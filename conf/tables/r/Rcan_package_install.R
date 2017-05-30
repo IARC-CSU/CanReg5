@@ -37,9 +37,6 @@ if (substr(out,nchar(out)-nchar(ft),nchar(out)) == paste0(".", ft)) {
   filename <- paste(out, ft, sep = "." )
 }
 
-pos <- max(gregexpr("\\", out, fixed=TRUE)[[1]])
-path <- substr(out,start=1, stop=pos)
-log_file <- paste0(path, "canreg_log.txt")
 
 log_connection <- file(filename,open="wt")
 
@@ -153,6 +150,7 @@ if(length(missing_packages) > 0 ) {
 
 
 
+
 lapply(packages_list, require, character.only = TRUE)
 
 
@@ -169,18 +167,37 @@ error = function(e) {
   sink(type="message")
   sink()
   close(log_connection)
-  
   if (file.exists(filename)) file.remove(filename)
   
+  #find path and create log file
+  pos <- max(gregexpr("\\", out, fixed=TRUE)[[1]])
+  path <- substr(out,start=1, stop=pos)
+  log_file <- paste0(path, "canreg_log.txt")
   error_connection <- file(log_file,open="wt")
   sink(error_connection)
   sink(error_connection, type="message")
   
-  cat(paste0("An error append! please send the log file: `",log_file,"` to canreg_support@iarc.fr\n\n"))
+  #print error
+  cat(paste0("An error occured! please send the log file: `",log_file,"` to  canreg@iarc.fr\n\n"))
   print(paste("MY_ERROR:  ",e))
-  traceback(1, max.lines = 1)
+  cat("\n")
+  #print argument from canreg
+  print(Args)
+  cat("\n")
+  
+  #print incidence / population file (r format)
+  cat("Incidence file\n")
+  dput(read.table(inc, header=TRUE))
+  cat("\n")
+  cat("population file\n")
+  dput(read.table(pop, header=TRUE))
+  cat("\n")
+  
+  #close log_file and send to canreg
   sink(type="message")
   sink()
   close(error_connection)
   cat(paste("-outFile",log_file,sep=":"))
+  
+  
 })

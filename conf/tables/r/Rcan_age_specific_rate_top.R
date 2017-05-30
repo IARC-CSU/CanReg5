@@ -10,7 +10,7 @@
   source(paste(sep="/", script.basename, "Rcan_source.r"))
   ################
 
-  
+tryCatch({    
 
   ##Prepare canreg data for ageSpecific rate
 	dt_all <- canreg_ageSpecific_rate_data(dt_all)
@@ -39,5 +39,20 @@
 	  cat(paste("-outFile",filename,sep=":"))
 	  
 	}
+	
+	},
+  
+  error = function(e){
+    if (dev.cur() > 1) {
+      dev.off()
+	  temp_file <- substr(filename,0,nchar(filename)-nchar(ft)-1)
+      if (file.exists(filename)) file.remove(filename)
+	  if (file.exists(paste0(temp_file,"001.",ft))) file.remove(paste0(temp_file,"001.",ft))
+	  if (file.exists(paste0(temp_file,"002.",ft))) file.remove(paste0(temp_file,"002.",ft))
+    }
+    
+    canreg_error_log(e,filename,out,Args,inc,pop)
+  }
+)
 	
 	
