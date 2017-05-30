@@ -37,12 +37,22 @@ if (substr(out,nchar(out)-nchar(ft),nchar(out)) == paste0(".", ft)) {
   filename <- paste(out, ft, sep = "." )
 }
 
+pos <- max(gregexpr("\\", out, fixed=TRUE)[[1]])
+path <- substr(out,start=1, stop=pos)
+log_file <- paste0(path, "canreg_log.txt")
+
 log_connection <- file(filename,open="wt")
+
 sink(log_connection)
 sink(log_connection, type="message")
 
+tryCatch({
+  
+options(warn = 1)
+  
 
-cat("This log file contains warnings, errors, and package availability information\n")
+
+cat("This log file contains warnings, errors, and package availability information\n\n")
 
 dir.create(file.path(Sys.getenv("R_LIBS_USER")),recursive = TRUE)
 .libPaths(Sys.getenv("R_LIBS_USER"))
@@ -56,6 +66,7 @@ new.repos <- old.repos
 new.repos["CRAN"] <- "https://cloud.r-project.org/" #set your favorite  CRAN Mirror here 
 
 options(repos = new.repos) 
+
 
 
 
@@ -149,8 +160,27 @@ lapply(packages_list, require, character.only = TRUE)
 sink(type="message")
 sink()
 close(log_connection)
-
-
 cat(paste("-outFile",filename,sep=":"))
 
 
+},
+error = function(e) {
+  
+  sink(type="message")
+  sink()
+  close(log_connection)
+  
+  if (file.exists(filename)) file.remove(filename)
+  
+  error_connection <- file(log_file,open="wt")
+  sink(error_connection)
+  sink(error_connection, type="message")
+  
+  cat(paste0("An error append! please send the log file: `",log_file,"` to canreg_support@iarc.fr\n\n"))
+  print(paste("MY_ERROR:  ",e))
+  traceback(1, max.lines = 1)
+  sink(type="message")
+  sink()
+  close(error_connection)
+  cat(paste("-outFile",log_file,sep=":"))
+})
