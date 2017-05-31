@@ -37,12 +37,19 @@ if (substr(out,nchar(out)-nchar(ft),nchar(out)) == paste0(".", ft)) {
   filename <- paste(out, ft, sep = "." )
 }
 
+
 log_connection <- file(filename,open="wt")
+
 sink(log_connection)
 sink(log_connection, type="message")
 
+tryCatch({
+  
+options(warn = 1)
+  
 
-cat("This log file contains warnings, errors, and package availability information\n")
+
+cat("This log file contains warnings, errors, and package availability information\n\n")
 
 dir.create(file.path(Sys.getenv("R_LIBS_USER")),recursive = TRUE)
 .libPaths(Sys.getenv("R_LIBS_USER"))
@@ -56,6 +63,7 @@ new.repos <- old.repos
 new.repos["CRAN"] <- "https://cloud.r-project.org/" #set your favorite  CRAN Mirror here 
 
 options(repos = new.repos) 
+
 
 
 
@@ -142,6 +150,7 @@ if(length(missing_packages) > 0 ) {
 
 
 
+
 lapply(packages_list, require, character.only = TRUE)
 
 
@@ -149,8 +158,46 @@ lapply(packages_list, require, character.only = TRUE)
 sink(type="message")
 sink()
 close(log_connection)
-
-
 cat(paste("-outFile",filename,sep=":"))
 
 
+},
+error = function(e) {
+  
+  sink(type="message")
+  sink()
+  close(log_connection)
+  if (file.exists(filename)) file.remove(filename)
+  
+  #find path and create log file
+  pos <- max(gregexpr("\\", out, fixed=TRUE)[[1]])
+  path <- substr(out,start=1, stop=pos)
+  log_file <- paste0(path, "canreg_log.txt")
+  error_connection <- file(log_file,open="wt")
+  sink(error_connection)
+  sink(error_connection, type="message")
+  
+  #print error
+  cat(paste0("An error occured! please send the log file: `",log_file,"` to  canreg@iarc.fr\n\n"))
+  print(paste("MY_ERROR:  ",e))
+  cat("\n")
+  #print argument from canreg
+  print(Args)
+  cat("\n")
+  
+  #print incidence / population file (r format)
+  cat("Incidence file\n")
+  dput(read.table(inc, header=TRUE))
+  cat("\n")
+  cat("population file\n")
+  dput(read.table(pop, header=TRUE))
+  cat("\n")
+  
+  #close log_file and send to canreg
+  sink(type="message")
+  sink()
+  close(error_connection)
+  cat(paste("-outFile",log_file,sep=":"))
+  
+  
+})

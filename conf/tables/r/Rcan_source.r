@@ -1,9 +1,9 @@
 ## load Rcan_core
   source(paste(sep="/", script.basename, "Rcan_core.r"))
+  
 
 ## install packages missing and require them
 
-  invisible(canreg_load_packages(c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","ReporteRs")))
 
   ## get Args from canreg  
   skin <- FALSE
@@ -28,6 +28,11 @@
     }
   }
   
+tryCatch({
+  
+  invisible(canreg_load_packages(c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","ReporteRs")))
+  
+  
   	#create filename from out and avoid double extension (.pdf.pdf)
 	if (substr(out,nchar(out)-nchar(ft),nchar(out)) == paste0(".", ft)) {
 	  filename <- out
@@ -45,5 +50,11 @@
 		)
 	
 
-		
+  },
+
+  error = function(e){
+    canreg_error_log(e,filename,out,Args,inc,pop)
+    quit()
+  }
+)
   
