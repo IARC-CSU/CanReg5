@@ -241,3 +241,8 @@ CanReg5-R-packages.zip
 *.orig
 CanReg5.zip.tmp4
 r-packages/*.zip
+*.tmp5
+CanReg5.zip.tmp6
+*.tmp7
+version.txt
+inno-settings.txt

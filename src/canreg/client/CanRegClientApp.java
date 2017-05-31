@@ -262,7 +262,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         }
 
         String versionString = canRegSystemVersionString;
-        versionString += "build" + appInfoProperties.getProperty("program.BUILDNUM");
+        versionString += "-build" + appInfoProperties.getProperty("program.BUILDNUM");
         versionString += " (" + appInfoProperties.getProperty("program.BUILDDATE") + ")";
         Logger.getLogger(CanRegClientApp.class.getName()).log(Level.INFO, "CanReg version: {0}", versionString);
 
