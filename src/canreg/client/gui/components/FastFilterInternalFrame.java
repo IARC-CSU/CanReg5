@@ -40,6 +40,7 @@ import java.util.Map;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import org.apache.commons.lang.ArrayUtils;
 import org.jdesktop.application.Action;
 import org.w3c.dom.Document;
 
@@ -389,26 +390,17 @@ private void variableComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//
 
     private void refreshVariableList() {
         if (tableName.equalsIgnoreCase(Globals.TUMOUR_AND_PATIENT_JOIN_TABLE_NAME)) {
-            variablesInTable = new DatabaseVariablesListElement[patientVariablesInDB.length + tumourVariablesInDB.length];
-            System.arraycopy(patientVariablesInDB, 0, variablesInTable, 0, patientVariablesInDB.length);
-            System.arraycopy(tumourVariablesInDB, 0, variablesInTable, patientVariablesInDB.length, tumourVariablesInDB.length);
+            variablesInTable = (DatabaseVariablesListElement[])ArrayUtils.addAll(patientVariablesInDB, tumourVariablesInDB);
         } else if (tableName.equalsIgnoreCase(Globals.SOURCE_AND_TUMOUR_JOIN_TABLE_NAME)) {
-            variablesInTable = new DatabaseVariablesListElement[sourceVariablesInDB.length + tumourVariablesInDB.length];
-            System.arraycopy(sourceVariablesInDB, 0, variablesInTable, 0, sourceVariablesInDB.length);
-            System.arraycopy(tumourVariablesInDB, 0, variablesInTable, sourceVariablesInDB.length, tumourVariablesInDB.length);
+            variablesInTable = (DatabaseVariablesListElement[])ArrayUtils.addAll(sourceVariablesInDB, tumourVariablesInDB);                
         } else if (tableName.equalsIgnoreCase(Globals.SOURCE_AND_TUMOUR_AND_PATIENT_JOIN_TABLE_NAME)) {
-            variablesInTable = new DatabaseVariablesListElement[sourceVariablesInDB.length + tumourVariablesInDB.length + sourceVariablesInDB.length];
-            System.arraycopy(sourceVariablesInDB, 0, variablesInTable, 0, sourceVariablesInDB.length);
-            System.arraycopy(tumourVariablesInDB, 0, variablesInTable, sourceVariablesInDB.length, tumourVariablesInDB.length);
-            System.arraycopy(patientVariablesInDB, 0, variablesInTable, sourceVariablesInDB.length + tumourVariablesInDB.length, patientVariablesInDB.length);
+            variablesInTable = (DatabaseVariablesListElement[])ArrayUtils.addAll(sourceVariablesInDB, tumourVariablesInDB);                
+            variablesInTable = (DatabaseVariablesListElement[])ArrayUtils.addAll(variablesInTable, patientVariablesInDB);
         } else if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
-            variablesInTable = new DatabaseVariablesListElement[patientVariablesInDB.length];
             variablesInTable = patientVariablesInDB;
         } else if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
-            variablesInTable = new DatabaseVariablesListElement[tumourVariablesInDB.length];
             variablesInTable = tumourVariablesInDB;
         } else if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
-            variablesInTable = new DatabaseVariablesListElement[sourceVariablesInDB.length];
             variablesInTable = sourceVariablesInDB;
         }
         Arrays.sort(variablesInTable, comparator);
@@ -416,7 +408,7 @@ private void variableComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//
         variableComboBox.setSelectedItem(0);
         updatePossibleValues();
     }
-
+    
     /**
      * 
      * @param str
