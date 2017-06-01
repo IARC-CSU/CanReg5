@@ -278,7 +278,6 @@ canreg_basis_table <- function(dt,var_cases="CASES", var_basis="BASIS", var_canc
 
 
 
-
 csu_merge_inc_pop <- function(inc_file,
                               pop_file,
                               var_cases = "CASES",
@@ -296,13 +295,15 @@ csu_merge_inc_pop <- function(inc_file,
   
   setnames(dt_inc, var_cases, "CSU_C")
   
+  column_group_list[[1]]  <- intersect(column_group_list[[1]],colnames(dt_inc))
+  
   dt_inc <- dt_inc[, c(var_age, var_by, "CSU_C"), with = FALSE]
   dt_inc <-  dt_inc[,list(CSU_C = sum(CSU_C)), by=eval(colnames(dt_inc)[!colnames(dt_inc) %in% c("CSU_C")])]
   
   if (!is.null(column_group_list)){
-    cj_var <- colnames(dt_inc)[!colnames(dt_inc) %in% c("CSU_C",lapply(column_group_list, `[[`, 2))]
+    cj_var <- colnames(dt_inc)[!colnames(dt_inc) %in% unlist(c("CSU_C",lapply(column_group_list, `[`, -1)))]
   } else {
-    cj_var <-colnames(dt_inc)[!dt_inc %in% c("CSU_C")]
+    cj_var <-colnames(dt_inc)[!colnames(dt_inc) %in% c("CSU_C")]
   }
   
   dt_temp = dt_inc[, do.call(CJ, c(.SD, unique=TRUE)), .SDcols=cj_var]
@@ -330,7 +331,7 @@ csu_merge_inc_pop <- function(inc_file,
 
 canreg_ageSpecific_rate_data <- function(dt, keep_ref=FALSE, keep_year=FALSE, keep_basis = FALSE) { 
   
-  var_by <- c("ICD10GROUP", "ICD10GROUPLABEL", "AGE_GROUP","AGE_GROUP_LABEL", "SEX")
+  var_by <- c("ICD10GROUP", "ICD10GROUPLABEL","ICD10GROUPCOLOR", "AGE_GROUP","AGE_GROUP_LABEL", "SEX")
   if (keep_ref) {
     var_by <- c(var_by, "REFERENCE_COUNT")
   }
@@ -1714,9 +1715,11 @@ canreg_bar_top_single <- function(dt, var_top, var_bar = "cancer_label" ,group_b
     plot_subtitle <-  paste0("Top ",nb_top, " cancer sites\n",i)
     
     dt_plot <- dt[get(group_by) == i]
-    dt_label_order <- setkey(unique(dt_plot[, c(var_bar, "CSU_RANK"), with=FALSE]), CSU_RANK)
+    dt_label_order <- setkey(unique(dt_plot[, c(var_bar,"ICD10GROUPCOLOR", "CSU_RANK"), with=FALSE]), CSU_RANK)
     dt_plot$cancer_label <- factor(dt_plot$cancer_label,levels = rev(dt_label_order$cancer_label)) 
-    color_cancer <- csu_cancer_color(cancer_list =rev(dt_label_order$cancer_label))
+   
+    color_cancer <- as.character(rev(dt_label_order$ICD10GROUPCOLOR))
+    #color_cancer <- csu_cancer_color(cancer_list =rev(dt_label_order$cancer_label))
     
 
 
