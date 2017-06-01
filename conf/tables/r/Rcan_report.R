@@ -200,7 +200,7 @@ tryCatch({
   
   ##calcul of ASR
   dt_asr<- csu_asr_core(df_data =dt_report, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
-                        var_by = c("cancer_label", "SEX"), missing_age = canreg_missing_age(dt_all),
+                        var_by = c("cancer_label", "SEX","ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt_all),
                         first_age = 1,
                         last_age= 18,
                         pop_base_count = "REFERENCE_COUNT",
@@ -208,7 +208,7 @@ tryCatch({
   
   ##calcul of cumulative risk
   dt_cum_risk <- csu_cum_risk_core(df_data = dt_report,var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
-                                   group_by = c("cancer_label", "SEX"), missing_age = canreg_missing_age(dt_all),
+                                   group_by = c("cancer_label", "SEX","ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt_all),
                                    last_age= 15,
                                    age_label_list = "AGE_GROUP_LABEL")
   
@@ -338,7 +338,7 @@ tryCatch({
   
   ##calcul of ASR
   dt_report<- csu_asr_core(df_data =dt_report, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
-                           var_by = c("cancer_label", "SEX", "YEAR"), missing_age = canreg_missing_age(dt_all),
+                           var_by = c("cancer_label", "SEX", "YEAR", "ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt_all),
                            first_age = 1,
                            last_age= 18,
                            pop_base_count = "REFERENCE_COUNT",

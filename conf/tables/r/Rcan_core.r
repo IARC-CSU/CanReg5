@@ -331,7 +331,7 @@ csu_merge_inc_pop <- function(inc_file,
 
 canreg_ageSpecific_rate_data <- function(dt, keep_ref=FALSE, keep_year=FALSE, keep_basis = FALSE) { 
   
-  var_by <- c("ICD10GROUP", "ICD10GROUPLABEL","ICD10GROUPCOLOR", "AGE_GROUP","AGE_GROUP_LABEL", "SEX")
+  var_by <- intersect(colnames(dt),c("ICD10GROUP", "ICD10GROUPLABEL","ICD10GROUPCOLOR", "AGE_GROUP","AGE_GROUP_LABEL", "SEX"))
   if (keep_ref) {
     var_by <- c(var_by, "REFERENCE_COUNT")
   }
@@ -462,6 +462,7 @@ csu_asr_core <- function(df_data, var_age, var_cases, var_py, var_by=NULL,
     
   }
   
+  var_by <- intersect(colnames(df_data), var_by)
   
   if (is.null(var_age_group)) {
     
@@ -721,6 +722,9 @@ csu_cum_risk_core <- function(df_data, var_age, var_cases, var_py, group_by=NULL
     bool_dum_by <- TRUE
     
   }
+  
+  var_by <- intersect(colnames(df_data), var_by)
+  
   
   
   dt_data <- data.table(df_data, key = group_by) 
@@ -1645,14 +1649,17 @@ canreg_ageSpecific_rate_top <- function(dt, var_age="AGE_GROUP",
       plot_caption <- canreg_header
     }
       
+
     
+
 
     
     dt_plot <- dt[get(var_by) == i]
-    dt_label_order <- setkey(unique(dt_plot[, c("cancer_label", "CSU_RANK"), with=FALSE]), CSU_RANK)
+    dt_label_order <- setkey(unique(dt_plot[, c("cancer_label","ICD10GROUPCOLOR", "CSU_RANK"), with=FALSE]), CSU_RANK)
     dt_plot$cancer_label <- factor(dt_plot$cancer_label,levels = dt_label_order$cancer_label) 
+    color_cancer <- as.character(dt_label_order$ICD10GROUPCOLOR)
     
-    color_cancer <- csu_cancer_color(cancer_list =dt_label_order$cancer_label)
+    #color_cancer <- csu_cancer_color(cancer_list =dt_label_order$cancer_label)
 
     
     plotlist[[j]] <- csu_ageSpecific_core(dt_plot,
@@ -1693,6 +1700,9 @@ canreg_bar_top_single <- function(dt, var_top, var_bar = "cancer_label" ,group_b
   if (return_data) {
     setnames(dt, "CSU_RANK","cancer_rank")
     setkeyv(dt, c("SEX","cancer_rank"))
+    if ("ICD10GROUPCOLOR" %in% colnames(dt)) {
+      dt <-  dt[,-c("ICD10GROUPCOLOR"), with=FALSE]
+    }
     return(dt)
     stop() 
   }
@@ -2375,12 +2385,15 @@ canreg_asr_trend_top <- function(dt, var_asr="asr",
       plot_caption <- canreg_header
     }
     
+
     
     dt_plot <- dt[get("SEX") == i]
-    dt_label_order <- setkey(unique(dt_plot[, c(group_by, "CSU_RANK"), with=FALSE]), CSU_RANK)
+    dt_label_order <- setkey(unique(dt_plot[, c(group_by,"ICD10GROUPCOLOR", "CSU_RANK"), with=FALSE]), CSU_RANK)
     dt_plot$cancer_label <- factor(dt_plot$cancer_label,levels = dt_label_order$cancer_label) 
     
-    color_cancer <- csu_cancer_color(cancer_list =dt_label_order$cancer_label)
+    color_cancer <- as.character(dt_label_order$ICD10GROUPCOLOR)
+    
+    #color_cancer <- csu_cancer_color(cancer_list =dt_label_order$cancer_label)
 
     
     
