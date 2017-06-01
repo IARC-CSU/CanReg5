@@ -45,8 +45,8 @@ tryCatch({
 	dt_all <- csu_merge_inc_pop(
 		inc_file =inc,
 		pop_file =pop,
-		var_by = c("ICD10GROUP", "ICD10GROUPLABEL", "YEAR", "SEX"),
-		column_group_list =list(c("ICD10GROUP", "ICD10GROUPLABEL"))
+		var_by = c("ICD10GROUP", "ICD10GROUPLABEL","ICD10GROUPCOLOR", "YEAR", "SEX"),
+		column_group_list =list(c("ICD10GROUP", "ICD10GROUPLABEL", "ICD10GROUPCOLOR"))
 		)
 	
 

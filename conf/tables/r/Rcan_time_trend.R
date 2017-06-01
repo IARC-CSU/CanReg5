@@ -22,7 +22,7 @@ tryCatch({
   
   ##calcul of ASR
   dt<- csu_asr_core(df_data =dt, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
-                    var_by = c("cancer_label", "SEX", "YEAR"), missing_age = canreg_missing_age(dt_all),
+                    var_by = c("cancer_label", "SEX", "YEAR", "ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt_all),
                     first_age = first_age+1,
                     last_age= last_age+1,
                     pop_base_count = "REFERENCE_COUNT",
