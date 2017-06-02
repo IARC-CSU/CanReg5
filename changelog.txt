@@ -1,3 +1,4 @@
+﻿
 Changelog
 
 5.00.42 BETA
