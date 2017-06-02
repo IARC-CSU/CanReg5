@@ -160,7 +160,7 @@
         <Property name="name" type="java.lang.String" value="appVersionLabel" noResource="true"/>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="String versionString = &quot;&quot;;&#xa;for (String part:Globals.versionStringParts){&#xa;    versionString += appInfoProperties.getProperty(part);&#xa;}&#xa;versionString += &quot;build&quot;+appInfoProperties.getProperty(&quot;program.BUILDNUM&quot;);&#xa;versionString += &quot; (&quot;+appInfoProperties.getProperty(&quot;program.BUILDDATE&quot;)+&quot;)&quot;;&#xa;appVersionLabel.setText(versionString);"/>
+        <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="String versionString = &quot;&quot;; for (String part:Globals.versionStringParts){     versionString += appInfoProperties.getProperty(part); } versionString += &quot;-build&quot;+appInfoProperties.getProperty(&quot;program.BUILDNUM&quot;); versionString += &quot; (&quot;+appInfoProperties.getProperty(&quot;program.BUILDDATE&quot;)+&quot;)&quot;; appVersionLabel.setText(versionString);"/>
         <AuxValue name="JavaCodeGenerator_VariableLocal" type="java.lang.Boolean" value="true"/>
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="0"/>
       </AuxValues>
