@@ -26,8 +26,9 @@ import canreg.common.DateHelper;
 import canreg.common.Globals;
 import canreg.common.GregorianCalendarCanReg;
 import canreg.common.qualitycontrol.Checker.CheckNames;
+import com.ibm.icu.util.Calendar;
+
 import java.text.ParseException;
-import java.util.Calendar;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;

@@ -30,6 +30,7 @@ import canreg.client.gui.CanRegClientView;
 import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
+import canreg.common.LocalizationHelper;
 import canreg.common.database.Dictionary;
 import canreg.common.database.DictionaryEntry;
 import java.awt.event.ActionEvent;
@@ -41,6 +42,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import org.apache.commons.lang.ArrayUtils;
+import com.toedter.calendar.JDateChooser;
 import org.jdesktop.application.Action;
 import org.w3c.dom.Document;
 
@@ -95,6 +97,11 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame implemen
         valuesSplitPane = new javax.swing.JSplitPane();
         valueTextField = new javax.swing.JTextField();
         valueTextField2 = new javax.swing.JTextField();
+        //<ictl.co>
+        dateValuesSplitPane = new javax.swing.JSplitPane();
+        dateChooser = new JDateChooser();
+        dateChooser2 = new JDateChooser();
+        //</ictl.co>
         jLabel1 = new javax.swing.JLabel();
         filterPanel = new javax.swing.JPanel();
         scrollPane = new javax.swing.JScrollPane();
@@ -152,6 +159,11 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame implemen
 
         valuesSplitPane.setResizeWeight(0.5);
         valuesSplitPane.setName("valuesSplitPane"); // NOI18N
+        //<ictl.co>
+        dateValuesSplitPane.setResizeWeight(0.5);
+        dateValuesSplitPane.setName("dateValuesSplitPane"); // NOI18N
+        dateValuesSplitPane.setVisible(false);
+        //</ictl.co>
 
         valueTextField.setText(resourceMap.getString("valueTextField.text")); // NOI18N
         valueTextField.setAction(actionMap.get("addAction")); // NOI18N
@@ -162,7 +174,20 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame implemen
             }
         });
         valuesSplitPane.setLeftComponent(valueTextField);
+        //<ictl.co>
+        dateValuesSplitPane.setLeftComponent(dateChooser);
+        dateChooser.setName("dateChooser"); // NOI18N
+        dateChooser.setDateFormatString(Globals.DATE_FORMAT_STRING);
+        dateChooser.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                dateChooserMousePressed(evt);
+            }
 
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                dateChooserMouseReleased(evt);
+            }
+        });
+        //</ictl.co>
         valueTextField2.setAction(actionMap.get("addAction")); // NOI18N
         valueTextField2.setName("valueTextField2"); // NOI18N
         valueTextField2.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -171,7 +196,21 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame implemen
             }
         });
         valuesSplitPane.setRightComponent(valueTextField2);
+        //<ictl.co>
+        dateValuesSplitPane.setRightComponent(dateChooser2);
+        dateChooser2.setName("dateChooser2"); // NOI18N
+        dateChooser2.setVisible(false);
+        dateChooser2.setDateFormatString(Globals.DATE_FORMAT_STRING);
+        dateChooser2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                dateChooserMousePressed(evt);
+            }
 
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                dateChooserMouseReleased(evt);
+            }
+        });
+        //</ictl.co>
         jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
         jLabel1.setName("jLabel1"); // NOI18N
 
@@ -193,6 +232,7 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame implemen
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(valuesSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 269, Short.MAX_VALUE)
+                                                .addComponent(dateValuesSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 269, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(valueLabel)
@@ -219,7 +259,8 @@ public class FastFilterInternalFrame extends javax.swing.JInternalFrame implemen
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(variableComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(operationComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(valuesSplitPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(valuesSplitPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(dateValuesSplitPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -354,6 +395,11 @@ private void variableComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//
     private javax.swing.JLabel valueLabel;
     private javax.swing.JTextField valueTextField;
     private javax.swing.JTextField valueTextField2;
+    //<ictl.co>
+    private JDateChooser dateChooser;
+    private JDateChooser dateChooser2;
+    private javax.swing.JSplitPane dateValuesSplitPane;
+    //</ictl.co>
     private javax.swing.JSplitPane valuesSplitPane;
     private javax.swing.JComboBox variableComboBox;
     private javax.swing.JLabel variableLabel;
@@ -407,6 +453,9 @@ private void variableComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//
         variableComboBox.setModel(new DefaultComboBoxModel(variablesInTable));
         variableComboBox.setSelectedItem(0);
         updatePossibleValues();
+        //<ictl.co>
+        updateOperations();
+        //</ictl.co>
     }
     
     /**
@@ -459,52 +508,54 @@ private void variableComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//
      */
     @Action
     public void addAction() {
-        String newFilterPart = "";
-        DatabaseVariablesListElement dbvle = (DatabaseVariablesListElement) variableComboBox.getSelectedItem();
-        newFilterPart +=
-                dbvle.getDatabaseVariableName();
-        newFilterPart +=
-                " ";
-        newFilterPart +=
-                operationComboBox.getSelectedItem().toString();
-        newFilterPart +=
-                " ";
-        DatabaseVariablesListElement dvle = (DatabaseVariablesListElement) variableComboBox.getSelectedItem();
-        if (!dvle.getVariableType().equalsIgnoreCase("Number")) {
-            newFilterPart += "'";
-        }
-
-        newFilterPart += valueTextField.getText();
-        if (!dvle.getVariableType().equalsIgnoreCase("Number")) {
-            newFilterPart += "'";
-        }
-
-        if (operationComboBox.getSelectedItem().toString().equalsIgnoreCase("BETWEEN")) {
-            newFilterPart += " AND ";
-
+        if (!addDateAction()) {//<ictl.co>
+            String newFilterPart = "";
+            DatabaseVariablesListElement dbvle = (DatabaseVariablesListElement) variableComboBox.getSelectedItem();
+            newFilterPart +=
+                    dbvle.getDatabaseVariableName();
+            newFilterPart +=
+                    " ";
+            newFilterPart +=
+                    operationComboBox.getSelectedItem().toString();
+            newFilterPart +=
+                    " ";
+            DatabaseVariablesListElement dvle = (DatabaseVariablesListElement) variableComboBox.getSelectedItem();
             if (!dvle.getVariableType().equalsIgnoreCase("Number")) {
                 newFilterPart += "'";
             }
 
-            newFilterPart += valueTextField2.getText();
+            newFilterPart += valueTextField.getText();
             if (!dvle.getVariableType().equalsIgnoreCase("Number")) {
                 newFilterPart += "'";
             }
+
+            if (operationComboBox.getSelectedItem().toString().equalsIgnoreCase("BETWEEN")) {
+                newFilterPart += " AND ";
+
+                if (!dvle.getVariableType().equalsIgnoreCase("Number")) {
+                    newFilterPart += "'";
+                }
+
+                newFilterPart += valueTextField2.getText();
+                if (!dvle.getVariableType().equalsIgnoreCase("Number")) {
+                    newFilterPart += "'";
+                }
+            }
+
+            newFilterPart += " ";
+            newFilterPart +=
+                    logicalOperatorComboBox.getSelectedItem().toString();
+            newFilterPart +=
+                    " ";
+            textPane.setText(textPane.getText() + newFilterPart);
+
+            // reset things
+            valueTextField.setText("");
+            valueTextField2.setText("");
+            logicalOperatorComboBox.setSelectedIndex(0);
+
+            currentSelectionAdded = true;
         }
-
-        newFilterPart += " ";
-        newFilterPart +=
-                logicalOperatorComboBox.getSelectedItem().toString();
-        newFilterPart +=
-                " ";
-        textPane.setText(textPane.getText() + newFilterPart);
-
-        // reset things
-        valueTextField.setText("");
-        valueTextField2.setText("");
-        logicalOperatorComboBox.setSelectedIndex(0);
-
-        currentSelectionAdded = true;
     }
 
     /**
@@ -516,6 +567,11 @@ private void variableComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//
         valueTextField2.setText("");
         updatePossibleValues();
         currentSelectionAdded = false;
+        //<ictl.co>
+        dateChooser.setDate(null);
+        dateChooser2.setDate(null);
+        updateOperations();
+        //<ictl.co>
     }
 
     @SuppressWarnings("empty-statement")
@@ -538,30 +594,34 @@ private void variableComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//
 
     @Action
     public void operatorSelected() {
-        String operator = operationComboBox.getSelectedItem().toString();
-        if ("BETWEEN".equalsIgnoreCase(operator)) {
-            valueTextField2.setVisible(true);
-            valuesSplitPane.setDividerLocation(0.5);
-            dictionaryPopUp = true;
-        } else if ("LIKE".equalsIgnoreCase(operator)) {
-            valueTextField2.setVisible(false);
-            valuesSplitPane.setDividerLocation(1);
-            dictionaryPopUp = false;
-        } else if ("IN".equalsIgnoreCase(operator)) {
-            valueTextField2.setVisible(false);
-            valuesSplitPane.setDividerLocation(1);
-            dictionaryPopUp = false;
-        } else {
-            valueTextField2.setVisible(false);
-            valuesSplitPane.setDividerLocation(1);
-            dictionaryPopUp = true;
+        //<ictl.co>
+        if (!dateOperatorSelected()) {
+            //</ictl.co>
+            String operator = operationComboBox.getSelectedItem().toString();
+            if ("BETWEEN".equalsIgnoreCase(operator)) {
+                valueTextField2.setVisible(true);
+                valuesSplitPane.setDividerLocation(0.5);
+                dictionaryPopUp = true;
+            } else if ("LIKE".equalsIgnoreCase(operator)) {
+                valueTextField2.setVisible(false);
+                valuesSplitPane.setDividerLocation(1);
+                dictionaryPopUp = false;
+            } else if ("IN".equalsIgnoreCase(operator)) {
+                valueTextField2.setVisible(false);
+                valuesSplitPane.setDividerLocation(1);
+                dictionaryPopUp = false;
+            } else {
+                valueTextField2.setVisible(false);
+                valuesSplitPane.setDividerLocation(1);
+                dictionaryPopUp = true;
+            }
+            currentSelectionAdded = false;
         }
-        currentSelectionAdded = false;
     }
 
     private boolean currentSelectionIsNotAdded() {
         boolean isAdded = false;
-        if (valueTextField.getText().trim().length() == 0) {
+        if (valueTextField.getText().trim().length() == 0 && dateChooser.getDate() == null) {
             isAdded = true;
         } else {
             isAdded = currentSelectionAdded;
@@ -582,4 +642,114 @@ private void variableComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//
             dictionaryElementChooserAssignedTextField.setText(dictionaryElementChooser.getSelectedElement().getCode());
         }
     }
+
+    //<ictl.co>
+    private boolean dateOperatorSelected() {
+        if (variableComboBox.getSelectedItem() instanceof DatabaseVariablesListElement) {
+            DatabaseVariablesListElement dbvle = (DatabaseVariablesListElement) variableComboBox.getSelectedItem();
+            if (dbvle.getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_DATE_NAME)) {
+                dictionaryPopUp = false;
+                String operator = operationComboBox.getSelectedItem().toString();
+                if ("BETWEEN".equalsIgnoreCase(operator)) {
+                    dateChooser2.setVisible(true);
+                    dateValuesSplitPane.setDividerLocation(0.5);
+                } else if ("LIKE".equalsIgnoreCase(operator)) {
+                    dateChooser2.setVisible(false);
+                    dateValuesSplitPane.setDividerLocation(1);
+                } else if ("IN".equalsIgnoreCase(operator)) {
+                    dateChooser2.setVisible(false);
+                    dateValuesSplitPane.setDividerLocation(1);
+                } else {
+                    dateChooser2.setVisible(false);
+                    dateValuesSplitPane.setDividerLocation(1);
+                }
+                currentSelectionAdded = false;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void updateOperations() {
+        if (LocalizationHelper.isRtlLanguageActive()) {
+            String[] operators = {"=", "<>", ">", "<", ">=", "<=", "BETWEEN", "LIKE", "IN"};
+            DatabaseVariablesListElement dbvle = (DatabaseVariablesListElement) variableComboBox.getSelectedItem();
+            if (dbvle.getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_DATE_NAME)) {
+                operators = new String[]{"=", "<>", ">", "<", ">=", "<=", "BETWEEN", "IN"};
+                dateValuesSplitPane.setVisible(true);
+                dateChooser2.setVisible(false);
+                valuesSplitPane.setVisible(false);
+            } else {
+                dateValuesSplitPane.setVisible(false);
+                valuesSplitPane.setVisible(true);
+            }
+            operationComboBox.setModel(new DefaultComboBoxModel(operators));
+        }
+    }
+
+    private void dateChooserMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dateChooserMousePressed
+        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(valueTextField, evt);
+    }//GEN-LAST:event_dateChooserMousePressed
+
+    private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dateChooserMouseReleased
+        MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(valueTextField, evt);
+    }//GEN-LAST:event_dateChooserMouseReleased
+
+    //<ictl.co>
+    private boolean addDateAction() {
+        DatabaseVariablesListElement dbvle = (DatabaseVariablesListElement) variableComboBox.getSelectedItem();
+        if (dbvle.getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_DATE_NAME)) {
+            String newFilterPart = "";
+            newFilterPart +=
+                    dbvle.getDatabaseVariableName();
+            newFilterPart +=
+                    " ";
+            newFilterPart +=
+                    operationComboBox.getSelectedItem().toString();
+            newFilterPart +=
+                    " ";
+            DatabaseVariablesListElement dvle = (DatabaseVariablesListElement) variableComboBox.getSelectedItem();
+            if (!dvle.getVariableType().equalsIgnoreCase("Number")) {
+                newFilterPart += "'";
+            }
+
+            newFilterPart += ((JTextField)dateChooser.getDateEditor().getUiComponent()).getText();
+            if (!dvle.getVariableType().equalsIgnoreCase("Number")) {
+                newFilterPart += "'";
+            }
+
+            if (operationComboBox.getSelectedItem().toString().equalsIgnoreCase("BETWEEN")) {
+                newFilterPart += " AND ";
+
+                if (!dvle.getVariableType().equalsIgnoreCase("Number")) {
+                    newFilterPart += "'";
+                }
+
+                newFilterPart += ((JTextField)dateChooser2.getDateEditor().getUiComponent()).getText();
+                if (!dvle.getVariableType().equalsIgnoreCase("Number")) {
+                    newFilterPart += "'";
+                }
+            }
+
+            newFilterPart += " ";
+            newFilterPart +=
+                    logicalOperatorComboBox.getSelectedItem().toString();
+            newFilterPart +=
+                    " ";
+            textPane.setText(textPane.getText() + newFilterPart);
+
+            // reset things
+            dateChooser.setDate(null);
+            dateChooser2.setDate(null);
+            valueTextField.setText("");
+            valueTextField2.setText("");
+            logicalOperatorComboBox.setSelectedIndex(0);
+
+            currentSelectionAdded = true;
+            return true;
+        }
+        return false;
+    }
+
+    //</ictl.co>
 }

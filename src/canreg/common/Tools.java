@@ -647,8 +647,12 @@ public class Tools {
         File inputFile = new File(from);
         File outputFile = new File(to);
 
-        FileReader in = new FileReader(inputFile);
-        FileWriter out = new FileWriter(outputFile);
+        //<ictl.co>
+        Reader in = new InputStreamReader(new FileInputStream(inputFile), "UTF-8");
+        Writer out = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8");
+//        FileReader in = new FileReader(inputFile);
+//        FileWriter out = new FileWriter(outputFile);
+        //</ictl.co>
         int c;
 
         while ((c = in.read()) != -1) {

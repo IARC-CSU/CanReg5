@@ -20,8 +20,8 @@
 
 package canreg.common;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import com.ibm.icu.util.Calendar;
+import com.ibm.icu.util.GregorianCalendar;
 
 public class GregorianCalendarCanReg extends GregorianCalendar implements CalendarCanReg  {
     private boolean unkownMonth = false;

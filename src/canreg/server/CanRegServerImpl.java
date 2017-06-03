@@ -89,14 +89,20 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     private String patientRecordIDvariableName;
     private GlobalToolBox serverToolbox;
     private TrayIcon trayIcon;
+    //<ictl.co>
+    private int port;
+    //</ictl.co>
 
     /**
      * 
      * @param systemCode
      * @throws java.rmi.RemoteException
      */
-    public CanRegServerImpl(String systemCode) throws RemoteException {
-        
+    public CanRegServerImpl(String systemCode/*<ictl.co>*/, int port/*<ictl.co>*/) throws RemoteException {
+        //<ictl.co>
+        super(port);
+        this.port = port;
+        //</ictl.co>
         Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.INFO, "Java version: {0}", System.getProperty("java.version"));
                 
         this.systemCode = systemCode;
@@ -1029,4 +1035,12 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         }
         return success;
     }
+
+    //<ictl.co>
+
+    public Integer getPort() throws RemoteException, SecurityException {
+        return port;
+    }
+
+    //<ictl.co>
 }

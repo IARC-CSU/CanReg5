@@ -1,17 +1,17 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
  * Copyright (C) 2008-2016 International Agency for Research on Cancer
- *
+ * <p>
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
  * version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
- *
+ * <p>
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *
@@ -25,58 +25,39 @@
  */
 package canreg.client.gui.analysis;
 
-import canreg.client.analysis.TableBuilderInterface.FileTypes;
-import canreg.common.cachingtableapi.DistributedTableDescription;
 import canreg.client.CanRegClientApp;
 import canreg.client.DistributedTableDataSourceClient;
 import canreg.client.LocalSettings;
-import canreg.client.analysis.ConfigFields;
-import canreg.client.analysis.ConfigFieldsReader;
-import canreg.client.analysis.JChartTableBuilderInterface;
-import canreg.client.analysis.NotCompatibleDataException;
-import canreg.client.analysis.TableBuilderFactory;
-import canreg.client.analysis.TableBuilderInterface;
-import canreg.client.analysis.TableBuilderListElement;
-import canreg.client.analysis.TableErrorException;
+import canreg.client.analysis.*;
+import canreg.client.analysis.TableBuilderInterface.FileTypes;
 import canreg.client.gui.CanRegClientView;
 import canreg.client.gui.components.LabelAndComboBoxJPanel;
 import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
-import canreg.common.DatabaseFilter;
-import canreg.common.DatabaseVariablesListElement;
-import canreg.common.Globals;
+import canreg.common.*;
+import canreg.common.cachingtableapi.DistributedTableDescription;
 import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.common.database.PopulationDataset;
 import canreg.server.database.UnknownTableException;
+import com.ibm.icu.text.SimpleDateFormat;
+import com.ibm.icu.util.ULocale;
 import org.imgscalr.Scalr;
-import java.awt.Cursor;
-import java.awt.event.FocusEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.rmi.RemoteException;
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.JSpinner;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import org.jdesktop.application.Action;
 import org.jfree.chart.JFreeChart;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.rmi.RemoteException;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -298,9 +279,15 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         tableTypeScrollPane.setName("tableTypeScrollPane"); // NOI18N
 
         tableTypeList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Incidence per 100000 by Age groups (Annual)", "Incidence per 100000 by Age groups (Period)" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
+            String[] strings = {"Incidence per 100000 by Age groups (Annual)", "Incidence per 100000 by Age groups (Period)"};
+
+            public int getSize() {
+                return strings.length;
+            }
+
+            public Object getElementAt(int i) {
+                return strings[i];
+            }
         });
         tableTypeList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tableTypeList.setName("tableTypeList"); // NOI18N
@@ -333,38 +320,38 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         javax.swing.GroupLayout tableTypePanelLayout = new javax.swing.GroupLayout(tableTypePanel);
         tableTypePanel.setLayout(tableTypePanelLayout);
         tableTypePanelLayout.setHorizontalGroup(
-            tableTypePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(tableTypePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(tableTypePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tableTypeScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
-                    .addComponent(typeLabel)
-                    .addGroup(tableTypePanelLayout.createSequentialGroup()
-                        .addGroup(tableTypePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(descriptionLabel)
-                            .addComponent(descriptionScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(tableTypePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(previewLabel)
-                            .addComponent(previewImageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE))))
-                .addContainerGap())
+                tableTypePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(tableTypePanelLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(tableTypePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(tableTypeScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
+                                        .addComponent(typeLabel)
+                                        .addGroup(tableTypePanelLayout.createSequentialGroup()
+                                                .addGroup(tableTypePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(descriptionLabel)
+                                                        .addComponent(descriptionScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addGroup(tableTypePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(previewLabel)
+                                                        .addComponent(previewImageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE))))
+                                .addContainerGap())
         );
         tableTypePanelLayout.setVerticalGroup(
-            tableTypePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(tableTypePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(typeLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tableTypeScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(tableTypePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(descriptionLabel)
-                    .addComponent(previewLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(tableTypePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(previewImageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
-                    .addComponent(descriptionScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE))
-                .addContainerGap())
+                tableTypePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(tableTypePanelLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(typeLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tableTypeScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(tableTypePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(descriptionLabel)
+                                        .addComponent(previewLabel))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(tableTypePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(previewImageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
+                                        .addComponent(descriptionScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE))
+                                .addContainerGap())
         );
 
         tabbedPane.addTab(resourceMap.getString("tableTypePanel.TabConstraints.tabTitle"), tableTypePanel); // NOI18N
@@ -373,7 +360,17 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
 
         startYearChooser.setName("startYearChooser"); // NOI18N
         startYearChooser.setStartYear(-292278994);
-        startYearChooser.setValue(1999);
+        //<ictl.co>
+        if (LocalizationHelper.isRtlLanguageActive()) {
+            if (LocalizationHelper.isPersianLocale()) {
+                startYearChooser.setValue(1378);
+            } else {
+                startYearChooser.setValue(1999);
+            }
+        } else {
+            startYearChooser.setValue(1999);
+        }
+        //</ictl.co>
         startYearChooser.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 startYearChooserPropertyChange(evt);
@@ -389,7 +386,17 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         endYearChooser.setDayChooser(null);
         endYearChooser.setName("endYearChooser"); // NOI18N
         endYearChooser.setStartYear(-292278994);
-        endYearChooser.setValue(2001);
+        //<ictl.co>
+        if (LocalizationHelper.isRtlLanguageActive()) {
+            if (LocalizationHelper.isPersianLocale()) {
+                endYearChooser.setValue(1380);
+            } else {
+                endYearChooser.setValue(2001);
+            }
+        } else {
+            endYearChooser.setValue(2001);
+        }
+        //</ictl.co>
         endYearChooser.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 endYearChooserPropertyChange(evt);
@@ -415,47 +422,47 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         javax.swing.GroupLayout rangePanelLayout = new javax.swing.GroupLayout(rangePanel);
         rangePanel.setLayout(rangePanelLayout);
         rangePanelLayout.setHorizontalGroup(
-            rangePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rangePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(rangePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(warningLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
-                    .addGroup(rangePanelLayout.createSequentialGroup()
-                        .addGroup(rangePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel6)
-                            .addComponent(endYearLabel)
-                            .addComponent(startYearLabel)
-                            .addComponent(jLabel7))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 179, Short.MAX_VALUE)
-                        .addGroup(rangePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(startYearChooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(endYearChooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(numberOfYearsTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
-                            .addComponent(midYearTextField, javax.swing.GroupLayout.Alignment.TRAILING))))
-                .addContainerGap())
+                rangePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rangePanelLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(rangePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(warningLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
+                                        .addGroup(rangePanelLayout.createSequentialGroup()
+                                                .addGroup(rangePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(jLabel6)
+                                                        .addComponent(endYearLabel)
+                                                        .addComponent(startYearLabel)
+                                                        .addComponent(jLabel7))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 179, Short.MAX_VALUE)
+                                                .addGroup(rangePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                        .addComponent(startYearChooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(endYearChooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(numberOfYearsTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
+                                                        .addComponent(midYearTextField, javax.swing.GroupLayout.Alignment.TRAILING))))
+                                .addContainerGap())
         );
         rangePanelLayout.setVerticalGroup(
-            rangePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(rangePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(rangePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(startYearLabel)
-                    .addComponent(startYearChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(rangePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(endYearLabel)
-                    .addComponent(endYearChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(rangePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(midYearTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(rangePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(numberOfYearsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(warningLabel)
-                .addContainerGap(304, Short.MAX_VALUE))
+                rangePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(rangePanelLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(rangePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(startYearLabel)
+                                        .addComponent(startYearChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(rangePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(endYearLabel)
+                                        .addComponent(endYearChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(rangePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel6)
+                                        .addComponent(midYearTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(rangePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel7)
+                                        .addComponent(numberOfYearsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(warningLabel)
+                                .addContainerGap(304, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab(resourceMap.getString("rangePanel.TabConstraints.tabTitle"), rangePanel); // NOI18N
@@ -486,25 +493,25 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         javax.swing.GroupLayout populationDatasetChooserPanelLayout = new javax.swing.GroupLayout(populationDatasetChooserPanel);
         populationDatasetChooserPanel.setLayout(populationDatasetChooserPanelLayout);
         populationDatasetChooserPanelLayout.setHorizontalGroup(
-            populationDatasetChooserPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(populationDatasetChooserPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(populationDatasetChooserPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(populationDatasetsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
-                    .addComponent(pleaseChooseLabel)
-                    .addComponent(dontUsePopulationDatasetCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE))
-                .addContainerGap())
+                populationDatasetChooserPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(populationDatasetChooserPanelLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(populationDatasetChooserPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(populationDatasetsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
+                                        .addComponent(pleaseChooseLabel)
+                                        .addComponent(dontUsePopulationDatasetCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE))
+                                .addContainerGap())
         );
         populationDatasetChooserPanelLayout.setVerticalGroup(
-            populationDatasetChooserPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(populationDatasetChooserPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(pleaseChooseLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(populationDatasetsScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
-                .addComponent(dontUsePopulationDatasetCheckBox)
-                .addContainerGap())
+                populationDatasetChooserPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(populationDatasetChooserPanelLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(pleaseChooseLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(populationDatasetsScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                                .addComponent(dontUsePopulationDatasetCheckBox)
+                                .addContainerGap())
         );
 
         tabbedPane.addTab(resourceMap.getString("populationDatasetChooserPanel.TabConstraints.tabTitle"), populationDatasetChooserPanel); // NOI18N
@@ -520,18 +527,18 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         javax.swing.GroupLayout filterPanelLayout = new javax.swing.GroupLayout(filterPanel);
         filterPanel.setLayout(filterPanelLayout);
         filterPanelLayout.setHorizontalGroup(
-            filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(filterPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(rangeFilterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
-                .addContainerGap())
+                filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(filterPanelLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(rangeFilterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
+                                .addContainerGap())
         );
         filterPanelLayout.setVerticalGroup(
-            filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(filterPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(rangeFilterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE)
-                .addContainerGap())
+                filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(filterPanelLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(rangeFilterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE)
+                                .addContainerGap())
         );
 
         tabbedPane.addTab(resourceMap.getString("filterPanel.TabConstraints.tabTitle"), filterPanel); // NOI18N
@@ -562,6 +569,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 headerOfTableTextFieldMousePressed(evt);
             }
+
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 headerOfTableTextFieldMouseReleased(evt);
             }
@@ -619,51 +627,51 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         javax.swing.GroupLayout writeOutPanelLayout = new javax.swing.GroupLayout(writeOutPanel);
         writeOutPanel.setLayout(writeOutPanelLayout);
         writeOutPanelLayout.setHorizontalGroup(
-            writeOutPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(writeOutPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(writeOutPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(writeOutPanelLayout.createSequentialGroup()
-                        .addComponent(headerOfTableLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(headerOfTableTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 387, Short.MAX_VALUE))
-                    .addComponent(pdfButton, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
-                    .addComponent(postScriptButton, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
-                    .addComponent(wmfButton, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
-                    .addComponent(tabulatedButton, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
-                    .addComponent(svgButton, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
-                    .addComponent(imageButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
-                    .addComponent(csvButton, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
-                    .addComponent(chartViewerButton, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
-                    .addComponent(seerPrepButton, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE))
-                .addContainerGap())
+                writeOutPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(writeOutPanelLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(writeOutPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(writeOutPanelLayout.createSequentialGroup()
+                                                .addComponent(headerOfTableLabel)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(headerOfTableTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 387, Short.MAX_VALUE))
+                                        .addComponent(pdfButton, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
+                                        .addComponent(postScriptButton, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
+                                        .addComponent(wmfButton, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
+                                        .addComponent(tabulatedButton, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
+                                        .addComponent(svgButton, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
+                                        .addComponent(imageButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
+                                        .addComponent(csvButton, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
+                                        .addComponent(chartViewerButton, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
+                                        .addComponent(seerPrepButton, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE))
+                                .addContainerGap())
         );
         writeOutPanelLayout.setVerticalGroup(
-            writeOutPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(writeOutPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(writeOutPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(headerOfTableLabel)
-                    .addComponent(headerOfTableTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pdfButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(postScriptButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(svgButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(imageButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(wmfButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tabulatedButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(csvButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(chartViewerButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(seerPrepButton)
-                .addContainerGap(132, Short.MAX_VALUE))
+                writeOutPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(writeOutPanelLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(writeOutPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(headerOfTableLabel)
+                                        .addComponent(headerOfTableTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(pdfButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(postScriptButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(svgButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(imageButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(wmfButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tabulatedButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(csvButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(chartViewerButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(seerPrepButton)
+                                .addContainerGap(132, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab(resourceMap.getString("writeOutPanel.TabConstraints.tabTitle"), writeOutPanel); // NOI18N
@@ -680,30 +688,30 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(tabbedPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 499, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(backButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cancelButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(nextButton)))
-                .addContainerGap())
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(tabbedPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 499, Short.MAX_VALUE)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(backButton)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(cancelButton)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(nextButton)))
+                                .addContainerGap())
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 452, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(nextButton)
-                    .addComponent(cancelButton)
-                    .addComponent(backButton))
-                .addContainerGap())
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 452, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(nextButton)
+                                        .addComponent(cancelButton)
+                                        .addComponent(backButton))
+                                .addContainerGap())
         );
 
         pack();
@@ -733,6 +741,19 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         for (PopulationDataset pds : populationDatasetsArray) {
             if (pds.getDate().length() >= 4) {
                 int year = Integer.parseInt(pds.getDate().substring(0, 4));
+                //<ictl.co>
+                if (LocalizationHelper.isRtlLanguageActive()) {
+                    GregorianCalendarCanReg calendarCanReg = null;
+                    try {
+                        calendarCanReg = DateHelper.parseDateStringToGregorianCalendarCanReg(pds.getDate(), Globals.DATE_FORMAT_STRING);
+                        String strDate = new SimpleDateFormat(Globals.DATE_FORMAT_STRING, ULocale.getDefault()).format(calendarCanReg);
+                        year = Integer.parseInt(strDate.substring(0, 4));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                        continue;
+                    }
+                }
+                //</ictl.co>
                 if (map.get(year) == null) {
                     map.put(year, pds);
                 }
@@ -877,10 +898,12 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     private void wmfButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wmfButtonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_wmfButtonActionPerformed
+
     private void dontUsePopulationDatasetCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dontUsePopulationDatasetCheckBoxActionPerformed
         // TODO add your handling code here:
         // dontUsePopsCheckboxUpdated();
     }//GEN-LAST:event_dontUsePopulationDatasetCheckBoxActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backButton;
     private javax.swing.JButton cancelButton;
@@ -934,6 +957,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     public void focusLost(java.awt.event.FocusEvent evt) {
                         startYearChooserFocusLost(evt);
                     }
+
                     private void startYearChooserFocusLost(FocusEvent evt) {
                         if (startYearChooser.getYear() > endYearChooser.getYear()) {
                             endYearChooser.setYear(startYearChooser.getYear());
@@ -1019,8 +1043,8 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
 
         // get directories of .confs
         File[] dirs = {
-            new File(Globals.TABLES_CONF_PATH),
-            new File(Globals.USER_TABLES_CONF_PATH)
+                new File(Globals.TABLES_CONF_PATH),
+                new File(Globals.USER_TABLES_CONF_PATH)
         };
 
         for (File dir : dirs) {
@@ -1160,6 +1184,11 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                         }
                     }
                 }
+                //<ictl.co>
+                if (LocalizationHelper.isRtlLanguageActive()) {
+                    populationFilterString = FilterHelper.analyzeFilterForDateAndReplace(populationFilterString);
+                }
+                //</ictl.co>
 
                 Globals.StandardVariableNames[] variablesNeeded = tableBuilder.getVariablesNeeded();
                 if (variablesNeeded != null) {
@@ -1172,7 +1201,13 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                 String filterString = rangeFilterPanel.getFilter().trim();
 
                 if (filterString.length() != 0) {
-                    filterString += " AND ";
+                    //<ictl.co>
+                    if (LocalizationHelper.isRtlLanguageActive()) {
+                        filterString = FilterHelper.analyzeFilterForDateAndReplace(filterString) + " AND ";
+                    } else {
+                        filterString += " AND ";
+                    }
+                    //</ictl.co>
                 }
 
                 if (populationFilterString.length() != 0) {
@@ -1181,7 +1216,25 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
 
                 // add the years to the filter
                 DatabaseVariablesListElement incidenceDate = canreg.client.CanRegClientApp.getApplication().getGlobalToolBox().translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.IncidenceDate.toString());
-                filterString += incidenceDate.getDatabaseVariableName() + " BETWEEN '" + startYear * 10000 + "' AND '" + ((endYear + 1) * 10000 - 1) + "'";
+                //<ictl.co>
+                if (LocalizationHelper.isRtlLanguageActive()) {
+
+                    if (LocalizationHelper.isPersianLocale()) {
+                        String startYearExact = DateHelper.localeDateStringToGregorianDateString(String.format("%s0101", startYear), Globals.DATE_FORMAT_STRING);
+                        String endYearExact = DateHelper.localeDateStringToGregorianDateString(String.format("%s12%s", endYear, (DateHelper.isLeapYear(endYear) ? "30" : 29)), Globals.DATE_FORMAT_STRING);
+/*
+                        startYear = DateHelper.convertJalaliYearToGregoranYear(startYear);
+                        endYear = DateHelper.convertJalaliYearToGregoranYear(endYear);
+*/
+
+                        filterString += incidenceDate.getDatabaseVariableName() + " BETWEEN '" + startYearExact + "' AND '" + endYearExact + "'";
+                    } else {
+                        filterString += incidenceDate.getDatabaseVariableName() + " BETWEEN '" + startYear * 10000 + "' AND '" + ((endYear + 1) * 10000 - 1) + "'";
+                    }
+                } else {
+                    filterString += incidenceDate.getDatabaseVariableName() + " BETWEEN '" + startYear * 10000 + "' AND '" + ((endYear + 1) * 10000 - 1) + "'";
+                }
+                //</ictl.co>
 
                 // filter only the confirmed cases
                 DatabaseVariablesListElement recordStatus = canreg.client.CanRegClientApp.getApplication().getGlobalToolBox().translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourRecordStatus.toString());
@@ -1215,16 +1268,16 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     // Build the table(s)
                     LinkedList<String> filesGenerated
                             = tableBuilder.buildTable(
-                                    heading,
-                                    fileName,
-                                    startYear,
-                                    endYear,
-                                    incidenceData,
-                                    populations,
-                                    standardPopulations,
-                                    tble.getConfigFields(),
-                                    tble.getEngineParameters(),
-                                    filetype);
+                            heading,
+                            fileName,
+                            startYear,
+                            endYear,
+                            incidenceData,
+                            populations,
+                            standardPopulations,
+                            tble.getConfigFields(),
+                            tble.getEngineParameters(),
+                            filetype);
 
                     if (filetype != FileTypes.jchart) {
 

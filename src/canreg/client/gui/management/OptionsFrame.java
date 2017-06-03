@@ -28,21 +28,20 @@ import canreg.client.gui.*;
 import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
 import canreg.common.Globals;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.rmi.RemoteException;
 import java.text.DateFormat;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Properties;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+
+import canreg.web.TomcatLauncher;
 import org.jdesktop.application.Action;
 
 /**
@@ -585,7 +584,70 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         );
 
         tabbedPane.addTab(resourceMap.getString("pathsPanel.TabConstraints.tabTitle"), pathsPanel); // NOI18N
+//<ictl.co>
+        webPanel = new javax.swing.JPanel();
+        serverPortLabel = new javax.swing.JLabel();
+        serverPortTextField = new javax.swing.JTextField();
+        serverLanuchButton = new javax.swing.JButton();
+        serverPanel = new javax.swing.JPanel();
 
+        webPanel.setName("webPanel"); //NOI18N
+
+        serverPortLabel.setText(resourceMap.getString("serverPortLabel.text")); // NOI18N
+        serverPortLabel.setName("serverPortLabel"); // NOI18N
+
+        serverPortTextField.setText(resourceMap.getString("serverPortTextField.text")); // NOI18N
+        serverPortTextField.setToolTipText(resourceMap.getString("serverPortTextField.toolTipText")); // NOI18N
+        serverPortTextField.setName("serverPortTextField"); // NOI18N
+
+        serverLanuchButton.setAction(actionMap.get("serverLaunch")); // NOI18N
+        serverLanuchButton.setText(resourceMap.getString("serverLaunchButton.text")); // NOI18N
+        serverLanuchButton.setName("serverLaunchButton"); // NOI18N
+
+        serverPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("serverPanel.border.title"))); // NOI18N
+        serverPanel.setName("serverPanel"); // NOI18N
+        javax.swing.GroupLayout serverPanelLayout = new javax.swing.GroupLayout(serverPanel);
+        serverPanel.setLayout(serverPanelLayout);
+
+        serverPanelLayout.setHorizontalGroup(
+                serverPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(serverPanelLayout.createSequentialGroup()
+                                .addComponent(serverPortLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(serverPortTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(serverLanuchButton)
+                                .addContainerGap())
+        );
+        serverPanelLayout.setVerticalGroup(
+                serverPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(serverPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(serverPortLabel)
+                                .addComponent(serverPortTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(serverLanuchButton))
+        );
+
+
+        javax.swing.GroupLayout webPanelLayout = new javax.swing.GroupLayout(webPanel);
+        webPanel.setLayout(webPanelLayout);
+        webPanelLayout.setHorizontalGroup(
+                webPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(webPanelLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(webPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(serverPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addContainerGap())
+        );
+        webPanelLayout.setVerticalGroup(
+                webPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(webPanelLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(serverPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        )
+        );
+
+        tabbedPane.addTab(resourceMap.getString("web.TabConstraints.tabTitle"), webPanel); // NOI18N
+        //</ictl.co>
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -678,6 +740,13 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
     private javax.swing.JCheckBox newDataEntryVerticalSources;
     private javax.swing.JTextField numberOfDaysTextField;
     private javax.swing.JPanel pathsPanel;
+    //<ictl.co>
+    private javax.swing.JPanel webPanel;
+    private javax.swing.JPanel serverPanel;
+    private javax.swing.JLabel serverPortLabel;
+    private javax.swing.JTextField serverPortTextField;
+    private javax.swing.JButton serverLanuchButton;
+    //</ictl.co>
     private javax.swing.JButton rInstallationBrowseButton;
     private javax.swing.JLabel rInstallationLabel;
     private javax.swing.JTextField rInstallationTextField;
@@ -694,6 +763,12 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         localSettings = CanRegClientApp.getApplication().getLocalSettings();
         // Languages
         locales = Locale.getAvailableLocales();
+        //<ictl.co>
+        List<Locale> tmp = new ArrayList<Locale>(Arrays.asList(locales));
+        tmp.add(new Locale("fa", "IR"));
+        locales = tmp.toArray(new Locale[0]);
+        //</ictl.co>
+
         Arrays.sort(locales, new Comparator<Locale>() {
 
             @Override
@@ -726,6 +801,14 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         locales = (Locale[]) localesList.toArray(locales);
         languageComboBox.setModel(new javax.swing.DefaultComboBoxModel(localesNamesList.toArray()));
         languageComboBox.setSelectedIndex(currentLocaleIndex);
+        //<ictl.co>
+        languageComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(null, "To make changes effect please restart CanReg5.");
+            }
+        });
+        //<ictl.co>
 
         showOutlineCheckBox.setSelected(localSettings.isOutlineDragMode());
         // CanReg verison
@@ -773,6 +856,11 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         newDataEntryVerticalSources.setSelected(localSettings.isDataEntryVerticalSources());
         String dataEntryVersion = localSettings.getProperty(LocalSettings.DATA_ENTRY_VERSION_KEY);
         dataEntryVersionComboBox.setSelectedItem(dataEntryVersion);
+
+        //<ictl.co>
+        serverPortTextField.setText(localSettings.getProperty("webserver.port"));
+        //</ictl.co>
+
     }
 
     private String getNewestVersionNumber() {
@@ -900,5 +988,23 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
             gsInstallationTextField.setText(chooser.getSelectedFile().getAbsolutePath());
         }
     }
-    
+
+    //<ictl.co>
+    @Action
+    public void serverLaunch() {
+        int webPort = 0;
+        try {
+            webPort = Integer.parseInt(serverPortTextField.getText());
+            localSettings.setProperty("webserver.port", serverPortTextField.getText());
+            TomcatLauncher.launch(webPort);
+            JOptionPane.showMessageDialog(null, "Web Server Started Successfully.");
+            canreg.common.Tools.browse("http://localhost:" + serverPortTextField.getText());
+        } catch (NumberFormatException nfe) {
+            Logger.getLogger(OptionsFrame.class.getName()).log(Level.SEVERE, null, nfe);
+            JOptionPane.showMessageDialog(null, "Invalid Port number.");
+        } catch (IOException e) {
+            Logger.getLogger(OptionsFrame.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }
+    //</ictl.co>
 }

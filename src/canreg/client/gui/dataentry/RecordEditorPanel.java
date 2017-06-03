@@ -56,7 +56,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -68,6 +67,8 @@ import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import com.ibm.icu.util.Calendar;
 import org.jdesktop.application.Action;
 import org.w3c.dom.Document;
 
@@ -568,6 +569,10 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
                 vep = new DateVariableEditorPanel(this);
             } else if (Globals.VARIABLE_TYPE_TEXT_AREA_NAME.equalsIgnoreCase(variableType)) {
                 vep = new TextFieldVariableEditorPanel(this);
+//<ictl.co>
+            } else if (Globals.VARIABLE_TYPE_NCID_NAME.equalsIgnoreCase(variableType)) {
+                vep = new NCIDFieldVariableEditorPanel(this);
+//</ictl.co>
             } else {
                 vep = new VariableEditorPanel(this);
             }

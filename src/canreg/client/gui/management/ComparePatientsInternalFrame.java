@@ -1,17 +1,17 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
  * Copyright (C) 2008-2015  International Agency for Research on Cancer
- *
+ * <p>
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -29,12 +29,7 @@ import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
 import canreg.client.gui.CanRegClientView;
 import canreg.client.gui.dataentry.RecordEditor;
-import canreg.common.DatabaseFilter;
-import canreg.common.GlobalToolBox;
-import canreg.common.Globals;
-import canreg.common.Pair;
-import canreg.common.PersonSearchVariable;
-import canreg.common.Tools;
+import canreg.common.*;
 import canreg.common.cachingtableapi.DistributedTableDescription;
 import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.common.database.DatabaseRecord;
@@ -42,8 +37,16 @@ import canreg.common.database.Patient;
 import canreg.common.database.Tumour;
 import canreg.server.database.RecordLockedException;
 import canreg.server.database.UnknownTableException;
-import java.awt.Component;
-import java.awt.Cursor;
+import org.jdesktop.application.Action;
+import org.w3c.dom.Document;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.TableColumnModelEvent;
+import javax.swing.event.TableColumnModelListener;
+import javax.swing.table.*;
+import java.awt.*;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.Comparator;
@@ -66,6 +69,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import org.jdesktop.application.Action;
 import org.w3c.dom.Document;
+
 
 /**
  *
@@ -117,7 +121,7 @@ public class ComparePatientsInternalFrame extends javax.swing.JInternalFrame {
 
     private void rowClicked(java.awt.event.MouseEvent evt) {
         JTable target = (JTable) evt.getSource();
-        if (evt.getClickCount() == 2) {  
+        if (evt.getClickCount() == 2) {
             if (target.columnAtPoint(evt.getPoint()) != 0) {
                 int rowNumber = target.rowAtPoint(evt.getPoint());
                 TableModel model = target.getModel();
@@ -194,24 +198,24 @@ public class ComparePatientsInternalFrame extends javax.swing.JInternalFrame {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(409, Short.MAX_VALUE)
-                .addComponent(mergeButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(closeButton)
-                .addContainerGap())
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 631, Short.MAX_VALUE)
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addContainerGap(409, Short.MAX_VALUE)
+                                .addComponent(mergeButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(closeButton)
+                                .addContainerGap())
+                        .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 631, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 530, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(closeButton)
-                    .addComponent(mergeButton))
-                .addContainerGap())
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 530, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(closeButton)
+                                        .addComponent(mergeButton))
+                                .addContainerGap())
         );
 
         pack();
@@ -242,8 +246,8 @@ public class ComparePatientsInternalFrame extends javax.swing.JInternalFrame {
     private void refreshTable() {
         Patient mainPatient = mainRecord.getFirst();
         String[] columnNames = canreg.common.Tools.arrayConcat(new String[]{
-                    firstColumnName,
-                    "Percent", patientIDlookupVariable}, defaultColumns);
+                firstColumnName,
+                "Percent", patientIDlookupVariable}, defaultColumns);
         Object[][] data = new Object[recordSets.size() + 1][columnNames.length];
         // add the main one
         List<Object> line = new LinkedList<Object>();
@@ -274,14 +278,25 @@ public class ComparePatientsInternalFrame extends javax.swing.JInternalFrame {
         resultTable = new javax.swing.JTable(tableModel) {
             @Override
             public Component prepareRenderer(TableCellRenderer renderer, int row,
-                    int column) {
+                                             int column) {
                 Component component = super.prepareRenderer(renderer, row, column);
                 int rendererWidth = component.getPreferredSize().width;
                 TableColumn tableColumn = getColumnModel().getColumn(column);
                 tableColumn.setPreferredWidth(Math.max(rendererWidth
-                        + getIntercellSpacing().width,
+                                + getIntercellSpacing().width,
                         tableColumn.getPreferredWidth()));
-                return component;
+//<ictl.co>
+                if (LocalizationHelper.isRtlLanguageActive()) {
+                    if (component instanceof DefaultTableCellRenderer.UIResource) {
+                        String value = ((DefaultTableCellRenderer.UIResource) component).getText();
+                        if (DateHelper.analyseContentForDateValue(value)) {
+                            value = DateHelper.gregorianDateStringToLocaleDateString(value, Globals.DATE_FORMAT_STRING);
+                            ((DefaultTableCellRenderer.UIResource) component).setText(value);
+                        }
+                    }
+                }
+//</ictl.co>
+               return component;
             }
         };
 
@@ -403,7 +418,13 @@ public class ComparePatientsInternalFrame extends javax.swing.JInternalFrame {
 
                     @Override
                     public int compare(DatabaseRecord o1, DatabaseRecord o2) {
-                        return (o1.getVariable(tumourIDlookupVariable).toString().compareTo(o2.getVariable(tumourIDlookupVariable).toString()));
+                        //<ictl.co> FIX NPE Error
+                        if (o1.getVariable(tumourIDlookupVariable) == null || o2.getVariable(tumourIDlookupVariable) == null) {
+                            return (o1.getVariable(patientIDTumourTablelookupVariable).toString().compareTo(o2.getVariable(patientIDTumourTablelookupVariable).toString()));
+                        } else {
+                            return (o1.getVariable(tumourIDlookupVariable).toString().compareTo(o2.getVariable(tumourIDlookupVariable).toString()));
+                        }
+                        //</ictl.co>
                     }
                 });
                 // Get all the tumour records for all the patient records...
@@ -451,6 +472,7 @@ public class ComparePatientsInternalFrame extends javax.swing.JInternalFrame {
             setCursor(normalCursor);
         }
     }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton closeButton;
     private javax.swing.JScrollPane jScrollPane1;
@@ -478,7 +500,7 @@ public class ComparePatientsInternalFrame extends javax.swing.JInternalFrame {
 
         @Override
         public boolean isCellEditable(int row, int col) {
-            if (col == 0 && row!=0) //first column will be editable, excapt first line
+            if (col == 0 && row != 0) //first column will be editable, excapt first line
             {
                 return true;
             } else {
