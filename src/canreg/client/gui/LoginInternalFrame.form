@@ -29,7 +29,7 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jTabbedPane1" alignment="1" max="32767" attributes="0"/>
+                  <Component id="jTabbedPane1" alignment="1" pref="550" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="feedbackLabel" max="32767" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -113,13 +113,13 @@
                       </Group>
                       <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="canRegSystemComboBox" alignment="0" pref="364" max="32767" attributes="0"/>
+                          <Component id="canRegSystemComboBox" alignment="0" pref="463" max="32767" attributes="0"/>
                           <Group type="102" alignment="1" attributes="0">
-                              <Component id="passwordField" pref="237" max="32767" attributes="1"/>
+                              <Component id="passwordField" pref="336" max="32767" attributes="1"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="rememberPasswordCheckBox" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="usernameTextField" alignment="1" pref="364" max="32767" attributes="1"/>
+                          <Component id="usernameTextField" alignment="1" pref="463" max="32767" attributes="1"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -238,14 +238,14 @@
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                       <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="codeField" pref="34" max="32767" attributes="1"/>
+                                      <Component id="codeField" pref="133" max="32767" attributes="1"/>
                                   </Group>
-                                  <Component id="nameTextField" pref="364" max="32767" attributes="0"/>
+                                  <Component id="nameTextField" pref="463" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
                               <Component id="advancedCheckBox" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="111" max="32767" attributes="0"/>
+                              <EmptySpace pref="210" max="32767" attributes="0"/>
                               <Component id="launchServerButton" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="addServerToListButton" min="-2" max="-2" attributes="0"/>
@@ -343,7 +343,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="singleUserCheckBox" alignment="0" pref="390" max="32767" attributes="0"/>
+                              <Component id="singleUserCheckBox" alignment="0" pref="493" max="32767" attributes="0"/>
                               <Component id="autoStartCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="jButton2" min="-2" max="-2" attributes="0"/>
@@ -352,7 +352,7 @@
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="portLabel" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="portField" pref="136" max="32767" attributes="1"/>
+                                  <Component id="portField" pref="239" max="32767" attributes="1"/>
                               </Group>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>

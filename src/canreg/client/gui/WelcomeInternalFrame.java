@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2015  International Agency for Research on Cancer
+ * Copyright (C) 2008-2017  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -73,7 +73,7 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
             for (String part : Globals.versionStringParts) {
                 versionString += appInfoProperties.getProperty(part);
             }
-            versionString += "build" + appInfoProperties.getProperty("program.BUILDNUM");
+            versionString += "-build" + appInfoProperties.getProperty("program.BUILDNUM");
             versionString += " (" + appInfoProperties.getProperty("program.BUILDDATE") + ")";
             versionLabel.setText(versionLabel.getText() + " " + versionString);
         } catch (IOException ex) {
@@ -90,19 +90,27 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
     private void initComponents() {
 
         mainPanel = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
+        jPanel4 = new javax.swing.JPanel();
         logoButton = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
         aboutScrollPane = new javax.swing.JScrollPane();
         aboutEditorPane = new javax.swing.JEditorPane();
+        jPanel5 = new javax.swing.JPanel();
         buttonPanel = new javax.swing.JPanel();
         loginButton = new javax.swing.JButton();
         restoreBackupButton = new javax.swing.JButton();
-        versionLabel = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        versionLabel = new javax.swing.JLabel();
 
         setClosable(true);
+        setMaximizable(true);
+        setResizable(true);
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(WelcomeInternalFrame.class);
         setFrameIcon(resourceMap.getIcon("Form.frameIcon")); // NOI18N
         setName("Form"); // NOI18N
+        setPreferredSize(new java.awt.Dimension(670, 495));
         try {
             setSelected(true);
         } catch (java.beans.PropertyVetoException e1) {
@@ -113,8 +121,15 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
                 formFocusLost(evt);
             }
         });
+        getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.Y_AXIS));
 
         mainPanel.setName("mainPanel"); // NOI18N
+        mainPanel.setLayout(new java.awt.GridLayout(1, 2, 0, 11));
+
+        jPanel1.setName("jPanel1"); // NOI18N
+        jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.PAGE_AXIS));
+
+        jPanel4.setName("jPanel4"); // NOI18N
 
         logoButton.setIcon(resourceMap.getIcon("logoButton.icon")); // NOI18N
         logoButton.setBorder(null);
@@ -125,6 +140,10 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
         logoButton.setName("logoButton"); // NOI18N
         logoButton.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
+        jPanel2.setName("jPanel2"); // NOI18N
+
+        aboutScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        aboutScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         aboutScrollPane.setName("aboutScrollPane"); // NOI18N
 
         aboutEditorPane.setEditable(false);
@@ -137,8 +156,49 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
         aboutEditorPane.setRequestFocusEnabled(false);
         aboutScrollPane.setViewportView(aboutEditorPane);
 
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(aboutScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(aboutScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(logoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(logoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPanel1.add(jPanel4);
+
+        mainPanel.add(jPanel1);
+
+        jPanel5.setName("jPanel5"); // NOI18N
+
         buttonPanel.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         buttonPanel.setName("buttonPanel"); // NOI18N
+        buttonPanel.setLayout(new java.awt.GridLayout(2, 1));
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(WelcomeInternalFrame.class, this);
         loginButton.setAction(actionMap.get("showLoginFrame")); // NOI18N
@@ -147,35 +207,38 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
         loginButton.setToolTipText(resourceMap.getString("loginButton.toolTipText")); // NOI18N
         loginButton.setActionCommand(resourceMap.getString("loginButton.actionCommand")); // NOI18N
         loginButton.setName("loginButton"); // NOI18N
+        buttonPanel.add(loginButton);
 
         restoreBackupButton.setAction(actionMap.get("installNewSystemAction")); // NOI18N
         restoreBackupButton.setToolTipText(resourceMap.getString("restoreBackupButton.toolTipText")); // NOI18N
         restoreBackupButton.setActionCommand(resourceMap.getString("restoreBackupButton.actionCommand")); // NOI18N
         restoreBackupButton.setName("restoreBackupButton"); // NOI18N
+        buttonPanel.add(restoreBackupButton);
 
-        javax.swing.GroupLayout buttonPanelLayout = new javax.swing.GroupLayout(buttonPanel);
-        buttonPanel.setLayout(buttonPanelLayout);
-        buttonPanelLayout.setHorizontalGroup(
-            buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, buttonPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(loginButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
-                    .addComponent(restoreBackupButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE))
-                .addContainerGap())
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 311, Short.MAX_VALUE)
+            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                    .addComponent(buttonPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
+                    .addContainerGap()))
         );
-        buttonPanelLayout.setVerticalGroup(
-            buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(buttonPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(loginButton, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(restoreBackupButton, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
-                .addContainerGap())
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 381, Short.MAX_VALUE)
+            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(buttonPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)))
         );
 
-        versionLabel.setText(resourceMap.getString("versionLabel.text")); // NOI18N
-        versionLabel.setName("versionLabel"); // NOI18N
+        mainPanel.add(jPanel5);
+
+        getContentPane().add(mainPanel);
+
+        jPanel3.setName("jPanel3"); // NOI18N
 
         jLabel1.setForeground(resourceMap.getColor("jLabel1.foreground")); // NOI18N
         jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
@@ -186,55 +249,31 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
             }
         });
 
-        javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
-        mainPanel.setLayout(mainPanelLayout);
-        mainPanelLayout.setHorizontalGroup(
-            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(mainPanelLayout.createSequentialGroup()
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(aboutScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 347, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(mainPanelLayout.createSequentialGroup()
-                                .addComponent(versionLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel1)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(logoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(29, 29, 29)))
-                .addComponent(buttonPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        mainPanelLayout.setVerticalGroup(
-            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(mainPanelLayout.createSequentialGroup()
+        versionLabel.setText(resourceMap.getString("versionLabel.text")); // NOI18N
+        versionLabel.setName("versionLabel"); // NOI18N
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(buttonPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addComponent(logoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(aboutScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(versionLabel)
-                            .addComponent(jLabel1))))
+                .addComponent(versionLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel1)
+                .addContainerGap(510, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(versionLabel))
                 .addContainerGap())
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
+        getContentPane().add(jPanel3);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -292,6 +331,11 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane aboutScrollPane;
     private javax.swing.JPanel buttonPanel;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JButton loginButton;
     private javax.swing.JButton logoButton;
     private javax.swing.JPanel mainPanel;

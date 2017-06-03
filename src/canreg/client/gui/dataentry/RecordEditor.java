@@ -79,7 +79,8 @@ import org.w3c.dom.Document;
  *
  * @author  ervikm
  */
-public class RecordEditor extends javax.swing.JInternalFrame implements ActionListener {
+public class RecordEditor extends javax.swing.JInternalFrame 
+        implements ActionListener, canreg.client.gui.dataentry2.RecordEditor {
 
     public static final String CHANGED = "changed";
     public static final String CHECKS = "checks";

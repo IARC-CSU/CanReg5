@@ -1,4 +1,4 @@
-<?xml version="1.1" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 
 <Form version="1.5" maxVersion="1.5" type="org.netbeans.modules.form.forminfo.JInternalFrameFormInfo">
   <Properties>
@@ -29,7 +29,7 @@
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="tabbedPane" alignment="1" pref="478" max="32767" attributes="0"/>
+                  <Component id="tabbedPane" alignment="1" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="jButton2" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -44,7 +44,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="tabbedPane" pref="285" max="32767" attributes="0"/>
+              <Component id="tabbedPane" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -113,8 +113,8 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="languagePanel" min="-2" pref="75" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="lookAndFeelPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="66" max="32767" attributes="0"/>
+                      <Component id="lookAndFeelPanel" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -245,6 +245,13 @@
                                   <Component id="showOutlineCheckBox" pref="413" max="32767" attributes="0"/>
                                   <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                               </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="dataEntryLabel" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="dataEntryVersionComboBox" pref="323" max="32767" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                              </Group>
+                              <Component id="newDataEntryVerticalSources" alignment="0" pref="431" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -263,6 +270,14 @@
                           </Group>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="showOutlineCheckBox" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="dataEntryLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="dataEntryVersionComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Component id="newDataEntryVerticalSources" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace pref="15" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -307,6 +322,30 @@
                     <Property name="name" type="java.lang.String" value="fontSizeLabel" noResource="true"/>
                   </Properties>
                 </Component>
+                <Component class="javax.swing.JLabel" name="dataEntryLabel">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" resourceKey="dataEntryLabel.text"/>
+                    <Property name="name" type="java.lang.String" value="dataEntryLabel" noResource="true"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JComboBox" name="dataEntryVersionComboBox">
+                  <Properties>
+                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                      <StringArray count="2">
+                        <StringItem index="0" value="New Version"/>
+                        <StringItem index="1" value="Original Version"/>
+                      </StringArray>
+                    </Property>
+                    <Property name="name" type="java.lang.String" value="dataEntryVersionComboBox" noResource="true"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="newDataEntryVerticalSources">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" resourceKey="newDataEntryVerticalSources.text"/>
+                    <Property name="toolTipText" type="java.lang.String" resourceKey="newDataEntryVerticalSources.toolTipText"/>
+                    <Property name="name" type="java.lang.String" value="newDataEntryVerticalSources" noResource="true"/>
+                  </Properties>
+                </Component>
               </SubComponents>
             </Container>
           </SubComponents>
@@ -338,7 +377,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="automaticBackupPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="155" max="32767" attributes="0"/>
+                      <EmptySpace pref="172" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -360,14 +399,13 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
                               <Group type="102" attributes="0">
-                                  <EmptySpace max="-2" attributes="0"/>
                                   <Component id="automaticbackupCheckBox" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace pref="199" max="32767" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
-                                  <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                               </Group>
@@ -478,7 +516,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="versionPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="152" max="32767" attributes="0"/>
+                      <EmptySpace pref="169" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -649,7 +687,7 @@
                       <Component id="rPanel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="gsPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="148" max="32767" attributes="0"/>
+                      <EmptySpace pref="165" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>

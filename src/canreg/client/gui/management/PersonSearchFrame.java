@@ -29,11 +29,13 @@ import canreg.server.database.RecordLockedException;
 import canreg.server.database.UnknownTableException;
 import canreg.common.cachingtableapi.DistributedTableDescription;
 import canreg.client.CanRegClientApp;
+import canreg.client.LocalSettings;
 import canreg.client.gui.dataentry.BrowseInternalFrame;
 import canreg.client.gui.dataentry.RecordEditor;
 import canreg.common.DatabaseFilter;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
+import canreg.common.qualitycontrol.DefaultPersonSearch;
 import canreg.common.database.DatabaseRecord;
 import canreg.common.database.Patient;
 import canreg.common.database.Tumour;
@@ -60,7 +62,7 @@ import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
 import org.w3c.dom.Document;
 import canreg.common.cachingtableapi.DistributedTableDescriptionException;
-import canreg.common.qualitycontrol.PersonSearcher;
+import javax.swing.JInternalFrame;
 
 /**
  *
@@ -68,22 +70,22 @@ import canreg.common.qualitycontrol.PersonSearcher;
  */
 public class PersonSearchFrame extends javax.swing.JInternalFrame implements ActionListener {
 
-    private final PersonSearchListener listener;
+    private PersonSearchListener listener;
     private Task duplicateSearchTask;
     private JDesktopPane desktopPane;
-    private final Document doc;
+    private Document doc;
     private String personSearchHandlerID;
     int recordsTested;
     int matchesFound;
-    private final DefaultTableModel resultTableModel;
+    private DefaultTableModel resultTableModel;
     boolean personSearcherRunning = false;
     private GlobalToolBox globalToolBox;
     private String patientIDlookupVariable;
     private String patientIDTumourTablelookupVariable;
     private String tumourIDlookupVariable;
+    private LocalSettings localSettings;
 
-    /** Creates new form PersonSearchFrame
-     * @param desktopPane */
+    /** Creates new form PersonSearchFrame */
     public PersonSearchFrame(JDesktopPane desktopPane) {
         this.desktopPane = desktopPane;
 
@@ -91,6 +93,8 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
         patientIDlookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName();
         patientIDTumourTablelookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientIDTumourTable.toString()).getDatabaseVariableName();
         tumourIDlookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
+        
+        localSettings = CanRegClientApp.getApplication().getLocalSettings();
 
         resultTableModel = new DefaultTableModel(new String[]{java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/PersonSearchFrame").getString("PATIENT A RECORD ID"), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/PersonSearchFrame").getString("PATIENT B RECORD ID"), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/PersonSearchFrame").getString("MATCH %")}, 0) {
 
@@ -149,7 +153,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 columnTableMousePressed(evt);
             }
-        });
+        });                
     }
 
     /** This method is called from within the constructor to
@@ -418,7 +422,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
         duplicateSearchTask = new PerformDuplicateSearchTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
         performButton.setEnabled(false);
         interruptButton.setEnabled(true);
-        PersonSearcher searcher = personSearchVariablesPanel1.getSearcher();
+        DefaultPersonSearch searcher = personSearchVariablesPanel1.getSearcher();
         // TODO: File selector?
         try {
             String rangeStart = rangeStartTextField.getText();
@@ -665,7 +669,13 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
 
         String tableName = Globals.PATIENT_TABLE_NAME;
 
-        RecordEditor recordEditor = new RecordEditor(desktopPane);
+        canreg.client.gui.dataentry2.RecordEditor recordEditor = null;
+        String dataEntryVersion = localSettings.getProperty(LocalSettings.DATA_ENTRY_VERSION_KEY);
+        if (dataEntryVersion.equalsIgnoreCase(LocalSettings.DATA_ENTRY_VERSION_NEW))
+            recordEditor = new canreg.client.gui.dataentry2.RecordEditorMainFrame(desktopPane);
+        else 
+            recordEditor = new RecordEditor(desktopPane);
+        
         recordEditor.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
         recordEditor.setDictionary(CanRegClientApp.getApplication().getDictionary());
         DatabaseRecord record = null;
@@ -739,8 +749,8 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                     // store them in a map, so we don't show them several times
                     recordEditor.addRecord(rec);
                 }
-                CanRegClientView.showAndPositionInternalFrame(desktopPane, recordEditor);
-                CanRegClientView.maximizeHeight(desktopPane, recordEditor);
+                CanRegClientView.showAndPositionInternalFrame(desktopPane, (JInternalFrame)recordEditor);
+                CanRegClientView.maximizeHeight(desktopPane, (JInternalFrame)recordEditor);
             } else {
                 JOptionPane.showMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("RECORD_NOT_FOUND"), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             }

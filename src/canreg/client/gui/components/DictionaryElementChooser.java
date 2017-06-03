@@ -138,9 +138,8 @@ public class DictionaryElementChooser extends javax.swing.JInternalFrame {
             }
             if (categoryCode != null) {
                 possibleValuesCollection.addAll(
-                        Arrays.asList(
-                        DictionaryHelper.getDictionaryEntriesStartingWith(
-                        categoryCode, dictionary.getDictionaryEntries().values().toArray(new DictionaryEntry[0]))));
+                        DictionaryHelper.getDictionaryEntriesCodeStartingWith(
+                        categoryCode, dictionary.getDictionaryEntries().values().toArray(new DictionaryEntry[0])));
 
             } else // we're on the second pass with no starts with selected, so we show all codes
             {

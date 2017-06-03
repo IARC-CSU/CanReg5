@@ -31,7 +31,6 @@ import canreg.common.Globals;
 import canreg.common.PersonSearchVariable;
 import canreg.common.Tools;
 import canreg.common.qualitycontrol.DefaultPersonSearch;
-import canreg.common.qualitycontrol.PersonSearcher;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -48,7 +47,7 @@ public class PersonSearchVariablesPanel extends javax.swing.JPanel implements Ac
     private Document doc;
     private DatabaseVariablesListElement[] variablesInDB;
     private LinkedList<PersonSearchVariablePanel> personSearchVariablePanelList;
-    private PersonSearcher searcher;
+    private DefaultPersonSearch searcher;
 
     /** Creates new form PersonSearchVariablesPanel */
     public PersonSearchVariablesPanel() {
@@ -70,8 +69,8 @@ public class PersonSearchVariablesPanel extends javax.swing.JPanel implements Ac
         setSearcher(searcher);
     }
 
-    private void setSearcher(PersonSearcher searcher) {
-        PersonSearchVariable[] searchVariables = searcher.getSearchVariables();
+    private void setSearcher(DefaultPersonSearch searcher) {
+        PersonSearchVariable[] searchVariables = searcher.getPersonSearchVariables();
         personSearchVariablePanelList = new LinkedList<PersonSearchVariablePanel>();
         variablesListPanel.removeAll();
         for (PersonSearchVariable searchVariable : searchVariables) {
@@ -87,12 +86,12 @@ public class PersonSearchVariablesPanel extends javax.swing.JPanel implements Ac
      * 
      * @return
      */
-    public PersonSearcher getSearcher() {
+    public DefaultPersonSearch getSearcher() {
         return buildSearcher();
     }
 
-    private PersonSearcher buildSearcher() {
-        PersonSearcher newPersonSearch = null;
+    private DefaultPersonSearch buildSearcher() {
+        DefaultPersonSearch newPersonSearch = null;
         if (!defaultSettingsToggleButton.isSelected()||!defaultSettingsToggleButton.isVisible()) {
             newPersonSearch = new DefaultPersonSearch(variablesInDB);
             Component[] components = variablesListPanel.getComponents();

@@ -1,5 +1,17 @@
 Changelog
 
+5.00.41b
+- Fixed bug in generation of variables list if source table contains more fields than patient table.
+
+5.00.41
+- New data entry form. (Developed in collaboration with Betty Carballo and Patricio Carranza.)
+- Ability to enable/disble new data entry form in Options.
+- Removed latest news since Twitter no longer allows access to their API like that.
+- Improved layout for login and welcome screens for big fonts.
+- Updated Spanish translation.
+- Updated JavaDB to version 10.13.1.1.
+- Small fixes.
+
 5.00.40
 - Date format for data entry can now be chosen at user level. (Under "Options".)
 - Added detection of uninstallation/reinstallation/updates of R/GS software.

@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2015  International Agency for Research on Cancer
+ * Copyright (C) 2008-2017  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -260,7 +260,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         }
 
         String versionString = canRegSystemVersionString;
-        versionString += "build" + appInfoProperties.getProperty("program.BUILDNUM");
+        versionString += "-build" + appInfoProperties.getProperty("program.BUILDNUM");
         versionString += " (" + appInfoProperties.getProperty("program.BUILDDATE") + ")";
         Logger.getLogger(CanRegClientApp.class.getName()).log(Level.INFO, "CanReg version: {0}", versionString);
 

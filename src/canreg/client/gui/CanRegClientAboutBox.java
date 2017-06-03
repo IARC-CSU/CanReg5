@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2015  International Agency for Research on Cancer
+ * Copyright (C) 2008-2017  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -216,20 +216,14 @@ public class CanRegClientAboutBox extends javax.swing.JDialog implements Hyperli
                 .addContainerGap())
         );
 
-        String versionString = "";
-        for (String part:Globals.versionStringParts){
-            versionString += appInfoProperties.getProperty(part);
-        }
-        versionString += "build"+appInfoProperties.getProperty("program.BUILDNUM");
-        versionString += " ("+appInfoProperties.getProperty("program.BUILDDATE")+")";
-        appVersionLabel.setText(versionString);
+        String versionString = ""; for (String part:Globals.versionStringParts){     versionString += appInfoProperties.getProperty(part); } versionString += "-build"+appInfoProperties.getProperty("program.BUILDNUM"); versionString += " ("+appInfoProperties.getProperty("program.BUILDDATE")+")"; appVersionLabel.setText(versionString);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
 private void homepageLabelMouseClick(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homepageLabelMouseClick
     try {
-        canreg.common.Tools.browse(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientAboutBox").getString("http://canreg.iarc.fr/"));
+        canreg.common.Tools.browse(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientAboutBox").getString("http://www.iacr.com.fr/CanReg5"));
     } catch (IOException ex) {
         Logger.getLogger(CanRegClientAboutBox.class.getName()).log(Level.SEVERE, null, ex);
     }
