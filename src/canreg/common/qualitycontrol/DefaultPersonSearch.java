@@ -64,14 +64,6 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
 
     /**
      * 
-     * @return
-     */
-    public synchronized PersonSearchVariable[] getPersonSearchVariables() {
-        return searchVariables;
-    }
-
-    /**
-     * 
      * @param personSearchVariables
      */
     @Override

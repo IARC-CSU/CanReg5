@@ -186,6 +186,14 @@ public class Globals {
      *
      */
     public static String DATE_FORMAT_STRING = "yyyyMMdd";
+    
+    public static String[] DATE_FORMAT_STRINGS_ARRAY = {
+        "yyyyMMdd",
+        "dd/MM/yyyy",
+        "MM/dd/yyyy",
+        "yyyy-MM-dd"
+    };
+   
     public static String DATAENTRY_LANGUAGE_ENGLISH = "en";
     public static String DATAENTRY_LANGUAGE_FRENCH = "fr";
     public static String DATAENTRY_LANGUAGE_SPANISH = "es";

@@ -597,7 +597,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         systemDescription.setGroups((DatabaseGroupsListElement[]) databaseGroupPanel.getDatabaseElements());
         systemDescription.setVariables((DatabaseVariablesListElement[]) databaseVariablePanel.getDatabaseElements());
         systemDescription.setIndexes((DatabaseIndexesListElement[]) databaseIndexPanel.getDatabaseElements());
-        systemDescription.setPersonSearcher((PersonSearcher) personSearchVariablesPanel.getSearcher());
+        systemDescription.setPersonSearcher(personSearchVariablesPanel.getSearcher());
         // save doc
         fileName = Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + File.separator + registryCodeTextField.getText().trim() + ".xml";
         File file = new File(fileName);
