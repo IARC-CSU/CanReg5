@@ -75,6 +75,7 @@ public final class RangeFilterPanel extends javax.swing.JPanel implements Action
         // comment the following lines away if you want to change the GUIs using this bean.
         globalToolBox = canreg.client.CanRegClientApp.getApplication().getGlobalToolBox();
         setDeskTopPane(canreg.client.CanRegClientApp.getApplication().getDeskTopPane());
+        ////
     }
 
     /**

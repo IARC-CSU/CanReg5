@@ -48,15 +48,16 @@ public class MaxLengthDocument extends PlainDocument {
 
     @Override
     public void insertString(final int offset, final String str,
-            final AttributeSet attr) throws BadLocationException {
-
-        actionListener.actionPerformed(new ActionEvent(this, 0, CHANGED_ACTION_STRING));
-
+            final AttributeSet attr) throws BadLocationException {        
         if (getLength() + str.length() > maxLength) {
             Toolkit.getDefaultToolkit().beep();
             return;
         }
+        
         super.insertString(offset, str, attr);
+        
+        actionListener.actionPerformed(new ActionEvent(this, 0, CHANGED_ACTION_STRING));
+        
         if (getLength() == maxLength&&actionListener!=null) {
             actionListener.actionPerformed(new ActionEvent(this, 0, MAX_LENGTH_ACTION_STRING));
         }

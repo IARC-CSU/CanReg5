@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.w3c.dom.Element;
@@ -249,14 +250,44 @@ public class DictionaryHelper {
         }
     }
 
-    public static DictionaryEntry[] getDictionaryEntriesStartingWith(String start, DictionaryEntry[] dictionaryEntries) {
+    /**
+     * Returns a list of DictionaryEntry's which code starts with the passed 
+     * parameter. Example: if codeStart = 0023, then all entries that have 
+     * those 4 digits at the start will be returned.
+     * @param codeStart
+     * @param dictionaryEntries
+     * @return 
+     */
+    public static List<DictionaryEntry> getDictionaryEntriesCodeStartingWith(String codeStart, 
+                                                                             DictionaryEntry[] dictionaryEntries) {
         LinkedList<DictionaryEntry> entriesList = new LinkedList<DictionaryEntry>();
         for (DictionaryEntry entry : dictionaryEntries) {
             String code = entry.getCode();
-            if (code.startsWith(start) && code.length() > start.length()) {
-                entriesList.add(entry);
-            }
+            if (code.startsWith(codeStart) && code.length() > codeStart.length()) 
+                entriesList.add(entry);            
         }
-        return entriesList.toArray(new DictionaryEntry[0]);
+        return entriesList;
+    }
+    
+    /**
+     * Returns the DictionaryEntry with the best code match.
+     * Example: we have the dictionary entries 00235 0023579 0023. If we run
+     * this method passing 00235 as parameter, then the Dictionary Entry with
+     * 00235 is returned. But if we pass 0023, then the Dictionary Entry with
+     * 0023 is returned.
+     * @param code
+     * @param dictionaryEntries
+     * @return 
+     */
+    public static DictionaryEntry getDictionaryEntryBestMatchingSubcode(String code, 
+                                                                        DictionaryEntry[] dictionaryEntries) {       
+        for(int i = (code.length() - 1); i > 0; i--) {
+            String possibleMatch = code.substring(0, i);
+            for(DictionaryEntry entry : dictionaryEntries) {   
+                if(entry.getCode().equalsIgnoreCase(possibleMatch))
+                    return entry;
+            }    
+        }
+        return null;
     }
 }
