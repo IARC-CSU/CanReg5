@@ -723,7 +723,7 @@ csu_cum_risk_core <- function(df_data, var_age, var_cases, var_py, group_by=NULL
     
   }
   
-  var_by <- intersect(colnames(df_data), var_by)
+  group_by <- intersect(colnames(df_data), group_by)
   
   
   
