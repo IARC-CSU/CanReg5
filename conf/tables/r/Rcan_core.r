@@ -296,6 +296,7 @@ csu_merge_inc_pop <- function(inc_file,
   setnames(dt_inc, var_cases, "CSU_C")
   
   column_group_list[[1]]  <- intersect(column_group_list[[1]],colnames(dt_inc))
+  var_by <- intersect(var_by,colnames(dt_inc))
   
   dt_inc <- dt_inc[, c(var_age, var_by, "CSU_C"), with = FALSE]
   dt_inc <-  dt_inc[,list(CSU_C = sum(CSU_C)), by=eval(colnames(dt_inc)[!colnames(dt_inc) %in% c("CSU_C")])]
@@ -321,9 +322,18 @@ csu_merge_inc_pop <- function(inc_file,
   
   dt_pop <- dt_pop[get(var_pop) != 0,]
   dt_pop[[var_ref_count]] <-  dt_pop[[var_ref_count]]*100
-  intersect(colnames(dt_inc),colnames(dt_pop))
   
   dt_all <- merge(dt_inc, dt_pop,by=intersect(colnames(dt_inc),colnames(dt_pop)), all.x=TRUE)
+  
+  #create ICD10color if not existing (take care of NA when using the color) and add cancer_label
+  dt_all$cancer_label <- canreg_cancer_info(dt_all)$cancer_label
+  if (!"ICD10GROUPCOLOR" %in% colnames(dt_all)) {
+    
+    dt_color_map <- csu_cancer_color(unique(canreg_cancer_info(dt_all)$cancer_label))
+    dt_all <- merge(dt_all, dt_color_map, by = c("cancer_label"), all.x=TRUE, sort=F )
+  }
+  
+  
   setnames(dt_all,"CSU_C",var_cases)
   return(dt_all)
 }
@@ -331,7 +341,7 @@ csu_merge_inc_pop <- function(inc_file,
 
 canreg_ageSpecific_rate_data <- function(dt, keep_ref=FALSE, keep_year=FALSE, keep_basis = FALSE) { 
   
-  var_by <- intersect(colnames(dt),c("ICD10GROUP", "ICD10GROUPLABEL","ICD10GROUPCOLOR", "AGE_GROUP","AGE_GROUP_LABEL", "SEX"))
+  var_by <- c("cancer_label","ICD10GROUP", "ICD10GROUPLABEL","ICD10GROUPCOLOR", "AGE_GROUP","AGE_GROUP_LABEL", "SEX")
   if (keep_ref) {
     var_by <- c(var_by, "REFERENCE_COUNT")
   }
@@ -345,7 +355,6 @@ canreg_ageSpecific_rate_data <- function(dt, keep_ref=FALSE, keep_year=FALSE, ke
   }
   
   dt <-  dt[AGE_GROUP != canreg_missing_age(dt) ,list(CASES=sum(CASES), COUNT=sum(COUNT)), by=var_by]
-  dt$cancer_label <- canreg_cancer_info(dt)$cancer_label
   dt$cancer_sex <- canreg_cancer_info(dt)$cancer_sex
   dt$cancer_title <- paste(dt$cancer_label, "\n(", dt$ICD10GROUP, ")", sep="")
   dt$SEX <- factor(dt$SEX, levels=c(1,2), labels=c("Male", "Female"))
@@ -462,7 +471,7 @@ csu_asr_core <- function(df_data, var_age, var_cases, var_py, var_by=NULL,
     
   }
   
-  var_by <- intersect(colnames(df_data), var_by)
+
   
   if (is.null(var_age_group)) {
     
@@ -723,8 +732,7 @@ csu_cum_risk_core <- function(df_data, var_age, var_cases, var_py, group_by=NULL
     
   }
   
-  var_by <- intersect(colnames(df_data), var_by)
-  
+
   
   
   dt_data <- data.table(df_data, key = group_by) 
@@ -1700,9 +1708,8 @@ canreg_bar_top_single <- function(dt, var_top, var_bar = "cancer_label" ,group_b
   if (return_data) {
     setnames(dt, "CSU_RANK","cancer_rank")
     setkeyv(dt, c("SEX","cancer_rank"))
-    if ("ICD10GROUPCOLOR" %in% colnames(dt)) {
-      dt <-  dt[,-c("ICD10GROUPCOLOR"), with=FALSE]
-    }
+    dt <-  dt[,-c("ICD10GROUPCOLOR"), with=FALSE]
+    
     return(dt)
     stop() 
   }
@@ -1729,8 +1736,7 @@ canreg_bar_top_single <- function(dt, var_top, var_bar = "cancer_label" ,group_b
     dt_plot$cancer_label <- factor(dt_plot$cancer_label,levels = rev(dt_label_order$cancer_label)) 
    
     color_cancer <- as.character(rev(dt_label_order$ICD10GROUPCOLOR))
-    #color_cancer <- csu_cancer_color(cancer_list =rev(dt_label_order$cancer_label))
-    
+
 
 
     
@@ -2393,7 +2399,6 @@ canreg_asr_trend_top <- function(dt, var_asr="asr",
     
     color_cancer <- as.character(dt_label_order$ICD10GROUPCOLOR)
     
-    #color_cancer <- csu_cancer_color(cancer_list =dt_label_order$cancer_label)
 
     
     
@@ -2884,7 +2889,7 @@ csu_cancer_color <- function(cancer_list) {
                     "Ill-defined",
                     "Others and unspecified","Other and unspecified")
   
-  cancer_color <- c("#AE563E", "#AE563E",
+  ICD10GROUPCOLOR <- c("#AE563E", "#AE563E",
                     "#DC1341", 
                     "#ae56a2",
                     "#FFD803","#FFD803",
@@ -2911,13 +2916,16 @@ csu_cancer_color <- function(cancer_list) {
                     "#DCDCDC","#DCDCDC")
   
   
-  dt_color <- data.table(cancer_label = cancer_base, cancer_color= cancer_color)
-  cancer_list <-  gsub("\n"," ", cancer_list)
+  dt_color <- data.table(cancer_label = cancer_base, ICD10GROUPCOLOR= ICD10GROUPCOLOR)
+  cancer_list <- unique(cancer_list)
   dt_cancer_list <- data.table(cancer_label = cancer_list)
   dt_color_map <- merge(dt_cancer_list, dt_color, by = c("cancer_label"), all.x=TRUE, sort=F )
-  color_map <- c(dt_color_map$cancer_color)
+  
+  colours(distinct=TRUE)[c(1:136,235:502)]
+  temp <- nrow(dt_color_map[is.na(ICD10GROUPCOLOR),])
+  dt_color_map[is.na(ICD10GROUPCOLOR),ICD10GROUPCOLOR:=sample(colours(distinct=TRUE)[c(1:136,235:502)],temp)]
 
-  return(color_map)
+  return(dt_color_map)
   
 }
 
