@@ -1,6 +1,5 @@
-This Would be a basic in introduction, the text in each section can be edit by editing the file:
-<CanReg5 installation folder>\conf\tables\r\report_text\section_name.txt. 
-(This will be moved to a user folder eventually...)
+<EDIT FILE PATH>
+This Would be a basic in introduction.
 
 Here's an example:
 

@@ -149,13 +149,33 @@ canreg_cancer_info <- function(dt,
   
 }
 
-canreg_import_txt <- function(file,folder) {
-  text <- scan(paste0(folder, file), what="character", sep="\n", blank.lines.skip = FALSE, quiet=TRUE)
-  for (i in 2:length(text)) {
-    text[1] <- paste(text[1], text[i], sep = "\n")
-  }
-  return(text[1])
 
+
+canreg_import_txt <- function(file,folder) {
+  
+  if (!file_test("-f",paste0(folder, "\\", file))) {
+    file.copy(paste(sep="/", script.basename, "report_text", file),paste0(folder, "\\", file))
+  }
+  
+  text <- scan(paste0(folder,"/", file), what="character", sep="\n", blank.lines.skip = FALSE, quiet=TRUE)
+  if (length(text) > 1){
+    for (i in 2:length(text)) {
+      text[1] <- paste(text[1], text[i], sep = "\n")
+    }
+  }
+  
+  text <- text[1]
+  text <- canreg_markdown_txt(text, file, folder)
+  return(text)
+}
+
+canreg_markdown_txt <- function(text, file, folder) {
+  
+  #<EDIT FILE PATH>
+  folder <- gsub("\\","\\\\",folder,fixed=TRUE)
+  temp <- paste0("This text can be edit directly in the template file:\n",folder,"\\\\",file,"\n")
+  text <- gsub("<EDIT FILE PATH>",temp, text)
+  return(text)
 }
 
 canreg_report_top_cancer_text <- function(dt_report, percent_equal=5, sex_select="Male") {
