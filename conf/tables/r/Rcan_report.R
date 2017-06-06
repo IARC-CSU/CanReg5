@@ -14,6 +14,22 @@ tryCatch({
   
   graph_width <- 5
   
+  #find path and check if file already exist
+  pos <- max(gregexpr("\\", out, fixed=TRUE)[[1]])
+  path <- substr(out,start=1, stop=pos)
+  if (sc=="null") {
+    report_path <- paste0(path, "report-template")
+  } else {
+    report_path <- paste0(path, "report-template-", sc)
+  }
+  if(!file_test("-d",report_path)) {
+    dir.create(report_path)
+  }
+  
+  if (!file_test("-f",paste0(report_path, "\\", "map_example.png"))) {
+    file.copy(paste(sep="/", script.basename, "report_text", "map_example.png"),paste0(report_path, "\\", "map_example.png"))
+  }
+  
   
   doc <- docx()
   
@@ -27,9 +43,9 @@ tryCatch({
   doc <- addTitle(doc, "Registry background and population", level=1)
   doc <- addTitle(doc, "Background", level=2)
   
-  text <- canreg_import_txt("Background.txt", folder = paste(sep="/", script.basename, "report_text/"))
-  if (!grepl("NA\n", text)) {
-    doc <- addParagraph(doc,  text) 
+  text <- canreg_import_txt("Background.txt",folder = report_path)
+  if (!is.na(text)) {
+    doc <- addParagraph(doc,text) 
   } 
   
   doc <- addTitle(doc, "Population", level=2)
@@ -37,15 +53,17 @@ tryCatch({
   dt_report <- dt_all
   dt_report <- canreg_pop_data(dt_report)
   
-  text <- canreg_import_txt("Population.txt", folder = paste(sep="/", script.basename, "report_text/"))
-  if (!grepl("NA\n", text)) {
+  text <- canreg_import_txt("Population.txt", folder = report_path)
+  if (!is.na(text)) {
     doc <- addParagraph(doc,  text) 
   } 
   doc <- addParagraph(doc, "\r\n")
   
-  dims <- attr( png::readPNG(paste0(paste(sep="/", script.basename, "report_text/"), "map_general.png")), "dim" )
-  doc <- addImage(doc, paste0(paste(sep="/", script.basename, "report_text/"), "map_general.png"),width=3,height=3*dims[1]/dims[2],par.properties = parProperties(text.align = "left"))
+  dims <- attr(png::readPNG(paste0(report_path,"\\", "map_example.png")), "dim" )
+  doc <- addImage(doc, paste0(report_path,"\\", "map_example.png"),width=3,height=3*dims[1]/dims[2],par.properties = parProperties(text.align = "left"))
   doc <- addParagraph(doc, "Fig 1. Region map")
+  doc <- addParagraph(doc, "\r\n")
+  
   
   
   total_pop <- formatC(round(unique(dt_report$Total)), format="d", big.mark=",") 
@@ -70,24 +88,36 @@ tryCatch({
   doc <- addTitle(doc, "Methods", level=1)   
   
   
-  text <- canreg_import_txt("Methods.txt", folder = paste(sep="/", script.basename, "report_text/"))
-  if (!grepl("NA\n", text)) {
+  text <- canreg_import_txt("Methods.txt", folder = report_path)
+  if (!is.na(text)) {
     doc <- addParagraph(doc,  text) 
   } 
   
   doc <- addTitle(doc, "Source of data", level=2)   
-  doc <- addTitle(doc, "ect..", level=2)   
+  text <- canreg_import_txt("Source of data.txt",folder = report_path)
+  if (!is.na(text)) {
+    doc <- addParagraph(doc,text) 
+  } 
+  
   doc <- addTitle(doc, "Variable", level=2)   
-  doc <- addParagraph(doc, "Can generate some table from canreg?")
-  doc <- addTitle(doc, "Classification and coding", level=2)   
-  doc <- addParagraph(doc, "Can generate table from canreg ICD03 classification and label")                 
+  text <- canreg_import_txt("Variable.txt",folder = report_path)
+  if (!is.na(text)) {
+    doc <- addParagraph(doc,text) 
+  } 
+  
+  doc <- addTitle(doc, "Classification and coding", level=2)
+  
+  text <- canreg_import_txt("Classification and coding.txt",folder = report_path)
+  if (!is.na(text)) {
+    doc <- addParagraph(doc,text) 
+  } 
+  
   doc <- addTitle(doc, "The database", level=2)  
-  doc <- addParagraph(doc, "The registry uses CANREG (version 6, vintage edition) for data entry, management and analysis")                 
-  doc <- addTitle(doc, "etc..", level=2)  
+  doc <- addParagraph(doc, "The registry uses CanReg5 software for data entry, management and analysis")                 
   
   doc <- addPageBreak(doc)
   
-  doc <- addTitle(doc, "Results", level=1)      
+  doc <- addTitle(doc, "Results", level=1)    
   
   # bar chart age
   dt_report <- dt_all
