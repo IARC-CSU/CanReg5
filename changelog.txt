@@ -14,6 +14,7 @@
 - Big parts of importing/exporting rewritten using an updated Java CSV library
 - Files generated (either by exporting or saving tables in frequencies by year) now open in the associated software automatically.
 - Some updates to the French translation. (Thanks Eric Masuyer.)
+- Java Runtime Environment (JRE) 8 is now required.
 - Stability improvements.
 - Other fixes.
 
