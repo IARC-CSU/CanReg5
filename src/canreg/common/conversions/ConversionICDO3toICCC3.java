@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2015  International Agency for Research on Cancer
+ * Copyright (C) 2008-2017  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,6 @@
  * @author Morten Johannes Ervik, CSU/IARC, ervikm@iarc.fr
  * @author Andy Cooke
  */
-
 package canreg.common.conversions;
 
 import canreg.common.Globals.StandardVariableNames;
@@ -34,23 +33,23 @@ import java.util.logging.Logger;
 
 public class ConversionICDO3toICCC3 implements ConversionInterface {
 
-    private static ConversionName conversionName = ConversionName.ICDO3toICCC3;
-    private static StandardVariableNames[] variablesNeeded = new StandardVariableNames[]{
+    private static final ConversionName CONVERSION_NAME = ConversionName.ICDO3toICCC3;
+    private static final StandardVariableNames[] VARIABLES_NEEDED = new StandardVariableNames[]{
         StandardVariableNames.Sex,
         StandardVariableNames.Topography,
         StandardVariableNames.Morphology,
         StandardVariableNames.Behaviour
     };
-    private static StandardVariableNames[] variablesCreated = new StandardVariableNames[]{
+    private static final StandardVariableNames[] VARIABLES_CREATED = new StandardVariableNames[]{
         StandardVariableNames.ICCC
     };
     static private final int UNASSIGNED = -1;
-    static private final int MAXMORPHRANGE = 1990;	//	Highest morph(9990) -  Lowest morph(8000)
-    static private final int ICCC1Max = 12;			//	ICCC first part - group code, Roman nums
-    static private final String ICCCGroup[] = {"??", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"};
-    static private final int ICCC2Max = 6;			//	ICCC second part - subgroup, letters
-    static private final String ICCCSubGrp[] = {"", "a", "b", "c", "d", "e", "f"};
-    static private final int ICCC3Max = 11;			//	ICCC third part - extended code, numeric
+    static private final int MAXMORPHRANGE = 1993;	//	Highest morph(9992) -  Lowest morph(8000) + 1
+    static private final int ICCC1_MAX = 12;			//	ICCC first part - group code, Roman nums
+    static private final String ICCC_GROUP[] = {"??", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"};
+    static private final int ICCC2_MAX = 6;			//	ICCC second part - subgroup, letters
+    static private final String ICCC_SUB_GRP[] = {"", "a", "b", "c", "d", "e", "f"};
+    static private final int ICCC3_MAX = 11;			//	ICCC third part - extended code, numeric
 
     private String ICCCLookUpFileResource = "/canreg/common/resources/lookup/ICCC-Table.txt";
     private int nofTopGroups, nofMorLines;
@@ -61,7 +60,7 @@ public class ConversionICDO3toICCC3 implements ConversionInterface {
     private boolean showExtendedCode = false, romanNums = false;
 
     /**
-     * 
+     *
      */
     public ConversionICDO3toICCC3() {
         try {
@@ -120,31 +119,31 @@ public class ConversionICDO3toICCC3 implements ConversionInterface {
     }
 
     /**
-     * 
+     *
      * @return
      */
     @Override
     public StandardVariableNames[] getVariablesNeeded() {
-        return variablesNeeded;
+        return VARIABLES_NEEDED;
     }
 
     /**
-     * 
+     *
      * @return
      */
     @Override
     public StandardVariableNames[] getVariablesCreated() {
-        return variablesCreated;
+        return VARIABLES_CREATED;
     }
 
     /**
-     * 
+     *
      * @param variables
      * @return
      */
     @Override
     public ConversionResult[] performConversion(Map<StandardVariableNames, Object> variables) {
-        String ICCCcode = "";
+        String ICCCcode;
         String errorMessage = "";
 
         ConversionResult result[] = new ConversionResult[1];
@@ -227,7 +226,6 @@ public class ConversionICDO3toICCC3 implements ConversionInterface {
         }
 
         // ICCCnum(5digits) consists of Group(2digits), SubGrp(1dig), ExtendCode(2digs)
-
         int groupNum = ICCCnum / 1000;
         if (groupNum == 0) {
             errorMessage = "Error - GroupNum zero";
@@ -235,7 +233,7 @@ public class ConversionICDO3toICCC3 implements ConversionInterface {
             result[0].setMessage(errorMessage);
             return result;
         }
-        if (groupNum > ICCC1Max) {
+        if (groupNum > ICCC1_MAX) {
             errorMessage = "Error - GroupNum too large";
             result[0].setResultCode(ConversionResult.ResultCode.Invalid);
             result[0].setMessage(errorMessage);
@@ -252,7 +250,7 @@ public class ConversionICDO3toICCC3 implements ConversionInterface {
             result[0].setMessage(errorMessage);
             return result;
         }
-        if (subGrpNum > ICCC2Max) {
+        if (subGrpNum > ICCC2_MAX) {
             errorMessage = "Error - SubGrpNum too large";
             result[0].setResultCode(ConversionResult.ResultCode.Invalid);
             result[0].setMessage(errorMessage);
@@ -273,16 +271,26 @@ public class ConversionICDO3toICCC3 implements ConversionInterface {
             return result;
         }
 
+        if (behaviourCode.equals("0") || behaviourCode.equals("1")) {   // JF 2015. CNS tumours cannot be in situ
+            int code = subGrpNum;
+            if (!((code >= 31 && code <= 36) || code == 101)) {
+                errorMessage = "CNS tumours cannot be in situ";
+                result[0].setResultCode(ConversionResult.ResultCode.Invalid);
+                result[0].setMessage(errorMessage);
+                return result;
+            }
+        }
+
         //-----------------------------------------< construct string ICCC code
         if (romanNums) {
-            ICCCcode = ICCCGroup[groupNum];
+            ICCCcode = ICCC_GROUP[groupNum];
         } else {
             ICCCcode = Integer.toString(groupNum);
         }
 
         if (groupNum != 5) //  group 5 has no subgroups
         {
-            ICCCcode += ("" + ICCCSubGrp[subGrpNum]);
+            ICCCcode += ("" + ICCC_SUB_GRP[subGrpNum]);
         }
 
         if (!showExtendedCode) {
@@ -300,7 +308,7 @@ public class ConversionICDO3toICCC3 implements ConversionInterface {
             result[0].setValue(ICCCcode);
             return result;
         }
-        if (extendedNum > ICCC3Max) {
+        if (extendedNum > ICCC3_MAX) {
             errorMessage = "Error - ExtendedNum too large";
             result[0].setResultCode(ConversionResult.ResultCode.Invalid);
             result[0].setMessage(errorMessage);
@@ -323,11 +331,11 @@ public class ConversionICDO3toICCC3 implements ConversionInterface {
     }
 
     /**
-     * 
+     *
      * @return
      */
     @Override
     public ConversionName getConversionName() {
-        return conversionName;
+        return CONVERSION_NAME;
     }
 }
