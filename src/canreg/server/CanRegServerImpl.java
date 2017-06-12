@@ -1031,7 +1031,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     @Override
-    public String getCanRegSystemCode() {
+    public String getCanRegSystemCode() throws RemoteException, SecurityException {
         return systemCode;
     }
 }
