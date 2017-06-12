@@ -463,6 +463,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             debugOut("LOGIN SUCCESSFULL");
             // This should work...
             systemName = server.getCanRegSystemName();
+            systemCode = server.getCanRegSystemCode();
             loggedIn = true;
             doc = server.getDatabseDescription();
             dictionary = server.getDictionary();

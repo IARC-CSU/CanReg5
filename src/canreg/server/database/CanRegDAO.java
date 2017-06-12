@@ -2195,25 +2195,25 @@ public class CanRegDAO {
             = "DELETE FROM APP.PDSET "
             + "WHERE PDS_ID = ?";
     // The Dynamic ones
-    private String strMaxNumberOfSourcesPerTumourRecord;
-    private String strSavePatient;
-    private String strSaveTumour;
-    private String strSaveSource;
-    private String strEditPatient;
-    private String strEditTumour;
-    private String strEditSource;
-    private String strSaveDictionary;
-    private String strSaveDictionaryEntry;
-    private String strSavePopoulationDataset;
-    private String strSavePopoulationDatasetsEntry;
-    private String strSaveNameSexRecord;
-    private String strDeleteNameSexRecord;
-    private String strGetHighestPatientID;
-    private String strGetHighestTumourID;
-    private String strGetHighestPatientRecordID;
-    private String strGetHighestSourceRecordID;
-    private String strEditUser;
-    private String strSaveUser;
+    private final String strMaxNumberOfSourcesPerTumourRecord;
+    private final String strSavePatient;
+    private final String strSaveTumour;
+    private final String strSaveSource;
+    private final String strEditPatient;
+    private final String strEditTumour;
+    private final String strEditSource;
+    private final String strSaveDictionary;
+    private final String strSaveDictionaryEntry;
+    private final String strSavePopoulationDataset;
+    private final String strSavePopoulationDatasetsEntry;
+    private final String strSaveNameSexRecord;
+    private final String strDeleteNameSexRecord;
+    private final String strGetHighestPatientID;
+    private final String strGetHighestTumourID;
+    private final String strGetHighestPatientRecordID;
+    private final String strGetHighestSourceRecordID;
+    private final String strEditUser;
+    private final String strSaveUser;
     /* We don't use tumour record ID...
      private String strGetHighestTumourRecordID;
      */
