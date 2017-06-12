@@ -11,13 +11,31 @@ canreg_error_log <- function(e,filename,out,Args,inc,pop) {
   sink(error_connection, type="message")
   
   #print error
-  cat(paste0("An error occured! please send the log file: `",log_file,"` to  canreg@iarc.fr\n\n"))
+  cat(paste0("An error occured! please send the log file: `",log_file,"` to  canreg@iarc.fr\n"))
+  cat("The second part of this log (After '----------------------') contains your aggregated data, if you do not won't to share the aggregated, you can delete this part \n\n")
   print(paste("MY_ERROR:  ",e))
   cat("\n")
   #print argument from canreg
   print(Args)
   cat("\n")
   
+  #print R version and package load
+  print(sessionInfo())
+  cat("\n")
+  
+  
+  #print missing package
+  packages_list <- c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","ReporteRs")
+  missing_packages <- packages_list[!(packages_list %in% installed.packages()[,"Package"])]  
+  if (length(missing_packages) == 0) {
+    print("No missing package")
+  } else {
+    print("missing_packages")
+  }
+  cat("\n")
+  
+  print("----------------------")
+  cat("\n")
   #print incidence / population file (r format)
   cat("Incidence file\n")
   dput(read.table(inc, header=TRUE))
@@ -129,14 +147,17 @@ canreg_load_packages <- function(packages_list) {
 
 
 
-
 canreg_missing_age <- function(dt,
                                var_age = "AGE_GROUP",
                                var_age_label = "AGE_GROUP_LABEL") {
+  oups
   
-  missing_age <- unique(dt[is.na(get(var_age_label)), c(var_age, var_age_label), with = FALSE])[[var_age]]
+  if (NA %in% dt[[var_age_label]]) {
+    missing_age <- unique(dt[is.na(get(var_age_label)), c(var_age, var_age_label), with = FALSE])[[var_age]]
+  } else {
+    missing_age <- 10000
+  }
   return(missing_age)
-  
 }
 
 canreg_cancer_info <- function(dt,
