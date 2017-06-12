@@ -1,5 +1,4 @@
-﻿
-Changelog
+﻿Changelog
 
 5.00.42 BETA
 - Analysis features updated in collaboration with Mathieu Laversanne:
