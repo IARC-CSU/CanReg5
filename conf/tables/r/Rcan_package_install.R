@@ -61,9 +61,9 @@ if (getRversion() < '3.2.0') {
   utils::setInternet2(TRUE)
   if (Sys.info()[['sysname']] == "Windows") {
     options(download.file.method = "internal")
-  } else if ((Sys.info()[['sysname']] == "Linux") {
+  } else if (Sys.info()[['sysname']] == "Linux") {
     options(download.file.method = "wget")
-  } else if ((Sys.info()[['sysname']] == "Darwin") {
+  } else if (Sys.info()[['sysname']] == "Darwin") {
     options(download.file.method = "curl")
   }
 } else if (getRversion() < '3.3.0') {
@@ -81,7 +81,7 @@ on.exit(options(repos = old.repos)) #this resets the repos option when the funct
 new.repos <- old.repos 
 
 
-new.repos["CRAN"] <- "https://cloud.r-project.org/" #set your favorite  CRAN Mirror here 
+new.repos["CRAN"] <- "https://cran.r-project.org" #set your favorite  CRAN Mirror here 
 
 options(repos = new.repos) 
 
