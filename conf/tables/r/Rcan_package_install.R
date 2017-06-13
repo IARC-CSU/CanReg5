@@ -51,6 +51,12 @@ options(warn = 1)
 
 cat("This log file contains warnings, errors, and package availability information\n\n")
 
+if (getRversion() == '3.2.0') {
+  
+  stop("The table builder do not work with R '3.2.0', please install any version after '3.2.1'.\n '3.2.1' would do as well as '3.3.0' for instance.\n You can edit the Path in the 'Option' in CanReg.") 
+  
+}
+
 dir.create(file.path(Sys.getenv("R_LIBS_USER")),recursive = TRUE)
 .libPaths(Sys.getenv("R_LIBS_USER"))
 
@@ -162,6 +168,11 @@ for (i in c(packages_list, "rvg","plyr", "gtable","munsell" )) {
 missing_packages <- unique(missing_packages)
 
 if(length(missing_packages) > 0 ) {
+  
+  if (Sys.info()[['sysname']] == "Windows" & getRversion() < '3.3.0' & getRversion() >= '3.2.0') {
+    options(pkgType="win.binary") #to avoid package from source
+  }
+  
   for (i in missing_packages) {
     install.packages(i, dependencies=  c("Depends", "Imports", "LinkingTo"), quiet = TRUE)
   }
