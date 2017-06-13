@@ -57,6 +57,7 @@ canreg_error_log <- function(e,filename,out,Args,inc,pop) {
 canreg_load_packages <- function(packages_list) { 
   
   
+  if (getRversion() == '3.2.0') {
    
     stop("The table builder do not work with R '3.2.0', please install any version after '3.2.1'.\n '3.2.1' would do as well as '3.3.0' for instance.\n You can edit the Path in the 'Option' in CanReg.") 
     
