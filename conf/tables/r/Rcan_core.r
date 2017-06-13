@@ -56,16 +56,41 @@ canreg_error_log <- function(e,filename,out,Args,inc,pop) {
 
 canreg_load_packages <- function(packages_list) { 
   
+  
+  if (getRversion() == '3.2.0') {
+   
+    stop("The table builder do not work with R '3.2.0', please install any version after '3.2.1'.\n '3.2.1' would do as well as '3.3.0' for instance.\n You can edit the Path in the 'Option' in CanReg.") 
+    
+  }
+  
   dir.create(file.path(Sys.getenv("R_LIBS_USER")),recursive = TRUE)
   .libPaths(Sys.getenv("R_LIBS_USER"))
   
   missing_packages <- packages_list[!(packages_list %in% installed.packages()[,"Package"])]
   
+  #managing installing package for old R version.
+  if (getRversion() < '3.2.0') {
+    utils::setInternet2(TRUE)
+    if (Sys.info()[['sysname']] == "Windows") {
+      options(download.file.method = "internal")
+    } else if (Sys.info()[['sysname']] == "Linux") {
+      options(download.file.method = "wget")
+    } else if (Sys.info()[['sysname']] == "Darwin") {
+      options(download.file.method = "curl")
+    }
+  } else if (getRversion() < '3.3.0') {
+    if (Sys.info()[['sysname']] == "Windows") {
+      options(download.file.method = "wininet")
+    } else {
+      options(download.file.method = "libcurl")
+    }
+  }
+  
   old.repos <- getOption("repos") 
   on.exit(options(repos = old.repos)) #this resets the repos option when the function exits 
   new.repos <- old.repos 
 
-  new.repos["CRAN"] <- "https://cloud.r-project.org/" #set your favorite  CRAN Mirror here 
+  new.repos["CRAN"] <- "https://cran.r-project.org" #set your favorite  CRAN Mirror here 
 
   options(repos = new.repos) 
   
@@ -126,13 +151,19 @@ canreg_load_packages <- function(packages_list) {
       }
     }
   }
-  
+
 
 
 
   missing_packages <- unique(missing_packages)
 
   if(length(missing_packages) > 0 ) {
+    
+    
+    if (Sys.info()[['sysname']] == "Windows" & getRversion() < '3.3.0' & getRversion() >= '3.2.0') {
+      options(pkgType="win.binary") #to avoid package from source
+    }
+    
     for (i in missing_packages) {
       install.packages(i, dependencies=  c("Depends", "Imports", "LinkingTo"), quiet = TRUE)
 
@@ -209,9 +240,12 @@ canreg_report_top_cancer_text <- function(dt_report, percent_equal=5, sex_select
   dt_temp[, pct_temp:=(temp-CASES)/temp*100]
   dt_temp[pct_temp<=percent_equal, rank:=1]
   
+  # restore rank (because missing rank 2 if 2 rank 1)
   temp <- dt_temp[cancer_rank==2,CASES]
   dt_temp[, pct_temp:=(temp-CASES)/temp*100]
   dt_temp[pct_temp<=percent_equal & is.na(rank), rank:=2]
+  
+  #think of dropping % on pie chart of 
   
   dt_temp <- dt_temp[rank<=2]
   
@@ -220,6 +254,7 @@ canreg_report_top_cancer_text <- function(dt_report, percent_equal=5, sex_select
   label2 <- dt_temp[rank==2,cancer_label]
   cases2 <- dt_temp[rank==2,CASES]
   
+  #WHY ??? 
   label1 <- label1[1]
   cases1<- formatC(cases1[1], format="d", big.mark=",")
   
