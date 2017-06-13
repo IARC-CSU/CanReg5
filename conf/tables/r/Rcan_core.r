@@ -144,13 +144,19 @@ canreg_load_packages <- function(packages_list) {
       }
     }
   }
-  
+
 
 
 
   missing_packages <- unique(missing_packages)
 
   if(length(missing_packages) > 0 ) {
+    
+    
+    if (Sys.info()[['sysname']] == "Windows" & getRversion() < '3.3.0' & getRversion() >= '3.2.0') {
+      options(pkgType="win.binary") #to avoid package from source
+    }
+    
     for (i in missing_packages) {
       install.packages(i, dependencies=  c("Depends", "Imports", "LinkingTo"), quiet = TRUE)
 
@@ -227,9 +233,12 @@ canreg_report_top_cancer_text <- function(dt_report, percent_equal=5, sex_select
   dt_temp[, pct_temp:=(temp-CASES)/temp*100]
   dt_temp[pct_temp<=percent_equal, rank:=1]
   
+  # restore rank (because missing rank 2 if 2 rank 1)
   temp <- dt_temp[cancer_rank==2,CASES]
   dt_temp[, pct_temp:=(temp-CASES)/temp*100]
   dt_temp[pct_temp<=percent_equal & is.na(rank), rank:=2]
+  
+  #think of dropping % on pie chart of 
   
   dt_temp <- dt_temp[rank<=2]
   
@@ -238,6 +247,7 @@ canreg_report_top_cancer_text <- function(dt_report, percent_equal=5, sex_select
   label2 <- dt_temp[rank==2,cancer_label]
   cases2 <- dt_temp[rank==2,CASES]
   
+  #WHY ??? 
   label1 <- label1[1]
   cases1<- formatC(cases1[1], format="d", big.mark=",")
   
