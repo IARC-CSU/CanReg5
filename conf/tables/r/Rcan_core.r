@@ -61,6 +61,24 @@ canreg_load_packages <- function(packages_list) {
   
   missing_packages <- packages_list[!(packages_list %in% installed.packages()[,"Package"])]
   
+  #managing installing package for old R version.
+  if (getRversion() < '3.2.0') {
+    utils::setInternet2(TRUE)
+    if (Sys.info()[['sysname']] == "Windows") {
+      options(download.file.method = "internal")
+    } else if ((Sys.info()[['sysname']] == "Linux") {
+      options(download.file.method = "wget")
+    } else if ((Sys.info()[['sysname']] == "Darwin") {
+      options(download.file.method = "curl")
+    }
+  } else if (getRversion() < '3.3.0') {
+    if (Sys.info()[['sysname']] == "Windows") {
+      options(download.file.method = "wininet")
+    } else {
+      options(download.file.method = "libcurl")
+    }
+  }
+  
   old.repos <- getOption("repos") 
   on.exit(options(repos = old.repos)) #this resets the repos option when the function exits 
   new.repos <- old.repos 
