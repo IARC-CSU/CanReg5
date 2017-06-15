@@ -207,7 +207,7 @@ canreg_missing_age <- function(dt,
 
   
   if (NA %in% dt[[var_age_label]]) {
-    missing_age <- unique(dt[is.na(get(var_age_label)), c(var_age, var_age_label), with = FALSE])[[var_age]]
+    missing_age <- unique(dt[is.na(as.character(get(var_age_label))), c(var_age, var_age_label), with = FALSE])[[var_age]]
   } else {
     missing_age <- 10000
   }
@@ -258,20 +258,20 @@ canreg_report_top_cancer_text <- function(dt_report, percent_equal=5, sex_select
   dt_temp <- as.data.table(dt_report)
   dt_temp <- dt_temp[SEX==sex_select]
   dt_temp[, cancer_rank:= frank(-CASES, ties.method="first")]
+  
   setkeyv(dt_temp, c("cancer_rank"))
+  
+  #  rank for second set
   temp <- dt_temp[cancer_rank==1,CASES]
   dt_temp[, pct_temp:=(temp-CASES)/temp*100]
   dt_temp[pct_temp<=percent_equal, rank:=1]
   
-  #need to be fix:
-  # restore rank (because missing rank 2 if 2 rank 1)
-  #dt_temp[, cancer_rank:= frank(cancer_rank, ties.method="??")]
-  
-  temp <- dt_temp[cancer_rank==2,CASES]
-  dt_temp[, pct_temp:=(temp-CASES)/temp*100]
-  dt_temp[pct_temp<=percent_equal & is.na(rank), rank:=2]
-  
-  #think of dropping % on pie chart of 
+  #  rank for second set
+  dt_temp[, cancer_rank:=NA] #first set of cancer
+  dt_temp[is.na(rank), cancer_rank:= frank(-CASES, ties.method="first")] #first set of cancer
+  temp <- dt_temp[cancer_rank==1,CASES]
+  dt_temp[is.na(rank) , pct_temp:=(temp-CASES)/temp*100]
+  dt_temp[is.na(rank) & pct_temp<=percent_equal, rank:=2]
   
   dt_temp <- dt_temp[rank<=2]
   
@@ -280,7 +280,6 @@ canreg_report_top_cancer_text <- function(dt_report, percent_equal=5, sex_select
   label2 <- dt_temp[rank==2,cancer_label]
   cases2 <- dt_temp[rank==2,CASES]
   
-  #Fix tentative to test
   label_1 <- label1[1]
   cases_1<- formatC(cases1[1], format="d", big.mark=",")
   
@@ -308,7 +307,7 @@ canreg_report_top_cancer_text <- function(dt_report, percent_equal=5, sex_select
   
   cases_1 <- paste0(cases_1," cases")
   text2 <- paste0(label2[1], " (",formatC(cases2[1], format="d", big.mark=","), " cases)")
-
+  
   if (length(label2) > 1) {
     for (i in 2:length(label2)) {
       
@@ -327,7 +326,7 @@ canreg_report_top_cancer_text <- function(dt_report, percent_equal=5, sex_select
   
   
   text <-paste0(label_1,"the most commonly diagnosed malignancy with ",cases_1,
-                       " followed by ",text2,".")
+                ", followed by ",text2,".")
   return(text)
 }
 
@@ -2395,10 +2394,13 @@ canreg_cases_age_pie <- function(
   
   dt[, y_label := cumsum(CSU_CASES) - 0.5*CSU_CASES]
   dt[shift(percent) < 0.04 & percent <0.04, y_label:=y_label + 0.25*CSU_CASES ]
-
+  dt[percent < 0.01,y_label:=y_label - 0.5*CSU_CASES]
   
   dt[,text_size:=2]
   dt[percent < 0.1,text_size:=1]
+  dt[percent < 0.01,text_size:=0]
+  
+
 
   
   
