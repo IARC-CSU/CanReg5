@@ -5,9 +5,9 @@ load.fun <- function(x) {
   new.repos["CRAN"] <- "http://cran.rstudio.com/"   #Rstudio, automatic redirection to servers worldwide , or set your favorite  CRAN Mirror here 
   options(repos = new.repos)
   x <- as.character(substitute(x))
-  dir.create(Sys.getenv("R_LIBS_USER"), recursive = TRUE)
-  rlibs = gsub("\\", "/", Sys.getenv("R_LIBS_USER"), fixed = T)
-  eval(parse(text=paste("install.packages('", x, "', lib='", rlibs,"' )", sep=""))) 
+  rlibs <- gsub("\\", "/",file.path(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5")), fixed = T)
+  dir.create(rlibs, recursive = TRUE)
+  eval(parse(text=paste("install.packages('", x, "', lib='", rlibs,"', quiet = TRUE )", sep=""))) 
   eval(parse(text=paste("require(", x, ", lib.loc = '", rlibs ,"')", sep="")))
 }
 
