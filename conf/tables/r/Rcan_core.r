@@ -1,11 +1,35 @@
 canreg_error_log <- function(e,filename,out,Args,inc,pop) {
   
-
+  ## get Args from canreg  
+  skin <- FALSE
+  landscape <- FALSE
+  logr <- FALSE
+  multi_graph <- FALSE
   
+  for (i in 1:length(Args)) {
+    
+    temp <- Args[i]
+    pos <- regexpr("=",temp)[1]
+    
+    if (pos < 0) {
+      assign(substring(temp,2), TRUE)
+    } 
+    else {
+      varname <- substring(temp,2,pos-1)
+      assign(varname,substring(temp, pos+1)) 
+      if (suppressWarnings(!is.na(as.numeric(get(varname))))){
+        assign(varname, as.numeric(get(varname)))
+      }
+    }
+  }
+  
+  #create log error file name 
+  log_name <- paste0(gsub("\\W","", label),"_",sc,"_",gsub("\\D","", Sys.time()),"_error_log.txt") 
+
   #find path and create log file
   pos <- max(gregexpr("\\", out, fixed=TRUE)[[1]])
   path <- substr(out,start=1, stop=pos)
-  log_file <- paste0(path, "canreg_log.txt")
+  log_file <- paste0(path, log_name)
   error_connection <- file(log_file,open="wt")
   sink(error_connection)
   sink(error_connection, type="message")
@@ -18,6 +42,8 @@ canreg_error_log <- function(e,filename,out,Args,inc,pop) {
   #print argument from canreg
   print(Args)
   cat("\n")
+  
+ 
   
   #print R version and package load
   print(sessionInfo())
@@ -53,7 +79,6 @@ canreg_error_log <- function(e,filename,out,Args,inc,pop) {
 }
 
 
-
 canreg_load_packages <- function(packages_list) { 
   
   
@@ -63,8 +88,8 @@ canreg_load_packages <- function(packages_list) {
     
   }
   
-  dir.create(file.path(paste0(Sys.getenv("R_LIBS_USER"), "/Canreg5")),recursive = TRUE)
-  .libPaths(paste0(Sys.getenv("R_LIBS_USER"), "/Canreg5"))
+  dir.create(file.path(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5")),recursive = TRUE)
+  .libPaths(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5"))
   
   missing_packages <- packages_list[!(packages_list %in% installed.packages()[,"Package"])]
   
