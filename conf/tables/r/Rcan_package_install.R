@@ -57,9 +57,9 @@ if (getRversion() == '3.2.0') {
   
 }
 
-unlink(file.path(paste0(Sys.getenv("R_LIBS_USER"), "/canreg5")),recursive = TRUE)
-dir.create(file.path(paste0(Sys.getenv("R_LIBS_USER"), "/canreg5")),recursive = TRUE)
-.libPaths(paste0(Sys.getenv("R_LIBS_USER"), "/canreg5"))
+unlink(file.path(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5")),recursive = TRUE)
+dir.create(file.path(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5")),recursive = TRUE)
+.libPaths(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5"))
 
 missing_packages <- packages_list[!(packages_list %in% installed.packages()[,"Package"])]
 
