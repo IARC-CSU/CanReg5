@@ -57,8 +57,9 @@ if (getRversion() == '3.2.0') {
   
 }
 
-dir.create(file.path(Sys.getenv("R_LIBS_USER")),recursive = TRUE)
-.libPaths(Sys.getenv("R_LIBS_USER"))
+unlink(file.path(paste0(Sys.getenv("R_LIBS_USER"), "/canreg5")),recursive = TRUE)
+dir.create(file.path(paste0(Sys.getenv("R_LIBS_USER"), "/canreg5")),recursive = TRUE)
+.libPaths(paste0(Sys.getenv("R_LIBS_USER"), "/canreg5"))
 
 missing_packages <- packages_list[!(packages_list %in% installed.packages()[,"Package"])]
 
@@ -169,8 +170,8 @@ missing_packages <- unique(missing_packages)
 
 if(length(missing_packages) > 0 ) {
   
-  if (Sys.info()[['sysname']] == "Windows" & getRversion() < '3.3.0' & getRversion() >= '3.2.0') {
-    options(pkgType="win.binary") #to avoid package from source
+  if (Sys.info()[['sysname']] == "Windows") {
+    options(pkgType="win.binary") #to avoid package more recent from source
   }
   
   for (i in missing_packages) {

@@ -30,7 +30,7 @@ canreg_error_log <- function(e,filename,out,Args,inc,pop) {
   if (length(missing_packages) == 0) {
     print("No missing package")
   } else {
-    print("missing_packages")
+    print(missing_packages)
   }
   cat("\n")
   
@@ -63,12 +63,12 @@ canreg_load_packages <- function(packages_list) {
     
   }
   
-  dir.create(file.path(Sys.getenv("R_LIBS_USER")),recursive = TRUE)
-  .libPaths(Sys.getenv("R_LIBS_USER"))
+  dir.create(file.path(paste0(Sys.getenv("R_LIBS_USER"), "/Canreg5")),recursive = TRUE)
+  .libPaths(paste0(Sys.getenv("R_LIBS_USER"), "/Canreg5"))
   
   missing_packages <- packages_list[!(packages_list %in% installed.packages()[,"Package"])]
   
-  #managing installing package for old R version.
+  #managing installing package for old R version. 
   if (getRversion() < '3.2.0') {
     utils::setInternet2(TRUE)
     if (Sys.info()[['sysname']] == "Windows") {
@@ -153,15 +153,14 @@ canreg_load_packages <- function(packages_list) {
   }
 
 
-
-
   missing_packages <- unique(missing_packages)
+  
+
 
   if(length(missing_packages) > 0 ) {
     
-    
-    if (Sys.info()[['sysname']] == "Windows" & getRversion() < '3.3.0' & getRversion() >= '3.2.0') {
-      options(pkgType="win.binary") #to avoid package from source
+    if (Sys.info()[['sysname']] == "Windows") {
+      options(pkgType="win.binary") #to avoid package from source which need compilation.
     }
     
     for (i in missing_packages) {
@@ -169,9 +168,7 @@ canreg_load_packages <- function(packages_list) {
 
     }
   }
-
-
-    
+  
   lapply(packages_list, require, character.only = TRUE)
   
 }
@@ -240,7 +237,10 @@ canreg_report_top_cancer_text <- function(dt_report, percent_equal=5, sex_select
   dt_temp[, pct_temp:=(temp-CASES)/temp*100]
   dt_temp[pct_temp<=percent_equal, rank:=1]
   
+  #need to be fix:
   # restore rank (because missing rank 2 if 2 rank 1)
+  #dt_temp[, cancer_rank:= frank(cancer_rank, ties.method="??")]
+  
   temp <- dt_temp[cancer_rank==2,CASES]
   dt_temp[, pct_temp:=(temp-CASES)/temp*100]
   dt_temp[pct_temp<=percent_equal & is.na(rank), rank:=2]
@@ -254,33 +254,33 @@ canreg_report_top_cancer_text <- function(dt_report, percent_equal=5, sex_select
   label2 <- dt_temp[rank==2,cancer_label]
   cases2 <- dt_temp[rank==2,CASES]
   
-  #WHY ??? 
-  label1 <- label1[1]
-  cases1<- formatC(cases1[1], format="d", big.mark=",")
+  #Fix tentative to test
+  label_1 <- label1[1]
+  cases_1<- formatC(cases1[1], format="d", big.mark=",")
   
   if (length(label1) > 1) {
     for (i in 2:length(label1)) {
       
       if (i != length(label1)) {
         
-        label1 <- paste0(label1,", ",label1[i])
-        cases1 <- paste0(cases1,", ",formatC(cases1[i], format="d", big.mark=","))
+        label_1 <- paste0(label_1,", ",label1[i])
+        cases_1 <- paste0(cases_1,", ",formatC(cases1[i], format="d", big.mark=","))
         
       } else {
         
-        label1 <- paste0(label1," and ",label1[i])
-        cases1 <- paste0(cases1," and ",formatC(cases1[i], format="d", big.mark=","))
+        label_1 <- paste0(label_1," and ",label1[i])
+        cases_1 <- paste0(cases_1," and ",formatC(cases1[i], format="d", big.mark=","))
       }
     }
     
-    label1 <- paste0(label1," are ")
+    label_1 <- paste0(label_1," are ")
     
   } else {
     
-    label1 <- paste0(label1," is ")
+    label_1 <- paste0(label_1," is ")
   }
   
-  cases1 <- paste0(cases1," cases")
+  cases_1 <- paste0(cases_1," cases")
   text2 <- paste0(label2[1], " (",formatC(cases2[1], format="d", big.mark=","), " cases)")
 
   if (length(label2) > 1) {
@@ -300,7 +300,7 @@ canreg_report_top_cancer_text <- function(dt_report, percent_equal=5, sex_select
   
   
   
-  text <-paste0(label1,"the most commonly diagnosed malignancy with ",cases1,
+  text <-paste0(label_1,"the most commonly diagnosed malignancy with ",cases_1,
                        " followed by ",text2,".")
   return(text)
 }
