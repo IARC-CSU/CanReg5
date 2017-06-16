@@ -1,0 +1,1 @@
+The registry uses CanReg5 software (http://www.iacr.com.fr/CanReg5) for data entry, management and analysis.

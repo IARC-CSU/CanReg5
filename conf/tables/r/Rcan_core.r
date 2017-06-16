@@ -226,11 +226,107 @@ canreg_cancer_info <- function(dt,
 
 
 
-canreg_import_txt <- function(file,folder) {
+
+canreg_report_template_extract <- function(report_path,script.basename) {
   
-  if (!file_test("-f",paste0(folder, "\\", file))) {
-    file.copy(paste(sep="/", script.basename, "report_text", file),paste0(folder, "\\", file))
+  # Copy template base if no file in the report_template folder
+  file <- list.files(path=report_path, pattern="^([1-9]{1,2}_)([1-9]{1,2}_([A-Z]_)?)?[^_]*\\.txt$")
+  
+  if (length(file) == 0) {
+    
+    file_template <- list.files(path=paste(sep="/", script.basename, "report_text"), full.names = TRUE)
+    file.copy(file_template,report_path)
+    
   }
+  
+  
+  # Copy 1.1 chapter if missing
+  if (!any(grepl("^1_1_",file ))) {
+    
+    file_template <- list.files(path=paste(sep="/", script.basename, "report_text"),pattern= "^1_1_[^_]*\\.txt$", full.names = TRUE)
+    file.copy(file_template,report_path)
+    
+  }
+  
+  # Copy 1.2 chapter if missing
+  if (!any(grepl("^1_2_",file ))) {
+    
+    file_template <- list.files(path=paste(sep="/", script.basename, "report_text"),pattern= "^1_2_[^_]*\\.txt$", full.names = TRUE)
+    file.copy(file_template,report_path)
+    
+  }
+  
+  file <- list.files(path=report_path, pattern="^([1-9]{1,2}_)([1-9]{1,2}_([A-Z]_)?)?[^_]*\\.txt$")
+  
+  dt_chapter <- canreg_report_chapter_table(file)
+  return(dt_chapter)
+  
+}
+
+
+canreg_report_chapter_table <- function(file) {
+  
+  #get title_number
+  title_number <- regmatches(file, gregexpr("^([1-9]{1,2}_)([1-9]{1,2}_([A-Z]_)?)?",file ))
+  
+  #get last occurence of _ in the title_number
+  pos_name <- sapply(gregexpr("_", title_number), max)
+  
+  #extract title
+  title <- substring(file,pos_name+1, nchar(file)-4)
+  
+  #extract title level
+  title_level <- sapply(gregexpr("_", title_number), length)
+  
+  #create data table with information
+  dt_chapter <- data.table(file,title,title_level )
+  
+  #determine title order
+  dt_chapter[,title_number:=gsub("_", "", title_number)]
+  setkey(dt_chapter,title_number )
+  dt_chapter[,rank:=1:.N]   
+  
+  #Drop 1.3+ chapter
+  dt_chapter <- dt_chapter[!grepl("^[1][3-9]",dt_chapter$title_number )]
+  
+  
+  return(dt_chapter)
+  
+  
+}
+
+
+canreg_report_chapter_txt <- function(dt_chapter, doc, folder, dt_all, fig_number) {
+  
+  
+  doc <- addPageBreak(doc) # go to the next page
+  doc <- addTitle(doc, paste(dt_chapter$title[1], tolower(dt_chapter$title[2]), sep= " and "), level=1)
+  
+  
+  for (i in 1:nrow(dt_chapter)) {
+    
+    
+    chapter_info <- dt_chapter[i]
+    if (chapter_info$title_level == 1 ) {
+      doc <- addPageBreak(doc)
+    }
+    
+    doc <- addTitle(doc, chapter_info$title, level=chapter_info$title_level)
+    
+    pop_data <- (i==2)
+    
+    fig_number <- canreg_report_import_txt(doc,chapter_info$file,folder, dt_all, fig_number,pop_data)
+    
+  }
+  
+  return(fig_number)
+  
+}
+
+
+canreg_report_import_txt <- function(doc,file,folder, dt_all, fig_number, pop_data=FALSE) {
+  
+  
   
   text <- scan(paste0(folder,"/", file), what="character", sep="\n", blank.lines.skip = FALSE, quiet=TRUE)
   if (length(text) > 1){
@@ -240,18 +336,128 @@ canreg_import_txt <- function(file,folder) {
   }
   
   text <- text[1]
-  text <- canreg_markdown_txt(text, file, folder)
-  return(text)
+  
+  #create markup table 
+  mark_pos <- NULL
+  mark_length <- NULL
+  
+  mark_table <- data.table(mark_pos=integer(),mark_length=integer(),mark_type=character())
+  
+  temp <- gregexpr("<EDIT FILE PATH>", text = text)[[1]]
+  mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("PATH", length(temp)))))
+  
+  temp <- gregexpr("<POPULATION DATA>", text = text)[[1]]
+  mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("POP", length(temp)))))
+  
+  temp <- gregexpr("\\<img:[^[:space:]]*\\.png\\>", text = text)[[1]]
+  mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("IMG", length(temp)))))
+  setkey(mark_table, mark_pos)
+  mark_table <- mark_table[mark_pos!=-1, ]
+  
+  if (pop_data ) {
+    if (!"POP" %in% mark_table$mark_type) {
+      mark_table <- rbind(mark_table,list(nchar(text),17,"POP"))
+    }
+  }
+  
+  
+  fig_number <- canreg_report_add_text(doc,text,mark_table,dt_all,file, folder, fig_number )
+  
+  return(fig_number)
+  
 }
 
-canreg_markdown_txt <- function(text, file, folder) {
+canreg_report_add_text <- function(doc, text, mark_table,dt_all,file, folder, fig_number) {
   
-  #<EDIT FILE PATH>
-  folder <- gsub("\\","\\\\",folder,fixed=TRUE)
-  temp <- paste0("This text can be edit directly in the template file:\n",folder,"\\\\",file,"\n")
-  text <- gsub("<EDIT FILE PATH>",temp, text)
-  return(text)
+  if (nrow(mark_table)==0) { #no markup
+    
+    if (!is.na(text)) {
+      doc <- addParagraph(doc,text) 
+    } 
+    
+  } else {
+    
+    start <- 0 
+    
+    for (i in 1:nrow(mark_table)) { 
+      
+      
+      stop <- mark_table$mark_pos[i]-1 #markup position
+      temp <- substr(text, start,stop) # add text before markup
+      
+      if (temp != "") {
+        doc <- addParagraph(doc,temp) 
+      }
+      
+      type <- mark_table$mark_type[i] 
+      
+      if (type == "PATH") {
+        
+        #folder <- gsub("\\","\\\\",folder,fixed=TRUE)
+        temp <- paste0("This text can be edit directly in the template file folder:\n",folder,"\n")
+        doc <- addParagraph(doc,temp) 
+        
+      } else if (type == "POP"){
+        
+        dt_report <- dt_all
+        dt_report <- canreg_pop_data(dt_report)
+        doc <- addParagraph(doc, "\r\n")
+        
+        total_pop <- formatC(round(unique(dt_report$Total)), format="d", big.mark=",") 
+        total_male <- formatC(round(dt_report[SEX==levels(SEX)[1], sum(COUNT)]), format="d", big.mark=",")
+        total_female <- formatC(round(dt_report[SEX==levels(SEX)[2], sum(COUNT)]), format="d", big.mark=",")
+        
+        doc <- addParagraph(doc,
+                            paste0("The average annual population was ", total_pop,
+                                   " (",total_male," males and ",total_female, " females).\n"))
+        
+        canreg_output(output_type = "png", filename =  paste0(tempdir(), "\\temp_graph"),landscape = TRUE,list_graph = FALSE,
+                      FUN=canreg_population_pyramid,
+                      df_data =dt_report,
+                      canreg_header = "")
+        
+        dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph.png")), "dim" )
+        doc <- addImage(doc, paste0(tempdir(), "\\temp_graph.png"),width=graph_width,height=graph_width*dims[1]/dims[2] )
+        doc <- addParagraph(doc,  paste0("Fig ",fig_number,". Estimated average annual population"))
+        fig_number <- fig_number+1
+        
+      } else if (type == "IMG") {
+        
+        img_file <-  substr(text, stop+5,stop+mark_table$mark_length[i])
+        
+        doc <- addParagraph(doc, "\r\n")
+        
+        if (file_test("-f",paste0(folder, "\\", img_file))) {
+          
+          dims <- attr(png::readPNG(paste0(folder,"\\", img_file)), "dim" )
+          doc <- addImage(doc, paste0(folder,"\\", img_file),width=3,height=3*dims[1]/dims[2],par.properties = parProperties(text.align = "left"))
+          doc <- addParagraph(doc, paste0("Fig ",fig_number,". ",img_file))
+          doc <- addParagraph(doc, "\r\n")
+          fig_number <- fig_number+1 
+          
+        } else {
+          temp <- paste0("The file: ",folder,"\\\\",img_file," does not exist\n")
+          doc <- addParagraph(doc,temp)
+          
+        }
+      }
+      
+      start <- stop + mark_table$mark_length[i]+1
+    }
+    
+    temp <- substr(text, start ,nchar(text)) # add text before markup
+    if (temp != "") {
+      doc <- addParagraph(doc,temp) 
+    }
+    
+  }
+  
+  return(fig_number)
+  
 }
+
+
+
 
 canreg_report_top_cancer_text <- function(dt_report, percent_equal=5, sex_select="Male") {
   
