@@ -5,7 +5,10 @@
   - Default report for further editing in Word or similar added.
   - Updated and harmonized look on most data visualizations.
   - Some new visualizations added.
-  - Updated the R package installer -- also created an installer that comes with bundled R packages.
+- Updated the R package installer 
+  - Created an installer that comes with bundled R packages for the latest version of R (Currently 3.4.0patched).
+  - R packages that CanReg5 uses are installed in a separate folder among the user's R libs so that we have more control over packages we use.
+  - R script to clean the folder for R packages added.
 - ICD-O-3 1st revision is now implemented in the checks and conversions by translating and adapting Jacques Ferlay's C++-code and tables.
   - New codes are added to the dictionaries when setting up a new CanReg5 system. Existing users must add the codes manually if desired. 
   - Added a default dictionary of morphological codes on 5 characters.
@@ -19,7 +22,7 @@
 - Other fixes.
 
 5.00.41b
-- Fixed bug in genertaion of variables list if source table contains more fields than patient table.
+- Fixed bug in generation of variables list if source table contains more fields than patient table.
 
 5.00.41
 - New data entry form. (Developed in collaboration with Betty Carballo and Patricio Carranza.)
