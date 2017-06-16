@@ -1,6 +1,6 @@
-<EDIT FILE PATH>
 The cancer registry aims to cover the whole area of Bestlandeverland, between the Rightland and Leftland, north of the Houlahoop.
 The population consists mainly of nice people, but around 20% are very weird, and might be agressive the 124th days of the year.
 The last census was made in 1580, but since one baby is born each time an old men die, the data should be accurate.
 
+<POPULATION DATA>
 img:map_example.png
