@@ -355,9 +355,6 @@ canreg_report_import_txt <- function(doc,file,folder, dt_all, fig_number, pop_da
   temp <- gregexpr("\\<img:[^[:space:]]*\\.jpe?g\\>", text = tolower(text))[[1]]
   mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("IMG", length(temp)))))
   
-  temp <- gregexpr("\\<img:[^[:space:]]*\\.tiff?\\>", text = tolower(text))[[1]]
-  mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("IMG", length(temp)))))
-  
   temp <- gregexpr("\\<img:[^[:space:]]*\\.bmp\\>", text = tolower(text))[[1]]
   mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("IMG", length(temp)))))
   
@@ -440,26 +437,25 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all,file, folder, fi
         if (file_test("-f",paste0(folder, "\\", img_file))) {
           
           #change extension to low cases in a temp file
-          lower_img_file <- tolower(img_file)
-          file.copy(paste0(folder, "\\", img_file), paste0(tempdir(),"\\", lower_img_file))
-          file_ext <- regmatches(lower_img_file, regexpr("[^\\.]*$",lower_img_file ))
+          file.copy(paste0(folder, "\\", img_file), paste0(tempdir(),"\\", tolower(img_file)))
           
-          
+		
+          file_ext <- tolower(regmatches(img_file, regexpr("[^\\.]*$",img_file )))
 
 			    #"Valid files are png, jpg, jpeg, gif, bmp, wmf, emf
           if (grepl("jpe?g$",file_ext)) {
-            dims <- attr(jpeg::readJPEG(paste0(tempdir(),"\\", lower_img_file)), "dim" )
+            dims <- attr(jpeg::readJPEG(paste0(tempdir(),"\\", tolower(img_file))), "dim" )
           } else if (file_ext == "png") {
-            dims <- attr(png::readPNG(paste0(tempdir(),"\\", lower_img_file)), "dim" )
+            dims <- attr(png::readPNG(paste0(tempdir(),"\\", tolower(img_file))), "dim" )
           } else if (file_ext == "bmp") {
-            dims <- attr(bmp::read.bmp(paste0(tempdir(),"\\", lower_img_file)), "dim" )
-          } 
+            dims <- attr(bmp::read.bmp(paste0(tempdir(),"\\", tolower(img_file))), "dim" )
+          }
           
-          doc <- addImage(doc, paste0(tempdir(),"\\", lower_img_file),width=3,height=3*dims[1]/dims[2],par.properties = parProperties(text.align = "left"))
+          doc <- addImage(doc, paste0(tempdir(),"\\", tolower(img_file)),width=3,height=3*dims[1]/dims[2],par.properties = parProperties(text.align = "left"))
           doc <- addParagraph(doc, paste0("Fig ",fig_number,". ",img_file))
           doc <- addParagraph(doc, "\r\n")
           fig_number <- fig_number+1 
-
+          
         } else {
           temp <- paste0("The file: ",folder,"\\\\",img_file," does not exist\n")
           doc <- addParagraph(doc,temp)
