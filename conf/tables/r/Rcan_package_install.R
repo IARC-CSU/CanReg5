@@ -2,7 +2,7 @@
 Args <- commandArgs(TRUE)
 
 
-packages_list <- c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","ReporteRs")
+packages_list <- c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","ReporteRs","bmp", "jpeg")
 
 ## get Args from canreg  
 skin <- FALSE
@@ -200,10 +200,16 @@ error = function(e) {
   close(log_connection)
   if (file.exists(filename)) file.remove(filename)
   
+   
+  #create log error file name 
+  log_name <- paste0(gsub("\\W","", label),"_",sc,"_",gsub("\\D","", Sys.time()),"_error_log.txt") 
+  
+  
   #find path and create log file
   pos <- max(gregexpr("\\", out, fixed=TRUE)[[1]])
   path <- substr(out,start=1, stop=pos)
-  log_file <- paste0(path, "canreg_log.txt")
+
+  log_file <- paste0(path, log_name)
   error_connection <- file(log_file,open="wt")
   sink(error_connection)
   sink(error_connection, type="message")
@@ -214,6 +220,10 @@ error = function(e) {
   cat("\n")
   #print argument from canreg
   print(Args)
+  cat("\n")
+  
+  #print R version and package load
+  print(sessionInfo())
   cat("\n")
   
   #print incidence / population file (r format)

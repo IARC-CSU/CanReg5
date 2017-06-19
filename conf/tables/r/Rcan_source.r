@@ -30,7 +30,7 @@
   
 tryCatch({
   
-  canreg_load_packages(c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","ReporteRs"))
+  canreg_load_packages(c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","ReporteRs", "bmp", "jpeg"))
   
   
   	#create filename from out and avoid double extension (.pdf.pdf)

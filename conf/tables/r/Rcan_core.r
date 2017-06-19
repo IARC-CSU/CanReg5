@@ -51,7 +51,7 @@ canreg_error_log <- function(e,filename,out,Args,inc,pop) {
   
   
   #print missing package
-  packages_list <- c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","ReporteRs")
+  packages_list <- c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","ReporteRs", "bmp", "jpeg")
   missing_packages <- packages_list[!(packages_list %in% installed.packages()[,"Package"])]  
   if (length(missing_packages) == 0) {
     print("No missing package")
@@ -230,7 +230,9 @@ canreg_cancer_info <- function(dt,
 canreg_report_template_extract <- function(report_path,script.basename) {
   
   # Copy template base if no file in the report_template folder
-  file <- list.files(path=report_path, pattern="^([1-9]{1,2}_)([1-9]{1,2}_([A-Z]_)?)?[^_]*\\.txt$")
+  
+  # detect txt file beginning with 1_, 12_, 2_ etc.. 
+  file <- list.files(path=report_path, pattern="^(\\d{1,2}_).*\\.txt$")
   
   if (length(file) == 0) {
     
@@ -256,7 +258,8 @@ canreg_report_template_extract <- function(report_path,script.basename) {
     
   }
   
-  file <- list.files(path=report_path, pattern="^([1-9]{1,2}_)([1-9]{1,2}_([A-Z]_)?)?[^_]*\\.txt$")
+  # detect txt file beginning with 1_, 12_, 2_ etc.. 
+  file <- list.files(path=report_path, pattern="^(\\d{1,2}_).*\\.txt$")
   
   dt_chapter <- canreg_report_chapter_table(file)
   return(dt_chapter)
@@ -266,11 +269,12 @@ canreg_report_template_extract <- function(report_path,script.basename) {
 
 canreg_report_chapter_table <- function(file) {
   
-  #get title_number
-  title_number <- regmatches(file, gregexpr("^([1-9]{1,2}_)([1-9]{1,2}_([A-Z]_)?)?",file ))
+  # find  position of first "_" followed by at least 2 non-numeric and not "_" character) 
+  pos_name <- gregexpr("_[^0-9_]{2,}.*?\\.txt$", file)
+  pos_name <- sapply(pos_name, `[[`, 1)
   
-  #get last occurence of _ in the title_number
-  pos_name <- sapply(gregexpr("_", title_number), max)
+  # extract title_number part
+  title_number <- substr(file, 0,pos_name)
   
   #extract title
   title <- substring(file,pos_name+1, nchar(file)-4)
@@ -349,8 +353,15 @@ canreg_report_import_txt <- function(doc,file,folder, dt_all, fig_number, pop_da
   temp <- gregexpr("<POPULATION DATA>", text = text)[[1]]
   mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("POP", length(temp)))))
   
-  temp <- gregexpr("\\<img:[^[:space:]]*\\.png\\>", text = text)[[1]]
+  temp <- gregexpr("\\<img:[^[:space:]]*\\.png\\>", text = tolower(text))[[1]]
   mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("IMG", length(temp)))))
+  
+  temp <- gregexpr("\\<img:[^[:space:]]*\\.jpe?g\\>", text = tolower(text))[[1]]
+  mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("IMG", length(temp)))))
+  
+  temp <- gregexpr("\\<img:[^[:space:]]*\\.bmp\\>", text = tolower(text))[[1]]
+  mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("IMG", length(temp)))))
+  
   setkey(mark_table, mark_pos)
   mark_table <- mark_table[mark_pos!=-1, ]
   
@@ -429,8 +440,22 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all,file, folder, fi
         
         if (file_test("-f",paste0(folder, "\\", img_file))) {
           
-          dims <- attr(png::readPNG(paste0(folder,"\\", img_file)), "dim" )
-          doc <- addImage(doc, paste0(folder,"\\", img_file),width=3,height=3*dims[1]/dims[2],par.properties = parProperties(text.align = "left"))
+          #change extension to low cases in a temp file
+          file.copy(paste0(folder, "\\", img_file), paste0(tempdir(),"\\", tolower(img_file)))
+          
+		
+          file_ext <- tolower(regmatches(img_file, regexpr("[^\\.]*$",img_file )))
+
+			    #"Valid files are png, jpg, jpeg, gif, bmp, wmf, emf
+          if (grepl("jpe?g$",file_ext)) {
+            dims <- attr(jpeg::readJPEG(paste0(tempdir(),"\\", tolower(img_file))), "dim" )
+          } else if (file_ext == "png") {
+            dims <- attr(png::readPNG(paste0(tempdir(),"\\", tolower(img_file))), "dim" )
+          } else if (file_ext == "bmp") {
+            dims <- attr(bmp::read.bmp(paste0(tempdir(),"\\", tolower(img_file))), "dim" )
+          }
+          
+          doc <- addImage(doc, paste0(tempdir(),"\\", tolower(img_file)),width=3,height=3*dims[1]/dims[2],par.properties = parProperties(text.align = "left"))
           doc <- addParagraph(doc, paste0("Fig ",fig_number,". ",img_file))
           doc <- addParagraph(doc, "\r\n")
           fig_number <- fig_number+1 
