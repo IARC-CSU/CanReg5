@@ -51,7 +51,7 @@ canreg_error_log <- function(e,filename,out,Args,inc,pop) {
   
   
   #print missing package
-  packages_list <- c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","ReporteRs")
+  packages_list <- c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","ReporteRs", "tiff", "jpeg")
   missing_packages <- packages_list[!(packages_list %in% installed.packages()[,"Package"])]  
   if (length(missing_packages) == 0) {
     print("No missing package")
@@ -349,8 +349,15 @@ canreg_report_import_txt <- function(doc,file,folder, dt_all, fig_number, pop_da
   temp <- gregexpr("<POPULATION DATA>", text = text)[[1]]
   mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("POP", length(temp)))))
   
-  temp <- gregexpr("\\<img:[^[:space:]]*\\.png\\>", text = text)[[1]]
+  temp <- gregexpr("\\<img:[^[:space:]]*\\.png\\>", text = tolower(text))[[1]]
   mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("IMG", length(temp)))))
+  
+  temp <- gregexpr("\\<img:[^[:space:]]*\\.jpe?g\\>", text = tolower(text))[[1]]
+  mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("IMG", length(temp)))))
+  
+  temp <- gregexpr("\\<img:[^[:space:]]*\\.tiff?\\>", text = tolower(text))[[1]]
+  mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("IMG", length(temp)))))
+  
   setkey(mark_table, mark_pos)
   mark_table <- mark_table[mark_pos!=-1, ]
   
@@ -428,8 +435,18 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all,file, folder, fi
         doc <- addParagraph(doc, "\r\n")
         
         if (file_test("-f",paste0(folder, "\\", img_file))) {
+		
+          file_ext <- tolower(regmatches(test, regexpr("[^\\.]*$",test )))
+
+			    
+          if (grepl("tiff?$",file_ext)) {
+            dims <- attr(tiff::readTIFF(paste0(folder,"\\", img_file)), "dim" )
+          } else if (grepl("jpe?g$",file_ext)) {
+            dims <- attr(jpeg::readJPEG(paste0(folder,"\\", img_file)), "dim" )
+          } else if (file_ext == "png") {
+            dims <- attr(png::readPNG(paste0(folder,"\\", img_file)), "dim" )
+          }
           
-          dims <- attr(png::readPNG(paste0(folder,"\\", img_file)), "dim" )
           doc <- addImage(doc, paste0(folder,"\\", img_file),width=3,height=3*dims[1]/dims[2],par.properties = parProperties(text.align = "left"))
           doc <- addParagraph(doc, paste0("Fig ",fig_number,". ",img_file))
           doc <- addParagraph(doc, "\r\n")
