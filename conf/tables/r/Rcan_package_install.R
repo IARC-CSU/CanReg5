@@ -2,7 +2,7 @@
 Args <- commandArgs(TRUE)
 
 
-packages_list <- c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","ReporteRs","tiff", "jpeg")
+packages_list <- c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","ReporteRs","bmp", "jpeg")
 
 ## get Args from canreg  
 skin <- FALSE
