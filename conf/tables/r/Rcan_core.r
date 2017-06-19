@@ -230,7 +230,9 @@ canreg_cancer_info <- function(dt,
 canreg_report_template_extract <- function(report_path,script.basename) {
   
   # Copy template base if no file in the report_template folder
-  file <- list.files(path=report_path, pattern="^([1-9]{1,2}_)([1-9]{1,2}_([A-Z]_)?)?[^_]*\\.txt$")
+  
+  # detect txt file beginning with 1_, 12_, 2_ etc.. 
+  file <- list.files(path=report_path, pattern="^(\\d{1,2}_).*\\.txt$")
   
   if (length(file) == 0) {
     
@@ -256,7 +258,8 @@ canreg_report_template_extract <- function(report_path,script.basename) {
     
   }
   
-  file <- list.files(path=report_path, pattern="^([1-9]{1,2}_)([1-9]{1,2}_([A-Z]_)?)?[^_]*\\.txt$")
+  # detect txt file beginning with 1_, 12_, 2_ etc.. 
+  file <- list.files(path=report_path, pattern="^(\\d{1,2}_).*\\.txt$")
   
   dt_chapter <- canreg_report_chapter_table(file)
   return(dt_chapter)
@@ -266,11 +269,12 @@ canreg_report_template_extract <- function(report_path,script.basename) {
 
 canreg_report_chapter_table <- function(file) {
   
-  #get title_number
-  title_number <- regmatches(file, gregexpr("^([1-9]{1,2}_)([1-9]{1,2}_([A-Z]_)?)?",file ))
+  # find  position of first "_" followed by at least 2 non-numeric and not "_" character) 
+  pos_name <- gregexpr("_[^0-9_]{2,}.*?\\.txt$", file)
+  pos_name <- sapply(pos_name, `[[`, 1)
   
-  #get last occurence of _ in the title_number
-  pos_name <- sapply(gregexpr("_", title_number), max)
+  # extract title_number part
+  title_number <- substr(file, 0,pos_name)
   
   #extract title
   title <- substring(file,pos_name+1, nchar(file)-4)
