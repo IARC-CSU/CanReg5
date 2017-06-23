@@ -245,3 +245,4 @@ CanReg5.zip.tmp6
 *.tmp7
 version.txt
 inno-settings.txt
+conf/tables/r/r-packages/*.zip
