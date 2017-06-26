@@ -30,7 +30,11 @@
   
 tryCatch({
   
+<<<<<<< HEAD
   canreg_load_packages(c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","ReporteRs", "zip"))
+=======
+  canreg_load_packages(c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","ReporteRs", "bmp", "jpeg"))
+>>>>>>> refs/remotes/origin/new-analysis-template
   
   
   	#create filename from out and avoid double extension (.pdf.pdf)
