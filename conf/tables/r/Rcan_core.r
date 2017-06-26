@@ -23,6 +23,8 @@ canreg_error_log <- function(e,filename,out,Args,inc,pop) {
     }
   }
   
+
+  
   #create log error file name 
   log_name <- paste0(gsub("\\W","", label),"_",sc,"_",gsub("\\D","", Sys.time()),"_error_log.txt") 
 
@@ -39,25 +41,36 @@ canreg_error_log <- function(e,filename,out,Args,inc,pop) {
   cat("The second part of this log (After '----------------------') contains your aggregated data, if you do not won't to share the aggregated data, you can delete this part.\n\n")
   print(paste("MY_ERROR:  ",e))
   cat("\n")
+  
   #print argument from canreg
   print(Args)
   cat("\n")
   
- 
+  #print environment
+  print(ls.str())
+  cat("\n")
   
   #print R version and package load
   print(sessionInfo())
   cat("\n")
   
+  #print java information if windows
+  if (Sys.info()[['sysname']] == "Windows") {
+    print(find.java())
+  }
   
   #print missing package
-  packages_list <- c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","ReporteRs")
+  packages_list <- c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","ReporteRs", "zip")
   missing_packages <- packages_list[!(packages_list %in% installed.packages()[,"Package"])]  
   if (length(missing_packages) == 0) {
     print("No missing package")
   } else {
     print(missing_packages)
   }
+  cat("\n")
+  
+  #test loading package
+  lapply(packages_list, require, character.only = TRUE)
   cat("\n")
   
   print("----------------------")
@@ -3258,4 +3271,32 @@ extract_legend_axes<-function(a_gplot){
   caption <- tmp$grobs[[caption_index]]
   dev.off()
   return(list(legend=legend, xlab=xlab, ylab=ylab, title=title, caption=caption))
+}
+
+reporteRs_OO_patched <- function (docx,temp_path=paste0(tempdir(),"\\temp" )) {
+  
+  unzip(docx, exdir=temp_path)
+  tmp_txt <- readLines(paste0(temp_path, "\\word\\document.xml"))
+  tmp_txt <- gsub("<w:tblGrid/><w:tr><w:tc>","<w:tblGrid><w:gridCol w:w=\"4104\"/><w:gridCol w:w=\"4104\"/></w:tblGrid><w:tr><w:tc>",tmp_txt,fixed = TRUE)
+  tmp_txt <- gsub("<w:tblGrid/><w:tr><w:trPr>","<w:tblGrid><w:gridCol w:w=\"2382\"/><w:gridCol w:w=\"1741\"/><w:gridCol w:w=\"1149\"/><w:gridCol w:w=\"886\"/><w:gridCol w:w=\"825\"/><w:gridCol w:w=\"953\"/><w:gridCol w:w=\"825\"/></w:tblGrid><w:tr><w:trPr>",tmp_txt,fixed = TRUE)
+  writeLines(tmp_txt, con=paste0(temp_path, "\\word\\document.xml"))
+  
+  temp_wd <- getwd()
+  setwd(temp_path)
+  zip("tmp.docx", files=list.files(all.files = TRUE, recursive = TRUE))
+  setwd(temp_wd)
+  file.copy(paste0(temp_path,"\\tmp.docx"),docx,overwrite=TRUE)
+  #file.remove(temp_path)
+  
+}
+
+find.java <- function() {
+  for (root in c("HLM", "HCU")) for (key in c("Software\\JavaSoft\\Java Runtime Environment", 
+                                              "Software\\JavaSoft\\Java Development Kit")) {
+    hive <- try(utils::readRegistry(key, root, 2), 
+                silent = TRUE)
+    if (!inherits(hive, "try-error")) 
+      return(hive)
+  }
+  hive
 }

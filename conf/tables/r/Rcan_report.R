@@ -387,6 +387,8 @@ tryCatch({
   
   writeDoc(doc, file = filename)
   
+  reporteRs_OO_patched(docx=filename)
+  
 
 #talk to canreg
   cat(paste("-outFile",filename,sep=":"))
