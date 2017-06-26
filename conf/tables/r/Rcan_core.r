@@ -3302,6 +3302,8 @@ extract_legend_axes<-function(a_gplot){
 
 reporteRs_OO_patched <- function (docx,temp_path=paste0(tempdir(),"\\temp" )) {
   
+  
+  # number: 4104, 2382... correspond to the table column wide setup by word and extract from the document.xml..
   unzip(docx, exdir=temp_path)
   tmp_txt <- readLines(paste0(temp_path, "\\word\\document.xml"))
   tmp_txt <- gsub("<w:tblGrid/><w:tr><w:tc>","<w:tblGrid><w:gridCol w:w=\"4104\"/><w:gridCol w:w=\"4104\"/></w:tblGrid><w:tr><w:tc>",tmp_txt,fixed = TRUE)
