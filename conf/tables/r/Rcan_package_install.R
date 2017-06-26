@@ -2,11 +2,9 @@
 Args <- commandArgs(TRUE)
 
 
-<<<<<<< HEAD
-packages_list <- c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","ReporteRs", "zip")
-=======
-packages_list <- c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","ReporteRs","bmp", "jpeg")
->>>>>>> refs/remotes/origin/new-analysis-template
+
+packages_list <- c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","ReporteRs", "zip","bmp", "jpeg")
+
 
 ## get Args from canreg  
 skin <- FALSE

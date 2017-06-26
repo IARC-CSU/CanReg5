@@ -60,11 +60,9 @@ canreg_error_log <- function(e,filename,out,Args,inc,pop) {
   }
   
   #print missing package
-<<<<<<< HEAD
-  packages_list <- c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","ReporteRs", "zip")
-=======
-  packages_list <- c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","ReporteRs", "bmp", "jpeg")
->>>>>>> refs/remotes/origin/new-analysis-template
+
+  packages_list <- c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","ReporteRs", "zip", "bmp", "jpeg")
+
   missing_packages <- packages_list[!(packages_list %in% installed.packages()[,"Package"])]  
   if (length(missing_packages) == 0) {
     print("No missing package")
