@@ -9,7 +9,7 @@ REM if not exist %isx% set errormsg=%isx% not found && goto errorhandler
 copy doc\CanReg5-Instructions\CanReg5-Instructions.pdf doc\
 %zx% a -tzip CanReg5.zip doc\CanReg5-Instructions.pdf
 %zx% a -tzip CanReg5.zip changelog.txt
-%zx% a -tzip CanReg5-R-packages.zip r-packages
+%zx% a -tzip CanReg5-R-packages.zip conf/tables/r/r-packages
 REM pull out translations and zip them
 rsync -Rtrv --include "*/" --include "*.properties" --exclude "*" ./src/canreg/client/ ./translations/
 %zx% a -tzip translations.zip translations\src

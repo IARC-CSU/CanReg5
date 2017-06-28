@@ -10,7 +10,7 @@ unlink(paste0(destdir,"/*.zip"),recursive = TRUE)
 
 
 # package list
-packages_list <- c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","ReporteRs")
+packages_list <- c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","ReporteRs","zip","bmp", "jpeg")
 
 #Select https repos
 old.repos <- getOption("repos") 

@@ -3,14 +3,14 @@
 destdir <- "c:/r-package"
 
 #create folder if do not exist
-dir.create(file.path(destdir)),recursive = TRUE)
+dir.create(file.path(destdir),recursive = TRUE)
 
 # clean destination folder (remove zip file)
 unlink(paste0(destdir,"/*.zip"),recursive = TRUE)
 
 
 # package list
-packages_list <- c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","ReporteRs")
+packages_list <- c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","ReporteRs","zip","bmp", "jpeg")
 
 #Select https repos
 old.repos <- getOption("repos") 

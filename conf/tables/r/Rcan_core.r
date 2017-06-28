@@ -23,6 +23,8 @@ canreg_error_log <- function(e,filename,out,Args,inc,pop) {
     }
   }
   
+
+  
   #create log error file name 
   log_name <- paste0(gsub("\\W","", label),"_",sc,"_",gsub("\\D","", Sys.time()),"_error_log.txt") 
 
@@ -39,25 +41,38 @@ canreg_error_log <- function(e,filename,out,Args,inc,pop) {
   cat("The second part of this log (After '----------------------') contains your aggregated data, if you do not won't to share the aggregated data, you can delete this part.\n\n")
   print(paste("MY_ERROR:  ",e))
   cat("\n")
+  
   #print argument from canreg
   print(Args)
   cat("\n")
   
- 
+  #print environment
+  print(ls.str())
+  cat("\n")
   
   #print R version and package load
   print(sessionInfo())
   cat("\n")
   
+  #print java information if windows
+  if (Sys.info()[['sysname']] == "Windows") {
+    print(find.java())
+  }
   
   #print missing package
-  packages_list <- c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","ReporteRs")
+
+  packages_list <- c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","ReporteRs", "zip", "bmp", "jpeg")
+
   missing_packages <- packages_list[!(packages_list %in% installed.packages()[,"Package"])]  
   if (length(missing_packages) == 0) {
     print("No missing package")
   } else {
     print(missing_packages)
   }
+  cat("\n")
+  
+  #test loading package
+  lapply(packages_list, require, character.only = TRUE)
   cat("\n")
   
   print("----------------------")
@@ -226,11 +241,111 @@ canreg_cancer_info <- function(dt,
 
 
 
-canreg_import_txt <- function(file,folder) {
+
+canreg_report_template_extract <- function(report_path,script.basename) {
   
-  if (!file_test("-f",paste0(folder, "\\", file))) {
-    file.copy(paste(sep="/", script.basename, "report_text", file),paste0(folder, "\\", file))
+  # Copy template base if no file in the report_template folder
+  
+  # detect txt file beginning with 1_, 12_, 2_ etc.. 
+  file <- list.files(path=report_path, pattern="^(\\d{1,2}_).*\\.txt$")
+  
+  if (length(file) == 0) {
+    
+    file_template <- list.files(path=paste(sep="/", script.basename, "report_text"), full.names = TRUE)
+    file.copy(file_template,report_path)
+    
   }
+  
+  
+  # Copy 1.1 chapter if missing
+  if (!any(grepl("^1_1_",file ))) {
+    
+    file_template <- list.files(path=paste(sep="/", script.basename, "report_text"),pattern= "^1_1_[^_]*\\.txt$", full.names = TRUE)
+    file.copy(file_template,report_path)
+    
+  }
+  
+  # Copy 1.2 chapter if missing
+  if (!any(grepl("^1_2_",file ))) {
+    
+    file_template <- list.files(path=paste(sep="/", script.basename, "report_text"),pattern= "^1_2_[^_]*\\.txt$", full.names = TRUE)
+    file.copy(file_template,report_path)
+    
+  }
+  
+  # detect txt file beginning with 1_, 12_, 2_ etc.. 
+  file <- list.files(path=report_path, pattern="^(\\d{1,2}_).*\\.txt$")
+  
+  dt_chapter <- canreg_report_chapter_table(file)
+  return(dt_chapter)
+  
+}
+
+
+canreg_report_chapter_table <- function(file) {
+  
+  # find  position of first "_" followed by at least 2 non-numeric and not "_" character) 
+  pos_name <- gregexpr("_[^0-9_]{2,}.*?\\.txt$", file)
+  pos_name <- sapply(pos_name, `[[`, 1)
+  
+  # extract title_number part
+  title_number <- substr(file, 0,pos_name)
+  
+  #extract title
+  title <- substring(file,pos_name+1, nchar(file)-4)
+  
+  #extract title level
+  title_level <- sapply(gregexpr("_", title_number), length)
+  
+  #create data table with information
+  dt_chapter <- data.table(file,title,title_level )
+  
+  #determine title order
+  dt_chapter[,title_number:=gsub("_", "", title_number)]
+  setkey(dt_chapter,title_number )
+  dt_chapter[,rank:=1:.N]   
+  
+  #Drop 1.3+ chapter
+  dt_chapter <- dt_chapter[!grepl("^[1][3-9]",dt_chapter$title_number )]
+  
+  
+  return(dt_chapter)
+  
+  
+}
+
+
+canreg_report_chapter_txt <- function(dt_chapter, doc, folder, dt_all, fig_number) {
+  
+  
+  doc <- addPageBreak(doc) # go to the next page
+  doc <- addTitle(doc, paste(dt_chapter$title[1], tolower(dt_chapter$title[2]), sep= " and "), level=1)
+  
+  
+  for (i in 1:nrow(dt_chapter)) {
+    
+    
+    chapter_info <- dt_chapter[i]
+    if (chapter_info$title_level == 1 ) {
+      doc <- addPageBreak(doc)
+    }
+    
+    doc <- addTitle(doc, chapter_info$title, level=chapter_info$title_level)
+    
+    pop_data <- (i==2)
+    
+    fig_number <- canreg_report_import_txt(doc,chapter_info$file,folder, dt_all, fig_number,pop_data)
+    
+  }
+  
+  return(fig_number)
+  
+}
+
+
+canreg_report_import_txt <- function(doc,file,folder, dt_all, fig_number, pop_data=FALSE) {
+  
+  
   
   text <- scan(paste0(folder,"/", file), what="character", sep="\n", blank.lines.skip = FALSE, quiet=TRUE)
   if (length(text) > 1){
@@ -240,18 +355,149 @@ canreg_import_txt <- function(file,folder) {
   }
   
   text <- text[1]
-  text <- canreg_markdown_txt(text, file, folder)
-  return(text)
+  
+  #create markup table 
+  mark_pos <- NULL
+  mark_length <- NULL
+  
+  mark_table <- data.table(mark_pos=integer(),mark_length=integer(),mark_type=character())
+  
+  temp <- gregexpr("<EDIT FILE PATH>", text = text)[[1]]
+  mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("PATH", length(temp)))))
+  
+  temp <- gregexpr("<POPULATION DATA>", text = text)[[1]]
+  mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("POP", length(temp)))))
+  
+  temp <- gregexpr("\\<img:[^[:space:]]*\\.png\\>", text = tolower(text))[[1]]
+  mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("IMG", length(temp)))))
+  
+  temp <- gregexpr("\\<img:[^[:space:]]*\\.jpe?g\\>", text = tolower(text))[[1]]
+  mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("IMG", length(temp)))))
+  
+  temp <- gregexpr("\\<img:[^[:space:]]*\\.bmp\\>", text = tolower(text))[[1]]
+  mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("IMG", length(temp)))))
+  
+  setkey(mark_table, mark_pos)
+  mark_table <- mark_table[mark_pos!=-1, ]
+  
+  if (pop_data ) {
+    if (!"POP" %in% mark_table$mark_type) {
+      mark_table <- rbind(mark_table,list(nchar(text),17,"POP"))
+    }
+  }
+  
+  
+  fig_number <- canreg_report_add_text(doc,text,mark_table,dt_all,file, folder, fig_number )
+  
+  return(fig_number)
+  
 }
 
-canreg_markdown_txt <- function(text, file, folder) {
+canreg_report_add_text <- function(doc, text, mark_table,dt_all,file, folder, fig_number) {
   
-  #<EDIT FILE PATH>
-  folder <- gsub("\\","\\\\",folder,fixed=TRUE)
-  temp <- paste0("This text can be edit directly in the template file:\n",folder,"\\\\",file,"\n")
-  text <- gsub("<EDIT FILE PATH>",temp, text)
-  return(text)
+  if (nrow(mark_table)==0) { #no markup
+    
+    if (!is.na(text)) {
+      doc <- addParagraph(doc,text) 
+    } 
+    
+  } else {
+    
+    start <- 0 
+    
+    for (i in 1:nrow(mark_table)) { 
+      
+      
+      stop <- mark_table$mark_pos[i]-1 #markup position
+      temp <- substr(text, start,stop) # add text before markup
+      
+      if (temp != "") {
+        doc <- addParagraph(doc,temp) 
+      }
+      
+      type <- mark_table$mark_type[i] 
+      
+      if (type == "PATH") {
+        
+        #folder <- gsub("\\","\\\\",folder,fixed=TRUE)
+        temp <- paste0("This text can be edit directly in the template file folder:\n",folder,"\n")
+        doc <- addParagraph(doc,temp) 
+        
+      } else if (type == "POP"){
+        
+        dt_report <- dt_all
+        dt_report <- canreg_pop_data(dt_report)
+        doc <- addParagraph(doc, "\r\n")
+        
+        total_pop <- formatC(round(unique(dt_report$Total)), format="d", big.mark=",") 
+        total_male <- formatC(round(dt_report[SEX==levels(SEX)[1], sum(COUNT)]), format="d", big.mark=",")
+        total_female <- formatC(round(dt_report[SEX==levels(SEX)[2], sum(COUNT)]), format="d", big.mark=",")
+        
+        doc <- addParagraph(doc,
+                            paste0("The average annual population was ", total_pop,
+                                   " (",total_male," males and ",total_female, " females).\n"))
+        
+        canreg_output(output_type = "png", filename =  paste0(tempdir(), "\\temp_graph"),landscape = TRUE,list_graph = FALSE,
+                      FUN=canreg_population_pyramid,
+                      df_data =dt_report,
+                      canreg_header = "")
+        
+        dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph.png")), "dim" )
+        doc <- addImage(doc, paste0(tempdir(), "\\temp_graph.png"),width=graph_width,height=graph_width*dims[1]/dims[2] )
+        doc <- addParagraph(doc,  paste0("Fig ",fig_number,". Estimated average annual population"))
+        fig_number <- fig_number+1
+        
+      } else if (type == "IMG") {
+        
+        img_file <-  substr(text, stop+5,stop+mark_table$mark_length[i])
+        
+        doc <- addParagraph(doc, "\r\n")
+        
+        if (file_test("-f",paste0(folder, "\\", img_file))) {
+          
+          #change extension to low cases in a temp file
+          file.copy(paste0(folder, "\\", img_file), paste0(tempdir(),"\\", tolower(img_file)))
+          
+		
+          file_ext <- tolower(regmatches(img_file, regexpr("[^\\.]*$",img_file )))
+
+			    #"Valid files are png, jpg, jpeg, gif, bmp, wmf, emf
+          if (grepl("jpe?g$",file_ext)) {
+            dims <- attr(jpeg::readJPEG(paste0(tempdir(),"\\", tolower(img_file))), "dim" )
+          } else if (file_ext == "png") {
+            dims <- attr(png::readPNG(paste0(tempdir(),"\\", tolower(img_file))), "dim" )
+          } else if (file_ext == "bmp") {
+            dims <- attr(bmp::read.bmp(paste0(tempdir(),"\\", tolower(img_file))), "dim" )
+          }
+          
+          doc <- addImage(doc, paste0(tempdir(),"\\", tolower(img_file)),width=3,height=3*dims[1]/dims[2],par.properties = parProperties(text.align = "left"))
+          doc <- addParagraph(doc, paste0("Fig ",fig_number,". ",img_file))
+          doc <- addParagraph(doc, "\r\n")
+          fig_number <- fig_number+1 
+          
+        } else {
+          temp <- paste0("The file: ",folder,"\\\\",img_file," does not exist\n")
+          doc <- addParagraph(doc,temp)
+          
+        }
+      }
+      
+      start <- stop + mark_table$mark_length[i]+1
+    }
+    
+    temp <- substr(text, start ,nchar(text)) # add text before markup
+    if (temp != "") {
+      doc <- addParagraph(doc,temp) 
+    }
+    
+  }
+  
+  return(fig_number)
+  
 }
+
+
+
 
 canreg_report_top_cancer_text <- function(dt_report, percent_equal=5, sex_select="Male") {
   
@@ -3052,4 +3298,34 @@ extract_legend_axes<-function(a_gplot){
   caption <- tmp$grobs[[caption_index]]
   dev.off()
   return(list(legend=legend, xlab=xlab, ylab=ylab, title=title, caption=caption))
+}
+
+reporteRs_OO_patched <- function (docx,temp_path=paste0(tempdir(),"\\temp" )) {
+  
+  
+  # number: 4104, 2382... correspond to the table column wide setup by word and extract from the document.xml..
+  unzip(docx, exdir=temp_path)
+  tmp_txt <- readLines(paste0(temp_path, "\\word\\document.xml"))
+  tmp_txt <- gsub("<w:tblGrid/><w:tr><w:tc>","<w:tblGrid><w:gridCol w:w=\"4104\"/><w:gridCol w:w=\"4104\"/></w:tblGrid><w:tr><w:tc>",tmp_txt,fixed = TRUE)
+  tmp_txt <- gsub("<w:tblGrid/><w:tr><w:trPr>","<w:tblGrid><w:gridCol w:w=\"2382\"/><w:gridCol w:w=\"1741\"/><w:gridCol w:w=\"1149\"/><w:gridCol w:w=\"886\"/><w:gridCol w:w=\"825\"/><w:gridCol w:w=\"953\"/><w:gridCol w:w=\"825\"/></w:tblGrid><w:tr><w:trPr>",tmp_txt,fixed = TRUE)
+  writeLines(tmp_txt, con=paste0(temp_path, "\\word\\document.xml"))
+  
+  temp_wd <- getwd()
+  setwd(temp_path)
+  zip("tmp.docx", files=list.files(all.files = TRUE, recursive = TRUE))
+  setwd(temp_wd)
+  file.copy(paste0(temp_path,"\\tmp.docx"),docx,overwrite=TRUE)
+  #file.remove(temp_path)
+  
+}
+
+find.java <- function() {
+  for (root in c("HLM", "HCU")) for (key in c("Software\\JavaSoft\\Java Runtime Environment", 
+                                              "Software\\JavaSoft\\Java Development Kit")) {
+    hive <- try(utils::readRegistry(key, root, 2), 
+                silent = TRUE)
+    if (!inherits(hive, "try-error")) 
+      return(hive)
+  }
+  hive
 }
