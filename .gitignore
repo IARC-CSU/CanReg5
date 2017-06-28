@@ -243,3 +243,4 @@ r-packages/*.zip
 *.tmp5
 CanReg5.zip.tmp6
 *.tmp7
+conf/tables/r/r-packages/*.zip
