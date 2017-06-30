@@ -3,8 +3,10 @@
 5.00.42 BETA
 - Analysis features updated in collaboration with Mathieu Laversanne:
   - Default report for further editing in Word or similar added.
-  - Updated and harmonized look on most data visualizations.
+    - Template system implemented.
+  - Updated and harmonized look of most data visualizations.
   - Some new visualizations added.
+  - Log files for analysis improved.
 - Updated the R package installer 
   - Created an installer that comes with bundled R packages for the latest version of R (Currently 3.4.0patched).
   - R packages that CanReg5 uses are installed in a separate folder among the user's R libs so that we have more control over packages we use.
@@ -14,7 +16,7 @@
   - Added a default dictionary of morphological codes on 5 characters.
   - Default labels harmonized with http://codes.iarc.fr .
 - Improved messages from Topography and Morphology checks.
-- Big parts of importing/exporting rewritten using an updated Java CSV library
+- Big parts of importing/exporting rewritten using an updated Java CSV library.
 - Files generated (either by exporting or saving tables in frequencies by year) now open in the associated software automatically.
 - Some updates to the French translation. (Thanks Eric Masuyer.)
 - Java Runtime Environment (JRE) 8 is now required.
