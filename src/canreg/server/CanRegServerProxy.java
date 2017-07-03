@@ -367,4 +367,10 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
         checkPermission("getSystemCode");
         return theServer.getCanRegSystemCode();
     }
+    
+    @Override
+    public String getCanRegSystemRegion() throws RemoteException, SecurityException {
+        checkPermission("getSystemRegion");
+        return theServer.getCanRegSystemRegion();
+    }
 }
