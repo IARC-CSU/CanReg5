@@ -213,10 +213,11 @@ public class Tools {
         LocalSettings localSettings = CanRegClientApp.getApplication().getLocalSettings();
                 
         String dateFormatString = localSettings.getDateFormatString();
+        DatabaseVariablesListElement.VariableType displayVariableType = localSettings.getDisplayVariableType();
 
         NodeList nl = doc.getElementsByTagName(namespace + "variable");
         // DatabaseVariablesListElement[] variables = new DatabaseVariablesListElement[nl.getLength()];
-        LinkedList<DatabaseVariablesListElement> variablesList = new LinkedList<DatabaseVariablesListElement>();
+        LinkedList<DatabaseVariablesListElement> variablesList = new LinkedList<>();
         // build a list of database variables
         for (int i = 0; i < nl.getLength(); i++) {
             Element e = (Element) nl.item(i);
@@ -284,6 +285,8 @@ public class Tools {
             if (variable.getVariableType().equalsIgnoreCase("Date")) {
                 variable.setDateFormatString(dateFormatString);
             }
+            
+            variable.setDisplayVariableType(displayVariableType);
             // Add variable to the list.
             variablesList.add(variable);
         }

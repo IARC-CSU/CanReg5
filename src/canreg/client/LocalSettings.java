@@ -19,6 +19,7 @@
  */
 package canreg.client;
 
+import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
 import canreg.common.Tools;
 import java.io.File;
@@ -177,6 +178,7 @@ public final class LocalSettings {
      *
      */    
     public static String DATE_FORMAT_KEY = "date_format_string";
+    public static String DISPLAY_VARIABLE_TYPE_KEY = "display_variable_type";
 
     /**
      *
@@ -438,6 +440,8 @@ public final class LocalSettings {
             property = DATA_ENTRY_VERSION_NEW;
         } else if (key.equalsIgnoreCase(DATE_FORMAT_KEY)){
             property = Globals.DATE_FORMAT_STRING;
+        } else if (key.equalsIgnoreCase(DISPLAY_VARIABLE_TYPE_KEY)){
+            property = DatabaseVariablesListElement.VariableType.FULL.toString();
         }
         return property;
     }
@@ -456,6 +460,7 @@ public final class LocalSettings {
         setProperty(FONT_SIZE_KEY, getDefaultProperty(FONT_SIZE_KEY));
         setProperty(DATA_ENTRY_VERSION_KEY, getDefaultProperty(DATA_ENTRY_VERSION_KEY));
         setProperty(DATE_FORMAT_KEY, getDefaultProperty(DATE_FORMAT_KEY));
+        setProperty(DISPLAY_VARIABLE_TYPE_KEY, getDefaultProperty(DISPLAY_VARIABLE_TYPE_KEY));
         settingsChanged = true;
     }
 
@@ -747,5 +752,14 @@ public final class LocalSettings {
         // Ref: https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
         df = df.replaceAll("m", "M");
         return df;
+    }
+
+    public DatabaseVariablesListElement.VariableType getDisplayVariableType() {
+        String dvt_s = getProperty(DISPLAY_VARIABLE_TYPE_KEY).toUpperCase();
+        DatabaseVariablesListElement.VariableType dvt_e = DatabaseVariablesListElement.VariableType.valueOf(dvt_s);
+        if (dvt_e == null) {
+            dvt_e = DatabaseVariablesListElement.VariableType.valueOf(getDefaultProperty(DISPLAY_VARIABLE_TYPE_KEY));
+        }
+        return dvt_e;
     }
 }
