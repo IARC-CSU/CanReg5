@@ -8,7 +8,7 @@
   - Some new visualizations added.
   - Log files for analysis improved.
 - Updated the R package installer 
-  - Created an installer that comes with bundled R packages for the latest version of R (Currently 3.4.0patched).
+  - Created an installer that comes with bundled R packages for the latest version of R (Currently 3.4.0).
   - R packages that CanReg5 uses are installed in a separate folder among the user's R libs so that we have more control over packages we use.
   - R script to clean the folder for R packages added.
 - ICD-O-3 1st revision is now implemented in the checks and conversions by translating and adapting Jacques Ferlay's C++-code and tables.
