@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2016 International Agency for Research on Cancer
+ * Copyright (C) 2008-2017 International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -402,12 +402,11 @@ public class CanRegDAO {
             Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
         }
 
-
         for (PopulationDataset popset : populationDatasetMap.values()) {
             if (!popset.isWorldPopulationBool()) {
                 popset.setWorldPopulation(
                         populationDatasetMap.get(
-                        popset.getWorldPopulationID()));
+                                popset.getWorldPopulationID()));
             }
         }
 
@@ -635,7 +634,6 @@ public class CanRegDAO {
             //        globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName())) {
             //    statement.execute(command);
             //}
-
             // Build keys
             dropAndRebuildKeys(statement);
 
@@ -676,7 +674,6 @@ public class CanRegDAO {
         // http://db.apache.org/derby/docs/dev/devguide/tdevdvlpcollation.html#tdevdvlpcollation
         // We do it without the territory set so that the default JVM one is taken
         // Should this be moved to an option? I guess not...
-
         dbProperties.put("collation", "TERRITORY_BASED:PRIMARY");
 
         try {
@@ -766,8 +763,7 @@ public class CanRegDAO {
 
     /**
      *
-     * @return
-     * @throws java.sql.SQLException
+     * @return @throws java.sql.SQLException
      * @throws java.rmi.RemoteException
      */
     public boolean connect() throws SQLException, RemoteException {
@@ -838,7 +834,6 @@ public class CanRegDAO {
             }
 
             // test
-
             debugOut("Cocuou from the database connection...\nVersion: " + dbConnection.getMetaData().getDatabaseProductVersion());
             debugOut("Next patient ID = " + getNextPatientID());
         } catch (SQLException ex) {
@@ -903,8 +898,7 @@ public class CanRegDAO {
 
     /**
      *
-     * @return 
-     * @throws java.sql.SQLException
+     * @return @throws java.sql.SQLException
      */
     public boolean disconnect() throws SQLException {
         boolean shutdownSuccess = false;
@@ -971,7 +965,6 @@ public class CanRegDAO {
                 // System.out.println(
                 //         element.getElementsByTagName(Globals.NAMESPACE + "short_name").item(0).getTextContent() +
                 //         ": " + obj.toString());
-
                 if (variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_ALPHA_NAME) || variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_ASIAN_TEXT_NAME) || variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_DICTIONARY_NAME) || variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_DATE_NAME) || variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_TEXT_AREA_NAME)) {
                     if (obj != null) {
                         try {
@@ -1424,20 +1417,18 @@ public class CanRegDAO {
         boolean success = false;
         if (isRecordLocked(recordID, tableName)) {
             throw new RecordLockedException();
+        } else if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
+            success = deletePatientRecord(recordID);
+        } else if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
+            success = deleteTumourRecord(recordID);
+        } else if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
+            success = deleteSourceRecord(recordID);
         } else {
-            if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
-                success = deletePatientRecord(recordID);
-            } else if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
-                success = deleteTumourRecord(recordID);
-            } else if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
-                success = deleteSourceRecord(recordID);
-            } else {
-                String idString = "ID";
-                // ResultSet results = null;
-                Statement statement = dbConnection.createStatement();
-                statement.execute("DELETE FROM " + Globals.SCHEMA_NAME + "." + tableName + " WHERE " + idString + " = " + recordID);
-                success = true;
-            }
+            String idString = "ID";
+            // ResultSet results = null;
+            Statement statement = dbConnection.createStatement();
+            statement.execute("DELETE FROM " + Globals.SCHEMA_NAME + "." + tableName + " WHERE " + idString + " = " + recordID);
+            success = true;
         }
         return success;
     }
@@ -1684,7 +1675,9 @@ public class CanRegDAO {
         }
         // Morphology
         try {
-            fillDictionary(Globals.StandardVariableNames.Morphology, Globals.DEFAULT_DICTIONARIES_FOLDER + "/morphology.tsv");
+            fillDictionary(Globals.StandardVariableNames.Morphology, Globals.DEFAULT_DICTIONARIES_FOLDER + "/morphology4.tsv");
+            // TODO -- autofill five character morphologies as well...
+            // fillDictionary(Globals.StandardVariableNames.Morphology, Globals.DEFAULT_DICTIONARIES_FOLDER + "/morphology5.tsv");
         } catch (IOException ex) {
             Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -2136,70 +2129,70 @@ public class CanRegDAO {
     private PreparedStatement stmtGetHighestSourceRecordID;
     private PreparedStatement stmtMaxNumberOfSourcesPerTumourRecord;
     private final String ns = Globals.NAMESPACE;
-    private static final String strGetPatient =
-            "SELECT * FROM APP.PATIENT "
+    private static final String strGetPatient
+            = "SELECT * FROM APP.PATIENT "
             + "WHERE " + Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
-    private final String strGetPatients =
-            "SELECT * FROM APP.PATIENT";
-    private final String strGetUsers =
-            "SELECT * FROM APP.USERS";
-    private final String strCountPatients =
-            "SELECT COUNT(*) FROM APP.PATIENT";
-    private final String strCountSources =
-            "SELECT COUNT(*) FROM APP.SOURCE";
-    private final String strGetSources =
-            "SELECT * FROM APP.SOURCE";
+    private final String strGetPatients
+            = "SELECT * FROM APP.PATIENT";
+    private final String strGetUsers
+            = "SELECT * FROM APP.USERS";
+    private final String strCountPatients
+            = "SELECT COUNT(*) FROM APP.PATIENT";
+    private final String strCountSources
+            = "SELECT COUNT(*) FROM APP.SOURCE";
+    private final String strGetSources
+            = "SELECT * FROM APP.SOURCE";
     private final String strGetPatientsAndTumours;
     private final String strCountPatientsAndTumours;
     private final String strGetSourcesAndTumours;
     private final String strCountSourcesAndTumours;
     private final String strGetSourcesAndTumoursAndPatients;
     private final String strCountSourcesAndTumoursAndPatients;
-    private static final String strGetTumour =
-            "SELECT * FROM APP.TUMOUR "
+    private static final String strGetTumour
+            = "SELECT * FROM APP.TUMOUR "
             + "WHERE " + Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
-    private static final String strGetSource =
-            "SELECT * FROM APP.Source "
+    private static final String strGetSource
+            = "SELECT * FROM APP.Source "
             + "WHERE " + Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
-    private final String strGetTumours =
-            "SELECT * FROM APP.TUMOUR";
-    private final String strCountTumours =
-            "SELECT COUNT(*) FROM APP.TUMOUR";
-    private static final String strGetDictionary =
-            "SELECT * FROM APP.DICTIONARIES "
+    private final String strGetTumours
+            = "SELECT * FROM APP.TUMOUR";
+    private final String strCountTumours
+            = "SELECT COUNT(*) FROM APP.TUMOUR";
+    private static final String strGetDictionary
+            = "SELECT * FROM APP.DICTIONARIES "
             + "WHERE ID = ?";
-    private final String strGetDictionaries =
-            "SELECT * FROM APP.DICTIONARIES ";
-    private static final String strGetDictionaryEntry =
-            "SELECT * FROM APP.DICTIONARY "
+    private final String strGetDictionaries
+            = "SELECT * FROM APP.DICTIONARIES ";
+    private static final String strGetDictionaryEntry
+            = "SELECT * FROM APP.DICTIONARY "
             + "WHERE ID = ?";
-    private static final String strGetDictionaryEntries =
-            "SELECT * FROM APP.DICTIONARY ORDER BY ID";
-    private static final String strGetPopulationDatasetEntries =
-            "SELECT * FROM APP.PDSET ";
-    private static final String strGetPopulationDatasets =
-            "SELECT * FROM APP.PDSETS ";
-    private static final String strGetNameSexRecords =
-            "SELECT * FROM APP.NAMESEX ";
-    private static final String strDeletePatientRecord =
-            "DELETE FROM APP.PATIENT "
+    private static final String strGetDictionaryEntries
+            = "SELECT * FROM APP.DICTIONARY ORDER BY ID";
+    private static final String strGetPopulationDatasetEntries
+            = "SELECT * FROM APP.PDSET ";
+    private static final String strGetPopulationDatasets
+            = "SELECT * FROM APP.PDSETS ";
+    private static final String strGetNameSexRecords
+            = "SELECT * FROM APP.NAMESEX ";
+    private static final String strDeletePatientRecord
+            = "DELETE FROM APP.PATIENT "
             + "WHERE " + Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
-    private static final String strDeleteSourceRecord =
-            "DELETE FROM APP.SOURCE "
+    private static final String strDeleteSourceRecord
+            = "DELETE FROM APP.SOURCE "
             + "WHERE " + Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
-    private static final String strDeleteTumourRecord =
-            "DELETE FROM APP.TUMOUR "
+    private static final String strDeleteTumourRecord
+            = "DELETE FROM APP.TUMOUR "
             + "WHERE " + Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
-    private static final String strDeleteDictionaryEntries =
-            "DELETE FROM APP.DICTIONARY "
+    private static final String strDeleteDictionaryEntries
+            = "DELETE FROM APP.DICTIONARY "
             + "WHERE DICTIONARY = ?";
-    private static final String strClearNameSexTable =
-            "DELETE FROM APP.NAMESEX";
-    private static final String strDeletePopulationDataset =
-            "DELETE FROM APP.PDSETS "
+    private static final String strClearNameSexTable
+            = "DELETE FROM APP.NAMESEX";
+    private static final String strDeletePopulationDataset
+            = "DELETE FROM APP.PDSETS "
             + "WHERE PDS_ID = ?";
-    private static final String strDeletePopulationDatasetEntries =
-            "DELETE FROM APP.PDSET "
+    private static final String strDeletePopulationDatasetEntries
+            = "DELETE FROM APP.PDSET "
             + "WHERE PDS_ID = ?";
     // The Dynamic ones
     private final String strMaxNumberOfSourcesPerTumourRecord;
@@ -2367,13 +2360,13 @@ public class CanRegDAO {
             } else {
                 filterString = " AND ( " + filterString + " )";
             }
-        } 
+        }
 
         // Add the range part
         if ((filter.getRangeStart() != null && filter.getRangeStart().length() > 0) || (filter.getRangeEnd() != null && filter.getRangeEnd().length() > 0)) {
-            if (!filterString.isEmpty()) 
+            if (!filterString.isEmpty()) {
                 filterString += " AND ";
-            else { 
+            } else {
                 filterString += " WHERE ";
             }
             String rangeFilterString = QueryGenerator.buildRangePart(filter);
@@ -2389,7 +2382,6 @@ public class CanRegDAO {
             }
 
             // variablesList = variablesList.substring(0, variablesList.length() - 2);
-
         }
         String patientIDVariableNamePatientTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
         String patientIDVariableNameTumourTable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName();
@@ -2511,10 +2503,10 @@ public class CanRegDAO {
         }
 
         /* debug stuff */
-         System.out.println("filterString: " + filterStringBuilder);
-         System.out.println("getterString: " + getterStringBuilder);
-         System.out.println("counterString: " + counterStringBuilder);
-         /* */
+        System.out.println("filterString: " + filterStringBuilder);
+        System.out.println("getterString: " + getterStringBuilder);
+        System.out.println("counterString: " + counterStringBuilder);
+        /* */
 
         ResultSet countRowSet;
         try {
@@ -2547,9 +2539,9 @@ public class CanRegDAO {
     }
 
     private void fillDictionary(Globals.StandardVariableNames standardVariableName, String fileName) throws IOException {
-        DatabaseVariablesListElement element =
-                globalToolBox.translateStandardVariableNameToDatabaseListElement(
-                standardVariableName.toString());
+        DatabaseVariablesListElement element
+                = globalToolBox.translateStandardVariableNameToDatabaseListElement(
+                        standardVariableName.toString());
         if (element != null) {
             DatabaseDictionaryListElement dictionary = element.getDictionary();
             InputStream in = getClass().getResourceAsStream(fileName);
@@ -2582,7 +2574,7 @@ public class CanRegDAO {
         // Set primary keys in patient table
         for (String command : QueryGenerator.strCreatePatientTablePrimaryKey(
                 globalToolBox.translateStandardVariableNameToDatabaseListElement(
-                Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName())) {
+                        Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName())) {
             try {
                 System.out.println(command);
                 statement.execute(command);
@@ -2594,7 +2586,7 @@ public class CanRegDAO {
         // Set primary keys in tumour table
         for (String command : QueryGenerator.strCreateTumourTablePrimaryKey(
                 globalToolBox.translateStandardVariableNameToDatabaseListElement(
-                Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName())) {
+                        Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName())) {
             try {
                 System.out.println(command);
                 statement.execute(command);
@@ -2607,7 +2599,7 @@ public class CanRegDAO {
         // Set primary keys in source table
         for (String command : QueryGenerator.strCreateSourceTablePrimaryKey(
                 globalToolBox.translateStandardVariableNameToDatabaseListElement(
-                Globals.StandardVariableNames.SourceRecordID.toString()).getDatabaseVariableName())) {
+                        Globals.StandardVariableNames.SourceRecordID.toString()).getDatabaseVariableName())) {
             try {
                 System.out.println(command);
                 statement.execute(command);
@@ -2620,9 +2612,9 @@ public class CanRegDAO {
         // Set foreign keys in tumour table
         for (String command : QueryGenerator.strCreateTumourTableForeignKey(
                 globalToolBox.translateStandardVariableNameToDatabaseListElement(
-                Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName(),
+                        Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName(),
                 globalToolBox.translateStandardVariableNameToDatabaseListElement(
-                Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName())) {
+                        Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName())) {
             try {
                 System.out.println(command);
                 statement.execute(command);
@@ -2634,9 +2626,9 @@ public class CanRegDAO {
         // Set foreign keys in source table
         for (String command : QueryGenerator.strCreateSourceTableForeignKey(
                 globalToolBox.translateStandardVariableNameToDatabaseListElement(
-                Globals.StandardVariableNames.TumourIDSourceTable.toString()).getDatabaseVariableName(),
+                        Globals.StandardVariableNames.TumourIDSourceTable.toString()).getDatabaseVariableName(),
                 globalToolBox.translateStandardVariableNameToDatabaseListElement(
-                Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName())) {
+                        Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName())) {
             try {
                 System.out.println(command);
                 statement.execute(command);

@@ -3,7 +3,7 @@
 destdir <- "c:/r-package"
 
 #create folder if do not exist
-dir.create(file.path(destdir)),recursive = TRUE)
+dir.create(file.path(destdir),recursive = TRUE)
 
 # clean destination folder (remove zip file)
 unlink(paste0(destdir,"/*.zip"),recursive = TRUE)

@@ -241,9 +241,10 @@ public class Globals {
     public static String NAMESEX_TABLE_SEX_VARIABLE_NAME = "SEX";
     public static String NAMESEX_TABLE_NAME = "NAMESEX";
     public static final int MAX_ERROR_LINES = 25;
-    public static final String morphologicalFamiliesLookUpFileResource = "/canreg/common/resources/lookup/MorphFam.txt";
-    public static final String mustLookupFile = "/canreg/common/resources/lookup/Must.txt";
-    public static final String mustNotLookupFile = "/canreg/common/resources/lookup/MustNot.txt";
+    public static final String MORPHOLOGICAL_FAMILIES_LOOKUP_FILE_RESOURCE = "/canreg/common/resources/lookup/MorphFam.txt";
+    public static final String MUST_LOOKUP_FILE_RESOURCE = "/canreg/common/resources/lookup/Must.txt";
+    public static final String MUST_NOT_LOOKUP_FILE_RESOURCE = "/canreg/common/resources/lookup/MustNot.txt";
+    public static final String MORPH_FAM_DICT_LOOKUP_FILE_RESOURCE = "/canreg/common/resources/lookup/MorphFamDict.txt";
     public static String newline = System.getProperty("line.separator");
     public static boolean SHOW_GARBLER = false;
     public static int DEFAULT_UNKNOWN_AGE_CODE = 999;
