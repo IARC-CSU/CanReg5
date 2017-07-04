@@ -123,7 +123,6 @@ public class CanRegClientApp extends SingleFrameApplication {
     private String canRegSystemVersionString;
     private TreeMap<String, Set<Integer>> locksMap;
     private LockFile lockFile;
-    private String systemCode;
 
     public void changePassword(String encrypted) throws SecurityException, RemoteException {
         try {
@@ -441,7 +440,6 @@ public class CanRegClientApp extends SingleFrameApplication {
 
     public String loginDirect(String serverCode, String username, char[] password) throws LoginException, NullPointerException, NotBoundException, MalformedURLException, RemoteException, UnknownHostException, WrongCanRegVersionException {
         // should this be moved to the loginserver?
-        this.systemCode = serverCode;
         CanRegLoginInterface loginServer = new CanRegLoginImpl(serverCode);
         return login(loginServer, username, password);
     }
@@ -463,7 +461,6 @@ public class CanRegClientApp extends SingleFrameApplication {
             debugOut("LOGIN SUCCESSFULL");
             // This should work...
             systemName = server.getCanRegSystemName();
-            systemCode = server.getCanRegSystemCode();
             loggedIn = true;
             doc = server.getDatabseDescription();
             dictionary = server.getDictionary();
@@ -493,10 +490,14 @@ public class CanRegClientApp extends SingleFrameApplication {
         return systemName;
     }
 
-    public String getSystemCode() {
-        return systemCode;
+    public String getSystemCode() throws RemoteException {
+        return server.getCanRegSystemCode();
     }
 
+    public String getSystemRegion() throws RemoteException {
+        return server.getCanRegSystemRegion();
+    }
+    
     public DatabaseStats getDatabaseStats() throws SecurityException, RemoteException {
         try {
             return server.getDatabaseStats();
@@ -1658,20 +1659,18 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     private synchronized void releaseAllRecordsHeldByThisClient() {
-        for (String tableName : locksMap.keySet()) {
+        locksMap.keySet().stream().forEach((tableName) -> {
             Set<Integer> lockSet = locksMap.get(tableName);
             if (lockSet != null) {
-                for (Integer recordID : lockSet) {
+                lockSet.stream().forEach((recordID) -> {
                     try {
                         releaseRecord(recordID, tableName);
-                    } catch (RemoteException ex) {
-                        Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (SecurityException ex) {
+                    } catch (RemoteException | SecurityException ex) {
                         Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                }
+                });
             }
-        }
+        });
         lockFile.writeMap();
     }
 
@@ -1729,4 +1728,6 @@ public class CanRegClientApp extends SingleFrameApplication {
             return canRegClientView.getDesktopPane();
         }
     }
+
+
 }
