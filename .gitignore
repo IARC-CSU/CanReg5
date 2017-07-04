@@ -240,3 +240,7 @@ doc/CanReg5-Instructions.pdf
 CanReg5-R-packages.zip
 /CanReg5.zip.tmp4
 r-packages/*.zip
+*.tmp5
+CanReg5.zip.tmp6
+*.tmp7
+conf/tables/r/r-packages/*.zip
