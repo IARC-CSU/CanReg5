@@ -497,4 +497,8 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     public void setDateFormatString(String dateFormat) {
         this.dateFormatString = dateFormat;
     }
+    
+    public String getDisplayVariableName() {
+        return "test"; // TODO IMPLEMENT!
+    }
 }
