@@ -19,7 +19,7 @@ script.name <- sub(file.arg.name, "",
 script.basename <- dirname(script.name)
 
 ## LOADING DEPENDENCIES
-source(paste(sep="/", script.basename, "StartUp.R")) 
+source(paste(sep="/", script.basename, "StartUp.r")) 
 
 
 ############################### FORMATING DATA ############################### 

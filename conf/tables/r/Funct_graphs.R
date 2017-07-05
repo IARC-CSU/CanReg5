@@ -1,7 +1,7 @@
 # Dependencies for graphics
 		
 	# Check that ggplot is installed
-	source(paste(sep="/", script.basename, "Funct_misc.R"))  # Misc functions
+	source(paste(sep="/", script.basename, "Funct_misc.r"))  # Misc functions
 	if(!is.installed("ggplot2")){
 		load.fun("ggplot2")
 	}       
