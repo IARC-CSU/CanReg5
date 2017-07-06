@@ -18,7 +18,7 @@
     script.basename <- dirname(script.name)
 
 ## LOADING DEPENDENCIES
-    source(paste(sep="/", script.basename, "StartUp.R")) 
+    source(paste(sep="/", script.basename, "StartUp.r")) 
     if(!is.installed("reshape2")){load.fun("reshape2")}       
 	require(reshape2)
 

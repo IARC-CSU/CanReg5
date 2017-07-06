@@ -7,17 +7,17 @@ script.name <- sub(file.arg.name, "", initial.options[grep(file.arg.name, initia
 script.basename <- dirname(script.name)
 
 ##Load dependencies
-source(paste(sep="/", script.basename, "figure_AgeSpecificIncidenceRates.R"))
-source(paste(sep="/", script.basename, "subsetSex.R"))	
-source(paste(sep="/", script.basename, "mergePeriods.R"))
-source(paste(sep="/", script.basename, "makeageSpecIncRates.R"))
-source(paste(sep="/", script.basename, "subsetSite.R"))
-source(paste(sep="/", script.basename, "plotAgeSpecIncRates.R"))
+source(paste(sep="/", script.basename, "figure_AgeSpecificIncidenceRates.r"))
+source(paste(sep="/", script.basename, "subsetSex.r"))	
+source(paste(sep="/", script.basename, "mergePeriods.r"))
+source(paste(sep="/", script.basename, "makeageSpecIncRates.r"))
+source(paste(sep="/", script.basename, "subsetSite.r"))
+source(paste(sep="/", script.basename, "plotAgeSpecIncRates.r"))
 source(paste(sep="/", script.basename, "plotLogAgeSpecIncRates.r"))
-source(paste(sep="/", script.basename, "makeTable.R"))
-source(paste(sep="/", script.basename, "checkArgs.R"))
-source(paste(sep="/", script.basename, "load.fun.R")) # makeFile needs this
-source(paste(sep="/", script.basename, "makeFile.R"))
+source(paste(sep="/", script.basename, "makeTable.r"))
+source(paste(sep="/", script.basename, "checkArgs.r"))
+source(paste(sep="/", script.basename, "load.fun.r")) # makeFile needs this
+source(paste(sep="/", script.basename, "makeFile.r"))
 
 ##OutFile
 out <- checkArgs(Args, "-out")
