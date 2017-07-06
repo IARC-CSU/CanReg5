@@ -146,7 +146,7 @@ public class Tools {
 
         RFileBuilder rff = new RFileBuilder();
 
-        File script = new File(Globals.R_SCRIPTS_PATH + "/makeSureGgplot2IsInstalled.R");
+        File script = new File(Globals.R_SCRIPTS_PATH + "/makeSureGgplot2IsInstalled.r");
         rff.appendHeader(script.getAbsolutePath());
 
         rff.appendFileTypePart(fileType, fileName);
@@ -169,7 +169,7 @@ public class Tools {
         System.out.println(rff.getScript());
 
         try {
-            File tempFile = File.createTempFile("script", ".R");
+            File tempFile = File.createTempFile("script", ".r");
             // generatedFiles.add(tempFile.getPath());
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
                     new FileOutputStream(tempFile), "UTF8"));
