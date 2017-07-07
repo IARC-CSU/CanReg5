@@ -13573,6 +13573,10 @@ Jacques Ferlay (Original PostScript code, conversion tables, and original
 \end_layout
 
 \begin_layout Itemize
+Mathieu Laversanne (R code for analysis)
+\end_layout
+
+\begin_layout Itemize
 Anahita Rahimi (R code for analysis)
 \end_layout
 
@@ -13581,11 +13585,7 @@ Sebastien Antoni (R code for analysis)
 \end_layout
 
 \begin_layout Itemize
-Hemant Dhivar (Migration Tool)
-\end_layout
-
-\begin_layout Itemize
-Betty Carballo and Patricio Carranza (New Dataentry form)
+Betty Carballo and Patricio Carranza (New Data Entry form)
 \end_layout
 
 \begin_layout Subsection
@@ -13649,7 +13649,7 @@ Michel Smans, IARC/ITS
 \end_layout
 
 \begin_layout Itemize
-Lucile Alteyrac, IARC/BIO
+Lucile Alteyrac, IARC/ITS
 \end_layout
 
 \begin_layout Subsection
