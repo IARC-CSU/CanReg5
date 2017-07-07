@@ -276,7 +276,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, lookAndFeelPanelLayout.createSequentialGroup()
                         .addComponent(dataEntryDisplayVariableLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dataEntryDisplayVariableComboBox, 0, 328, Short.MAX_VALUE)
+                        .addComponent(dataEntryDisplayVariableComboBox, 0, 312, Short.MAX_VALUE)
                         .addContainerGap())))
         );
         lookAndFeelPanelLayout.setVerticalGroup(

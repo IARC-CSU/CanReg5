@@ -255,7 +255,7 @@
                               <Group type="102" alignment="1" attributes="0">
                                   <Component id="dataEntryDisplayVariableLabel" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="dataEntryDisplayVariableComboBox" pref="328" max="32767" attributes="0"/>
+                                  <Component id="dataEntryDisplayVariableComboBox" pref="312" max="32767" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                               </Group>
                           </Group>
