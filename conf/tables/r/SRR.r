@@ -12,9 +12,9 @@
 	script.basename <- dirname(script.name)
 
 ## Loading dependencies
-	source(paste(sep="/", script.basename, "checkArgs.R")) # Apparently this returns the arguments
-	source(paste(sep="/", script.basename, "Funct_rates.R"))  # Rates calculation functions
-	source(paste(sep="/", script.basename, "Funct_misc.R"))  # Misc functions
+	source(paste(sep="/", script.basename, "checkArgs.r")) # Apparently this returns the arguments
+	source(paste(sep="/", script.basename, "Funct_rates.r"))  # Rates calculation functions
+	source(paste(sep="/", script.basename, "Funct_misc.r"))  # Misc functions
 	
 ## Filename & File type
 	out <- checkArgs(Args, "-out")

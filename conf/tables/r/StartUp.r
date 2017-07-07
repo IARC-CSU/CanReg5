@@ -18,19 +18,19 @@
 ############################### LIBRARIES #####################################
 
 ## CHECK ARGS
-    source(paste(sep="/", script.basename, "checkArgs.R")) 
+    source(paste(sep="/", script.basename, "checkArgs.r")) 
 
 ## MISC FUNCTIONS
-    source(paste(sep="/", script.basename, "Funct_misc.R"))  
+    source(paste(sep="/", script.basename, "Funct_misc.r"))  
 
 ## GRAPHICS-RELATED FUNCTIONS
-    source(paste(sep="/", script.basename, "Funct_graphs.R"))  
+    source(paste(sep="/", script.basename, "Funct_graphs.r"))  
 
 ## ANALYSIS RELATED FUNCTIONS
-    source(paste(sep="/", script.basename, "Funct_rates.R"))  
+    source(paste(sep="/", script.basename, "Funct_rates.r"))  
 
 ## HTML PERSONAL FUNCTIONS
-    source(paste(sep="/", script.basename, "Funct_HTML.R"))  
+    source(paste(sep="/", script.basename, "Funct_HTML.r"))  
 
 
 ###############################################################################

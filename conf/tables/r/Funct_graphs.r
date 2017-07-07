@@ -1,12 +1,16 @@
 # Dependencies for graphics
 		
 	# Check that ggplot is installed
-	source(paste(sep="/", script.basename, "Funct_misc.R"))  # Misc functions
-	if(!is.installed("ggplot2")){
-		load.fun("ggplot2")
-	}       
-	require(ggplot2) 
-	
+	# source(paste(sep="/", script.basename, "Funct_misc.r"))  # Misc functions
+	# if(!is.installed("ggplot2")){
+	# 	load.fun("ggplot2")
+	# }       
+	# require(ggplot2) 
+
+# canreg_load_packages(c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","ReporteRs", "zip", "bmp", "jpeg"))
+
+canreg_load_packages(c("ggplot2", "Cairo"))
+
 	
 ############################## NEW FUNCTIONS ############################## 	
     

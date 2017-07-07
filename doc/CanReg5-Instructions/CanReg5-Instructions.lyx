@@ -11957,17 +11957,17 @@ script.basename <- dirname(script.name)
 
 \begin_layout Plain Layout
 
-source(paste(sep="/", script.basename, "makeTable.R")) 
+source(paste(sep="/", script.basename, "makeTable.r")) 
 \end_layout
 
 \begin_layout Plain Layout
 
-source(paste(sep="/", script.basename, "checkArgs.R")) 
+source(paste(sep="/", script.basename, "checkArgs.r")) 
 \end_layout
 
 \begin_layout Plain Layout
 
-source(paste(sep="/", script.basename, "makeFile.R"))
+source(paste(sep="/", script.basename, "makeFile.r"))
 \end_layout
 
 \begin_layout Plain Layout
@@ -11995,7 +11995,7 @@ fileType <- checkArgs(Args, "-ft")
 
 \begin_layout Plain Layout
 
-source(paste(sep="/", script.basename, "myLibrary1.R"))
+source(paste(sep="/", script.basename, "myLibrary1.r"))
 \end_layout
 
 \begin_layout Plain Layout
