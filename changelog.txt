@@ -7,6 +7,7 @@
   - Updated and harmonized look of most data visualizations.
   - Some new visualizations added.
   - Log files for analysis improved.
+  - Changed all .R references in CanReg code and conf files to .r. (This improves Linux/Mac compatibility.) 
 - Updated the R package installer 
   - Created an installer that comes with bundled R packages for the latest version of R (Currently 3.4.0).
   - R packages that CanReg5 uses are installed in a separate folder among the user's R libs so that we have more control over packages we use.
@@ -17,10 +18,11 @@
   - Default labels harmonized with http://codes.iarc.fr .
 - Improved messages from Topography and Morphology checks.
 - Big parts of importing/exporting rewritten using an updated Java CSV library.
-- Users can now chose English/Short/Standard labels instead of the full variable names as labels for data entry forms.
+- Users can now chose English/Short/Standard labels instead of the full variable names as labels for data entry forms, as well as in the variable chooser (Export/frequencies etc.).
+- Fixed a bug in the list of defined servers during login that occurred sometimes when users had more than a certain number defined.
 - Files generated (either by exporting or saving tables in frequencies by year) now open in the associated software automatically.
 - Updates to the Russian translation by Anton Ryzhov.
-- Some updates to the French translation. (Thanks Eric Masuyer.)
+- Some updates to the French translation by Eric Masuyer.
 - Java Runtime Environment (JRE) 8 is now required.
 - Stability improvements.
 - Other fixes.
