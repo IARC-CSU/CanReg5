@@ -21,7 +21,6 @@ package canreg.client;
 
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
-import canreg.common.Tools;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -38,9 +37,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.Set;
-import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public final class LocalSettings {
 
@@ -507,8 +507,10 @@ public final class LocalSettings {
 
         while (i.hasNext()) {
             String s = i.next();
-            if (s.length() > 7 && s.substring(0, 7).equalsIgnoreCase("server.")) {
-                int serverNumber = Integer.parseInt(s.substring(7, 8));
+            Pattern p = Pattern.compile("server\\.(\\d+)\\..*");
+            Matcher m = p.matcher(s);
+            if (m.matches()) {                
+                int serverNumber = Integer.parseInt(m.group(1));
                 boolean notSeen = foundServers.add(serverNumber);
                 if (notSeen) {
                     String name = properties.getProperty("server." + serverNumber + ".name");
