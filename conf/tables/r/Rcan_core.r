@@ -3056,11 +3056,21 @@ csu_dt_rank <- function(dt,
 
 csu_tick_generator <- function(max,min = 0,log_scale=FALSE) {
   
-  
-  temp_log_max = 10^floor(log10(max))
-  temp_unit_floor_max = floor(max/(temp_log_max))
+
   
   if (!log_scale) {
+    
+    if (min > 0) {
+      min = 0
+    } 
+    
+    if (max < 0) {
+      max = 0
+    }
+    
+    
+    temp_log_max = 10^floor(log10(max-min))
+    temp_unit_floor_max = floor((max-min)/(temp_log_max))
     
     if (temp_unit_floor_max < 2) {
       tick_space = 0.2*temp_log_max
@@ -3073,10 +3083,15 @@ csu_tick_generator <- function(max,min = 0,log_scale=FALSE) {
     }
     
     temp_top <- ceiling(max/tick_space)*tick_space
-    tick_list <- seq(0, temp_top, tick_space)
+    temp_floor <- floor(min/tick_space)*tick_space
+    tick_list <- seq(temp_floor, temp_top, tick_space)
     tick_minor_list <- NULL
     
   } else {
+    
+    
+    temp_log_max = 10^floor(log10(max))
+    temp_unit_floor_max = floor(max/(temp_log_max))
     
     temp_log_min <- 10^floor(log10(min))
     temp_unit_floor_min <- floor(min/(temp_log_min))
