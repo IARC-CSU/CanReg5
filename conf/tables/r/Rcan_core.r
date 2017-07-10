@@ -1170,6 +1170,84 @@ csu_cum_risk_core <- function(df_data, var_age, var_cases, var_py, group_by=NULL
   
 }
 
+csu_eapc_core <-
+  function(df_data,
+           var_rate="asr",
+           var_year="year",
+           group_by= NULL,
+           var_eapc="eapc") {
+    
+    #create fake group to have group_by optional 
+    bool_dum_by <- FALSE
+    
+    if (is.null(group_by)) {
+      
+      df_data$CSU_dum_by <- "dummy_by"
+      group_by <- "CSU_dum_by"
+      bool_dum_by <- TRUE
+    }
+    
+    dt_data <- data.table(df_data, key = c(group_by)) 
+    
+    setnames(dt_data, var_rate, "CSU_R")
+    setnames(dt_data, var_year, "CSU_Y")
+    
+    #check by variable adapted (ie: 1 year per variable)
+    dt_data$temp <- 1
+    nrow_base <- nrow(dt_data)
+    dt_test <- dt_data[ ,temp:=sum(temp), by=c("CSU_Y", group_by)]
+    nrow_test <-  nrow(dt_data[ ,sum(temp), by=c("CSU_Y", group_by)]) 
+    dt_data$temp <- NULL
+    
+    if (nrow_test != nrow_base) {
+      setkeyv(dt_test, c(group_by,"CSU_Y"))
+      print(head(dt_test[temp>1, ]))
+      dt_data <- NULL
+      stop("There is more than 1 data per year (see above).\nUse the 'group_by' option or call the function on a subset to define the sub-population of interest.\n")
+    }
+    
+    
+    dt_data[, id_group:=.GRP, by=group_by]
+    
+    temp_max <- max(dt_data$id_group)
+    for (i in 1:temp_max) {
+      suppressWarnings(
+        temp <- summary(glm(CSU_R ~ CSU_Y,
+                            family=poisson(link="log"),
+                            data=dt_data[dt_data$id_group  == i,] 
+        )
+        )
+      )
+      dt_data[dt_data$id_group  == i, CSU_EAPC:=temp$coefficients[[2]]]
+      dt_data[dt_data$id_group  == i, CSU_ST:=temp$coefficients[[4]]]
+      
+    }
+    
+    dt_data$CSU_UP <- 100*(exp(dt_data$CSU_EAPC+(1.65*dt_data$CSU_ST))-1)
+    dt_data$CSU_LOW <- 100*(exp(dt_data$CSU_EAPC-(1.65*dt_data$CSU_ST))-1)
+    dt_data$CSU_EAPC <- 100*(exp(dt_data$CSU_EAPC)-1)
+    
+    
+    
+    dt_data<-  dt_data[,list( CSU_EAPC=mean(CSU_EAPC), CSU_UP=mean(CSU_UP),CSU_LOW=mean(CSU_LOW)), by=group_by]
+    
+    
+    setnames(dt_data, "CSU_EAPC", var_eapc)
+    setnames(dt_data, "CSU_UP", paste(var_eapc, "up", sep="_"))
+    setnames(dt_data, "CSU_LOW", paste(var_eapc, "low", sep="_"))
+    
+    df_data <- data.frame(dt_data)
+    if (bool_dum_by) {
+      df_data$CSU_dum_by <- NULL
+    }
+    
+    
+    return(df_data)
+    
+  }
+
+
+
 csu_ageSpecific_core <-
   function(df_data,var_age="age",
            var_cases="cases",
@@ -2961,6 +3039,113 @@ csu_trend_core <- function (
 }
 
 
+
+canreg_eapc_scatter <- function(dt_plot,
+                                var_bar = "cancer_label",
+                                var_eapc = "eapc",
+                                var_by = "SEX",
+                                color_bar=c("Male" = "#2c7bb6", "Female" = "#b62ca1"),
+                                landscape = FALSE,
+                                list_graph = FALSE,
+                                canreg_header=NULL,
+                                ytitle = "",
+                                return_data = FALSE,
+                                plot_caption= NULL,
+                                canreg_report=FALSE) {
+  
+  if (return_data) {
+    dt_plot[, CSU_RANK := NULL]
+    return(dt_plot)
+    stop() 
+  }
+  
+  if (landscape) {
+    csu_ratio = 0.6 
+    csu_bar_label_size = 4
+  } else {
+    csu_ratio = 1
+    csu_bar_label_size = 5 
+  }
+  
+  line_size <- 0.4
+  text_size <- 14
+  
+  #calcul ticks:
+  tick <- csu_tick_generator(max = max(dt_plot[[var_eapc]]), min=min(dt_plot$eapc))
+  
+  #to have positive and negative side
+  tick_space <- tick$tick_list[length(tick$tick_list)] - tick$tick_list[length(tick$tick_list)-1]
+  if (min(tick$tick_list) == 0) {
+    tick$tick_list <- c(-tick_space,tick$tick_list)
+  }
+  if (max(tick$tick_list) == 0) {
+    tick$tick_list <- c(tick$tick_list,tick_space)
+  }
+  
+  dt_label_order <- setkeyv(unique(dt_plot[, c(var_bar, var_eapc), with=FALSE]), c(var_eapc))
+  dt_plot[[var_bar]] <- factor(dt_plot[[var_bar]],levels = unique(dt_label_order[[var_bar]],fromLast=TRUE)) 
+  
+  
+  setnames(dt_plot, var_eapc, "CSU_EAPC")
+  setnames(dt_plot, var_bar, "CSU_BAR")
+  setnames(dt_plot, var_by, "CSU_BY")
+  
+  csu_plot <- 
+    ggplot(dt_plot, aes(CSU_EAPC, CSU_BAR)) +
+    geom_point(aes(fill =CSU_BY),shape=23, color="black", size=5, stroke = 0.8)+
+    scale_x_continuous(name = ytitle,
+                       breaks=tick$tick_list,
+                       limits=c(tick$tick_list[1],tick$tick_list[length(tick$tick_list)]),
+                       labels=csu_axes_label)+
+    scale_fill_manual(name="",
+                      values= color_bar,
+                      drop = FALSE)+
+    geom_vline(xintercept = 0, size=0.8)+
+    labs(title = canreg_header, 
+         subtitle = NULL,
+         caption = plot_caption)+
+    theme(
+      aspect.ratio = csu_ratio,
+      plot.background= element_blank(),
+      panel.background = element_blank(),
+      panel.grid.major.y= element_line(colour = "grey70",size = line_size/2,linetype="dotted" ),
+      panel.grid.major.x= element_line(colour = "grey70",size = line_size),
+      panel.grid.minor.x= element_line(colour = "grey70",size = line_size),
+      plot.title = element_text(size=18, margin=margin(0,0,15,0),hjust = 0.5),
+      plot.subtitle = element_text(size=16, margin=margin(0,0,15,0),hjust = 0.5),
+      plot.caption = element_text(size=12, margin=margin(15,0,0,0)),
+      plot.margin=margin(20,20,20,20),
+      axis.title = element_text(size=text_size),
+      axis.title.x=element_text(margin=margin(10,0,0,0)),
+      axis.title.y = element_blank(),
+      axis.text = element_text(size=text_size, colour = "black"),
+      axis.text.x = element_text(size=text_size),
+      axis.text.y = element_text(size=text_size),
+      axis.ticks.x= element_line(colour = "black", size = line_size),
+      axis.ticks.y= element_blank(),
+      axis.ticks.length = unit(0.2, "cm"),
+      axis.line.y = element_blank(),
+      axis.line.x = element_line(colour = "black", 
+                                 size = line_size, 
+                                 linetype = "solid"),
+      legend.key = element_rect(fill="transparent"),
+      legend.position = "bottom",
+      legend.text = element_text(size = text_size),
+      legend.key.height = unit(0.6,"cm"),
+      legend.key.width =unit(1.5,"cm"),
+      legend.margin = margin(0, 0, 0, 0)
+    )
+  
+  
+  
+  if(!canreg_report){
+    print(csu_plot)
+  } 
+  else {
+    return(csu_plot)
+  }
+  
+}
 
 canreg_output <- function(output_type="pdf",filename=NULL, landscape = FALSE,list_graph = TRUE, FUN,...) {
   
