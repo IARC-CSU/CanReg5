@@ -2172,9 +2172,6 @@ canreg_bar_top_single <- function(dt, var_top, var_bar = "cancer_label" ,group_b
     dt_plot$cancer_label <- factor(dt_plot$cancer_label,levels = rev(dt_label_order$cancer_label)) 
    
     color_cancer <- as.character(rev(dt_label_order$ICD10GROUPCOLOR))
-
-
-
     
     plotlist[[j]] <-
       csu_bar_plot(
@@ -3082,7 +3079,7 @@ canreg_eapc_scatter <- function(dt_plot,
   text_size <- 14
   
   #calcul ticks:
-  tick <- csu_tick_generator(max = max(dt_plot[[var_eapc]]), min=min(dt_plot$eapc))
+  tick <- csu_tick_generator(max = max(dt_plot[[var_eapc]]), min=min(dt_plot[[var_eapc]]))
   
   #to have positive and negative side
   tick_space <- tick$tick_list[length(tick$tick_list)] - tick$tick_list[length(tick$tick_list)-1]
@@ -3157,6 +3154,173 @@ canreg_eapc_scatter <- function(dt_plot,
   }
   
 }
+
+
+canreg_eapc_scatter_error_bar <- function(dt,
+                                          var_eapc = "eapc",
+                                          var_eapc_up = "eapc_up",
+                                          var_eapc_low = "eapc_low",
+                                          var_bar = "cancer_label",
+                                          var_by = "SEX",
+                                          landscape = FALSE,
+                                          list_graph = TRUE,
+                                          canreg_header=NULL,
+                                          return_data = FALSE,
+                                          ytitle="") {
+  
+  if (return_data) {
+    
+    dt[, CSU_RANK := NULL]
+    return(dt)
+    stop() 
+  }
+  
+  
+  
+  #calcul ticks:
+  tick <- csu_tick_generator(max = max(dt[[var_eapc_up]]), min=min(dt[[var_eapc_low]]))
+  
+  #to have positive and negative side
+  tick_space <- tick$tick_list[length(tick$tick_list)] - tick$tick_list[length(tick$tick_list)-1]
+  if (min(tick$tick_list) == 0) {
+    tick$tick_list <- c(-tick_space,tick$tick_list)
+  }
+  if (max(tick$tick_list) == 0) {
+    tick$tick_list <- c(tick$tick_list,tick_space)
+  }
+  
+  plotlist <- list()
+  j <- 1 
+  for (i in levels(dt[[var_by]])) {
+    
+    plot_title <- canreg_header
+    plot_subtitle <-  i
+    axe_title = paste0(ytitle, ", ",i)
+    
+    dt_plot <- dt[get(var_by) == i]
+    
+    plotlist[[j]] <-
+      rcan_scatter_error_bar(
+        dt_plot,
+        tick_list = tick$tick_list,
+        plot_title=plot_title,plot_subtitle = plot_subtitle,
+        landscape=landscape,
+        ytitle=axe_title)
+    
+    print(plotlist[[j]])
+    j <- j+1
+    
+  }
+}
+
+
+
+
+rcan_scatter_error_bar <- function(dt_plot,
+                                   var_bar = "cancer_label",
+                                   var_data = "eapc",
+                                   var_data_up = "eapc_up",
+                                   var_data_low = "eapc_low",
+                                   ytitle = "",
+                                   landscape = FALSE,
+                                   list_graph = TRUE,
+                                   plot_title=NULL,
+                                   plot_subtitle=NULL,
+                                   plot_caption= NULL,
+                                   tick_list=NULL,
+                                   canreg_report=FALSE) {
+  
+  
+  
+  if (landscape) {
+    csu_ratio = 0.6 
+    csu_bar_label_size = 4
+  } else {
+    csu_ratio = 1
+    csu_bar_label_size = 5 
+  }
+  
+  line_size <- 0.4
+  text_size <- 14
+  
+  
+  
+  
+  
+  dt_label_order <- setkeyv(unique(dt_plot[, c(var_bar, var_data), with=FALSE]), c(var_data))
+  dt_plot[[var_bar]] <- factor(dt_plot[[var_bar]],levels = unique(dt_label_order[[var_bar]],fromLast=TRUE)) 
+  
+  
+  setnames(dt_plot, var_data, "CSU_DATA")
+  setnames(dt_plot, var_data_up, "CSU_DATA_UP")
+  setnames(dt_plot, var_data_low, "CSU_DATA_LOW")
+  setnames(dt_plot, var_bar, "CSU_BAR")
+  
+  
+  
+  csu_plot <- 
+    ggplot(dt_plot, aes(CSU_DATA, CSU_BAR)) +
+    geom_errorbarh(aes(xmin = CSU_DATA_LOW,xmax = CSU_DATA_UP), size=0.7,height =0.5,colour="#05305b") + 
+    geom_point(fill ="#e41a1c",shape=21, color="black", size=5, stroke = 1.2)
+  
+  if (is.null(tick_list)) {
+    
+    csu_plot <- csu_plot +
+      scale_x_continuous(name = ytitle)
+    
+  } else {
+    
+    csu_plot <- csu_plot +
+      scale_x_continuous(name = ytitle,
+                         breaks=tick_list,
+                         limits=c(tick_list[1],tick_list[length(tick_list)]),
+                         labels=csu_axes_label)
+  }
+  
+  csu_plot <- csu_plot +
+    scale_fill_manual(name="",
+                      values= color_bar,
+                      drop = FALSE)+
+    geom_vline(xintercept = 0, size=0.8)+
+    labs(title = plot_title, 
+         subtitle = plot_subtitle,
+         caption = plot_caption)+
+    theme(
+      aspect.ratio = csu_ratio,
+      plot.background= element_blank(),
+      panel.background = element_blank(),
+      panel.grid.major.y=  element_blank(),
+      panel.grid.major.x= element_line(colour = "grey70",size = line_size),
+      panel.grid.minor.x= element_line(colour = "grey70",size = line_size),
+      plot.title = element_text(size=18, margin=margin(0,0,15,0),hjust = 0.5),
+      plot.subtitle = element_text(size=16, margin=margin(0,0,15,0),hjust = 0.5),
+      plot.caption = element_text(size=12, margin=margin(15,0,0,0)),
+      plot.margin=margin(20,20,20,20),
+      axis.title = element_text(size=text_size),
+      axis.title.x=element_text(margin=margin(10,0,0,0)),
+      axis.title.y = element_blank(),
+      axis.text = element_text(size=text_size, colour = "black"),
+      axis.text.x = element_text(size=text_size),
+      axis.text.y = element_text(size=text_size),
+      axis.ticks.x= element_line(colour = "black", size = line_size),
+      axis.ticks.y= element_blank(),
+      axis.ticks.length = unit(0.2, "cm"),
+      axis.line.y = element_blank(),
+      axis.line.x = element_line(colour = "black", 
+                                 size = line_size, 
+                                 linetype = "solid"),
+      legend.key = element_rect(fill="transparent"),
+      legend.position = "bottom",
+      legend.text = element_text(size = text_size),
+      legend.key.height = unit(0.6,"cm"),
+      legend.key.width =unit(1.5,"cm"),
+      legend.margin = margin(0, 0, 0, 0)
+    )
+  
+  return(csu_plot)
+  
+}
+
 
 canreg_output <- function(output_type="pdf",filename=NULL, landscape = FALSE,list_graph = TRUE, FUN,...) {
   
