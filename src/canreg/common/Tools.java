@@ -41,7 +41,6 @@ import java.io.*;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
@@ -187,11 +186,11 @@ public class Tools {
         if (doc == null) {
             return new DatabaseVariablesListElement[0];
         }
-        TreeMap<String, DatabaseDictionaryListElement> dictionaryMap = new TreeMap<String, DatabaseDictionaryListElement>();
+        TreeMap<String, DatabaseDictionaryListElement> dictionaryMap = new TreeMap<>();
         for (DatabaseDictionaryListElement dictionary : getDictionaryListElements(doc, namespace)) {
             dictionaryMap.put(dictionary.getName(), dictionary);
         }
-        TreeMap<String, DatabaseGroupsListElement> groupsMap = new TreeMap<String, DatabaseGroupsListElement>();
+        TreeMap<String, DatabaseGroupsListElement> groupsMap = new TreeMap<>();
         for (DatabaseGroupsListElement group : getGroupsListElements(doc, namespace)) {
             groupsMap.put(group.getGroupIndex() + "", group);
         }
@@ -371,7 +370,7 @@ public class Tools {
      *
      */
     public static TreeMap<String, DatabaseVariablesListElement> buildVariablesMap(DatabaseVariablesListElement[] variableListElements) {
-        TreeMap<String, DatabaseVariablesListElement> variablesMap = new TreeMap<String, DatabaseVariablesListElement>();
+        TreeMap<String, DatabaseVariablesListElement> variablesMap = new TreeMap<>();
         for (DatabaseVariablesListElement elem : variableListElements) {
             variablesMap.put(canreg.common.Tools.toUpperCaseStandardized(elem.getDatabaseVariableName()), elem);
         }
@@ -383,7 +382,7 @@ public class Tools {
      *
      */
     public static TreeMap<StandardVariableNames, DatabaseVariablesListElement> buildStandardVariablesMap(DatabaseVariablesListElement[] variableListElements) {
-        TreeMap<StandardVariableNames, DatabaseVariablesListElement> variablesMap = new TreeMap<StandardVariableNames, DatabaseVariablesListElement>();
+        TreeMap<StandardVariableNames, DatabaseVariablesListElement> variablesMap = new TreeMap<>();
         for (DatabaseVariablesListElement elem : variableListElements) {
             if (elem.getStandardVariableName() != null) {
                 variablesMap.put(StandardVariableNames.valueOf(elem.getStandardVariableName()), elem);
@@ -419,7 +418,7 @@ public class Tools {
                 index.setDatabaseTableName(tableName);
                 NodeList variables = element.getElementsByTagName(namespace + "indexed_variable");
                 DatabaseVariablesListElement[] variableArray = new DatabaseVariablesListElement[variables.getLength()];
-                LinkedList<DatabaseVariablesListElement> variableLinkedList = new LinkedList<DatabaseVariablesListElement>();
+                LinkedList<DatabaseVariablesListElement> variableLinkedList = new LinkedList<>();
                 if (variables.getLength() > 0) {
                     // we don't allow empty indexes
                     // Go through all the variable definitions
@@ -507,23 +506,16 @@ public class Tools {
                 } else {
                     position = i;
                 }
-            } catch (NullPointerException npe) {
+            } catch (NullPointerException | NumberFormatException npe) {
                 throw (npe);
-            } catch (NumberFormatException nfe) {
-                throw (nfe);
             }
             indexes[i] = new DatabaseGroupsListElement(
                     e.getElementsByTagName(namespace + "name").item(0).getTextContent(),
                     id,
                     position);
         }
-        Arrays.sort(indexes, new Comparator() {
-            @Override
-            public int compare(Object o1, Object o2) {
-                DatabaseGroupsListElement group1 = (DatabaseGroupsListElement) o1;
-                DatabaseGroupsListElement group2 = (DatabaseGroupsListElement) o2;
-                return group1.getGroupPosition() - group2.getGroupPosition();
-            }
+        Arrays.sort(indexes, (DatabaseGroupsListElement o1, DatabaseGroupsListElement o2) -> {
+            return o1.getGroupPosition() - o2.getGroupPosition();
         });
         return indexes;
     }
@@ -643,21 +635,20 @@ public class Tools {
     }
 
     public static void downloadFile(String urlString, String localFileName) throws IOException {
-        java.io.BufferedInputStream in =
-                new java.io.BufferedInputStream(
-                new java.net.URL(urlString).openStream());
-        java.io.FileOutputStream fos = new java.io.FileOutputStream(localFileName);
-        java.io.BufferedOutputStream bout = new BufferedOutputStream(fos, 1024);
-        byte[] data = new byte[1024];
-        int x = 0;
-        while ((x = in.read(data, 0, 1024)) >= 0) {
-            {
-                bout.write(data, 0, x);
+        try (java.io.BufferedInputStream in = new java.io.BufferedInputStream(
+                new java.net.URL(urlString).openStream())) {
+            java.io.FileOutputStream fos = new java.io.FileOutputStream(localFileName);
+            try (java.io.BufferedOutputStream bout = new BufferedOutputStream(fos, 1024)) {
+                byte[] data = new byte[1024];
+                int x = 0;
+                while ((x = in.read(data, 0, 1024)) >= 0) {
+                    {
+                        bout.write(data, 0, x);
+                    }
+                    
+                }
             }
-
         }
-        bout.close();
-        in.close();
     }
 
     /**
@@ -670,14 +661,14 @@ public class Tools {
         File inputFile = new File(from);
         File outputFile = new File(to);
 
-        FileReader in = new FileReader(inputFile);
-        FileWriter out = new FileWriter(outputFile);
-        int c;
-
-        while ((c = in.read()) != -1) {
-            out.write(c);
+        FileWriter out;
+        try (FileReader in = new FileReader(inputFile)) {
+            out = new FileWriter(outputFile);
+            int c;
+            while ((c = in.read()) != -1) {
+                out.write(c);
+            }
         }
-        in.close();
         out.close();
     }
 
@@ -711,14 +702,16 @@ public class Tools {
         //Symphony software Hyderabad
         int countRec = 0;
 
-        RandomAccessFile randFile = new RandomAccessFile(file, "r");
-        long lastRec = randFile.length();
-        randFile.close();
-        FileReader fileRead = new FileReader(file);
-        LineNumberReader lineRead = new LineNumberReader(fileRead);
-        lineRead.skip(lastRec);
-        countRec = lineRead.getLineNumber() - 1;
-        fileRead.close();
+        long lastRec;
+        try (RandomAccessFile randFile = new RandomAccessFile(file, "r")) {
+            lastRec = randFile.length();
+        }
+        LineNumberReader lineRead;
+        try (FileReader fileRead = new FileReader(file)) {
+            lineRead = new LineNumberReader(fileRead);
+            lineRead.skip(lastRec);
+            countRec = lineRead.getLineNumber() - 1;
+        }
         lineRead.close();
 
         return countRec;
@@ -856,7 +849,7 @@ public class Tools {
         String BEHAVIOUR_STRING = "Behaviour";
         String SOURCE_STRING = "Source of information (E.g., hospital record no., name of physician)";
 
-        Set<String> missingStandardVariableNames = new HashSet<String>();
+        Set<String> missingStandardVariableNames = new HashSet<>();
 
         missingStandardVariableNames.add(NAMES_STRING);
         missingStandardVariableNames.add(SEX_STRING);
