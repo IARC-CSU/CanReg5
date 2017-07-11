@@ -12,6 +12,10 @@
 
 tryCatch({
   
+  year_info <- canreg_get_years(dt_all)
+  if (year_info$span < 3) {
+    stop("EAPC analysis need at least 3 years data")
+  }
   
   dt <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE, keep_year = TRUE)
   first_age <- as.numeric(substr(agegroup,1,regexpr("-", agegroup)[1]-1))
@@ -22,7 +26,7 @@ tryCatch({
   
   ##calcul of ASR
   dt<- csu_asr_core(df_data =dt, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
-                    var_by = c("cancer_label", "SEX", "YEAR", "ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt_all),
+                    var_by = c("cancer_label", "SEX", "YEAR"), missing_age = canreg_missing_age(dt_all),
                     first_age = first_age+1,
                     last_age= last_age+1,
                     pop_base_count = "REFERENCE_COUNT",
@@ -47,7 +51,7 @@ tryCatch({
                 FUN=canreg_eapc_scatter,
                 dt_plot=dt_eapc,color_bar=c("Male" = "#2c7bb6", "Female" = "#b62ca1"),
                 canreg_header = header,
-                ytitle=paste0("Estimated Average Percentage Change (%), ", canreg_age_group))
+                ytitle=paste0("Estimated annual percentage change (%), ", canreg_age_group))
 
 	
 	#talk to canreg

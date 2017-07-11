@@ -11,6 +11,11 @@
   ################
   
 tryCatch({
+  
+  year_info <- canreg_get_years(dt_all)
+  if (year_info$span < 2) {
+    stop("Time trend analysis need at least 2 years data")
+  }
 
   dt <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE, keep_year = TRUE)
   first_age <- as.numeric(substr(agegroup,1,regexpr("-", agegroup)[1]-1))

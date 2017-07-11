@@ -12,7 +12,10 @@
 
 tryCatch({  
   
-  graph_width <- 5
+  graph_width <- 6
+  
+  year_info <- canreg_get_years(dt_all)
+  
   
   #check if report path exist (if not create report path)
   pos <- regexpr("\\\\[^\\\\]*$", out)[[1]]
@@ -56,9 +59,15 @@ tryCatch({
   total_male <- formatC(dt_report[SEX == "Male",sum(CASES)], format="d", big.mark=",")
   total_female <-formatC(dt_report[SEX == "Female",sum(CASES)], format="d", big.mark=",")
   
+  if (year_info$max == year_info$min) {
+    text_year <- paste0("In ",year_info$max,", ")
+  } else {
+    text_year <- paste0("Between ",year_info$min," and ",year_info$max, ", ")
+  }
+  
   
   doc <- addParagraph(doc,
-                      paste0(total_cases," cases of cancers were registered, ",
+                      paste0(text_year,total_cases," cases of cancers were registered: ",
                              total_male," among men and ",total_female," among women."))
   
   doc <- addTitle(doc, "Number of cases in period, by age group & sex", level = 2)
@@ -119,8 +128,8 @@ tryCatch({
   text_male <- canreg_report_top_cancer_text(dt_report, 5, sex_select="Male")
   text_female <- canreg_report_top_cancer_text(dt_report, 5, sex_select="Female")
   
-  doc <- addParagraph(doc, paste0("In men ",tolower(text_male)))
-  doc <- addParagraph(doc, paste0("In women ",tolower(text_female)))
+  doc <- addParagraph(doc, paste0("In men, ",tolower(text_male)))
+  doc <- addParagraph(doc, paste0("In women, ",tolower(text_female)))
   
   canreg_output(output_type = "png", filename =  paste0(tempdir(), "\\temp_graph"),landscape = TRUE,list_graph = FALSE,
                 FUN=canreg_bar_top,
@@ -286,49 +295,104 @@ tryCatch({
   doc <- addParagraph(doc, paste0("Fig ",fig_number,". Age specific incidence rates"))
   fig_number <- fig_number+1
   
-  doc <- addPageBreak(doc)
   
-  doc <- addTitle(doc, "Trend in ASR (most common sites) by sex", level = 2)
+  if (year_info$span > 1) {
+    
+    doc <- addPageBreak(doc)
+    doc <- addTitle(doc, "Trend in ASR (most common sites) by sex", level = 2)
+    
+    dt_report <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE, keep_year = TRUE)
+    
+    
+    ## get age group label
+    
+    canreg_age_group <- canreg_get_agegroup_label(dt_report, 0, 17)
+    
+    ##calcul of ASR
+    dt_report<- csu_asr_core(df_data =dt_report, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
+                             var_by = c("cancer_label", "SEX", "YEAR", "ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt_all),
+                             first_age = 1,
+                             last_age= 18,
+                             pop_base_count = "REFERENCE_COUNT",
+                             age_label_list = "AGE_GROUP_LABEL")
+    
+    
+    #produce graph
+    canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph"),landscape = FALSE,list_graph = TRUE,
+                  FUN=canreg_asr_trend_top,
+                  dt=dt_report,number = 5,
+                  canreg_header = "",
+                  ytitle=paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=","), ", ", canreg_age_group))
+    
+    dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph001.png")), "dim" )
+    
+    dat <- matrix("", nrow = 1, ncol = 2) # dummy empty table
+    ft <- FlexTable(dat, header.columns = F, add.rownames = F)
+    ft[1,1] <- pot_img( paste0(tempdir(), "\\temp_graph001.png"), width=3,height=3*dims[1]/dims[2]) # add image1 to cell 1
+    ft[1,2] <- pot_img(paste0(tempdir(), "\\temp_graph002.png"), width=3,height=3*dims[1]/dims[2]) # add image2 to cell 2
+    
+    ft[,, side = 'left'] <- borderProperties( style = 'none' )
+    ft[,, side = 'right'] <- borderProperties( style = 'none' )
+    ft[,, side = 'bottom' ] <- borderProperties( style = 'none' )
+    ft[,, side = 'top'] <- borderProperties( style = 'none' )
+    
+    doc <- addParagraph(doc, "\r\n")
+    doc <- addFlexTable(doc,ft,par.properties = parProperties(text.align = "center"))
+    doc <- addParagraph(doc, paste0("Fig ",fig_number,". Trend in Age-standardized (W) incidence rate"))
+    fig_number <- fig_number+1
+    
+  }
   
-  dt_report <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE, keep_year = TRUE)
+  if (year_info$span > 2) {
+    
+    doc <- addPageBreak(doc)
+    doc <- addTitle(doc, "Estimated annual percentage change", level = 2)
+    
+    dt_report <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE, keep_year = TRUE)
+    first_age <- as.numeric(substr(agegroup,1,regexpr("-", agegroup)[1]-1))
+    last_age <- as.numeric(substr(agegroup,regexpr("-", agegroup)[1]+1,nchar(agegroup)))
+    
+    ## get age group label
+    canreg_age_group <- canreg_get_agegroup_label(dt_report, first_age, last_age)
+    
+    ##calcul of ASR
+    dt_report<- csu_asr_core(df_data =dt_report, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
+                      var_by = c("cancer_label", "SEX", "YEAR"), missing_age = canreg_missing_age(dt_all),
+                      first_age = first_age+1,
+                      last_age= last_age+1,
+                      pop_base_count = "REFERENCE_COUNT",
+                      age_label_list = "AGE_GROUP_LABEL")
+    
+    ##Keep top based on rank
+    dt_report <- csu_dt_rank(dt_report,
+                      var_value= "CASES",
+                      var_rank = "cancer_label",
+                      group_by = "SEX",
+                      number = 25
+    )
+    
+    
+    ##calcul eapc
+    dt_report <- csu_eapc_core(dt_report, var_rate = "asr",var_year = "YEAR" ,group_by =c("cancer_label", "SEX","CSU_RANK"))
+    dt_report <-as.data.table(dt_report)
+    
+    
+    #produce graph
+    canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph"),landscape = TRUE,list_graph = FALSE,
+                  FUN=canreg_eapc_scatter,
+                  dt_plot=dt_report,color_bar=c("Male" = "#2c7bb6", "Female" = "#b62ca1"),
+                  canreg_header = "",
+                  ytitle=paste0("Estimated Average Percentage Change (%), ", canreg_age_group))
+    
+    dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph.png")), "dim" )
+    doc <- addImage(doc, paste0(tempdir(), "\\temp_graph.png"),width=graph_width,height=graph_width*dims[1]/dims[2] )
+    doc <- addParagraph(doc, paste0("Fig ",fig_number,". Estimated annual percentage change"))
+    fig_number=fig_number+1
+    
+    doc <- addParagraph(doc, "\r\n")
+    
+  }
   
-  
-  ## get age group label
-  
-  canreg_age_group <- canreg_get_agegroup_label(dt_report, 0, 17)
-  
-  ##calcul of ASR
-  dt_report<- csu_asr_core(df_data =dt_report, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
-                           var_by = c("cancer_label", "SEX", "YEAR", "ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt_all),
-                           first_age = 1,
-                           last_age= 18,
-                           pop_base_count = "REFERENCE_COUNT",
-                           age_label_list = "AGE_GROUP_LABEL")
-  
-  
-  #produce graph
-  canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph"),landscape = FALSE,list_graph = TRUE,
-                FUN=canreg_asr_trend_top,
-                dt=dt_report,number = 5,
-                canreg_header = "",
-                ytitle=paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=","), ", ", canreg_age_group))
-  
-  dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph001.png")), "dim" )
-  
-  dat <- matrix("", nrow = 1, ncol = 2) # dummy empty table
-  ft <- FlexTable(dat, header.columns = F, add.rownames = F)
-  ft[1,1] <- pot_img( paste0(tempdir(), "\\temp_graph001.png"), width=3,height=3*dims[1]/dims[2]) # add image1 to cell 1
-  ft[1,2] <- pot_img(paste0(tempdir(), "\\temp_graph002.png"), width=3,height=3*dims[1]/dims[2]) # add image2 to cell 2
-  
-  ft[,, side = 'left'] <- borderProperties( style = 'none' )
-  ft[,, side = 'right'] <- borderProperties( style = 'none' )
-  ft[,, side = 'bottom' ] <- borderProperties( style = 'none' )
-  ft[,, side = 'top'] <- borderProperties( style = 'none' )
-  
-  doc <- addParagraph(doc, "\r\n")
-  doc <- addFlexTable(doc,ft,par.properties = parProperties(text.align = "center"))
-  doc <- addParagraph(doc, paste0("Fig ",fig_number,". Trend in Age-standardized (W) incidence rate"))
-  fig_number <- fig_number+1
   
   ## Basis of diagnosis
   doc <- addPageBreak(doc)

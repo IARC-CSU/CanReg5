@@ -240,6 +240,17 @@ canreg_cancer_info <- function(dt,
 }
 
 
+canreg_get_years <- function (dt, var_year="YEAR") {
+  
+  dt <- unique(dt[[var_year]])
+  span <- max(dt) - min(dt) + 1
+  
+  return(list(span = span, min = min(dt), max=max(dt)))
+  
+} 
+
+
+
 
 
 canreg_report_template_extract <- function(report_path,script.basename) {
