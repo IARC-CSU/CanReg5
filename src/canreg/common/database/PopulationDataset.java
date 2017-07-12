@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2015  International Agency for Research on Cancer
+ * Copyright (C) 2008-2017  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,10 +50,10 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
     private String description = "";
     private boolean worldPopulationBool = false;
     private int worldPopulationID = 0;
-    private LinkedList<PopulationDatasetsEntry> ageGroups = new LinkedList<PopulationDatasetsEntry>();
-    private int UNKNOWN_AGE_GROUP_CODE = 99;
+    private LinkedList<PopulationDatasetsEntry> ageGroups = new LinkedList<>();
+    private final int UNKNOWN_AGE_GROUP_CODE = 99;
     private PopulationDataset worldPopulation;
-    private Map<String, Integer> ageGroupMap = new HashMap<String, Integer>();
+    private Map<String, Integer> ageGroupMap = new HashMap<>();
 
     /**
      * Creates a new instance of PopulationDatasetsEntry
@@ -69,7 +69,7 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
      * @param count
      */
     public void addUnkownAgeGroup(int sex, int count) {
-        ageGroupMap.put(sex + "," + UNKNOWN_AGE_GROUP_CODE, new Integer(count));
+        ageGroupMap.put(sex + "," + UNKNOWN_AGE_GROUP_CODE, count);
         ageGroups.add(new PopulationDatasetsEntry(UNKNOWN_AGE_GROUP_CODE, sex, count));
     }
 
@@ -77,8 +77,8 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
      * 
      */
     public void flushAgeGroups() {
-        ageGroupMap = new HashMap<String, Integer>();
-        ageGroups = new LinkedList<PopulationDatasetsEntry>();
+        ageGroupMap = new HashMap<>();
+        ageGroups = new LinkedList<>();
     }
 
     @Override
@@ -237,7 +237,7 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
      * @param pdse
      */
     public void addAgeGroup(PopulationDatasetsEntry pdse) {
-        ageGroupMap.put(pdse.getSex() + "," + pdse.getAgeGroup(), new Integer(pdse.getCount()));
+        ageGroupMap.put(pdse.getSex() + "," + pdse.getAgeGroup(), pdse.getCount());
         ageGroups.add(pdse);
     }
 
@@ -280,7 +280,7 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
     {
 
         // load population data
-        for (PopulationDatasetsEntry pdse : ageGroups) {
+        ageGroups.stream().forEach((pdse) -> {
             int sex = pdse.getSex() - 1;
             if (sex > 1) {
                 sex = 2;
@@ -296,8 +296,7 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
             populationArray[sex][ageGroup] += population;
             // For the total
             populationArray[sex][populationArray[0].length - 1] += population;
-
-        }
+        });
     }
 
     public String getStringRepresentationOfAgeGroupsForFile() {
@@ -350,16 +349,20 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
                 // and smaller than the group size
                 else if (ageGroupStructure.getSizeOfFirstGroup() < ageGroupStructure.getSizeOfGroups()) {
                     int offset = -1;
-                    if (index == 0) {
-                        count = worldPopulation.getAgeGroupCount(sex, index)
-                                / ageGroupStructure.getSizeOfGroups();
-                    } else if (index == 1) {
-                        int firstGroupCount = worldPopulation.getAgeGroupCount(sex, 0)
-                                / ageGroupStructure.getSizeOfGroups();
-                        count = getWorldPopulationForAgeGroupIndex(sex, index, offset)
-                                - firstGroupCount;
-                    } else {
-                        count = getWorldPopulationForAgeGroupIndex(sex, index, offset);
+                    switch (index) {
+                        case 0:
+                            count = worldPopulation.getAgeGroupCount(sex, index)
+                                    / ageGroupStructure.getSizeOfGroups();
+                            break;
+                        case 1:
+                            int firstGroupCount = worldPopulation.getAgeGroupCount(sex, 0)
+                                    / ageGroupStructure.getSizeOfGroups();
+                            count = getWorldPopulationForAgeGroupIndex(sex, index, offset)
+                                    - firstGroupCount;
+                            break;
+                        default:
+                            count = getWorldPopulationForAgeGroupIndex(sex, index, offset);
+                            break;
                     }
                 } // if the size of the groups are the same, 
                 // but the first group size is different
