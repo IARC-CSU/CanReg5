@@ -250,6 +250,43 @@ canreg_get_years <- function (dt, var_year="YEAR") {
 } 
 
 
+canreg_import_CI5_data <- function(dt,CI5_file,var_ICD_canreg="ICD10GROUP") {
+  
+  # list ICD10 from canreg
+  ICD_canreg <- unique(dt[[var_ICD_canreg]])
+  ICD_canreg <- ICD_canreg[grepl("^C",ICD_canreg )]
+  
+  #load CI5 data
+  dt_CI5_data <- as.data.table(readRDS(file = CI5_file))
+  
+  #list ICD10 CI5
+  ICD_CI5 <- unique(dt_CI5_data[["ICD10"]])
+  ICD_CI5 <- ICD_CI5[grepl("^C",ICD_CI5 )]
+  
+  #parse ICD10 code 
+  dt_ICD_CI5 <- data.table(ICD10=ICD_CI5,ICD_list=(lapply(ICD_CI5,parse_icd10)))
+  dt_ICD_canreg <- data.table(ICD10=ICD_canreg,ICD_list=(lapply(ICD_canreg,parse_icd10)))
+  dt_ICD_CI5$ICD_canreg <- character(0) 
+  
+  #associate CI5 ICD code with CANREG ICD code
+  for (i in 1:nrow(dt_ICD_CI5)) {
+    
+    temp <- sapply(dt_ICD_canreg$ICD_list, function(x) {return(all(dt_ICD_CI5$ICD_list[[i]] %in% x))})
+    ind <- which(temp)
+    if (length(ind) > 0) {
+      dt_ICD_CI5$ICD_canreg[[i]] <- levels(dt_ICD_canreg$ICD10)[ind]
+    }
+    
+  }
+  
+  dt_ICD_CI5[,ICD_list:=NULL]
+  #Add canreg ICD code to CI5 data
+  dt_CI5_data <- merge(dt_CI5_data,dt_ICD_CI5, by=("ICD10"), all.x=TRUE) 
+  dt_CI5_data <- dt_CI5_data[!is.na(ICD_canreg),]
+  dt_CI5_data<-  dt_CI5_data[,.( cases=sum(cases), py=mean(py)), by=c("sex","age","country_label", "cr","ICD_canreg")]
+  
+  return(dt_CI5_data)
+}
 
 
 
@@ -3655,6 +3692,42 @@ csu_cancer_color <- function(cancer_list) {
 }
 
 
+parse_icd10 <- function (icd) {
+  
+  icd_list <- NULL
+  
+  #extract XX-XX code
+  temp1 <- regmatches(icd, gregexpr("[C|,][0-9]{2}-[0-9]{2}", icd))
+  
+  if (length(temp1[[1]]) > 0) {
+    temp2 <- regmatches(temp1[[1]], gregexpr("[0-9]{2}", temp1[[1]]))
+    for (i in 1:length(temp2)) {
+      icd_list <- c(icd_list,sapply(temp2[[i]][1]:temp2[[i]][2],
+                                    function(x) {
+                                      if (nchar(x) == 1) {
+                                        x <- paste0("0",x)
+                                      }
+                                      return(x)
+                                    })
+      )
+    }
+  }
+  
+  #add XX code
+  temp1 <- regmatches(icd, gregexpr("[C|,][0-9]{2}", icd))
+  
+  if (length(temp1[[1]]) > 0) {
+    temp2 <- regmatches(temp1[[1]], gregexpr("[0-9]{2}", temp1[[1]]))
+    for (i in 1:length(temp2)) {
+      icd_list <- c(icd_list,temp2[[i]][1])
+    }
+  }
+  
+  icd_list <- unique(icd_list)
+  
+  return(icd_list)
+  
+}
 
 
 
