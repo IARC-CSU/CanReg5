@@ -206,8 +206,8 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     private PopulationDataset[] generateDummyPopulationDatasets() {
         PopulationDataset dummyPop = new PopulationDataset();
         dummyPop.setFilter(rangeFilterPanel.getFilter());
-        dummyPop.setWorldPopulation(new PopulationDataset());
-        dummyPop.setWorldPopulationID(0);
+        dummyPop.setReferencePopulation(new PopulationDataset());
+        dummyPop.setReferencePopulationID(0);
         dummyPop.setPopulationDatasetName("");
 
         PopulationDataset[] populations = new PopulationDataset[populationDatasetChooserPanels.size()];
@@ -977,7 +977,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
             Collection<PopulationDataset> populationDatasetsCollection2 = new LinkedList<PopulationDataset>();
             populationDatasetsCollection = populationDatasetsMap.values();
             for (PopulationDataset pd : populationDatasetsCollection) {
-                if (!pd.isWorldPopulationBool()) {
+                if (!pd.isReferencePopulationBool()) {
                     populationDatasetsCollection2.add(pd);
                 }
             }
@@ -1150,7 +1150,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                 String populationFilterString = "";
                 for (PopulationDataset pop : populations) {
                     if (pop != null) {
-                        int stdPopID = pop.getWorldPopulationID();
+                        int stdPopID = pop.getReferencePopulationID();
                         standardPopulations[i++] = populationDatasetsMap.get(stdPopID);
                         if (populationFilterString.trim().length() == 0) {
                             populationFilterString = pop.getFilter();

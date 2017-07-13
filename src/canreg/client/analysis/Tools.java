@@ -348,7 +348,7 @@ public class Tools {
                     popoutput.append(ageGroupNames[pop.getAgeGroup()]).append(separator);
                     popoutput.append(pop.getStringRepresentationOfAgeGroupsForFile(separator)).append(separator);
                     // get reference pop
-                    popoutput.append(popset.getWorldPopulationForAgeGroupIndex(pop.getSex(), pop.getAgeGroup()) + "");
+                    popoutput.append(popset.getReferencePopulationForAgeGroupIndex(pop.getSex(), pop.getAgeGroup()) + "");
                     popoutput.newLine();
                 }
             }
