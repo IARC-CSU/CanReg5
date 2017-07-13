@@ -390,10 +390,10 @@ public class CanRegDAO {
                 populationDataset.setDescription(description);
 
                 Integer worldPopulationPDSID = results.getInt(9);
-                populationDataset.setWorldPopulationID(worldPopulationPDSID);
+                populationDataset.setReferencePopulationID(worldPopulationPDSID);
 
                 boolean worldPopulationBool = results.getInt(10) == 1;
-                populationDataset.setWorldPopulationBool(worldPopulationBool);
+                populationDataset.setReferencePopulationBool(worldPopulationBool);
 
                 populationDatasetMap.put(pdsId, populationDataset);
             }
@@ -403,10 +403,10 @@ public class CanRegDAO {
         }
 
         for (PopulationDataset popset : populationDatasetMap.values()) {
-            if (!popset.isWorldPopulationBool()) {
-                popset.setWorldPopulation(
+            if (!popset.isReferencePopulationBool()) {
+                popset.setReferencePopulation(
                         populationDatasetMap.get(
-                                popset.getWorldPopulationID()));
+                                popset.getReferencePopulationID()));
             }
         }
 
@@ -1208,8 +1208,8 @@ public class CanRegDAO {
             stmtSaveNewPopoulationDataset.setString(5, populationDataSet.getSource());
             stmtSaveNewPopoulationDataset.setString(6, populationDataSet.getAgeGroupStructure().getConstructor());
             stmtSaveNewPopoulationDataset.setString(7, populationDataSet.getDescription());
-            stmtSaveNewPopoulationDataset.setInt(8, populationDataSet.getWorldPopulationID());
-            if (populationDataSet.isWorldPopulationBool()) {
+            stmtSaveNewPopoulationDataset.setInt(8, populationDataSet.getReferencePopulationID());
+            if (populationDataSet.isReferencePopulationBool()) {
                 stmtSaveNewPopoulationDataset.setInt(9, 1);
             } else {
                 stmtSaveNewPopoulationDataset.setInt(9, 0);
@@ -1594,7 +1594,7 @@ public class CanRegDAO {
 
     private synchronized boolean fillPopulationDatasetTables() {
         PopulationDataset pds = new PopulationDataset();
-        pds.setWorldPopulationBool(true);
+        pds.setReferencePopulationBool(true);
         pds.setPopulationDatasetName("World Standard Population");
         pds.setSource("SEGI 1960 / World Health Organization");
         pds.setDescription("http://www.who.int/healthinfo/paper31.pdf");
@@ -1609,7 +1609,7 @@ public class CanRegDAO {
         saveNewPopulationDataset(pds);
 
         pds = new PopulationDataset();
-        pds.setWorldPopulationBool(true);
+        pds.setReferencePopulationBool(true);
         pds.setPopulationDatasetName("European Standard Population");
         pds.setSource("World Health Organization");
         pds.setDescription("http://www.who.int/healthinfo/paper31.pdf");
@@ -1624,7 +1624,7 @@ public class CanRegDAO {
         saveNewPopulationDataset(pds);
 
         pds = new PopulationDataset();
-        pds.setWorldPopulationBool(true);
+        pds.setReferencePopulationBool(true);
         pds.setPopulationDatasetName("WHO Standard Population");
         pds.setSource("World Health Organization");
         pds.setDescription("http://www.who.int/healthinfo/paper31.pdf");
