@@ -42,12 +42,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyVetoException;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -82,23 +77,23 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
     private Document doc;
     private PopulationDataset pds;
     private JTextField dateTextField;
-    private final PopulationDataset[] worldPopulations;
+    private final PopulationDataset[] referencePopulations;
     private JFreeChart chart;
     private ExcelAdapter myAd;
     private final ActionListener listener;
     private ChartPanel chartPanel;
-    JFileChooser chooser = null;
+    private JFileChooser chooser = null;
 
     /**
      * Creates new form PDSEditorInternalFrame
      *
      * @param dtp
-     * @param worldPopulations
+     * @param referencePopulations
      * @param listener
      */
-    public PDSEditorInternalFrame(JDesktopPane dtp, PopulationDataset[] worldPopulations, ActionListener listener) {
+    public PDSEditorInternalFrame(JDesktopPane dtp, PopulationDataset[] referencePopulations, ActionListener listener) {
         this.dtp = dtp;
-        this.worldPopulations = worldPopulations;
+        this.referencePopulations = referencePopulations;
         this.listener = listener;
         initComponents();
         otherAgeGroupStructureButton.setVisible(false);
@@ -124,7 +119,7 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
             dateTextField.setText(pds.getDate());
             refreshPopulationDataSetTable();
             lockedToggleButton.setSelected(true);
-            if (pds.isWorldPopulationBool()) {
+            if (pds.isReferencePopulationBool()) {
                 standardPopulationComboBox.setVisible(false);
                 editStandardPopulationButton.setVisible(false);
                 standardPopulationLabel.setVisible(false);
@@ -132,10 +127,10 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
                 boolean found = false;
                 PopulationDataset worldPopulation = null;
                 int i = 0;
-                while (!found && i < worldPopulations.length) {
-                    worldPopulation = worldPopulations[i++];
+                while (!found && i < referencePopulations.length) {
+                    worldPopulation = referencePopulations[i++];
                     if (worldPopulation != null) {
-                        found = worldPopulation.getPopulationDatasetID() == pds.getWorldPopulationID();
+                        found = worldPopulation.getPopulationDatasetID() == pds.getReferencePopulationID();
                     }
                 }
                 if (worldPopulation != null) {
@@ -143,7 +138,7 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
                 }
             }
             updateSaveAsNewAndDeleteButtons();
-            lockTheFields();
+            lockTheFields(pds.getPopulationDatasetID() > -1);
         }
     }
 
@@ -180,10 +175,8 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
         Object[][] pdsTableData = new Object[ageGroupNames.length][2];
 
         for (int i = 0; i < ageGroupNames.length; i++) {
-            // pdsTableData[i][0] = ageGroupNames[i];
-            pdsTableData[i][0] = new Integer(0);
-            pdsTableData[i][0] = new Integer(0);
-            /// pdsTableData[i][3] = ageGroupNames[i];
+            pdsTableData[i][0] = 0;
+            pdsTableData[i][0] = 0;
         }
 
         if (pds != null) {
@@ -323,8 +316,7 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
         lockedToggleButton1 = new javax.swing.JToggleButton();
         deleteButton1 = new javax.swing.JButton();
         saveAsNewButton = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        writeToFileButton = new javax.swing.JButton();
 
         saveGraphicsPopupMenu.setName("saveGraphicsPopupMenu"); // NOI18N
 
@@ -1348,11 +1340,8 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
         saveAsNewButton.setAction(actionMap.get("saveAsNewAction")); // NOI18N
         saveAsNewButton.setName("saveAsNewButton"); // NOI18N
 
-        jButton3.setAction(actionMap.get("writeToFile")); // NOI18N
-        jButton3.setName("jButton3"); // NOI18N
-
-        jButton4.setAction(actionMap.get("loadFromFile")); // NOI18N
-        jButton4.setName("jButton4"); // NOI18N
+        writeToFileButton.setAction(actionMap.get("writeToFile")); // NOI18N
+        writeToFileButton.setName("writeToFileButton"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -1362,9 +1351,7 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
                 .addContainerGap()
                 .addComponent(deleteButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton4)
+                .addComponent(writeToFileButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lockedToggleButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1392,8 +1379,7 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
                     .addComponent(cancelButton)
                     .addComponent(lockedToggleButton)
                     .addComponent(saveAsNewButton)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4))
+                    .addComponent(writeToFileButton))
                 .addContainerGap())
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
@@ -1419,7 +1405,7 @@ private void pdsTablePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-F
 }//GEN-LAST:event_pdsTablePropertyChange
 
 private void jTabbedPane1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTabbedPane1FocusGained
-    // updatePyramid();
+    updatePyramid();
 }//GEN-LAST:event_jTabbedPane1FocusGained
 
 private void ageGroupStructureComboBox1ageGroupStructureChanged(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ageGroupStructureComboBox1ageGroupStructureChanged
@@ -1558,7 +1544,7 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
         } catch (ParseException ex) {
             Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
-        standardPopulationComboBox.setModel(new javax.swing.DefaultComboBoxModel(worldPopulations));
+        standardPopulationComboBox.setModel(new javax.swing.DefaultComboBoxModel(referencePopulations));
         refreshPopulationDataSetTable();
         updateChart();
         chartPanel = new ChartPanel(chart);
@@ -1586,7 +1572,7 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
     @Action
     public void saveAction() {
         lockedToggleButton.setSelected(true);
-        lockTheFields();
+        lockTheFields(!lockedToggleButton.isSelected());
         buildPDSfromTable();
         try {
             if (pds.getPopulationDatasetID() < 0) {
@@ -1601,33 +1587,30 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
                 CanRegClientApp.getApplication().saveNewPopulationDataset(pds);
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("SUCCESSFULLY_UPDATED_PDS:_") + pds.getPopulationDatasetName() + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("PDS_SAVED."), JOptionPane.INFORMATION_MESSAGE);
             }
-        } catch (SecurityException ex) {
-            Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RemoteException ex) {
+        } catch (SecurityException | RemoteException ex) {
             Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (listener != null) {
             listener.actionPerformed(new ActionEvent(this, 1, "refresh"));
         }
         updateSaveAsNewAndDeleteButtons();
-        lockTheFields();
+        lockTheFields(true);
     }
 
     private void buildPDSfromTable() {
         if (pds == null) {
             pds = new PopulationDataset();
-        } else {
-            pds.flushAgeGroups();
         }
+        pds.flushAgeGroups();
         pds.setPopulationDatasetName(nameTextField.getText().trim());
         pds.setSource(sourceTextField.getText().trim());
         pds.setFilter(filterTextField.getText().trim());
         pds.setDescription(descriptionTextArea.getText().trim());
         pds.setAgeGroupStructure((AgeGroupStructure) ageGroupStructureComboBox.getSelectedItem());
         pds.setDate(dateTextField.getText());
-        pds.setWorldPopulationBool(false);
+        pds.setReferencePopulationBool(false);
         PopulationDataset wpds = (PopulationDataset) standardPopulationComboBox.getSelectedItem();
-        pds.setWorldPopulation(wpds);
+        pds.setReferencePopulation(wpds);
 
         int numberOfAgeGroups = pds.getAgeGroupStructure().getNumberOfAgeGroups();
 
@@ -1643,10 +1626,10 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
                     s = s.replaceAll("[^0-9]", "");
                     count = Integer.parseInt(s);
                 } catch (java.lang.NullPointerException npe) {
-                    count = new Integer(0);
+                    count = 0;
                     Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.WARNING, "Missing value in the pds...");
                 } catch (java.lang.NumberFormatException nfe) {
-                    count = new Integer(0);
+                    count = 0;
                     Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.WARNING, "Error in the pds...");
                 }
                 pds.addAgeGroup(new PopulationDatasetsEntry(ageGroup, sex + 1, count));
@@ -1660,7 +1643,7 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
      */
     @Action
     public void editWorldPopulation() {
-        PDSEditorInternalFrame populationDatasetEditorInternalFrame = new PDSEditorInternalFrame(dtp, worldPopulations, listener);
+        PDSEditorInternalFrame populationDatasetEditorInternalFrame = new PDSEditorInternalFrame(dtp, referencePopulations, listener);
         populationDatasetEditorInternalFrame.setPopulationDataset((PopulationDataset) standardPopulationComboBox.getSelectedItem());
         CanRegClientView.showAndPositionInternalFrame(dtp, populationDatasetEditorInternalFrame);
     }
@@ -1671,7 +1654,7 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
     @Action
     public void lockedAction() {
         updateSaveAsNewAndDeleteButtons();
-        lockTheFields();
+        lockTheFields(lockedToggleButton.isSelected());
     }
 
     /**
@@ -1689,25 +1672,27 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
     public void otherAction() {
     }
 
-    private void lockTheFields() {
-        ageGroupStructureComboBox.setEnabled(!lockedToggleButton.isSelected());
-        dateTextField.setEnabled(!lockedToggleButton.isSelected());
-        detailsPanel.setEnabled(!lockedToggleButton.isSelected());
-        editStandardPopulationButton.setEnabled(!lockedToggleButton.isSelected());
-        filterTextField.setEnabled(!lockedToggleButton.isSelected());
-        filterWizardButton.setEnabled(!lockedToggleButton.isSelected());
-        ageGroupStructureComboBox.setEnabled(!lockedToggleButton.isSelected());
-        editStandardPopulationButton.setEnabled(!lockedToggleButton.isSelected());
-        nameTextField.setEnabled(!lockedToggleButton.isSelected());
-        pdsTable.setEnabled(!lockedToggleButton.isSelected());
-        saveButton.setEnabled(!lockedToggleButton.isSelected());
-        sourceTextField.setEnabled(!lockedToggleButton.isSelected());
-        standardPopulationComboBox.setEnabled(!lockedToggleButton.isSelected());
-        otherAgeGroupStructureButton.setEnabled(!lockedToggleButton.isSelected());
-        descriptionTextArea.setEnabled(!lockedToggleButton.isSelected());
-        dateChooser.setEnabled(!lockedToggleButton.isSelected());
-        deleteButton.setEnabled(!lockedToggleButton.isSelected());
-        saveAsNewButton.setEnabled(!lockedToggleButton.isSelected());
+    private void lockTheFields(boolean locked) {
+        lockedToggleButton.setSelected(locked);
+        ageGroupStructureComboBox.setEnabled(!locked);
+        dateTextField.setEnabled(!locked);
+        detailsPanel.setEnabled(!locked);
+        editStandardPopulationButton.setEnabled(!locked);
+        filterTextField.setEnabled(!locked);
+        filterWizardButton.setEnabled(!locked);
+        ageGroupStructureComboBox.setEnabled(!locked);
+        editStandardPopulationButton.setEnabled(!locked);
+        nameTextField.setEnabled(!locked);
+        pdsTable.setEnabled(!locked);
+        saveButton.setEnabled(!locked);
+        sourceTextField.setEnabled(!locked);
+        standardPopulationComboBox.setEnabled(!locked);
+        otherAgeGroupStructureButton.setEnabled(!locked);
+        descriptionTextArea.setEnabled(!locked);
+        dateChooser.setEnabled(!locked);
+        deleteButton.setEnabled(!locked);
+        saveAsNewButton.setEnabled(!locked);
+        // writeToFileButton.setEnabled(!locked);
     }
 
     @Action
@@ -1720,11 +1705,7 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
                 if (listener != null) {
                     listener.actionPerformed(new ActionEvent(this, 1, "refresh"));
                 }
-            } catch (SQLException ex) {
-                Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (RemoteException ex) {
-                Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SecurityException ex) {
+            } catch (SQLException | RemoteException | SecurityException ex) {
                 Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -1822,8 +1803,6 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
     private javax.swing.JButton filterWizardButton1;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JInternalFrame jInternalFrame1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -1878,6 +1857,7 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
     private javax.swing.JLabel totalLabel;
     private javax.swing.JTable totalsTable;
     private javax.swing.JTable totalsTable1;
+    private javax.swing.JButton writeToFileButton;
     // End of variables declaration//GEN-END:variables
 
     private DefaultKeyedValues2DDataset getJChartDataset() {
@@ -1954,7 +1934,7 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
     @Action
     public void saveSVGAction() {
         if (chart != null) {
-            JFileChooser chooser = new JFileChooser();
+            JFileChooser svgFileChooser = new JFileChooser();
             FileFilter filter = new FileFilter() {
 
                 @Override
@@ -1967,11 +1947,11 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
                     return java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("SVG GRAPHICS FILES");
                 }
             };
-            chooser.setFileFilter(filter);
-            int result = chooser.showDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("CHOOSE FILENAME"));
+            svgFileChooser.setFileFilter(filter);
+            int result = svgFileChooser.showDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("CHOOSE FILENAME"));
             if (result == JFileChooser.APPROVE_OPTION) {
                 try {
-                    File file = chooser.getSelectedFile();
+                    File file = svgFileChooser.getSelectedFile();
                     if (!file.getName().toLowerCase().endsWith("svg")) { //NOI18N
                         file = new File(file.getAbsolutePath() + ".svg"); //NOI18N
                     }
@@ -2021,39 +2001,40 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
 
         if (chooser == null) {
             chooser = new JFileChooser();
+            FileFilter filter = new FileFilter() {
+
+                @Override
+                public boolean accept(File f) {
+                    return f.isDirectory() || f.getName().toLowerCase().endsWith("json"); //NOI18N
+                }
+
+                @Override
+                public String getDescription() {
+                    return java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("JSON FILES");
+                }
+            };
+            chooser.setFileFilter(filter);
         }
 
-        int returnVal = chooser.showOpenDialog(this);
+        chooser.setSelectedFile(new File("CR5POP_" + pds.getPopulationDatasetName().replace(",", "_").replace(" ", "_").replace("__", "_") + ".json"));
+        int returnVal = chooser.showSaveDialog(this);
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            try (ObjectOutputStream oos
-                    = new ObjectOutputStream(new FileOutputStream(chooser.getSelectedFile().getCanonicalPath()))) {
+            try {
                 buildPDSfromTable();
-                oos.writeObject(pds);
+                String fileName = chooser.getSelectedFile().getCanonicalPath();
+                if (!fileName.toLowerCase().endsWith(".json")) {
+                    fileName += ".json";
+                }
+                canreg.common.database.Tools.writePopulationDatasetToJSON(pds, fileName);
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("SUCCESSFULLY_SAVED_PDS_TO_FILE:_") + fileName + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("PDS_SAVED."), JOptionPane.INFORMATION_MESSAGE);
             } catch (IOException ex) {
                 Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
 
-    @Action
-    public void loadFromFile() {
-
-        if (chooser == null) {
-            chooser = new JFileChooser();
-        }
-
-        int returnVal = chooser.showOpenDialog(this);
-
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            try (ObjectInputStream ois
-                    = new ObjectInputStream(new FileInputStream(chooser.getSelectedFile().getCanonicalPath()))) {
-                PopulationDataset tempPDS = (PopulationDataset) ois.readObject();
-                setPopulationDataset(tempPDS);
-            } catch (IOException | ClassNotFoundException ex) {
-                Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            updatePyramid();
-        }
+    public void setLocked(boolean locked) {
+        lockTheFields(locked);
     }
 }
