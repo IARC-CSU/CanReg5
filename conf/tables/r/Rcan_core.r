@@ -250,7 +250,7 @@ canreg_get_years <- function (dt, var_year="YEAR") {
 } 
 
 
-canreg_import_CI5_data <- function(dt,CI5_file,var_ICD_canreg="ICD10GROUP") {
+canreg_import_CI5_data <- function(dt,CI5_file,var_ICD_canreg="ICD10GROUP",var_age_label_canreg="AGE_GROUP_LABEL") {
   
   # list ICD10 from canreg
   ICD_canreg <- unique(dt[[var_ICD_canreg]])
@@ -284,6 +284,29 @@ canreg_import_CI5_data <- function(dt,CI5_file,var_ICD_canreg="ICD10GROUP") {
   dt_CI5_data <- merge(dt_CI5_data,dt_ICD_CI5, by=("ICD10"), all.x=TRUE) 
   dt_CI5_data <- dt_CI5_data[!is.na(ICD_canreg),]
   dt_CI5_data<-  dt_CI5_data[,.( cases=sum(cases), py=mean(py)), by=c("sex","age","country_label", "cr","ICD_canreg")]
+  
+  
+  #list age group label from canreg and CI5
+  dt_CI5_data[age<19, age_label:= (age-1)*5]
+  dt_CI5_age_label <- parse_age_label_dt(dt_CI5_data,var_age_label = "age_label")
+  dt_canreg_age_label <- parse_age_label_dt(dt,var_age_label =var_age_label_canreg)
+  dt_CI5_age_label$age_label_canreg <- character(0) 
+  
+  #associate CI5 age group with CANREG age group
+  for (i in 1:nrow(dt_CI5_age_label)) {
+    
+    temp <- sapply(dt_canreg_age_label$age_list, function(x) {return(all(dt_CI5_age_label$age_list[[i]] %in% x))})
+    ind <- which(temp)
+    if (length(ind) > 0) {
+      dt_CI5_age_label$age_label_canreg[[i]] <- as.character(dt_canreg_age_label$age_label[ind])
+    }
+  }
+  
+  dt_CI5_age_label[,age_list:=NULL]
+
+  #Add canreg age label code to CI5 data
+  dt_CI5_data <- merge(dt_CI5_data,dt_CI5_age_label, by=("age_label"), all.x=TRUE) 
+  dt_CI5_data<-  dt_CI5_data[,.( cases=sum(cases), py=sum(py)), by=c("sex","age_label_canreg","country_label", "cr","ICD_canreg")]
   
   return(dt_CI5_data)
 }
