@@ -19,6 +19,9 @@
 
 ## CHECK ARGS
     source(paste(sep="/", script.basename, "checkArgs.r")) 
+	
+## RCAN FUNCTIONS
+	source(paste(sep="/", script.basename, "Rcan_core.r")) 
 
 ## MISC FUNCTIONS
     source(paste(sep="/", script.basename, "Funct_misc.r"))  
