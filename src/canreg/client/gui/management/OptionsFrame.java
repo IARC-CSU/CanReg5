@@ -105,6 +105,8 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         dataEntryLabel = new javax.swing.JLabel();
         dataEntryVersionComboBox = new javax.swing.JComboBox();
         newDataEntryVerticalSources = new javax.swing.JCheckBox();
+        dataEntryDisplayVariableLabel = new javax.swing.JLabel();
+        dataEntryDisplayVariableComboBox = new javax.swing.JComboBox();
         systemPanel = new javax.swing.JPanel();
         automaticBackupPanel = new javax.swing.JPanel();
         automaticbackupCheckBox = new javax.swing.JCheckBox();
@@ -240,6 +242,12 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         newDataEntryVerticalSources.setToolTipText(resourceMap.getString("newDataEntryVerticalSources.toolTipText")); // NOI18N
         newDataEntryVerticalSources.setName("newDataEntryVerticalSources"); // NOI18N
 
+        dataEntryDisplayVariableLabel.setText(resourceMap.getString("dataEntryDisplayVariableLabel.text")); // NOI18N
+        dataEntryDisplayVariableLabel.setName("dataEntryDisplayVariableLabel"); // NOI18N
+
+        dataEntryDisplayVariableComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "FULL", "SHORT", "ENGLISH", "STANDARD" }));
+        dataEntryDisplayVariableComboBox.setName("dataEntryDisplayVariableComboBox"); // NOI18N
+
         javax.swing.GroupLayout lookAndFeelPanelLayout = new javax.swing.GroupLayout(lookAndFeelPanel);
         lookAndFeelPanel.setLayout(lookAndFeelPanelLayout);
         lookAndFeelPanelLayout.setHorizontalGroup(
@@ -264,7 +272,12 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(dataEntryVersionComboBox, 0, 323, Short.MAX_VALUE)
                         .addContainerGap())
-                    .addComponent(newDataEntryVerticalSources, javax.swing.GroupLayout.DEFAULT_SIZE, 431, Short.MAX_VALUE)))
+                    .addComponent(newDataEntryVerticalSources, javax.swing.GroupLayout.DEFAULT_SIZE, 431, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, lookAndFeelPanelLayout.createSequentialGroup()
+                        .addComponent(dataEntryDisplayVariableLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(dataEntryDisplayVariableComboBox, 0, 312, Short.MAX_VALUE)
+                        .addContainerGap())))
         );
         lookAndFeelPanelLayout.setVerticalGroup(
             lookAndFeelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -284,7 +297,11 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
                     .addComponent(dataEntryVersionComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(newDataEntryVerticalSources)
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(lookAndFeelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(dataEntryDisplayVariableComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(dataEntryDisplayVariableLabel))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout generalPanelLayout = new javax.swing.GroupLayout(generalPanel);
@@ -390,7 +407,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
             .addGroup(systemPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(automaticBackupPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(172, Short.MAX_VALUE))
+                .addContainerGap(193, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab(resourceMap.getString("systemPanel.TabConstraints.tabTitle"), systemPanel); // NOI18N
@@ -490,7 +507,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
             .addGroup(advancedPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(versionPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(169, Short.MAX_VALUE))
+                .addContainerGap(190, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab(resourceMap.getString("advancedPanel.TabConstraints.tabTitle"), advancedPanel); // NOI18N
@@ -581,7 +598,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
                 .addComponent(rPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(gsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(165, Short.MAX_VALUE))
+                .addContainerGap(186, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab(resourceMap.getString("pathsPanel.TabConstraints.tabTitle"), pathsPanel); // NOI18N
@@ -649,6 +666,8 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
     private javax.swing.JCheckBox automaticbackupCheckBox;
     private javax.swing.JTextField backUpPerformedTextField;
     private javax.swing.JButton checkButton;
+    private javax.swing.JComboBox dataEntryDisplayVariableComboBox;
+    private javax.swing.JLabel dataEntryDisplayVariableLabel;
     private javax.swing.JLabel dataEntryLabel;
     private javax.swing.JComboBox dataEntryVersionComboBox;
     private javax.swing.JComboBox dateFormatComboBox;
@@ -773,6 +792,8 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         newDataEntryVerticalSources.setSelected(localSettings.isDataEntryVerticalSources());
         String dataEntryVersion = localSettings.getProperty(LocalSettings.DATA_ENTRY_VERSION_KEY);
         dataEntryVersionComboBox.setSelectedItem(dataEntryVersion);
+
+        dataEntryDisplayVariableComboBox.setSelectedItem(localSettings.getDisplayVariableType().toString());
     }
 
     private String getNewestVersionNumber() {
@@ -827,6 +848,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         localSettings.setProperty(LocalSettings.FONT_SIZE_KEY, fontSizeComboBox.getSelectedItem().toString());
 
         localSettings.setProperty(LocalSettings.DATE_FORMAT_KEY, dateFormatComboBox.getSelectedItem().toString());
+        localSettings.setProperty(LocalSettings.DISPLAY_VARIABLE_TYPE_KEY, dataEntryDisplayVariableComboBox.getSelectedItem().toString());
 
         localSettings.setProperty(LocalSettings.DATA_ENTRY_VERSION_KEY, dataEntryVersionComboBox.getSelectedItem().toString());
         if (newDataEntryVerticalSources.isSelected()) {

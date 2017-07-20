@@ -242,8 +242,11 @@ translations/
 CanReg5.zip
 doc/CanReg5-Instructions.pdf
 CanReg5-R-packages.zip
+*.orig
 r-packages/*.zip
 version.txt
 inno-settings.txt
 conf/tables/r/r-packages/*.zip
-.gitignore.orig
+buildnumber.properties
+out/*
+

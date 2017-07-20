@@ -21,6 +21,7 @@ package canreg.common.database;
 
 import canreg.client.CanRegClientApp;
 import canreg.common.Translator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 //   Commented away to be able to disable the IARCtools package... 
 //    
 // import fr.iarc.cin.iarctools.Globals.IARCStandardVariableNames;
@@ -98,6 +99,7 @@ public class DatabaseRecord implements Serializable //   Commented away to be ab
 //        }
 //        return value;
 //    }
+    @JsonIgnore
     public Object getPatientID() {
         if (patientIDVariableName == null) {
             patientIDVariableName = CanRegClientApp.getApplication().getGlobalToolBox().getPatientIDVariableName(this);

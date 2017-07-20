@@ -214,7 +214,7 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends AbstractEdit
         }
 
         if (populations.length > 0) {
-            notesString += ", " + java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder").getString("REFERENCE POPULATION:") + " " + populations[0].getWorldPopulation().getPopulationDatasetName();
+            notesString += ", " + java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder").getString("REFERENCE POPULATION:") + " " + populations[0].getReferencePopulation().getPopulationDatasetName();
         }
 
         standardPopulationArray = new double[numberOfSexes][numberOfAgeGroups];
