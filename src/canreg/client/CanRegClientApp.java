@@ -454,7 +454,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         }
         //do the loginRMI 
         debugOut("ATTEMPTING LOGIN");
-        server = (CanRegServerInterface) loginServer.login(username, password);
+        server = loginServer.login(username, password);
         if (server != null) {
             // See if server version of CanReg matches the 
 
@@ -532,7 +532,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     /**
      * Simple console trace to system.out for debug purposes only.
      *
-     * @param message the message to be printed to the console
+     * @param msg the message to be printed to the console
      */
     private static void debugOut(String msg) {
         if (debug) {
