@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2016 International Agency for Research on Cancer
+ * Copyright (C) 2008-2017 International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -87,11 +87,11 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     private Map<Integer, PopulationDataset> populationDatasetsMap;
     private PopulationDataset[] populationDatasetsArray;
     private LinkedList<LabelAndComboBoxJPanel> populationDatasetChooserPanels;
-    private LocalSettings localSettings;
+    private final LocalSettings localSettings;
     private String path;
     private JFileChooser chooser;
-    private Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
-    private Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+    private final Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
+    private final Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
     private TableBuilderInterface tableBuilder = null;
     int filterTabPos = 3;
 
@@ -106,12 +106,9 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         localSettings = CanRegClientApp.getApplication().getLocalSettings();
 
         // Add a listener for changing the active tab
-        ChangeListener tabbedPaneChangeListener = new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                // initializeVariableMappingTab();
-                changeTab(tabbedPane.getSelectedIndex());
-            }
+        ChangeListener tabbedPaneChangeListener = (ChangeEvent e) -> {
+            // initializeVariableMappingTab();
+            changeTab(tabbedPane.getSelectedIndex());
         };
         // And add the listener to the tabbedPane
 
@@ -712,7 +709,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     private void populatePopulationDataSetChooser() {
         populationDatasetChoosersPanel.removeAll();
         if (populationDatasetChooserPanels == null) {
-            populationDatasetChooserPanels = new LinkedList<LabelAndComboBoxJPanel>();
+            populationDatasetChooserPanels = new LinkedList<>();
         }
         populationDatasetChooserPanels.clear();
         for (int i = 0; i <= (endYearChooser.getYear() - startYearChooser.getYear()); i++) {
@@ -729,7 +726,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     }
 
     private void guessPopulationSelections() {
-        Map<Integer, PopulationDataset> map = new HashMap<Integer, PopulationDataset>();
+        Map<Integer, PopulationDataset> map = new HashMap<>();
         for (PopulationDataset pds : populationDatasetsArray) {
             if (pds.getDate().length() >= 4) {
                 int year = Integer.parseInt(pds.getDate().substring(0, 4));
@@ -814,24 +811,36 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                 if (tableBuilder != null) {
                     FileTypes[] fileTypes = tableBuilder.getFileTypesGenerated();
                     for (FileTypes filetype : fileTypes) {
-                        if (filetype.equals(FileTypes.ps)) {
-                            postScriptButton.setEnabled(true);
-                        } else if (filetype.equals(FileTypes.html)) {
-                            tabulatedButton.setEnabled(true);
-                        } else if (filetype.equals(FileTypes.png)) {
-                            imageButton.setEnabled(true);
-                        } else if (filetype.equals(FileTypes.pdf)) {
-                            pdfButton.setEnabled(true);
-                        } else if (filetype.equals(FileTypes.svg)) {
-                            svgButton.setEnabled(true);
-                        } else if (filetype.equals(FileTypes.wmf)) {
-                            wmfButton.setEnabled(true);
-                        } else if (filetype.equals(FileTypes.jchart)) {
-                            chartViewerButton.setEnabled(true);
-                        } else if (filetype.equals(FileTypes.seer)) {
-                            seerPrepButton.setEnabled(true);
-                        } else if (filetype.equals(FileTypes.csv)) {
-                            csvButton.setEnabled(true);
+                        switch (filetype) {
+                            case ps:
+                                postScriptButton.setEnabled(true);
+                                break;
+                            case html:
+                                tabulatedButton.setEnabled(true);
+                                break;
+                            case png:
+                                imageButton.setEnabled(true);
+                                break;
+                            case pdf:
+                                pdfButton.setEnabled(true);
+                                break;
+                            case svg:
+                                svgButton.setEnabled(true);
+                                break;
+                            case wmf:
+                                wmfButton.setEnabled(true);
+                                break;
+                            case jchart:
+                                chartViewerButton.setEnabled(true);
+                                break;
+                            case seer:
+                                seerPrepButton.setEnabled(true);
+                                break;
+                            case csv:
+                                csvButton.setEnabled(true);
+                                break;
+                            default:
+                                break;
                         }
                     }
                 }
@@ -974,18 +983,14 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         try {
             populationDatasetsMap = canreg.client.CanRegClientApp.getApplication().getPopulationDatasets();
             Collection<PopulationDataset> populationDatasetsCollection;
-            Collection<PopulationDataset> populationDatasetsCollection2 = new LinkedList<PopulationDataset>();
+            Collection<PopulationDataset> populationDatasetsCollection2 = new LinkedList<>();
             populationDatasetsCollection = populationDatasetsMap.values();
-            for (PopulationDataset pd : populationDatasetsCollection) {
-                if (!pd.isReferencePopulationBool()) {
-                    populationDatasetsCollection2.add(pd);
-                }
-            }
+            populationDatasetsCollection.stream().filter((pd) -> (!pd.isReferencePopulationBool())).forEachOrdered((pd) -> {
+                populationDatasetsCollection2.add(pd);
+            });
             populationDatasetsArray = populationDatasetsCollection2.toArray(new PopulationDataset[0]);
             populatePopulationDataSetChooser();
-        } catch (SecurityException ex) {
-            Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RemoteException ex) {
+        } catch (SecurityException | RemoteException ex) {
             Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -1008,14 +1013,9 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
 
     private void refreshTableTypeList() {
 
-        FilenameFilter filter = new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                return (name.endsWith(".conf"));
-            }
-        };
+        FilenameFilter filter = (File dir, String name1) -> (name1.endsWith(".conf"));
 
-        LinkedList<String> children = new LinkedList<String>();
+        LinkedList<String> children = new LinkedList<>();
 
         // get directories of .confs
         File[] dirs = {
@@ -1035,7 +1035,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         DefaultListModel listModel = new DefaultListModel();
         //open one by one using configreader
         //make list
-        for (String configFileName : children) {
+        children.forEach((configFileName) -> {
             // Get filename of file or directory
             try {
                 String[] tempArray;
@@ -1077,7 +1077,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
+        });
         tableTypeList.setModel(listModel);
 
     }
@@ -1229,9 +1229,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     if (filetype != FileTypes.jchart) {
 
                         String filesGeneratedList = new String();
-                        for (String fileN : filesGenerated) {
-                            filesGeneratedList += "\n" + fileN;
-                        }
+                        filesGeneratedList = filesGenerated.stream().map((fileN) -> "\n" + fileN).reduce(filesGeneratedList, String::concat);
 
                         setCursor(normalCursor);
 
@@ -1274,15 +1272,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     setCursor(normalCursor);
                     JOptionPane.showMessageDialog(this, "Something wrong with the SQL query: \n" + ex.getLocalizedMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                     Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (RemoteException ex) {
-                    Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (SecurityException ex) {
-                    Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (NotCompatibleDataException ex) {
-                    Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (DistributedTableDescriptionException ex) {
-                    Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (UnknownTableException ex) {
+                } catch (RemoteException | SecurityException | NotCompatibleDataException | DistributedTableDescriptionException | UnknownTableException ex) {
                     Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (TableErrorException ex) {
                     setCursor(normalCursor);
