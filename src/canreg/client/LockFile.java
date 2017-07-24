@@ -44,7 +44,7 @@ public class LockFile {
 
     public LockFile(String identifier) {
         lockFileName = Globals.CANREG_CLIENT_FOLDER + Globals.FILE_SEPARATOR + identifier + Globals.CANREG_LOCAL_LOCKED_RECORDS_FILE_NAME_SUFFIX;
-        locksMap = new TreeMap<String, Set<Integer>>();
+        locksMap = new TreeMap<>();
         loadMap();
     }
 
@@ -76,7 +76,7 @@ public class LockFile {
                     in.close();
                 }
                 if (!success) {
-                    locksMap = new TreeMap<String, Set<Integer>>();
+                    locksMap = new TreeMap<>();
                 }
             }
         } catch (FileNotFoundException ex) {
@@ -85,7 +85,7 @@ public class LockFile {
             Logger.getLogger(LockFile.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (locksMap == null) {
-            locksMap = new TreeMap<String, Set<Integer>>();
+            locksMap = new TreeMap<>();
         }
     }
 
