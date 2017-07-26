@@ -408,9 +408,7 @@ public final class LocalSettings {
 
     private String getDefaultProperty(String key) {
         String property = "";
-        if (key.equalsIgnoreCase(USERNAME_KEY)) {
-            property = "";
-        } else if (key.equalsIgnoreCase(PASSWORD_KEY)) {
+        if (key.equalsIgnoreCase(USERNAME_KEY) || key.equalsIgnoreCase(PASSWORD_KEY)) {
             property = "";
         } else if (key.equalsIgnoreCase(LOCALE_KEY)) {
             property = Locale.getDefault().getLanguage();
