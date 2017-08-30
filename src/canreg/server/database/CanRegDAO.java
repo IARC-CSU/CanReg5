@@ -475,19 +475,21 @@ public class CanRegDAO {
 
         if (null == filter.getQueryType()) {
             dataSource = initiateTableQuery(filter, statement, tableName);
-        }        else // Is this a person search query?
-        switch (filter.getQueryType()) {
-        // Or a Frequency by year query?
-            case PERSON_SEARCH:
-                dataSource = initiatePersonSearchQuery(filter, statement);
-                break;
-        // Or a "regular" query
-            case FREQUENCIES_BY_YEAR:
-                dataSource = initiateFrequenciesByYearQuery(filter, statement, tableName);
-                break;
-            default:
-                dataSource = initiateTableQuery(filter, statement, tableName);
-                break;
+        } else // Is this a person search query?
+        {
+            switch (filter.getQueryType()) {
+                // Or a Frequency by year query?
+                case PERSON_SEARCH:
+                    dataSource = initiatePersonSearchQuery(filter, statement);
+                    break;
+                // Or a "regular" query
+                case FREQUENCIES_BY_YEAR:
+                    dataSource = initiateFrequenciesByYearQuery(filter, statement, tableName);
+                    break;
+                default:
+                    dataSource = initiateTableQuery(filter, statement, tableName);
+                    break;
+            }
         }
         distributedDataSources.put(resultSetID, dataSource);
         activeStatements.remove(resultSetID);
