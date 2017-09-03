@@ -57,7 +57,7 @@ import java.io.Writer;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.Calendar;
+import com.ibm.icu.util.Calendar;
 import java.util.Enumeration;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -86,7 +86,32 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
     private DistributedTableDataSourceClient tableDataSource;
     private DistributedTableModel tableDataModel;
     private JScrollPane resultScrollPane;
-    private final JTable resultTable = new JTable();
+    //<ictl.co>
+//    private JTable resultTable = new JTable();
+    private JTable resultTable = new javax.swing.JTable() {
+        //<ictl.co>
+        @Override
+        public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+            Component c = super.prepareRenderer(renderer, row, column);
+            String columnName = this.getColumnName(column);
+            if (variableChooserPanel.isLocalCalendarSelected() && LocalizationHelper.isRtlLanguageActive() &&
+                    ("InciD".equalsIgnoreCase(columnName) ||
+                            "BirthD".equalsIgnoreCase(columnName) ||
+                            "YEAR".equalsIgnoreCase(columnName) ||
+                            "DLC".equalsIgnoreCase(columnName) ||
+                            "PatientUpdateDate".equalsIgnoreCase(columnName) ||
+                            "UpDate".equalsIgnoreCase(columnName)
+                    )) {
+                if (c instanceof DefaultTableCellRenderer.UIResource) {
+                    String value = ((DefaultTableCellRenderer.UIResource) c).getText();
+                    ((DefaultTableCellRenderer.UIResource) c).setText(DateHelper.analyseJTableColumnValue(value, getModel().getColumnName(column)));
+                }
+            }
+            return c;
+        }
+        //</ictl.co>
+    };
+    //</ictl.co>
     private JFileChooser chooser;
     private String path;
     private final LocalSettings localSettings;
@@ -505,7 +530,13 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
             setCursor(hourglassCursor);
             tableName = rangeFilterPanel.getSelectedTable();
             variablesToShow = variableChooserPanel.getSelectedVariableNames(tableName);
-            filter.setFilterString(rangeFilterPanel.getFilter().trim());
+            //<ictl.co>
+            if (LocalizationHelper.isRtlLanguageActive()) {
+                filter.setFilterString(FilterHelper.analyzeFilterForDateAndReplace(rangeFilterPanel.getFilter().trim()));
+            } else {
+                filter.setFilterString(rangeFilterPanel.getFilter().trim());
+            }
+            //</ictl.co>
             filter.setSortByVariable(rangeFilterPanel.getSortByVariable().trim());
             filter.setRange(rangeFilterPanel.getRange());
             // setProgress(0, 0, 4);
@@ -886,6 +917,15 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                 for (int column = 0; column < columnCount; column++) {
                     dvle = variableChooserPanel.getVariablesExportDetailsPanelByName(resultTable.getColumnName(column));
                     value = resultTable.getValueAt(row, column);
+                    //<ictl.co>
+                    if (LocalizationHelper.isRtlLanguageActive()) {
+                        if (dvle.getVariable().getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_DATE_NAME)
+                                && variableChooserPanel.isLocalCalendarSelected()
+                                && DateHelper.analyseContentForDateValue((String) value)) {
+                            value = DateHelper.gregorianDateStringToLocaleDateString((String) value, Globals.DATE_FORMAT_STRING);
+                        }
+                    }
+                    //<ictl.co>
                     boolean[] bools = dvle.getCheckboxes();
                     // the raw code
                     if (bools[0]) {
@@ -908,7 +948,13 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                                     }
                                 }
                                 if (gregorianCanRegCalendar != null) {
-                                    value = DateHelper.parseGregorianCalendarCanRegToDateString(gregorianCanRegCalendar, (String) dateFormatComboBox.getSelectedItem());
+                                    //<ictl.co>
+                                    if (variableChooserPanel.isLocalCalendarSelected() && LocalizationHelper.isRtlLanguageActive()) {
+                                        value = DateHelper.parseGregorianCalendarCanRegToDateStringLocale(gregorianCanRegCalendar, (String) dateFormatComboBox.getSelectedItem());
+                                    } else {
+                                        value = DateHelper.parseGregorianCalendarCanRegToDateString(gregorianCanRegCalendar, (String) dateFormatComboBox.getSelectedItem());
+                                    }
+                                    //</ictl.co>
                                 }
                             } catch (ParseException ex) {
                                 Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);

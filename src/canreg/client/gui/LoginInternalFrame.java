@@ -45,8 +45,8 @@ import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.security.auth.login.LoginException;
-import javax.swing.JDesktopPane;
-import javax.swing.JOptionPane;
+import javax.swing.*;
+
 import org.jdesktop.application.Action;
 import org.jdesktop.application.FrameView;
 import org.jdesktop.application.Task;
@@ -354,8 +354,9 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(codeField, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE))
-                            .addComponent(nameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 463, Short.MAX_VALUE)))
+                                    //<ictl.co> .addComponent(codeField, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
+                                    .addComponent(codeField, GroupLayout.PREFERRED_SIZE, 150, Short.MAX_VALUE))
+                            .addComponent(nameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)))
                     .addGroup(settingsPanelLayout.createSequentialGroup()
                         .addComponent(advancedCheckBox)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 210, Short.MAX_VALUE)
@@ -893,7 +894,7 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
                     canRegSystemName = CanRegClientApp.getApplication().loginRMI(serverObjectString, username, password);
                 } else {
                     // testing an approach to avoid the RMI for single users
-                    canRegSystemName = CanRegClientApp.getApplication().loginDirect(code, username, password);
+                    canRegSystemName = CanRegClientApp.getApplication().loginDirect(code, username, password,/*<ictl.co>*/Integer.parseInt(port)/*</ictl.co<*/);
                 }
                 return "OK";
             } catch (LoginException loginException) {

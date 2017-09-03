@@ -29,7 +29,9 @@ import canreg.client.gui.CanRegClientView;
 import canreg.client.gui.components.FastFilterInternalFrame;
 import canreg.client.gui.tools.ExcelAdapter;
 import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
+import canreg.common.DateHelper;
 import canreg.common.Globals;
+import canreg.common.LocalizationHelper;
 import canreg.common.Tools;
 import canreg.common.database.AgeGroupStructure;
 import canreg.common.database.PopulationDataset;
@@ -47,10 +49,8 @@ import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
@@ -59,6 +59,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.table.DefaultTableModel;
+
+import com.ibm.icu.text.SimpleDateFormat;
 import org.jdesktop.application.Action;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -114,7 +116,13 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
                 ageGroupStructureComboBox.addItem(pds.getAgeGroupStructure());
                 ageGroupStructureComboBox.setSelectedItem(pds.getAgeGroupStructure());
             }
-            dateTextField.setText(pds.getDate());
+            //<ictl.co>
+            if (LocalizationHelper.isRtlLanguageActive()) {
+                dateTextField.setText(DateHelper.gregorianDateStringToLocaleDateString(pds.getDate(), Globals.DATE_FORMAT_STRING));
+            } else {
+                dateTextField.setText(pds.getDate());
+            }
+            //<ictl.co>
             refreshPopulationDataSetTable();
             lockedToggleButton.setSelected(true);
             if (pds.isWorldPopulationBool()) {
@@ -1522,7 +1530,13 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
         dateTextField = (JTextField) dateChooser.getDateEditor().getUiComponent();
         dateChooser.setDateFormatString(Globals.DATE_FORMAT_STRING);
         try {
-            dateChooser.setDate(new SimpleDateFormat(Globals.DATE_FORMAT_STRING).parse("20000701"));
+            //<ictl.co>
+            if(LocalizationHelper.isRtlLanguageActive()){
+                dateChooser.setDate(new SimpleDateFormat(Globals.DATE_FORMAT_STRING).parse("13790701"));
+            }else{
+                dateChooser.setDate(new SimpleDateFormat(Globals.DATE_FORMAT_STRING).parse("20000701"));
+            }
+            //</ictl.co>
         } catch (ParseException ex) {
             Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1592,7 +1606,13 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
         pds.setFilter(filterTextField.getText().trim());
         pds.setDescription(descriptionTextArea.getText().trim());
         pds.setAgeGroupStructure((AgeGroupStructure) ageGroupStructureComboBox.getSelectedItem());
-        pds.setDate(dateTextField.getText());
+        //<ictl.co>
+        if (LocalizationHelper.isRtlLanguageActive()) {
+            pds.setDate(DateHelper.localeDateStringToGregorianDateString(dateTextField.getText(), Globals.DATE_FORMAT_STRING));
+        } else {
+            pds.setDate(dateTextField.getText());
+        }
+        //</ictl.co>
         pds.setWorldPopulationBool(false);
         PopulationDataset wpds = (PopulationDataset) standardPopulationComboBox.getSelectedItem();
         pds.setWorldPopulation(wpds);

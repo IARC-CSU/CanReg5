@@ -55,7 +55,10 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     private CanRegServerInterface theServer;
     private Subject theUser;
 
-    public CanRegServerProxy(Subject user, CanRegServerInterface server) throws RemoteException {
+    public CanRegServerProxy(Subject user, CanRegServerInterface server/*<ictl.co>*/,int port/*</ictl.co>*/) throws RemoteException {
+        //<ictl.co>
+        super(port);
+        //</ictl.co>
         /** The user associated with this proxy
          */
         this.theUser = user;

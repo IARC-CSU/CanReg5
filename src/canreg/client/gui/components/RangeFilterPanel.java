@@ -43,6 +43,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JDesktopPane;
+
+import org.apache.commons.lang.StringUtils;
 import org.jdesktop.application.Action;
 import org.w3c.dom.Document;
 
@@ -778,7 +780,12 @@ private void rangeEndTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GE
                 Logger.getLogger(RangeFilterPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            filterWizardInternalFrame.setTextPane("");
+            //<iclt.co>
+            if (filterComboBox.getSelectedItem() != null && !StringUtils.isEmpty(String.valueOf(filterComboBox.getSelectedItem())))
+                filterWizardInternalFrame.setTextPane(filterComboBox.getSelectedItem().toString()+" AND ");
+            else
+                filterWizardInternalFrame.setTextPane("");
+            //<ictl.co>
             filterWizardInternalFrame.setVisible(true);
         }
     }

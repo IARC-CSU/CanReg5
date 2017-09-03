@@ -28,6 +28,7 @@ package canreg.client.gui.components;
 
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
+import canreg.common.LocalizationHelper;
 import canreg.common.database.Dictionary;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -35,6 +36,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import org.jdesktop.application.Action;
+
+import javax.swing.*;
 
 /**
  *
@@ -63,6 +66,14 @@ public class VariablesChooserPanel extends javax.swing.JPanel {
         scrollPane = new javax.swing.JScrollPane();
         panel = new javax.swing.JPanel();
         allVariablesCheckBox = new javax.swing.JCheckBox();
+        //<ictl.co>
+        localeCalendarCheckBox = new javax.swing.JCheckBox();
+        if (LocalizationHelper.isRtlLanguageActive()) {
+            localeCalendarCheckBox.setSelected(true);
+        }
+        localeCalendarCheckBox.setVisible(false);
+
+        //</ictl.co>
 
         setName("Form"); // NOI18N
 
@@ -79,12 +90,16 @@ public class VariablesChooserPanel extends javax.swing.JPanel {
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(VariablesChooserPanel.class, this);
         allVariablesCheckBox.setAction(actionMap.get("exportAllVariablesAction")); // NOI18N
         allVariablesCheckBox.setName("allVariablesCheckBox"); // NOI18N
-
+//<ictl.co>
+        localeCalendarCheckBox.setAction(actionMap.get("localeCalendarAction"));// NOI18N
+        localeCalendarCheckBox.setName("localeCalendarCheckBox");// NOI18N
+//</ictl.co>
         javax.swing.GroupLayout variablesPanelLayout = new javax.swing.GroupLayout(variablesPanel);
         variablesPanel.setLayout(variablesPanelLayout);
         variablesPanelLayout.setHorizontalGroup(
             variablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(allVariablesCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, 384, Short.MAX_VALUE)
+                    /*<ictl.co>*/.addComponent(localeCalendarCheckBox, GroupLayout.DEFAULT_SIZE, 384, Short.MAX_VALUE)/*</ictl.co>*/
             .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 384, Short.MAX_VALUE)
         );
         variablesPanelLayout.setVerticalGroup(
@@ -92,7 +107,8 @@ public class VariablesChooserPanel extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, variablesPanelLayout.createSequentialGroup()
                 .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(allVariablesCheckBox))
+                .addComponent(allVariablesCheckBox)
+            /*<ictl.co>*/.addComponent(localeCalendarCheckBox)/*</ictl.co>*/)
         );
 
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
@@ -147,7 +163,15 @@ public class VariablesChooserPanel extends javax.swing.JPanel {
             ved.setDataCheckBox(allVariablesCheckBox.isSelected());
         }
     }
+    //<ictl.co>
+    @Action
+    public void localeCalendarAction() {
+    }
 
+    public Boolean isLocalCalendarSelected() {
+        return localeCalendarCheckBox.isSelected();
+    }
+    //</ictl.co>
     /**
      * 
      * @return
@@ -188,6 +212,9 @@ public class VariablesChooserPanel extends javax.swing.JPanel {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox allVariablesCheckBox;
+    //<ictl.co>
+    private javax.swing.JCheckBox localeCalendarCheckBox;
+    //</ictl.co>
     private javax.swing.JPanel panel;
     private javax.swing.JScrollPane scrollPane;
     private javax.swing.JPanel variablesPanel;

@@ -25,6 +25,7 @@
  */
 package canreg.client.gui.management;
 
+import canreg.client.CanRegClientApp;
 import canreg.common.Globals;
 import canreg.common.PasswordService;
 import canreg.exceptions.SystemUnavailableException;
@@ -621,6 +622,19 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
             }
         }
 
+//<ictl.co>
+        if (CanRegClientApp.getApplication().isLoggedIn() && "admin".equals(user.getUserName())) {
+            String currentUserName = CanRegClientApp.getApplication().getLocalSettings().getProperty("username");
+            if (!"admin".equals(currentUserName)) {
+                JOptionPane.showInternalMessageDialog(this,"Admin user is readonly.");
+                throw new SecurityException("Admin user is readonly.");
+            }
+            if (!CanRegClientApp.getApplication().isCanRegServerRunningOnThisMachine()) {
+                JOptionPane.showInternalMessageDialog(this,"Admin user cannot delete from remote connection.");
+                throw new SecurityException("Admin user cannot delete from remote connection.");
+            }
+        }
+        //</ictl.co>
         int index = usersList.getSelectedIndex();
         user.setUserRightLevel((Globals.UserRightLevels) userRightLevelComboBox.getSelectedItem());
         user.setEmail(emailTextField.getText());
@@ -643,6 +657,19 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
     public void resetPasswordAction() {
         User user = (User) usersList.getSelectedValue();
         try {
+            //<ictl.co>
+            if (CanRegClientApp.getApplication().isLoggedIn() && "admin".equals(user.getUserName())) {
+                String currentUserName = CanRegClientApp.getApplication().getLocalSettings().getProperty("username");
+                if (!"admin".equals(currentUserName)) {
+                    JOptionPane.showInternalMessageDialog(this,"Admin user is readonly.");
+                    throw new SecurityException("Admin user is readonly.");
+                }
+                if (!CanRegClientApp.getApplication().isCanRegServerRunningOnThisMachine()) {
+                    JOptionPane.showInternalMessageDialog(this,"Admin user cannot delete from remote connection.");
+                    throw new SecurityException("Admin user cannot delete from remote connection.");
+                }
+            }
+            //</ictl.co>
             String encrypted = PasswordService.getInstance().encrypt(user.getUserName());
             user.setPassword(encrypted.toCharArray());
             canreg.client.CanRegClientApp.getApplication().saveUser(user);
@@ -671,6 +698,19 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
         int id = user.getID();
         if (okToDelete && id > 0) {
             try {
+                //<ictl.co>
+                if (CanRegClientApp.getApplication().isLoggedIn() && "admin".equals(user.getUserName())) {
+                    String currentUserName = CanRegClientApp.getApplication().getLocalSettings().getProperty("username");
+                    if (!"admin".equals(currentUserName)) {
+                        JOptionPane.showInternalMessageDialog(this,"Admin user is readonly.");
+                        throw new SecurityException("Admin user is readonly.");
+                    }
+                    if (!CanRegClientApp.getApplication().isCanRegServerRunningOnThisMachine()) {
+                        JOptionPane.showInternalMessageDialog(this,"Admin user cannot delete from remote connection.");
+                        throw new SecurityException("Admin user cannot delete from remote connection.");
+                    }
+                }
+                //</ictl.co>
                 canreg.client.CanRegClientApp.getApplication().deleteRecord(id, Globals.USERS_TABLE_NAME);
             } catch (SQLException ex) {
                 Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);

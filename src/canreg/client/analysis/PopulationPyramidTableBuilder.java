@@ -24,13 +24,14 @@ import canreg.common.Globals.StandardVariableNames;
 import canreg.common.PsToPdfConverter;
 import canreg.common.database.AgeGroupStructure;
 import canreg.common.database.PopulationDataset;
+import com.ibm.icu.util.Calendar;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.text.NumberFormat;
-import java.util.Calendar;
 import java.util.LinkedList;
 
 /**
