@@ -323,6 +323,49 @@ canreg_import_CI5_data <- function(dt,CI5_file,var_ICD_canreg="ICD10GROUP",var_a
 }
 
 
+canreg_merge_CI5_registry <- function(dt, dt_CI5, registry_region, registry_label, number=5) {
+  
+  ##calcul of ASR for canreg
+  dt<- csu_asr_core(df_data =dt, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
+                    var_by = c("cancer_label", "SEX","ICD10GROUP","ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt_all),
+                    pop_base_count = "REFERENCE_COUNT",
+                    age_label_list = "AGE_GROUP_LABEL")
+  
+  ##keep top 5 cancer for men and top 5 cancer women of canreg.
+  dt <- csu_dt_rank(dt,var_value = "CASES",var_rank = "cancer_label",
+                    group_by = "SEX", number =number) 
+  
+  #Keep selected cancer in CI5 data and prepare CI5 data
+  
+  dt_temp <- dt[,c("SEX", "ICD10GROUP", "CSU_RANK"),  with=FALSE]
+  dt_CI5 <- merge(dt_CI5,dt_temp, by=c("SEX", "ICD10GROUP"),all.y=TRUE )
+  dt_CI5 <- csu_asr_core(df_data =dt_CI5, var_age ="AGE_GROUP",var_cases = "cases", var_py = "py",
+                         var_by = c("country_label","cr" ,"SEX","ICD10GROUP", "CSU_RANK"),
+                         var_age_group=c("country_label"),
+                         missing_age = canreg_missing_age(dt_CI5),
+                         pop_base_count = "REFERENCE_COUNT",
+                         age_label_list = "AGE_GROUP_LABEL")
+  
+  dt_CI5 <- as.data.table(dt_CI5)
+  
+  #keep CI5 selected region
+  dt_CI5 <- dt_CI5[cr==registry_region,]
+  dt_CI5[, cr:=NULL]
+  
+  #add CI5 data to canreg data
+  dt_temp <- unique(dt[,c("ICD10GROUP", "ICD10GROUPCOLOR", "cancer_label"),  with=FALSE])
+  dt_CI5 <- merge(dt_CI5,dt_temp, by=c("ICD10GROUP"),all.x=TRUE )
+  setnames(dt_CI5, "cases", "CASES")
+  setnames(dt_CI5, "py", "COUNT")
+  dt[, country_label:=registry_label]
+  dt <- rbind(dt,dt_CI5)
+  
+  return(dt)
+  
+  
+}
+
+
 
 canreg_report_template_extract <- function(report_path,script.basename) {
   
@@ -2214,7 +2257,7 @@ canreg_bar_top_single <- function(dt, var_top, var_bar = "cancer_label" ,group_b
   
   if (return_data) {
     setnames(dt, "CSU_RANK","cancer_rank")
-    setkeyv(dt, c("SEX","cancer_rank"))
+    setkeyv(dt, c(group_by,"cancer_rank"))
     dt <-  dt[,-c("ICD10GROUPCOLOR"), with=FALSE]
     
     return(dt)
@@ -2259,6 +2302,48 @@ canreg_bar_top_single <- function(dt, var_top, var_bar = "cancer_label" ,group_b
   }
 }
 
+canreg_bar_CI5_compare <- function(dt,group_by = "SEX", landscape = TRUE,list_graph=TRUE,
+                                   xtitle = "",digit  =  1,text_size_factor =1.5,
+                                   return_data  =  FALSE) {
+
+  if (return_data) {
+    setnames(dt, "CSU_RANK","cancer_rank")
+    dt <-  dt[,-c("ICD10GROUPCOLOR"), with=FALSE]
+    
+    return(dt)
+    stop() 
+  }
+  
+  plotlist <- list()
+  j <- 1 
+  
+  for (i in levels(dt[[group_by]])) {
+   
+    dt_plot <- dt[get(group_by) == i]
+    
+    dt_plot[,country_label:=factor(country_label, levels=country_label)]
+    
+    
+    plotlist[[j]] <-
+      csu_bar_plot(dt=dt_plot, 
+                   var_top="asr",
+                   var_bar="country_label",
+                   plot_title = unique(dt_plot$cancer_label),
+                   plot_subtitle = unique(dt_plot$SEX), 
+                   plot_caption = NULL,
+                   xtitle=xtitle,
+                   digit = digit,
+                   color_bar = as.character(dt_plot$ICD10GROUPCOLOR),
+                   text_size_factor = text_size_factor,
+                   landscape = landscape)  
+    
+    print(plotlist[[j]])
+    j <- j+1
+    
+  }
+
+}
+
 
 csu_bar_plot <- function(dt, 
                              var_top,
@@ -2269,10 +2354,13 @@ csu_bar_plot <- function(dt,
                              xtitle="",
                              digit = 1,
                              color_bar = NULL,
+                             text_size_factor = 1,
                              landscape = FALSE)  {
   
   line_size <- 0.4
   text_size <- 14 
+  title_size <- 18
+  subtitle_size <- 16
   
   if (landscape) {
     csu_ratio = 0.6
@@ -2281,6 +2369,11 @@ csu_bar_plot <- function(dt,
     csu_ratio = 1.4
     csu_bar_label_size = 5
   }
+  
+  text_size <- text_size*text_size_factor
+  csu_bar_label_size <- csu_bar_label_size*text_size_factor
+  title_size <- title_size*text_size_factor
+  subtitle_size <- subtitle_size*text_size_factor
   
   dt[, plot_value:= get(var_top)]
   
@@ -2325,8 +2418,8 @@ csu_bar_plot <- function(dt,
       panel.grid.major.y= element_blank(),
       panel.grid.major.x= element_line(colour = "grey70",size = line_size),
       panel.grid.minor.x= element_line(colour = "grey70",size = line_size),
-      plot.title = element_text(size=18, margin=margin(0,0,15,0),hjust = 0.5),
-      plot.subtitle = element_text(size=16, margin=margin(0,0,15,0),hjust = 0.5),
+      plot.title = element_text(size=title_size, margin=margin(0,0,15,0),hjust = 0.5),
+      plot.subtitle = element_text(size=subtitle_size, margin=margin(0,0,15,0),hjust = 0.5),
       plot.caption = element_text(size=12, margin=margin(15,0,0,0)),
       plot.margin=margin(20,20,20,20),
       axis.title = element_text(size=text_size),
