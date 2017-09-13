@@ -333,7 +333,7 @@ canreg_merge_CI5_registry <- function(dt, dt_CI5, registry_region, registry_labe
   
   ##keep top 5 cancer for men and top 5 cancer women of canreg.
   dt <- csu_dt_rank(dt,var_value = "CASES",var_rank = "cancer_label",
-                    group_by = "SEX", number =number) 
+                    group_by = "SEX", number =number, ties.method = "first") 
   
   #Keep selected cancer in CI5 data and prepare CI5 data
   
@@ -2314,6 +2314,8 @@ canreg_bar_CI5_compare <- function(dt,group_by = "SEX", landscape = TRUE,list_gr
     stop() 
   }
   
+
+  
   plotlist <- list()
   j <- 1 
   
@@ -2322,6 +2324,8 @@ canreg_bar_CI5_compare <- function(dt,group_by = "SEX", landscape = TRUE,list_gr
     dt_plot <- dt[get(group_by) == i]
     
     dt_plot[,country_label:=factor(country_label, levels=country_label)]
+    
+    dt_plot[["country_label"]] <-csu_legend_wrapper(dt_plot[["country_label"]], 14)
     
     
     plotlist[[j]] <-
@@ -3552,7 +3556,8 @@ csu_dt_rank <- function(dt,
                         var_value = "CASES",
                         var_rank = "cancer_label",
                         group_by = NULL,
-                        number = NULL) {
+                        number = NULL, 
+                        ties.method="min") {
   
   bool_dum_by <- FALSE
   if (is.null(group_by)) {
@@ -3564,7 +3569,7 @@ csu_dt_rank <- function(dt,
   
   dt <- as.data.table(dt)
   dt_rank <- dt[, list(rank_value=sum(get(var_value))), by=c(var_rank, group_by)]
-  dt_rank[, CSU_RANK:= frank(-rank_value, ties.method="min"), by=group_by]
+  dt_rank[, CSU_RANK:= frank(-rank_value, ties.method=ties.method), by=group_by]
 
   if (!is.null(number)){
     dt_rank <- dt_rank[CSU_RANK <= number,c(group_by, var_rank, "CSU_RANK"), with=FALSE]
