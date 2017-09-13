@@ -2323,9 +2323,10 @@ canreg_bar_CI5_compare <- function(dt,group_by = "SEX", landscape = TRUE,list_gr
    
     dt_plot <- dt[get(group_by) == i]
     
+    dt_plot[["country_label"]] <-csu_legend_wrapper(dt_plot[["country_label"]], 14)
     dt_plot[,country_label:=factor(country_label, levels=country_label)]
     
-    dt_plot[["country_label"]] <-csu_legend_wrapper(dt_plot[["country_label"]], 14)
+
     
     
     plotlist[[j]] <-
