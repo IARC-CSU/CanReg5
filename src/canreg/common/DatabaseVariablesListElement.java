@@ -51,8 +51,14 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     private DatabaseGroupsListElement group;
     private String dateFormatString = "yyyyMMdd";
 
+    public enum VariableType {
+        FULL, ENGLISH, SHORT, STANDARD
+    };
+
+    private VariableType displayVariableType = VariableType.FULL;
+
     /**
-     * 
+     *
      * @param databaseTableName
      * @param databaseTableVariableID
      * @param databaseVariableName
@@ -70,7 +76,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String getDatabaseTableName() {
@@ -78,7 +84,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     }
 
     /**
-     * 
+     *
      * @param databaseTableName
      */
     public void setDatabaseTableName(String databaseTableName) {
@@ -86,7 +92,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     }
 
     /**
-     * 
+     *
      * @return
      */
     public int getDatabaseTableVariableID() {
@@ -94,7 +100,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     }
 
     /**
-     * 
+     *
      * @param databaseTableVariableID
      */
     public void setDatabaseTableVariableID(int databaseTableVariableID) {
@@ -102,7 +108,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String getDatabaseVariableName() {
@@ -110,7 +116,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     }
 
     /**
-     * 
+     *
      * @param databaseVariableName
      */
     public void setDatabaseVariableName(String databaseVariableName) {
@@ -118,7 +124,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String getVariableType() {
@@ -126,7 +132,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     }
 
     /**
-     * 
+     *
      * @param variableType
      */
     public void setVariableType(String variableType) {
@@ -134,7 +140,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     }
 
     /**
-     * 
+     *
      * @param o
      * @return
      */
@@ -148,7 +154,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     }
 
     /**
-     * 
+     *
      * @return
      */
     public int getDictionaryID() {
@@ -160,7 +166,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String getTable() {
@@ -168,7 +174,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     }
 
     /**
-     * 
+     *
      * @param table
      */
     public void setTable(String table) {
@@ -176,7 +182,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     }
 
     /**
-     * 
+     *
      * @return
      */
     public int getVariableID() {
@@ -184,7 +190,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     }
 
     /**
-     * 
+     *
      * @param variableID
      */
     public void setVariableID(int variableID) {
@@ -192,7 +198,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String getShortName() {
@@ -200,7 +206,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     }
 
     /**
-     * 
+     *
      * @param shortName
      */
     public void setShortName(String shortName) {
@@ -208,7 +214,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String getUseDictionary() {
@@ -220,7 +226,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String getFullName() {
@@ -228,7 +234,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     }
 
     /**
-     * 
+     *
      * @param fullName
      */
     public void setFullName(String fullName) {
@@ -236,7 +242,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String getEnglishName() {
@@ -244,7 +250,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     }
 
     /**
-     * 
+     *
      * @param englishName
      */
     public void setEnglishName(String englishName) {
@@ -252,7 +258,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     }
 
     /**
-     * 
+     *
      * @return
      */
     public int getGroupID() {
@@ -264,7 +270,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String getGroupName() {
@@ -276,7 +282,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     }
 
     /**
-     * 
+     *
      * @return
      */
     public int getXPos() {
@@ -284,7 +290,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     }
 
     /**
-     * 
+     *
      * @param xPos
      */
     public void setXPos(int xPos) {
@@ -292,7 +298,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     }
 
     /**
-     * 
+     *
      * @return
      */
     public int getYPos() {
@@ -300,7 +306,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     }
 
     /**
-     * 
+     *
      * @param yPos
      */
     public void setYPos(int yPos) {
@@ -308,7 +314,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     }
 
     /**
-     * 
+     *
      * @return
      */
     public int getVariableLength() {
@@ -316,7 +322,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     }
 
     /**
-     * 
+     *
      * @param variableLength
      */
     public void setVariableLength(int variableLength) {
@@ -324,7 +330,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String getFillInStatus() {
@@ -332,7 +338,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     }
 
     /**
-     * 
+     *
      * @param fillInStatus
      */
     public void setFillInStatus(String fillInStatus) {
@@ -340,7 +346,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String getStandardVariableName() {
@@ -348,7 +354,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     }
 
     /**
-     * 
+     *
      * @param standardVariableName
      */
     public void setStandardVariableName(String standardVariableName) {
@@ -356,7 +362,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     }
 
     /**
-     * 
+     *
      * @param string
      * @return
      */
@@ -368,7 +374,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     }
 
     /**
-     * 
+     *
      * @return
      */
     public Object getUnknownCode() {
@@ -376,7 +382,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     }
 
     /**
-     * 
+     *
      * @param unknownCode
      */
     public void setUnknownCode(Object unknownCode) {
@@ -490,11 +496,41 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     public int compareTo(DatabaseVariablesListElement o) {
         return toString().compareTo(o.toString());
     }
-    
+
     public String getDateFormatString() {
         return dateFormatString;
     }
+
     public void setDateFormatString(String dateFormat) {
         this.dateFormatString = dateFormat;
+    }
+
+    public void setDisplayVariableType(VariableType type) {
+        displayVariableType = type;
+    }
+
+    public String getDisplayVariableName() {
+        String name = getFullName();
+        switch (displayVariableType) {
+            case FULL:
+                name = getFullName();
+                break;
+            case SHORT:
+                name = getShortName();
+                break;
+            case ENGLISH:
+                name = getEnglishName();
+                break;
+            case STANDARD:
+                name = getStandardVariableName();
+                if (name == null || name.length() == 0) {
+                    name = getFullName();
+                }
+                break;
+            default:
+                name = getFullName();
+                break;
+        }
+        return name;
     }
 }
