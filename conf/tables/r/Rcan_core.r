@@ -274,12 +274,12 @@ canreg_import_CI5_data <- function(dt,CI5_file,var_ICD_canreg="ICD10GROUP",var_a
     temp <- sapply(dt_ICD_canreg$ICD_list, function(x) {return(all(dt_ICD_CI5$ICD_list[[i]] %in% x))})
     ind <- which(temp)
     if (length(ind) > 0) {
-      dt_ICD_CI5$ICD_canreg[[i]] <- levels(dt_ICD_canreg$ICD10)[ind]
+      dt_ICD_CI5$ICD_canreg[[i]] <- as.character(dt_ICD_canreg$ICD10)[ind]
     }
     
   }
   
-  dt_ICD_CI5[,ICD_list:=NULL]
+  
   #Add canreg ICD code to CI5 data
   dt_CI5_data <- merge(dt_CI5_data,dt_ICD_CI5, by=("ICD10"), all.x=TRUE) 
   dt_CI5_data <- dt_CI5_data[!is.na(ICD_canreg),]
@@ -292,23 +292,77 @@ canreg_import_CI5_data <- function(dt,CI5_file,var_ICD_canreg="ICD10GROUP",var_a
   dt_canreg_age_label <- parse_age_label_dt(dt,var_age_label =var_age_label_canreg)
   dt_CI5_age_label$age_label_canreg <- character(0) 
   
-  #associate CI5 age group with CANREG age group
+  #associate CI5 age group with CANREG age group and age code and reference count
   for (i in 1:nrow(dt_CI5_age_label)) {
     
     temp <- sapply(dt_canreg_age_label$age_list, function(x) {return(all(dt_CI5_age_label$age_list[[i]] %in% x))})
     ind <- which(temp)
     if (length(ind) > 0) {
       dt_CI5_age_label$age_label_canreg[[i]] <- as.character(dt_canreg_age_label$age_label[ind])
+
     }
   }
   
   dt_CI5_age_label[,age_list:=NULL]
 
+  setnames(dt_CI5_age_label,"age_label_canreg",var_age_label_canreg)
+  dt_temp <- unique(dt_all[,c("AGE_GROUP","REFERENCE_COUNT", var_age_label_canreg),  with=FALSE])
+  dt_CI5_age_label <- merge(dt_CI5_age_label,dt_temp, by=c(var_age_label_canreg),all.x=TRUE, all.y=FALSE )
+  
+  
   #Add canreg age label code to CI5 data
   dt_CI5_data <- merge(dt_CI5_data,dt_CI5_age_label, by=("age_label"), all.x=TRUE) 
-  dt_CI5_data<-  dt_CI5_data[,.( cases=sum(cases), py=sum(py)), by=c("sex","age_label_canreg","country_label", "cr","ICD_canreg")]
+  dt_CI5_data<-  dt_CI5_data[,.( cases=sum(cases), py=sum(py)), by=c("sex","AGE_GROUP","REFERENCE_COUNT",var_age_label_canreg,"country_label", "cr","ICD_canreg")]
+  
+  dt_CI5_data[, ICD10GROUP:=factor(ICD_canreg, levels = levels(dt$ICD10GROUP))]
+  dt_CI5_data[, SEX:=factor(sex, levels=c(1,2),labels = levels(dt$SEX))]
+  dt_CI5_data[,sex:=NULL]
+  dt_CI5_data[,ICD_canreg:=NULL]
   
   return(dt_CI5_data)
+}
+
+
+canreg_merge_CI5_registry <- function(dt, dt_CI5, registry_region, registry_label, number=5) {
+  
+  ##calcul of ASR for canreg
+  dt<- csu_asr_core(df_data =dt, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
+                    var_by = c("cancer_label", "SEX","ICD10GROUP","ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt_all),
+                    pop_base_count = "REFERENCE_COUNT",
+                    age_label_list = "AGE_GROUP_LABEL")
+  
+  ##keep top 5 cancer for men and top 5 cancer women of canreg.
+  dt <- csu_dt_rank(dt,var_value = "CASES",var_rank = "cancer_label",
+                    group_by = "SEX", number =number, ties.method = "first") 
+  
+  #Keep selected cancer in CI5 data and prepare CI5 data
+  
+  dt_temp <- dt[,c("SEX", "ICD10GROUP", "CSU_RANK"),  with=FALSE]
+  dt_CI5 <- merge(dt_CI5,dt_temp, by=c("SEX", "ICD10GROUP"),all.y=TRUE )
+  dt_CI5 <- csu_asr_core(df_data =dt_CI5, var_age ="AGE_GROUP",var_cases = "cases", var_py = "py",
+                         var_by = c("country_label","cr" ,"SEX","ICD10GROUP", "CSU_RANK"),
+                         var_age_group=c("country_label"),
+                         missing_age = canreg_missing_age(dt_CI5),
+                         pop_base_count = "REFERENCE_COUNT",
+                         age_label_list = "AGE_GROUP_LABEL")
+  
+  dt_CI5 <- as.data.table(dt_CI5)
+  
+  #keep CI5 selected region
+  dt_CI5 <- dt_CI5[cr==registry_region,]
+  dt_CI5[, cr:=NULL]
+  
+  #add CI5 data to canreg data
+  dt_temp <- unique(dt[,c("ICD10GROUP", "ICD10GROUPCOLOR", "cancer_label"),  with=FALSE])
+  dt_CI5 <- merge(dt_CI5,dt_temp, by=c("ICD10GROUP"),all.x=TRUE )
+  setnames(dt_CI5, "cases", "CASES")
+  setnames(dt_CI5, "py", "COUNT")
+  dt[, country_label:=registry_label]
+  dt <- rbind(dt,dt_CI5)
+  
+  return(dt)
+  
+  
 }
 
 
@@ -2203,7 +2257,7 @@ canreg_bar_top_single <- function(dt, var_top, var_bar = "cancer_label" ,group_b
   
   if (return_data) {
     setnames(dt, "CSU_RANK","cancer_rank")
-    setkeyv(dt, c("SEX","cancer_rank"))
+    setkeyv(dt, c(group_by,"cancer_rank"))
     dt <-  dt[,-c("ICD10GROUPCOLOR"), with=FALSE]
     
     return(dt)
@@ -2230,8 +2284,9 @@ canreg_bar_top_single <- function(dt, var_top, var_bar = "cancer_label" ,group_b
     dt_plot <- dt[get(group_by) == i]
     dt_label_order <- setkey(unique(dt_plot[, c(var_bar,"ICD10GROUPCOLOR", "CSU_RANK"), with=FALSE]), CSU_RANK)
     dt_plot$cancer_label <- factor(dt_plot$cancer_label,levels = rev(dt_label_order$cancer_label)) 
-   
     color_cancer <- as.character(rev(dt_label_order$ICD10GROUPCOLOR))
+    
+
     
     plotlist[[j]] <-
       csu_bar_plot(
@@ -2247,6 +2302,53 @@ canreg_bar_top_single <- function(dt, var_top, var_bar = "cancer_label" ,group_b
   }
 }
 
+canreg_bar_CI5_compare <- function(dt,group_by = "SEX", landscape = TRUE,list_graph=TRUE,
+                                   xtitle = "",digit  =  1,text_size_factor =1.5,
+                                   return_data  =  FALSE) {
+
+  if (return_data) {
+    setnames(dt, "CSU_RANK","cancer_rank")
+    dt <-  dt[,-c("ICD10GROUPCOLOR"), with=FALSE]
+    
+    return(dt)
+    stop() 
+  }
+  
+
+  
+  plotlist <- list()
+  j <- 1 
+  
+  for (i in levels(dt[[group_by]])) {
+   
+    dt_plot <- dt[get(group_by) == i]
+    
+    dt_plot[["country_label"]] <-csu_legend_wrapper(dt_plot[["country_label"]], 14)
+    dt_plot[,country_label:=factor(country_label, levels=country_label)]
+    
+
+    
+    
+    plotlist[[j]] <-
+      csu_bar_plot(dt=dt_plot, 
+                   var_top="asr",
+                   var_bar="country_label",
+                   plot_title = unique(dt_plot$cancer_label),
+                   plot_subtitle = unique(dt_plot$SEX), 
+                   plot_caption = NULL,
+                   xtitle=xtitle,
+                   digit = digit,
+                   color_bar = as.character(dt_plot$ICD10GROUPCOLOR),
+                   text_size_factor = text_size_factor,
+                   landscape = landscape)  
+    
+    print(plotlist[[j]])
+    j <- j+1
+    
+  }
+
+}
+
 
 csu_bar_plot <- function(dt, 
                              var_top,
@@ -2257,10 +2359,13 @@ csu_bar_plot <- function(dt,
                              xtitle="",
                              digit = 1,
                              color_bar = NULL,
+                             text_size_factor = 1,
                              landscape = FALSE)  {
   
   line_size <- 0.4
   text_size <- 14 
+  title_size <- 18
+  subtitle_size <- 16
   
   if (landscape) {
     csu_ratio = 0.6
@@ -2269,6 +2374,11 @@ csu_bar_plot <- function(dt,
     csu_ratio = 1.4
     csu_bar_label_size = 5
   }
+  
+  text_size <- text_size*text_size_factor
+  csu_bar_label_size <- csu_bar_label_size*text_size_factor
+  title_size <- title_size*text_size_factor
+  subtitle_size <- subtitle_size*text_size_factor
   
   dt[, plot_value:= get(var_top)]
   
@@ -2279,6 +2389,8 @@ csu_bar_plot <- function(dt,
   if ((tick_major_list[nb_tick] -  max(dt$plot_value))/tick_space < 1/4){
     tick_major_list[nb_tick+1] <- tick_major_list[nb_tick] + tick_space
   }
+  
+  tick_minor_list <-seq(tick_major_list[1],tail(tick_major_list,1),tick_space/2)
   
 
   dt$value_label <- dt$plot_value + (tick_space*0.1)
@@ -2294,6 +2406,7 @@ csu_bar_plot <- function(dt,
     coord_flip(ylim = c(0,tick_major_list[length(tick_major_list)]+(tick_space*0.25)), expand = TRUE)+
     scale_y_continuous(name = xtitle,
                        breaks=tick_major_list,
+                       minor_breaks = tick_minor_list,
                        labels=csu_axes_label
                        
     )+
@@ -2310,8 +2423,8 @@ csu_bar_plot <- function(dt,
       panel.grid.major.y= element_blank(),
       panel.grid.major.x= element_line(colour = "grey70",size = line_size),
       panel.grid.minor.x= element_line(colour = "grey70",size = line_size),
-      plot.title = element_text(size=18, margin=margin(0,0,15,0),hjust = 0.5),
-      plot.subtitle = element_text(size=16, margin=margin(0,0,15,0),hjust = 0.5),
+      plot.title = element_text(size=title_size, margin=margin(0,0,15,0),hjust = 0.5),
+      plot.subtitle = element_text(size=subtitle_size, margin=margin(0,0,15,0),hjust = 0.5),
       plot.caption = element_text(size=12, margin=margin(15,0,0,0)),
       plot.margin=margin(20,20,20,20),
       axis.title = element_text(size=text_size),
@@ -3444,7 +3557,8 @@ csu_dt_rank <- function(dt,
                         var_value = "CASES",
                         var_rank = "cancer_label",
                         group_by = NULL,
-                        number = NULL) {
+                        number = NULL, 
+                        ties.method="min") {
   
   bool_dum_by <- FALSE
   if (is.null(group_by)) {
@@ -3456,7 +3570,7 @@ csu_dt_rank <- function(dt,
   
   dt <- as.data.table(dt)
   dt_rank <- dt[, list(rank_value=sum(get(var_value))), by=c(var_rank, group_by)]
-  dt_rank[, CSU_RANK:= frank(-rank_value, ties.method="min"), by=group_by]
+  dt_rank[, CSU_RANK:= frank(-rank_value, ties.method=ties.method), by=group_by]
 
   if (!is.null(number)){
     dt_rank <- dt_rank[CSU_RANK <= number,c(group_by, var_rank, "CSU_RANK"), with=FALSE]
@@ -3752,6 +3866,28 @@ parse_icd10 <- function (icd) {
   
 }
 
+
+parse_age_label_dt <- function(dt,var_age_label) {
+  
+  dt_age_label <- data.table(age_label=unique(dt[[var_age_label]]))
+  dt_age_label <- dt_age_label[!is.na(age_label) ,]
+  dt_age_label[ ,age_list := list()]
+  dt_age_label[, temp:=as.numeric(regmatches(age_label, regexpr("[0-9]{1,2}", age_label)))]
+  
+  setkey(dt_age_label,temp)
+  
+  
+  len <- nrow(dt_age_label)
+  for (i in 1:(len-1)) {
+    dt_age_label$age_list[[i]] <- dt_age_label$temp[[i]]:(dt_age_label$temp [[i+1]]-1)
+  }
+  
+  dt_age_label$age_list[[len]] <- dt_age_label$temp[[len]]:200
+  dt_age_label[ ,temp := NULL]
+  
+  return(dt_age_label)
+  
+}
 
 
 extract_legend_axes<-function(a_gplot){
