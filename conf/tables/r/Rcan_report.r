@@ -428,20 +428,21 @@ tryCatch({
   doc <- addParagraph(doc, "\r\n")
   
   
-  for (i in 1:5) {
-    
-    dt_temp <- dt_both[CSU_RANK ==i ]
-    
+
+  
     canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph"),landscape = TRUE,list_graph = TRUE,
-                  FUN=canreg_bar_CI5_compare,
-                  dt=dt_temp,xtitle=xtitle <- "Age standardized incidence rate per 10000")
+                  FUN=canreg_bar_CI5_compare_single,
+                  dt=dt_both,xtitle=xtitle <- "Age standardized incidence rate per 10000")
     
     dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph001.png")), "dim" )
     
+    for (i in 1:5) {
+    
+      
     dat <- matrix("", nrow = 1, ncol = 2) # dummy empty table
     ft <- FlexTable(dat, header.columns = F, add.rownames = F)
-    ft[1,1] <- pot_img( paste0(tempdir(), "\\temp_graph001.png"), width=3.2,height=3.2*dims[1]/dims[2]) # add image1 to cell 1
-    ft[1,2] <- pot_img(paste0(tempdir(), "\\temp_graph002.png"), width=3.2,height=3.2*dims[1]/dims[2]) # add image2 to cell 2
+    ft[1,1] <- pot_img( paste0(tempdir(), "\\temp_graph", sprintf("%03d",(2*i)-1), ".png"), width=3.2,height=3.2*dims[1]/dims[2]) # add image1 to cell 1
+    ft[1,2] <- pot_img(paste0(tempdir(), "\\temp_graph", sprintf("%03d",(2*i)), ".png"), width=3.2,height=3.2*dims[1]/dims[2]) # add image2 to cell 2
     
     ft[,, side = 'left'] <- borderProperties( style = 'none' )
     ft[,, side = 'right'] <- borderProperties( style = 'none' )
@@ -456,7 +457,7 @@ tryCatch({
   fig_number=fig_number+1
   
   doc <- addParagraph(doc, "\r\n")
-  
+
   
 
   ## Basis of diagnosis
