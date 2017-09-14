@@ -89,6 +89,10 @@ canreg_error_log <- function(e,filename,out,Args,inc,pop) {
   sink(type="message")
   sink()
   close(error_connection)
+  
+  
+  
+  
   cat(paste("-outFile",log_file,sep=":"))
   
 }
@@ -2316,6 +2320,7 @@ canreg_bar_CI5_compare <- function(dt,group_by = "SEX", landscape = TRUE,list_gr
   
 
   
+  
   plotlist <- list()
   j <- 1 
   
@@ -2348,6 +2353,61 @@ canreg_bar_CI5_compare <- function(dt,group_by = "SEX", landscape = TRUE,list_gr
   }
 
 }
+
+canreg_bar_CI5_compare_single <- function(dt,group_by = "SEX", landscape = TRUE,list_graph=TRUE,
+                                   xtitle = "",digit  =  1,text_size_factor =1.5,number=5,
+                                   return_data  =  FALSE) {
+  
+  if (return_data) {
+    setnames(dt, "CSU_RANK","cancer_rank")
+    dt <-  dt[,-c("ICD10GROUPCOLOR"), with=FALSE]
+    
+    return(dt)
+    stop() 
+  }
+  
+  
+  
+  
+  plotlist <- list()
+  i <- 1 
+  
+  
+  for (j in 1:5) {
+    
+    dt_temp <- dt[CSU_RANK ==j ]
+  
+    for (k in levels(dt_temp[[group_by]])) {
+      
+      dt_plot <- dt_temp[get(group_by) == k]
+      
+      dt_plot[["country_label"]] <-csu_legend_wrapper(dt_plot[["country_label"]], 14)
+      dt_plot[,country_label:=factor(country_label, levels=country_label)]
+      
+      
+      
+      
+      plotlist[[i]] <-
+        csu_bar_plot(dt=dt_plot, 
+                     var_top="asr",
+                     var_bar="country_label",
+                     plot_title = unique(dt_plot$cancer_label),
+                     plot_subtitle = unique(dt_plot$SEX), 
+                     plot_caption = NULL,
+                     xtitle=xtitle,
+                     digit = digit,
+                     color_bar = as.character(dt_plot$ICD10GROUPCOLOR),
+                     text_size_factor = text_size_factor,
+                     landscape = landscape)  
+      
+      print(plotlist[[i]])
+      i <- i+1
+      
+    }
+  }
+  
+}
+
 
 
 csu_bar_plot <- function(dt, 
