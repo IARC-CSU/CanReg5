@@ -438,6 +438,7 @@ tryCatch({
     
     for (i in 1:5) {
     
+
       
     dat <- matrix("", nrow = 1, ncol = 2) # dummy empty table
     ft <- FlexTable(dat, header.columns = F, add.rownames = F)
@@ -457,8 +458,8 @@ tryCatch({
   fig_number=fig_number+1
   
   doc <- addParagraph(doc, "\r\n")
-
   
+
 
   ## Basis of diagnosis
   doc <- addPageBreak(doc)
