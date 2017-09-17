@@ -2306,55 +2306,8 @@ canreg_bar_top_single <- function(dt, var_top, var_bar = "cancer_label" ,group_b
   }
 }
 
+
 canreg_bar_CI5_compare <- function(dt,group_by = "SEX", landscape = TRUE,list_graph=TRUE,
-                                   xtitle = "",digit  =  1,text_size_factor =1.5,
-                                   return_data  =  FALSE) {
-
-  if (return_data) {
-    setnames(dt, "CSU_RANK","cancer_rank")
-    dt <-  dt[,-c("ICD10GROUPCOLOR"), with=FALSE]
-    
-    return(dt)
-    stop() 
-  }
-  
-
-  
-  
-  plotlist <- list()
-  j <- 1 
-  
-  for (i in levels(dt[[group_by]])) {
-   
-    dt_plot <- dt[get(group_by) == i]
-    
-    dt_plot[["country_label"]] <-csu_legend_wrapper(dt_plot[["country_label"]], 14)
-    dt_plot[,country_label:=factor(country_label, levels=country_label)]
-    
-
-    
-    
-    plotlist[[j]] <-
-      csu_bar_plot(dt=dt_plot, 
-                   var_top="asr",
-                   var_bar="country_label",
-                   plot_title = unique(dt_plot$cancer_label),
-                   plot_subtitle = unique(dt_plot$SEX), 
-                   plot_caption = NULL,
-                   xtitle=xtitle,
-                   digit = digit,
-                   color_bar = as.character(dt_plot$ICD10GROUPCOLOR),
-                   text_size_factor = text_size_factor,
-                   landscape = landscape)  
-    
-    print(plotlist[[j]])
-    j <- j+1
-    
-  }
-
-}
-
-canreg_bar_CI5_compare_single <- function(dt,group_by = "SEX", landscape = TRUE,list_graph=TRUE,
                                    xtitle = "",digit  =  1,text_size_factor =1.5,number=5,
                                    return_data  =  FALSE) {
   
@@ -2367,6 +2320,12 @@ canreg_bar_CI5_compare_single <- function(dt,group_by = "SEX", landscape = TRUE,
   }
   
   
+  CI5_registries <- as.character(unique(dt$country_label))
+  caption <- NULL
+  if (any(grepl("\\*",CI5_registries))) {
+    caption <- "*: Regional registries"
+  }
+
   
   
   plotlist <- list()
@@ -2393,7 +2352,7 @@ canreg_bar_CI5_compare_single <- function(dt,group_by = "SEX", landscape = TRUE,
                      var_bar="country_label",
                      plot_title = unique(dt_plot$cancer_label),
                      plot_subtitle = unique(dt_plot$SEX), 
-                     plot_caption = NULL,
+                     plot_caption = caption,
                      xtitle=xtitle,
                      digit = digit,
                      color_bar = as.character(dt_plot$ICD10GROUPCOLOR),
@@ -2426,6 +2385,7 @@ csu_bar_plot <- function(dt,
   text_size <- 14 
   title_size <- 18
   subtitle_size <- 16
+  caption_size <- 12
   
   if (landscape) {
     csu_ratio = 0.6
@@ -2439,9 +2399,9 @@ csu_bar_plot <- function(dt,
   csu_bar_label_size <- csu_bar_label_size*text_size_factor
   title_size <- title_size*text_size_factor
   subtitle_size <- subtitle_size*text_size_factor
+  caption_size <- caption_size*text_size_factor
   
-  dt[, plot_value:= get(var_top)]
-  
+  setnames(dt,var_top,"plot_value")
   
   tick_major_list <- csu_tick_generator(max = max(dt$plot_value), 0)$tick_list
   nb_tick <- length(tick_major_list) 
@@ -2485,7 +2445,7 @@ csu_bar_plot <- function(dt,
       panel.grid.minor.x= element_line(colour = "grey70",size = line_size),
       plot.title = element_text(size=title_size, margin=margin(0,0,15,0),hjust = 0.5),
       plot.subtitle = element_text(size=subtitle_size, margin=margin(0,0,15,0),hjust = 0.5),
-      plot.caption = element_text(size=12, margin=margin(15,0,0,0)),
+      plot.caption = element_text(size=caption_size, margin=margin(15,0,0,0)),
       plot.margin=margin(20,20,20,20),
       axis.title = element_text(size=text_size),
       axis.title.x=element_text(margin=margin(10,0,0,0)),
@@ -3958,7 +3918,11 @@ extract_legend_axes<-function(a_gplot){
   ylab_index <- which(sapply(tmp$grobs, function(x) substr(x$name, 1,12 ) == "axis.title.y"))
   title_index <- which(sapply(tmp$grobs, function(x) substr(x$name, 1,10 ) == "plot.title"))
   caption_index <- which(sapply(tmp$grobs, function(x) substr(x$name, 1,10 ) == "plot.capti"))
-  legend <- tmp$grobs[[leg_index]]
+  
+  if(length(leg_index) > 0) {
+    legend <- tmp$grobs[[leg_index]]
+  }
+  
   xlab <- tmp$grobs[[xlab_index]]
   ylab <- tmp$grobs[[ylab_index]]
   title <- tmp$grobs[[title_index]]
