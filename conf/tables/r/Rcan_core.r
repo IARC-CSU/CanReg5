@@ -2307,9 +2307,9 @@ canreg_bar_top_single <- function(dt, var_top, var_bar = "cancer_label" ,group_b
 }
 
 
-canreg_bar_CI5_compare <- function(dt,group_by = "SEX", landscape = TRUE,list_graph=TRUE,
-                                   xtitle = "",digit  =  1,text_size_factor =1.5,number=5,
-                                   return_data  =  FALSE) {
+canreg_bar_CI5_compare <- function(dt,group_by = "SEX", landscape = TRUE,list_graph=TRUE,multi_graph=FALSE,
+                                        xtitle = "",digit  =  1,text_size_factor =1.5,number=5,
+                                        return_data  =  FALSE) {
   
   if (return_data) {
     setnames(dt, "CSU_RANK","cancer_rank")
@@ -2325,19 +2325,58 @@ canreg_bar_CI5_compare <- function(dt,group_by = "SEX", landscape = TRUE,list_gr
   if (any(grepl("\\*",CI5_registries))) {
     caption <- "*: Regional registries"
   }
-
+  
+  lay <- rbind(c(11,12),
+               c(1,2),
+               c(3,4),  
+               c(5,6),
+               c(7,8),
+               c(9,9),
+               c(NA,10))  
+  
+  theme_2p4 <- list(theme(
+    axis.title.x = element_blank(), 
+    axis.title.y = element_blank(),
+    axis.text = element_text(colour = "black"),
+    axis.text.x = element_text(size=10),
+    axis.text.y = element_text(size=9),
+    axis.line.x = element_line(size = 0.25),
+    panel.grid.major.x = element_line(size=0.25),
+    panel.grid.minor.x = element_line(size=0.25),
+    axis.ticks.x = element_line(size=0.25),
+    plot.title = element_text(size=12),
+    plot.subtitle = element_blank(),
+    plot.caption = element_blank(),
+    plot.margin=margin(0,3,0,0),
+  )
+  )
+  
+  widths <- c(10,10)
+  heights <- c(1,10,10,10,10,1,1)
   
   
-  plotlist <- list()
+  if (multi_graph) {
+    
+    plotlist_grid <- list()
+    
+  }
+  
+  if (list_graph) {
+    
+    plotlist <- list()
+    
+  }
+  
   i <- 1 
   
   
-  for (j in 1:5) {
+  for (j in 1:number) {
     
     dt_temp <- dt[CSU_RANK ==j ]
-  
-    for (k in levels(dt_temp[[group_by]])) {
+    
+    for (k in levels(dt_temp[[group_by]])) local({
       
+      k <- k
       dt_plot <- dt_temp[get(group_by) == k]
       
       dt_plot[["country_label"]] <-csu_legend_wrapper(dt_plot[["country_label"]], 14)
@@ -2346,7 +2385,7 @@ canreg_bar_CI5_compare <- function(dt,group_by = "SEX", landscape = TRUE,list_gr
       
       
       
-      plotlist[[i]] <-
+      temp <-
         csu_bar_plot(dt=dt_plot, 
                      var_top="asr",
                      var_bar="country_label",
@@ -2357,17 +2396,78 @@ canreg_bar_CI5_compare <- function(dt,group_by = "SEX", landscape = TRUE,list_gr
                      digit = digit,
                      color_bar = as.character(dt_plot$ICD10GROUPCOLOR),
                      text_size_factor = text_size_factor,
-                     landscape = landscape)  
+                     landscape = TRUE) 
+      
+      if (list_graph) {
+        plotlist[[i]] <<- temp
+      }
+      
+      if (multi_graph) {
+        
+        if (i==1) { 
+          grid_legend <<- extract_legend_axes(temp)
+          plotlist_grid[[11]] <<- grid_legend$subtitle
+        }
+        
+        if (i == 2) {
+          grid_legend <<- extract_legend_axes(temp)
+          plotlist_grid[[12]] <<- grid_legend$subtitle
+        } 
+        
+        if (i < 11) {
+          
+          temp <- temp  + theme_2p4
+          plotlist_grid[[i]] <<- temp
+          geom_text_index <- which(sapply(plotlist_grid[[i]]$layers, function(x) class(x$geom)[1]) == "GeomText")
+          plotlist_grid[[i]]$layers[[geom_text_index]]$aes_params$size <<- 3.5
+          geom_hline_index <- which(sapply(plotlist_grid[[i]]$layers, function(x) class(x$geom)[1]) == "GeomHline")
+          plotlist_grid[[i]]$layers[[geom_hline_index]]$aes_params$size <<- 0.25
+        }
+      }
+      
+      
+      i <<- i+1
+      
+    })
+  }
+  
+  if (multi_graph) {
+    
+    #need edit to keep only 10 
+    
+    plotlist_grid[[9]] <- grid_legend$xlab
+    plotlist_grid[[10]] <- grid_legend$caption
+    
+    
+    
+    grid.arrange(
+      grobs=plotlist_grid,
+      layout_matrix = lay,
+      widths = widths,
+      heights=heights,
+      left=" ",
+      top= " ",
+      bottom= " ",
+      right= " "
+    )
+    
+  }
+  
+  if (list_graph) {
+    
+    for (i in 1:length(plotlist)) {
+      
+      geom_text_index <- which(sapply(plotlist[[i]]$layers, function(x) class(x$geom)[1]) == "GeomText")
+      plotlist[[i]]$layers[[geom_text_index]]$aes_params$size <- 6 
+      geom_hline_index <- which(sapply(plotlist[[i]]$layers, function(x) class(x$geom)[1]) == "GeomHline")
+      plotlist[[i]]$layers[[geom_hline_index]]$aes_params$size <- 0.4
       
       print(plotlist[[i]])
-      i <- i+1
-      
     }
   }
   
+  
 }
-
-
 
 csu_bar_plot <- function(dt, 
                              var_top,
@@ -3917,10 +4017,15 @@ extract_legend_axes<-function(a_gplot){
   xlab_index <- which(sapply(tmp$grobs, function(x) substr(x$name, 1,12 ) == "axis.title.x"))
   ylab_index <- which(sapply(tmp$grobs, function(x) substr(x$name, 1,12 ) == "axis.title.y"))
   title_index <- which(sapply(tmp$grobs, function(x) substr(x$name, 1,10 ) == "plot.title"))
+  subtitle_index <- which(sapply(tmp$grobs, function(x) substr(x$name, 1,10 ) == "plot.subti"))
   caption_index <- which(sapply(tmp$grobs, function(x) substr(x$name, 1,10 ) == "plot.capti"))
   
   if(length(leg_index) > 0) {
     legend <- tmp$grobs[[leg_index]]
+  }
+  
+  if(length(subtitle_index) > 0) {
+    subtitle <- tmp$grobs[[subtitle_index]]
   }
   
   xlab <- tmp$grobs[[xlab_index]]
@@ -3928,7 +4033,7 @@ extract_legend_axes<-function(a_gplot){
   title <- tmp$grobs[[title_index]]
   caption <- tmp$grobs[[caption_index]]
   dev.off()
-  return(list(legend=legend, xlab=xlab, ylab=ylab, title=title, caption=caption))
+  return(list(legend=legend, xlab=xlab, ylab=ylab, title=title, subtitle=subtitle, caption=caption))
 }
 
 reporteRs_OO_patched <- function (docx,temp_path=paste0(tempdir(),"\\temp" )) {
