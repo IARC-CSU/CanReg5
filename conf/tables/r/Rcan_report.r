@@ -441,8 +441,6 @@ tryCatch({
       
       for (i in 1:5) {
       
-  
-        
       dat <- matrix("", nrow = 1, ncol = 2) # dummy empty table
       ft <- FlexTable(dat, header.columns = F, add.rownames = F)
       ft[1,1] <- pot_img( paste0(tempdir(), "\\temp_graph", sprintf("%03d",(2*i)-1), ".png"), width=3.2,height=3.2*dims[1]/dims[2]) # add image1 to cell 1

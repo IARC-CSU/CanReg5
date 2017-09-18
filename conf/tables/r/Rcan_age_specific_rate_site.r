@@ -41,9 +41,9 @@ tryCatch({
   error = function(e){
     if (dev.cur() > 1) {
       dev.off()
-	  temp_file <- substr(filename,0,nchar(filename)-nchar(ft)-1)
+	    temp_file <- substr(filename,0,nchar(filename)-nchar(ft)-1)
       if (file.exists(filename)) file.remove(filename)
-	  if (file.exists(paste0(temp_file,"001.",ft))) file.remove(paste0(temp_file,"001.",ft))
+	    if (file.exists(paste0(temp_file,"001.",ft))) file.remove(paste0(temp_file,"001.",ft))
     }
     
     canreg_error_log(e,filename,out,Args,inc,pop)
