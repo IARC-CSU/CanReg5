@@ -394,70 +394,73 @@ tryCatch({
   }
   
   ## comparaison with CI5 registries.
-  doc <- addPageBreak(doc)
-  doc <- addTitle(doc, "Comparison of summary rates with other registries (in same region)", level = 2)
   
-  doc <- addParagraph(doc, "\r\n")
+  region_admit <- c("EastMed", "Americas", "West Pacific", "Europe", "SEAsia", "Africa")
   
-  
-  dt_report <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE)
-  
-  # import CI5 data with same cancer code and same age group
-  dt_CI5_data <- canreg_import_CI5_data(dt_report, paste0(script.basename, "/CI5_data.rds"))
-  
+  if (sr %in% region_admit) {
 
+    doc <- addPageBreak(doc)
+    doc <- addTitle(doc, "Comparison of summary rates with other registries (in same region)", level = 2)
+    
+    doc <- addParagraph(doc, "\r\n")
+    
+    
+    dt_report <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE)
+    
+    # import CI5 data with same cancer code and same age group
+    dt_CI5_data <- canreg_import_CI5_data(dt_report, paste0(script.basename, "/CI5_data.rds"))
+    
   
-  #merge CI5 and canreg data
-  dt_both <- canreg_merge_CI5_registry(dt_report,dt_CI5_data, registry_region = sr, registry_label = header )
+    
+    #merge CI5 and canreg data
+    dt_both <- canreg_merge_CI5_registry(dt_report,dt_CI5_data, registry_region = sr, registry_label = header )
+    
+    #create bar chart graphique 
+    setkeyv(dt_both, c("CSU_RANK", "SEX","asr"))
+    dt_both[country_label!=header,ICD10GROUPCOLOR:=paste0(ICD10GROUPCOLOR,"6E")]
+    dt_both[country_label==header,ICD10GROUPCOLOR:=paste0(ICD10GROUPCOLOR,"FF")]
+    
+    CI5_registries <- sort(as.character(unique(dt_both$country_label)))
+    CI5_registries <- CI5_registries[CI5_registries != header]
+    CI5_registries <- gsub("\\*","",CI5_registries)
+    
+    doc <- addParagraph(doc,
+                        paste0("Figure ",fig_number," shows a comparaison of the age standardised incidence rates in ",
+                               header, " with those observed in ", 
+                               CI5_registries[1], ", ", CI5_registries[2],
+                               " and ", CI5_registries[3], " (CI5 X, 2013)." ))
+                               
+                               
+    doc <- addParagraph(doc, "\r\n")
+    
+      canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph"),landscape = TRUE,list_graph = TRUE,
+                    FUN=canreg_bar_CI5_compare,
+                    dt=dt_both,xtitle=paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=",")))
+      
+      dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph001.png")), "dim" )
+      
+      for (i in 1:5) {
+      
+      dat <- matrix("", nrow = 1, ncol = 2) # dummy empty table
+      ft <- FlexTable(dat, header.columns = F, add.rownames = F)
+      ft[1,1] <- pot_img( paste0(tempdir(), "\\temp_graph", sprintf("%03d",(2*i)-1), ".png"), width=3.2,height=3.2*dims[1]/dims[2]) # add image1 to cell 1
+      ft[1,2] <- pot_img(paste0(tempdir(), "\\temp_graph", sprintf("%03d",(2*i)), ".png"), width=3.2,height=3.2*dims[1]/dims[2]) # add image2 to cell 2
+      
+      ft[,, side = 'left'] <- borderProperties( style = 'none' )
+      ft[,, side = 'right'] <- borderProperties( style = 'none' )
+      ft[,, side = 'bottom' ] <- borderProperties( style = 'none' )
+      ft[,, side = 'top'] <- borderProperties( style = 'none' )
+      
+      doc <- addFlexTable(doc,ft,par.properties = parProperties(text.align = "center"))
+      
+    }
+    
+    doc <- addParagraph(doc, paste0("Fig ",fig_number,". Comparaison with other registries"))
+    fig_number=fig_number+1
+    
+    doc <- addParagraph(doc, "\r\n")
   
-  #create bar chart graphique 
-  setkeyv(dt_both, c("CSU_RANK", "SEX","asr"))
-  dt_both[country_label!=header,ICD10GROUPCOLOR:=paste0(ICD10GROUPCOLOR,"AA")]
-  dt_both[country_label==header,ICD10GROUPCOLOR:=paste0(ICD10GROUPCOLOR,"FF")]
-  
-  CI5_registries <- sort(as.character(unique(dt_both$country_label)))
-  CI5_registries <- CI5_registries[CI5_registries != header]
-  
-  doc <- addParagraph(doc,
-                      paste0("Figure ",fig_number," shows a comparaison of the age standardised incidence rates in ",
-                             header, " with those observed in 2003-2007 in ", 
-                             CI5_registries[1], ", ", CI5_registries[2],
-                             " and ", CI5_registries[3], " (CI5 X, 2013)." ))
-                             
-                             
-  doc <- addParagraph(doc, "\r\n")
-  
-  
-  for (i in 1:5) {
-    
-    dt_temp <- dt_both[CSU_RANK ==i ]
-    
-    canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph"),landscape = TRUE,list_graph = TRUE,
-                  FUN=canreg_bar_CI5_compare,
-                  dt=dt_temp,xtitle=xtitle <- "Age standardized incidence rate per 10000")
-    
-    dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph001.png")), "dim" )
-    
-    dat <- matrix("", nrow = 1, ncol = 2) # dummy empty table
-    ft <- FlexTable(dat, header.columns = F, add.rownames = F)
-    ft[1,1] <- pot_img( paste0(tempdir(), "\\temp_graph001.png"), width=3.2,height=3.2*dims[1]/dims[2]) # add image1 to cell 1
-    ft[1,2] <- pot_img(paste0(tempdir(), "\\temp_graph002.png"), width=3.2,height=3.2*dims[1]/dims[2]) # add image2 to cell 2
-    
-    ft[,, side = 'left'] <- borderProperties( style = 'none' )
-    ft[,, side = 'right'] <- borderProperties( style = 'none' )
-    ft[,, side = 'bottom' ] <- borderProperties( style = 'none' )
-    ft[,, side = 'top'] <- borderProperties( style = 'none' )
-    
-    doc <- addFlexTable(doc,ft,par.properties = parProperties(text.align = "center"))
-    
   }
-  
-  doc <- addParagraph(doc, paste0("Fig ",fig_number,". Comparaison with regional registries"))
-  fig_number=fig_number+1
-  
-  doc <- addParagraph(doc, "\r\n")
-  
-  
 
   ## Basis of diagnosis
   doc <- addPageBreak(doc)
