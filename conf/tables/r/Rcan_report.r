@@ -517,6 +517,14 @@ tryCatch({
   doc <- addParagraph(doc, "\r\n")
   doc <- addParagraph(doc, "Table 1.", par.properties=parProperties(text.align="center", padding=0))
   
+  dt_appendix <- canreg_report_template_extract(report_path, script.basename, appendix  =TRUE)
+  fig_number <- 1
+  
+  if (!is.null(dt_appendix)) {
+    fig_number <- canreg_report_chapter_txt(dt_appendix, doc, report_path,dt_all,fig_number, appendix=TRUE)
+  }
+  
+  
   writeDoc(doc, file = filename)
   
   reporteRs_OO_patched(docx=filename)
