@@ -845,8 +845,8 @@ JRE
 \begin_layout Standard
 \align left
 Before you install and run CanReg5 for the first time it is recommended
- that you install the latest Java 7 Runtime Environment (March 2016: Version
- 8 Update 77 ) You can get that from here: 
+ that you install the latest Java 8 Runtime Environment (July 2017: Version
+ 8 Update 144 ) You can get that from here: 
 \begin_inset CommandInset href
 LatexCommand href
 target "http://java.com/en/download/manual.jsp"

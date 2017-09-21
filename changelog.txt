@@ -1,6 +1,6 @@
 ﻿Changelog
 
-5.00.42 BETA 11
+5.00.42 BETA 12
 - Analysis features updated in collaboration with Mathieu Laversanne:
   - Default report for further editing in Word or similar added.
     - Template system implemented.
@@ -22,6 +22,8 @@
 - Users can choose English/Short/Standard labels instead of the full variable names as labels for data entry forms, as well as in the variable chooser (Export/frequencies etc.).
 - Fixed a bug in the list of defined servers during login that occurred sometimes when users had more than a certain number defined.
 - Files generated (either by exporting or saving tables in frequencies by year) now open in the associated software automatically.
+- Fixed off by one error when counting cases to be imported.
+- Fix bug where ICCC codes were not generated during import.
 - Updates to the Russian translation by Anton Ryzhov.
 - Some updates to the French translation by Eric Masuyer.
 - Java Runtime Environment (JRE) 8 is now required.
