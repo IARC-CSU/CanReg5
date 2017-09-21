@@ -357,6 +357,11 @@ public class Import {
                         ConversionResult[] conversionResult = canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICD10, patient, tumour);
                         tumour.setVariable(io.getICD10VariableName(), conversionResult[0].getValue());
                     }
+                    String iccc = (String) tumour.getVariable(io.getICCCVariableName());
+                    if (iccc == null || iccc.trim().length() == 0) {
+                        ConversionResult[] conversionResult = canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICCC3, patient, tumour);
+                        tumour.setVariable(io.getICCCVariableName(), conversionResult[0].getValue());
+                    }
                 }
                 if (tumour.getVariable(io.getPatientIDTumourTableVariableName()) == null) {
                     tumour.setVariable(io.getPatientIDTumourTableVariableName(), patientID);
@@ -732,9 +737,12 @@ public class Import {
                             // tumour.setVariable(io.getICD10VariableName(), conversionResult[0].getValue());
 
                             if (worstResultCodeFound != CheckResult.ResultCode.Invalid && worstResultCodeFound != CheckResult.ResultCode.Missing) {
-                                // TODO: If no errors were found we generate ICD10 code
+                                // generate ICD10 codes
                                 ConversionResult[] conversionResult = canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICD10, patient, tumour);
                                 tumour.setVariable(io.getICD10VariableName(), conversionResult[0].getValue());
+                                // generate ICCC codes
+                                ConversionResult[] conversionResultICCC = canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICCC3, patient, tumour);
+                                tumour.setVariable(io.getICCCVariableName(), conversionResultICCC[0].getValue());
                             } else {
                                 tumour.setVariable(io.getTumourRecordStatus(), "0");
                             }
@@ -753,6 +761,12 @@ public class Import {
                             if (icd10 == null || icd10.trim().length() == 0) {
                                 ConversionResult[] conversionResult = canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICD10, patient, tumour);
                                 tumour.setVariable(io.getICD10VariableName(), conversionResult[0].getValue());
+                            }
+                            // try to generate ICCC3, if missing, anyway
+                            String iccc = (String) tumour.getVariable(io.getICCCVariableName());
+                            if (iccc == null || iccc.trim().length() == 0) {
+                                ConversionResult[] conversionResult = canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICCC3, patient, tumour);
+                                tumour.setVariable(io.getICCCVariableName(), conversionResult[0].getValue());
                             }
                         }
                     } else {
