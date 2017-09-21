@@ -89,6 +89,10 @@ canreg_error_log <- function(e,filename,out,Args,inc,pop) {
   sink(type="message")
   sink()
   close(error_connection)
+  
+  
+  
+  
   cat(paste("-outFile",log_file,sep=":"))
   
 }
@@ -274,12 +278,12 @@ canreg_import_CI5_data <- function(dt,CI5_file,var_ICD_canreg="ICD10GROUP",var_a
     temp <- sapply(dt_ICD_canreg$ICD_list, function(x) {return(all(dt_ICD_CI5$ICD_list[[i]] %in% x))})
     ind <- which(temp)
     if (length(ind) > 0) {
-      dt_ICD_CI5$ICD_canreg[[i]] <- levels(dt_ICD_canreg$ICD10)[ind]
+      dt_ICD_CI5$ICD_canreg[[i]] <- as.character(dt_ICD_canreg$ICD10)[ind]
     }
     
   }
   
-  dt_ICD_CI5[,ICD_list:=NULL]
+  
   #Add canreg ICD code to CI5 data
   dt_CI5_data <- merge(dt_CI5_data,dt_ICD_CI5, by=("ICD10"), all.x=TRUE) 
   dt_CI5_data <- dt_CI5_data[!is.na(ICD_canreg),]
@@ -292,65 +296,139 @@ canreg_import_CI5_data <- function(dt,CI5_file,var_ICD_canreg="ICD10GROUP",var_a
   dt_canreg_age_label <- parse_age_label_dt(dt,var_age_label =var_age_label_canreg)
   dt_CI5_age_label$age_label_canreg <- character(0) 
   
-  #associate CI5 age group with CANREG age group
+  #associate CI5 age group with CANREG age group and age code and reference count
   for (i in 1:nrow(dt_CI5_age_label)) {
     
     temp <- sapply(dt_canreg_age_label$age_list, function(x) {return(all(dt_CI5_age_label$age_list[[i]] %in% x))})
     ind <- which(temp)
     if (length(ind) > 0) {
       dt_CI5_age_label$age_label_canreg[[i]] <- as.character(dt_canreg_age_label$age_label[ind])
+
     }
   }
   
   dt_CI5_age_label[,age_list:=NULL]
 
+  setnames(dt_CI5_age_label,"age_label_canreg",var_age_label_canreg)
+  dt_temp <- unique(dt_all[,c("AGE_GROUP","REFERENCE_COUNT", var_age_label_canreg),  with=FALSE])
+  dt_CI5_age_label <- merge(dt_CI5_age_label,dt_temp, by=c(var_age_label_canreg),all.x=TRUE, all.y=FALSE )
+  
+  
   #Add canreg age label code to CI5 data
   dt_CI5_data <- merge(dt_CI5_data,dt_CI5_age_label, by=("age_label"), all.x=TRUE) 
-  dt_CI5_data<-  dt_CI5_data[,.( cases=sum(cases), py=sum(py)), by=c("sex","age_label_canreg","country_label", "cr","ICD_canreg")]
+  dt_CI5_data<-  dt_CI5_data[,.( cases=sum(cases), py=sum(py)), by=c("sex","AGE_GROUP","REFERENCE_COUNT",var_age_label_canreg,"country_label", "cr","ICD_canreg")]
+  
+  dt_CI5_data[, ICD10GROUP:=factor(ICD_canreg, levels = levels(dt$ICD10GROUP))]
+  dt_CI5_data[, SEX:=factor(sex, levels=c(1,2),labels = levels(dt$SEX))]
+  dt_CI5_data[,sex:=NULL]
+  dt_CI5_data[,ICD_canreg:=NULL]
   
   return(dt_CI5_data)
 }
 
 
+canreg_merge_CI5_registry <- function(dt, dt_CI5, registry_region, registry_label, number=5) {
+  
+  ##calcul of ASR for canreg
+  dt<- csu_asr_core(df_data =dt, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
+                    var_by = c("cancer_label", "SEX","ICD10GROUP","ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt_all),
+                    pop_base_count = "REFERENCE_COUNT",
+                    age_label_list = "AGE_GROUP_LABEL")
+  
+  ##keep top 5 cancer for men and top 5 cancer women of canreg.
+  dt <- csu_dt_rank(dt,var_value = "CASES",var_rank = "cancer_label",
+                    group_by = "SEX", number =number, ties.method = "first") 
+  
+  #Keep selected cancer in CI5 data and prepare CI5 data
+  
+  dt_temp <- dt[,c("SEX", "ICD10GROUP", "CSU_RANK"),  with=FALSE]
+  dt_CI5 <- merge(dt_CI5,dt_temp, by=c("SEX", "ICD10GROUP"),all.y=TRUE )
+  dt_CI5 <- csu_asr_core(df_data =dt_CI5, var_age ="AGE_GROUP",var_cases = "cases", var_py = "py",
+                         var_by = c("country_label","cr" ,"SEX","ICD10GROUP", "CSU_RANK"),
+                         var_age_group=c("country_label"),
+                         missing_age = canreg_missing_age(dt_CI5),
+                         pop_base_count = "REFERENCE_COUNT",
+                         age_label_list = "AGE_GROUP_LABEL")
+  
+  dt_CI5 <- as.data.table(dt_CI5)
+  
+  #keep CI5 selected region
+  dt_CI5 <- dt_CI5[cr==registry_region,]
+  dt_CI5[, cr:=NULL]
+  
+  #add CI5 data to canreg data
+  dt_temp <- unique(dt[,c("ICD10GROUP", "ICD10GROUPCOLOR", "cancer_label"),  with=FALSE])
+  dt_CI5 <- merge(dt_CI5,dt_temp, by=c("ICD10GROUP"),all.x=TRUE )
+  setnames(dt_CI5, "cases", "CASES")
+  setnames(dt_CI5, "py", "COUNT")
+  dt[, country_label:=registry_label]
+  dt <- rbind(dt,dt_CI5)
+  
+  return(dt)
+  
+  
+}
 
-canreg_report_template_extract <- function(report_path,script.basename) {
+
+
+canreg_report_template_extract <- function(report_path,script.basename, appendix=FALSE) {
   
   # Copy template base if no file in the report_template folder
   
   # detect txt file beginning with 1_, 12_, 2_ etc.. 
-  file <- list.files(path=report_path, pattern="^(\\d{1,2}_).*\\.txt$")
+  file_template <- list.files(path=report_path, pattern="^((APP_)?\\d{1,2}_).*\\.txt$")
   
-  if (length(file) == 0) {
+  
+  if (length(file_template) == 0) {
     
     file_template <- list.files(path=paste(sep="/", script.basename, "report_text"), full.names = TRUE)
     file.copy(file_template,report_path)
     
   }
   
-  
   # Copy 1.1 chapter if missing
-  if (!any(grepl("^1_1_",file ))) {
+  if (!any(grepl("^1_1_",file_template ))) {
     
-    file_template <- list.files(path=paste(sep="/", script.basename, "report_text"),pattern= "^1_1_[^_]*\\.txt$", full.names = TRUE)
-    file.copy(file_template,report_path)
+    file_1_1 <- list.files(path=paste(sep="/", script.basename, "report_text"),pattern= "^1_1_[^_]*\\.txt$", full.names = TRUE)
+    file.copy(file_1_1,report_path)
     
   }
   
   # Copy 1.2 chapter if missing
-  if (!any(grepl("^1_2_",file ))) {
+  if (!any(grepl("^1_2_",file_template ))) {
     
-    file_template <- list.files(path=paste(sep="/", script.basename, "report_text"),pattern= "^1_2_[^_]*\\.txt$", full.names = TRUE)
-    file.copy(file_template,report_path)
+    file_1_2 <- list.files(path=paste(sep="/", script.basename, "report_text"),pattern= "^1_2_[^_]*\\.txt$", full.names = TRUE)
+    file.copy(file_1_2,report_path)
     
   }
   
-  # detect txt file beginning with 1_, 12_, 2_ etc.. 
-  file <- list.files(path=report_path, pattern="^(\\d{1,2}_).*\\.txt$")
+  if (appendix) {
+    pattern_template <- "^(APP_\\d{1,2}_).*\\.txt$"
+  } else {
+    pattern_template <- "^(\\d{1,2}_).*\\.txt$"
+  }
   
-  dt_chapter <- canreg_report_chapter_table(file)
+
+  
+  # detect txt file beginning with 1_, 12_, 2_ etc.. 
+  file_template <- list.files(path=report_path, pattern=pattern_template)
+  
+  if (length(file_template) > 0) {
+    dt_chapter <- canreg_report_chapter_table(file_template)
+    if (appendix) {
+      
+      dt_chapter[, title_number:=gsub("APP", "",title_number)]
+    }
+  } else {
+    dt_chapter <- NULL
+  }
+  
+
+  
   return(dt_chapter)
   
 }
+
 
 
 canreg_report_chapter_table <- function(file) {
@@ -386,11 +464,15 @@ canreg_report_chapter_table <- function(file) {
 }
 
 
-canreg_report_chapter_txt <- function(dt_chapter, doc, folder, dt_all, fig_number) {
-  
+canreg_report_chapter_txt <- function(dt_chapter, doc, folder, dt_all, fig_number, appendix=FALSE) {
   
   doc <- addPageBreak(doc) # go to the next page
-  doc <- addTitle(doc, paste(dt_chapter$title[1], tolower(dt_chapter$title[2]), sep= " and "), level=1)
+  
+  if (!appendix) {
+    doc <- addTitle(doc, paste(dt_chapter$title[1], tolower(dt_chapter$title[2]), sep= " and "), level=1)
+  } else {
+    doc <- addTitle(doc, "Appendix", level=1)
+  }
   
   
   for (i in 1:nrow(dt_chapter)) {
@@ -403,7 +485,8 @@ canreg_report_chapter_txt <- function(dt_chapter, doc, folder, dt_all, fig_numbe
     
     doc <- addTitle(doc, chapter_info$title, level=chapter_info$title_level)
     
-    pop_data <- (i==2)
+    pop_data <- ((i==2) & !appendix)
+    
     
     fig_number <- canreg_report_import_txt(doc,chapter_info$file,folder, dt_all, fig_number,pop_data)
     
@@ -419,46 +502,57 @@ canreg_report_import_txt <- function(doc,file,folder, dt_all, fig_number, pop_da
   
   
   text <- scan(paste0(folder,"/", file), what="character", sep="\n", blank.lines.skip = FALSE, quiet=TRUE)
-  if (length(text) > 1){
-    for (i in 2:length(text)) {
-      text[1] <- paste(text[1], text[i], sep = "\n")
+  
+  
+  if (length(text) > 0) {
+    
+    if (length(text) > 1){
+      for (i in 2:length(text)) {
+        text[1] <- paste(text[1], text[i], sep = "\n")
+      }
     }
-  }
-  
-  text <- text[1]
-  
-  #create markup table 
-  mark_pos <- NULL
-  mark_length <- NULL
-  
-  mark_table <- data.table(mark_pos=integer(),mark_length=integer(),mark_type=character())
-  
-  temp <- gregexpr("<EDIT FILE PATH>", text = text)[[1]]
-  mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("PATH", length(temp)))))
-  
-  temp <- gregexpr("<POPULATION DATA>", text = text)[[1]]
-  mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("POP", length(temp)))))
-  
-  temp <- gregexpr("\\<img:[^[:space:]]*\\.png\\>", text = tolower(text))[[1]]
-  mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("IMG", length(temp)))))
-  
-  temp <- gregexpr("\\<img:[^[:space:]]*\\.jpe?g\\>", text = tolower(text))[[1]]
-  mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("IMG", length(temp)))))
-  
-  temp <- gregexpr("\\<img:[^[:space:]]*\\.bmp\\>", text = tolower(text))[[1]]
-  mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("IMG", length(temp)))))
-  
-  setkey(mark_table, mark_pos)
-  mark_table <- mark_table[mark_pos!=-1, ]
-  
-  if (pop_data ) {
-    if (!"POP" %in% mark_table$mark_type) {
-      mark_table <- rbind(mark_table,list(nchar(text),17,"POP"))
+    
+    text <- text[1]
+    
+    
+    
+    #create markup table 
+    mark_pos <- NULL
+    mark_length <- NULL
+    
+    mark_table <- data.table(mark_pos=integer(),mark_length=integer(),mark_type=character())
+    
+    temp <- gregexpr("<EDIT FILE PATH>", text = text)[[1]]
+    mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("PATH", length(temp)))))
+    
+    temp <- gregexpr("<POPULATION DATA>", text = text)[[1]]
+    mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("POP", length(temp)))))
+    
+    temp <- gregexpr("<AGE_SPECIFIC_RATE_DETAILLED>", text = text)[[1]]
+    mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("ASRD", length(temp)))))
+    
+    temp <- gregexpr("\\<img:[^[:space:]]*\\.png\\>", text = tolower(text))[[1]]
+    mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("IMG", length(temp)))))
+    
+    temp <- gregexpr("\\<img:[^[:space:]]*\\.jpe?g\\>", text = tolower(text))[[1]]
+    mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("IMG", length(temp)))))
+    
+    temp <- gregexpr("\\<img:[^[:space:]]*\\.bmp\\>", text = tolower(text))[[1]]
+    mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("IMG", length(temp)))))
+    
+    setkey(mark_table, mark_pos)
+    mark_table <- mark_table[mark_pos!=-1, ]
+    
+    if (pop_data ) {
+      if (!"POP" %in% mark_table$mark_type) {
+        mark_table <- rbind(mark_table,list(nchar(text),17,"POP"))
+      }
     }
+    
+    
+    fig_number <- canreg_report_add_text(doc,text,mark_table,dt_all,file, folder, fig_number )
+    
   }
-  
-  
-  fig_number <- canreg_report_add_text(doc,text,mark_table,dt_all,file, folder, fig_number )
   
   return(fig_number)
   
@@ -477,6 +571,8 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all,file, folder, fi
     start <- 0 
     
     for (i in 1:nrow(mark_table)) { 
+      
+      
       
       
       stop <- mark_table$mark_pos[i]-1 #markup position
@@ -515,8 +611,37 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all,file, folder, fi
         
         dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph.png")), "dim" )
         doc <- addImage(doc, paste0(tempdir(), "\\temp_graph.png"),width=graph_width,height=graph_width*dims[1]/dims[2] )
-        doc <- addParagraph(doc,  paste0("Fig ",fig_number,". Estimated average annual population"))
+        doc <- addParagraph(doc,  paste0("Appendix Fig ",fig_number,". Estimated average annual population"))
         fig_number <- fig_number+1
+        
+      } else if (type == "ASRD"){
+        
+        
+        
+        doc <- addParagraph(doc, "\r\n")
+        dt_report <- dt_all
+        
+        dt_report <- canreg_ageSpecific_rate_data(dt_report)
+        
+        canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph"),landscape = FALSE,
+                      list_graph = TRUE,
+                      FUN=canreg_ageSpecific_rate_multi_plot,dt=dt_report,var_by="SEX",var_age_label_list = "AGE_GROUP_LABEL",
+                      log_scale = TRUE,  
+                      color_trend=c("Male" = "#2c7bb6", "Female" = "#b62ca1"),
+                      multi_graph= FALSE,
+                      canreg_header=header)
+        
+        
+        dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph001.png")), "dim" )
+        
+        for (j in 1:length(levels(dt_report$ICD10GROUP))) {
+          doc <- addImage(doc, paste0(tempdir(), "\\temp_graph",sprintf("%03d",j) ,".png"),width=graph_width*0.8,height=graph_width*0.8*dims[1]/dims[2] )
+          doc <- addParagraph(doc,  
+                              paste0("Appendix fig ",fig_number,". ", unique(dt_report[ICD10GROUP== levels(ICD10GROUP)[j] ,cancer_label]),  
+                                     ": Age specifique incidence rate per ", formatC(100000, format="d", big.mark=",")))
+          fig_number <- fig_number+1
+        }
+        
         
       } else if (type == "IMG") {
         
@@ -529,10 +654,10 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all,file, folder, fi
           #change extension to low cases in a temp file
           file.copy(paste0(folder, "\\", img_file), paste0(tempdir(),"\\", tolower(img_file)))
           
-		
+          
           file_ext <- tolower(regmatches(img_file, regexpr("[^\\.]*$",img_file )))
-
-			    #"Valid files are png, jpg, jpeg, gif, bmp, wmf, emf
+          
+          #"Valid files are png, jpg, jpeg, gif, bmp, wmf, emf
           if (grepl("jpe?g$",file_ext)) {
             dims <- attr(jpeg::readJPEG(paste0(tempdir(),"\\", tolower(img_file))), "dim" )
           } else if (file_ext == "png") {
@@ -556,7 +681,11 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all,file, folder, fi
       start <- stop + mark_table$mark_length[i]+1
     }
     
-    temp <- substr(text, start ,nchar(text)) # add text before markup
+    
+    
+    
+    temp <- substr(text, start ,nchar(text)) # add text after markup
+    
     if (temp != "") {
       doc <- addParagraph(doc,temp) 
     }
@@ -780,6 +909,7 @@ canreg_ageSpecific_rate_data <- function(dt, keep_ref=FALSE, keep_year=FALSE, ke
   dt <- dt[!((substring(cancer_sex, 1, 1) ==0) & SEX == "Male"),]
   dt <- dt[!((substring(cancer_sex, 2, 2) ==0) & SEX == "Female"),]
   
+  dt[, ICD10GROUP :=factor(ICD10GROUP)]
   
   return(dt) 
 }
@@ -1896,7 +2026,10 @@ canreg_ageSpecific_rate_multi_plot <- function(dt,
   for ( i in levels(dt$ICD10GROUP) ) { 
     
     
+    
+    
     dt_temp <- dt[ICD10GROUP ==i]
+    
     cancer_title <- unique(dt_temp$cancer_title)
     temp <- csu_ageSpecific_core(dt_temp,
                                  var_age=var_age,
@@ -2203,7 +2336,7 @@ canreg_bar_top_single <- function(dt, var_top, var_bar = "cancer_label" ,group_b
   
   if (return_data) {
     setnames(dt, "CSU_RANK","cancer_rank")
-    setkeyv(dt, c("SEX","cancer_rank"))
+    setkeyv(dt, c(group_by,"cancer_rank"))
     dt <-  dt[,-c("ICD10GROUPCOLOR"), with=FALSE]
     
     return(dt)
@@ -2230,8 +2363,9 @@ canreg_bar_top_single <- function(dt, var_top, var_bar = "cancer_label" ,group_b
     dt_plot <- dt[get(group_by) == i]
     dt_label_order <- setkey(unique(dt_plot[, c(var_bar,"ICD10GROUPCOLOR", "CSU_RANK"), with=FALSE]), CSU_RANK)
     dt_plot$cancer_label <- factor(dt_plot$cancer_label,levels = rev(dt_label_order$cancer_label)) 
-   
     color_cancer <- as.character(rev(dt_label_order$ICD10GROUPCOLOR))
+    
+
     
     plotlist[[j]] <-
       csu_bar_plot(
@@ -2248,6 +2382,168 @@ canreg_bar_top_single <- function(dt, var_top, var_bar = "cancer_label" ,group_b
 }
 
 
+canreg_bar_CI5_compare <- function(dt,group_by = "SEX", landscape = TRUE,list_graph=TRUE,multi_graph=FALSE,
+                                        xtitle = "",digit  =  1,text_size_factor =1.5,number=5,
+                                        return_data  =  FALSE) {
+  
+  if (return_data) {
+    setnames(dt, "CSU_RANK","cancer_rank")
+    dt <-  dt[,-c("ICD10GROUPCOLOR"), with=FALSE]
+    
+    return(dt)
+    stop() 
+  }
+  
+  
+  CI5_registries <- as.character(unique(dt$country_label))
+  caption <- NULL
+  if (any(grepl("\\*",CI5_registries))) {
+    caption <- "*: Regional registries"
+  }
+  
+  lay <- rbind(c(11,12),
+               c(1,2),
+               c(3,4),  
+               c(5,6),
+               c(7,8),
+               c(9,9),
+               c(NA,10))  
+  
+  theme_2p4 <- list(theme(
+    axis.title.x = element_blank(), 
+    axis.title.y = element_blank(),
+    axis.text = element_text(colour = "black"),
+    axis.text.x = element_text(size=10),
+    axis.text.y = element_text(size=9),
+    axis.line.x = element_line(size = 0.25),
+    panel.grid.major.x = element_line(size=0.25),
+    panel.grid.minor.x = element_line(size=0.25),
+    axis.ticks.x = element_line(size=0.25),
+    plot.title = element_text(size=12),
+    plot.subtitle = element_blank(),
+    plot.caption = element_blank(),
+    plot.margin=margin(0,3,0,0),
+  )
+  )
+  
+  widths <- c(10,10)
+  heights <- c(1,10,10,10,10,1,1)
+  
+  
+  if (multi_graph) {
+    
+    plotlist_grid <- list()
+    
+  }
+  
+  if (list_graph) {
+    
+    plotlist <- list()
+    
+  }
+  
+  i <- 1 
+  
+  
+  for (j in 1:number) {
+    
+    dt_temp <- dt[CSU_RANK ==j ]
+    
+    for (k in levels(dt_temp[[group_by]])) local({
+      
+      k <- k
+      dt_plot <- dt_temp[get(group_by) == k]
+      
+      dt_plot[["country_label"]] <-csu_legend_wrapper(dt_plot[["country_label"]], 14)
+      dt_plot[,country_label:=factor(country_label, levels=country_label)]
+      
+      
+      
+      
+      temp <-
+        csu_bar_plot(dt=dt_plot, 
+                     var_top="asr",
+                     var_bar="country_label",
+                     plot_title = unique(dt_plot$cancer_label),
+                     plot_subtitle = unique(dt_plot$SEX), 
+                     plot_caption = caption,
+                     xtitle=xtitle,
+                     digit = digit,
+                     color_bar = as.character(dt_plot$ICD10GROUPCOLOR),
+                     text_size_factor = text_size_factor,
+                     landscape = TRUE) 
+      
+      if (list_graph) {
+        plotlist[[i]] <<- temp
+      }
+      
+      if (multi_graph) {
+        
+        if (i==1) { 
+          grid_legend <<- extract_legend_axes(temp)
+          plotlist_grid[[11]] <<- grid_legend$subtitle
+        }
+        
+        if (i == 2) {
+          grid_legend <<- extract_legend_axes(temp)
+          plotlist_grid[[12]] <<- grid_legend$subtitle
+        } 
+        
+        if (i < 11) {
+          
+          temp <- temp  + theme_2p4
+          plotlist_grid[[i]] <<- temp
+          geom_text_index <- which(sapply(plotlist_grid[[i]]$layers, function(x) class(x$geom)[1]) == "GeomText")
+          plotlist_grid[[i]]$layers[[geom_text_index]]$aes_params$size <<- 3.5
+          geom_hline_index <- which(sapply(plotlist_grid[[i]]$layers, function(x) class(x$geom)[1]) == "GeomHline")
+          plotlist_grid[[i]]$layers[[geom_hline_index]]$aes_params$size <<- 0.25
+        }
+      }
+      
+      
+      i <<- i+1
+      
+    })
+  }
+  
+  if (multi_graph) {
+    
+    #need edit to keep only 10 
+    
+    plotlist_grid[[9]] <- grid_legend$xlab
+    plotlist_grid[[10]] <- grid_legend$caption
+    
+    
+    
+    grid.arrange(
+      grobs=plotlist_grid,
+      layout_matrix = lay,
+      widths = widths,
+      heights=heights,
+      left=" ",
+      top= " ",
+      bottom= " ",
+      right= " "
+    )
+    
+  }
+  
+  if (list_graph) {
+    
+    for (i in 1:length(plotlist)) {
+      
+      geom_text_index <- which(sapply(plotlist[[i]]$layers, function(x) class(x$geom)[1]) == "GeomText")
+      plotlist[[i]]$layers[[geom_text_index]]$aes_params$size <- 6 
+      geom_hline_index <- which(sapply(plotlist[[i]]$layers, function(x) class(x$geom)[1]) == "GeomHline")
+      plotlist[[i]]$layers[[geom_hline_index]]$aes_params$size <- 0.4
+      
+      print(plotlist[[i]])
+    }
+  }
+  
+  
+}
+
 csu_bar_plot <- function(dt, 
                              var_top,
                              var_bar,
@@ -2257,10 +2553,14 @@ csu_bar_plot <- function(dt,
                              xtitle="",
                              digit = 1,
                              color_bar = NULL,
+                             text_size_factor = 1,
                              landscape = FALSE)  {
   
   line_size <- 0.4
   text_size <- 14 
+  title_size <- 18
+  subtitle_size <- 16
+  caption_size <- 12
   
   if (landscape) {
     csu_ratio = 0.6
@@ -2270,8 +2570,13 @@ csu_bar_plot <- function(dt,
     csu_bar_label_size = 5
   }
   
-  dt[, plot_value:= get(var_top)]
+  text_size <- text_size*text_size_factor
+  csu_bar_label_size <- csu_bar_label_size*text_size_factor
+  title_size <- title_size*text_size_factor
+  subtitle_size <- subtitle_size*text_size_factor
+  caption_size <- caption_size*text_size_factor
   
+  setnames(dt,var_top,"plot_value")
   
   tick_major_list <- csu_tick_generator(max = max(dt$plot_value), 0)$tick_list
   nb_tick <- length(tick_major_list) 
@@ -2279,6 +2584,8 @@ csu_bar_plot <- function(dt,
   if ((tick_major_list[nb_tick] -  max(dt$plot_value))/tick_space < 1/4){
     tick_major_list[nb_tick+1] <- tick_major_list[nb_tick] + tick_space
   }
+  
+  tick_minor_list <-seq(tick_major_list[1],tail(tick_major_list,1),tick_space/2)
   
 
   dt$value_label <- dt$plot_value + (tick_space*0.1)
@@ -2294,6 +2601,7 @@ csu_bar_plot <- function(dt,
     coord_flip(ylim = c(0,tick_major_list[length(tick_major_list)]+(tick_space*0.25)), expand = TRUE)+
     scale_y_continuous(name = xtitle,
                        breaks=tick_major_list,
+                       minor_breaks = tick_minor_list,
                        labels=csu_axes_label
                        
     )+
@@ -2310,9 +2618,9 @@ csu_bar_plot <- function(dt,
       panel.grid.major.y= element_blank(),
       panel.grid.major.x= element_line(colour = "grey70",size = line_size),
       panel.grid.minor.x= element_line(colour = "grey70",size = line_size),
-      plot.title = element_text(size=18, margin=margin(0,0,15,0),hjust = 0.5),
-      plot.subtitle = element_text(size=16, margin=margin(0,0,15,0),hjust = 0.5),
-      plot.caption = element_text(size=12, margin=margin(15,0,0,0)),
+      plot.title = element_text(size=title_size, margin=margin(0,0,15,0),hjust = 0.5),
+      plot.subtitle = element_text(size=subtitle_size, margin=margin(0,0,15,0),hjust = 0.5),
+      plot.caption = element_text(size=caption_size, margin=margin(15,0,0,0)),
       plot.margin=margin(20,20,20,20),
       axis.title = element_text(size=text_size),
       axis.title.x=element_text(margin=margin(10,0,0,0)),
@@ -3444,7 +3752,8 @@ csu_dt_rank <- function(dt,
                         var_value = "CASES",
                         var_rank = "cancer_label",
                         group_by = NULL,
-                        number = NULL) {
+                        number = NULL, 
+                        ties.method="min") {
   
   bool_dum_by <- FALSE
   if (is.null(group_by)) {
@@ -3456,7 +3765,7 @@ csu_dt_rank <- function(dt,
   
   dt <- as.data.table(dt)
   dt_rank <- dt[, list(rank_value=sum(get(var_value))), by=c(var_rank, group_by)]
-  dt_rank[, CSU_RANK:= frank(-rank_value, ties.method="min"), by=group_by]
+  dt_rank[, CSU_RANK:= frank(-rank_value, ties.method=ties.method), by=group_by]
 
   if (!is.null(number)){
     dt_rank <- dt_rank[CSU_RANK <= number,c(group_by, var_rank, "CSU_RANK"), with=FALSE]
@@ -3753,6 +4062,28 @@ parse_icd10 <- function (icd) {
 }
 
 
+parse_age_label_dt <- function(dt,var_age_label) {
+  
+  dt_age_label <- data.table(age_label=unique(dt[[var_age_label]]))
+  dt_age_label <- dt_age_label[!is.na(age_label) ,]
+  dt_age_label[ ,age_list := list()]
+  dt_age_label[, temp:=as.numeric(regmatches(age_label, regexpr("[0-9]{1,2}", age_label)))]
+  
+  setkey(dt_age_label,temp)
+  
+  
+  len <- nrow(dt_age_label)
+  for (i in 1:(len-1)) {
+    dt_age_label$age_list[[i]] <- dt_age_label$temp[[i]]:(dt_age_label$temp [[i+1]]-1)
+  }
+  
+  dt_age_label$age_list[[len]] <- dt_age_label$temp[[len]]:200
+  dt_age_label[ ,temp := NULL]
+  
+  return(dt_age_label)
+  
+}
+
 
 extract_legend_axes<-function(a_gplot){
   pdf(file=NULL)
@@ -3761,14 +4092,23 @@ extract_legend_axes<-function(a_gplot){
   xlab_index <- which(sapply(tmp$grobs, function(x) substr(x$name, 1,12 ) == "axis.title.x"))
   ylab_index <- which(sapply(tmp$grobs, function(x) substr(x$name, 1,12 ) == "axis.title.y"))
   title_index <- which(sapply(tmp$grobs, function(x) substr(x$name, 1,10 ) == "plot.title"))
+  subtitle_index <- which(sapply(tmp$grobs, function(x) substr(x$name, 1,10 ) == "plot.subti"))
   caption_index <- which(sapply(tmp$grobs, function(x) substr(x$name, 1,10 ) == "plot.capti"))
-  legend <- tmp$grobs[[leg_index]]
+  
+  if(length(leg_index) > 0) {
+    legend <- tmp$grobs[[leg_index]]
+  }
+  
+  if(length(subtitle_index) > 0) {
+    subtitle <- tmp$grobs[[subtitle_index]]
+  }
+  
   xlab <- tmp$grobs[[xlab_index]]
   ylab <- tmp$grobs[[ylab_index]]
   title <- tmp$grobs[[title_index]]
   caption <- tmp$grobs[[caption_index]]
   dev.off()
-  return(list(legend=legend, xlab=xlab, ylab=ylab, title=title, caption=caption))
+  return(list(legend=legend, xlab=xlab, ylab=ylab, title=title, subtitle=subtitle, caption=caption))
 }
 
 reporteRs_OO_patched <- function (docx,temp_path=paste0(tempdir(),"\\temp" )) {
