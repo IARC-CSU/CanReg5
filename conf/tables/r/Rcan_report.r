@@ -510,12 +510,13 @@ tryCatch({
   doc <- addParagraph(doc, "\r\n")
   
   doc <- addParagraph(doc,
-                      "Table 1 shows the percentage of cases at the major sites that were registered on the basis of information from a death certificate only (DCO) and with morphological verification (MV%) - that is, based on cytology or histology (of the primary tumour, or a metastasis).")
+                      paste0("Table ",list_number$tbl," shows the percentage of cases at the major sites that were registered on the basis of information from a death certificate only (DCO) and with morphological verification (MV%) - that is, based on cytology or histology (of the primary tumour, or a metastasis)."))
   
   doc <- addParagraph(doc, "\r\n")
   doc <- addFlexTable(doc,ft)
   doc <- addParagraph(doc, "\r\n")
-  doc <- addParagraph(doc, "Table 1.", par.properties=parProperties(text.align="center", padding=0))
+  doc <- addParagraph(doc, 
+                      paste0("Table ",list_number$tbl,"."), par.properties=parProperties(text.align="center", padding=0))
   
   dt_appendix <- canreg_report_template_extract(report_path, script.basename, appendix  =TRUE)
   list_number$fig <- 1
