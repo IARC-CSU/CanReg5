@@ -29,7 +29,7 @@ tryCatch({
     dir.create(report_path)
   }
   
-  fig_number <- 1
+  list_number <- list(fig=1, tbl=1)
   
   doc <- docx()
   
@@ -42,7 +42,7 @@ tryCatch({
   
   dt_chapter <- canreg_report_template_extract(report_path, script.basename)
   
-  fig_number <- canreg_report_chapter_txt(dt_chapter, doc, report_path,dt_all,fig_number)
+  list_number <- canreg_report_chapter_txt(dt_chapter, doc, report_path,dt_all,list_number)
   
   
   doc <- addPageBreak(doc)
@@ -81,7 +81,7 @@ tryCatch({
   
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph.png")), "dim" )
   doc <- addImage(doc, paste0(tempdir(), "\\temp_graph.png"),width=graph_width,height=graph_width*dims[1]/dims[2] )
-  doc <- addParagraph(doc, paste0("Fig ",fig_number,"a. Bar chart, distribution of cases by age group and sex"))
+  doc <- addParagraph(doc, paste0("Fig ",list_number$fig,"a. Bar chart, distribution of cases by age group and sex"))
   
   dt_report <- dt_all
   dt_report[ICD10GROUP != "C44",]$ICD10GROUP ="O&U" 
@@ -97,8 +97,8 @@ tryCatch({
   
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph.png")), "dim" )
   doc <- addImage(doc, paste0(tempdir(), "\\temp_graph.png"),width=graph_width,height=graph_width*dims[1]/dims[2] )
-  doc <- addParagraph(doc,paste0("Fig ",fig_number,"b. Pie chart, distribution of cases by age group and sex"))
-  fig_number <- fig_number +1 
+  doc <- addParagraph(doc,paste0("Fig ",list_number$fig,"b. Pie chart, distribution of cases by age group and sex"))
+  list_number$fig <- list_number$fig +1 
   
   doc <- addTitle(doc, "The most common cancers, by sex", level = 2)
   
@@ -142,7 +142,7 @@ tryCatch({
   
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph.png")), "dim" )
   doc <- addImage(doc, paste0(tempdir(), "\\temp_graph.png"),width=graph_width,height=graph_width*dims[1]/dims[2] )
-  doc <- addParagraph(doc, paste0("Fig ",fig_number,"a. Top 10 cancers, both sexes (Number of cases)"))
+  doc <- addParagraph(doc, paste0("Fig ",list_number$fig,"a. Top 10 cancers, both sexes (Number of cases)"))
   
   
   canreg_output(output_type = "png", filename =  paste0(tempdir(), "\\temp_graph"),landscape = TRUE,list_graph = FALSE,
@@ -153,8 +153,8 @@ tryCatch({
   
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph.png")), "dim" )
   doc <- addImage(doc, paste0(tempdir(), "\\temp_graph.png"),width=graph_width,height=graph_width*dims[1]/dims[2] )
-  doc <- addParagraph(doc, paste0("Fig ",fig_number,"b. Top 10 cancers, both sexes (Age-standardized rate per 100,000)"))
-  fig_number=fig_number+1
+  doc <- addParagraph(doc, paste0("Fig ",list_number$fig,"b. Top 10 cancers, both sexes (Age-standardized rate per 100,000)"))
+  list_number$fig=list_number$fig+1
   
   doc <- addParagraph(doc, "\r\n")
   
@@ -204,8 +204,8 @@ tryCatch({
   
   doc <- addParagraph(doc, "\r\n")
   doc <- addFlexTable(doc,ft,par.properties = parProperties(text.align = "center"))
-  doc <- addParagraph(doc, paste0("Fig ",fig_number,". Top 10 cancers, number of cases"))
-  fig_number = fig_number+1
+  doc <- addParagraph(doc, paste0("Fig ",list_number$fig,". Top 10 cancers, number of cases"))
+  list_number$fig = list_number$fig+1
   
   var_top <- "asr"
   digit <- 1
@@ -231,8 +231,8 @@ tryCatch({
   
   doc <- addParagraph(doc, "\r\n")
   doc <- addFlexTable(doc,ft,par.properties = parProperties(text.align = "center"))
-  doc <- addParagraph(doc, paste0("Fig ",fig_number,". Top 10 cancers, ASR"))
-  fig_number <- fig_number+1
+  doc <- addParagraph(doc, paste0("Fig ",list_number$fig,". Top 10 cancers, ASR"))
+  list_number$fig <- list_number$fig+1
   
   var_top <- "cum_risk"
   digit <- 2
@@ -260,8 +260,8 @@ tryCatch({
   
   doc <- addParagraph(doc, "\r\n")
   doc <- addFlexTable(doc,ft,par.properties = parProperties(text.align = "center"))
-  doc <- addParagraph(doc, paste0("Fig ",fig_number,". Top 10 cancers, cumulative risk, 0-74 years"))
-  fig_number <- fig_number+1
+  doc <- addParagraph(doc, paste0("Fig ",list_number$fig,". Top 10 cancers, cumulative risk, 0-74 years"))
+  list_number$fig <- list_number$fig+1
   
   doc <- addPageBreak(doc)
   
@@ -292,8 +292,8 @@ tryCatch({
   
   doc <- addParagraph(doc, "\r\n")
   doc <- addFlexTable(doc,ft,par.properties = parProperties(text.align = "center"))
-  doc <- addParagraph(doc, paste0("Fig ",fig_number,". Age specific incidence rates"))
-  fig_number <- fig_number+1
+  doc <- addParagraph(doc, paste0("Fig ",list_number$fig,". Age specific incidence rates"))
+  list_number$fig <- list_number$fig+1
   
   
   if (year_info$span > 1) {
@@ -338,8 +338,8 @@ tryCatch({
     
     doc <- addParagraph(doc, "\r\n")
     doc <- addFlexTable(doc,ft,par.properties = parProperties(text.align = "center"))
-    doc <- addParagraph(doc, paste0("Fig ",fig_number,". Trend in Age-standardized (W) incidence rate"))
-    fig_number <- fig_number+1
+    doc <- addParagraph(doc, paste0("Fig ",list_number$fig,". Trend in Age-standardized (W) incidence rate"))
+    list_number$fig <- list_number$fig+1
     
   }
   
@@ -386,8 +386,8 @@ tryCatch({
     
     dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph.png")), "dim" )
     doc <- addImage(doc, paste0(tempdir(), "\\temp_graph.png"),width=graph_width,height=graph_width*dims[1]/dims[2] )
-    doc <- addParagraph(doc, paste0("Fig ",fig_number,". Estimated annual percentage change"))
-    fig_number=fig_number+1
+    doc <- addParagraph(doc, paste0("Fig ",list_number$fig,". Estimated annual percentage change"))
+    list_number$fig=list_number$fig+1
     
     doc <- addParagraph(doc, "\r\n")
     
@@ -425,7 +425,7 @@ tryCatch({
     CI5_registries <- gsub("\\*","",CI5_registries)
     
     doc <- addParagraph(doc,
-                        paste0("Figure ",fig_number," shows a comparaison of the age standardised incidence rates in ",
+                        paste0("Figure ",list_number$fig," shows a comparaison of the age standardised incidence rates in ",
                                header, " with those observed in ", 
                                CI5_registries[1], ", ", CI5_registries[2],
                                " and ", CI5_registries[3], " (CI5 X, 2013)." ))
@@ -455,8 +455,8 @@ tryCatch({
       
     }
     
-    doc <- addParagraph(doc, paste0("Fig ",fig_number,". Comparaison with other registries"))
-    fig_number=fig_number+1
+    doc <- addParagraph(doc, paste0("Fig ",list_number$fig,". Comparaison with other registries"))
+    list_number$fig=list_number$fig+1
     
     doc <- addParagraph(doc, "\r\n")
   
@@ -518,10 +518,11 @@ tryCatch({
   doc <- addParagraph(doc, "Table 1.", par.properties=parProperties(text.align="center", padding=0))
   
   dt_appendix <- canreg_report_template_extract(report_path, script.basename, appendix  =TRUE)
-  fig_number <- 1
+  list_number$fig <- 1
+  list_number$tbl <- 1
   
   if (!is.null(dt_appendix)) {
-    fig_number <- canreg_report_chapter_txt(dt_appendix, doc, report_path,dt_all,fig_number, appendix=TRUE)
+    list_number <- canreg_report_chapter_txt(dt_appendix, doc, report_path,dt_all,list_number, appendix=TRUE)
   }
   
   

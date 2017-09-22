@@ -464,7 +464,7 @@ canreg_report_chapter_table <- function(file) {
 }
 
 
-canreg_report_chapter_txt <- function(dt_chapter, doc, folder, dt_all, fig_number, appendix=FALSE) {
+canreg_report_chapter_txt <- function(dt_chapter, doc, folder, dt_all, list_number, appendix=FALSE) {
   
   doc <- addPageBreak(doc) # go to the next page
   
@@ -488,16 +488,16 @@ canreg_report_chapter_txt <- function(dt_chapter, doc, folder, dt_all, fig_numbe
     pop_data <- ((i==2) & !appendix)
     
     
-    fig_number <- canreg_report_import_txt(doc,chapter_info$file,folder, dt_all, fig_number,pop_data)
+    list_number <- canreg_report_import_txt(doc,chapter_info$file,folder, dt_all, list_number,pop_data, appendix)
     
   }
   
-  return(fig_number)
+  return(list_number)
   
 }
 
 
-canreg_report_import_txt <- function(doc,file,folder, dt_all, fig_number, pop_data=FALSE) {
+canreg_report_import_txt <- function(doc,file,folder, dt_all, list_number, pop_data=FALSE, appendix=FALSE) {
   
   
   
@@ -531,17 +531,24 @@ canreg_report_import_txt <- function(doc,file,folder, dt_all, fig_number, pop_da
     temp <- gregexpr("<AGE_SPECIFIC_RATE_DETAILLED>", text = text)[[1]]
     mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("ASRD", length(temp)))))
     
-    temp <- gregexpr("\\<img:[^[:space:]]*\\.png\\>", text = tolower(text))[[1]]
+    temp <- gregexpr("\\<img:(\\[(.*)\\])?[^[:space:]]*?\\.png\\>", text = tolower(text))[[1]]
     mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("IMG", length(temp)))))
     
-    temp <- gregexpr("\\<img:[^[:space:]]*\\.jpe?g\\>", text = tolower(text))[[1]]
+    temp <- gregexpr("\\<tbl:(\\[(.*)\\])?[^[:space:]]*?\\.png\\>", text = tolower(text))[[1]]
     mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("IMG", length(temp)))))
     
-    temp <- gregexpr("\\<img:[^[:space:]]*\\.bmp\\>", text = tolower(text))[[1]]
+    temp <- gregexpr("\\<img:(\\[(.*)\\])?[^[:space:]]*?\\.jpe?g\\>", text = tolower(text))[[1]]
     mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("IMG", length(temp)))))
+    
+    temp <- gregexpr("\\<img:(\\[(.*)\\])?[^[:space:]]*?\\.bmp\\>", text = tolower(text))[[1]]
+    mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("IMG", length(temp)))))
+    
+    
+
     
     setkey(mark_table, mark_pos)
     mark_table <- mark_table[mark_pos!=-1, ]
+    
     
     if (pop_data ) {
       if (!"POP" %in% mark_table$mark_type) {
@@ -550,15 +557,15 @@ canreg_report_import_txt <- function(doc,file,folder, dt_all, fig_number, pop_da
     }
     
     
-    fig_number <- canreg_report_add_text(doc,text,mark_table,dt_all,file, folder, fig_number )
+    list_number <- canreg_report_add_text(doc,text,mark_table,dt_all,file, folder, list_number, appendix )
     
   }
   
-  return(fig_number)
+  return(list_number)
   
 }
 
-canreg_report_add_text <- function(doc, text, mark_table,dt_all,file, folder, fig_number) {
+canreg_report_add_text <- function(doc, text, mark_table,dt_all,file, folder, list_number, appendix=FALSE) {
   
   if (nrow(mark_table)==0) { #no markup
     
@@ -569,6 +576,7 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all,file, folder, fi
   } else {
     
     start <- 0 
+    j <- 1
     
     for (i in 1:nrow(mark_table)) { 
       
@@ -611,8 +619,8 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all,file, folder, fi
         
         dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph.png")), "dim" )
         doc <- addImage(doc, paste0(tempdir(), "\\temp_graph.png"),width=graph_width,height=graph_width*dims[1]/dims[2] )
-        doc <- addParagraph(doc,  paste0("Appendix Fig ",fig_number,". Estimated average annual population"))
-        fig_number <- fig_number+1
+        doc <- addParagraph(doc,  paste0("Fig ",list_number$fig,". Estimated average annual population"))
+        list_number$fig <- list_number$fig+1
         
       } else if (type == "ASRD"){
         
@@ -637,19 +645,56 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all,file, folder, fi
         for (j in 1:length(levels(dt_report$ICD10GROUP))) {
           doc <- addImage(doc, paste0(tempdir(), "\\temp_graph",sprintf("%03d",j) ,".png"),width=graph_width*0.8,height=graph_width*0.8*dims[1]/dims[2] )
           doc <- addParagraph(doc,  
-                              paste0("Appendix fig ",fig_number,". ", unique(dt_report[ICD10GROUP== levels(ICD10GROUP)[j] ,cancer_label]),  
+                              paste0("Appendix fig ",list_number$fig,". ", unique(dt_report[ICD10GROUP== levels(ICD10GROUP)[j] ,cancer_label]),  
                                      ": Age specifique incidence rate per ", formatC(100000, format="d", big.mark=",")))
-          fig_number <- fig_number+1
+          list_number$fig <- list_number$fig+1
         }
         
         
       } else if (type == "IMG") {
         
-        img_file <-  substr(text, stop+5,stop+mark_table$mark_length[i])
+
+        table <- (substr(text, stop+1, stop+3) == "tbl")
         
+
+        caption_markdown <- regexpr("\\[(.*)\\]", substr(text, stop+1,stop+1+mark_table$mark_length[i] ))
+
+        
+        if (caption_markdown[j] > 0) {
+          img_file <-  substr(text, stop+5+attr(caption_markdown,"match.length"),stop+mark_table$mark_length[i])
+          caption  <-  substr(text, stop+6,stop+3+attr(caption_markdown,"match.length"))
+          
+          
+          
+          # j=j+1
+          # if (j > length(caption_markdown[[1]])) {
+          #   j <- 1
+          # }
+          
+        } else {
+          img_file <-  substr(text, stop+5,stop+mark_table$mark_length[i])
+          caption <- img_file
+        } 
+        
+
+
+        
+
         doc <- addParagraph(doc, "\r\n")
         
         if (file_test("-f",paste0(folder, "\\", img_file))) {
+          
+          if (table) {
+            caption_start <- paste0("Table ", list_number$tbl, ". ")
+            list_number$tbl <- list_number$tbl + 1
+          } else {
+            caption_start <- paste0("Fig ", list_number$fig, ". ")
+            list_number$fig <- list_number$fig + 1
+          }
+          
+          if (appendix) {
+            caption_start <- paste0("Appendix ", tolower(caption_start))
+          }
           
           #change extension to low cases in a temp file
           file.copy(paste0(folder, "\\", img_file), paste0(tempdir(),"\\", tolower(img_file)))
@@ -657,7 +702,7 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all,file, folder, fi
           
           file_ext <- tolower(regmatches(img_file, regexpr("[^\\.]*$",img_file )))
           
-          #"Valid files are png, jpg, jpeg, gif, bmp, wmf, emf
+          #"Valid files are png, jpg, jpeg,bmp (add gif,wmf,emf ?)
           if (grepl("jpe?g$",file_ext)) {
             dims <- attr(jpeg::readJPEG(paste0(tempdir(),"\\", tolower(img_file))), "dim" )
           } else if (file_ext == "png") {
@@ -667,12 +712,12 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all,file, folder, fi
           }
           
           doc <- addImage(doc, paste0(tempdir(),"\\", tolower(img_file)),width=3,height=3*dims[1]/dims[2],par.properties = parProperties(text.align = "left"))
-          doc <- addParagraph(doc, paste0("Fig ",fig_number,". ",img_file))
+          doc <- addParagraph(doc, paste0(caption_start,caption))
           doc <- addParagraph(doc, "\r\n")
-          fig_number <- fig_number+1 
+
           
         } else {
-          temp <- paste0("The file: ",folder,"\\\\",img_file," does not exist\n")
+          temp <- paste0("The file: ",folder,"\\",img_file," does not exist\n")
           doc <- addParagraph(doc,temp)
           
         }
@@ -692,11 +737,9 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all,file, folder, fi
     
   }
   
-  return(fig_number)
+  return(list_number)
   
 }
-
-
 
 
 canreg_report_top_cancer_text <- function(dt_report, percent_equal=5, sex_select="Male") {
