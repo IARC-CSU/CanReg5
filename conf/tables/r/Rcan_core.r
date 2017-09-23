@@ -474,28 +474,49 @@ canreg_report_chapter_txt <- function(dt_chapter, doc, folder, dt_all, list_numb
     doc <- addTitle(doc, "Appendix", level=1)
   }
   
+  last_landscape <- FALSE
   
   for (i in 1:nrow(dt_chapter)) {
     
+    
+    doc_landscape <- FALSE
     
     chapter_info <- dt_chapter[i]
     
     text <- scan(paste0(folder,"/", chapter_info$file), what="character", sep="\n", blank.lines.skip = FALSE, quiet=TRUE)
     
+    if (length(text) > 0) {
+      
+
+      if (substr(text[1], 1,11) == "<LANDSCAPE>") {
+        doc_landscape <- TRUE
+      }
     
+    }
+
     if (chapter_info$title_level == 1 ) {
       doc <- addPageBreak(doc)
     }
-    
-    
-    
+      
+    if (doc_landscape) {
+      text <- text[2:length(text)]
+      doc <- addSection(doc, landscape = TRUE)
+      last_landscape <- TRUE
+      
+    } else {
+      if (last_landscape){
+        doc <- addSection(doc, landscape = FALSE)
+        last_landscape <- FALSE
+      }
+    }
+      
     doc <- addTitle(doc, chapter_info$title, level=chapter_info$title_level)
-    
+      
     pop_data <- ((i==2) & !appendix)
-    
-    
-    list_number <- canreg_report_import_txt(doc,text,folder, dt_all, list_number,pop_data, appendix)
-    
+      
+    if (length(text) > 0) {  
+      list_number <- canreg_report_import_txt(doc,text,folder, dt_all, list_number,pop_data, appendix)
+    }
   }
   
   return(list_number)
@@ -506,64 +527,58 @@ canreg_report_chapter_txt <- function(dt_chapter, doc, folder, dt_all, list_numb
 canreg_report_import_txt <- function(doc,text,folder, dt_all, list_number, pop_data=FALSE, appendix=FALSE) {
   
   
+  if (length(text) > 1){
+    for (i in 2:length(text)) {
+      text[1] <- paste(text[1], text[i], sep = "\n")
+    }
+  }
+  
+  text <- text[1]
+  
+  
+  
+  #create markup table 
+  mark_pos <- NULL
+  mark_length <- NULL
+  
+  mark_table <- data.table(mark_pos=integer(),mark_length=integer(),mark_type=character())
+  
+  temp <- gregexpr("<EDIT FILE PATH>", text = text)[[1]]
+  mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("PATH", length(temp)))))
+  
+  temp <- gregexpr("<POPULATION DATA>", text = text)[[1]]
+  mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("POP", length(temp)))))
+  
+  temp <- gregexpr("<AGE_SPECIFIC_RATE_DETAILLED>", text = text)[[1]]
+  mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("ASRD", length(temp)))))
+  
+  temp <- gregexpr("\\<img:(\\[(.*)\\])?[^[:space:]]*?\\.png\\>", text = tolower(text))[[1]]
+  mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("IMG", length(temp)))))
+  
+  temp <- gregexpr("\\<tbl:(\\[(.*)\\])?[^[:space:]]*?\\.png\\>", text = tolower(text))[[1]]
+  mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("TBL", length(temp)))))
+  
+  temp <- gregexpr("\\<img:(\\[(.*)\\])?[^[:space:]]*?\\.jpe?g\\>", text = tolower(text))[[1]]
+  mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("IMG", length(temp)))))
+  
+  temp <- gregexpr("\\<img:(\\[(.*)\\])?[^[:space:]]*?\\.bmp\\>", text = tolower(text))[[1]]
+  mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("IMG", length(temp)))))
+  
+  
 
   
-  if (length(text) > 0) {
-    
-    if (length(text) > 1){
-      for (i in 2:length(text)) {
-        text[1] <- paste(text[1], text[i], sep = "\n")
-      }
+  setkey(mark_table, mark_pos)
+  mark_table <- mark_table[mark_pos!=-1, ]
+  
+  
+  if (pop_data ) {
+    if (!"POP" %in% mark_table$mark_type) {
+      mark_table <- rbind(mark_table,list(nchar(text),17,"POP"))
     }
-    
-    text <- text[1]
-    
-    
-    
-    #create markup table 
-    mark_pos <- NULL
-    mark_length <- NULL
-    
-    mark_table <- data.table(mark_pos=integer(),mark_length=integer(),mark_type=character())
-    
-    temp <- gregexpr("<EDIT FILE PATH>", text = text)[[1]]
-    mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("PATH", length(temp)))))
-    
-    temp <- gregexpr("<POPULATION DATA>", text = text)[[1]]
-    mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("POP", length(temp)))))
-    
-    temp <- gregexpr("<AGE_SPECIFIC_RATE_DETAILLED>", text = text)[[1]]
-    mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("ASRD", length(temp)))))
-    
-    temp <- gregexpr("\\<img:(\\[(.*)\\])?[^[:space:]]*?\\.png\\>", text = tolower(text))[[1]]
-    mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("IMG", length(temp)))))
-    
-    temp <- gregexpr("\\<tbl:(\\[(.*)\\])?[^[:space:]]*?\\.png\\>", text = tolower(text))[[1]]
-    mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("TBL", length(temp)))))
-    
-    temp <- gregexpr("\\<img:(\\[(.*)\\])?[^[:space:]]*?\\.jpe?g\\>", text = tolower(text))[[1]]
-    mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("IMG", length(temp)))))
-    
-    temp <- gregexpr("\\<img:(\\[(.*)\\])?[^[:space:]]*?\\.bmp\\>", text = tolower(text))[[1]]
-    mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("IMG", length(temp)))))
-    
-    
-
-    
-    setkey(mark_table, mark_pos)
-    mark_table <- mark_table[mark_pos!=-1, ]
-    
-    
-    if (pop_data ) {
-      if (!"POP" %in% mark_table$mark_type) {
-        mark_table <- rbind(mark_table,list(nchar(text),17,"POP"))
-      }
-    }
-    
-    
-    list_number <- canreg_report_add_text(doc,text,mark_table,dt_all, folder, list_number, appendix )
-    
   }
+  
+  
+  list_number <- canreg_report_add_text(doc,text,mark_table,dt_all, folder, list_number, appendix )
   
   return(list_number)
   
@@ -580,7 +595,7 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all, folder, list_nu
   } else {
     
     start <- 0 
-    doc_landscape <- FALSE
+
     
     for (i in 1:nrow(mark_table)) { 
       
@@ -589,17 +604,6 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all, folder, list_nu
       temp <- substr(text, start,stop) # add text before markup
       type <- mark_table$mark_type[i]
       
-      if (appendix & type=="TBL") {
-        
-        if (!doc_landscape) {
-          doc <- addSection(doc, landscape = TRUE)
-          doc_landscape = TRUE
-        }
-        
-      } else {
-        doc_landscape = FALSE
-        doc <- addSection(doc, landscape = FALSE)
-      }
   
       
       if (temp != "") {
