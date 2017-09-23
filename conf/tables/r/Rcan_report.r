@@ -514,7 +514,6 @@ tryCatch({
   
   doc <- addParagraph(doc, "\r\n")
   doc <- addFlexTable(doc,ft)
-  doc <- addParagraph(doc, "\r\n")
   doc <- addParagraph(doc, 
                       paste0("Table ",list_number$tbl,"."), par.properties=parProperties(text.align="center", padding=0))
   

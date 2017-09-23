@@ -479,16 +479,22 @@ canreg_report_chapter_txt <- function(dt_chapter, doc, folder, dt_all, list_numb
     
     
     chapter_info <- dt_chapter[i]
+    
+    text <- scan(paste0(folder,"/", chapter_info$file), what="character", sep="\n", blank.lines.skip = FALSE, quiet=TRUE)
+    
+    
     if (chapter_info$title_level == 1 ) {
       doc <- addPageBreak(doc)
     }
+    
+    
     
     doc <- addTitle(doc, chapter_info$title, level=chapter_info$title_level)
     
     pop_data <- ((i==2) & !appendix)
     
     
-    list_number <- canreg_report_import_txt(doc,chapter_info$file,folder, dt_all, list_number,pop_data, appendix)
+    list_number <- canreg_report_import_txt(doc,text,folder, dt_all, list_number,pop_data, appendix)
     
   }
   
@@ -497,12 +503,10 @@ canreg_report_chapter_txt <- function(dt_chapter, doc, folder, dt_all, list_numb
 }
 
 
-canreg_report_import_txt <- function(doc,file,folder, dt_all, list_number, pop_data=FALSE, appendix=FALSE) {
+canreg_report_import_txt <- function(doc,text,folder, dt_all, list_number, pop_data=FALSE, appendix=FALSE) {
   
   
-  
-  text <- scan(paste0(folder,"/", file), what="character", sep="\n", blank.lines.skip = FALSE, quiet=TRUE)
-  
+
   
   if (length(text) > 0) {
     
@@ -535,7 +539,7 @@ canreg_report_import_txt <- function(doc,file,folder, dt_all, list_number, pop_d
     mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("IMG", length(temp)))))
     
     temp <- gregexpr("\\<tbl:(\\[(.*)\\])?[^[:space:]]*?\\.png\\>", text = tolower(text))[[1]]
-    mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("IMG", length(temp)))))
+    mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("TBL", length(temp)))))
     
     temp <- gregexpr("\\<img:(\\[(.*)\\])?[^[:space:]]*?\\.jpe?g\\>", text = tolower(text))[[1]]
     mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("IMG", length(temp)))))
@@ -557,7 +561,7 @@ canreg_report_import_txt <- function(doc,file,folder, dt_all, list_number, pop_d
     }
     
     
-    list_number <- canreg_report_add_text(doc,text,mark_table,dt_all,file, folder, list_number, appendix )
+    list_number <- canreg_report_add_text(doc,text,mark_table,dt_all, folder, list_number, appendix )
     
   }
   
@@ -565,7 +569,7 @@ canreg_report_import_txt <- function(doc,file,folder, dt_all, list_number, pop_d
   
 }
 
-canreg_report_add_text <- function(doc, text, mark_table,dt_all,file, folder, list_number, appendix=FALSE) {
+canreg_report_add_text <- function(doc, text, mark_table,dt_all, folder, list_number, appendix=FALSE) {
   
   if (nrow(mark_table)==0) { #no markup
     
@@ -576,25 +580,36 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all,file, folder, li
   } else {
     
     start <- 0 
-    j <- 1
+    doc_landscape <- FALSE
     
     for (i in 1:nrow(mark_table)) { 
       
-      
-      
-      
+
       stop <- mark_table$mark_pos[i]-1 #markup position
       temp <- substr(text, start,stop) # add text before markup
+      type <- mark_table$mark_type[i]
+      
+      if (appendix & type=="TBL") {
+        
+        if (!doc_landscape) {
+          doc <- addSection(doc, landscape = TRUE)
+          doc_landscape = TRUE
+        }
+        
+      } else {
+        doc_landscape = FALSE
+        doc <- addSection(doc, landscape = FALSE)
+      }
+  
       
       if (temp != "") {
         doc <- addParagraph(doc,temp) 
       }
       
-      type <- mark_table$mark_type[i] 
+
       
       if (type == "PATH") {
         
-        #folder <- gsub("\\","\\\\",folder,fixed=TRUE)
         temp <- paste0("This text can be edit directly in the template file folder:\n",folder,"\n")
         doc <- addParagraph(doc,temp) 
         
@@ -651,50 +666,46 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all,file, folder, li
         }
         
         
-      } else if (type == "IMG") {
+      } else if (type %in% c("IMG", "TBL")) {
         
-
-        table <- (substr(text, stop+1, stop+3) == "tbl")
+        table <- type == "TBL"
+        doc <- addParagraph(doc, "\r\n")
         
-
         caption_markdown <- regexpr("\\[(.*)\\]", substr(text, stop+1,stop+1+mark_table$mark_length[i] ))
 
         
-        if (caption_markdown[j] > 0) {
+        if (caption_markdown[1] > 0) {
           img_file <-  substr(text, stop+5+attr(caption_markdown,"match.length"),stop+mark_table$mark_length[i])
           caption  <-  substr(text, stop+6,stop+3+attr(caption_markdown,"match.length"))
           
           
-          
-          # j=j+1
-          # if (j > length(caption_markdown[[1]])) {
-          #   j <- 1
-          # }
-          
         } else {
           img_file <-  substr(text, stop+5,stop+mark_table$mark_length[i])
           caption <- img_file
-        } 
+        }
         
 
-
-        
-
-        doc <- addParagraph(doc, "\r\n")
-        
         if (file_test("-f",paste0(folder, "\\", img_file))) {
+          
           
           if (table) {
             caption_start <- paste0("Table ", list_number$tbl, ". ")
             list_number$tbl <- list_number$tbl + 1
+            graph_width <- 6
           } else {
             caption_start <- paste0("Fig ", list_number$fig, ". ")
             list_number$fig <- list_number$fig + 1
+            graph_width <- 3
           }
           
           if (appendix) {
             caption_start <- paste0("Appendix ", tolower(caption_start))
-          }
+            
+            if (table) {
+              graph_width <- 8
+            }
+          } 
+
           
           #change extension to low cases in a temp file
           file.copy(paste0(folder, "\\", img_file), paste0(tempdir(),"\\", tolower(img_file)))
@@ -711,9 +722,8 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all,file, folder, li
             dims <- attr(bmp::read.bmp(paste0(tempdir(),"\\", tolower(img_file))), "dim" )
           }
           
-          doc <- addImage(doc, paste0(tempdir(),"\\", tolower(img_file)),width=3,height=3*dims[1]/dims[2],par.properties = parProperties(text.align = "left"))
+          doc <- addImage(doc, paste0(tempdir(),"\\", tolower(img_file)),width=graph_width,height=graph_width*dims[1]/dims[2],par.properties = parProperties(text.align = "left"))
           doc <- addParagraph(doc, paste0(caption_start,caption))
-          doc <- addParagraph(doc, "\r\n")
 
           
         } else {
