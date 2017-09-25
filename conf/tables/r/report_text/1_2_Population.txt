@@ -3,4 +3,4 @@ The population consists mainly of nice people, but around 20% are very weird, an
 The last census was made in 1580, but since one baby is born each time an old men die, the data should be accurate.
 
 <POPULATION DATA>
-img:map_example.png
+img:[Bestlandeverland map (smurfy projection)]map_example.png

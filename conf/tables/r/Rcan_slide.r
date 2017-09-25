@@ -12,41 +12,40 @@
 
 tryCatch({  
   
-  graph_width <- 6
+  graph_width <- 8
+  graph_width_split <- 4
+  graph_width_vertical <- 5
   
   year_info <- canreg_get_years(dt_all)
   
+
   
-  #check if report path exist (if not create report path)
-  pos <- regexpr("\\\\[^\\\\]*$", out)[[1]]
-  path <- substr(out,start=1, stop=pos)
-  if (sc=="null") {
-    report_path <- paste0(path, "report-template")
-  } else {
-    report_path <- paste0(path, "report-template-", sc)
-  }
-  if(!file_test("-d",report_path)) {
-    dir.create(report_path)
-  }
+  doc <- pptx(template=paste(sep="/", script.basename,"slide_template", "canreg_template.pptx"))
   
-  list_number <- list(fig=1, tbl=1)
+  slide.layouts(doc)
   
-  doc <- docx()
+  doc <- addSlide(doc, "Canreg_title") ## add PPTX TITLE
+  doc <- addTitle(doc, header)
+  doc <- addSubtitle(doc, "Cancer cases registered using the CanReg5 software. (http://www.iacr.com.fr/CanReg5)")
   
-  doc <- addParagraph( doc, value = header, stylename =  "TitleDoc")
-  doc <- addParagraph(doc, "\r\n")
-  doc <- addParagraph(doc, "\r\n")
-  doc <- addTOC(doc)
+  #################
+  doc <- addSlide(doc, "Canreg_basic") ## add PPTX slide (Title + content)
+  doc <- addTitle(doc, "Population pyramid")
   
+  dt_report <- dt_all
+  dt_report <- canreg_pop_data(dt_report)
   
+  canreg_output(output_type = "png", filename =  paste0(tempdir(), "\\temp_graph"),landscape = TRUE,list_graph = FALSE,
+                FUN=canreg_population_pyramid,
+                df_data =dt_report,
+                canreg_header = "")
   
-  dt_chapter <- canreg_report_template_extract(report_path, script.basename)
+  dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph.png")), "dim" )
+  doc <- addImage(doc, paste0(tempdir(), "\\temp_graph.png"),width=graph_width,height=graph_width*dims[1]/dims[2])
   
-  list_number <- canreg_report_chapter_txt(dt_chapter, doc, report_path,dt_all,list_number)
-  
-  
-  doc <- addPageBreak(doc)
-  doc <- addTitle(doc, "Results", level=1)    
+  ################# 
+  doc <- addSlide(doc, "Canreg_basic") ## add PPTX slide (Title + content)
+  doc <- addTitle(doc, "Number of cases by age group & sex")
   
   # bar chart age
   dt_report <- dt_all
@@ -55,24 +54,6 @@ tryCatch({
   dt_report <- dt_report[, .(CASES=sum(CASES)),by=.(ICD10GROUP, ICD10GROUPLABEL, YEAR,SEX, AGE_GROUP,AGE_GROUP_LABEL,COUNT,REFERENCE_COUNT) ]
   dt_report <- canreg_age_cases_data(dt_report,age_group = c(5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80), skin=TRUE)
   
-  total_cases <- formatC(dt_report[,sum(CASES)], format="d", big.mark=",")
-  total_male <- formatC(dt_report[SEX == "Male",sum(CASES)], format="d", big.mark=",")
-  total_female <-formatC(dt_report[SEX == "Female",sum(CASES)], format="d", big.mark=",")
-  
-  if (year_info$max == year_info$min) {
-    text_year <- paste0("In ",year_info$max,", ")
-  } else {
-    text_year <- paste0("Between ",year_info$min," and ",year_info$max, ", ")
-  }
-  
-  
-  doc <- addParagraph(doc,
-                      paste0(text_year,total_cases," cases of cancers were registered: ",
-                             total_male," among men and ",total_female," among women."))
-  
-  doc <- addTitle(doc, "Number of cases in period, by age group & sex", level = 2)
-  
-  
   canreg_output(output_type = "png", filename =  paste0(tempdir(), "\\temp_graph"),landscape = TRUE,list_graph = FALSE,
                 FUN=canreg_cases_age_bar,
                 df_data =dt_report,
@@ -80,8 +61,11 @@ tryCatch({
   
   
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph.png")), "dim" )
-  doc <- addImage(doc, paste0(tempdir(), "\\temp_graph.png"),width=graph_width,height=graph_width*dims[1]/dims[2] )
-  doc <- addParagraph(doc, paste0("Fig ",list_number$fig,"a. Bar chart, distribution of cases by age group and sex"))
+  doc <- addImage(doc, paste0(tempdir(), "\\temp_graph.png"),width=graph_width,height=graph_width*dims[1]/dims[2])
+  
+  ################# 
+  doc <- addSlide(doc, "Canreg_basic") ## add PPTX slide (Title + content)
+  doc <- addTitle(doc, "Proportion of cases by age group & sex")
   
   dt_report <- dt_all
   dt_report[ICD10GROUP != "C44",]$ICD10GROUP ="O&U" 
@@ -97,10 +81,11 @@ tryCatch({
   
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph.png")), "dim" )
   doc <- addImage(doc, paste0(tempdir(), "\\temp_graph.png"),width=graph_width,height=graph_width*dims[1]/dims[2] )
-  doc <- addParagraph(doc,paste0("Fig ",list_number$fig,"b. Pie chart, distribution of cases by age group and sex"))
-  list_number$fig <- list_number$fig +1 
   
-  doc <- addTitle(doc, "The most common cancers, by sex", level = 2)
+  ################# 
+  doc <- addSlide(doc, "Canreg_basic_subtitle") ## add PPTX slide (Title + 2 content)
+  doc <- addTitle(doc, "Top 10 cancer, both sexes")
+  doc <- addParagraph(doc, "Number of cases")
   
   dt_report <- dt_all
   dt_report <- dt_report[ICD10GROUP != "C44",]
@@ -124,13 +109,6 @@ tryCatch({
                            age_label_list = "AGE_GROUP_LABEL")
   
   
-  
-  text_male <- canreg_report_top_cancer_text(dt_report, 5, sex_select="Male")
-  text_female <- canreg_report_top_cancer_text(dt_report, 5, sex_select="Female")
-  
-  doc <- addParagraph(doc, paste0("In men, ",tolower(text_male)))
-  doc <- addParagraph(doc, paste0("In women, ",tolower(text_female)))
-  
   canreg_output(output_type = "png", filename =  paste0(tempdir(), "\\temp_graph"),landscape = TRUE,list_graph = FALSE,
                 FUN=canreg_bar_top,
                 df_data=dt_report,
@@ -142,8 +120,11 @@ tryCatch({
   
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph.png")), "dim" )
   doc <- addImage(doc, paste0(tempdir(), "\\temp_graph.png"),width=graph_width,height=graph_width*dims[1]/dims[2] )
-  doc <- addParagraph(doc, paste0("Fig ",list_number$fig,"a. Top 10 cancers, both sexes (Number of cases)"))
   
+  ################# 
+  doc <- addSlide(doc, "Canreg_basic_subtitle") ## add PPTX slide (Title + 2 content)
+  doc <- addTitle(doc, "Top 10 cancer, both sexes")
+  doc <- addParagraph(doc, "Age-standardized incidence rate")
   
   canreg_output(output_type = "png", filename =  paste0(tempdir(), "\\temp_graph"),landscape = TRUE,list_graph = FALSE,
                 FUN=canreg_bar_top,
@@ -153,10 +134,10 @@ tryCatch({
   
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph.png")), "dim" )
   doc <- addImage(doc, paste0(tempdir(), "\\temp_graph.png"),width=graph_width,height=graph_width*dims[1]/dims[2] )
-  doc <- addParagraph(doc, paste0("Fig ",list_number$fig,"b. Top 10 cancers, both sexes (Age-standardized rate per 100,000)"))
-  list_number$fig=list_number$fig+1
   
-  doc <- addParagraph(doc, "\r\n")
+  ################# 
+  doc <- addSlide(doc, "Canreg_split") ## add PPTX slide (Title + 2 content)
+  doc <- addTitle(doc, "Top 10 cancer: Number of cases")
   
   dt_report <- dt_all
   dt_report <- dt_report[ICD10GROUP != "C44",]
@@ -191,21 +172,12 @@ tryCatch({
                 xtitle=xtitle)
   
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph001.png")), "dim" )
+  doc <- addImage(doc, paste0(tempdir(), "\\temp_graph001.png"),width=graph_width_split,height=graph_width_split*dims[1]/dims[2] )
+  doc <- addImage(doc, paste0(tempdir(), "\\temp_graph002.png"),width=graph_width_split,height=graph_width_split*dims[1]/dims[2] )
   
-  dat <- matrix("", nrow = 1, ncol = 2) # dummy empty table
-  ft <- FlexTable(dat, header.columns = F, add.rownames = F)
-  ft[1,1] <- pot_img( paste0(tempdir(), "\\temp_graph001.png"), width=2.7,height=2.7*dims[1]/dims[2]) # add image1 to cell 1
-  ft[1,2] <- pot_img(paste0(tempdir(), "\\temp_graph002.png"), width=2.7,height=2.7*dims[1]/dims[2]) # add image2 to cell 2
-  
-  ft[,, side = 'left'] <- borderProperties( style = 'none' )
-  ft[,, side = 'right'] <- borderProperties( style = 'none' )
-  ft[,, side = 'bottom' ] <- borderProperties( style = 'none' )
-  ft[,, side = 'top'] <- borderProperties( style = 'none' )
-  
-  doc <- addParagraph(doc, "\r\n")
-  doc <- addFlexTable(doc,ft,par.properties = parProperties(text.align = "center"))
-  doc <- addParagraph(doc, paste0("Fig ",list_number$fig,". Top 10 cancers, number of cases"))
-  list_number$fig = list_number$fig+1
+  ################# 
+  doc <- addSlide(doc, "Canreg_split") ## add PPTX slide (Title + 2 content)
+  doc <- addTitle(doc, "Top 10 cancer: ASR")
   
   var_top <- "asr"
   digit <- 1
@@ -218,21 +190,12 @@ tryCatch({
                 xtitle=xtitle)
   
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph001.png")), "dim" )
+  doc <- addImage(doc, paste0(tempdir(), "\\temp_graph001.png"),width=graph_width_split,height=graph_width_split*dims[1]/dims[2] )
+  doc <- addImage(doc, paste0(tempdir(), "\\temp_graph002.png"),width=graph_width_split,height=graph_width_split*dims[1]/dims[2] )
   
-  dat <- matrix("", nrow = 1, ncol = 2) # dummy empty table
-  ft <- FlexTable(dat, header.columns = F, add.rownames = F)
-  ft[1,1] <- pot_img( paste0(tempdir(), "\\temp_graph001.png"), width=2.7,height=2.7*dims[1]/dims[2]) # add image1 to cell 1
-  ft[1,2] <- pot_img(paste0(tempdir(), "\\temp_graph002.png"), width=2.7,height=2.7*dims[1]/dims[2]) # add image2 to cell 2
-  
-  ft[,, side = 'left'] <- borderProperties( style = 'none' )
-  ft[,, side = 'right'] <- borderProperties( style = 'none' )
-  ft[,, side = 'bottom' ] <- borderProperties( style = 'none' )
-  ft[,, side = 'top'] <- borderProperties( style = 'none' )
-  
-  doc <- addParagraph(doc, "\r\n")
-  doc <- addFlexTable(doc,ft,par.properties = parProperties(text.align = "center"))
-  doc <- addParagraph(doc, paste0("Fig ",list_number$fig,". Top 10 cancers, ASR"))
-  list_number$fig <- list_number$fig+1
+  ################# 
+  doc <- addSlide(doc, "Canreg_split") ## add PPTX slide (Title + 2 content)
+  doc <- addTitle(doc, "Top 10 cancer: Cumulative risk")
   
   var_top <- "cum_risk"
   digit <- 2
@@ -247,26 +210,10 @@ tryCatch({
                 xtitle=xtitle)
   
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph001.png")), "dim" )
+  doc <- addImage(doc, paste0(tempdir(), "\\temp_graph001.png"),width=graph_width_split,height=graph_width_split*dims[1]/dims[2] )
+  doc <- addImage(doc, paste0(tempdir(), "\\temp_graph002.png"),width=graph_width_split,height=graph_width_split*dims[1]/dims[2] )
   
-  dat <- matrix("", nrow = 1, ncol = 2) # dummy empty table
-  ft <- FlexTable(dat, header.columns = F, add.rownames = F)
-  ft[1,1] <- pot_img( paste0(tempdir(), "\\temp_graph001.png"), width=2.7,height=2.7*dims[1]/dims[2]) # add image1 to cell 1
-  ft[1,2] <- pot_img(paste0(tempdir(), "\\temp_graph002.png"), width=2.7,height=2.7*dims[1]/dims[2]) # add image2 to cell 2
-  
-  ft[,, side = 'left'] <- borderProperties( style = 'none' )
-  ft[,, side = 'right'] <- borderProperties( style = 'none' )
-  ft[,, side = 'bottom' ] <- borderProperties( style = 'none' )
-  ft[,, side = 'top'] <- borderProperties( style = 'none' )
-  
-  doc <- addParagraph(doc, "\r\n")
-  doc <- addFlexTable(doc,ft,par.properties = parProperties(text.align = "center"))
-  doc <- addParagraph(doc, paste0("Fig ",list_number$fig,". Top 10 cancers, cumulative risk, 0-74 years"))
-  list_number$fig <- list_number$fig+1
-  
-  doc <- addPageBreak(doc)
-  
-  doc <- addTitle(doc, "Age specific incidence rates (most common sites) by sex", level = 2)
-  
+  ################# 
   
   dt_report <- dt_all
   dt_report <- dt_report[ICD10GROUP != "C44",]
@@ -278,28 +225,19 @@ tryCatch({
                 dt=dt_report,log_scale = TRUE,nb_top = 5,
                 canreg_header = "")
   
+  doc <- addSlide(doc, "Canreg_vertical") ## add PPTX slide (Title + 2 content)
+  doc <- addTitle(doc, "Age specific rates: Males")
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph001.png")), "dim" )
+  doc <- addImage(doc, paste0(tempdir(), "\\temp_graph001.png"),width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2] )
   
-  dat <- matrix("", nrow = 1, ncol = 2) # dummy empty table
-  ft <- FlexTable(dat, header.columns = F, add.rownames = F)
-  ft[1,1] <- pot_img( paste0(tempdir(), "\\temp_graph001.png"), width=3,height=3*dims[1]/dims[2]) # add image1 to cell 1
-  ft[1,2] <- pot_img(paste0(tempdir(), "\\temp_graph002.png"), width=3,height=3*dims[1]/dims[2]) # add image2 to cell 2
-  
-  ft[,, side = 'left'] <- borderProperties( style = 'none' )
-  ft[,, side = 'right'] <- borderProperties( style = 'none' )
-  ft[,, side = 'bottom' ] <- borderProperties( style = 'none' )
-  ft[,, side = 'top'] <- borderProperties( style = 'none' )
-  
-  doc <- addParagraph(doc, "\r\n")
-  doc <- addFlexTable(doc,ft,par.properties = parProperties(text.align = "center"))
-  doc <- addParagraph(doc, paste0("Fig ",list_number$fig,". Age specific incidence rates"))
-  list_number$fig <- list_number$fig+1
+  doc <- addSlide(doc, "Canreg_vertical") ## add PPTX slide (Title + 2 content)
+  doc <- addTitle(doc, "Age specific rates: Females")
+  doc <- addImage(doc, paste0(tempdir(), "\\temp_graph002.png"),width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2] )
   
   
-  if (year_info$span > 1) {
+  #################  
+  if (year_info$span > 1) {  
     
-    doc <- addPageBreak(doc)
-    doc <- addTitle(doc, "Trend in ASR (most common sites) by sex", level = 2)
     
     dt_report <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE, keep_year = TRUE)
     
@@ -324,29 +262,22 @@ tryCatch({
                   canreg_header = "",
                   ytitle=paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=","), ", ", canreg_age_group))
     
+    doc <- addSlide(doc, "Canreg_vertical") ## add PPTX slide (Title + 2 content)
+    doc <- addTitle(doc, "Trend in ASR: Males")
     dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph001.png")), "dim" )
+    doc <- addImage(doc, paste0(tempdir(), "\\temp_graph001.png"),width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2] )
     
-    dat <- matrix("", nrow = 1, ncol = 2) # dummy empty table
-    ft <- FlexTable(dat, header.columns = F, add.rownames = F)
-    ft[1,1] <- pot_img( paste0(tempdir(), "\\temp_graph001.png"), width=3,height=3*dims[1]/dims[2]) # add image1 to cell 1
-    ft[1,2] <- pot_img(paste0(tempdir(), "\\temp_graph002.png"), width=3,height=3*dims[1]/dims[2]) # add image2 to cell 2
+    doc <- addSlide(doc, "Canreg_vertical") ## add PPTX slide (Title + 2 content)
+    doc <- addTitle(doc, "Trend in ASR: Females")
+    doc <- addImage(doc, paste0(tempdir(), "\\temp_graph002.png"),width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2] )
     
-    ft[,, side = 'left'] <- borderProperties( style = 'none' )
-    ft[,, side = 'right'] <- borderProperties( style = 'none' )
-    ft[,, side = 'bottom' ] <- borderProperties( style = 'none' )
-    ft[,, side = 'top'] <- borderProperties( style = 'none' )
-    
-    doc <- addParagraph(doc, "\r\n")
-    doc <- addFlexTable(doc,ft,par.properties = parProperties(text.align = "center"))
-    doc <- addParagraph(doc, paste0("Fig ",list_number$fig,". Trend in Age-standardized (W) incidence rate"))
-    list_number$fig <- list_number$fig+1
     
   }
   
   if (year_info$span > 2) {
     
-    doc <- addPageBreak(doc)
-    doc <- addTitle(doc, "Estimated annual percentage change", level = 2)
+    doc <- addSlide(doc, "Canreg_basic") ## add PPTX slide (Title + content)
+    doc <- addTitle(doc, "Estimated annual percentage change")
     
     dt_report <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE, keep_year = TRUE)
     first_age <- as.numeric(substr(agegroup,1,regexpr("-", agegroup)[1]-1))
@@ -357,18 +288,18 @@ tryCatch({
     
     ##calcul of ASR
     dt_report<- csu_asr_core(df_data =dt_report, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
-                      var_by = c("cancer_label", "SEX", "YEAR"), missing_age = canreg_missing_age(dt_all),
-                      first_age = first_age+1,
-                      last_age= last_age+1,
-                      pop_base_count = "REFERENCE_COUNT",
-                      age_label_list = "AGE_GROUP_LABEL")
+                             var_by = c("cancer_label", "SEX", "YEAR"), missing_age = canreg_missing_age(dt_all),
+                             first_age = first_age+1,
+                             last_age= last_age+1,
+                             pop_base_count = "REFERENCE_COUNT",
+                             age_label_list = "AGE_GROUP_LABEL")
     
     ##Keep top based on rank
     dt_report <- csu_dt_rank(dt_report,
-                      var_value= "CASES",
-                      var_rank = "cancer_label",
-                      group_by = "SEX",
-                      number = 25
+                             var_value= "CASES",
+                             var_rank = "cancer_label",
+                             group_by = "SEX",
+                             number = 25
     )
     
     
@@ -385,32 +316,18 @@ tryCatch({
                   ytitle=paste0("Estimated Average Percentage Change (%), ", canreg_age_group))
     
     dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph.png")), "dim" )
-    doc <- addImage(doc, paste0(tempdir(), "\\temp_graph.png"),width=graph_width,height=graph_width*dims[1]/dims[2] )
-    doc <- addParagraph(doc, paste0("Fig ",list_number$fig,". Estimated annual percentage change"))
-    list_number$fig=list_number$fig+1
+    doc <- addImage(doc, paste0(tempdir(), "\\temp_graph.png"),width=graph_width,height=graph_width*dims[1]/dims[2])
     
-    doc <- addParagraph(doc, "\r\n")
     
   }
   
-  ## comparaison with CI5 registries.
-  
   region_admit <- c("EastMed", "Americas", "West Pacific", "Europe", "SEAsia", "Africa")
-  
   if (sr %in% region_admit) {
-
-    doc <- addPageBreak(doc)
-    doc <- addTitle(doc, "Comparison of summary rates with other registries (in same region)", level = 2)
-    
-    doc <- addParagraph(doc, "\r\n")
-    
     
     dt_report <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE)
     
     # import CI5 data with same cancer code and same age group
     dt_CI5_data <- canreg_import_CI5_data(dt_report, paste0(script.basename, "/CI5_data.rds"))
-    
-  
     
     #merge CI5 and canreg data
     dt_both <- canreg_merge_CI5_registry(dt_report,dt_CI5_data, registry_region = sr, registry_label = header )
@@ -420,52 +337,39 @@ tryCatch({
     dt_both[country_label!=header,ICD10GROUPCOLOR:=paste0(ICD10GROUPCOLOR,"6E")]
     dt_both[country_label==header,ICD10GROUPCOLOR:=paste0(ICD10GROUPCOLOR,"FF")]
     
-    CI5_registries <- sort(as.character(unique(dt_both$country_label)))
-    CI5_registries <- CI5_registries[CI5_registries != header]
-    CI5_registries <- gsub("\\*","",CI5_registries)
     
-    doc <- addParagraph(doc,
-                        paste0("Figure ",list_number$fig," shows a comparaison of the age standardised incidence rates in ",
-                               header, " with those observed in ", 
-                               CI5_registries[1], ", ", CI5_registries[2],
-                               " and ", CI5_registries[3], " (CI5 X, 2013)." ))
-                               
-                               
-    doc <- addParagraph(doc, "\r\n")
+    canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph"),landscape = TRUE,list_graph = TRUE,
+                  FUN=canreg_bar_CI5_compare,
+                  dt=dt_both,xtitle=paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=",")))
     
-      canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph"),landscape = TRUE,list_graph = TRUE,
-                    FUN=canreg_bar_CI5_compare,
-                    dt=dt_both,xtitle=paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=",")))
+    dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph001.png")), "dim" )
+    
+    for (i in seq(1,10,2)) {
+      
+      doc <- addSlide(doc, "Canreg_basic") ## add PPTX slide (Title + content)
+      doc <- addTitle(doc, "Comparison of summary rates with other registries")
       
       dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph001.png")), "dim" )
-      
-      for (i in 1:5) {
-      
-      dat <- matrix("", nrow = 1, ncol = 2) # dummy empty table
-      ft <- FlexTable(dat, header.columns = F, add.rownames = F)
-      ft[1,1] <- pot_img( paste0(tempdir(), "\\temp_graph", sprintf("%03d",(2*i)-1), ".png"), width=3.2,height=3.2*dims[1]/dims[2]) # add image1 to cell 1
-      ft[1,2] <- pot_img(paste0(tempdir(), "\\temp_graph", sprintf("%03d",(2*i)), ".png"), width=3.2,height=3.2*dims[1]/dims[2]) # add image2 to cell 2
-      
-      ft[,, side = 'left'] <- borderProperties( style = 'none' )
-      ft[,, side = 'right'] <- borderProperties( style = 'none' )
-      ft[,, side = 'bottom' ] <- borderProperties( style = 'none' )
-      ft[,, side = 'top'] <- borderProperties( style = 'none' )
-      
-      doc <- addFlexTable(doc,ft,par.properties = parProperties(text.align = "center"))
+      doc <- addImage(doc, paste0(tempdir(), "\\temp_graph", sprintf("%03d",i), ".png"),width=graph_width,height=graph_width*dims[1]/dims[2])
       
     }
     
-    doc <- addParagraph(doc, paste0("Fig ",list_number$fig,". Comparaison with other registries"))
-    list_number$fig=list_number$fig+1
+    for (i in seq(2,10,2)) {
+      
+      doc <- addSlide(doc, "Canreg_basic") ## add PPTX slide (Title + content)
+      doc <- addTitle(doc, "Comparison of summary rates with other registries")
+      
+      dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph001.png")), "dim" )
+      doc <- addImage(doc, paste0(tempdir(), "\\temp_graph", sprintf("%03d",i), ".png"),width=graph_width,height=graph_width*dims[1]/dims[2])
+      
+    }
     
-    doc <- addParagraph(doc, "\r\n")
-  
   }
-
-  ## Basis of diagnosis
-  doc <- addPageBreak(doc)
-  doc <- addTitle(doc, "Basis of Diagnosis (DCO / Clinical / MV) by site", level = 2)
   
+  ###############
+  
+  doc <- addSlide(doc, "Canreg_basic_wide")
+  doc <- addTitle(doc, "Basis of diagnosis (DCO/Clinical/MV) by site")
   
   dt_basis <- csu_merge_inc_pop(
     inc_file =inc,
@@ -480,8 +384,6 @@ tryCatch({
   dt_report <- canreg_ageSpecific_rate_data(dt_basis, keep_basis = TRUE)
   dt_report <- canreg_basis_table(dt_report)
   
-  
-  
   ft <- FlexTable( data = dt_report,
                    header.columns = FALSE )
   
@@ -492,13 +394,14 @@ tryCatch({
                       colspan = c( 1,1,1,1,1,1,1))
   
   
-  ft[,2, side = 'left'] <- borderProperties( style = 'none' )
-  ft[,2,to = 'header', side = 'left'] <- borderProperties( style = 'none' )
-  ft[,4, side = 'left'] <- borderProperties( style = 'none' )
-  ft[,4,to = 'header', side = 'left'] <- borderProperties( style = 'none' )
+  #ft[,2, side = 'left'] <- borderProperties( style = 'none' )
+  #ft[,2,to = 'header', side = 'left'] <- borderProperties( style = 'none' )
+  #ft[,4, side = 'left'] <- borderProperties( style = 'none' )
+  #ft[,4,to = 'header', side = 'left'] <- borderProperties( style = 'none' )
   ft[1,1:4,to = 'header', side = 'bottom'] <- borderProperties( style = 'none' )
   
-  ft[,, side = 'bottom'] <- borderProperties( style = 'none' )
+  
+  #ft[,, side = 'bottom'] <- borderProperties( style = 'none' )
   ft[nrow(dt_report),, side = 'bottom'] <- borderProperties( width = 1 )
   ft[nrow(dt_report),, side = 'top'] <- borderProperties( width = 1 )
   
@@ -507,28 +410,35 @@ tryCatch({
   ft[1,1,to = 'header'] <- textProperties(underlined=TRUE)
   ft[,,] <- parProperties(text.align = "right")
   
-  doc <- addParagraph(doc, "\r\n")
+  ft[ seq(2,nrow(dt_report),2), ] = cellProperties( background.color = "#bdbdbd" )
   
-  doc <- addParagraph(doc,
-                      paste0("Table ",list_number$tbl," shows the percentage of cases at the major sites that were registered on the basis of information from a death certificate only (DCO) and with morphological verification (MV%) - that is, based on cytology or histology (of the primary tumour, or a metastasis)."))
   
-  doc <- addParagraph(doc, "\r\n")
   doc <- addFlexTable(doc,ft)
-  doc <- addParagraph(doc, 
-                      paste0("Table ",list_number$tbl,"."), par.properties=parProperties(text.align="center", padding=0))
   
-  dt_appendix <- canreg_report_template_extract(report_path, script.basename, appendix  =TRUE)
-  list_number$fig <- 1
-  list_number$tbl <- 1
+  #################
+  dt_report <- dt_all
   
-  if (!is.null(dt_appendix)) {
-    list_number <- canreg_report_chapter_txt(dt_appendix, doc, report_path,dt_all,list_number, appendix=TRUE)
+  dt_report <- canreg_ageSpecific_rate_data(dt_report)
+  
+  canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph"),landscape = FALSE,
+                list_graph = TRUE,
+                FUN=canreg_ageSpecific_rate_multi_plot,dt=dt_report,var_by="SEX",var_age_label_list = "AGE_GROUP_LABEL",
+                log_scale = TRUE,  
+                color_trend=c("Male" = "#2c7bb6", "Female" = "#b62ca1"),
+                multi_graph= FALSE,
+                canreg_header=header)
+  
+  dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph001.png")), "dim" )
+  
+  for (j in 1:length(levels(dt_report$ICD10GROUP))) {
+    
+    doc <- addSlide(doc, "Canreg_vertical") ## add PPTX slide (Title + 2 content)
+    doc <- addTitle(doc, paste0("Age specifique incidence rate: ",  unique(dt_report[ICD10GROUP== levels(ICD10GROUP)[j] ,cancer_label])))
+    doc <- addImage(doc, paste0(tempdir(), "\\temp_graph",sprintf("%03d",j) ,".png"),width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2] )
+    
   }
   
-  
   writeDoc(doc, file = filename)
-  
-  reporteRs_OO_patched(docx=filename)
   
 
 #talk to canreg
