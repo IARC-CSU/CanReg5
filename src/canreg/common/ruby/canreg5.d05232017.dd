@@ -1,13 +1,11 @@
 [DatabaseInfo]
 DataDescription=Incidence
-Name=Azores 1997 to 2011 incidence
+Name=$NAME
 NeedCutoffInfo=true
 SEERPrepDDVersion=2.5.0
 Citation=SEER*Stat Database:  #name#.  Created on #date#.
-Case1=P:\seerprep\userdata\goncalo\canreg5\incidence\Cases_Azores_1997-2011_MF.txd
-StudyCutYear=2016
-StudyCutMonth=12
-Pop1=P:\seerprep\userdata\goncalo\canreg5\populations\Pop_Azores_1997-2011_MF.19ages.txd
+Case1=$CASE_FILE
+Pop1=$POP_FILE
 
 [FileInfo]
 NumberOfFields=42
