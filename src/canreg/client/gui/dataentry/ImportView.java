@@ -946,7 +946,7 @@ public class ImportView extends javax.swing.JInternalFrame {
         io.setTumourCheckStatus(globalToolBox.translateStandardVariableNameToDatabaseVariableName(Globals.StandardVariableNames.CheckStatus.toString()));
         io.setTumourRecordStatus(globalToolBox.translateStandardVariableNameToDatabaseVariableName(Globals.StandardVariableNames.TumourRecordStatus.toString()));
         io.setICD10VariableName(globalToolBox.translateStandardVariableNameToDatabaseVariableName(Globals.StandardVariableNames.ICD10.toString()));
-
+        io.setICCCVariableName(globalToolBox.translateStandardVariableNameToDatabaseVariableName(Globals.StandardVariableNames.ICCC.toString()));
         // Set the characterset
         io.setFileCharset((Charset) charsetsComboBox.getSelectedItem());
 

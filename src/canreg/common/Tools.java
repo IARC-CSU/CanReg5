@@ -710,7 +710,7 @@ public class Tools {
         try (FileReader fileRead = new FileReader(file)) {
             lineRead = new LineNumberReader(fileRead);
             lineRead.skip(lastRec);
-            countRec = lineRead.getLineNumber() - 1;
+            countRec = lineRead.getLineNumber();
         }
         lineRead.close();
 

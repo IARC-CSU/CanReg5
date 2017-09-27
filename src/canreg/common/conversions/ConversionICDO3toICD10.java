@@ -327,8 +327,10 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
         if (rule == 0 || rule > 5) {
             Logger.getLogger(ConversionICDO3toICD10.class.getName()).log(Level.WARNING, "ERROR : ICD10 Rule invalid (O3_10clas.java)");
             return;
-        }
-        if (O3_10TLookLine.length() < 20) {
+        } else if (O3_10TLookLine == null) {
+            Logger.getLogger(ConversionICDO3toICD10.class.getName()).log(Level.WARNING, "ERROR : O3_10TLookLine doesn't exist");
+            return;
+        } else if (O3_10TLookLine.length() < 20) {
             Logger.getLogger(ConversionICDO3toICD10.class.getName()).log(Level.WARNING, "ERROR : O3_10TLookLine too short");
             return;
         }
