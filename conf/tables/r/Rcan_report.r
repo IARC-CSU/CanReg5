@@ -48,6 +48,8 @@ tryCatch({
   doc <- addPageBreak(doc)
   doc <- addTitle(doc, "Results", level=1)    
   
+
+  
   # bar chart age
   dt_report <- dt_all
   dt_report[ICD10GROUP != "C44",]$ICD10GROUP ="O&U" 
@@ -66,9 +68,23 @@ tryCatch({
   }
   
   
-  doc <- addParagraph(doc,
-                      paste0(text_year,total_cases," cases of cancers were registered: ",
-                             total_male," among men and ",total_female," among women."))
+  #add warning if  many missing cases 
+  sex_missing <- canreg_desc_missing_sex(inc)
+  if (sex_missing$percent_missing > 0) {
+    
+    warning_note <- Footnote()
+    warning <- paste0(sex_missing$nb_missing ," cases over ", sex_missing$nb_total," (",
+                      sex_missing$percent_missing,"%) missed sex information. Sex have been attributed randomly based on known distribution")
+    warning_note <- addParagraph(warning_note,warning)
+    pot_intro <- pot(paste0(text_year,total_cases," cases"),footnote =warning_note)+
+      pot(paste0(" of cancers were registered: ",total_male," among men and ",total_female," among women."))
+    
+  } else {
+    pot_intro <- pot(paste0(text_year,total_cases," cases of cancers were registered: ",
+                            total_male," among men and ",total_female," among women."))
+  }
+  
+  doc <- addParagraph(doc,pot_intro)
   
   doc <- addTitle(doc, "Number of cases in period, by age group & sex", level = 2)
   

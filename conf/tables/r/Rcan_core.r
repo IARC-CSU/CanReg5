@@ -924,6 +924,16 @@ csu_merge_inc_pop <- function(inc_file,
   
   dt_inc <- merge(dt_temp, dt_inc,by=colnames(dt_temp), all.x=TRUE)[, CSU_C := ifelse(is.na(CSU_C),0, CSU_C )]
   
+  if (nrow(dt_inc[!SEX %in% c(1,2)]) > 0){
+    
+    var_group2 <- "ICD10GROUP"
+    if ("BASIS" %in% var_by) {
+      var_group2 <- c(var_group2,"BASIS" )
+    }
+    
+    dt_inc <- canreg_attr_missing_sex(dt_inc, var_age, var_group2)
+  }
+  
   dt_pop <- dt_pop[get(var_pop) != 0,]
   dt_pop[[var_ref_count]] <-  dt_pop[[var_ref_count]]*100
   
@@ -940,6 +950,88 @@ csu_merge_inc_pop <- function(inc_file,
   
   setnames(dt_all,"CSU_C",var_cases)
   return(dt_all)
+}
+
+
+
+canreg_attr_missing_sex <- function(dt, var_age, var_group2) {
+  
+  
+  
+  
+  #drop row with no missing value 
+  dt <- dt[SEX %in% c(1,2) | CSU_C>0, ]
+  # create counter 0
+  dt[ , counter0 := .GRP, by = c(var_age, "YEAR", var_group2)]
+  
+  # keep only usefull column: CSU cases & COUNTER & SEX, AGE, YEAR,"ICD10GROUP", "BASIS"?
+  dt_temp <- dt[, c("CSU_C", "counter0", "SEX",var_age, "YEAR", var_group2 ), with=FALSE]
+  
+  #create sub counter for age and ICD10GROUP
+  dt_temp[ ,  counter1 := .GRP, by = c(var_age, var_group2)]
+  dt_temp[ ,  counter2 := .GRP, by = c(var_group2)]
+  
+  # calculate nb_known for the 3 counter
+  dt_temp[SEX %in% c(1,2), nb_known2:= sum(CSU_C), by=counter2]
+  dt_temp[!SEX %in% c(1,2), nb_known2:= 0]
+  dt_temp[ , nb_known2:= max(nb_known2), by=counter2]
+  dt_temp <- dt_temp[nb_known2 > 0,] # drop if no known cases for the all site
+  
+  dt_temp[SEX %in% c(1,2), nb_known:= sum(CSU_C), by=counter0]
+  dt_temp[SEX %in% c(1,2), nb_known1:= sum(CSU_C), by=counter1]
+  
+  # calculate proba_male for each subgroup
+  dt_temp[SEX==1 & nb_known >0, p_male:= sum(CSU_C)/nb_known, by=counter0]
+  dt_temp[SEX==1  & nb_known1>0 , p_male1:= sum(CSU_C)/nb_known1, by=counter1]
+  dt_temp[SEX==1  & nb_known2>0 , p_male2:= sum(CSU_C)/nb_known2, by=counter2]
+  
+  #keep more precise proba
+  dt_temp[is.na(p_male1) , p_male1:= p_male2]
+  dt_temp[is.na(p_male) , p_male:= p_male1]
+  
+  #keep only useful variable
+  dt_temp[, c("p_male1", "p_male2", "counter1", "nb_known","nb_known1","nb_known2",var_age,"YEAR",var_group2) := NULL]
+  
+  #create column for nb missing and drop if nb_missing = 0
+  dt_temp[!SEX %in% c(1,2), nb_missing:= sum(CSU_C), by=counter0]
+  dt_temp[SEX %in% c(1,2), nb_missing:= 0]
+  dt_temp[  ,nb_missing:=max(nb_missing), by=counter0 ]
+  dt_temp <- dt_temp[nb_missing>0,]
+  
+  # Distribute the missing sex cases based on probability
+  #dt_temp[SEX==1, nb_add:=sum(rbinom(nb_missing,1,p_male)), by=counter0]
+  dt_temp[SEX==1, nb_add:=round(nb_missing*p_male), by=counter0]
+  dt_temp[, nb_add:=max(nb_add,na.rm=TRUE), by=counter0]
+  dt_temp[SEX==2, nb_add:=nb_missing-nb_add]
+  # update CSU_CASES
+  dt_temp[, CSU_C:=CSU_C+nb_add, ]
+  #keep only usefull variable
+  dt_temp <- dt_temp[SEX %in% c(1,2), c("CSU_C", "counter0", "SEX")]
+  
+  #merge by counter0 & sex 
+  dt <- merge(dt, dt_temp, by=c("counter0","SEX"), all=T, suffixes=c("",".new"))
+  dt[CSU_C.new > CSU_C ,CSU_C:=CSU_C.new]
+  dt[,"CSU_C.new":=NULL]
+  dt <- dt[SEX %in% c(1,2), ]
+  
+  return(dt)
+  
+}
+
+
+
+canreg_desc_missing_sex <- function(inc_file,
+                                    var_cases = "CASES"){
+  
+  df_inc <- read.table(inc_file, header=TRUE)
+  dt_inc <- data.table(df_inc)
+  setnames(dt_inc, var_cases, "CSU_C")
+  nb_total <- sum(dt_inc[,CSU_C])
+  nb_missing <- sum(dt_inc[!SEX %in% c(1,2),CSU_C])
+  percent_missing <- round(nb_missing/nb_total*100)
+  
+  return(list(nb_total=nb_total,nb_missing=nb_missing,percent_missing=percent_missing))
+  
 }
 
 
