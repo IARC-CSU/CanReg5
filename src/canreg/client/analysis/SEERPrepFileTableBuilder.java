@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2015  International Agency for Research on Cancer
+ * Copyright (C) 2008-2017  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,8 +43,8 @@ public class SEERPrepFileTableBuilder implements TableBuilderInterface {
 
     public static String VARIABLES_NEEDED = "variables_needed";
     public static String FILE_TYPES_GENERATED = "file_types_generated";
-    private StandardVariableNames[] variablesNeeded;
-    private FileTypes[] fileTypesGenerated;
+    private final StandardVariableNames[] variablesNeeded;
+    private final FileTypes[] fileTypesGenerated;
     private int unknownAgeCode = Globals.DEFAULT_UNKNOWN_AGE_CODE;
 
     public SEERPrepFileTableBuilder(String configFileName) throws FileNotFoundException {
@@ -52,14 +52,14 @@ public class SEERPrepFileTableBuilder implements TableBuilderInterface {
         LinkedList<ConfigFields> configList = ConfigFieldsReader.readFile(new FileReader(configFileName));
         // build variables needed map
         String[] variablesNeededArray = ConfigFieldsReader.findConfig(VARIABLES_NEEDED, configList);
-        LinkedList<StandardVariableNames> variablesNeededList = new LinkedList<StandardVariableNames>();
+        LinkedList<StandardVariableNames> variablesNeededList = new LinkedList<>();
         for (String variableName : variablesNeededArray) {
             variablesNeededList.add(StandardVariableNames.valueOf(variableName));
         }
         variablesNeeded = variablesNeededList.toArray(new StandardVariableNames[0]);
 
         String[] fileTypesGeneratedArray = ConfigFieldsReader.findConfig(FILE_TYPES_GENERATED, configList);
-        LinkedList<FileTypes> fileTypesList = new LinkedList<FileTypes>();
+        LinkedList<FileTypes> fileTypesList = new LinkedList<>();
         for (String fileType : fileTypesGeneratedArray) {
             fileTypesList.add(FileTypes.valueOf(fileType));
         }
@@ -87,7 +87,7 @@ public class SEERPrepFileTableBuilder implements TableBuilderInterface {
             LinkedList<ConfigFields> configList,
             String[] engineParameters,
             FileTypes fileType) throws NotCompatibleDataException, TableErrorException {
-        LinkedList<String> filesCreated = new LinkedList<String>();
+        LinkedList<String> filesCreated = new LinkedList<>();
 
         try {
 
@@ -208,7 +208,7 @@ public class SEERPrepFileTableBuilder implements TableBuilderInterface {
                 // filesCreated.add(reportFileName); //can't open it with the system.
             }
             // File dir = new File(Globals.TABLES_CONF_PATH);
-            BufferedReader bfr = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/canreg/common/ruby/naaccr1946.ver11_3.d02032011.dd")));
+            BufferedReader bfr = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(Globals.DD_FILE_PATH)));
 
             String line = bfr.readLine();
             BufferedWriter bfw = new BufferedWriter

@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2016 International Agency for Research on Cancer
+ * Copyright (C) 2008-2017 International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -248,7 +248,7 @@ public class Globals {
     public static String newline = System.getProperty("line.separator");
     public static boolean SHOW_GARBLER = false;
     public static int DEFAULT_UNKNOWN_AGE_CODE = 999;
-
+    public static String DD_FILE_PATH = "/canreg/common/ruby/canreg5.dd";
 
     /**
      *
