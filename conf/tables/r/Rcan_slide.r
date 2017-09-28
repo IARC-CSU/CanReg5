@@ -226,12 +226,12 @@ tryCatch({
                 canreg_header = "")
   
   doc <- addSlide(doc, "Canreg_vertical") ## add PPTX slide (Title + 2 content)
-  doc <- addTitle(doc, "Age specific rates: Males")
+  doc <- addTitle(doc, "Age specific rates:\r\nMales")
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph001.png")), "dim" )
   doc <- addImage(doc, paste0(tempdir(), "\\temp_graph001.png"),width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2] )
   
   doc <- addSlide(doc, "Canreg_vertical") ## add PPTX slide (Title + 2 content)
-  doc <- addTitle(doc, "Age specific rates: Females")
+  doc <- addTitle(doc, "Age specific rates:\r\nFemales")
   doc <- addImage(doc, paste0(tempdir(), "\\temp_graph002.png"),width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2] )
   
   
@@ -263,12 +263,12 @@ tryCatch({
                   ytitle=paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=","), ", ", canreg_age_group))
     
     doc <- addSlide(doc, "Canreg_vertical") ## add PPTX slide (Title + 2 content)
-    doc <- addTitle(doc, "Trend in ASR: Males")
+    doc <- addTitle(doc, "Trend in ASR:\r\nMales")
     dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph001.png")), "dim" )
     doc <- addImage(doc, paste0(tempdir(), "\\temp_graph001.png"),width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2] )
     
     doc <- addSlide(doc, "Canreg_vertical") ## add PPTX slide (Title + 2 content)
-    doc <- addTitle(doc, "Trend in ASR: Females")
+    doc <- addTitle(doc, "Trend in ASR:\r\nFemales")
     doc <- addImage(doc, paste0(tempdir(), "\\temp_graph002.png"),width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2] )
     
     
@@ -433,7 +433,7 @@ tryCatch({
   for (j in 1:length(levels(dt_report$ICD10GROUP))) {
     
     doc <- addSlide(doc, "Canreg_vertical") ## add PPTX slide (Title + 2 content)
-    doc <- addTitle(doc, paste0("Age specifique incidence rate: ",  unique(dt_report[ICD10GROUP== levels(ICD10GROUP)[j] ,cancer_label])))
+    doc <- addTitle(doc, paste0("Age specifique incidence rate:\r\n",  unique(dt_report[ICD10GROUP== levels(ICD10GROUP)[j] ,cancer_label])))
     doc <- addImage(doc, paste0(tempdir(), "\\temp_graph",sprintf("%03d",j) ,".png"),width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2] )
     
   }
