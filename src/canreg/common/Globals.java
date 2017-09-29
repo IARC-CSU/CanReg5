@@ -249,6 +249,7 @@ public class Globals {
     public static boolean SHOW_GARBLER = false;
     public static int DEFAULT_UNKNOWN_AGE_CODE = 999;
     public static String DD_FILE_PATH = "/canreg/common/ruby/canreg5.dd";
+    public static String DD_FILE_VARIABLES_FILE = "/canreg/common/ruby/export_format_canreg5.tsv";
 
     /**
      *

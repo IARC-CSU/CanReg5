@@ -19,6 +19,7 @@
  */
 package canreg.client.analysis;
 
+import canreg.common.Globals;
 import canreg.common.Globals.StandardVariableNames;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -66,7 +67,7 @@ public class FixedWidthFileWriter implements FileWriterInterface {
 
         if (definitionFileName == null) {
             bfr = new BufferedReader(new InputStreamReader(getClass()
-                    .getResourceAsStream("/canreg/common/ruby/export_format_naaccr1946.ver11_3.d02032011.tsv")));
+                    .getResourceAsStream(Globals.DD_FILE_VARIABLES_FILE)));
         } else {
             bfr = new BufferedReader(new FileReader(definitionFileName));
         }

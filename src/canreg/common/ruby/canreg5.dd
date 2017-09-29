@@ -1129,31 +1129,22 @@ Description=Please enter a meaningful description here.  Note that this can only
 Type=A
 ByteOffset=4
 Length=2
-FieldName=Region
+FieldName=AddressCode
 Category=2
 Index=1
 Hidden=false
 Required=false
 AllowEditing=true
 EditName=true
-Description=Please enter a meaningful description here.  Note that this can only be edited with SEER*Prep.
+Description=Coded address at the time of the tumour.
 ExclInvalidValues=false
 CommentPopByteOffset=4
 
 [Format=Region]
-40=Azores - unknown island
-41=Santa Maria
-42=Sao Miguel
-43=Terceira
-44=Graciosa
-45=Sao Jorge
-46=Pico
-47=Faial
-48=Flores
-49=Corvo
+$ADDRESS_CODE_FORMAT
 
 [Conversion=Region]
-40-49=* 0
+$ADDRESS_CODE_CONVERSION
 
 [Field3]
 Type=A
@@ -18468,12 +18459,10 @@ Hidden=false
 Required=true
 
 [Format=Vital status]
-0=Dead (COC)
-1=Alive
-4=Dead (SEER)
+$VITAL_STATUS_FORMAT
 
 [Conversion=Vital status]
-0,1,4=* 0
+$VITAL_STATUS_CONVERSION
 
 [Field27]
 Type=A

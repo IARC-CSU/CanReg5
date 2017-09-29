@@ -23,6 +23,8 @@ import canreg.client.analysis.TableBuilderInterface.FileTypes;
 import canreg.common.Globals;
 import canreg.common.Globals.StandardVariableNames;
 import canreg.common.database.AgeGroupStructure;
+import canreg.common.database.Dictionary;
+import canreg.common.database.DictionaryEntry;
 import canreg.common.database.IncompatiblePopulationDataSetException;
 import canreg.common.database.PopulationDataset;
 import java.io.BufferedReader;
@@ -35,6 +37,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -91,14 +94,14 @@ public class SEERPrepFileTableBuilder implements TableBuilderInterface {
 
         try {
 
-            File baseFileName = new File(reportFileName);            
+            File baseFileName = new File(reportFileName);
 
-            String ddFileName = baseFileName.getParent() + Globals.FILE_SEPARATOR + baseFileName.getName()+".dd";             
-            String populationFileName = baseFileName.getParent() + Globals.FILE_SEPARATOR + "pop-" + baseFileName.getName()+".txd"; 
-            String casesFileName = baseFileName.getParent() + Globals.FILE_SEPARATOR + "cases-" + baseFileName.getName()+".txd"; 
-       
+            String ddFileName = baseFileName.getParent() + Globals.FILE_SEPARATOR + baseFileName.getName() + ".dd";
+            String populationFileName = baseFileName.getParent() + Globals.FILE_SEPARATOR + "pop-" + baseFileName.getName() + ".txd";
+            String casesFileName = baseFileName.getParent() + Globals.FILE_SEPARATOR + "cases-" + baseFileName.getName() + ".txd";
+
             AgeGroupStructure ageGroupStructure;
-            
+
             int thisYear = startYear;
             if (populations != null) {
                 FixedWidthFileWriter fwfw = new FixedWidthFileWriter(26, true); //TODO: make dynamic
@@ -182,7 +185,7 @@ public class SEERPrepFileTableBuilder implements TableBuilderInterface {
             }
 
             if (incidenceData != null) {
-                FixedWidthFileWriter fwfw = new FixedWidthFileWriter(1946); //TODO: make dynamic
+                FixedWidthFileWriter fwfw = new FixedWidthFileWriter(105); //TODO: make dynamic
                 fwfw.setOutputFileName(casesFileName);
                 for (Object[] row : incidenceData) {
                     TreeMap map = new TreeMap();
@@ -211,21 +214,36 @@ public class SEERPrepFileTableBuilder implements TableBuilderInterface {
             BufferedReader bfr = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(Globals.DD_FILE_PATH)));
 
             String line = bfr.readLine();
-            BufferedWriter bfw = new BufferedWriter
-                (new OutputStreamWriter(new FileOutputStream(ddFileName),"ASCII"));
+            BufferedWriter bfw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(ddFileName), "ASCII"));
+            String vitalStatusFormat = "";
+            String vitalStatusConversion = "";
+
+            Dictionary vitalStatusDictionary = canreg.client.CanRegClientApp.getApplication().getGlobalToolBox().getDictionaryByStandardVariable(StandardVariableNames.VitalStatus);
+            if (vitalStatusDictionary != null) {
+                int i = 0;
+                for (Map.Entry<String, DictionaryEntry> element : vitalStatusDictionary.getDictionaryEntries().entrySet()) {
+                    String code = element.getValue().getCode();
+                    String label = element.getValue().getDescription();
+                    vitalStatusFormat += "\"" + code + "\"=\"" + label + "\"\n";
+                    vitalStatusConversion += "\"" + code + "\"=" + i + "\n";
+                    i = i +1;
+                }
+            }
             
-            while (line!=null) {
+            while (line != null) {
                 line = line.replace("$NAME", tableHeader);
                 line = line.replace("$CASE_FILE", casesFileName);
                 line = line.replace("$POP_FILE", populationFileName);
-                bfw.write(line+"\n");
-                line = bfr.readLine();            
+                line = line.replace("$VITAL_STATUS_FORMAT", vitalStatusFormat);
+                line = line.replace("$VITAL_STATUS_CONVERSION", vitalStatusConversion);
+                bfw.write(line + "\n");
+                line = bfr.readLine();
             }
             bfw.close();
             bfr.close();
-            
+
             filesCreated.add(ddFileName);
-            
+
         } catch (IOException ex) {
             Logger.getLogger(SEERPrepFileTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IncompatiblePopulationDataSetException ex) {
@@ -248,7 +266,7 @@ public class SEERPrepFileTableBuilder implements TableBuilderInterface {
         }
         return true;
     }
-    
+
     @Override
     public void setUnknownAgeCode(int unknownAgeCode) {
         this.unknownAgeCode = unknownAgeCode;

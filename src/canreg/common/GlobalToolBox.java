@@ -23,6 +23,7 @@ package canreg.common;
 import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
 import canreg.common.database.DatabaseRecord;
+import canreg.common.database.Dictionary;
 import canreg.common.database.Patient;
 import canreg.common.database.Source;
 import canreg.common.database.Tumour;
@@ -225,7 +226,19 @@ public class GlobalToolBox {
         System.out.println("Unknown age code = "+code);
         return code;
     }
+    
     public String getDateFormatString() {
         return localSettings.getProperty(LocalSettings.DATE_FORMAT_KEY);
+    }
+    
+    public Dictionary getDictionaryByStandardVariable(Globals.StandardVariableNames variable){
+        DatabaseVariablesListElement variableElement = standardVariableNameToDatabaseVariableListElementMap.get(variable.toString());
+        if (variableElement != null) {
+            Dictionary dictionary = CanRegClientApp.getApplication().getDictionary().get(variableElement.getDictionaryID());
+            return dictionary;
+        }
+        else {
+            return null;
+        }
     }
 }
