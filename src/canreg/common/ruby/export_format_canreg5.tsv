@@ -3,13 +3,13 @@ Sex	6	6	1	true	Sex
 Month of diagnosis	9		2	true	IncidenceDate[4,2]
 Year of diagnosis	11	7	4	true	IncidenceDate[0,4]
 Age at diagnosis	15		3	true	Age
-Primary Site - labeled	22		3	true	na
-Primary Site	22		3	true	na
-Histologic Type ICD-O-3	25		4	true	na
+Primary Site - labeled	22		3	true	Topography
+Primary Site	22		3	true	Topography
+Histologic Type ICD-O-3	25		4	true	Morphology
 Behavior code ICD-O-3	29		1	true	Behaviour
 Grade	30		1	true	Grade
 ICD-O-3 Hist/behavior, labeled	25		5	true	na
-Site (ICD-10)	31		4	true	na
+Site (ICD-10)	31		4	true	ICD10
 Cause of death (ICD-7, 8 or 9)	35		4	true	na
 Cause of death (ICD-10)	39		4	true	na
 ICD revision number	43		1	true	na
@@ -18,8 +18,8 @@ Year of birth	50		4	true	BirthDate[0,4]
 Month of last contact	56		2	true	Lastcontact[4,2]
 Year of last contact	58		4	true	Lastcontact[0,4]
 Vital status	62		1	true	Vitalstatus
-Patient ID	63		8	true	na
-Sequence number	71		2	true	na
+Patient ID	63		8	true	PatientID
+Sequence number	71		2	true	MultPrimSeq
 Record number recode	73		2	true	na
 Type of Reporting Source	75		1	true	na
 Laterality	80		1	true	na

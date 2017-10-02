@@ -1,6 +1,6 @@
 name	canreg
 Accession number--hosp	na
-Addr at DX--state	AddressCode
+AddressCode	AddressCode
 Age at diagnosis	Age
 Basis of diagnosis	BasisDiagnosis
 Behavior (92-00) ICD-O-2	na
@@ -17,7 +17,7 @@ Coding system for EOD	na
 County at DX	na
 Diagnostic confirmation	na
 Grade	Grade
-Histologic type ICD-O-3	Morphology
+Histologic Type ICD-O-3	Morphology
 Histology (92-00) ICD-O-2	na
 ICCC site recode ICD-O-3/WHO 2008	ICCC
 ICD revision number	na
@@ -27,14 +27,15 @@ Month of diagnosis	IncidenceDate[4,2]
 Month of initial RX--SEER	na
 Month of last contact	Lastcontact[4,2]
 NHIA Derived Hisp Origin	na
-Patient ID number	PatientID
-Primary site	Topography
-Primary site - labeled	na
+Patient ID	PatientID
+Primary Site	Topography
+Primary Site - labeled	Topography
 Race 1	na
 Reporting hospital (last 6-digits)	na
 SEER type of follow-up	na
-Sequence number--central	na
+Sequence number	MultPrimSeq
 Sex	Sex
+Site (ICD-10)	ICD10
 Spanish/Hispanic origin	na
 TNM stage	Stage
 Type of Reporting Source	na
