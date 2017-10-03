@@ -1128,24 +1128,23 @@ Description=Please enter a meaningful description here.  Note that this can only
 [Field2]
 Type=A
 ByteOffset=4
-Length=2
-FieldName=Address
+Length=$ADDRESS_CODE_LENGTH
+FieldName=AddressCode
 Category=2
 Index=1
 Hidden=false
 Required=false
 AllowEditing=true
 EditName=true
-Description=Placeholder address
+Description=Coded address at the time of the tumour.
 ExclInvalidValues=false
 CommentPopByteOffset=4
 
-[Format=Address]
-00=Something
-99=Something else
+[Format=AddressCode]
+$ADDRESS_CODE_FORMAT
 
-[Conversion=Address]
-00-99=* 0
+[Conversion=Region]
+$ADDRESS_CODE_CONVERSION
 
 [Field3]
 Type=A

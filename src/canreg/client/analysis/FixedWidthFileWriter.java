@@ -82,12 +82,12 @@ public class FixedWidthFileWriter implements FileWriterInterface {
 
             fe.name = elems[0];
             if (!elems[1].isEmpty()) {
-                fe.caseCol = Integer.parseInt(elems[1]) - 1; // we 0-reference our columns
+                fe.caseCol = Integer.parseInt("0" +elems[1]) - 1; // we 0-reference our columns
             }
             if (!elems[2].isEmpty()) {
-                fe.popCol = Integer.parseInt(elems[2]) - 1; // we 0-reference our columns
+                fe.popCol = Integer.parseInt("0" +elems[2]) - 1; // we 0-reference our columns
             }
-            fe.length = Integer.parseInt(elems[3]);
+            fe.length = Integer.parseInt("0" + elems[3]);
             fe.isRequired = elems[4].equalsIgnoreCase("true");
             System.out.println(line);
             // set up variable

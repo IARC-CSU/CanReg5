@@ -36,6 +36,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeMap;
@@ -215,19 +216,30 @@ public class SEERPrepFileTableBuilder implements TableBuilderInterface {
 
             String line = bfr.readLine();
             BufferedWriter bfw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(ddFileName), "ASCII"));
+
+            
+            // VITAL STATUS
             String vitalStatusFormat = "";
             String vitalStatusConversion = "";
-
             Dictionary vitalStatusDictionary = canreg.client.CanRegClientApp.getApplication().getGlobalToolBox().getDictionaryByStandardVariable(StandardVariableNames.VitalStatus);
+
             if (vitalStatusDictionary != null) {
-                int i = 0;
-                for (Map.Entry<String, DictionaryEntry> element : vitalStatusDictionary.getDictionaryEntries().entrySet()) {
-                    String code = element.getValue().getCode();
-                    String label = element.getValue().getDescription();
-                    vitalStatusFormat += "\"" + code + "\"=\"" + label + "\"\n";
-                    vitalStatusConversion += "\"" + code + "\"=" + i + "\n";
-                    i = i +1;
-                }
+                Map<String, String> vsMap = dictionaryToText(vitalStatusDictionary);
+                vitalStatusFormat = vsMap.get("format");
+                vitalStatusFormat = vsMap.get("conversion");
+            }
+
+            String addressCodeFormat = "";
+            String addressCodeConversion = "";
+            String addressCodeLength = "0";
+            
+            Dictionary addressDictionary = canreg.client.CanRegClientApp.getApplication().getGlobalToolBox().getDictionaryByStandardVariable(StandardVariableNames.AddressCode);
+            
+            if (vitalStatusDictionary != null) {
+                Map<String, String> acMap = dictionaryToText(addressDictionary);
+                addressCodeFormat = acMap.get("format");
+                addressCodeConversion = acMap.get("conversion");
+                addressCodeLength = acMap.get("length");
             }
             
             while (line != null) {
@@ -236,6 +248,9 @@ public class SEERPrepFileTableBuilder implements TableBuilderInterface {
                 line = line.replace("$POP_FILE", populationFileName);
                 line = line.replace("$VITAL_STATUS_FORMAT", vitalStatusFormat);
                 line = line.replace("$VITAL_STATUS_CONVERSION", vitalStatusConversion);
+                line = line.replace("$ADDRESS_CODE_FORMAT", addressCodeFormat);
+                line = line.replace("$ADDRESS_CODE_CONVERSION", addressCodeConversion);
+                line = line.replace("$ADDRESS_CODE_LENGTH", addressCodeLength);
                 bfw.write(line + "\n");
                 line = bfr.readLine();
             }
@@ -270,5 +285,26 @@ public class SEERPrepFileTableBuilder implements TableBuilderInterface {
     @Override
     public void setUnknownAgeCode(int unknownAgeCode) {
         this.unknownAgeCode = unknownAgeCode;
+    }
+
+    private Map<String, String> dictionaryToText(Dictionary dictionary) {
+        String format = "";
+        String conversion = "";
+        int length = 0;
+        int i = 0;
+        for (Map.Entry<String, DictionaryEntry> element : dictionary.getDictionaryEntries().entrySet()) {
+            String code = element.getValue().getCode();
+            String label = element.getValue().getDescription();
+            format += "\"" + code + "\"=\"" + label + "\"\n";
+            conversion += "\"" + code + "\"=" + i + "\n";
+            length = code.length();
+            i = i + 1;
+        }
+
+        HashMap map = new HashMap();
+        map.put("format", format);
+        map.put("conversion", conversion);
+        map.put("length", Integer.toString(length));
+        return map;
     }
 }
