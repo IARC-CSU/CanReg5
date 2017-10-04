@@ -25,7 +25,7 @@ Year of birth	50		4	true	BirthDate[0,4]
 Day of last contact	54		2	false	na
 Month of last contact	56		2	true	Lastcontact[4,2]
 Year of last contact	58		4	true	Lastcontact[0,4]
-Vital status	62		1	true	Vitalstatus
+Vital status	62		1	true	VitalStatus
 Patient ID	63		8	true	PatientID
 Sequence number	71		2	true	MultPrimSeq
 Record number recode	73		2	true	na

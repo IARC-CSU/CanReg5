@@ -39,7 +39,7 @@ Site (ICD-10)	ICD10
 Spanish/Hispanic origin	na
 TNM stage	Stage
 Type of Reporting Source	na
-Vital status	Vitalstatus
+Vital status	VitalStatus
 Year of birth	BirthDate[0,4]
 Year of diagnosis	IncidenceDate[0,4]
 Year of initial RX--SEER	na

@@ -228,14 +228,15 @@ public class SEERPrepFileTableBuilder implements TableBuilderInterface {
                 vitalStatusFormat = vsMap.get("format");
                 vitalStatusConversion = vsMap.get("conversion");
             }
-
+            
+            // ADDRESS CODES
             String addressCodeFormat = "";
             String addressCodeConversion = "";
             String addressCodeLength = "0";
             
             Dictionary addressDictionary = canreg.client.CanRegClientApp.getApplication().getGlobalToolBox().getDictionaryByStandardVariable(StandardVariableNames.AddressCode);
             
-            if (vitalStatusDictionary != null) {
+            if (addressDictionary != null) {
                 Map<String, String> acMap = dictionaryToText(addressDictionary);
                 addressCodeFormat = acMap.get("format");
                 addressCodeConversion = acMap.get("conversion");
