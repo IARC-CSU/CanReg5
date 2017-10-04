@@ -226,7 +226,7 @@ public class SEERPrepFileTableBuilder implements TableBuilderInterface {
             if (vitalStatusDictionary != null) {
                 Map<String, String> vsMap = dictionaryToText(vitalStatusDictionary);
                 vitalStatusFormat = vsMap.get("format");
-                vitalStatusFormat = vsMap.get("conversion");
+                vitalStatusConversion = vsMap.get("conversion");
             }
 
             String addressCodeFormat = "";
