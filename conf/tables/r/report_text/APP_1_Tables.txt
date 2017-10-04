@@ -1,2 +1,3 @@
-Tables release : Winter 2017
-
+<LANDSCAPE>
+tbl:[Incidence per 100,000 by age group, male]Incidence_table_test-Male.png
+tbl:[Incidence per 100,000 by age group, female]Incidence_table_test-Female.png
