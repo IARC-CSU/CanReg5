@@ -1,1 +1,1 @@
-#define MyAppVersion "5.00.41b-SEER*prep-build"
+#define MyAppVersion "5.00.42-BETA13"
