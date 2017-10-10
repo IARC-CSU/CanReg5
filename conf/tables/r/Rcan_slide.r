@@ -15,6 +15,7 @@ tryCatch({
   graph_width <- 8
   graph_width_split <- 4
   graph_width_vertical <- 5
+  time_limit <- 2
   
   year_info <- canreg_get_years(dt_all)
   
@@ -236,7 +237,7 @@ tryCatch({
   
   
   #################  
-  if (year_info$span > 1) {  
+  if (year_info$span > time_limit) {  
     
     
     dt_report <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE, keep_year = TRUE)
@@ -274,12 +275,10 @@ tryCatch({
     
   }
   
-  if (year_info$span > 2) {
-    
-    doc <- addSlide(doc, "Canreg_basic") ## add PPTX slide (Title + content)
-    doc <- addTitle(doc, "Estimated annual percentage change")
+  if (year_info$span > time_limit) {
     
     dt_report <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE, keep_year = TRUE)
+    agegroup <- "0-17"
     first_age <- as.numeric(substr(agegroup,1,regexpr("-", agegroup)[1]-1))
     last_age <- as.numeric(substr(agegroup,regexpr("-", agegroup)[1]+1,nchar(agegroup)))
     
@@ -309,14 +308,22 @@ tryCatch({
     
     
     #produce graph
-    canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph"),landscape = TRUE,list_graph = FALSE,
-                  FUN=canreg_eapc_scatter,
-                  dt_plot=dt_report,color_bar=c("Male" = "#2c7bb6", "Female" = "#b62ca1"),
-                  canreg_header = "",
-                  ytitle=paste0("Estimated Average Percentage Change (%), ", canreg_age_group))
+    canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph"),landscape = TRUE,list_graph = TRUE,
+                  FUN=canreg_eapc_scatter_error_bar,
+                  dt=dt_report,
+                  canreg_header = "Estimated Average Percentage Change",
+                  ytitle=paste0("Estimated average percentage change (%), ", canreg_age_group))
     
-    dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph.png")), "dim" )
-    doc <- addImage(doc, paste0(tempdir(), "\\temp_graph.png"),width=graph_width,height=graph_width*dims[1]/dims[2])
+    
+    dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph001.png")), "dim" )
+    
+    doc <- addSlide(doc, "Canreg_basic") ## add PPTX slide (Title + content)
+    doc <- addTitle(doc, "Estimated annual percentage change:\r\nMales")
+    doc <- addImage(doc, paste0(tempdir(), "\\temp_graph001.png"),width=graph_width,height=graph_width*dims[1]/dims[2])
+   
+    doc <- addSlide(doc, "Canreg_basic") ## add PPTX slide (Title + content)
+    doc <- addTitle(doc, "Estimated annual percentage change:\r\nFemales")
+    doc <- addImage(doc, paste0(tempdir(), "\\temp_graph002.png"),width=graph_width,height=graph_width*dims[1]/dims[2])
     
     
   }

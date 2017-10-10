@@ -12,6 +12,7 @@
 
 tryCatch({  
   
+  time_limit <- 9
   graph_width <- 6
   
   year_info <- canreg_get_years(dt_all)
@@ -312,7 +313,7 @@ tryCatch({
   list_number$fig <- list_number$fig+1
   
   
-  if (year_info$span > 9) {
+  if (year_info$span >  time_limit) {
     
     doc <- addPageBreak(doc)
     doc <- addTitle(doc, "Trend in ASR (most common sites) by sex", level = 2)
@@ -359,7 +360,7 @@ tryCatch({
     
   }
   
-  if (year_info$span > 9) {
+  if (year_info$span >  time_limit) {
     
     doc <- addPageBreak(doc)
     doc <- addTitle(doc, "Estimated annual percentage change", level = 2)
