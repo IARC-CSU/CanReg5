@@ -92,33 +92,17 @@ options(repos = new.repos)
 
 ap <- available.packages()
 
-cat("This is the actual repository\n")
-
-print(getOption("repos"))
-
 for (i in c(packages_list, "rvg","plyr", "gtable","munsell" )) {
 
   bool_internet <- FALSE
-  print(paste0(i," available: ", i %in% rownames(ap)))
-  
   if (i %in% rownames(ap)) {
-	bool_internet <- TRUE
+	  bool_internet <- TRUE
   }
-  
 }
 
 if (!bool_internet) {
-  
   stop("Canreg can not access internet and download the R packages. Please try again later") 
-  
-  
 }
-
-
-
-
-missing_packages <- unique(missing_packages)
-
 
 unlink(file.path(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5")),recursive = TRUE)
 dir.create(file.path(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5")),recursive = TRUE)
@@ -184,19 +168,19 @@ if ("ReporteRs" %in% missing_packages) {
   }
 }
 
-
 ap <- available.packages()
 
 cat("This is the actual repository\n")
 
 print(getOption("repos"))
 
-
-
-
 for (i in c(packages_list, "rvg","plyr", "gtable","munsell" )) {
+  
   print(paste0(i," available: ", i %in% rownames(ap)))
+  
+  
 }
+
 
 missing_packages <- unique(missing_packages)
 
