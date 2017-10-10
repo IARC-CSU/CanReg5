@@ -1,6 +1,9 @@
-The cancer registry aims to cover the whole area of Bestlandeverland, between the Rightland and Leftland, north of the Houlahoop.
-The population consists mainly of nice people, but around 20% are very weird, and might be agressive the 124th days of the year.
-The last census was made in 1580, but since one baby is born each time an old men die, the data should be accurate.
+<EDIT FILE PATH>
+
+Here is an example from Kampala Cancer Registry Profile Page on IACR website (http://www.iacr.com.fr/index.php?option=com_comprofiler&task=userprofile&user=867&Itemid=498)
+
+The Kampala Cancer Registry covers the population of Kyadondo County, which includes the city of Kampala (the capital of Uganda) and a peri-urban area extending approximately 30 km to the north.
+The majority of residents are members of the Ganda ethnic group.
 
 <POPULATION DATA>
-img:[Bestlandeverland map (smurfy projection)]map_example.png
+img:[Geographical area example]map_example.png

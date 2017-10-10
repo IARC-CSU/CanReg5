@@ -1,13 +1,32 @@
 <EDIT FILE PATH>
-This Would be a basic in introduction.
 
-Here's an example:
+Here is an example from Kampala Cancer Registry report: 2007-2009 (http://www.iacr.com.fr/index.php?option=com_comprofiler&task=userprofile&user=867&Itemid=498)
 
-My country is the nice and sweet, you can see funny animals sometimes.
-People are getting old and happy, drinking soda, smoking cigarettes...
-Cancer is coming as sure as winter! 
+Reports of cancer in Uganda date back to end of 19th century, when the first missionary doctor
+established western medicine in Uganda by constructing Mengo Hospital in Kampala. Davies et al.
+(1964) reviewed the hospital records of Mengo Hospital from 1897 to 1956. Kampala Cancer
+Registry (KCR) was established in 1954, in the Department of Pathology of Makerere University
+Medical School. The aim was to obtain information on cancer occurrence in the population of
+Kyadondo County, in which the capital city of Kampala is situated. The registry functioned
+continuously both before and after independence (1962), until the military coup of General Idi
+Amin Dada in 1971. Thereafter, full population coverage was not possible, although a register was
+maintained within the Department of Pathology until 1980, when all registration ceased. With the
+return of political stability, the registry restarted in 1989 and has functioned continuously since.
+Initially, the registry used request/result forms of the department of pathology, redesigned
+specifically to permit registration of cancers. Thus, they contained demographic information on
+the patient, as well as the source of the specimen and the results of the examination. In addition
+to data collected in this way, tumour registrars have been employed to search for cancer cases
+admitted to, or treated in, the four main hospitals in Kampala (and, in recent years, the Uganda
+Hospice) and, for individuals resident in Kyadondo County, to extract somewhat more extensive
+information onto special notification forms.
 
-Plan A: Find a nice looking princess controlling giant dragons, and if possible a funny talkative imp. 
-Plan B: Increase our knowledge about cancer.
+Between 1954 and 1980, registration was manual, apart from the period 1964-1968, when the
+data were transferred to punched cards (Templeton, 1973), which are no longer available in
+Uganda. The details of all patients were entered into a large register. Since 1989 the registration
+process has been computerized, using the CanReg system of IARC. Results of the registry have
+been published in volumes 1, 7, 8 and 9 of "Cancer Incidence in Five Continents" (Doll et al, 1966;
+Parkin et al, 1997, 2002; Curado et al 2007)
 
-Let's begin Plan B, in cases Plan A do no work.
+KCR is situated in the Department of Pathology, School of Biomedical Sciences, Makerere
+University College of Health Sciences. It is managed by a part-time Director (pathologist), the
+Cancer Registrar and an Assistant Cancer Registrar. 

@@ -59,11 +59,6 @@ if (getRversion() == '3.2.0') {
   
 }
 
-unlink(file.path(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5")),recursive = TRUE)
-dir.create(file.path(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5")),recursive = TRUE)
-.libPaths(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5"))
-
-missing_packages <- packages_list[!(packages_list %in% installed.packages()[,"Package"])]
 
 #managing installing package for old R version.
 if (getRversion() < '3.2.0') {
@@ -95,6 +90,41 @@ new.repos["CRAN"] <- "https://cran.r-project.org" #set your favorite  CRAN Mirro
 options(repos = new.repos) 
 
 
+ap <- available.packages()
+
+cat("This is the actual repository\n")
+
+print(getOption("repos"))
+
+for (i in c(packages_list, "rvg","plyr", "gtable","munsell" )) {
+
+  bool_internet <- FALSE
+  print(paste0(i," available: ", i %in% rownames(ap)))
+  
+  if (i %in% rownames(ap)) {
+	bool_internet <- TRUE
+  }
+  
+}
+
+if (!bool_internet) {
+  
+  stop("Canreg can not access internet and download the R packages. Please try again later") 
+  
+  
+}
+
+
+
+
+missing_packages <- unique(missing_packages)
+
+
+unlink(file.path(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5")),recursive = TRUE)
+dir.create(file.path(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5")),recursive = TRUE)
+.libPaths(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5"))
+
+missing_packages <- packages_list[!(packages_list %in% installed.packages()[,"Package"])]
 
 if (!"Rcpp" %in% missing_packages) {
   if (packageVersion("Rcpp") < "0.11.0") {

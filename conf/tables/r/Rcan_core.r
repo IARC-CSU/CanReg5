@@ -665,7 +665,7 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all, folder, list_nu
           doc <- addImage(doc, paste0(tempdir(), "\\temp_graph",sprintf("%03d",j) ,".png"),width=graph_width*0.8,height=graph_width*0.8*dims[1]/dims[2] )
           doc <- addParagraph(doc,  
                               paste0("Appendix fig ",list_number$fig,". ", unique(dt_report[ICD10GROUP== levels(ICD10GROUP)[j] ,cancer_label]),  
-                                     ": Age specifique incidence rate per ", formatC(100000, format="d", big.mark=",")))
+                                     ": Age-specific incidence rate per ", formatC(100000, format="d", big.mark=",")))
           list_number$fig <- list_number$fig+1
         }
         
@@ -851,28 +851,28 @@ canreg_basis_table <- function(dt,var_cases="CASES", var_basis="BASIS", var_canc
   dt[, total_cases := sum(CSU_C), by=c("CSU_label", "CSU_ICD")]
   dt[, BASIS_pc := CSU_C/total_cases*100]
   dt[,BASIS_pc:=round(BASIS_pc,1)]
-  dt[, BASIS_pc:=paste0(format(BASIS_pc, big.mark = ",", scientific = FALSE, drop0trailing = TRUE),"%")]
+  dt[, BASIS_pc:=format(BASIS_pc, big.mark = ",", scientific = FALSE, drop0trailing = FALSE)]
   dt[, CSU_C := NULL]
   
   dt <- reshape(dt, timevar = "BASIS",idvar = c("CSU_label","CSU_ICD","total_cases"), direction = "wide")
   dt[, total_pc_test:= total_cases/sum(total_cases)*200]
   dt[,total_pc_test:=round(total_pc_test,1)]
-  dt[, total_pc_test:=paste0(format(total_pc_test, big.mark = ",", scientific = FALSE, drop0trailing = TRUE),"%")]
+  dt[, total_pc_test:=format(total_pc_test, big.mark = ",", scientific = FALSE, drop0trailing = FALSE)]
   setkeyv(dt, c("CSU_ICD"))
   
   if(!("BASIS_pc.0" %in% colnames(dt)))
   {
-    dt[, BASIS_pc.0:="0%"]
+    dt[, BASIS_pc.0:="0.0"]
   }
   
   if(!("BASIS_pc.1" %in% colnames(dt)))
   {
-    dt[, BASIS_pc.1:="0%"]
+    dt[, BASIS_pc.1:="0.0"]
   }
   
   if(!("BASIS_pc.2" %in% colnames(dt)))
   {
-    dt[, BASIS_pc.2:="0%"]
+    dt[, BASIS_pc.2:="0.0"]
   }
   
   setcolorder(dt, c("CSU_label", "CSU_ICD", "total_cases", "total_pc_test", "BASIS_pc.0", "BASIS_pc.1","BASIS_pc.2"))
@@ -3778,7 +3778,7 @@ rcan_scatter_error_bar <- function(dt_plot,
   csu_plot <- 
     ggplot(dt_plot, aes(CSU_DATA, CSU_BAR)) +
     geom_errorbarh(aes(xmin = CSU_DATA_LOW,xmax = CSU_DATA_UP), size=0.7,height =0.5,colour="#05305b") + 
-    geom_point(fill ="#e41a1c",shape=21, color="black", size=5, stroke = 1.2)
+    geom_point(fill ="#e41a1c",shape=21, color="black", size=3, stroke = 1.2)
   
   if (is.null(tick_list)) {
     

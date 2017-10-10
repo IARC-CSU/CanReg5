@@ -7,7 +7,7 @@
   script.name <- sub(file.arg.name, "", 
                      initial.options[grep(file.arg.name, initial.options)])
   script.basename <- dirname(script.name)
-  source(paste(sep="/", script.basename, "Rcan_source.r"))
+  source(paste(sep="/", script.basename, "Rcan_source_reporteR.r"))
   ################
 
 tryCatch({  
@@ -433,7 +433,7 @@ tryCatch({
   for (j in 1:length(levels(dt_report$ICD10GROUP))) {
     
     doc <- addSlide(doc, "Canreg_vertical") ## add PPTX slide (Title + 2 content)
-    doc <- addTitle(doc, paste0("Age-specifique incidence rate:\r\n",  unique(dt_report[ICD10GROUP== levels(ICD10GROUP)[j] ,cancer_label])))
+    doc <- addTitle(doc, paste0("Age-specific incidence rate:\r\n",  unique(dt_report[ICD10GROUP== levels(ICD10GROUP)[j] ,cancer_label])))
     doc <- addImage(doc, paste0(tempdir(), "\\temp_graph",sprintf("%03d",j) ,".png"),width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2] )
     
   }

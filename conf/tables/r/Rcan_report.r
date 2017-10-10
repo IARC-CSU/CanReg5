@@ -7,7 +7,7 @@
   script.name <- sub(file.arg.name, "", 
                      initial.options[grep(file.arg.name, initial.options)])
   script.basename <- dirname(script.name)
-  source(paste(sep="/", script.basename, "Rcan_source.r"))
+  source(paste(sep="/", script.basename, "Rcan_source_reporteR.r"))
   ################
 
 tryCatch({  
@@ -48,12 +48,12 @@ tryCatch({
   doc <- addPageBreak(doc)
   doc <- addTitle(doc, "Results", level=1)    
   
-
+  
   
   # bar chart age
   dt_report <- dt_all
-  dt_report[ICD10GROUP != "C44",]$ICD10GROUP ="O&U" 
-  dt_report[ICD10GROUP != "C44",]$ICD10GROUPLABEL ="Other and unspecified" 
+  dt_report[ICD10GROUP != "C44",]$ICD10GROUP ="O&U"
+  dt_report[ICD10GROUP != "C44",]$ICD10GROUPLABEL ="Other and unspecified"
   dt_report <- dt_report[, .(CASES=sum(CASES)),by=.(ICD10GROUP, ICD10GROUPLABEL, YEAR,SEX, AGE_GROUP,AGE_GROUP_LABEL,COUNT,REFERENCE_COUNT) ]
   dt_report <- canreg_age_cases_data(dt_report,age_group = c(5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80), skin=TRUE)
   
@@ -68,7 +68,7 @@ tryCatch({
   }
   
   
-  #add warning if  many missing cases 
+  #add warning if  many missing cases
   sex_missing <- canreg_desc_missing_sex(inc)
   if (sex_missing$percent_missing > 0) {
     
@@ -100,8 +100,8 @@ tryCatch({
   doc <- addParagraph(doc, paste0("Fig ",list_number$fig,"a. Bar chart, distribution of cases by age group and sex"))
   
   dt_report <- dt_all
-  dt_report[ICD10GROUP != "C44",]$ICD10GROUP ="O&U" 
-  dt_report[ICD10GROUP != "C44",]$ICD10GROUPLABEL ="Other and unspecified" 
+  dt_report[ICD10GROUP != "C44",]$ICD10GROUP ="O&U"
+  dt_report[ICD10GROUP != "C44",]$ICD10GROUPLABEL ="Other and unspecified"
   dt_report <- dt_report[, .(CASES=sum(CASES)),by=.(ICD10GROUP, ICD10GROUPLABEL, YEAR,SEX, AGE_GROUP,AGE_GROUP_LABEL,COUNT,REFERENCE_COUNT) ]
   dt_report <- canreg_age_cases_data(dt_all, skin=TRUE)
   
@@ -114,7 +114,7 @@ tryCatch({
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph.png")), "dim" )
   doc <- addImage(doc, paste0(tempdir(), "\\temp_graph.png"),width=graph_width,height=graph_width*dims[1]/dims[2] )
   doc <- addParagraph(doc,paste0("Fig ",list_number$fig,"b. Pie chart, distribution of cases by age group and sex"))
-  list_number$fig <- list_number$fig +1 
+  list_number$fig <- list_number$fig +1
   
   doc <- addTitle(doc, "The most common cancers, by sex", level = 2)
   
@@ -312,7 +312,7 @@ tryCatch({
   list_number$fig <- list_number$fig+1
   
   
-  if (year_info$span > 1) {
+  if (year_info$span > 9) {
     
     doc <- addPageBreak(doc)
     doc <- addTitle(doc, "Trend in ASR (most common sites) by sex", level = 2)
@@ -359,12 +359,13 @@ tryCatch({
     
   }
   
-  if (year_info$span > 2) {
+  if (year_info$span > 9) {
     
     doc <- addPageBreak(doc)
     doc <- addTitle(doc, "Estimated annual percentage change", level = 2)
     
     dt_report <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE, keep_year = TRUE)
+    agegroup <- "0-17"
     first_age <- as.numeric(substr(agegroup,1,regexpr("-", agegroup)[1]-1))
     last_age <- as.numeric(substr(agegroup,regexpr("-", agegroup)[1]+1,nchar(agegroup)))
     
@@ -373,18 +374,18 @@ tryCatch({
     
     ##calcul of ASR
     dt_report<- csu_asr_core(df_data =dt_report, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
-                      var_by = c("cancer_label", "SEX", "YEAR"), missing_age = canreg_missing_age(dt_all),
-                      first_age = first_age+1,
-                      last_age= last_age+1,
-                      pop_base_count = "REFERENCE_COUNT",
-                      age_label_list = "AGE_GROUP_LABEL")
+                             var_by = c("cancer_label", "SEX", "YEAR"), missing_age = canreg_missing_age(dt_all),
+                             first_age = first_age+1,
+                             last_age= last_age+1,
+                             pop_base_count = "REFERENCE_COUNT",
+                             age_label_list = "AGE_GROUP_LABEL")
     
     ##Keep top based on rank
     dt_report <- csu_dt_rank(dt_report,
-                      var_value= "CASES",
-                      var_rank = "cancer_label",
-                      group_by = "SEX",
-                      number = 25
+                             var_value= "CASES",
+                             var_rank = "cancer_label",
+                             group_by = "SEX",
+                             number = 25
     )
     
     
@@ -394,17 +395,20 @@ tryCatch({
     
     
     #produce graph
-    canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph"),landscape = TRUE,list_graph = FALSE,
-                  FUN=canreg_eapc_scatter,
-                  dt_plot=dt_report,color_bar=c("Male" = "#2c7bb6", "Female" = "#b62ca1"),
-                  canreg_header = "",
-                  ytitle=paste0("Estimated Average Percentage Change (%), ", canreg_age_group))
+    canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph"),landscape = TRUE,list_graph = TRUE,
+                  FUN=canreg_eapc_scatter_error_bar,
+                  dt=dt_report,
+                  canreg_header = "Estimated Average Percentage Change",
+                  ytitle=paste0("Estimated average percentage change (%), ", canreg_age_group))
     
-    dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph.png")), "dim" )
-    doc <- addImage(doc, paste0(tempdir(), "\\temp_graph.png"),width=graph_width,height=graph_width*dims[1]/dims[2] )
-    doc <- addParagraph(doc, paste0("Fig ",list_number$fig,". Estimated annual percentage change"))
-    list_number$fig=list_number$fig+1
     
+    dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph001.png")), "dim" )
+    doc <- addImage(doc, paste0(tempdir(), "\\temp_graph001.png"),width=graph_width*0.9,height=graph_width*0.9*dims[1]/dims[2] )
+    doc <- addParagraph(doc, paste0("Fig ",list_number$fig,". Estimated annual percentage change, male"))
+    list_number$fig=list_number$fig+1 
+    doc <- addImage(doc, paste0(tempdir(), "\\temp_graph002.png"),width=graph_width*0.9,height=graph_width*0.9*dims[1]/dims[2] )
+    doc <- addParagraph(doc, paste0("Fig ",list_number$fig,". Estimated annual percentage change, female"))
+    list_number$fig=list_number$fig+1 
     doc <- addParagraph(doc, "\r\n")
     
   }
@@ -414,7 +418,7 @@ tryCatch({
   region_admit <- c("EastMed", "Americas", "West Pacific", "Europe", "SEAsia", "Africa")
   
   if (sr %in% region_admit) {
-
+    
     doc <- addPageBreak(doc)
     doc <- addTitle(doc, "Comparison of summary rates with other registries (in same region)", level = 2)
     
@@ -426,7 +430,7 @@ tryCatch({
     # import CI5 data with same cancer code and same age group
     dt_CI5_data <- canreg_import_CI5_data(dt_report, paste0(script.basename, "/CI5_data.rds"))
     
-  
+    
     
     #merge CI5 and canreg data
     dt_both <- canreg_merge_CI5_registry(dt_report,dt_CI5_data, registry_region = sr, registry_label = header )
@@ -445,17 +449,17 @@ tryCatch({
                                header, " with those observed in ", 
                                CI5_registries[1], ", ", CI5_registries[2],
                                " and ", CI5_registries[3], " (CI5 X, 2013)." ))
-                               
-                               
+    
+    
     doc <- addParagraph(doc, "\r\n")
     
-      canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph"),landscape = TRUE,list_graph = TRUE,
-                    FUN=canreg_bar_CI5_compare,
-                    dt=dt_both,xtitle=paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=",")))
-      
-      dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph001.png")), "dim" )
-      
-      for (i in 1:5) {
+    canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph"),landscape = TRUE,list_graph = TRUE,
+                  FUN=canreg_bar_CI5_compare,
+                  dt=dt_both,xtitle=paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=",")))
+    
+    dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph001.png")), "dim" )
+    
+    for (i in 1:5) {
       
       dat <- matrix("", nrow = 1, ncol = 2) # dummy empty table
       ft <- FlexTable(dat, header.columns = F, add.rownames = F)
@@ -475,9 +479,9 @@ tryCatch({
     list_number$fig=list_number$fig+1
     
     doc <- addParagraph(doc, "\r\n")
-  
+    
   }
-
+  
   ## Basis of diagnosis
   doc <- addPageBreak(doc)
   doc <- addTitle(doc, "Basis of Diagnosis (DCO / Clinical / MV) by site", level = 2)
@@ -504,7 +508,7 @@ tryCatch({
   ft <- addHeaderRow( ft,value = c("Cancer site","ICD-10","No. Cases","% total", "Basis of diagnosis"),
                       colspan = c( 1,1,1,1,3))
   
-  ft <- addHeaderRow( ft,value = c("","","","", "DCO", "Clinical", "M.V"),
+  ft <- addHeaderRow( ft,value = c("","","","", "% DCO", "% Clinical", "% M.V"),
                       colspan = c( 1,1,1,1,1,1,1))
   
   
@@ -526,10 +530,11 @@ tryCatch({
   doc <- addParagraph(doc, "\r\n")
   
   doc <- addParagraph(doc,
-                      paste0("Table ",list_number$tbl," shows the percentage of cases at the major sites that were registered on the basis of information from a death certificate only (DCO) and with morphological verification (MV%) - that is, based on cytology or histology (of the primary tumour, or a metastasis)."))
+                      paste0("Table ",list_number$tbl," shows the percentage of cases at the major sites that were registered on the basis of information from a death certificate only (DCO) and with morphological verification (MV) - that is, based on cytology or histology (of the primary tumour, or a metastasis)."))
   
   doc <- addParagraph(doc, "\r\n")
   doc <- addFlexTable(doc,ft)
+  doc <- addParagraph(doc, "\r\n")
   doc <- addParagraph(doc, 
                       paste0("Table ",list_number$tbl,"."), par.properties=parProperties(text.align="center", padding=0))
   
@@ -540,6 +545,7 @@ tryCatch({
   if (!is.null(dt_appendix)) {
     list_number <- canreg_report_chapter_txt(dt_appendix, doc, report_path,dt_all,list_number, appendix=TRUE)
   }
+  
   
   
   writeDoc(doc, file = filename)
