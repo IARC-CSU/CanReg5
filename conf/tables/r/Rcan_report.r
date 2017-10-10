@@ -281,7 +281,7 @@ tryCatch({
   
   doc <- addPageBreak(doc)
   
-  doc <- addTitle(doc, "Age specific incidence rates (most common sites) by sex", level = 2)
+  doc <- addTitle(doc, "Age-specific incidence rates (most common sites) by sex", level = 2)
   
   
   dt_report <- dt_all
@@ -308,7 +308,7 @@ tryCatch({
   
   doc <- addParagraph(doc, "\r\n")
   doc <- addFlexTable(doc,ft,par.properties = parProperties(text.align = "center"))
-  doc <- addParagraph(doc, paste0("Fig ",list_number$fig,". Age specific incidence rates"))
+  doc <- addParagraph(doc, paste0("Fig ",list_number$fig,". Age-specific incidence rates"))
   list_number$fig <- list_number$fig+1
   
   
