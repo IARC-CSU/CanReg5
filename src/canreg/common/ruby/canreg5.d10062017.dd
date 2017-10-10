@@ -1,11 +1,13 @@
 [DatabaseInfo]
 DataDescription=Incidence
-Name=$NAME
+Name=Azores 1997 to 2011 incidence
 NeedCutoffInfo=true
 SEERPrepDDVersion=2.5.0
 Citation=SEER*Stat Database:  #name#.  Created on #date#.
-Case1=$CASE_FILE
-Pop1=$POP_FILE
+Case1=P:\seerprep\userdata\goncalo\canreg5\incidence\Cases_Azores_1997-2011_MF.txd
+StudyCutYear=2016
+StudyCutMonth=12
+Pop1=P:\seerprep\userdata\goncalo\canreg5\populations\Pop_Azores_1997-2011_MF.19ages.txd
 
 [FileInfo]
 NumberOfFields=40
@@ -196,7 +198,7 @@ BirthDateMonthVar=Month of birth
 BirthDateYearVar=Year of birth
 PrevHideSelAndTableVars=Year of diagnosis~Month of diagnosis~Month of diagnosis
 SexSelectVar=Sex~1-2
-AgeSelectVar=Age recode~0-18
+AgeSelectVar=Age recode with <1 year olds~0-18
 AltRecordOrderVar=Sequence number
 PersonIDVars=Patient ID
 RecordOrderVar=Record number recode
@@ -1479,11 +1481,19 @@ ExclInvalidValues=false
 CommentPopByteOffset=4
 
 [Format=Region]
-00=Something 
-99=Something else 
+40=Azores - unknown island
+41=Santa Maria
+42=Sao Miguel
+43=Terceira
+44=Graciosa
+45=Sao Jorge
+46=Pico
+47=Faial
+48=Flores
+49=Corvo
 
 [Conversion=Region]
-00-99=* 0
+40-49=* 0
 
 [Field3]
 Type=A
@@ -18798,10 +18808,12 @@ Hidden=false
 Required=true
 
 [Format=Vital status]
-$VITAL_STATUS_FORMAT
+0=Dead (COC)
+1=Alive
+4=Dead (SEER)
 
 [Conversion=Vital status]
-$VITAL_STATUS_CONVERSION
+0,1,4=* 0
 
 [Field27]
 Type=A

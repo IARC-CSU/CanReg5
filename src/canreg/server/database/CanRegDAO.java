@@ -2369,7 +2369,7 @@ public class CanRegDAO {
                 filterString = " AND ( " + filterString + " )";
             }
         }
-
+        
         // Add the range part
         if ((filter.getRangeStart() != null && filter.getRangeStart().length() > 0) || (filter.getRangeEnd() != null && filter.getRangeEnd().length() > 0)) {
             if (!filterString.isEmpty()) {
