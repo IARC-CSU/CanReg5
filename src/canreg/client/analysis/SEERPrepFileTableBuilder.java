@@ -36,6 +36,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.sql.Array;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -125,13 +128,13 @@ public class SEERPrepFileTableBuilder implements TableBuilderInterface {
                         map.put(StandardVariableNames.Sex, sex);
                         if (ageGroupStructure.getSizeOfFirstGroup() != 1) {
                             int count = pop.getAgeGroupCount(sex, 0);
-                            int firstGroup = count / 5;
-                            count = count - firstGroup;
-                            // first line
-                            map.put(StandardVariableNames.AgeGroup, 0);
-                            map.put(StandardVariableNames.Count, firstGroup);
-                            fwfw.writeLine(map);
-                            // second line
+//                            int firstGroup = count / 5;
+//                            count = count - firstGroup;
+//                            // first line
+//                            map.put(StandardVariableNames.AgeGroup, 0);
+//                            map.put(StandardVariableNames.Count, firstGroup);
+//                            fwfw.writeLine(map);
+//                            // second line
                             map.put(StandardVariableNames.AgeGroup, 1);
                             map.put(StandardVariableNames.Count, count);
                             fwfw.writeLine(map);
@@ -144,7 +147,6 @@ public class SEERPrepFileTableBuilder implements TableBuilderInterface {
                             map.put(StandardVariableNames.Count, pop.getAgeGroupCount(sex, 1));
                             fwfw.writeLine(map);
                             offset = 0;
-
                         }
                         int goToGroup = ageGroupStructure.getNumberOfAgeGroups() - offset;
                         if (ageGroupStructure.getMaxAge() < 85) {
@@ -186,12 +188,27 @@ public class SEERPrepFileTableBuilder implements TableBuilderInterface {
             }
 
             if (incidenceData != null) {
-                FixedWidthFileWriter fwfw = new FixedWidthFileWriter(105); //TODO: make dynamic
+                FixedWidthFileWriter fwfw = new FixedWidthFileWriter(100); //TODO: make dynamic
                 fwfw.setOutputFileName(casesFileName);
+
+                int patientIDindex = Arrays.asList(variablesNeeded).indexOf(Globals.StandardVariableNames.PatientID) + 1;
+                int mpseqIndex = Arrays.asList(variablesNeeded).indexOf(Globals.StandardVariableNames.MultPrimSeq) + 1; 
+
+                Comparator<Object[]> comparator = (Object[] o1, Object[] o2) -> {
+                    if (o1[patientIDindex] != o2[patientIDindex]) {
+                        // Patient ID is sorted like a string
+                        return (o1[patientIDindex].toString()).compareToIgnoreCase(o2[patientIDindex].toString());
+                    } else {
+                        return ((Integer) o1[mpseqIndex]) - ((Integer) o2[mpseqIndex]);
+                    }
+                };
+                // sort by patient ID and sequence number
+                Arrays.sort(incidenceData, comparator);
+
                 for (Object[] row : incidenceData) {
                     TreeMap map = new TreeMap();
-                    // map.put(StandardVariableNames.IncidenceDate, row[0]);
-                    for (int i = 1; i < row.length - 1; i++) {
+                    // first element in row is year, so we start at 1
+                    for (int i = 1; i < row.length ; i++) {
                         Object element = row[i];
                         StandardVariableNames variable = variablesNeeded[i - 1];
                         // recode addresses to XX
@@ -217,7 +234,6 @@ public class SEERPrepFileTableBuilder implements TableBuilderInterface {
             String line = bfr.readLine();
             BufferedWriter bfw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(ddFileName), "ASCII"));
 
-            
             // VITAL STATUS
             String vitalStatusFormat = "";
             String vitalStatusConversion = "";
@@ -228,21 +244,21 @@ public class SEERPrepFileTableBuilder implements TableBuilderInterface {
                 vitalStatusFormat = vsMap.get("format");
                 vitalStatusConversion = vsMap.get("conversion");
             }
-            
+
             // ADDRESS CODES
             String addressCodeFormat = "";
             String addressCodeConversion = "";
             String addressCodeLength = "0";
-            
+
             Dictionary addressDictionary = canreg.client.CanRegClientApp.getApplication().getGlobalToolBox().getDictionaryByStandardVariable(StandardVariableNames.AddressCode);
-            
+
             if (addressDictionary != null) {
                 Map<String, String> acMap = dictionaryToText(addressDictionary);
                 addressCodeFormat = acMap.get("format");
                 addressCodeConversion = acMap.get("conversion");
                 addressCodeLength = acMap.get("length");
             }
-            
+
             while (line != null) {
                 line = line.replace("$NAME", tableHeader);
                 line = line.replace("$CASE_FILE", casesFileName);

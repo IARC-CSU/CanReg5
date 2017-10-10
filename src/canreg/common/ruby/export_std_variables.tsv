@@ -1,6 +1,5 @@
 name	canreg
 Accession number--hosp	na
-AddressCode	AddressCode
 Age at diagnosis	Age
 Basis of diagnosis	BasisDiagnosis
 Behavior (92-00) ICD-O-2	na
@@ -31,6 +30,7 @@ Patient ID	PatientID
 Primary Site	Topography
 Primary Site - labeled	Topography
 Race 1	na
+Region	AddressCode
 Reporting hospital (last 6-digits)	na
 SEER type of follow-up	na
 Sequence number	MultPrimSeq

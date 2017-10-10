@@ -1,7 +1,7 @@
 name	case_col	pop_col	length	required	std_name
 Count	19		8		na
 Country	1	1	3	false	na
-Address	4		2	false	na
+Region	4		2	false	AddressCode
 Sex	6	6	1	true	Sex
 Day of diagnosis	7		2	false	na
 Month of diagnosis	9		2	true	IncidenceDate[4,2]
@@ -39,7 +39,5 @@ TNM path T	84		4	false	na
 TNM path N	88		4	false	na
 TNM path M	92		4	false	na
 TNM stage	96		3	false	Stage
-TNM Edition	99		2	false	na
-Survival months	101		4	true	na
 Age recode with <1 year olds		17	2	true	AgeGroup
 Count		19	8	true	Count
