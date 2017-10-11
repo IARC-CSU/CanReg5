@@ -626,12 +626,12 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all, folder, list_nu
       
       if (type == "PATH") {
         
-        temp <- paste0("This text can be edit directly in the template file folder:\n",folder,"\n")
+        temp <- paste0("If you want to keep changes for future reports, this text can be edit directly in the template file folder:\n",folder,"\n")
         doc <- addParagraph(doc,temp) 
         
       } else if (type == "MAP") {
         
-        temp <- paste0("This map can be updated directly in the template file folder:\n",folder,"\\map_example.png\n")
+        temp <- paste0("If you want to keep changes for future reports, this map can be updated directly in the template file folder:\n",folder,"\\map_example.png\n")
         doc <- addParagraph(doc,temp) 
         
       } else if (type == "POP"){
