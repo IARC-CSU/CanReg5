@@ -1,6 +1,6 @@
-<EDIT FILE PATH>
 
-Here is an example from Kampala Cancer Registry report: 2007-2009 (http://www.iacr.com.fr/index.php?option=com_comprofiler&task=userprofile&user=867&Itemid=498)
+<EDIT FILE PATH>
+Here is an example from Kampala Cancer Registry report: 2007-2009.
 
 Reports of cancer in Uganda date back to end of 19th century, when the first missionary doctor
 established western medicine in Uganda by constructing Mengo Hospital in Kampala. Davies et al.

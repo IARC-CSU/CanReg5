@@ -117,6 +117,29 @@ tryCatch({
   doc <- addParagraph(doc,paste0("Fig ",list_number$fig,"b. Pie chart, distribution of cases by age group and sex"))
   list_number$fig <- list_number$fig +1
   
+  doc <- addTitle(doc, "Number of cases by year", level = 2)
+  
+  dt_report <- dt_all
+  dt_report[ICD10GROUP != "C44",]$ICD10GROUP ="O&U" 
+  dt_report[ICD10GROUP != "C44",]$ICD10GROUPLABEL ="Other and unspecified" 
+  dt_report <- dt_report[, .(CASES=sum(CASES)),by=.(ICD10GROUP, ICD10GROUPLABEL, YEAR,SEX, AGE_GROUP,AGE_GROUP_LABEL,COUNT,REFERENCE_COUNT) ]
+  
+  dt_report <- canreg_year_cases_data(dt_report, skin=FALSE)
+  
+  
+  ##Produce output
+  canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph"),landscape = TRUE,list_graph = FALSE,
+                FUN=canreg_cases_year_bar,
+                dt=dt_report,
+                canreg_header = "", skin=FALSE)
+  
+  dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph.png")), "dim" )
+  doc <- addImage(doc, paste0(tempdir(), "\\temp_graph.png"),width=graph_width,height=graph_width*dims[1]/dims[2] )
+  doc <- addParagraph(doc,paste0("Fig ",list_number$fig,". Number of cases by year"))
+  list_number$fig <- list_number$fig +1
+  
+  
+  
   doc <- addTitle(doc, "The most common cancers, by sex", level = 2)
   
   dt_report <- dt_all

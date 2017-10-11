@@ -15,7 +15,7 @@ tryCatch({
   graph_width <- 8
   graph_width_split <- 4
   graph_width_vertical <- 5
-  time_limit <- 2
+  time_limit <- 9
   
   year_info <- canreg_get_years(dt_all)
   
@@ -27,7 +27,10 @@ tryCatch({
   
   doc <- addSlide(doc, "Canreg_title") ## add PPTX TITLE
   doc <- addTitle(doc, header)
-  doc <- addSubtitle(doc, "Cancer cases registered using the CanReg5 software. (http://www.iacr.com.fr/CanReg5)")
+  
+  date <- format(Sys.time(), "%B/%Y")
+  date <- paste0(toupper(substr(date,1,1)),substr(date,2,nchar(date)))
+  doc <- addSubtitle(doc, date)
   
   #################
   doc <- addSlide(doc, "Canreg_basic") ## add PPTX slide (Title + content)
@@ -82,6 +85,30 @@ tryCatch({
   
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph.png")), "dim" )
   doc <- addImage(doc, paste0(tempdir(), "\\temp_graph.png"),width=graph_width,height=graph_width*dims[1]/dims[2] )
+  
+  ################# 
+  
+  doc <- addSlide(doc, "Canreg_basic") ## add PPTX slide (Title + 2 content)
+  doc <- addTitle(doc, "Number of cases by year")
+  
+  dt_report <- dt_all
+  dt_report[ICD10GROUP != "C44",]$ICD10GROUP ="O&U" 
+  dt_report[ICD10GROUP != "C44",]$ICD10GROUPLABEL ="Other and unspecified" 
+  dt_report <- dt_report[, .(CASES=sum(CASES)),by=.(ICD10GROUP, ICD10GROUPLABEL, YEAR,SEX, AGE_GROUP,AGE_GROUP_LABEL,COUNT,REFERENCE_COUNT) ]
+  
+  dt_report <- canreg_year_cases_data(dt_report, skin=FALSE)
+  
+  
+  ##Produce output
+  canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph"),landscape = TRUE,list_graph = FALSE,
+                FUN=canreg_cases_year_bar,
+                dt=dt_report,
+                canreg_header = "", skin=FALSE)
+  
+  dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph.png")), "dim" )
+  doc <- addImage(doc, paste0(tempdir(), "\\temp_graph.png"),width=graph_width,height=graph_width*dims[1]/dims[2] )
+  
+  
   
   ################# 
   doc <- addSlide(doc, "Canreg_basic_subtitle") ## add PPTX slide (Title + 2 content)
@@ -397,7 +424,7 @@ tryCatch({
   ft <- addHeaderRow( ft,value = c("Cancer site","ICD-10","No. Cases","% total", "Basis of diagnosis"),
                       colspan = c( 1,1,1,1,3))
   
-  ft <- addHeaderRow( ft,value = c("","","","", "DCO", "Clinical", "M.V"),
+  ft <- addHeaderRow( ft,value = c("","","","", "% DCO", "% Clinical", "% M.V"),
                       colspan = c( 1,1,1,1,1,1,1))
   
   
@@ -437,6 +464,9 @@ tryCatch({
   
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph001.png")), "dim" )
   
+  doc <- addSlide(doc, "Canreg_info") ## add Canreg information slide.
+  
+  
   for (j in 1:length(levels(dt_report$ICD10GROUP))) {
     
     doc <- addSlide(doc, "Canreg_vertical") ## add PPTX slide (Title + 2 content)
@@ -444,6 +474,8 @@ tryCatch({
     doc <- addImage(doc, paste0(tempdir(), "\\temp_graph",sprintf("%03d",j) ,".png"),width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2] )
     
   }
+  
+  
   
   writeDoc(doc, file = filename)
   
