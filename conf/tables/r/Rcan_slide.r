@@ -7,7 +7,7 @@
   script.name <- sub(file.arg.name, "", 
                      initial.options[grep(file.arg.name, initial.options)])
   script.basename <- dirname(script.name)
-  source(paste(sep="/", script.basename, "Rcan_source.r"))
+  source(paste(sep="/", script.basename, "Rcan_source_reporteR.r"))
   ################
 
 tryCatch({  
@@ -15,6 +15,7 @@ tryCatch({
   graph_width <- 8
   graph_width_split <- 4
   graph_width_vertical <- 5
+  time_limit <- 9
   
   year_info <- canreg_get_years(dt_all)
   
@@ -26,7 +27,10 @@ tryCatch({
   
   doc <- addSlide(doc, "Canreg_title") ## add PPTX TITLE
   doc <- addTitle(doc, header)
-  doc <- addSubtitle(doc, "Cancer cases registered using the CanReg5 software. (http://www.iacr.com.fr/CanReg5)")
+  
+  date <- format(Sys.time(), "%B/%Y")
+  date <- paste0(toupper(substr(date,1,1)),substr(date,2,nchar(date)))
+  doc <- addSubtitle(doc, date)
   
   #################
   doc <- addSlide(doc, "Canreg_basic") ## add PPTX slide (Title + content)
@@ -81,6 +85,30 @@ tryCatch({
   
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph.png")), "dim" )
   doc <- addImage(doc, paste0(tempdir(), "\\temp_graph.png"),width=graph_width,height=graph_width*dims[1]/dims[2] )
+  
+  ################# 
+  
+  doc <- addSlide(doc, "Canreg_basic") ## add PPTX slide (Title + 2 content)
+  doc <- addTitle(doc, "Number of cases by year")
+  
+  dt_report <- dt_all
+  dt_report[ICD10GROUP != "C44",]$ICD10GROUP ="O&U" 
+  dt_report[ICD10GROUP != "C44",]$ICD10GROUPLABEL ="Other and unspecified" 
+  dt_report <- dt_report[, .(CASES=sum(CASES)),by=.(ICD10GROUP, ICD10GROUPLABEL, YEAR,SEX, AGE_GROUP,AGE_GROUP_LABEL,COUNT,REFERENCE_COUNT) ]
+  
+  dt_report <- canreg_year_cases_data(dt_report, skin=FALSE)
+  
+  
+  ##Produce output
+  canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph"),landscape = TRUE,list_graph = FALSE,
+                FUN=canreg_cases_year_bar,
+                dt=dt_report,
+                canreg_header = "", skin=FALSE)
+  
+  dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph.png")), "dim" )
+  doc <- addImage(doc, paste0(tempdir(), "\\temp_graph.png"),width=graph_width,height=graph_width*dims[1]/dims[2] )
+  
+  
   
   ################# 
   doc <- addSlide(doc, "Canreg_basic_subtitle") ## add PPTX slide (Title + 2 content)
@@ -226,17 +254,17 @@ tryCatch({
                 canreg_header = "")
   
   doc <- addSlide(doc, "Canreg_vertical") ## add PPTX slide (Title + 2 content)
-  doc <- addTitle(doc, "Age specific rates:\r\nMales")
+  doc <- addTitle(doc, "Age-specific rates:\r\nMales")
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph001.png")), "dim" )
   doc <- addImage(doc, paste0(tempdir(), "\\temp_graph001.png"),width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2] )
   
   doc <- addSlide(doc, "Canreg_vertical") ## add PPTX slide (Title + 2 content)
-  doc <- addTitle(doc, "Age specific rates:\r\nFemales")
+  doc <- addTitle(doc, "Age-specific rates:\r\nFemales")
   doc <- addImage(doc, paste0(tempdir(), "\\temp_graph002.png"),width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2] )
   
   
   #################  
-  if (year_info$span > 1) {  
+  if (year_info$span > time_limit) {  
     
     
     dt_report <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE, keep_year = TRUE)
@@ -274,12 +302,10 @@ tryCatch({
     
   }
   
-  if (year_info$span > 2) {
-    
-    doc <- addSlide(doc, "Canreg_basic") ## add PPTX slide (Title + content)
-    doc <- addTitle(doc, "Estimated annual percentage change")
+  if (year_info$span > time_limit) {
     
     dt_report <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE, keep_year = TRUE)
+    agegroup <- "0-17"
     first_age <- as.numeric(substr(agegroup,1,regexpr("-", agegroup)[1]-1))
     last_age <- as.numeric(substr(agegroup,regexpr("-", agegroup)[1]+1,nchar(agegroup)))
     
@@ -309,14 +335,22 @@ tryCatch({
     
     
     #produce graph
-    canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph"),landscape = TRUE,list_graph = FALSE,
-                  FUN=canreg_eapc_scatter,
-                  dt_plot=dt_report,color_bar=c("Male" = "#2c7bb6", "Female" = "#b62ca1"),
-                  canreg_header = "",
-                  ytitle=paste0("Estimated Average Percentage Change (%), ", canreg_age_group))
+    canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph"),landscape = TRUE,list_graph = TRUE,
+                  FUN=canreg_eapc_scatter_error_bar,
+                  dt=dt_report,
+                  canreg_header = "Estimated Average Percentage Change",
+                  ytitle=paste0("Estimated average percentage change (%), ", canreg_age_group))
     
-    dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph.png")), "dim" )
-    doc <- addImage(doc, paste0(tempdir(), "\\temp_graph.png"),width=graph_width,height=graph_width*dims[1]/dims[2])
+    
+    dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph001.png")), "dim" )
+    
+    doc <- addSlide(doc, "Canreg_basic") ## add PPTX slide (Title + content)
+    doc <- addTitle(doc, "Estimated annual percentage change:\r\nMales")
+    doc <- addImage(doc, paste0(tempdir(), "\\temp_graph001.png"),width=graph_width,height=graph_width*dims[1]/dims[2])
+   
+    doc <- addSlide(doc, "Canreg_basic") ## add PPTX slide (Title + content)
+    doc <- addTitle(doc, "Estimated annual percentage change:\r\nFemales")
+    doc <- addImage(doc, paste0(tempdir(), "\\temp_graph002.png"),width=graph_width,height=graph_width*dims[1]/dims[2])
     
     
   }
@@ -390,7 +424,7 @@ tryCatch({
   ft <- addHeaderRow( ft,value = c("Cancer site","ICD-10","No. Cases","% total", "Basis of diagnosis"),
                       colspan = c( 1,1,1,1,3))
   
-  ft <- addHeaderRow( ft,value = c("","","","", "DCO", "Clinical", "M.V"),
+  ft <- addHeaderRow( ft,value = c("","","","", "% DCO", "% Clinical", "% M.V"),
                       colspan = c( 1,1,1,1,1,1,1))
   
   
@@ -430,13 +464,18 @@ tryCatch({
   
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph001.png")), "dim" )
   
+  doc <- addSlide(doc, "Canreg_info") ## add Canreg information slide.
+  
+  
   for (j in 1:length(levels(dt_report$ICD10GROUP))) {
     
     doc <- addSlide(doc, "Canreg_vertical") ## add PPTX slide (Title + 2 content)
-    doc <- addTitle(doc, paste0("Age specifique incidence rate:\r\n",  unique(dt_report[ICD10GROUP== levels(ICD10GROUP)[j] ,cancer_label])))
+    doc <- addTitle(doc, paste0("Age-specific incidence rate:\r\n",  unique(dt_report[ICD10GROUP== levels(ICD10GROUP)[j] ,cancer_label])))
     doc <- addImage(doc, paste0(tempdir(), "\\temp_graph",sprintf("%03d",j) ,".png"),width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2] )
     
   }
+  
+  
   
   writeDoc(doc, file = filename)
   

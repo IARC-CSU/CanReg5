@@ -402,6 +402,15 @@ canreg_report_template_extract <- function(report_path,script.basename, appendix
     
   }
   
+  # Force Appendix first chapter
+  
+  file_APP_1 <- list.files(path=paste(sep="/", script.basename, "report_text"),pattern= "^APP_1_Graph*\\.txt$", full.names = TRUE)
+  file.copy(file_APP_1,report_path)
+    
+  file_APP_1_1 <- list.files(path=paste(sep="/", script.basename, "report_text"),pattern= "^APP_1_1_Age-specific incidence rate*\\.txt$", full.names = TRUE)
+  file.copy(file_APP_1_1,report_path)
+    
+  
   if (appendix) {
     pattern_template <- "^(APP_\\d{1,2}_).*\\.txt$"
   } else {
@@ -546,6 +555,9 @@ canreg_report_import_txt <- function(doc,text,folder, dt_all, list_number, pop_d
   temp <- gregexpr("<EDIT FILE PATH>", text = text)[[1]]
   mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("PATH", length(temp)))))
   
+  temp <- gregexpr("<EDIT MAP PATH>", text = text)[[1]]
+  mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("MAP", length(temp)))))
+  
   temp <- gregexpr("<POPULATION DATA>", text = text)[[1]]
   mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("POP", length(temp)))))
   
@@ -617,6 +629,11 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all, folder, list_nu
         temp <- paste0("This text can be edit directly in the template file folder:\n",folder,"\n")
         doc <- addParagraph(doc,temp) 
         
+      } else if (type == "MAP") {
+        
+        temp <- paste0("This map can be updated directly in the template file folder:\n",folder,"\\map_example.png\n")
+        doc <- addParagraph(doc,temp) 
+        
       } else if (type == "POP"){
         
         dt_report <- dt_all
@@ -665,7 +682,7 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all, folder, list_nu
           doc <- addImage(doc, paste0(tempdir(), "\\temp_graph",sprintf("%03d",j) ,".png"),width=graph_width*0.8,height=graph_width*0.8*dims[1]/dims[2] )
           doc <- addParagraph(doc,  
                               paste0("Appendix fig ",list_number$fig,". ", unique(dt_report[ICD10GROUP== levels(ICD10GROUP)[j] ,cancer_label]),  
-                                     ": Age specifique incidence rate per ", formatC(100000, format="d", big.mark=",")))
+                                     ": Age-specific incidence rate per ", formatC(100000, format="d", big.mark=",")))
           list_number$fig <- list_number$fig+1
         }
         
@@ -851,28 +868,28 @@ canreg_basis_table <- function(dt,var_cases="CASES", var_basis="BASIS", var_canc
   dt[, total_cases := sum(CSU_C), by=c("CSU_label", "CSU_ICD")]
   dt[, BASIS_pc := CSU_C/total_cases*100]
   dt[,BASIS_pc:=round(BASIS_pc,1)]
-  dt[, BASIS_pc:=paste0(format(BASIS_pc, big.mark = ",", scientific = FALSE, drop0trailing = TRUE),"%")]
+  dt[, BASIS_pc:=format(BASIS_pc, big.mark = ",", scientific = FALSE, drop0trailing = FALSE)]
   dt[, CSU_C := NULL]
   
   dt <- reshape(dt, timevar = "BASIS",idvar = c("CSU_label","CSU_ICD","total_cases"), direction = "wide")
   dt[, total_pc_test:= total_cases/sum(total_cases)*200]
   dt[,total_pc_test:=round(total_pc_test,1)]
-  dt[, total_pc_test:=paste0(format(total_pc_test, big.mark = ",", scientific = FALSE, drop0trailing = TRUE),"%")]
+  dt[, total_pc_test:=format(total_pc_test, big.mark = ",", scientific = FALSE, drop0trailing = FALSE)]
   setkeyv(dt, c("CSU_ICD"))
   
   if(!("BASIS_pc.0" %in% colnames(dt)))
   {
-    dt[, BASIS_pc.0:="0%"]
+    dt[, BASIS_pc.0:="0.0"]
   }
   
   if(!("BASIS_pc.1" %in% colnames(dt)))
   {
-    dt[, BASIS_pc.1:="0%"]
+    dt[, BASIS_pc.1:="0.0"]
   }
   
   if(!("BASIS_pc.2" %in% colnames(dt)))
   {
-    dt[, BASIS_pc.2:="0%"]
+    dt[, BASIS_pc.2:="0.0"]
   }
   
   setcolorder(dt, c("CSU_label", "CSU_ICD", "total_cases", "total_pc_test", "BASIS_pc.0", "BASIS_pc.1","BASIS_pc.2"))
@@ -1086,6 +1103,16 @@ canreg_age_cases_data <- function(dt, age_group = c(15,30,50,70), skin=FALSE) {
   
   #add sex label
   dt$SEX <- factor(dt$SEX, levels=c(1,2), labels=c("Male", "Female"))
+  return(dt)
+}
+
+canreg_year_cases_data <- function(dt, var_year="YEAR", skin=FALSE, missing_age = FALSE) {
+  
+  #drop missing value
+  if (missing_age) dt <- dt[AGE_GROUP != canreg_missing_age(dt),]
+  #drop skin if no ALL but skin
+  if (!skin) dt <- dt[ICD10GROUP == "O&U",]
+  dt <- dt[,list(CASES=sum(CASES)), by=var_year]
   return(dt)
 }
 
@@ -3074,6 +3101,118 @@ else {
 
 
 }
+
+canreg_cases_year_bar <- function(dt,
+                                  var_cases = "CASES",
+                                  var_bar = "YEAR",
+                                  skin=FALSE,
+                                  landscape = FALSE,
+                                  list_graph = FALSE,
+                                  canreg_header=NULL,
+                                  return_data = FALSE,
+                                  plot_caption= NULL,
+                                  canreg_report=FALSE) {
+  
+  
+  dt <- as.data.table(dt)
+  
+  if (return_data) {
+    return(dt)
+    stop() 
+  }
+  
+  
+  
+  if (landscape) {
+    csu_ratio = 0.6 
+    csu_bar_label_size = 5
+  } else {
+    csu_ratio = 1
+    csu_bar_label_size = 5 
+  }
+  
+  line_size <- 0.4
+  text_size <- 18
+  if (skin) {
+    plot_subtitle <- paste("All cancers")
+  } else {
+    plot_subtitle <- paste("All cancers but C44")
+  }
+  
+  
+  setnames(dt, var_cases, "CSU_CASES")
+  setnames(dt, var_bar, "CSU_BAR")
+  
+  
+  dt$CSU_BAR <- factor(dt$CSU_BAR)
+  
+  tick_major_list <- csu_tick_generator(max = max(dt$CSU_CASES), 0)$tick_list
+  nb_tick <- length(tick_major_list) 
+  tick_space <- tick_major_list[nb_tick] - tick_major_list[nb_tick-1]
+  if ((tick_major_list[nb_tick] -  max(dt$CSU_CASES))/tick_space < 1/4){
+    tick_major_list[nb_tick+1] <- tick_major_list[nb_tick] + tick_space
+  }
+  
+  tick_minor_list <-seq(tick_major_list[1],tail(tick_major_list,1),tick_space/2)
+  
+  dt$cases_label <- dt$CSU_CASES + (tick_space*0.1)
+  
+  csu_plot <- ggplot(dt, aes(CSU_BAR, CSU_CASES)) +
+    geom_bar(stat="identity", width = 0.8, fill="#1673ce")+
+    geom_text(data=dt,aes(CSU_BAR, cases_label,label=CSU_CASES),
+              size = csu_bar_label_size,
+              vjust = 0)+
+    coord_cartesian( 
+      xlim = c(0.4, nrow(dt)+ 0.6),
+      ylim = c(0,tick_major_list[length(tick_major_list)]+(tick_space*0.25)),
+      expand = FALSE
+    )+
+    scale_y_continuous(name = "Number of cases",
+                       breaks=tick_major_list,
+                       minor_breaks = tick_minor_list
+    )+
+    scale_x_discrete(name = "Year")+
+    labs(title = canreg_header, 
+         subtitle = plot_subtitle,
+         caption = plot_caption)+
+    theme(
+      aspect.ratio = csu_ratio,
+      plot.background= element_blank(),
+      panel.background = element_blank(),
+      panel.grid.major.x= element_blank(),
+      panel.grid.major.y= element_line(colour = "grey70",size = line_size),
+      panel.grid.minor.y= element_line(colour = "grey70",size = line_size),
+      plot.title = element_text(size=18, margin=margin(0,0,15,0),hjust = 0.5),
+      plot.subtitle = element_text(size=16, margin=margin(0,0,15,0),hjust = 0.5),
+      plot.caption = element_text(size=12, margin=margin(15,0,0,0)),
+      plot.margin=margin(20,20,20,20),
+      axis.title = element_text(size=text_size),
+      axis.title.x=element_text(margin=margin(10,0,0,0)),
+      axis.title.y = element_text(margin=margin(0,15,0,0)),
+      axis.text = element_text(size=text_size, colour = "black"),
+      axis.text.x = element_text(size=text_size),
+      axis.text.y = element_text(size=text_size),
+      axis.ticks.x= element_line(colour = "black", size = line_size),
+      axis.ticks.y= element_blank(),
+      axis.ticks.length = unit(0.2, "cm"),
+      axis.line.y = element_line(colour = "black", 
+                                 size = line_size, 
+                                 linetype = "solid"),
+      axis.line.x = element_line(colour = "black", 
+                                 size = line_size, 
+                                 linetype = "solid"),
+      
+    )
+  
+  if(!canreg_report){
+    print(csu_plot)
+  } 
+  else {
+    return(csu_plot)
+  }
+  
+}
+
 canreg_cases_age_bar <- function(df_data,
                                      var_cases = "CASES",
                                      var_bar = "group_label",
@@ -3157,7 +3296,7 @@ canreg_cases_age_bar <- function(df_data,
               size = csu_bar_label_size,
               hjust = 1)+
     coord_flip(ylim = c(tick_minor_list[1]-(tick_space*0.25),tick_minor_list[length(tick_minor_list)]+(tick_space*0.25)), expand = TRUE)+
-    scale_y_continuous(name = "Number of new cases",
+    scale_y_continuous(name = "Number of cases",
                        breaks=tick_major_list,
                        minor_breaks = tick_minor_list,
                        labels=tick_label
@@ -3778,7 +3917,7 @@ rcan_scatter_error_bar <- function(dt_plot,
   csu_plot <- 
     ggplot(dt_plot, aes(CSU_DATA, CSU_BAR)) +
     geom_errorbarh(aes(xmin = CSU_DATA_LOW,xmax = CSU_DATA_UP), size=0.7,height =0.5,colour="#05305b") + 
-    geom_point(fill ="#e41a1c",shape=21, color="black", size=5, stroke = 1.2)
+    geom_point(fill ="#e41a1c",shape=21, color="black", size=3, stroke = 1.2)
   
   if (is.null(tick_list)) {
     
