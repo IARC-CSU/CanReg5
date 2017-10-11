@@ -43,6 +43,10 @@ tryCatch({
   
   dt_chapter <- canreg_report_template_extract(report_path, script.basename)
   
+  if (year_info$span <= time_limit) {
+    dt_chapter <- dt_chapter[title != "Estimated annual percentage change"]
+  }
+  
   list_number <- canreg_report_chapter_txt(dt_chapter, doc, report_path,dt_all,list_number)
   
   
