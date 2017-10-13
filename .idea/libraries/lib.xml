@@ -1,0 +1,39 @@
+<component name="libraryTable">
+  <library name="lib">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/dist/lib/batik-svggen.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/lib/derbynet.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/lib/xml-apis.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/lib/imgscalr-lib-4.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/lib/paradoxdriver12-1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/lib/beansbinding-1.2.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/lib/jackson-core-2.8.9.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/lib/rssutils.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/lib/jcalendar-1.3.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/lib/glazedlists_java15-1.9.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/lib/batik-xml.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/lib/jackson-annotations-2.8.9.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/lib/apache-commons-lang.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/lib/AbsoluteLayout.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/lib/jackson-databind-2.8.9.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/lib/org.apache.commons.io.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/lib/forms-1.3.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/lib/derby.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/lib/batik-dom.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/lib/looks-2.3.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/lib/jfreechart-1.0.14.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/lib/commons-csv-1.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/lib/itextpdf-5.2.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/lib/derbytools.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/lib/juniversalchardet-1.0.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/lib/batik-util.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/lib/bsaf-1.9.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/lib/jcommon-1.0.17.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/lib/batik-ext.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/lib/batik-awt-util.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/lib/itext-xtra-5.2.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2015  International Agency for Research on Cancer
+ * Copyright (C) 2008-2017  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,6 @@ import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
@@ -46,7 +45,7 @@ public class TextAreaVariableEditorPanel extends VariableEditorPanel {
     @Override
     public void setDatabaseVariablesListElement(DatabaseVariablesListElement databaseListElement) {
         this.databaseListElement = databaseListElement;
-        setVariableName(databaseListElement.getFullName());
+        setVariableName(databaseListElement.getDisplayVariableName());
         textArea = new JTextArea();
         textArea.setMinimumSize(new Dimension(20, 60));
         this.setMinimumSize(new Dimension(20, 60));

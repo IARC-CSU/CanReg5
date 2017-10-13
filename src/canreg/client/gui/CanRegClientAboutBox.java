@@ -223,7 +223,7 @@ public class CanRegClientAboutBox extends javax.swing.JDialog implements Hyperli
 
 private void homepageLabelMouseClick(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homepageLabelMouseClick
     try {
-        canreg.common.Tools.browse(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientAboutBox").getString("http://www.iacr.com.fr/CanReg5"));
+        canreg.common.Tools.browse(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientAboutBox").getString("http://canreg.iarc.fr/"));
     } catch (IOException ex) {
         Logger.getLogger(CanRegClientAboutBox.class.getName()).log(Level.SEVERE, null, ex);
     }

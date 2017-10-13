@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2015  International Agency for Research on Cancer
+ * Copyright (C) 2008-2017  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,8 +52,8 @@ import org.w3c.dom.Document;
  */
 class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInterface {
 
-    private CanRegServerInterface theServer;
-    private Subject theUser;
+    private final CanRegServerInterface theServer;
+    private final Subject theUser;
 
     public CanRegServerProxy(Subject user, CanRegServerInterface server) throws RemoteException {
         /** The user associated with this proxy
@@ -360,5 +360,17 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     public boolean setDBPassword(char[] newPasswordArray, char[] oldPasswordArray) throws RemoteException, SecurityException {
         checkPermission("setDBPassword");
         return theServer.setDBPassword(newPasswordArray, oldPasswordArray);
+    }
+
+    @Override
+    public String getCanRegSystemCode() throws RemoteException, SecurityException {
+        checkPermission("getSystemCode");
+        return theServer.getCanRegSystemCode();
+    }
+    
+    @Override
+    public String getCanRegSystemRegion() throws RemoteException, SecurityException {
+        checkPermission("getSystemRegion");
+        return theServer.getCanRegSystemRegion();
     }
 }

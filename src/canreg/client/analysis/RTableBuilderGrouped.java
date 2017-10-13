@@ -82,6 +82,8 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
     private final String[] rScripts;
     private Map<KeyCancerGroupsEnum, Integer> keyGroupsMap;
     private final String[] rScriptsArguments;
+    private String[] icd10GroupColors;
+    private boolean writeColors = true;
 
     public RTableBuilderGrouped(String configFileName) throws FileNotFoundException {
         this.unknownAgeInt = Globals.DEFAULT_UNKNOWN_AGE_CODE;
@@ -113,6 +115,12 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
         icd10GroupDescriptions = ConfigFieldsReader.findConfig(
                 "ICD_groups",
                 configList);
+        icd10GroupColors = ConfigFieldsReader.findConfig(
+                "cancer_color",
+                configList);
+        if (icd10GroupColors == null) {
+            writeColors = false;
+        }
 
         cancerGroupsLocal = EditorialTableTools.generateICD10Groups(icd10GroupDescriptions);
 
@@ -196,6 +204,9 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
                 String incheader = "YEAR";
                 incheader += separator + "ICD10GROUP";
                 incheader += separator + "ICD10GROUPLABEL";
+                if (writeColors) {
+                    incheader += separator + "ICD10GROUPCOLOR";
+                }
                 incheader += separator + "SEX";
                 incheader += separator + "AGE_GROUP";
                 incheader += separator + "MORPHOLOGY";
@@ -219,7 +230,6 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
                         sex = Integer.parseInt(sexString.trim());
 
                         // sex = 3 is unknown sex
-
                         if (sex > 2) {
                             sex = 3;
                         }
@@ -252,6 +262,9 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
                             outLine.append(year).append(separator);
                             outLine.append("\"").append(icd10GroupDescriptions[icdIndex]).append("\"").append(separator);
                             outLine.append("\"").append(icdGroupLabels[icdIndex]).append("\"").append(separator);
+                            if (writeColors) {
+                                outLine.append("\"").append(icd10GroupColors[icdIndex]).append("\"").append(separator);
+                            }
                             outLine.append(sexString).append(separator);
                             outLine.append(ageGroup).append(separator);
                             outLine.append(morphologyString).append(separator);
@@ -275,35 +288,37 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
             File userDir = new File(Globals.USER_R_SCRIPTS_PATH);
             // call R
             for (String rScript : rScripts) {
-                File scriptFile = new File(userDir.getAbsolutePath() 
+                File scriptFile = new File(userDir.getAbsolutePath()
                         + Globals.FILE_SEPARATOR
                         + rScript);
-                if(!scriptFile.exists()){
-                    scriptFile = new File(dir.getAbsolutePath() 
-                        + Globals.FILE_SEPARATOR
-                        + rScript);
+                if (!scriptFile.exists()) {
+                    scriptFile = new File(dir.getAbsolutePath()
+                            + Globals.FILE_SEPARATOR
+                            + rScript);
                 }
                 // String command = canreg.common.Tools.encapsulateIfNeeded(rpath);
-                
+
                 ArrayList<String> commandList = new ArrayList();
                 commandList.add(rpath);
                 commandList.add("--vanilla");
                 commandList.add("--slave");
-                commandList.add("--file="+ scriptFile.getAbsolutePath() );
+                commandList.add("--file=" + scriptFile.getAbsolutePath());
                 commandList.add("--args");
-                commandList.add("-out="      + reportFileName);
-                commandList.add("-pop="      + popfile.getPath());
-                commandList.add("-inc="      + incfile.getPath());
-                commandList.add("-label="    + canreg.common.Tools.combine(tableLabel, "|"));
-                commandList.add("-header="   + tableHeader);
-                commandList.add("-ft="       + fileType);
+                commandList.add("-out=" + reportFileName);
+                commandList.add("-pop=" + popfile.getPath());
+                commandList.add("-inc=" + incfile.getPath());
+                commandList.add("-label=" + canreg.common.Tools.combine(tableLabel, "|"));
+                commandList.add("-header=" + tableHeader);
+                commandList.add("-ft=" + fileType);
+                commandList.add("-sc=" + CanRegClientApp.getApplication().getSystemCode());
+                commandList.add("-sr=" + CanRegClientApp.getApplication().getSystemRegion());
                 // add the rest of the arguments
                 commandList.addAll(Arrays.asList(rScriptsArguments));
-               // if (rScriptsArguments != null) {
-               //     for (String arg : rScriptsArguments) {
-               //         commandList.add(arg);
-               //     }
-               // }
+                // if (rScriptsArguments != null) {
+                //     for (String arg : rScriptsArguments) {
+                //         commandList.add(arg);
+                //     }
+                // }
 
                 System.out.println(commandList);
                 System.out.flush();
@@ -361,7 +376,7 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
     public boolean areThesePopulationDatasetsCompatible(PopulationDataset[] populations) {
         return true;
     }
-    
+
     @Override
     public void setUnknownAgeCode(int unknownAgeCode) {
         this.unknownAgeInt = unknownAgeCode;

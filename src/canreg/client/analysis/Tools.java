@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2015  International Agency for Research on Cancer
+ * Copyright (C) 2008-2017  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -79,7 +79,7 @@ import org.w3c.dom.Document;
 public class Tools {
 
     /**
-     * 
+     *
      */
     public static int DONT_COUNT = -999;
 
@@ -146,7 +146,7 @@ public class Tools {
 
         RFileBuilder rff = new RFileBuilder();
 
-        File script = new File(Globals.R_SCRIPTS_PATH + "/makeSureGgplot2IsInstalled.R");
+        File script = new File(Globals.R_SCRIPTS_PATH + "/makeSureGgplot2IsInstalled.r");
         rff.appendHeader(script.getAbsolutePath());
 
         rff.appendFileTypePart(fileType, fileName);
@@ -169,10 +169,10 @@ public class Tools {
         System.out.println(rff.getScript());
 
         try {
-            File tempFile = File.createTempFile("script", ".R");
+            File tempFile = File.createTempFile("script", ".r");
             // generatedFiles.add(tempFile.getPath());
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
-			new FileOutputStream(tempFile), "UTF8"));
+                    new FileOutputStream(tempFile), "UTF8"));
             writer.append(rff.getScript());
             writer.close();
             Tools.callR(tempFile.getAbsolutePath(), rpath, fileName + "-report.txt");
@@ -245,80 +245,86 @@ public class Tools {
 
     static String writeJChartToFile(JFreeChart chart, File file, FileTypes fileType) throws IOException, DocumentException {
         String fileName = file.getPath();
-        if (fileType.equals(FileTypes.svg)) {
-            Tools.exportChartAsSVG(chart, new Rectangle(1000, 1000), file);
-        } else if (fileType.equals(FileTypes.pdf)) {
-            Tools.exportChartAsPDF(chart, new Rectangle(500, 400), file);
-        } else if (fileType.equals(FileTypes.jchart)) {
-        } else if (fileType.equals(FileTypes.csv)) {
-            Tools.exportChartAsCSV(chart, file);
-        } else {
-            ChartUtilities.saveChartAsPNG(file, chart, 1000, 1000);
+        switch (fileType) {
+            case svg:
+                Tools.exportChartAsSVG(chart, new Rectangle(1000, 1000), file);
+                break;
+            case pdf:
+                Tools.exportChartAsPDF(chart, new Rectangle(500, 400), file);
+                break;
+            case jchart:
+                break;
+            case csv:
+                Tools.exportChartAsCSV(chart, file);
+                break;
+            default:
+                ChartUtilities.saveChartAsPNG(file, chart, 1000, 1000);
+                break;
         }
         return fileName;
     }
 
     /**
-     * 
+     *
      */
     public enum KeyCancerGroupsEnum {
 
         /**
-         * 
+         *
          */
         allCancerGroupsIndex,
         /**
-         * 
+         *
          */
         leukemiaNOSCancerGroupIndex,
         /**
-         * 
+         *
          */
         skinCancerGroupIndex,
         /**
-         * 
+         *
          */
         bladderCancerGroupIndex,
         /**
-         * 
+         *
          */
         mesotheliomaCancerGroupIndex,
         /**
-         * 
+         *
          */
         kaposiSarkomaCancerGroupIndex,
         /**
-         * 
+         *
          */
         myeloproliferativeDisordersCancerGroupIndex,
         /**
-         * 
+         *
          */
         myelodysplasticSyndromesCancerGroupIndex,
         /**
-         * 
+         *
          */
         allCancerGroupsButSkinIndex,
         /**
-         * 
+         *
          */
         brainAndCentralNervousSystemCancerGroupIndex,
         /**
-         * 
+         *
          */
         ovaryCancerGroupIndex,
         /**
-         * 
+         *
          */
         otherCancerGroupsIndex,
         /**
-         * 
+         *
          */
         numberOfCancerGroups
     }
 
     /**
-     * 
+     *
      * @param popoutput
      * @param startYear
      * @param populations
@@ -336,7 +342,8 @@ public class Tools {
         popheader += "AGE_GROUP" + separator;
         popheader += "SEX" + separator;
         popheader += "COUNT" + separator;
-        popheader += "REFERENCE_COUNT";
+        popheader += "REFERENCE_COUNT" + separator;
+        popheader += "AGE_GROUP_SIZE";
         popoutput.append(popheader);
         popoutput.newLine();
         int thisYear = startYear;
@@ -348,7 +355,8 @@ public class Tools {
                     popoutput.append(ageGroupNames[pop.getAgeGroup()]).append(separator);
                     popoutput.append(pop.getStringRepresentationOfAgeGroupsForFile(separator)).append(separator);
                     // get reference pop
-                    popoutput.append(popset.getWorldPopulationForAgeGroupIndex(pop.getSex(), pop.getAgeGroup()) + "");
+                    popoutput.append(popset.getReferencePopulationForAgeGroupIndex(pop.getSex(), pop.getAgeGroup()) + "").append(separator);
+                    popoutput.append(popset.getAgeGroupStructure().getSizeOfAgeGroupByIndex(pop.getAgeGroup()) + "");
                     popoutput.newLine();
                 }
             }
@@ -358,12 +366,14 @@ public class Tools {
     }
 
     /**
-     * 
-     * @param keyGroupsMap - Important - needs a otherCancerGroupsIndex to be able to calculate all sites
+     *
+     * @param keyGroupsMap - Important - needs a otherCancerGroupsIndex to be
+     * able to calculate all sites
      * @param icdString
      * @param morphologyString
      * @param cancerGroupsLocal
-     * @return This is set to DONT_COUNT if it should not be counted and -1 if it is not classifiable but countable
+     * @return This is set to DONT_COUNT if it should not be counted and -1 if
+     * it is not classifiable but countable
      */
     public static int assignICDGroupIndex(
             Map<KeyCancerGroupsEnum, Integer> keyGroupsMap,
@@ -438,7 +448,7 @@ public class Tools {
 
     /**
      * Exports a JFreeChart to a SVG file.
-     * 
+     *
      * @param chart JFreeChart to export
      * @param bounds the dimensions of the viewport
      * @param svgFile the output file.
@@ -449,8 +459,8 @@ public class Tools {
             Rectangle bounds,
             File svgFile) throws IOException {
         // Get a DOMImplementation and create an XML document
-        DOMImplementation domImpl =
-                GenericDOMImplementation.getDOMImplementation();
+        DOMImplementation domImpl
+                = GenericDOMImplementation.getDOMImplementation();
         Document document = domImpl.createDocument(null, "svg", null);
 
         // Create an instance of the SVG Generator
@@ -514,7 +524,6 @@ public class Tools {
         //        + " CMD BATCH --vanilla --slave "
         //        + canreg.common.Tools.encapsulateIfNeeded(rScript) + " "
         //        + canreg.common.Tools.encapsulateIfNeeded(reportFileName);
-        
         System.out.println(commandList);
         Process pr = null;
         try {
@@ -545,7 +554,7 @@ public class Tools {
                 String errorMessage = convertStreamToString(errorStream);
                 System.out.println(errorMessage);
                 throw new TableErrorException("R says:\n \"" + errorMessage + "\"");
-            }      
+            }
         } catch (IOException ex) {
             Logger.getLogger(Tools.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -576,7 +585,7 @@ public class Tools {
                 plot.setSectionOutlinePaint(plot.getDataset().getKey(i), baseColor.darker().darker().darker());
                 color = darken(color);
                 plot.setSectionPaint(plot.getDataset().getKey(i), color);
-            } catch (java.lang.IndexOutOfBoundsException ex){
+            } catch (java.lang.IndexOutOfBoundsException ex) {
                 // not data for all the categories - that is fine
                 Logger.getLogger(TopNChartTableBuilder.class.getName()).log(Level.INFO, null, ex);
             }

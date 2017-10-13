@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2016 International Agency for Research on Cancer
+ * Copyright (C) 2008-2017 International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -40,6 +40,7 @@ import canreg.client.analysis.TableBuilderListElement;
 import canreg.client.analysis.TableErrorException;
 import canreg.client.gui.CanRegClientView;
 import canreg.client.gui.components.LabelAndComboBoxJPanel;
+import canreg.client.gui.components.RangeFilterPanel;
 import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 import canreg.common.DatabaseFilter;
 import canreg.common.DatabaseVariablesListElement;
@@ -87,13 +88,14 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     private Map<Integer, PopulationDataset> populationDatasetsMap;
     private PopulationDataset[] populationDatasetsArray;
     private LinkedList<LabelAndComboBoxJPanel> populationDatasetChooserPanels;
-    private LocalSettings localSettings;
+    private final LocalSettings localSettings;
     private String path;
     private JFileChooser chooser;
-    private Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
-    private Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+    private final Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
+    private final Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
     private TableBuilderInterface tableBuilder = null;
     int filterTabPos = 3;
+    private RangeFilterPanel rangeFilterPanel;
 
     /**
      * Creates new form TableBuilderInternalFrame
@@ -101,17 +103,17 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     public TableBuilderInternalFrame() {
         initComponents();
         setCursor(hourglassCursor);
+        
+        initRangeFilterPanel();
+        
         initData();
 
         localSettings = CanRegClientApp.getApplication().getLocalSettings();
 
         // Add a listener for changing the active tab
-        ChangeListener tabbedPaneChangeListener = new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                // initializeVariableMappingTab();
-                changeTab(tabbedPane.getSelectedIndex());
-            }
+        ChangeListener tabbedPaneChangeListener = (ChangeEvent e) -> {
+            // initializeVariableMappingTab();
+            changeTab(tabbedPane.getSelectedIndex());
         };
         // And add the listener to the tabbedPane
 
@@ -129,6 +131,8 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
 
         //tabbedPane.remove(3);
         setCursor(normalCursor);
+        
+        turnAllOutputButtonsOff();
     }
 
     private String generateHeadingString() {
@@ -206,8 +210,8 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     private PopulationDataset[] generateDummyPopulationDatasets() {
         PopulationDataset dummyPop = new PopulationDataset();
         dummyPop.setFilter(rangeFilterPanel.getFilter());
-        dummyPop.setWorldPopulation(new PopulationDataset());
-        dummyPop.setWorldPopulationID(0);
+        dummyPop.setReferencePopulation(new PopulationDataset());
+        dummyPop.setReferencePopulationID(0);
         dummyPop.setPopulationDatasetName("");
 
         PopulationDataset[] populations = new PopulationDataset[populationDatasetChooserPanels.size()];
@@ -252,7 +256,6 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         populationDatasetChoosersPanel = new javax.swing.JPanel();
         dontUsePopulationDatasetCheckBox = new javax.swing.JCheckBox();
         filterPanel = new javax.swing.JPanel();
-        rangeFilterPanel = new canreg.client.gui.components.RangeFilterPanel();
         writeOutPanel = new javax.swing.JPanel();
         postScriptButton = new javax.swing.JButton();
         tabulatedButton = new javax.swing.JButton();
@@ -265,6 +268,9 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         chartViewerButton = new javax.swing.JButton();
         seerPrepButton = new javax.swing.JButton();
         csvButton = new javax.swing.JButton();
+        tiffButton = new javax.swing.JButton();
+        docxButton = new javax.swing.JButton();
+        pptxButton = new javax.swing.JButton();
         backButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
         nextButton = new javax.swing.JButton();
@@ -362,8 +368,8 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     .addComponent(previewLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(tableTypePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(previewImageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
-                    .addComponent(descriptionScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE))
+                    .addComponent(previewImageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)
+                    .addComponent(descriptionScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -455,7 +461,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     .addComponent(numberOfYearsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(warningLabel)
-                .addContainerGap(304, Short.MAX_VALUE))
+                .addContainerGap(308, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab(resourceMap.getString("rangePanel.TabConstraints.tabTitle"), rangePanel); // NOI18N
@@ -502,7 +508,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                 .addComponent(pleaseChooseLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(populationDatasetsScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
                 .addComponent(dontUsePopulationDatasetCheckBox)
                 .addContainerGap())
         );
@@ -513,27 +519,6 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         filterPanel.setFocusable(false);
         filterPanel.setName("filterPanel"); // NOI18N
         filterPanel.setRequestFocusEnabled(false);
-
-        rangeFilterPanel.setName("rangeFilterPanel"); // NOI18N
-        rangeFilterPanel.initValues();
-
-        javax.swing.GroupLayout filterPanelLayout = new javax.swing.GroupLayout(filterPanel);
-        filterPanel.setLayout(filterPanelLayout);
-        filterPanelLayout.setHorizontalGroup(
-            filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(filterPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(rangeFilterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        filterPanelLayout.setVerticalGroup(
-            filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(filterPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(rangeFilterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-
         tabbedPane.addTab(resourceMap.getString("filterPanel.TabConstraints.tabTitle"), filterPanel); // NOI18N
 
         writeOutPanel.setName("writeOutPanel"); // NOI18N
@@ -616,6 +601,20 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         csvButton.setToolTipText(resourceMap.getString("csvButton.toolTipText")); // NOI18N
         csvButton.setName("csvButton"); // NOI18N
 
+        tiffButton.setAction(actionMap.get("generateTIFF")); // NOI18N
+        tiffButton.setText(resourceMap.getString("tiffButton.text")); // NOI18N
+        tiffButton.setToolTipText(resourceMap.getString("tiffButton.toolTipText")); // NOI18N
+        tiffButton.setName("tiffButton"); // NOI18N
+
+        docxButton.setAction(actionMap.get("generateDOCX")); // NOI18N
+        docxButton.setText(resourceMap.getString("docxButton.text")); // NOI18N
+        docxButton.setName("docxButton"); // NOI18N
+
+        pptxButton.setAction(actionMap.get("generatePPTX")); // NOI18N
+        pptxButton.setText(resourceMap.getString("pptxButton.text")); // NOI18N
+        pptxButton.setToolTipText(resourceMap.getString("pptxButton.toolTipText")); // NOI18N
+        pptxButton.setName("pptxButton"); // NOI18N
+
         javax.swing.GroupLayout writeOutPanelLayout = new javax.swing.GroupLayout(writeOutPanel);
         writeOutPanel.setLayout(writeOutPanelLayout);
         writeOutPanelLayout.setHorizontalGroup(
@@ -635,7 +634,10 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     .addComponent(imageButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
                     .addComponent(csvButton, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
                     .addComponent(chartViewerButton, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
-                    .addComponent(seerPrepButton, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE))
+                    .addComponent(seerPrepButton, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
+                    .addComponent(tiffButton, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
+                    .addComponent(docxButton, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
+                    .addComponent(pptxButton, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE))
                 .addContainerGap())
         );
         writeOutPanelLayout.setVerticalGroup(
@@ -658,12 +660,18 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tabulatedButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tiffButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(docxButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pptxButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(csvButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(chartViewerButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(seerPrepButton)
-                .addContainerGap(132, Short.MAX_VALUE))
+                .addContainerGap(53, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab(resourceMap.getString("writeOutPanel.TabConstraints.tabTitle"), writeOutPanel); // NOI18N
@@ -684,7 +692,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(tabbedPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 499, Short.MAX_VALUE)
+                    .addComponent(tabbedPane, javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(backButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -697,7 +705,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 452, Short.MAX_VALUE)
+                .addComponent(tabbedPane)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nextButton)
@@ -712,7 +720,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     private void populatePopulationDataSetChooser() {
         populationDatasetChoosersPanel.removeAll();
         if (populationDatasetChooserPanels == null) {
-            populationDatasetChooserPanels = new LinkedList<LabelAndComboBoxJPanel>();
+            populationDatasetChooserPanels = new LinkedList<>();
         }
         populationDatasetChooserPanels.clear();
         for (int i = 0; i <= (endYearChooser.getYear() - startYearChooser.getYear()); i++) {
@@ -729,7 +737,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     }
 
     private void guessPopulationSelections() {
-        Map<Integer, PopulationDataset> map = new HashMap<Integer, PopulationDataset>();
+        Map<Integer, PopulationDataset> map = new HashMap<>();
         for (PopulationDataset pds : populationDatasetsArray) {
             if (pds.getDate().length() >= 4) {
                 int year = Integer.parseInt(pds.getDate().substring(0, 4));
@@ -774,16 +782,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         ImageIcon icon = new ImageIcon(Globals.TABLES_PREVIEW_PATH + "/" + Globals.DEFAULT_PREVIEW_FILENAME,
                 tble.getName());
 
-        // set all buttons off
-        postScriptButton.setEnabled(false);
-        tabulatedButton.setEnabled(false);
-        csvButton.setEnabled(false);
-        imageButton.setEnabled(false);
-        pdfButton.setEnabled(false);
-        svgButton.setEnabled(false);
-        wmfButton.setEnabled(false);
-        chartViewerButton.setEnabled(false);
-        seerPrepButton.setEnabled(false);
+        turnAllOutputButtonsOff();
 
         if (tble != null) {
 
@@ -814,24 +813,45 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                 if (tableBuilder != null) {
                     FileTypes[] fileTypes = tableBuilder.getFileTypesGenerated();
                     for (FileTypes filetype : fileTypes) {
-                        if (filetype.equals(FileTypes.ps)) {
-                            postScriptButton.setEnabled(true);
-                        } else if (filetype.equals(FileTypes.html)) {
-                            tabulatedButton.setEnabled(true);
-                        } else if (filetype.equals(FileTypes.png)) {
-                            imageButton.setEnabled(true);
-                        } else if (filetype.equals(FileTypes.pdf)) {
-                            pdfButton.setEnabled(true);
-                        } else if (filetype.equals(FileTypes.svg)) {
-                            svgButton.setEnabled(true);
-                        } else if (filetype.equals(FileTypes.wmf)) {
-                            wmfButton.setEnabled(true);
-                        } else if (filetype.equals(FileTypes.jchart)) {
-                            chartViewerButton.setEnabled(true);
-                        } else if (filetype.equals(FileTypes.seer)) {
-                            seerPrepButton.setEnabled(true);
-                        } else if (filetype.equals(FileTypes.csv)) {
-                            csvButton.setEnabled(true);
+                        switch (filetype) {
+                            case ps:
+                                postScriptButton.setEnabled(true);
+                                break;
+                            case html:
+                                tabulatedButton.setEnabled(true);
+                                break;
+                            case png:
+                                imageButton.setEnabled(true);
+                                break;
+                            case pdf:
+                                pdfButton.setEnabled(true);
+                                break;
+                            case svg:
+                                svgButton.setEnabled(true);
+                                break;
+                            case wmf:
+                                wmfButton.setEnabled(true);
+                                break;
+                            case jchart:
+                                chartViewerButton.setEnabled(true);
+                                break;
+                            case seer:
+                                seerPrepButton.setEnabled(true);
+                                break;
+                            case csv:
+                                csvButton.setEnabled(true);
+                                break;
+                            case tiff:
+                                tiffButton.setEnabled(true);
+                                break;
+                            case docx:
+                                docxButton.setEnabled(true);
+                                break;
+                            case pptx:
+                                pptxButton.setEnabled(true);
+                                break;
+                            default:
+                                break;
                         }
                     }
                 }
@@ -889,6 +909,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     private javax.swing.JLabel descriptionLabel;
     private javax.swing.JScrollPane descriptionScrollPane;
     private javax.swing.JTextPane descriptionTextPane;
+    private javax.swing.JButton docxButton;
     private javax.swing.JCheckBox dontUsePopulationDatasetCheckBox;
     private com.toedter.calendar.JYearChooser endYearChooser;
     private javax.swing.JLabel endYearLabel;
@@ -907,9 +928,9 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     private javax.swing.JPanel populationDatasetChoosersPanel;
     private javax.swing.JScrollPane populationDatasetsScrollPane;
     private javax.swing.JButton postScriptButton;
+    private javax.swing.JButton pptxButton;
     private javax.swing.JLabel previewImageLabel;
     private javax.swing.JLabel previewLabel;
-    private canreg.client.gui.components.RangeFilterPanel rangeFilterPanel;
     private javax.swing.JPanel rangePanel;
     private javax.swing.JButton seerPrepButton;
     private com.toedter.calendar.JYearChooser startYearChooser;
@@ -920,12 +941,32 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     private javax.swing.JPanel tableTypePanel;
     private javax.swing.JScrollPane tableTypeScrollPane;
     private javax.swing.JButton tabulatedButton;
+    private javax.swing.JButton tiffButton;
     private javax.swing.JLabel typeLabel;
     private javax.swing.JLabel warningLabel;
     private javax.swing.JButton wmfButton;
     private javax.swing.JPanel writeOutPanel;
     // End of variables declaration//GEN-END:variables
 
+    private void turnAllOutputButtonsOff() {
+        // set all buttons off
+        postScriptButton.setEnabled(false);
+        tabulatedButton.setEnabled(false);
+        csvButton.setEnabled(false);
+        imageButton.setEnabled(false);
+        pdfButton.setEnabled(false);
+        svgButton.setEnabled(false);
+        wmfButton.setEnabled(false);
+        chartViewerButton.setEnabled(false);
+        seerPrepButton.setEnabled(false);
+        seerPrepButton.setEnabled(false);
+        seerPrepButton.setEnabled(false);
+        tiffButton.setEnabled(false);
+        docxButton.setEnabled(false);
+        pptxButton.setEnabled(false);
+    }
+            
+    
     private void initData() {
         JSpinner spinnerStart = (JSpinner) startYearChooser.getSpinner();
         spinnerStart.getEditor()
@@ -974,18 +1015,14 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         try {
             populationDatasetsMap = canreg.client.CanRegClientApp.getApplication().getPopulationDatasets();
             Collection<PopulationDataset> populationDatasetsCollection;
-            Collection<PopulationDataset> populationDatasetsCollection2 = new LinkedList<PopulationDataset>();
+            Collection<PopulationDataset> populationDatasetsCollection2 = new LinkedList<>();
             populationDatasetsCollection = populationDatasetsMap.values();
-            for (PopulationDataset pd : populationDatasetsCollection) {
-                if (!pd.isWorldPopulationBool()) {
-                    populationDatasetsCollection2.add(pd);
-                }
-            }
+            populationDatasetsCollection.stream().filter((pd) -> (!pd.isReferencePopulationBool())).forEachOrdered((pd) -> {
+                populationDatasetsCollection2.add(pd);
+            });
             populationDatasetsArray = populationDatasetsCollection2.toArray(new PopulationDataset[0]);
             populatePopulationDataSetChooser();
-        } catch (SecurityException ex) {
-            Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RemoteException ex) {
+        } catch (SecurityException | RemoteException ex) {
             Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -1008,14 +1045,9 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
 
     private void refreshTableTypeList() {
 
-        FilenameFilter filter = new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                return (name.endsWith(".conf"));
-            }
-        };
+        FilenameFilter filter = (File dir, String name1) -> (name1.endsWith(".conf"));
 
-        LinkedList<String> children = new LinkedList<String>();
+        LinkedList<String> children = new LinkedList<>();
 
         // get directories of .confs
         File[] dirs = {
@@ -1035,7 +1067,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         DefaultListModel listModel = new DefaultListModel();
         //open one by one using configreader
         //make list
-        for (String configFileName : children) {
+        children.forEach((configFileName) -> {
             // Get filename of file or directory
             try {
                 String[] tempArray;
@@ -1077,7 +1109,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
+        });
         tableTypeList.setModel(listModel);
 
     }
@@ -1098,7 +1130,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
             }
         }
 
-        Set<DatabaseVariablesListElement> variables = new LinkedHashSet<DatabaseVariablesListElement>();
+        Set<DatabaseVariablesListElement> variables = new LinkedHashSet<>();
         DistributedTableDescription tableDatadescription;
         JChartTableBuilderInterface chartBuilder;
 
@@ -1150,7 +1182,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                 String populationFilterString = "";
                 for (PopulationDataset pop : populations) {
                     if (pop != null) {
-                        int stdPopID = pop.getWorldPopulationID();
+                        int stdPopID = pop.getReferencePopulationID();
                         standardPopulations[i++] = populationDatasetsMap.get(stdPopID);
                         if (populationFilterString.trim().length() == 0) {
                             populationFilterString = pop.getFilter();
@@ -1229,9 +1261,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     if (filetype != FileTypes.jchart) {
 
                         String filesGeneratedList = new String();
-                        for (String fileN : filesGenerated) {
-                            filesGeneratedList += "\n" + fileN;
-                        }
+                        filesGeneratedList = filesGenerated.stream().map((fileN) -> "\n" + fileN).reduce(filesGeneratedList, String::concat);
 
                         setCursor(normalCursor);
 
@@ -1246,16 +1276,14 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                                     filesGeneratedList,
                                     java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("TABLE(S)_BUILT."),
                                     JOptionPane.INFORMATION_MESSAGE);
-                            for (String resultFileName : filesGenerated) {
-                                if (new File(resultFileName).exists()) {
-                                    try {
-                                        canreg.common.Tools.openFile(resultFileName);
-                                    } catch (IOException ex) {
-                                        JOptionPane.showMessageDialog(this, "Unable to open: " + resultFileName + "\n" + ex.getLocalizedMessage());
-                                        Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                                    }
+                            filesGenerated.stream().filter((resultFileName) -> (new File(resultFileName).exists())).forEachOrdered((resultFileName) -> {
+                                try {
+                                    canreg.common.Tools.openFile(resultFileName);
+                                } catch (IOException ex) {
+                                    JOptionPane.showMessageDialog(this, "Unable to open: " + resultFileName + "\n" + ex.getLocalizedMessage());
+                                    Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                                 }
-                            }
+                            });
                         }
                     } else {
                         chartBuilder = (JChartTableBuilderInterface) tableBuilder;
@@ -1274,15 +1302,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     setCursor(normalCursor);
                     JOptionPane.showMessageDialog(this, "Something wrong with the SQL query: \n" + ex.getLocalizedMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                     Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (RemoteException ex) {
-                    Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (SecurityException ex) {
-                    Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (NotCompatibleDataException ex) {
-                    Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (DistributedTableDescriptionException ex) {
-                    Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (UnknownTableException ex) {
+                } catch (RemoteException | SecurityException | NotCompatibleDataException | DistributedTableDescriptionException | UnknownTableException ex) {
                     Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (TableErrorException ex) {
                     setCursor(normalCursor);
@@ -1344,10 +1364,54 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     }
 
     @Action
+    public void generateTIFF() {
+        generateTablesAction(FileTypes.tiff);
+    }
+
+    @Action
+    public void generateDOCX() {
+        generateTablesAction(FileTypes.docx);
+    }
+
+    @Action
+    public void generatePPTX() {
+        generateTablesAction(FileTypes.pptx);
+    }
+    
+    @Action
     public void dontUsePopsCheckboxUpdated() {
         boolean enabled = !dontUsePopulationDatasetCheckBox.isSelected();
         populationDatasetsScrollPane.setVisible(enabled);
         pleaseChooseLabel.setVisible(enabled);
         tabbedPane.setEnabledAt(filterTabPos, !enabled);
+    }
+    
+    private void initRangeFilterPanel() {
+        rangeFilterPanel = new canreg.client.gui.components.RangeFilterPanel();
+        
+        filterPanel.setEnabled(false);
+        filterPanel.setFocusable(false);
+        filterPanel.setName("filterPanel"); // NOI18N
+        filterPanel.setRequestFocusEnabled(false);
+
+        rangeFilterPanel.setName("rangeFilterPanel"); // NOI18N
+        rangeFilterPanel.initValues();
+
+        javax.swing.GroupLayout filterPanelLayout = new javax.swing.GroupLayout(filterPanel);
+        filterPanel.setLayout(filterPanelLayout);
+        filterPanelLayout.setHorizontalGroup(
+            filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(filterPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(rangeFilterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        filterPanelLayout.setVerticalGroup(
+            filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(filterPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(rangeFilterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE)
+                .addContainerGap())
+        );
     }
 }

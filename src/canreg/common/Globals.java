@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2016 International Agency for Research on Cancer
+ * Copyright (C) 2008-2017 International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -121,7 +121,7 @@ public class Globals {
     static final public String USER_R_SCRIPTS_PATH = USER_TABLES_CONF_PATH + "/r";
     static public String USER_TABLES_PREVIEW_PATH = USER_TABLES_CONF_PATH + "/previews";
     static public String DEFAULT_PREVIEW_FILENAME = "blanc.png";
-    public static String R_INSTALL_PACKAGES_SCRIPT = R_SCRIPTS_PATH + "/" + "r-packages/install_packages.R";
+    public static String R_INSTALL_PACKAGES_SCRIPT = R_SCRIPTS_PATH + "/" + "r-packages/install_packages.r";
     /**
      *
      */
@@ -241,13 +241,15 @@ public class Globals {
     public static String NAMESEX_TABLE_SEX_VARIABLE_NAME = "SEX";
     public static String NAMESEX_TABLE_NAME = "NAMESEX";
     public static final int MAX_ERROR_LINES = 25;
-    public static final String morphologicalFamiliesLookUpFileResource = "/canreg/common/resources/lookup/MorphFam.txt";
-    public static final String mustLookupFile = "/canreg/common/resources/lookup/Must.txt";
-    public static final String mustNotLookupFile = "/canreg/common/resources/lookup/MustNot.txt";
+    public static final String MORPHOLOGICAL_FAMILIES_LOOKUP_FILE_RESOURCE = "/canreg/common/resources/lookup/MorphFam.txt";
+    public static final String MUST_LOOKUP_FILE_RESOURCE = "/canreg/common/resources/lookup/Must.txt";
+    public static final String MUST_NOT_LOOKUP_FILE_RESOURCE = "/canreg/common/resources/lookup/MustNot.txt";
+    public static final String MORPH_FAM_DICT_LOOKUP_FILE_RESOURCE = "/canreg/common/resources/lookup/MorphFamDict.txt";
     public static String newline = System.getProperty("line.separator");
     public static boolean SHOW_GARBLER = false;
     public static int DEFAULT_UNKNOWN_AGE_CODE = 999;
-
+    public static String DD_FILE_PATH = "/canreg/common/ruby/canreg5.dd";
+    public static String DD_FILE_VARIABLES_FILE = "/canreg/common/ruby/export_format_canreg5.tsv";
 
     /**
      *
