@@ -7037,22 +7037,14 @@ Scalable Vector Graphics, or SVG, is a scalable editable file format that
 \end_layout
 
 \begin_layout Subsubsection
-Portable Network Graphics (PNG)
+Image files (Portable Network Graphics (PNG), Windows Meta files (WMF) or
+ TIFFs)
 \end_layout
 
 \begin_layout Standard
-PNGs are useful for presentation on screen or online, but less adapted to
- print, as they are not scalable.
-\end_layout
-
-\begin_layout Subsubsection
-Windows Meta File (WMF)
-\end_layout
-
-\begin_layout Standard
-WMFs are useful for presentation on screen, but less adapted to print, as
- they are not scalable.
- (If possible it is better to use PNG as that is an open format.
+Image files are useful for presentation on screen or online, but less adapted
+ to print, as they are not scalable.
+ (If possible it is best to use PNG as that is an open format.)
 \end_layout
 
 \begin_layout Subsubsection
@@ -7061,6 +7053,24 @@ Tabulated data (HTML)
 
 \begin_layout Standard
 This is the data from the tables in HTML format for further processing.
+\end_layout
+
+\begin_layout Subsubsection
+Word files (DOCX)
+\end_layout
+
+\begin_layout Standard
+This generates a word document that can be edited in any compatible software.
+ (Microsoft Word, Libre Office Writer, Open Office Writer, etc.)
+\end_layout
+
+\begin_layout Subsubsection
+PowerPoint (PPTX)
+\end_layout
+
+\begin_layout Standard
+This generates a slide deck that can be edited in any compatible software.
+ (Microsoft PowerPoint, Libre Office Impress, Open Office Impress, etc.)
 \end_layout
 
 \begin_layout Subsection
@@ -7083,7 +7093,7 @@ reference "fig:CanReg5-chart-editor"
 placement h
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
