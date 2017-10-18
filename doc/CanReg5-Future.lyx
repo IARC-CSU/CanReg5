@@ -1,7 +1,9 @@
-#LyX 2.1 created this file. For more info see http://www.lyx.org/
-\lyxformat 474
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
 \begin_document
 \begin_header
+\save_transient_properties true
+\origin unavailable
 \textclass report
 \use_default_options true
 \maintain_unincluded_children false
@@ -9,16 +11,16 @@
 \language_package default
 \inputencoding auto
 \fontencoding global
-\font_roman default
-\font_sans default
-\font_typewriter default
-\font_math auto
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
 \font_default_family default
 \use_non_tex_fonts false
 \font_sc false
 \font_osf false
-\font_sf_scale 100
-\font_tt_scale 100
+\font_sf_scale 100 100
+\font_tt_scale 100 100
 \graphics default
 \default_output_format default
 \output_sync 0
@@ -116,26 +118,12 @@ Data Entry related
 \end_layout
 
 \begin_layout Itemize
-Improve detection of changes to a record.
-\end_layout
-
-\begin_layout Itemize
-Only one save button for all records for a patient?
-\end_layout
-
-\begin_layout Itemize
-Implement shortcuts in the data entry form:
-\end_layout
-
-\begin_deeper
-\begin_layout Standard
-- "Home, "End" keys for the first, last variable.
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
 Design a way to streamline the export and import functionality when centralizing
  data.
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -151,6 +139,10 @@ Database related
 
 \begin_layout Itemize
 Move (parts of) the XML to the database so that we no longer have mismatch.
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -168,11 +160,19 @@ Stored as a BLOB?
 
 \begin_layout Itemize
 Check compatibility of XML? 
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
 ruby code: 
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -206,6 +206,10 @@ Analysis related
 \begin_layout Itemize
 Implement all the analysis tables proposed.
  
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -216,6 +220,10 @@ Number of sources per record.
 
 \begin_layout Itemize
 Others:
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -250,6 +258,10 @@ First name sex improved
 
 \begin_layout Itemize
 Improve person search 
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -259,6 +271,10 @@ Look into using the Duke library!
 
 \begin_layout Itemize
 Improve the dedicated merge patient interface.
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -293,6 +309,10 @@ Keep a table of all confirmed false positives?
 \end_deeper
 \begin_layout Itemize
 Local edits
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -321,16 +341,28 @@ Management related
 
 \begin_layout Itemize
 Database structure editor:
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
 Better detection of missing mandatory variables
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
 Database workings
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -341,6 +373,10 @@ Source ID etc
 \end_deeper
 \begin_layout Itemize
 Registry workings
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -369,6 +405,10 @@ Pending bugs
 
 \begin_layout Itemize
 Bug in R script:
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -390,7 +430,8 @@ Coding related improvements
 \end_layout
 
 \begin_layout Itemize
-Update ICD-O 3 to the Dec 2011 version
+Inconsistencies IARCcrgTools vs CanReg in ICD-O-3 to 10 conversions.
+ (Korea)
 \end_layout
 
 \begin_layout Part*
@@ -410,11 +451,19 @@ General
 
 \begin_layout Itemize
 Internalize some dictionaries (this has started, but can be taken further)
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
 ICD-O-3 (Topo, Morpho, Behaviour)
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -442,11 +491,19 @@ The possibility to select premade dictionaries during set up?
 
 \begin_layout Itemize
 Migrate GUI away from Swing Application Framework.
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
 Migrate towards other GUI designers?
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -470,6 +527,10 @@ Let user enter dates in the format they wish?
 
 \begin_layout Itemize
 Support for some other date formats?
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -488,6 +549,10 @@ Store those as additional fields and
 \end_deeper
 \begin_layout Itemize
 Improve workflow during data entry.
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -514,6 +579,10 @@ passive data collection
 \end_inset
 
 
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -535,6 +604,10 @@ automatic linkage proposals with patients already in the database
 \end_deeper
 \begin_layout Itemize
 Data entry using smart phones/tablets?
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -565,6 +638,10 @@ Use of mortality data in analysis?
 
 \begin_layout Itemize
 Survival?
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -575,6 +652,10 @@ Link to the UN life tables for relative survival?
 \end_deeper
 \begin_layout Itemize
 Export excel files
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -589,6 +670,10 @@ GUI for redefining groups etc of tables?
 
 \begin_layout Itemize
 Export to EpiInfo? 
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -603,6 +688,10 @@ Format?
 \end_deeper
 \begin_layout Itemize
 Export as HTML+JS with help of graph libraries?
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -621,6 +710,10 @@ http://code.google.com/p/flot/
 \end_deeper
 \begin_layout Itemize
 Launch a web server and serve a live view of the databaset?
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -635,6 +728,10 @@ Management related
 
 \begin_layout Itemize
 Changing some user rights levels
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -649,6 +746,10 @@ Adding dedicated procedures to deal with central databases.
 
 \begin_layout Itemize
 Streamline the setup of new systems
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -659,12 +760,20 @@ New system wizard
 \end_deeper
 \begin_layout Itemize
 Implement other algorithms for names sounding alike during person search
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
 Double Metaphone (http://commons.apache.org/codec/apidocs/org/apache/commons/codec
 /language/DoubleMetaphone.html)
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
