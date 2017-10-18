@@ -196,6 +196,17 @@ Move deprecated/obsolete cases to a different table?
 \end_layout
 
 \begin_layout Itemize
+A log of changes table monitoring any change to any element in the database...
+\end_layout
+
+\begin_layout Itemize
+Letting users add variables (tables) that are linked to certain (ranges
+ of) variables.
+ (For example cancer sites, breast woudl show certain fields only relevant
+ to breast cases...)
+\end_layout
+
+\begin_layout Itemize
 Optimize queries.
 \end_layout
 
