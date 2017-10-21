@@ -1,0 +1,1 @@
+The Estimated Annual Percentage Change (EAPC) is used to describe the magnitude of change in the trend on fitting a simple regression model to the log of the ASR. It is the average annual rate of change in the ASR over the time period selected.

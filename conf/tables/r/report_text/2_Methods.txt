@@ -1,0 +1,2 @@
+<EDIT FILE PATH>
+Cancer cases registered using the CanReg5 software. (http://www.iacr.com.fr/CanReg5)
