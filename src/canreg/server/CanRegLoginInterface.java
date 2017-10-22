@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2017  International Agency for Research on Cancer
+ * Copyright (C) 2008-2015  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,7 +40,7 @@ public interface CanRegLoginInterface extends java.rmi.Remote{
      * @return The version number
      * @throws java.rmi.RemoteException
      */
-    public String getSystemVersion() throws java.rmi.RemoteException ;
+    public String getSystemVersion()throws java.rmi.RemoteException ;
     
    /** Method that lets clients login, returning an interface to the server.
    * @param username The name of the user.

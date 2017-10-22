@@ -28,21 +28,20 @@ import canreg.client.gui.*;
 import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
 import canreg.common.Globals;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.rmi.RemoteException;
 import java.text.DateFormat;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Properties;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+
+import canreg.web.TomcatLauncher;
 import org.jdesktop.application.Action;
 
 /**
@@ -105,8 +104,6 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         dataEntryLabel = new javax.swing.JLabel();
         dataEntryVersionComboBox = new javax.swing.JComboBox();
         newDataEntryVerticalSources = new javax.swing.JCheckBox();
-        dataEntryDisplayVariableLabel = new javax.swing.JLabel();
-        dataEntryDisplayVariableComboBox = new javax.swing.JComboBox();
         systemPanel = new javax.swing.JPanel();
         automaticBackupPanel = new javax.swing.JPanel();
         automaticbackupCheckBox = new javax.swing.JCheckBox();
@@ -242,12 +239,6 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         newDataEntryVerticalSources.setToolTipText(resourceMap.getString("newDataEntryVerticalSources.toolTipText")); // NOI18N
         newDataEntryVerticalSources.setName("newDataEntryVerticalSources"); // NOI18N
 
-        dataEntryDisplayVariableLabel.setText(resourceMap.getString("dataEntryDisplayVariableLabel.text")); // NOI18N
-        dataEntryDisplayVariableLabel.setName("dataEntryDisplayVariableLabel"); // NOI18N
-
-        dataEntryDisplayVariableComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "FULL", "SHORT", "ENGLISH", "STANDARD" }));
-        dataEntryDisplayVariableComboBox.setName("dataEntryDisplayVariableComboBox"); // NOI18N
-
         javax.swing.GroupLayout lookAndFeelPanelLayout = new javax.swing.GroupLayout(lookAndFeelPanel);
         lookAndFeelPanel.setLayout(lookAndFeelPanelLayout);
         lookAndFeelPanelLayout.setHorizontalGroup(
@@ -272,12 +263,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(dataEntryVersionComboBox, 0, 323, Short.MAX_VALUE)
                         .addContainerGap())
-                    .addComponent(newDataEntryVerticalSources, javax.swing.GroupLayout.DEFAULT_SIZE, 431, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, lookAndFeelPanelLayout.createSequentialGroup()
-                        .addComponent(dataEntryDisplayVariableLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dataEntryDisplayVariableComboBox, 0, 312, Short.MAX_VALUE)
-                        .addContainerGap())))
+                    .addComponent(newDataEntryVerticalSources, javax.swing.GroupLayout.DEFAULT_SIZE, 431, Short.MAX_VALUE)))
         );
         lookAndFeelPanelLayout.setVerticalGroup(
             lookAndFeelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -297,11 +283,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
                     .addComponent(dataEntryVersionComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(newDataEntryVerticalSources)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(lookAndFeelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(dataEntryDisplayVariableComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(dataEntryDisplayVariableLabel))
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout generalPanelLayout = new javax.swing.GroupLayout(generalPanel);
@@ -407,7 +389,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
             .addGroup(systemPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(automaticBackupPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(193, Short.MAX_VALUE))
+                .addContainerGap(172, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab(resourceMap.getString("systemPanel.TabConstraints.tabTitle"), systemPanel); // NOI18N
@@ -507,7 +489,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
             .addGroup(advancedPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(versionPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(190, Short.MAX_VALUE))
+                .addContainerGap(169, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab(resourceMap.getString("advancedPanel.TabConstraints.tabTitle"), advancedPanel); // NOI18N
@@ -598,11 +580,74 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
                 .addComponent(rPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(gsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(186, Short.MAX_VALUE))
+                .addContainerGap(165, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab(resourceMap.getString("pathsPanel.TabConstraints.tabTitle"), pathsPanel); // NOI18N
+//<ictl.co>
+        webPanel = new javax.swing.JPanel();
+        serverPortLabel = new javax.swing.JLabel();
+        serverPortTextField = new javax.swing.JTextField();
+        serverLanuchButton = new javax.swing.JButton();
+        serverPanel = new javax.swing.JPanel();
 
+        webPanel.setName("webPanel"); //NOI18N
+
+        serverPortLabel.setText(resourceMap.getString("serverPortLabel.text")); // NOI18N
+        serverPortLabel.setName("serverPortLabel"); // NOI18N
+
+        serverPortTextField.setText(resourceMap.getString("serverPortTextField.text")); // NOI18N
+        serverPortTextField.setToolTipText(resourceMap.getString("serverPortTextField.toolTipText")); // NOI18N
+        serverPortTextField.setName("serverPortTextField"); // NOI18N
+
+        serverLanuchButton.setAction(actionMap.get("serverLaunch")); // NOI18N
+        serverLanuchButton.setText(resourceMap.getString("serverLaunchButton.text")); // NOI18N
+        serverLanuchButton.setName("serverLaunchButton"); // NOI18N
+
+        serverPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("serverPanel.border.title"))); // NOI18N
+        serverPanel.setName("serverPanel"); // NOI18N
+        javax.swing.GroupLayout serverPanelLayout = new javax.swing.GroupLayout(serverPanel);
+        serverPanel.setLayout(serverPanelLayout);
+
+        serverPanelLayout.setHorizontalGroup(
+                serverPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(serverPanelLayout.createSequentialGroup()
+                                .addComponent(serverPortLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(serverPortTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(serverLanuchButton)
+                                .addContainerGap())
+        );
+        serverPanelLayout.setVerticalGroup(
+                serverPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(serverPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(serverPortLabel)
+                                .addComponent(serverPortTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(serverLanuchButton))
+        );
+
+
+        javax.swing.GroupLayout webPanelLayout = new javax.swing.GroupLayout(webPanel);
+        webPanel.setLayout(webPanelLayout);
+        webPanelLayout.setHorizontalGroup(
+                webPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(webPanelLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(webPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(serverPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addContainerGap())
+        );
+        webPanelLayout.setVerticalGroup(
+                webPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(webPanelLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(serverPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        )
+        );
+
+        tabbedPane.addTab(resourceMap.getString("web.TabConstraints.tabTitle"), webPanel); // NOI18N
+        //</ictl.co>
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -666,8 +711,6 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
     private javax.swing.JCheckBox automaticbackupCheckBox;
     private javax.swing.JTextField backUpPerformedTextField;
     private javax.swing.JButton checkButton;
-    private javax.swing.JComboBox dataEntryDisplayVariableComboBox;
-    private javax.swing.JLabel dataEntryDisplayVariableLabel;
     private javax.swing.JLabel dataEntryLabel;
     private javax.swing.JComboBox dataEntryVersionComboBox;
     private javax.swing.JComboBox dateFormatComboBox;
@@ -697,6 +740,13 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
     private javax.swing.JCheckBox newDataEntryVerticalSources;
     private javax.swing.JTextField numberOfDaysTextField;
     private javax.swing.JPanel pathsPanel;
+    //<ictl.co>
+    private javax.swing.JPanel webPanel;
+    private javax.swing.JPanel serverPanel;
+    private javax.swing.JLabel serverPortLabel;
+    private javax.swing.JTextField serverPortTextField;
+    private javax.swing.JButton serverLanuchButton;
+    //</ictl.co>
     private javax.swing.JButton rInstallationBrowseButton;
     private javax.swing.JLabel rInstallationLabel;
     private javax.swing.JTextField rInstallationTextField;
@@ -713,6 +763,12 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         localSettings = CanRegClientApp.getApplication().getLocalSettings();
         // Languages
         locales = Locale.getAvailableLocales();
+        //<ictl.co>
+        List<Locale> tmp = new ArrayList<Locale>(Arrays.asList(locales));
+        tmp.add(new Locale("fa", "IR"));
+        locales = tmp.toArray(new Locale[0]);
+        //</ictl.co>
+
         Arrays.sort(locales, new Comparator<Locale>() {
 
             @Override
@@ -745,6 +801,14 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         locales = (Locale[]) localesList.toArray(locales);
         languageComboBox.setModel(new javax.swing.DefaultComboBoxModel(localesNamesList.toArray()));
         languageComboBox.setSelectedIndex(currentLocaleIndex);
+        //<ictl.co>
+        languageComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(null, "To make changes effect please restart CanReg5.");
+            }
+        });
+        //<ictl.co>
 
         showOutlineCheckBox.setSelected(localSettings.isOutlineDragMode());
         // CanReg verison
@@ -793,7 +857,10 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         String dataEntryVersion = localSettings.getProperty(LocalSettings.DATA_ENTRY_VERSION_KEY);
         dataEntryVersionComboBox.setSelectedItem(dataEntryVersion);
 
-        dataEntryDisplayVariableComboBox.setSelectedItem(localSettings.getDisplayVariableType().toString());
+        //<ictl.co>
+        serverPortTextField.setText(localSettings.getProperty("webserver.port"));
+        //</ictl.co>
+
     }
 
     private String getNewestVersionNumber() {
@@ -848,7 +915,6 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         localSettings.setProperty(LocalSettings.FONT_SIZE_KEY, fontSizeComboBox.getSelectedItem().toString());
 
         localSettings.setProperty(LocalSettings.DATE_FORMAT_KEY, dateFormatComboBox.getSelectedItem().toString());
-        localSettings.setProperty(LocalSettings.DISPLAY_VARIABLE_TYPE_KEY, dataEntryDisplayVariableComboBox.getSelectedItem().toString());
 
         localSettings.setProperty(LocalSettings.DATA_ENTRY_VERSION_KEY, dataEntryVersionComboBox.getSelectedItem().toString());
         if (newDataEntryVerticalSources.isSelected()) {
@@ -922,5 +988,23 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
             gsInstallationTextField.setText(chooser.getSelectedFile().getAbsolutePath());
         }
     }
-    
+
+    //<ictl.co>
+    @Action
+    public void serverLaunch() {
+        int webPort = 0;
+        try {
+            webPort = Integer.parseInt(serverPortTextField.getText());
+            localSettings.setProperty("webserver.port", serverPortTextField.getText());
+            TomcatLauncher.launch(webPort);
+            JOptionPane.showMessageDialog(null, "Web Server Started Successfully.");
+            canreg.common.Tools.browse("http://localhost:" + serverPortTextField.getText());
+        } catch (NumberFormatException nfe) {
+            Logger.getLogger(OptionsFrame.class.getName()).log(Level.SEVERE, null, nfe);
+            JOptionPane.showMessageDialog(null, "Invalid Port number.");
+        } catch (IOException e) {
+            Logger.getLogger(OptionsFrame.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }
+    //</ictl.co>
 }

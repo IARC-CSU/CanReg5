@@ -721,7 +721,7 @@ public final class CanRegClientView extends FrameView {
 
     public static void centerInternalFrame(JDesktopPane desktopPane, JInternalFrame internalFrame) {
         int width = internalFrame.getWidth(), height = internalFrame.getHeight();
-        int leftX = desktopPane.getWidth() / 2 - width / 2, topY = (desktopPane.getHeight() - TOOLBARHEIGTH) / 2 - height / 2;
+        int leftX = desktopPane.getWidth() / 2 - width / 2, topY = (desktopPane.getHeight() - toolBarHeight) / 2 - height / 2;
         internalFrame.setBounds(leftX, topY, width, height);
     }
 
@@ -827,7 +827,7 @@ public final class CanRegClientView extends FrameView {
     }
 
     private static void debugOut(String msg) {
-        if (Globals.DEBUG) {
+        if (DEBUG) {
             Logger.getLogger(CanRegClientView.class.getName()).log(Level.INFO, msg);
         }
     }
@@ -843,8 +843,8 @@ public final class CanRegClientView extends FrameView {
 
             // format the list
             String users = "";
-            for (String list1 : list) {
-                users += list1 + "\n";
+            for (int i = 0; i < list.length; i++) {
+                users += list[i] + "\n";
             }
             // send some debug out
             debugOut(users);
@@ -1000,7 +1000,7 @@ public final class CanRegClientView extends FrameView {
         }
 
         garbleDatabaseMenuItem.setVisible(management && Globals.SHOW_GARBLER);
-        canreg4migrationMenuItem.setVisible(Globals.DEBUG);
+        canreg4migrationMenuItem.setVisible(DEBUG);
 
         latestNewsMenuItem.setVisible(false);
         
@@ -1102,9 +1102,9 @@ public final class CanRegClientView extends FrameView {
         JInternalFrame importInternalFrame;
         // int i = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("DO YOU HAVA ALL YOUR DATA IN ONE FILE?"), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("ONE FILE?"), JOptionPane.YES_NO_OPTION);
         // if (i == JOptionPane.YES_OPTION) {
-        //    importInternalFrame = new ImportView();
+        //    importInternalFrame = new ImportView(/*<ictl.co>*/getDesktopPane()/*</ictl.co>*/);
         //} else {
-        importInternalFrame = new ImportFilesView();
+        importInternalFrame = new ImportFilesView(/*<ictl.co>*/getDesktopPane()/*</ictl.co>*/);
         //}
 
         showAndPositionInternalFrame(desktopPane, importInternalFrame);
@@ -1116,7 +1116,7 @@ public final class CanRegClientView extends FrameView {
      */
     @Action
     public void importDataFromCR4() {
-        JInternalFrame importInternalFrame = new ImportView();
+        JInternalFrame importInternalFrame = new ImportView(/*<ictl.co>*/getDesktopPane()/*</ictl.co>*/);
         showAndPositionInternalFrame(desktopPane, importInternalFrame);
         maximizeHeight(desktopPane, importInternalFrame);
     }
@@ -1214,10 +1214,10 @@ public final class CanRegClientView extends FrameView {
         internalFrame.setVisible(true);
         int posX = 0;
         // Math.max(desktopPane.getWidth() / 2 - internalFrame.getWidth() / 2, 0);
-        posX = Math.min(posX + numberOfOpenFrames * X_OFFSET, desktopPane.getWidth() - X_OFFSET);
+        posX = Math.min(posX + numberOfOpenFrames * xOffset, desktopPane.getWidth() - xOffset);
         int posY = 0;
         // Math.max(desktopPane.getHeight() / 2 - internalFrame.getHeight() / 2, 0);
-        posY = Math.min(posY + numberOfOpenFrames * Y_OFFSET, desktopPane.getHeight() - Y_OFFSET);
+        posY = Math.min(posY + numberOfOpenFrames * yOffset, desktopPane.getHeight() - yOffset);
         internalFrame.setLocation(posX, posY);
         //CanRegClientApp.getApplication().getMainFrame();
         internalFrame.setVisible(true);
@@ -1597,6 +1597,7 @@ public final class CanRegClientView extends FrameView {
     @Action
     public Task installRpackagesAction() {
         return new InstallRpackagesActionTask(getApplication());
+
     }
 
     private class InstallRpackagesActionTask extends org.jdesktop.application.Task<Object, Void> {
@@ -1640,6 +1641,9 @@ public final class CanRegClientView extends FrameView {
                     commandList.add("--slave");
                     commandList.add("--file=" + scriptFile.getAbsolutePath());
                     
+                  //  String command = canreg.common.Tools.encapsulateIfNeeded(rpath) 
+                //            + " --slave --file="
+                 //           + canreg.common.Tools.encapsulateIfNeeded(scriptFile.getAbsolutePath());
                     System.out.println("Command: " + commandList);
                     System.out.flush();
 
@@ -1786,8 +1790,9 @@ public final class CanRegClientView extends FrameView {
     private int busyIconIndex = 0;
     private JDialog aboutBox;
     private Globals.UserRightLevels userRightsLevel = Globals.UserRightLevels.NOT_LOGGED_IN;
+    private static final boolean DEBUG = Globals.DEBUG;
     LocalSettings localSettings;
-    private static final int X_OFFSET = 30, Y_OFFSET = 30;
-    private static final int TOOLBARHEIGTH = 80;
+    private static final int xOffset = 30, yOffset = 30;
+    private static final int toolBarHeight = 80;
     private BrowseInternalFrame browseInternalFrame;
 }

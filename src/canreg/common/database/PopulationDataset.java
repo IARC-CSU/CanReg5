@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2017  International Agency for Research on Cancer
+ * Copyright (C) 2008-2015  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,13 +19,18 @@
  */
 package canreg.common.database;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import canreg.common.DateHelper;
+import canreg.common.LocalizationHelper;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.function.Predicate;
 
+/**
+ *
+ * @author ervikm
+ */
 public class PopulationDataset extends DatabaseRecord implements Serializable {
 
     static String ID_KEY = "ID";
@@ -36,8 +41,8 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
     static String SOURCE_KEY = "SOURCE";
     static String AGE_GROUP_STRUCTURE_KEY = "AGE_GROUP_STRUCTURE";
     static String DESCRIPTION_KEY = "DESCRIPTION";
-    static String REFERENCE_POPULATION_ID_KEY = "WORLD_POPULATION_ID";
-    static String REFERENCE_POPULATION_BOOL_KEY = "WORLD_POPULATION_BOOL";
+    static String WORLD_POPULATION_ID_KEY = "WORLD_POPULATION_ID";
+    static String WORLD_POPULATION_BOOL_KEY = "WORLD_POPULATION_BOOL";
     static AgeGroupStructure[] AGE_GROUP_STRUCTURES = {new AgeGroupStructure(5, 85)};
     private int populationDatasetID = -1;
     private String populationDatasetName = null;
@@ -46,12 +51,12 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
     private String source = "";
     private AgeGroupStructure ageGroupStructure;
     private String description = "";
-    private boolean referencePopulationBool = false;
-    private int referencePopulationID = 0;
-    private LinkedList<PopulationDatasetsEntry> ageGroups = new LinkedList<>();
-    private final int UNKNOWN_AGE_GROUP_CODE = 99;
-    private PopulationDataset referencePopulation;
-    private Map<String, Integer> ageGroupMap = new HashMap<>();
+    private boolean worldPopulationBool = false;
+    private int worldPopulationID = 0;
+    private LinkedList<PopulationDatasetsEntry> ageGroups = new LinkedList<PopulationDatasetsEntry>();
+    private int UNKNOWN_AGE_GROUP_CODE = 99;
+    private PopulationDataset worldPopulation;
+    private Map<String, Integer> ageGroupMap = new HashMap<String, Integer>();
 
     /**
      * Creates a new instance of PopulationDatasetsEntry
@@ -67,25 +72,41 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
      * @param count
      */
     public void addUnkownAgeGroup(int sex, int count) {
-        ageGroupMap.put(sex + "," + UNKNOWN_AGE_GROUP_CODE, count);
+        ageGroupMap.put(sex + "," + UNKNOWN_AGE_GROUP_CODE, new Integer(count));
         ageGroups.add(new PopulationDatasetsEntry(UNKNOWN_AGE_GROUP_CODE, sex, count));
     }
 
     /**
-     *
+     * 
      */
     public void flushAgeGroups() {
-        ageGroupMap = new HashMap<>();
-        ageGroups = new LinkedList<>();
+        ageGroupMap = new HashMap<String, Integer>();
+        ageGroups = new LinkedList<PopulationDatasetsEntry>();
     }
 
     @Override
     public String toString() {
+        //<ictl.co>
+        String[] names = populationDatasetName.split(",");
+        if (names.length == 2) {
+            try {
+                int year = Integer.parseInt(names[1].trim());
+                if (LocalizationHelper.isPersianLocale() && DateHelper.isGregorianYear(year)) {
+                    year = DateHelper.convertGregorianYearToPersianYear(year);
+                } else if (LocalizationHelper.isGregorianLocale() && DateHelper.isJalaliYear(year)) {
+                    year = DateHelper.convertJalaliYearToGregoranYear(year);
+                }
+                return names[0] + "," + year;
+            } catch (NumberFormatException ex) {
+
+            }
+        }
+        //</ictl.co>
         return populationDatasetName;
     }
 
     /**
-     *
+     * 
      * @return
      */
     public int getPopulationDatasetID() {
@@ -93,7 +114,7 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
     }
 
     /**
-     *
+     * 
      * @param populationDatasetID
      */
     public void setPopulationDatasetID(int populationDatasetID) {
@@ -101,15 +122,31 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public String getPopulationDatasetName() {
+        //<ictl.co>
+        String[] names = populationDatasetName.split(",");
+        if (names.length == 2) {
+            try {
+                int year = Integer.parseInt(names[1].trim());
+                if (LocalizationHelper.isPersianLocale() && DateHelper.isGregorianYear(year)) {
+                    year = DateHelper.convertGregorianYearToPersianYear(year);
+                } else if (LocalizationHelper.isGregorianLocale() && DateHelper.isJalaliYear(year)) {
+                    year = DateHelper.convertJalaliYearToGregoranYear(year);
+                }
+                return names[0] + "," + year;
+            } catch (NumberFormatException ex) {
+
+            }
+        }
+        //</ictl.co>
         return populationDatasetName;
     }
 
     /**
-     *
+     * 
      * @param populationDatasetName
      */
     public void setPopulationDatasetName(String populationDatasetName) {
@@ -117,7 +154,7 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public String getFilter() {
@@ -125,7 +162,7 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
     }
 
     /**
-     *
+     * 
      * @param filter
      */
     public void setFilter(String filter) {
@@ -133,7 +170,7 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public String getDate() {
@@ -141,7 +178,7 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
     }
 
     /**
-     *
+     * 
      * @param date
      */
     public void setDate(String date) {
@@ -149,7 +186,7 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public String getSource() {
@@ -157,7 +194,7 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
     }
 
     /**
-     *
+     * 
      * @param source
      */
     public void setSource(String source) {
@@ -165,7 +202,7 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public AgeGroupStructure getAgeGroupStructure() {
@@ -173,7 +210,7 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
     }
 
     /**
-     *
+     * 
      * @param ageGroupStructure
      */
     public final void setAgeGroupStructure(AgeGroupStructure ageGroupStructure) {
@@ -183,7 +220,7 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public String getDescription() {
@@ -191,7 +228,7 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
     }
 
     /**
-     *
+     * 
      * @param description
      */
     public void setDescription(String description) {
@@ -199,46 +236,43 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
     }
 
     /**
-     *
+     * 
      * @return
      */
-    public boolean isReferencePopulationBool() {
-        return referencePopulationBool;
+    public boolean isWorldPopulationBool() {
+        return worldPopulationBool;
     }
 
     /**
-     *
+     * 
      * @param worldPopulationBool
      */
-    public void setReferencePopulationBool(boolean worldPopulationBool) {
-        this.referencePopulationBool = worldPopulationBool;
+    public void setWorldPopulationBool(boolean worldPopulationBool) {
+        this.worldPopulationBool = worldPopulationBool;
     }
 
     /**
-     *
+     * 
      * @return
      */
-    public int getReferencePopulationID() {
-        return referencePopulationID;
+    public int getWorldPopulationID() {
+        return worldPopulationID;
     }
 
     /**
-     *
-     * @param referencePopulationID
+     * 
+     * @param worldPopulationID
      */
-    public void setReferencePopulationID(int referencePopulationID) {
-        this.referencePopulationID = referencePopulationID;
+    public void setWorldPopulationID(int worldPopulationID) {
+        this.worldPopulationID = worldPopulationID;
     }
 
     /**
-     *
+     * 
      * @param pdse
      */
     public void addAgeGroup(PopulationDatasetsEntry pdse) {
-        ageGroupMap.put(pdse.getSex() + "," + pdse.getAgeGroup(), pdse.getCount());
-        Predicate<PopulationDatasetsEntry> allreadyThere = (p) -> (p.getSex() == pdse.getSex()
-                && p.getAgeGroup() == pdse.getAgeGroup());
-        ageGroups.removeIf(allreadyThere);
+        ageGroupMap.put(pdse.getSex() + "," + pdse.getAgeGroup(), new Integer(pdse.getCount()));
         ageGroups.add(pdse);
     }
 
@@ -252,7 +286,7 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public PopulationDatasetsEntry[] getAgeGroups() {
@@ -264,7 +298,6 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
      * @param age
      * @return
      */
-    @JsonIgnore
     public int getAgeGroupIndex(int age) {
         return ageGroupStructure.whatAgeGroupIsThisAge(age);
     }
@@ -282,7 +315,7 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
     {
 
         // load population data
-        ageGroups.stream().forEach((pdse) -> {
+        for (PopulationDatasetsEntry pdse : ageGroups) {
             int sex = pdse.getSex() - 1;
             if (sex > 1) {
                 sex = 2;
@@ -298,15 +331,14 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
             populationArray[sex][ageGroup] += population;
             // For the total
             populationArray[sex][populationArray[0].length - 1] += population;
-        });
+
+        }
     }
 
-    @JsonIgnore
     public String getStringRepresentationOfAgeGroupsForFile() {
         return getStringRepresentationOfAgeGroupsForFile("\t");
     }
 
-    @JsonIgnore
     public String getStringRepresentationOfAgeGroupsForFile(String separator) {
         StringBuilder popString = new StringBuilder();
         for (PopulationDatasetsEntry pop : getAgeGroups()) {
@@ -322,52 +354,47 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
         return popString.toString();
     }
 
-    @JsonIgnore
-    public PopulationDataset getReferencePopulation() {
-        return referencePopulation;
+    public PopulationDataset getWorldPopulation() {
+        return worldPopulation;
     }
 
     /**
      * @param worldPopulation the referencePopulation to set
      */
-    public void setReferencePopulation(PopulationDataset worldPopulation) {
+    public void setWorldPopulation(PopulationDataset worldPopulation) {
         if (worldPopulation != null) {
-            this.referencePopulation = worldPopulation;
-            this.referencePopulationID = worldPopulation.getPopulationDatasetID();
+            this.worldPopulation = worldPopulation;
+            this.worldPopulationID = worldPopulation.getPopulationDatasetID();
         }
     }
 
-    public int getReferencePopulationForAgeGroupIndex(int sex, int index) throws IncompatiblePopulationDataSetException {
+    public int getWorldPopulationForAgeGroupIndex(int sex, int index) throws IncompatiblePopulationDataSetException {
         int count = Integer.MIN_VALUE;
-        if (referencePopulation != null) {
-            AgeGroupStructure wags = referencePopulation.getAgeGroupStructure();
+        if (worldPopulation != null) {
+            AgeGroupStructure wags = worldPopulation.getAgeGroupStructure();
             // if this has the very same age group structure as the worldpop - return this
 
             if (wags.equals(ageGroupStructure)) {
-                count = referencePopulation.getAgeGroupCount(sex, index);
+                count = worldPopulation.getAgeGroupCount(sex, index);
             } else if (wags.getSizeOfGroups() == ageGroupStructure.getSizeOfGroups()) {
                 // we have the same general age group size
                 if (wags.getSizeOfFirstGroup() == ageGroupStructure.getSizeOfFirstGroup()) {
-                    count = getreferencePopulationForAgeGroupIndex(sex, index, 0);
+                    count = getWorldPopulationForAgeGroupIndex(sex, index, 0);
                 } // if the size of the groups are the same, 
                 // but the first group size is different
                 // and smaller than the group size
                 else if (ageGroupStructure.getSizeOfFirstGroup() < ageGroupStructure.getSizeOfGroups()) {
                     int offset = -1;
-                    switch (index) {
-                        case 0:
-                            count = referencePopulation.getAgeGroupCount(sex, index)
-                                    / ageGroupStructure.getSizeOfGroups();
-                            break;
-                        case 1:
-                            int firstGroupCount = referencePopulation.getAgeGroupCount(sex, 0)
-                                    / ageGroupStructure.getSizeOfGroups();
-                            count = getreferencePopulationForAgeGroupIndex(sex, index, offset)
-                                    - firstGroupCount;
-                            break;
-                        default:
-                            count = getreferencePopulationForAgeGroupIndex(sex, index, offset);
-                            break;
+                    if (index == 0) {
+                        count = worldPopulation.getAgeGroupCount(sex, index)
+                                / ageGroupStructure.getSizeOfGroups();
+                    } else if (index == 1) {
+                        int firstGroupCount = worldPopulation.getAgeGroupCount(sex, 0)
+                                / ageGroupStructure.getSizeOfGroups();
+                        count = getWorldPopulationForAgeGroupIndex(sex, index, offset)
+                                - firstGroupCount;
+                    } else {
+                        count = getWorldPopulationForAgeGroupIndex(sex, index, offset);
                     }
                 } // if the size of the groups are the same, 
                 // but the first group size is different
@@ -379,10 +406,10 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
                     if (index == 0) {
                         // group all the ages that 
                         for (int tempIndex = 0; tempIndex < offset; tempIndex++) {
-                            count += getReferencePopulationForAgeGroupIndex(sex, index);
+                            count += getWorldPopulationForAgeGroupIndex(sex, index);
                         }
                     } else {
-                        count = getreferencePopulationForAgeGroupIndex(sex, index, offset);
+                        count = getWorldPopulationForAgeGroupIndex(sex, index, offset);
                     }
                 }
             }
@@ -395,35 +422,31 @@ public class PopulationDataset extends DatabaseRecord implements Serializable {
         return count;
     }
 
-    private int getreferencePopulationForAgeGroupIndex(int sex, int index, int offset) {
-        AgeGroupStructure wags = referencePopulation.getAgeGroupStructure();
+    private int getWorldPopulationForAgeGroupIndex(int sex, int index, int offset) {
+        AgeGroupStructure wags = worldPopulation.getAgeGroupStructure();
         int count = 0;
         index = index + offset;
         if (index < wags.getNumberOfAgeGroups() - 1
                 && index < ageGroupStructure.getNumberOfAgeGroups() - 1) {
-            count = referencePopulation.getAgeGroupCount(sex, index);
-        } else // last group - no cutoff, we sum it all up
-         if (index <= wags.getNumberOfAgeGroups() - 1
+            count = worldPopulation.getAgeGroupCount(sex, index);
+        } else {
+            // last group - no cutoff, we sum it all up
+            if (index <= wags.getNumberOfAgeGroups() - 1
                     && ageGroupStructure.getCutOfAge() == Integer.MAX_VALUE) {
                 for (int tempIndex = index; tempIndex < wags.getNumberOfAgeGroups(); tempIndex++) {
-                    count += referencePopulation.getAgeGroupCount(sex, tempIndex);
+                    count += worldPopulation.getAgeGroupCount(sex, tempIndex);
                 }
                 // last group - with cutoff, we take that group
             } else if (index <= wags.getNumberOfAgeGroups() - 1
                     && ageGroupStructure.getCutOfAge() != Integer.MAX_VALUE) {
-                count = referencePopulation.getAgeGroupCount(sex, index);
+                count = worldPopulation.getAgeGroupCount(sex, index);
             }
+        }
         return count;
     }
 
     public int getAgeGroupCount(int sex, int index) {
         int count = ageGroupMap.get(sex + "," + index);
         return count;
-    }
-
-    @Override
-    @JsonIgnore
-    public String[] getVariableNames() {
-        return new String[]{}; // nothing for now
     }
 }

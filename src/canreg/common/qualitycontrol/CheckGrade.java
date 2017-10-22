@@ -140,11 +140,7 @@ public class CheckGrade extends CheckInterface {
             }
 
             //-----------------< Mod differentiated
-            if ((morphologyNumber == 8249 ||   // JF 2014
-                    morphologyNumber == 8332 || 
-                    morphologyNumber == 9083 || 
-                    morphologyNumber == 9243 || 
-                    morphologyNumber == 9372) && (gradeNumber != 2)) {
+            if ((morphologyNumber == 8332 || morphologyNumber == 9083 || morphologyNumber == 9243 || morphologyNumber == 9372) && (gradeNumber != 2)) {
                 graderesult = false;
             }
 
@@ -154,17 +150,7 @@ public class CheckGrade extends CheckInterface {
             }
 
             //-----------------< Undifferentiated, Anaplastic
-            if ((morphologyNumber == 8020 || 
-                    morphologyNumber == 8021 || 
-                    morphologyNumber == 8805 || 
-                    morphologyNumber == 9062 || 
-                    morphologyNumber == 9082 || 
-//                    morphologyNumber == 9390 || // JF 2014
-                    morphologyNumber == 9392 || 
-                    morphologyNumber == 9401 || 
-                    morphologyNumber == 9451 || 
-                    morphologyNumber == 9505 || 
-                    morphologyNumber == 9512) && (gradeNumber != 4)) {
+            if ((morphologyNumber == 8020 || morphologyNumber == 8021 || morphologyNumber == 8805 || morphologyNumber == 9062 || morphologyNumber == 9082 || morphologyNumber == 9390 || morphologyNumber == 9392 || morphologyNumber == 9401 || morphologyNumber == 9451 || morphologyNumber == 9505 || morphologyNumber == 9512) && (gradeNumber != 4)) {
                 graderesult = false;            
             }
 
@@ -174,21 +160,7 @@ public class CheckGrade extends CheckInterface {
             }
 
             //-----------------< T cell lymphomas
-            if ((morphologyNumber == 9702 || 
-                    morphologyNumber == 9705 || 
-                    morphologyNumber == 9708 || 
-                    morphologyNumber == 9709 || 
-                    morphologyNumber == 9717 || 
-                    morphologyNumber == 9716 || // 1st 2014
-                    morphologyNumber == 9718 || 
-                    morphologyNumber == 9719 || 
-         	    morphologyNumber == 9724 ||  // 1st 2014
-		    morphologyNumber == 9726 ||  // 1st 2014
-                    morphologyNumber == 9729 || 
-                    morphologyNumber == 9827 || 
-                    morphologyNumber == 9834 || 
-                    morphologyNumber == 9837) && 
-                    (gradeNumber != 5)) {
+            if ((morphologyNumber == 9702 || morphologyNumber == 9705 || morphologyNumber == 9708 || morphologyNumber == 9709 || morphologyNumber == 9717 || morphologyNumber == 9718 || morphologyNumber == 9719 || morphologyNumber == 9729 || morphologyNumber == 9827 || morphologyNumber == 9834 || morphologyNumber == 9837) && (gradeNumber != 5)) {
                 graderesult = false;            
             }
 
@@ -203,23 +175,7 @@ public class CheckGrade extends CheckInterface {
             }
 
             //-----------------< B cell lymphomas
-            if (((morphologyNumber >= 9670 && morphologyNumber <= 9699) || 
-                    morphologyNumber == 9712 ||
-                    morphologyNumber == 9728 || 
-                    morphologyNumber == 9737 ||  // 1st 2014
-                    morphologyNumber == 9738 ||  // 1st 2014
-                    morphologyNumber == 9811 ||  // 1st 2014
-                    morphologyNumber == 9812 ||  // 1st 2014
-                    morphologyNumber == 9813 ||  // 1st 2014
-                    morphologyNumber == 9814 ||  // 1st 2014
-                    morphologyNumber == 9815 ||  // 1st 2014
-                    morphologyNumber == 9816 ||  // 1st 2014
-                    morphologyNumber == 9817 ||  // 1st 2014
-                    morphologyNumber == 9818 ||  // 1st 2014
-                    morphologyNumber == 9823 || 
-                    morphologyNumber == 9833 || 
-                    morphologyNumber == 9836) && 
-                    (gradeNumber != 6)) {
+            if (((morphologyNumber >= 9670 && morphologyNumber <= 9699) || morphologyNumber == 9728 || morphologyNumber == 9823 || morphologyNumber == 9833 || morphologyNumber == 9836) && (gradeNumber != 6)) {
                 graderesult = false;            
             }
 

@@ -194,29 +194,6 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
                 if (morphologyLookUpLine.length() > 5) {
                     flag = morphologyLookUpLine.charAt(5);
                 }
-                if (morphologyNumber == 8930 && behaviourNumber == 3) {
-                    if (sexNumber == 0) { 
-                        String topographyLookUpLine = topographyICD10Map.get(topographyCode);
-                        TopogConv(1, topographyLookUpLine);
-                    } // male
-		    else {
-			if (topographyNumber == 540) ICD10Male = "C540";  // change C54.1 to C54.0
-                    }
-		}
-		else if ((morphologyNumber == 8161 || morphologyNumber == 8162) && behaviourNumber == 3) {  // J. Ferlay 2014
-		// override default conversion (C22.1; C22.1; C22.1) for specific sites
-                    if (topographyNumber == 240) ICD10Male = "C240"; 
-		}
-		else if (morphologyNumber == 9699) {  // MALT lymphoma (B. Rous/GEKID, 2015)
-			// override default conversion (C88.4) for specific sites
-			if (morphologyNumber == 420 || 
-                            topographyNumber == 421 || 
-                            topographyNumber == 424 || 
-                            (topographyNumber/10) == 77) {
-                            ICD10Male = "C830";
-                        } 
-		}
-                
             } else if (rule == 8) // dependent on Top and Mor
             {
                 boolean ret = Rule8(morphologyLookUpLine, topographyCode);
@@ -327,10 +304,8 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
         if (rule == 0 || rule > 5) {
             Logger.getLogger(ConversionICDO3toICD10.class.getName()).log(Level.WARNING, "ERROR : ICD10 Rule invalid (O3_10clas.java)");
             return;
-        } else if (O3_10TLookLine == null) {
-            Logger.getLogger(ConversionICDO3toICD10.class.getName()).log(Level.WARNING, "ERROR : O3_10TLookLine doesn't exist");
-            return;
-        } else if (O3_10TLookLine.length() < 20) {
+        }
+        if (O3_10TLookLine.length() < 20) {
             Logger.getLogger(ConversionICDO3toICD10.class.getName()).log(Level.WARNING, "ERROR : O3_10TLookLine too short");
             return;
         }

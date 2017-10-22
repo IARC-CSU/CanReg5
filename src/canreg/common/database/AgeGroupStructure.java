@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2017  International Agency for Research on Cancer
+ * Copyright (C) 2008-2015  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,9 +19,6 @@
  */
 package canreg.common.database;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import java.util.LinkedList;
 
@@ -39,7 +36,6 @@ public class AgeGroupStructure implements Serializable {
     private int sizeOfFirstGroup = 5;
     private int cutOfAge = Integer.MAX_VALUE;
     private String[] ageGroupNames;
-    @JsonIgnore
     private String constructor;
 
     /**
@@ -69,13 +65,8 @@ public class AgeGroupStructure implements Serializable {
      * @param maxAge
      * @param sizeOfFirstGroup
      * @param cutOfAge
-     */    
-    @JsonCreator
-    public AgeGroupStructure(
-            @JsonProperty("sizeOfGroups") int sizeOfGroups, 
-            @JsonProperty("maxAge") int maxAge, 
-            @JsonProperty("sizeOfFirstGroup") int sizeOfFirstGroup, 
-            @JsonProperty("cutOfAge") int cutOfAge) {
+     */
+    public AgeGroupStructure(int sizeOfGroups, int maxAge, int sizeOfFirstGroup, int cutOfAge) {
         this.cutOfAge = cutOfAge;
         this.sizeOfFirstGroup = sizeOfFirstGroup;
         this.sizeOfGroups = sizeOfGroups;
@@ -87,10 +78,12 @@ public class AgeGroupStructure implements Serializable {
     /**
      * 
      * @param constructor
-     */    
+     */
     public AgeGroupStructure(String constructor) {
         this.constructor = constructor;
+
         String[] arguments = constructor.split(",");
+
         // Set defaults
         this.sizeOfGroups = 5;
         this.maxAge = 85;
@@ -131,7 +124,6 @@ public class AgeGroupStructure implements Serializable {
      * 
      * @return
      */
-    @JsonIgnore
     public int getNumberOfAgeGroups() {
         return ageGroupNames.length;
     }
@@ -161,7 +153,7 @@ public class AgeGroupStructure implements Serializable {
     }
 
     private String[] generateAgeGroupNames() {
-        LinkedList<String> strings = new LinkedList<>();
+        LinkedList<String> strings = new LinkedList<String>();
         int year = 0;
         if (getSizeOfFirstGroup() == 1) {
             strings.add("0");

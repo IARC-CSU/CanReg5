@@ -1,38 +1,4 @@
-﻿Changelog
-
-5.00.42
-- Analysis features updated in collaboration with Mathieu Laversanne:
-  - Default report for further editing in Word or similar added.
-    - Template system implemented.
-  - Default slide deck for further editing in Power Point or similar added.
-  - Updated and harmonized look of most data visualizations.
-  - New visualizations added.
-  - Log files for analysis improved.
-  - Changed all .R references in CanReg code and conf files to .r. (This improves Linux/Mac compatibility.) 
-- Updated the R package installer 
-  - Created an installer that comes with bundled R packages for the latest version of R (Currently 3.4.2).
-  - R packages that CanReg5 uses are installed in a separate folder among the user's R libs so that we have more control over packages we use.
-  - R script to clean the folder for R packages added.
-- ICD-O-3 1st revision is now implemented in the checks and conversions by translating and adapting Jacques Ferlay's C++-code and tables.
-  - New codes are added to the dictionaries when setting up a new CanReg5 system. Existing users must add the codes manually if desired. 
-  - Added a default dictionary of morphological codes on 5 characters.
-  - Default labels harmonized with http://codes.iarc.fr .
-- Improved messages from Topography and Morphology checks.
-- Big parts of importing/exporting rewritten using an updated Java CSV library.
-- Users can save and load population datasets to and from (JSON) files.
-- SEER stat integration improved.
-  - CanReg specific DD file compatibility. (Requires SEER*prep from August 2017 or newer.)
-  - Vital Status and Grade (if collected and configured in CanReg XML) properly exported
-- Users can choose English/Short/Standard labels instead of the full variable names as labels for data entry forms, as well as in the variable chooser (Export/frequencies etc.).
-- Fixed a bug in the list of defined servers during login that occurred sometimes when users had more than a certain number defined.
-- Files generated (either by exporting or saving tables in frequencies by year) now open in the associated software automatically.
-- Fixed off by one error when counting cases to be imported.
-- Fix bug where ICCC codes were not generated during import.
-- Updates to the Russian translation by Anton Ryzhov.
-- Some updates to the French translation by Eric Masuyer.
-- Java Runtime Environment (JRE) 8 is now required.
-- Stability improvements.
-- Other fixes.
+Changelog
 
 5.00.41b
 - Fixed bug in generation of variables list if source table contains more fields than patient table.

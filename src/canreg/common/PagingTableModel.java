@@ -10,20 +10,25 @@ import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 
 /**
+ * Simulate a JTable with a million rows, but only MAX_PAGE_SIZE rows
+ * are paged in at a time and it takes LATENCY_MILLIS to load them.
+ * 
+ * This simulation is pretty simple. It doesn't do common-sense things
+ * like canceling scheduled loads when they aren't needed anymore.
+ * 
  * Original found here: http://saloon.javaranch.com/cgi-bin/ubb/ultimatebb.cgi?ubb=get_topic&f=2&t=016435
  * 
  * @author Brian Cole
- * @author Morten Ervik
  */
 public class PagingTableModel extends AbstractTableModel {
 
     private static final int MAX_PAGE_SIZE = 80;
     //private static final int LATENCY_MILLIS = 1500;
     private int dataOffset = 0;
-    private ArrayList<Object[]> data = new ArrayList<>();
-    private final SortedSet<Segment> pending = new TreeSet<>();
-    private final DistributedTableDataSource tableDataSource;
-    private final DistributedTableDescription tableDescription;
+    private ArrayList<Object[]> data = new ArrayList<Object[]>();
+    private SortedSet<Segment> pending = new TreeSet<Segment>();
+    private DistributedTableDataSource tableDataSource;
+    private DistributedTableDescription tableDescription;
 
     /**
      * 
@@ -55,7 +60,6 @@ public class PagingTableModel extends AbstractTableModel {
     }
 
     /**
-     * @return 
      * @see javax.swing.table.TableModel#getColumnClass(int)
      */
     @Override
@@ -109,7 +113,12 @@ public class PagingTableModel extends AbstractTableModel {
         Segment lo = new Segment(offset - MAX_PAGE_SIZE, 0);
         Segment hi = new Segment(offset + 1, 0);
         // search pending segments that may contain offset
-        return pending.subSet(lo, hi).stream().anyMatch((seg) -> (seg.contains(offset)));
+        for (Segment seg : pending.subSet(lo, hi)) {
+            if (seg.contains(offset)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void load(final int startOffset, final int length) {
@@ -117,25 +126,33 @@ public class PagingTableModel extends AbstractTableModel {
         final Segment seg = new Segment(startOffset, length);
         pending.add(seg);
         // set up code to run in another thread
-        Runnable fetch = () -> {
-            Object[][] dataObject;
-            try {
-                dataObject = tableDataSource.retrieveRows(startOffset, startOffset + length);
-            } catch (DistributedTableDescriptionException ex) {
-                Logger.getLogger(PagingTableModel.class.getName()).log(Level.WARNING, "error retrieving page at " + startOffset + ": aborting \n" + ex.getMessage(), ex);
-                pending.remove(seg);
-                return;
+        Runnable fetch = new Runnable() {
+
+            @Override
+            public void run() {
+                Object[][] dataObject;
+                try {
+                    dataObject = tableDataSource.retrieveRows(startOffset, startOffset + length);
+                } catch (DistributedTableDescriptionException ex) {
+                    Logger.getLogger(PagingTableModel.class.getName()).log(Level.WARNING, "error retrieving page at " + startOffset + ": aborting \n" + ex.getMessage(), ex);
+                    pending.remove(seg);
+                    return;
+                }
+                final ArrayList<Object[]> page = new ArrayList<Object[]>();
+                for (int j = 0; j < dataObject.length; j += 1) {
+                    page.add(dataObject[j]);
+                }
+                // done loading -- make available on the event dispatch thread
+                SwingUtilities.invokeLater(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        Logger.getLogger(PagingTableModel.class.getName()).log(Level.WARNING, "** loaded {0} through {1}", new Object[]{startOffset, startOffset + length - 1});
+                        setData(startOffset, page);
+                        pending.remove(seg);
+                    }
+                });
             }
-            final ArrayList<Object[]> page = new ArrayList<>();
-            for (int j = 0; j < dataObject.length; j += 1) {
-                page.add(dataObject[j]);
-            }
-            // done loading -- make available on the event dispatch thread
-            SwingUtilities.invokeLater(() -> {
-                Logger.getLogger(PagingTableModel.class.getName()).log(Level.WARNING, "** loaded {0} through {1}", new Object[]{startOffset, startOffset + length - 1});
-                setData(startOffset, page);
-                pending.remove(seg);
-            });
         };
         // run on another thread
         new Thread(fetch).start();

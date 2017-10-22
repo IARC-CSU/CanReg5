@@ -85,6 +85,9 @@
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
               <action class="canreg.client.gui.components.VariablesChooserPanel" id="exportAllVariablesAction" methodName="exportAllVariablesAction"/>
+			  <!-- <ictl.co> -->
+			  <action class="canreg.client.gui.components.VariablesChooserPanel" id="localeCalendarAction" methodName="localeCalendarAction"/>
+              <!-- </ictl.co> -->
             </Property>
             <Property name="name" type="java.lang.String" value="allVariablesCheckBox" noResource="true"/>
           </Properties>

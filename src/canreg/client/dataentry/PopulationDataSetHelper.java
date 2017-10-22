@@ -95,9 +95,9 @@ public class PopulationDataSetHelper {
         // Fourth line is the Standard population label
         line = bufferedReader.readLine();
         if (line.equalsIgnoreCase("World")) {
-            pds.setReferencePopulationID(0);
+            pds.setWorldPopulationID(0);
         } else {
-            pds.setReferencePopulationID(0); // Default
+            pds.setWorldPopulationID(0); // Default
         }
         // Read the rest of the file as datastream
         bufferedReader.close();

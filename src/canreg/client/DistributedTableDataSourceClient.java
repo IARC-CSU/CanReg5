@@ -87,4 +87,5 @@ public class DistributedTableDataSourceClient implements DistributedTableDataSou
     public int[] getSelectedColumns() throws DistributedTableDescriptionException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
 }

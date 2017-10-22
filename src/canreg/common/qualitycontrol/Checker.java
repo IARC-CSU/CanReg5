@@ -95,7 +95,10 @@ public class Checker {
         /**
          *
          */
-        TopographyMorphology
+        TopographyMorphology,
+        // <ictl.co>
+        NCID
+        //</ictl.co>
     }
     LinkedList<CheckInterface> checks;
 

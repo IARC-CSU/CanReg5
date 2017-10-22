@@ -378,7 +378,8 @@ public final class SystemDescription {
         if (variable.getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_ALPHA_NAME)
                 || variable.getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_NUMBER_NAME)
                 || variable.getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_ASIAN_TEXT_NAME)
-                || variable.getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_TEXT_AREA_NAME)) {
+                || variable.getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_TEXT_AREA_NAME)
+                /*<ictl.co>*/ || variable.getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_NCID_NAME)/*</ictl.co>*/) {
             element.appendChild(createElement(namespace + "variable_length", "" + variable.getVariableLength()));
         } else if (variable.getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_DATE_NAME)) {
             element.appendChild(createElement(namespace + "variable_length", "" + Globals.DATE_FORMAT_STRING.length()));

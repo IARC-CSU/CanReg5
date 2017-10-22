@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2017  International Agency for Research on Cancer
+ * Copyright (C) 2008-2015  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,9 +19,6 @@
  */
 package canreg.common.database;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 
 /**
@@ -44,16 +41,11 @@ public class PopulationDatasetsEntry extends DatabaseRecord implements Serializa
 
     /**
      * Creates a new instance of PopulationDatasetsEntry
-     *
-     * @param ageGroup
+     * @param ageGroup 
      * @param sex
-     * @param count
+     * @param count 
      */
-    @JsonCreator
-    public PopulationDatasetsEntry(
-            @JsonProperty("ageGroup") int ageGroup, 
-            @JsonProperty("sex") int sex, 
-            @JsonProperty("count") int count) {
+    public PopulationDatasetsEntry(int ageGroup, int sex, int count) {
         super();
         this.ageGroup = ageGroup;
         this.sex = sex;
@@ -66,7 +58,7 @@ public class PopulationDatasetsEntry extends DatabaseRecord implements Serializa
     }
 
     /**
-     *
+     * 
      * @return
      */
     public int getAgeGroup() {
@@ -74,7 +66,7 @@ public class PopulationDatasetsEntry extends DatabaseRecord implements Serializa
     }
 
     /**
-     *
+     * 
      * @param ageGroup
      */
     public void setAgeGroup(int ageGroup) {
@@ -82,7 +74,7 @@ public class PopulationDatasetsEntry extends DatabaseRecord implements Serializa
     }
 
     /**
-     *
+     * 
      * @return
      */
     public int getCount() {
@@ -90,7 +82,7 @@ public class PopulationDatasetsEntry extends DatabaseRecord implements Serializa
     }
 
     /**
-     *
+     * 
      * @param count
      */
     public void setCount(int count) {
@@ -98,16 +90,15 @@ public class PopulationDatasetsEntry extends DatabaseRecord implements Serializa
     }
 
     /**
-     *
+     * 
      * @return
      */
-    @JsonIgnore
     public int getPopulationDatasetID() {
         return populationDatasetID;
     }
 
     /**
-     *
+     * 
      * @param populationDatasetID
      */
     public void setPopulationDatasetID(int populationDatasetID) {
@@ -115,7 +106,7 @@ public class PopulationDatasetsEntry extends DatabaseRecord implements Serializa
     }
 
     /**
-     *
+     * 
      * @return
      */
     public int getSex() {
@@ -123,14 +114,13 @@ public class PopulationDatasetsEntry extends DatabaseRecord implements Serializa
     }
 
     /**
-     *
+     * 
      * @param sex
      */
     public void setSex(int sex) {
         this.sex = sex;
     }
 
-    @JsonIgnore
     public String getStringRepresentationOfAgeGroupsForFile() {
         return getStringRepresentationOfAgeGroupsForFile("\t");
     }
@@ -138,11 +128,4 @@ public class PopulationDatasetsEntry extends DatabaseRecord implements Serializa
     public String getStringRepresentationOfAgeGroupsForFile(String separator) {
         return ageGroup + separator + sex + separator + count;
     }
-
-    @Override
-    @JsonIgnore
-    public String[] getVariableNames() {
-        return new String[] { "ID", "PDS_ID", "AGE_GROUP", "COUNT", "SEX" };
-    }
-
 }

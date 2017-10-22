@@ -329,7 +329,7 @@ public class CasesByAgeGroupChartTableBuilder implements TableBuilderInterface, 
             for (int age = ag.getMin(); age <= ag.getMax(); age++) {
                 int index = pds.getAgeGroupIndex(age);
                 count += pds.getAgeGroupCount(sex, index);
-                refCount += pds.getReferencePopulationForAgeGroupIndex(sex, index);
+                refCount += pds.getWorldPopulationForAgeGroupIndex(sex, index);
             }
             ag.setPopulation(sex, count / (ag.getMax() - ag.getMin() + 1));
             ag.setReferencePopulation(sex, refCount / (ag.getMax() - ag.getMin() + 1));

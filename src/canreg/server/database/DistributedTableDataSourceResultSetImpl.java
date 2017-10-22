@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2017  International Agency for Research on Cancer
+ * Copyright (C) 2008-2015  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -93,10 +93,10 @@ public class DistributedTableDataSourceResultSetImpl implements DistributedTable
 
     @Override
     public synchronized Object[][] retrieveRows(int from, int to) throws DistributedTableDescriptionException {
-        LinkedList<Object[]> rows = new LinkedList<>();
+        LinkedList<Object[]> rows = new LinkedList<Object[]>();
 
         try {
-            // int pos;
+            int pos;
             // pos = resultSet.getRow();
             resultSet.absolute(from);
             boolean hasMore = resultSet.next();

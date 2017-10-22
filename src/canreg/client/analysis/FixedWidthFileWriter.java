@@ -19,7 +19,6 @@
  */
 package canreg.client.analysis;
 
-import canreg.common.Globals;
 import canreg.common.Globals.StandardVariableNames;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -67,7 +66,7 @@ public class FixedWidthFileWriter implements FileWriterInterface {
 
         if (definitionFileName == null) {
             bfr = new BufferedReader(new InputStreamReader(getClass()
-                    .getResourceAsStream(Globals.DD_FILE_VARIABLES_FILE)));
+                    .getResourceAsStream("/canreg/common/ruby/export_format_naaccr1946.ver11_3.d02032011.tsv")));
         } else {
             bfr = new BufferedReader(new FileReader(definitionFileName));
         }
@@ -82,12 +81,12 @@ public class FixedWidthFileWriter implements FileWriterInterface {
 
             fe.name = elems[0];
             if (!elems[1].isEmpty()) {
-                fe.caseCol = Integer.parseInt("0" +elems[1]) - 1; // we 0-reference our columns
+                fe.caseCol = Integer.parseInt(elems[1]) - 1; // we 0-reference our columns
             }
             if (!elems[2].isEmpty()) {
-                fe.popCol = Integer.parseInt("0" +elems[2]) - 1; // we 0-reference our columns
+                fe.popCol = Integer.parseInt(elems[2]) - 1; // we 0-reference our columns
             }
-            fe.length = Integer.parseInt("0" + elems[3]);
+            fe.length = Integer.parseInt(elems[3]);
             fe.isRequired = elems[4].equalsIgnoreCase("true");
             System.out.println(line);
             // set up variable

@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2017  International Agency for Research on Cancer
+ * Copyright (C) 2008-2015  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,8 +20,7 @@
  */
 package canreg.client.analysis;
 
-
-import static canreg.client.analysis.AbstractEditorialTableBuilder.highestPopulationAgeGroup;
+import au.com.bytecode.opencsv.CSVWriter;
 import canreg.common.Globals;
 import canreg.common.PsToPdfConverter;
 import canreg.common.database.AgeGroupStructure;
@@ -36,8 +35,6 @@ import java.io.Writer;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVPrinter;
 
 public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder {
 
@@ -52,8 +49,8 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
     private static final int SEX_COLUMN = 1;
     private static final int AGE_COLUMN = 2;
     private static final int ICD10_COLUMN = 3;
-    //   private static final int MORPHOLOGY_COLUMN = 4;
-    //   private static final int BEHAVIOUR_COLUMN = 5;
+ //   private static final int MORPHOLOGY_COLUMN = 4;
+ //   private static final int BEHAVIOUR_COLUMN = 5;
     private static final int BASIS_DIAGNOSIS_COLUMN = 6;
     private static final int CASES_COLUMN = 7;
     private double[][] standardPopulationArray;
@@ -92,7 +89,7 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
         String font = "Times";
 
         int[] years = {startYear, endYear};
-
+        
 //      double RegPop[][];
         double totalCases[][];
 
@@ -110,6 +107,7 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
 
         double cumRate64[][];
         double cumRate74[][];
+
 
         tableLabel = ConfigFieldsReader.findConfig("table_label",
                 configList);
@@ -177,6 +175,7 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
 
         // cumRate64 = new double[numberOfSexes][numberOfCancerGroups];
         // cumRate74 = new double[numberOfSexes][numberOfCancerGroups];
+
         populationArray = new double[numberOfSexes][numberOfAgeGroups];
         foundAgeGroups = new boolean[numberOfAgeGroups];
 
@@ -241,6 +240,7 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
                     sex = Integer.parseInt(sexString.trim());
 
                     // sex = 3 is unknown sex
+
                     if (sex > 2) {
                         sex = 3;
                     }
@@ -267,6 +267,7 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
                     }
                     }
                      */
+
                     if (icdIndex < 0) {
                         icdString = (String) line[ICD10_COLUMN];
                         if (icdString.length() > 0
@@ -332,9 +333,11 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
 
                             casesArray[icdIndex][sex - 1][ageGroup] += cases;
 
-                        } else if (otherCancerGroupsIndex >= 0) {
-                            casesArray[otherCancerGroupsIndex][sex
-                                    - 1][ageGroup] += cases;
+                        } else {
+                            if (otherCancerGroupsIndex >= 0) {
+                                casesArray[otherCancerGroupsIndex][sex
+                                        - 1][ageGroup] += cases;
+                            }
                         }
                         if (allCancerGroupsIndex >= 0) {
                             casesArray[allCancerGroupsIndex][sex - 1][ageGroup] += cases;
@@ -394,8 +397,8 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
                         }
                         if (foundAgeGroups[ageGroupNumber]
                                 && ageGroupNumber < highestPopulationAgeGroup) {
-                            casesPerHundredThousand[sexNumber][ageGroupNumber][icdGroup]
-                                    = 100000
+                            casesPerHundredThousand[sexNumber][ageGroupNumber][icdGroup] =
+                                    100000
                                     * (casesArray[icdGroup][sexNumber][ageGroupNumber]
                                     + previousAgeGroupCases)
                                     / (populationArray[sexNumber][ageGroupNumber]
@@ -426,6 +429,7 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
                 }
             }
         }
+
 
         // ASR, vASR, MV, MI, DCO
         for (int sexNumber = 0; sexNumber < numberOfSexes; sexNumber++) {
@@ -486,6 +490,7 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
                             lastAgeGroupPopulation,
                             lastAgeGroupWstdPopulation);
 
+
                 }
 
                 // and take the unknown age group into account
@@ -500,6 +505,8 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
                     ASRluL[sex][icdGroup][0] = asrlul[0];
                     ASRluL[sex][icdGroup][1] = asrlul[1];
                      */
+
+
                     // Cum. Rates
                     if (highestPopulationAgeGroup > 13) {
                         for (int k = 1; k <= 13; k++) {
@@ -539,91 +546,81 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
 
         if (fileType.equals(FileTypes.csv)) {
             // write tab separated stuff here
-            CSVPrinter csvOut;
+            CSVWriter csvOut;
             for (int sexNumber = 0; sexNumber < numberOfSexes - 1; sexNumber++) {
+                String tabReportFileName = "";
                 try {
-                    String tabReportFileName = "";
-                    try {
-                        tabReportFileName = reportFileName + sexLabel[sexNumber] + ".csv";
-                        System.out.println(java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder").getString("WRITING TO ") + tabReportFileName);
-                        reportFileWriter = new OutputStreamWriter(new FileOutputStream(tabReportFileName), "UTF-8");
-                    } catch (IOException ioe) {
-                        System.out.println(java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder").getString("ERROR IN REPORTFILE: ") + tabReportFileName);
-                        reportFileWriter = new OutputStreamWriter(System.out);
-                    }
-                    // reportStream = new PrintStream(tabReportFileName);
-                    // write the header line
-                    // reportStream = new PrintStream(tabReportFileName);
-                    // write the header line
-                    LinkedList<String> headers = new LinkedList<String>();
-                    headers.add("SITE");
-                    headers.add("ALL AGES");
-                    headers.add("AGE UNK");
-                    // add age groups
-
-                    for (int age = 1; age <= highestPopulationAgeGroup; age++) {
-                        headers.add(ageLabel[age]);
-                    }
-
-                   // headers.add("CRUDE RATE");
-                    headers.add("(%)");
-//                    headers.add("CUM 0-64");
-//                    headers.add("CUM 0-74");
-//                    headers.add("ASR");
-                    headers.add("ICD (10th)");
-
-                    CSVFormat format = CSVFormat.DEFAULT
-                            .withDelimiter(',')
-                            .withHeader(headers.toArray(new String[0]));
-
-                    csvOut = new CSVPrinter(reportFileWriter, format);
-
-                    LinkedList<String> line = new LinkedList<String>();
-
-                    // write the data
-                    for (int j = 0; j < numberOfCancerGroups; j++) {
-                        if (icdLabel[j].charAt(sexNumber) == '1') {
-                            line.add(icdLabel[j].substring(3));
-                            line.add(formatNumber(totalCases[sexNumber][j], 0));
-                            line.add(formatNumber(casesArray[j][sexNumber][unknownAgeGroupIndex], 0));
-                            for (int age = 1; age <= highestPopulationAgeGroup; age++) {
-                                if (casesArray[j][sexNumber][age] > 0) {
-                                    line.add(formatNumber(casesArray[j][sexNumber][age], 0));
-                                } else {
-                                    line.add("0");
-                                }
-                            }
-                            // line.add(formatNumber(crudeRate[sexNumber][j], 2));
-                            line.add(formatNumber(100 * totalCases[sexNumber][j] / totalCases[sexNumber][allCancerGroupsButSkinIndex]));
-                            // line.add(formatNumber(cumRate64[sexNumber][j], 2));
-                            // line.add(formatNumber(cumRate74[sexNumber][j], 2));
-                            // line.add(formatNumber(ASR[sexNumber][j]));
-                            line.add(icd10GroupDescriptions[j]);
-                            csvOut.printRecord(line);
-                            line.clear();
-                        }
-                    }
-
-                    try {
-                        csvOut.flush();
-                        csvOut.close();
-                    } catch (IOException ex) {
-                        Logger.getLogger(AgeSpecificCasesPerHundredThousandTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    generatedFiles.add(tabReportFileName);
-                } catch (IOException ex) {
-                    Logger.getLogger(AgeSpecificCasesTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                    tabReportFileName = reportFileName + sexLabel[sexNumber] + ".csv";
+                    System.out.println(java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder").getString("WRITING TO ") + tabReportFileName);    
+                    reportFileWriter = new OutputStreamWriter(new FileOutputStream(tabReportFileName), "UTF-8");
+                } catch (IOException ioe) {
+                    System.out.println(java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder").getString("ERROR IN REPORTFILE: ") + tabReportFileName);
+                    reportFileWriter = new OutputStreamWriter(System.out);
                 }
+                // reportStream = new PrintStream(tabReportFileName);
+                csvOut = new CSVWriter(reportFileWriter, '\t');
+                // write the header line
+                LinkedList<String> line = new LinkedList<String>();
+                line.add("SITE");
+                line.add("ALL AGES");
+                line.add("AGE UNK");
+                // add age groups
+
+                for (int age = 1; age <= highestPopulationAgeGroup; age++) {
+                    line.add(ageLabel[age]);
+                }
+
+                // line.add("CRUDE RATE");
+                line.add("(%)");
+                // line.add("CUM 0-64");
+                // line.add("CUM 0-74");
+                // line.add("ASR");
+                line.add("ICD (10th)");
+                csvOut.writeNext(line.toArray(new String[0]));
+                line.clear();
+
+                // write the data
+                for (int j = 0; j < numberOfCancerGroups; j++) {
+                    if (icdLabel[j].charAt(sexNumber) == '1') {
+                        line.add(icdLabel[j].substring(3));
+                        line.add(formatNumber(totalCases[sexNumber][j], 0));
+                        line.add(formatNumber(casesArray[j][sexNumber][unknownAgeGroupIndex], 0));
+                        for (int age = 1; age <= highestPopulationAgeGroup; age++) {
+                            if (casesArray[j][sexNumber][age] > 0) {
+                                line.add(formatNumber(casesArray[j][sexNumber][age], 0));
+                            } else {
+                                line.add("0");
+                            }
+                        }
+                        // line.add(formatNumber(crudeRate[sexNumber][j], 2));
+                        line.add(formatNumber(100 * totalCases[sexNumber][j] / totalCases[sexNumber][allCancerGroupsButSkinIndex]));
+                        // line.add(formatNumber(cumRate64[sexNumber][j], 2));
+                        // line.add(formatNumber(cumRate74[sexNumber][j], 2));
+                        // line.add(formatNumber(ASR[sexNumber][j]));
+                        line.add(icd10GroupDescriptions[j]);
+                        csvOut.writeNext(line.toArray(new String[0]));
+                        line.clear();
+                    }
+                }
+
+                try {
+                    csvOut.flush();
+                    csvOut.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(AgeSpecificCasesPerHundredThousandTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                generatedFiles.add(tabReportFileName);
             }
         } else {
 
             // Make PS-file
+
             for (int sexNumber = 0; sexNumber < numberOfSexes - 1; sexNumber++) {
                 String psFileName = reportFileName + "-" + sexLabel[sexNumber] + ".ps";
                 generatedFiles.add(psFileName);
                 try {
                     Writer fw = new OutputStreamWriter(new FileOutputStream(psFileName), "UTF-8");
-
+                    
                     nf.setMaximumFractionDigits(1);
                     nf.setMinimumFractionDigits(1);
 
@@ -789,7 +786,7 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
                             if (j != allCancerGroupsIndex && allCancerGroupsButSkinIndex >= 0) {
                                 fw.write("0 " + k + " MT ("
                                         + formatNumber(100 * totalCases[sexNumber][j]
-                                                / totalCases[sexNumber][allCancerGroupsButSkinIndex])
+                                        / totalCases[sexNumber][allCancerGroupsButSkinIndex])
                                         + ") RS\n");
                             }
                             k -= (tableFontSize);

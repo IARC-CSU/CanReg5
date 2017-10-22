@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2017  International Agency for Research on Cancer
+ * Copyright (C) 2008-2015  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,8 +25,11 @@
  */
 package canreg.client.gui.dataentry;
 
+// import canreg.client.gui.components.VariableMappingPanel;
 import canreg.client.LocalSettings;
 import canreg.client.CanRegClientApp;
+import canreg.client.gui.LoginInternalFrame;
+import canreg.client.gui.tools.WaitFrame;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.client.dataentry.Import;
 import canreg.client.dataentry.ImportOptions;
@@ -54,9 +57,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.ButtonGroup;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jdesktop.application.Action;
@@ -80,19 +81,22 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
     private File patientInFile;
     private File tumourInFile;
     private File sourceInFile;
-    private final Document doc;
-    private final DatabaseVariablesListElement[] patientVariablesInDB;
-    private final DatabaseVariablesListElement[] tumourVariablesInDB;
-    private final DatabaseVariablesListElement[] sourceVariablesInDB;
-    private final String path;
-    private final LocalSettings localSettings;
-    private final GlobalToolBox globalToolBox;
+    private Document doc;
+    private DatabaseVariablesListElement[] patientVariablesInDB;
+    private DatabaseVariablesListElement[] tumourVariablesInDB;
+    private DatabaseVariablesListElement[] sourceVariablesInDB;
+    private String path;
+    private LocalSettings localSettings;
+    private GlobalToolBox globalToolBox;
     private Task importTask;
-    private final JFileChooser chooser;
+    private JFileChooser chooser;
     private boolean reportFileNameSet = false;
+    //<ictl.co>
+    JDesktopPane desktopPane;
+    //</ictl.co>
 
     /** Creates new form ImportView */
-    public ImportFilesView() {
+    public ImportFilesView(/*<ictl.co>*/JDesktopPane desktopPane/*</ictl.co>*/) {
         initComponents();
         // previewPanel.setVisible(false);
 
@@ -639,6 +643,15 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
     @Action()
     public Task importAction() {
         // TODO: Add a handler for errors in the file structure...
+        //<ictl.co>
+        int showInternalConfirmDialog = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(),
+                java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("PERFORM_BACKUP_NOW?"),
+                java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("BACK_UP?"), JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+        if (showInternalConfirmDialog == JOptionPane.YES_OPTION) {
+            Task backupTask = new PerformBackUpActionTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
+            backupTask.execute();
+        }
+        //</ictl.co>
         if (overwriteRadioButton.isSelected()) {
             // if the overwrite is selected, warn the user.
             int result = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(),
@@ -928,7 +941,6 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
         io.setTumourCheckStatus(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.CheckStatus.toString()).getDatabaseVariableName());
         io.setTumourRecordStatus(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourRecordStatus.toString()).getDatabaseVariableName());
         io.setICD10VariableName(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.ICD10.toString()).getDatabaseVariableName());
-        io.setICCCVariableName(globalToolBox.translateStandardVariableNameToDatabaseVariableName(Globals.StandardVariableNames.ICCC.toString()));
 
         // Set the charactersets
         io.setFilesCharsets(getCharsets());
@@ -988,6 +1000,48 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
             reportFileNameSet = true;
         }
     }
+
+    //<ictl.co>
+    private class PerformBackUpActionTask extends org.jdesktop.application.Task<Object, Void> {
+
+        WaitFrame waitFrame;
+
+        PerformBackUpActionTask(org.jdesktop.application.Application app) {
+            super(app);
+            Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
+            setCursor(hourglassCursor);
+            waitFrame = new WaitFrame();
+            waitFrame.setLabel(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("PERFORMING_BACKUP..."));
+            waitFrame.setIndeterminate(true);
+            desktopPane.add(waitFrame, javax.swing.JLayeredPane.POPUP_LAYER);
+            waitFrame.setVisible(true);
+            waitFrame.setLocation((desktopPane.getWidth() - waitFrame.getWidth()) / 2, (desktopPane.getHeight() - waitFrame.getHeight()) / 2);
+        }
+
+        @Override
+        protected Object doInBackground() {
+            String result = null;
+            try {
+                result = CanRegClientApp.getApplication().performBackup();
+            } catch (RemoteException ex) {
+                Logger.getLogger(LoginInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return result;
+        }
+
+        @Override
+        protected void succeeded(Object resultObject) {
+            Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+            setCursor(normalCursor);
+            waitFrame.dispose();
+            String resultString = (String) resultObject;
+            if (resultString != null) {
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("SYSTEM_BACKED_UP_TO_") + resultString + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("BACKUP_PERFORMED."), JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+    }
+
+    //</ictl.co>
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTabbedPane associateVariavlesTabbedPane;
     private javax.swing.JButton backButton;

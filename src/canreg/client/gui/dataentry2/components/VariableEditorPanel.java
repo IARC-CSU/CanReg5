@@ -175,7 +175,7 @@ public class VariableEditorPanel extends javax.swing.JPanel
     @Override
     public void setDatabaseVariablesListElement(DatabaseVariablesListElement databaseListElement) {
         this.databaseListElement = databaseListElement;
-        setVariableName(databaseListElement.getDisplayVariableName());
+        setVariableName(databaseListElement.getFullName());
         
         String fillInStatus = databaseListElement.getFillInStatus();
         if (fillInStatus.equalsIgnoreCase(Globals.FILL_IN_STATUS_AUTOMATIC_STRING)) {

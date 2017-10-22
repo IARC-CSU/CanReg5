@@ -1,46 +1,41 @@
 name	canreg
-Accession number--hosp	na
-Age at diagnosis	Age
-Basis of diagnosis	BasisDiagnosis
-Behavior (92-00) ICD-O-2	na
-Behavior code ICD-O-3	Behaviour
-Behavior recode for analysis	na
-Cause of death (ICD-10)	na
-Cause of death (ICD-7, 8 or 9)	na
-Census Cod Sys 1970/80/90	na
-Census Tr Cert 1970/80/90	na
-Census Tr Certainty 2000	na
-Census Tract 1970/80/90	na
-Census Tract 2000	na
-Coding system for EOD	na
-County at DX	na
-Diagnostic confirmation	na
-Grade	Grade
-Histologic Type ICD-O-3	Morphology
-Histology (92-00) ICD-O-2	na
-ICCC site recode ICD-O-3/WHO 2008	ICCC
-ICD revision number	na
-ICD-O-3 Hist/behavior, labeled	na
-Month of birth	BirthDate[4,2]
-Month of diagnosis	IncidenceDate[4,2]
-Month of initial RX--SEER	na
-Month of last contact	Lastcontact[4,2]
-NHIA Derived Hisp Origin	na
-Patient ID	PatientID
-Primary Site	Topography
-Primary Site - labeled	Topography
-Race 1	na
-Region	AddressCode
-Reporting hospital (last 6-digits)	na
-SEER type of follow-up	na
-Sequence number	MultPrimSeq
 Sex	Sex
-Site (ICD-10)	ICD10
-Spanish/Hispanic origin	na
-TNM stage	Stage
-Type of Reporting Source	na
-Vital status	VitalStatus
-Year of birth	BirthDate[0,4]
 Year of diagnosis	IncidenceDate[0,4]
+Addr at DX--state	AddressCode
+County at DX	na
+Primary site	Topography
+Behavior code ICD-O-3	Behaviour
+Histologic type ICD-O-3	Morphology
+Behavior (92-00) ICD-O-2	na
+Histology (92-00) ICD-O-2	na
+Cause of death (ICD-7, 8 or 9)	na
+Cause of death (ICD-10)	na
+ICD revision number	na
 Year of initial RX--SEER	na
+Month of initial RX--SEER	na
+Coding system for EOD	na
+Age at diagnosis	Age
+Race 1	na
+Spanish/Hispanic origin	na
+NHIA Derived Hisp Origin	na
 Year of last contact	Lastcontact[0,4]
+Year of birth	BirthDate[0,4]
+Month of diagnosis	IncidenceDate[4,2]
+Month of last contact	na
+Month of birth	BirthDate[4,2]
+Census Tract 2000	na
+Census Tract 1970/80/90	na
+Census Cod Sys 1970/80/90	na
+Census Tr Certainty 2000	na
+Census Tr Cert 1970/80/90	na
+Sequence number--central	na
+Diagnostic confirmation	na
+Vital status	Vitalstatus
+SEER type of follow-up	na
+Type of Reporting Source	na
+Reporting hospital (last 6-digits)	na
+Accession number--hosp	na
+Patient ID number	PatientID
+Behavior recode for analysis	na
+Primary site - labeled	na
+ICD-O-3 Hist/behavior, labeled	na

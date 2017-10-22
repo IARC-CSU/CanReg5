@@ -32,7 +32,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jTabbedPane1" alignment="0" max="32767" attributes="0"/>
+          <Component id="jTabbedPane1" alignment="0" pref="805" max="32767" attributes="0"/>
           <Component id="resultPanel" alignment="0" max="32767" attributes="1"/>
       </Group>
     </DimensionLayout>
@@ -312,7 +312,6 @@
               <SubComponents>
                 <Component class="javax.swing.JCheckBox" name="headingCheckBox">
                   <Properties>
-                    <Property name="selected" type="boolean" value="true"/>
                     <Property name="text" type="java.lang.String" resourceKey="headingCheckBox.text"/>
                     <Property name="enabled" type="boolean" value="false"/>
                     <Property name="name" type="java.lang.String" value="headingCheckBox" noResource="true"/>
@@ -345,11 +344,10 @@
                 </Component>
                 <Component class="javax.swing.JComboBox" name="fileFormatComboBox">
                   <Properties>
-                    <Property name="editable" type="boolean" value="true"/>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="2">
-                        <StringItem index="0" value="Comma Separated"/>
-                        <StringItem index="1" value="Tab Separated Values"/>
+                        <StringItem index="0" value="Tab Separated Values"/>
+                        <StringItem index="1" value="Comma Separated"/>
                       </StringArray>
                     </Property>
                     <Property name="name" type="java.lang.String" value="fileFormatComboBox" noResource="true"/>

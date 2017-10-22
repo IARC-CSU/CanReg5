@@ -8,21 +8,15 @@ import canreg.common.database.Patient;
 import canreg.common.database.Source;
 import canreg.common.database.Tumour;
 import com.itextpdf.awt.PdfGraphics2D;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Element;
-import com.itextpdf.text.PageSize;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.PdfContentByte;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfTemplate;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.*;
 import com.itextpdf.text.pdf.draw.LineSeparator;
 import java.awt.Component;
 import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Map;
@@ -127,6 +121,15 @@ public class JComponentToPDF {
                             groups.put(element.getGroupName(), table);
                             groupIDs.put(element.getGroupID(), element.getGroupName());
                         }
+                        //<ictl.co>
+                        //table.addCell(element.getFullName());
+                        PdfPCell cell = new PdfPCell(new Phrase(element.getFullName(), JComponentToPDFHelper.getDefaultTTFont()));
+                        if (!StringUtils.isAscii(element.getFullName())) {
+                            cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+                            cell.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
+                        }
+                        table.addCell(cell);
+                        //</ictl.co>
                         table.addCell(element.getFullName());
                         Object value = databaseRecord.getVariable(element.getDatabaseVariableName());
                         if (value != null) {
@@ -141,9 +144,35 @@ public class JComponentToPDF {
                                         label = dictionaryEntry.getDescription();
                                     }
                                 }
-                                table.addCell(value.toString() + " (" + label + ")");
+                                //<ictl.co>
+//                                table.addCell(value.toString() + " (" + label + ")");
+                                cell = new PdfPCell(new Phrase(value.toString() + " (" + label + ")", JComponentToPDFHelper.getDefaultTTFont()));
+                                if (!StringUtils.isAscii(value.toString() + " (" + label + ")")) {
+                                    cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+                                    cell.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
+                                }
+                                table.addCell(cell);
+                                //</ictl.co>
                             } else {
-                                table.addCell(value.toString());
+                                //<ictl.co>
+                                //table.addCell(value.toString());
+                                if (LocalizationHelper.isRtlLanguageActive() && DateHelper.analyseContentForDateValue(value.toString())) {
+                                    value = DateHelper.gregorianDateStringToLocaleDateString(value.toString(), Globals.DATE_FORMAT_STRING);
+                                    cell = new PdfPCell(new Phrase(value.toString()));
+                                } else {
+                                    if (!StringUtils.isNumeric(value.toString())) {
+                                        cell = new PdfPCell(new Phrase(value.toString(), JComponentToPDFHelper.getDefaultTTFont()));
+                                        if (!StringUtils.isAscii(value.toString())) {
+                                            cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+                                            cell.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
+                                        }
+                                    } else {
+                                        cell = new PdfPCell(new Phrase(value.toString()));
+                                    }
+                                }
+                                table.addCell(cell);
+
+                                //</ictl.co>
                             }
                         } else {
                             table.addCell(" ");
@@ -171,7 +200,11 @@ public class JComponentToPDF {
             Logger.getLogger(JComponentToPDF.class.getName()).log(Level.SEVERE, null, ex);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(JComponentToPDF.class.getName()).log(Level.SEVERE, null, ex);
+        //<ictl.co>
+        } catch (IOException ex) {
+            Logger.getLogger(JComponentToPDF.class.getName()).log(Level.SEVERE, null, ex);
         }
+        //</ictl.co>
     }
 
     private static float convertToPixels(int points) {

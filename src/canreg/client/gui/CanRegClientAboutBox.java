@@ -88,6 +88,10 @@ public class CanRegClientAboutBox extends javax.swing.JDialog implements Hyperli
         javax.swing.JLabel appVendorLabel = new javax.swing.JLabel();
         javax.swing.JLabel homepageLabel = new javax.swing.JLabel();
         javax.swing.JLabel appHomepageLabel = new javax.swing.JLabel();
+        //<ictl.co>
+        javax.swing.JLabel behdashtHomepageLabel = new javax.swing.JLabel();
+        javax.swing.JLabel behdashtApppHomepageLabel = new javax.swing.JLabel();
+        //</ictl.co>
         javax.swing.JLabel appDescLabel = new javax.swing.JLabel();
         javax.swing.JLabel imageLabel = new javax.swing.JLabel();
 
@@ -155,6 +159,19 @@ public class CanRegClientAboutBox extends javax.swing.JDialog implements Hyperli
             }
         });
 
+//<ictl.co>
+        behdashtHomepageLabel.setFont(behdashtHomepageLabel.getFont().deriveFont(behdashtHomepageLabel.getFont().getStyle() | java.awt.Font.BOLD));
+        behdashtHomepageLabel.setText(resourceMap.getString("behdashtHomepageLabel.text")); // NOI18N
+        behdashtHomepageLabel.setName("behdashtHomepageLabel"); // NOI18N
+
+        behdashtApppHomepageLabel.setText(resourceMap.getString("BehdashtApplication.homepage")); // NOI18N
+        behdashtApppHomepageLabel.setName("behdashtAppHomepageLabel"); // NOI18N
+        behdashtApppHomepageLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                behdashtHomepageLabelMouseClick(evt);
+            }
+        });
+//</ictl.co>
         appDescLabel.setText(resourceMap.getString("appDescLabel.text")); // NOI18N
         appDescLabel.setName("appDescLabel"); // NOI18N
 
@@ -171,17 +188,19 @@ public class CanRegClientAboutBox extends javax.swing.JDialog implements Hyperli
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(209, 209, 209)
-                        .addComponent(closeButton))
+                                                .addComponent(closeButton))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(versionLabel)
                             .addComponent(vendorLabel)
-                            .addComponent(homepageLabel))
+                            .addComponent(homepageLabel)
+                                                /*<ictl.co>*/.addComponent(behdashtHomepageLabel)/*</ictl.co*/)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(appVersionLabel)
                             .addComponent(appVendorLabel)
-                            .addComponent(appHomepageLabel)))
+                                                        .addComponent(appHomepageLabel)
+                                                /*<ictl.co>*/.addComponent(behdashtApppHomepageLabel)/*</ictl.co>*/))
                     .addComponent(appTitleLabel)
                     .addComponent(appDescLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE)
                     .addComponent(aboutScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE))
@@ -208,6 +227,11 @@ public class CanRegClientAboutBox extends javax.swing.JDialog implements Hyperli
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(homepageLabel)
                             .addComponent(appHomepageLabel))
+//<ictl.co>
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(behdashtHomepageLabel)
+                                    .addComponent(behdashtApppHomepageLabel))
+//</ictl.co>
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(aboutScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -221,9 +245,20 @@ public class CanRegClientAboutBox extends javax.swing.JDialog implements Hyperli
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-private void homepageLabelMouseClick(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homepageLabelMouseClick
+    //<ictl.co>
+    private void behdashtHomepageLabelMouseClick(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homepageLabelMouseClick
+        try {
+            canreg.common.Tools.browse(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientAboutBox").getString("http://canreg.behdasht.gov.ir/canreg5/"));
+        } catch (IOException ex) {
+            Logger.getLogger(CanRegClientAboutBox.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_homepageLabelMouseClick
+
+    //</ictl.co>
+
+    private void homepageLabelMouseClick(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homepageLabelMouseClick
     try {
-        canreg.common.Tools.browse(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientAboutBox").getString("http://canreg.iarc.fr/"));
+        canreg.common.Tools.browse(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientAboutBox").getString("http://www.iacr.com.fr/CanReg5"));
     } catch (IOException ex) {
         Logger.getLogger(CanRegClientAboutBox.class.getName()).log(Level.SEVERE, null, ex);
     }

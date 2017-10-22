@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2017  International Agency for Research on Cancer
+ * Copyright (C) 2008-2015  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,19 +23,16 @@ package canreg.common.qualitycontrol;
 import canreg.common.Globals;
 import canreg.common.LookUpLoader;
 import canreg.common.qualitycontrol.Checker.CheckNames;
-import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URISyntaxException;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * 
  * @author ervikm
  */
 public class CheckTopographyMorphology extends CheckInterface {
@@ -46,16 +43,16 @@ public class CheckTopographyMorphology extends CheckInterface {
     /**
      *
      */
-    public static final int MUST_KEY_LENGTH = 6;
-    private static final int MUST_NOT_KEY_LENGTH = 6;
-
-    private Map<Integer, String> morphologyFamMap = new LinkedHashMap<Integer, String>();
+    public static final int mustKeyLength = 6;
+    private static final int mustNotkeyLength = 6;
+    public static String Must_LookupFile = "/canreg/common/resources/lookup/Must.txt";
+    public static String MustNot_LookupFile = "/canreg/common/resources/lookup/MustNot.txt";
 
     @Override
     public Globals.StandardVariableNames[] getVariablesNeeded() {
         return new Globals.StandardVariableNames[]{
-            Globals.StandardVariableNames.Topography,
-            Globals.StandardVariableNames.Morphology};
+                    Globals.StandardVariableNames.Topography,
+                    Globals.StandardVariableNames.Morphology};
     }
 
     @Override
@@ -152,7 +149,7 @@ public class CheckTopographyMorphology extends CheckInterface {
                 // complete key
                 // MustLookupResult = lookUpMustMap5.get(look.substring(0, 5));
 
-                String look1 = look.substring(0, MUST_KEY_LENGTH - 1) + "*";
+                String look1 = look.substring(0, mustKeyLength - 1) + "*";
 
                 if (lookUpMustMap.containsKey(look1)) {
 
@@ -160,7 +157,8 @@ public class CheckTopographyMorphology extends CheckInterface {
                     result.setResultCode(CheckResult.ResultCode.OK);
 
                     break;
-                } else if (lookUpMustMap.containsKey(look.substring(0, MUST_KEY_LENGTH))) {
+                } else if (lookUpMustMap.containsKey(look.substring(0, mustKeyLength))) {
+
 
                     result.setMessage("");
                     result.setResultCode(CheckResult.ResultCode.OK);
@@ -169,12 +167,11 @@ public class CheckTopographyMorphology extends CheckInterface {
                     // -----------< entry not found on partial key  Test all the key
                     String messageString = morphologyFamilyString;
                     try {
-                        int famNo = (Integer.parseInt(morphologyFamilyString.substring(1)));
-                        messageString = "\""+ morphologyFamMap.get(famNo) + "\" ("+famNo+")";
+                        messageString = "" + (Integer.parseInt(morphologyFamilyString.substring(1)) + 1);
                     } catch (NumberFormatException nfe) {
                         messageString = morphologyFamilyString;
                     }
-                    result.setMessage("Morpology (" + morphologyCode + ") is in family " + messageString + ", but topography is " + topographyCode + ".");
+                    result.setMessage("Morpology ("+morphologyCode+") is in family " + messageString +", but topography is "+topographyCode+".");
                     result.setResultCode(CheckResult.ResultCode.Rare);
 
                     break;
@@ -187,24 +184,23 @@ public class CheckTopographyMorphology extends CheckInterface {
                 // we must not find this association.!!+
                 // For example, We search for 5 characters in the key (67C77*)
                 // Then we search for the 6 characters
-                String look1 = look.substring(0, MUST_NOT_KEY_LENGTH - 1) + "*";
+                String look1 = look.substring(0, mustNotkeyLength - 1) + "*";
                 if (lookUpMustNotMap.containsKey(look1)) {
                     String messageString = morphologyFamilyString;
                     try {
-                        int famNo = (Integer.parseInt(morphologyFamilyString.substring(1)) + 63);
-                        messageString = "\""+ morphologyFamMap.get(famNo) + "\" ("+famNo+")";
+                        messageString = "" + (Integer.parseInt(morphologyFamilyString.substring(1)) + 64);
                     } catch (NumberFormatException nfe) {
                         messageString = morphologyFamilyString;
                     }
-                    result.setMessage("Morpology (" + morphologyCode + ") is in family " + messageString + ", but topography is " + topographyCode + ".");
+                    result.setMessage("Morpology ("+morphologyCode+") is in family " + messageString +", but topography is "+topographyCode+".");
                     result.setResultCode(CheckResult.ResultCode.Rare);
-
+                    
                     break;
                     // Search for complete key
                     // There is not * in the key for example String key="68C420";
                     // We search the key in 6 items
                 } else if (lookUpMustNotMap.containsKey(look.substring(0,
-                        MUST_NOT_KEY_LENGTH))) {
+                        mustNotkeyLength))) {
                     // We have found forbidden code.
 
                     result.setMessage("Fam.:" + morphologyFamilyString);
@@ -225,23 +221,15 @@ public class CheckTopographyMorphology extends CheckInterface {
     }
 
     public CheckTopographyMorphology() {
-        InputStream morphFamResourceStream = this.getClass().getResourceAsStream(Globals.MORPHOLOGICAL_FAMILIES_LOOKUP_FILE_RESOURCE);
-        InputStream lookUpMustResourceStream = this.getClass().getResourceAsStream(Globals.MUST_LOOKUP_FILE_RESOURCE);
-        InputStream lookUpMustNotResourceStream = this.getClass().getResourceAsStream(Globals.MUST_NOT_LOOKUP_FILE_RESOURCE);
-        InputStream morphFamDictResourceStream = this.getClass().getResourceAsStream(Globals.MORPH_FAM_DICT_LOOKUP_FILE_RESOURCE);
-        BufferedReader br = null;
+        InputStream morphFamResourceStream = this.getClass().getResourceAsStream(
+                Globals.morphologicalFamiliesLookUpFileResource);
+        InputStream lookUpMustResourceStream = this.getClass().getResourceAsStream(Globals.mustLookupFile);
+        InputStream lookUpMustNotResourceStream = this.getClass().getResourceAsStream(Globals.mustNotLookupFile);
+
         try {
             morphologicalFamiliesMap = LookUpLoader.load(morphFamResourceStream, 4);
-            lookUpMustMap = LookUpLoader.load(lookUpMustResourceStream, MUST_KEY_LENGTH);
-            lookUpMustNotMap = LookUpLoader.load(lookUpMustNotResourceStream, MUST_NOT_KEY_LENGTH);
-            br = new BufferedReader(new InputStreamReader(morphFamDictResourceStream));
-            String line = br.readLine();
-            int count = 1;
-            while (line != null) {
-                morphologyFamMap.put(count, line);
-                count++;
-                line = br.readLine();
-            }
+            lookUpMustMap = LookUpLoader.load(lookUpMustResourceStream, mustKeyLength);
+            lookUpMustNotMap = LookUpLoader.load(lookUpMustNotResourceStream, mustNotkeyLength);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(CheckMorphology.class.getName()).log(Level.SEVERE,
                     null, ex);
@@ -251,14 +239,6 @@ public class CheckTopographyMorphology extends CheckInterface {
         } catch (URISyntaxException ex) {
             Logger.getLogger(CheckMorphology.class.getName()).log(Level.SEVERE,
                     null, ex);
-        } finally {
-            try {
-                if (br != null) {
-                    br.close();
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(CheckTopographyMorphology.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
     }
 }

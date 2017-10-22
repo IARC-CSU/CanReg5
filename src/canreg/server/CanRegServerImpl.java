@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2017  International Agency for Research on Cancer
+ * Copyright (C) 2008-2015  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -89,14 +89,20 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     private String patientRecordIDvariableName;
     private GlobalToolBox serverToolbox;
     private TrayIcon trayIcon;
+    //<ictl.co>
+    private int port;
+    //</ictl.co>
 
     /**
      * 
      * @param systemCode
      * @throws java.rmi.RemoteException
      */
-    public CanRegServerImpl(String systemCode) throws RemoteException {
-        
+    public CanRegServerImpl(String systemCode/*<ictl.co>*/, int port/*<ictl.co>*/) throws RemoteException {
+        //<ictl.co>
+        super(port);
+        this.port = port;
+        //</ictl.co>
         Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.INFO, "Java version: {0}", System.getProperty("java.version"));
                 
         this.systemCode = systemCode;
@@ -1030,13 +1036,11 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         return success;
     }
 
-    @Override
-    public String getCanRegSystemCode() throws RemoteException, SecurityException {
-        return systemCode;
+    //<ictl.co>
+
+    public Integer getPort() throws RemoteException, SecurityException {
+        return port;
     }
 
-    @Override
-    public String getCanRegSystemRegion() throws RemoteException, SecurityException {
-        return systemDescription.getRegion();
-    }
+    //<ictl.co>
 }

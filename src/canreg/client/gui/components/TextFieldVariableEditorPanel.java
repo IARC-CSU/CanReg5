@@ -45,7 +45,7 @@ public class TextFieldVariableEditorPanel extends VariableEditorPanel {
     @Override
     public void setDatabaseVariablesListElement(DatabaseVariablesListElement databaseListElement) {
         this.databaseListElement = databaseListElement;
-        setVariableName(databaseListElement.getDisplayVariableName());
+        setVariableName(databaseListElement.getFullName());
         textArea = new JTextArea();
 
         splitPane1.remove(splitPane1.getRightComponent());

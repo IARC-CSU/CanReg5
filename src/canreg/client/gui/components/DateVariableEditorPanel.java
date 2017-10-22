@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2017  International Agency for Research on Cancer
+ * Copyright (C) 2008-2016  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -53,8 +53,8 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
     @Override
     public void setDatabaseVariablesListElement(DatabaseVariablesListElement databaseListElement) {
         this.databaseListElement = databaseListElement;
-        setVariableName(databaseListElement.getDisplayVariableName());
-        
+        setVariableName(databaseListElement.getFullName());
+
         dateChooser = new JDateChooser();
         String dateFormatString = databaseListElement.getDateFormatString();
         dateChooser.setDateFormatString(dateFormatString);

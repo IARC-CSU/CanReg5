@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2017  International Agency for Research on Cancer
+ * Copyright (C) 2008-2015  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,7 +29,9 @@ import canreg.client.gui.CanRegClientView;
 import canreg.client.gui.components.FastFilterInternalFrame;
 import canreg.client.gui.tools.ExcelAdapter;
 import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
+import canreg.common.DateHelper;
 import canreg.common.Globals;
+import canreg.common.LocalizationHelper;
 import canreg.common.Tools;
 import canreg.common.database.AgeGroupStructure;
 import canreg.common.database.PopulationDataset;
@@ -45,8 +47,8 @@ import java.io.File;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
+import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.logging.Level;
@@ -57,6 +59,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.table.DefaultTableModel;
+
+import com.ibm.icu.text.SimpleDateFormat;
 import org.jdesktop.application.Action;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -68,32 +72,28 @@ import org.w3c.dom.Document;
 
 /**
  *
- * @author ervikm
+ * @author  ervikm
  */
 public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame implements ActionListener {
 
     private FastFilterInternalFrame filterWizardInternalFrame;
-    private final JDesktopPane dtp;
+    private JDesktopPane dtp;
     private Document doc;
     private PopulationDataset pds;
     private JTextField dateTextField;
-    private final PopulationDataset[] referencePopulations;
+    private PopulationDataset[] worldPopulations;
     private JFreeChart chart;
     private ExcelAdapter myAd;
     private final ActionListener listener;
     private ChartPanel chartPanel;
-    private JFileChooser chooser = null;
 
-    /**
-     * Creates new form PDSEditorInternalFrame
-     *
+    /** Creates new form PDSEditorInternalFrame
      * @param dtp
-     * @param referencePopulations
-     * @param listener
+     * @param worldPopulations 
      */
-    public PDSEditorInternalFrame(JDesktopPane dtp, PopulationDataset[] referencePopulations, ActionListener listener) {
+    public PDSEditorInternalFrame(JDesktopPane dtp, PopulationDataset[] worldPopulations, ActionListener listener) {
         this.dtp = dtp;
-        this.referencePopulations = referencePopulations;
+        this.worldPopulations = worldPopulations;
         this.listener = listener;
         initComponents();
         otherAgeGroupStructureButton.setVisible(false);
@@ -101,7 +101,7 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
     }
 
     /**
-     *
+     * 
      * @param pds
      */
     public void setPopulationDataset(PopulationDataset pds) {
@@ -116,10 +116,16 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
                 ageGroupStructureComboBox.addItem(pds.getAgeGroupStructure());
                 ageGroupStructureComboBox.setSelectedItem(pds.getAgeGroupStructure());
             }
-            dateTextField.setText(pds.getDate());
+            //<ictl.co>
+            if (LocalizationHelper.isRtlLanguageActive()) {
+                dateTextField.setText(DateHelper.gregorianDateStringToLocaleDateString(pds.getDate(), Globals.DATE_FORMAT_STRING));
+            } else {
+                dateTextField.setText(pds.getDate());
+            }
+            //<ictl.co>
             refreshPopulationDataSetTable();
             lockedToggleButton.setSelected(true);
-            if (pds.isReferencePopulationBool()) {
+            if (pds.isWorldPopulationBool()) {
                 standardPopulationComboBox.setVisible(false);
                 editStandardPopulationButton.setVisible(false);
                 standardPopulationLabel.setVisible(false);
@@ -127,10 +133,10 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
                 boolean found = false;
                 PopulationDataset worldPopulation = null;
                 int i = 0;
-                while (!found && i < referencePopulations.length) {
-                    worldPopulation = referencePopulations[i++];
+                while (!found && i < worldPopulations.length) {
+                    worldPopulation = worldPopulations[i++];
                     if (worldPopulation != null) {
-                        found = worldPopulation.getPopulationDatasetID() == pds.getReferencePopulationID();
+                        found = worldPopulation.getPopulationDatasetID() == pds.getWorldPopulationID();
                     }
                 }
                 if (worldPopulation != null) {
@@ -138,7 +144,7 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
                 }
             }
             updateSaveAsNewAndDeleteButtons();
-            lockTheFields(pds.getPopulationDatasetID() > -1);
+            lockTheFields();
         }
     }
 
@@ -175,8 +181,10 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
         Object[][] pdsTableData = new Object[ageGroupNames.length][2];
 
         for (int i = 0; i < ageGroupNames.length; i++) {
-            pdsTableData[i][0] = 0;
-            pdsTableData[i][0] = 0;
+            // pdsTableData[i][0] = ageGroupNames[i];
+            pdsTableData[i][0] = new Integer(0);
+            pdsTableData[i][0] = new Integer(0);
+            /// pdsTableData[i][3] = ageGroupNames[i];
         }
 
         if (pds != null) {
@@ -216,10 +224,10 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
         updateTotals();
     }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
+    /** This method is called from within the constructor to
+     * initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is
+     * always regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -316,7 +324,6 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
         lockedToggleButton1 = new javax.swing.JToggleButton();
         deleteButton1 = new javax.swing.JButton();
         saveAsNewButton = new javax.swing.JButton();
-        writeToFileButton = new javax.swing.JButton();
 
         saveGraphicsPopupMenu.setName("saveGraphicsPopupMenu"); // NOI18N
 
@@ -509,19 +516,19 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, detailsPanelLayout.createSequentialGroup()
-                        .addComponent(standardPopulationComboBox, 0, 410, Short.MAX_VALUE)
+                        .addComponent(standardPopulationComboBox, 0, 389, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(editStandardPopulationButton))
-                    .addComponent(dateChooser, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 467, Short.MAX_VALUE)
-                    .addComponent(descriptionScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 467, Short.MAX_VALUE)
-                    .addComponent(sourceTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 467, Short.MAX_VALUE)
+                    .addComponent(dateChooser, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 446, Short.MAX_VALUE)
+                    .addComponent(descriptionScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 446, Short.MAX_VALUE)
+                    .addComponent(sourceTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 446, Short.MAX_VALUE)
                     .addGroup(detailsPanelLayout.createSequentialGroup()
-                        .addComponent(filterTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 368, Short.MAX_VALUE)
+                        .addComponent(filterTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(filterWizardButton))
-                    .addComponent(nameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 467, Short.MAX_VALUE)
+                    .addComponent(nameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 446, Short.MAX_VALUE)
                     .addGroup(detailsPanelLayout.createSequentialGroup()
-                        .addComponent(ageGroupStructureComboBox, 0, 400, Short.MAX_VALUE)
+                        .addComponent(ageGroupStructureComboBox, 0, 379, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(otherAgeGroupStructureButton)))
                 .addContainerGap())
@@ -559,7 +566,7 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
                     .addComponent(editStandardPopulationButton)
                     .addComponent(standardPopulationComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(standardPopulationLabel))
-                .addContainerGap(216, Short.MAX_VALUE))
+                .addContainerGap(212, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(resourceMap.getString("detailsPanel.TabConstraints.tabTitle"), detailsPanel); // NOI18N
@@ -597,26 +604,26 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
 
         pdsTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)}
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)}
             },
             new String [] {
                 "Male", "Female"
@@ -650,26 +657,26 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
 
         totalsTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)}
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)}
             },
             new String [] {
                 "Male", "Female"
@@ -697,7 +704,7 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
                     .addComponent(totalsTable, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(pdsTable, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jSplitPane3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 491, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(43, Short.MAX_VALUE))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -711,16 +718,12 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
         );
 
         pdsTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        if (pdsTable.getColumnModel().getColumnCount() > 0) {
-            pdsTable.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("pdsTable.columnModel.title1")); // NOI18N
-            pdsTable.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("pdsTable.columnModel.title2")); // NOI18N
-        }
+        pdsTable.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("pdsTable.columnModel.title1")); // NOI18N
+        pdsTable.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("pdsTable.columnModel.title2")); // NOI18N
         myAd = new ExcelAdapter(pdsTable);
         totalsTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        if (totalsTable.getColumnModel().getColumnCount() > 0) {
-            totalsTable.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("pdsTable.columnModel.title1")); // NOI18N
-            totalsTable.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("pdsTable.columnModel.title2")); // NOI18N
-        }
+        totalsTable.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("pdsTable.columnModel.title1")); // NOI18N
+        totalsTable.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("pdsTable.columnModel.title2")); // NOI18N
 
         jSplitPane1.setRightComponent(jPanel1);
 
@@ -802,9 +805,7 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
         );
 
         ageGroupLabelsTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        if (ageGroupLabelsTable.getColumnModel().getColumnCount() > 0) {
-            ageGroupLabelsTable.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("pdsTable.columnModel.title0")); // NOI18N
-        }
+        ageGroupLabelsTable.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("pdsTable.columnModel.title0")); // NOI18N
 
         jSplitPane1.setLeftComponent(jPanel2);
 
@@ -814,11 +815,11 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
         dataSetPanel.setLayout(dataSetPanelLayout);
         dataSetPanelLayout.setHorizontalGroup(
             dataSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 619, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 598, Short.MAX_VALUE)
         );
         dataSetPanelLayout.setVerticalGroup(
             dataSetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 455, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab(resourceMap.getString("dataSetPanel.TabConstraints.tabTitle"), dataSetPanel); // NOI18N
@@ -841,15 +842,15 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
         pyramidPanel.setLayout(pyramidPanelLayout);
         pyramidPanelLayout.setHorizontalGroup(
             pyramidPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 631, Short.MAX_VALUE)
-            .addComponent(pyramidPanelHolder, javax.swing.GroupLayout.DEFAULT_SIZE, 631, Short.MAX_VALUE)
+            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE)
+            .addComponent(pyramidPanelHolder, javax.swing.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE)
         );
         pyramidPanelLayout.setVerticalGroup(
             pyramidPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pyramidPanelLayout.createSequentialGroup()
                 .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pyramidPanelHolder, javax.swing.GroupLayout.DEFAULT_SIZE, 442, Short.MAX_VALUE)
+                .addComponent(pyramidPanelHolder, javax.swing.GroupLayout.DEFAULT_SIZE, 438, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -1055,26 +1056,26 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
 
         pdsTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)}
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)}
             },
             new String [] {
                 "Male", "Female"
@@ -1098,26 +1099,26 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
 
         totalsTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)}
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)},
+                {new Integer(0), new Integer(0)}
             },
             new String [] {
                 "Male", "Female"
@@ -1158,15 +1159,11 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
         );
 
         pdsTable1.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        if (pdsTable1.getColumnModel().getColumnCount() > 0) {
-            pdsTable1.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("pdsTable.columnModel.title1")); // NOI18N
-            pdsTable1.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("pdsTable.columnModel.title2")); // NOI18N
-        }
+        pdsTable1.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("pdsTable.columnModel.title1")); // NOI18N
+        pdsTable1.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("pdsTable.columnModel.title2")); // NOI18N
         totalsTable1.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        if (totalsTable1.getColumnModel().getColumnCount() > 0) {
-            totalsTable1.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("pdsTable.columnModel.title1")); // NOI18N
-            totalsTable1.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("pdsTable.columnModel.title2")); // NOI18N
-        }
+        totalsTable1.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("pdsTable.columnModel.title1")); // NOI18N
+        totalsTable1.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("pdsTable.columnModel.title2")); // NOI18N
 
         jSplitPane2.setRightComponent(jPanel4);
 
@@ -1246,9 +1243,7 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
         );
 
         ageGroupLabelsTable1.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        if (ageGroupLabelsTable1.getColumnModel().getColumnCount() > 0) {
-            ageGroupLabelsTable1.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("pdsTable.columnModel.title0")); // NOI18N
-        }
+        ageGroupLabelsTable1.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("pdsTable.columnModel.title0")); // NOI18N
 
         jSplitPane2.setLeftComponent(jPanel5);
 
@@ -1322,12 +1317,12 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(saveButton1)
                 .addContainerGap())
-            .addComponent(jTabbedPane2)
+            .addComponent(jTabbedPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 288, Short.MAX_VALUE)
         );
         jInternalFrame1Layout.setVerticalGroup(
             jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jInternalFrame1Layout.createSequentialGroup()
-                .addComponent(jTabbedPane2)
+                .addComponent(jTabbedPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 305, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(saveButton1)
@@ -1340,9 +1335,6 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
         saveAsNewButton.setAction(actionMap.get("saveAsNewAction")); // NOI18N
         saveAsNewButton.setName("saveAsNewButton"); // NOI18N
 
-        writeToFileButton.setAction(actionMap.get("writeToFile")); // NOI18N
-        writeToFileButton.setName("writeToFileButton"); // NOI18N
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -1350,9 +1342,7 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(deleteButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(writeToFileButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 207, Short.MAX_VALUE)
                 .addComponent(lockedToggleButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cancelButton)
@@ -1361,31 +1351,30 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(saveButton)
                 .addContainerGap())
-            .addComponent(jTabbedPane1)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 615, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 318, Short.MAX_VALUE)
+                    .addGap(0, 307, Short.MAX_VALUE)
                     .addComponent(jInternalFrame1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 318, Short.MAX_VALUE)))
+                    .addGap(0, 308, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jTabbedPane1)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 506, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(saveButton)
                     .addComponent(deleteButton)
                     .addComponent(cancelButton)
                     .addComponent(lockedToggleButton)
-                    .addComponent(saveAsNewButton)
-                    .addComponent(writeToFileButton))
+                    .addComponent(saveAsNewButton))
                 .addContainerGap())
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 275, Short.MAX_VALUE)
+                    .addGap(0, 273, Short.MAX_VALUE)
                     .addComponent(jInternalFrame1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 275, Short.MAX_VALUE)))
+                    .addGap(0, 273, Short.MAX_VALUE)))
         );
 
         pack();
@@ -1405,7 +1394,7 @@ private void pdsTablePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-F
 }//GEN-LAST:event_pdsTablePropertyChange
 
 private void jTabbedPane1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTabbedPane1FocusGained
-    updatePyramid();
+    // updatePyramid();
 }//GEN-LAST:event_jTabbedPane1FocusGained
 
 private void ageGroupStructureComboBox1ageGroupStructureChanged(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ageGroupStructureComboBox1ageGroupStructureChanged
@@ -1525,13 +1514,14 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
     }
 
     /**
-     *
+     * 
      */
     public void initValues() {
         // Get the system description
         doc = CanRegClientApp.getApplication().getDatabseDescription();
 
         // variablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE);
+
         filterWizardInternalFrame = new FastFilterInternalFrame();
         filterWizardInternalFrame.setTableName(Globals.TUMOUR_AND_PATIENT_JOIN_TABLE_NAME);
         filterWizardInternalFrame.setActionListener(this);
@@ -1540,11 +1530,17 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
         dateTextField = (JTextField) dateChooser.getDateEditor().getUiComponent();
         dateChooser.setDateFormatString(Globals.DATE_FORMAT_STRING);
         try {
-            dateChooser.setDate(new SimpleDateFormat(Globals.DATE_FORMAT_STRING).parse("20000701"));
+            //<ictl.co>
+            if(LocalizationHelper.isRtlLanguageActive()){
+                dateChooser.setDate(new SimpleDateFormat(Globals.DATE_FORMAT_STRING).parse("13790701"));
+            }else{
+                dateChooser.setDate(new SimpleDateFormat(Globals.DATE_FORMAT_STRING).parse("20000701"));
+            }
+            //</ictl.co>
         } catch (ParseException ex) {
             Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
-        standardPopulationComboBox.setModel(new javax.swing.DefaultComboBoxModel(referencePopulations));
+        standardPopulationComboBox.setModel(new javax.swing.DefaultComboBoxModel(worldPopulations));
         refreshPopulationDataSetTable();
         updateChart();
         chartPanel = new ChartPanel(chart);
@@ -1567,12 +1563,12 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
     }
 
     /**
-     *
+     * 
      */
     @Action
     public void saveAction() {
         lockedToggleButton.setSelected(true);
-        lockTheFields(!lockedToggleButton.isSelected());
+        lockTheFields();
         buildPDSfromTable();
         try {
             if (pds.getPopulationDatasetID() < 0) {
@@ -1587,30 +1583,39 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
                 CanRegClientApp.getApplication().saveNewPopulationDataset(pds);
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("SUCCESSFULLY_UPDATED_PDS:_") + pds.getPopulationDatasetName() + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("PDS_SAVED."), JOptionPane.INFORMATION_MESSAGE);
             }
-        } catch (SecurityException | RemoteException ex) {
+        } catch (SecurityException ex) {
+            Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RemoteException ex) {
             Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (listener != null) {
             listener.actionPerformed(new ActionEvent(this, 1, "refresh"));
         }
         updateSaveAsNewAndDeleteButtons();
-        lockTheFields(true);
+        lockTheFields();
     }
 
     private void buildPDSfromTable() {
         if (pds == null) {
             pds = new PopulationDataset();
+        } else {
+            pds.flushAgeGroups();
         }
-        pds.flushAgeGroups();
         pds.setPopulationDatasetName(nameTextField.getText().trim());
         pds.setSource(sourceTextField.getText().trim());
         pds.setFilter(filterTextField.getText().trim());
         pds.setDescription(descriptionTextArea.getText().trim());
         pds.setAgeGroupStructure((AgeGroupStructure) ageGroupStructureComboBox.getSelectedItem());
-        pds.setDate(dateTextField.getText());
-        pds.setReferencePopulationBool(false);
+        //<ictl.co>
+        if (LocalizationHelper.isRtlLanguageActive()) {
+            pds.setDate(DateHelper.localeDateStringToGregorianDateString(dateTextField.getText(), Globals.DATE_FORMAT_STRING));
+        } else {
+            pds.setDate(dateTextField.getText());
+        }
+        //</ictl.co>
+        pds.setWorldPopulationBool(false);
         PopulationDataset wpds = (PopulationDataset) standardPopulationComboBox.getSelectedItem();
-        pds.setReferencePopulation(wpds);
+        pds.setWorldPopulation(wpds);
 
         int numberOfAgeGroups = pds.getAgeGroupStructure().getNumberOfAgeGroups();
 
@@ -1626,10 +1631,10 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
                     s = s.replaceAll("[^0-9]", "");
                     count = Integer.parseInt(s);
                 } catch (java.lang.NullPointerException npe) {
-                    count = 0;
+                    count = new Integer(0);
                     Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.WARNING, "Missing value in the pds...");
                 } catch (java.lang.NumberFormatException nfe) {
-                    count = 0;
+                    count = new Integer(0);
                     Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.WARNING, "Error in the pds...");
                 }
                 pds.addAgeGroup(new PopulationDatasetsEntry(ageGroup, sex + 1, count));
@@ -1639,26 +1644,26 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
     }
 
     /**
-     *
+     * 
      */
     @Action
     public void editWorldPopulation() {
-        PDSEditorInternalFrame populationDatasetEditorInternalFrame = new PDSEditorInternalFrame(dtp, referencePopulations, listener);
+        PDSEditorInternalFrame populationDatasetEditorInternalFrame = new PDSEditorInternalFrame(dtp, worldPopulations, listener);
         populationDatasetEditorInternalFrame.setPopulationDataset((PopulationDataset) standardPopulationComboBox.getSelectedItem());
         CanRegClientView.showAndPositionInternalFrame(dtp, populationDatasetEditorInternalFrame);
     }
 
     /**
-     *
+     * 
      */
     @Action
     public void lockedAction() {
         updateSaveAsNewAndDeleteButtons();
-        lockTheFields(lockedToggleButton.isSelected());
+        lockTheFields();
     }
 
     /**
-     *
+     * 
      */
     @Action
     public void cancelAction() {
@@ -1666,33 +1671,31 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
     }
 
     /**
-     *
+     * 
      */
     @Action
     public void otherAction() {
     }
 
-    private void lockTheFields(boolean locked) {
-        lockedToggleButton.setSelected(locked);
-        ageGroupStructureComboBox.setEnabled(!locked);
-        dateTextField.setEnabled(!locked);
-        detailsPanel.setEnabled(!locked);
-        editStandardPopulationButton.setEnabled(!locked);
-        filterTextField.setEnabled(!locked);
-        filterWizardButton.setEnabled(!locked);
-        ageGroupStructureComboBox.setEnabled(!locked);
-        editStandardPopulationButton.setEnabled(!locked);
-        nameTextField.setEnabled(!locked);
-        pdsTable.setEnabled(!locked);
-        saveButton.setEnabled(!locked);
-        sourceTextField.setEnabled(!locked);
-        standardPopulationComboBox.setEnabled(!locked);
-        otherAgeGroupStructureButton.setEnabled(!locked);
-        descriptionTextArea.setEnabled(!locked);
-        dateChooser.setEnabled(!locked);
-        deleteButton.setEnabled(!locked);
-        saveAsNewButton.setEnabled(!locked);
-        // writeToFileButton.setEnabled(!locked);
+    private void lockTheFields() {
+        ageGroupStructureComboBox.setEnabled(!lockedToggleButton.isSelected());
+        dateTextField.setEnabled(!lockedToggleButton.isSelected());
+        detailsPanel.setEnabled(!lockedToggleButton.isSelected());
+        editStandardPopulationButton.setEnabled(!lockedToggleButton.isSelected());
+        filterTextField.setEnabled(!lockedToggleButton.isSelected());
+        filterWizardButton.setEnabled(!lockedToggleButton.isSelected());
+        ageGroupStructureComboBox.setEnabled(!lockedToggleButton.isSelected());
+        editStandardPopulationButton.setEnabled(!lockedToggleButton.isSelected());
+        nameTextField.setEnabled(!lockedToggleButton.isSelected());
+        pdsTable.setEnabled(!lockedToggleButton.isSelected());
+        saveButton.setEnabled(!lockedToggleButton.isSelected());
+        sourceTextField.setEnabled(!lockedToggleButton.isSelected());
+        standardPopulationComboBox.setEnabled(!lockedToggleButton.isSelected());
+        otherAgeGroupStructureButton.setEnabled(!lockedToggleButton.isSelected());
+        descriptionTextArea.setEnabled(!lockedToggleButton.isSelected());
+        dateChooser.setEnabled(!lockedToggleButton.isSelected());
+        deleteButton.setEnabled(!lockedToggleButton.isSelected());
+        saveAsNewButton.setEnabled(!lockedToggleButton.isSelected());
     }
 
     @Action
@@ -1705,7 +1708,11 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
                 if (listener != null) {
                     listener.actionPerformed(new ActionEvent(this, 1, "refresh"));
                 }
-            } catch (SQLException | RemoteException | SecurityException ex) {
+            } catch (SQLException ex) {
+                Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (RemoteException ex) {
+                Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SecurityException ex) {
                 Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -1722,7 +1729,7 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
                 true, // include legend
                 true, // tooltips
                 false // urls
-        );
+                );
     }
 
     private void buildPyramid() {
@@ -1857,7 +1864,6 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
     private javax.swing.JLabel totalLabel;
     private javax.swing.JTable totalsTable;
     private javax.swing.JTable totalsTable1;
-    private javax.swing.JButton writeToFileButton;
     // End of variables declaration//GEN-END:variables
 
     private DefaultKeyedValues2DDataset getJChartDataset() {
@@ -1870,15 +1876,15 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
                 return o2.getAgeGroup() - o1.getAgeGroup();
             }
         });
-        for (PopulationDatasetsEntry entry : ageGroups) {
+        for(PopulationDatasetsEntry entry : ageGroups){
             String label = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("FEMALE");
             int count = entry.getCount();
-            entry.getAgeGroup();
+            entry.getAgeGroup();            
             if (entry.getSex() == 1) {
-                count = -count;
+                count = - count;
                 label = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("MALE");
             }
-            dataset.addValue(count, label, ageGroupLabelsTable.getValueAt(entry.getAgeGroup(), 0).toString());
+            dataset.addValue(count, label, ageGroupLabelsTable.getValueAt(entry.getAgeGroup(),0).toString());
         }
         return dataset;
     }
@@ -1934,7 +1940,7 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
     @Action
     public void saveSVGAction() {
         if (chart != null) {
-            JFileChooser svgFileChooser = new JFileChooser();
+            JFileChooser chooser = new JFileChooser();
             FileFilter filter = new FileFilter() {
 
                 @Override
@@ -1947,11 +1953,11 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
                     return java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("SVG GRAPHICS FILES");
                 }
             };
-            svgFileChooser.setFileFilter(filter);
-            int result = svgFileChooser.showDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("CHOOSE FILENAME"));
+            chooser.setFileFilter(filter);
+            int result = chooser.showDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("CHOOSE FILENAME"));
             if (result == JFileChooser.APPROVE_OPTION) {
                 try {
-                    File file = svgFileChooser.getSelectedFile();
+                    File file = chooser.getSelectedFile();
                     if (!file.getName().toLowerCase().endsWith("svg")) { //NOI18N
                         file = new File(file.getAbsolutePath() + ".svg"); //NOI18N
                     }
@@ -1985,56 +1991,14 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
     public void titleUpdatedAction() {
         String text = nameTextField.getText();
         if (text.trim().length() > 0) {
-            String[] array = text.split(",");
+            String[] array = text.split(",");            
             try {
-                String potentialYear = array[array.length - 1].trim();
+                String potentialYear = array[array.length-1].trim();
                 Integer.parseInt(potentialYear);
-                dateChooser.setDate(new SimpleDateFormat(Globals.DATE_FORMAT_STRING).parse(potentialYear + "0701"));
+                dateChooser.setDate(new SimpleDateFormat(Globals.DATE_FORMAT_STRING).parse(potentialYear+"0701"));
             } catch (ParseException ex) {
                 Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-    }
-
-    @Action
-    public void writeToFile() {
-
-        if (chooser == null) {
-            chooser = new JFileChooser();
-            FileFilter filter = new FileFilter() {
-
-                @Override
-                public boolean accept(File f) {
-                    return f.isDirectory() || f.getName().toLowerCase().endsWith("json"); //NOI18N
-                }
-
-                @Override
-                public String getDescription() {
-                    return java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("JSON FILES");
-                }
-            };
-            chooser.setFileFilter(filter);
-        }
-
-        chooser.setSelectedFile(new File("CR5POP_" + pds.getPopulationDatasetName().replace(",", "_").replace(" ", "_").replace("__", "_") + ".json"));
-        int returnVal = chooser.showSaveDialog(this);
-
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            try {
-                buildPDSfromTable();
-                String fileName = chooser.getSelectedFile().getCanonicalPath();
-                if (!fileName.toLowerCase().endsWith(".json")) {
-                    fileName += ".json";
-                }
-                canreg.common.database.Tools.writePopulationDatasetToJSON(pds, fileName);
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("SUCCESSFULLY_SAVED_PDS_TO_FILE:_") + fileName + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("PDS_SAVED."), JOptionPane.INFORMATION_MESSAGE);
-            } catch (IOException ex) {
-                Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-
-    public void setLocked(boolean locked) {
-        lockTheFields(locked);
     }
 }

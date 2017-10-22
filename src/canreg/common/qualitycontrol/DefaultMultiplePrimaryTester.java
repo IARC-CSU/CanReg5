@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2017  International Agency for Research on Cancer
+ * Copyright (C) 2008-2015  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,6 @@ package canreg.common.qualitycontrol;
  */
 public class DefaultMultiplePrimaryTester implements MultiplePrimaryTesterInterface {
 
-    @Override
     public int multiplePrimaryTest(String topographyOrig, String morphologyOrig,
             String topographySim, String morphologySim) {
 
@@ -179,7 +178,7 @@ public class DefaultMultiplePrimaryTester implements MultiplePrimaryTesterInterf
                 (morphology >= 9861 & morphology <= 9931) ||
                 (morphology >= 9945 & morphology <= 9946) ||
                 (morphology == 9950) ||
-                (morphology >= 9961 & morphology <= 9967) || // 1st edition J.Ferlay 2014
+                (morphology >= 9961 & morphology <= 9964) ||
                 (morphology >= 9980 & morphology <= 9987)) {
             morphology_group = 8;
 
@@ -187,10 +186,8 @@ public class DefaultMultiplePrimaryTester implements MultiplePrimaryTesterInterf
         } else if ((morphology >= 9670 & morphology <= 9699) ||
                 (morphology == 9728) ||
                 (morphology >= 9731 & morphology <= 9734) ||
-                (morphology >= 9737 & morphology <= 9738) ||// 1st edition J.Ferlay 2014
                 (morphology >= 9761 & morphology <= 9767) ||
                 (morphology == 9769) ||
-                (morphology >= 9811 & morphology <= 9818) || // 1st edition J.Ferlay 2014
                 (morphology >= 9823 & morphology <= 9826) ||
                 (morphology == 9833) ||
                 (morphology == 9836) ||
@@ -198,8 +195,7 @@ public class DefaultMultiplePrimaryTester implements MultiplePrimaryTesterInterf
             morphology_group = 9;
 
         //-----------------------------------------< T-Cell, NK-Cell
-        } else if ((morphology >= 9700 & morphology <= 9724) || // 1st edition J.Ferlay 2014
-                (morphology == 9726) ||
+        } else if ((morphology >= 9700 & morphology <= 9719) ||
                 (morphology == 9729) ||
                 (morphology == 9768) ||
                 (morphology >= 9827 & morphology <= 9831) ||
@@ -209,19 +205,32 @@ public class DefaultMultiplePrimaryTester implements MultiplePrimaryTesterInterf
             morphology_group = 10;
 
         //----------------------------------------< Hodgkin Lymphoma
-        } else if (morphology >= 9650 & morphology <= 9669) {
+        } else if (morphology >= 9650 & morphology <= 9667) {
             morphology_group = 11;
 
         //-----------------------------------------------< Mast-cell
-        } else if (morphology >= 9740 & morphology <= 9749) { 
+        } else if (morphology >= 9740 & morphology <= 9742) {
             morphology_group = 12;
 
         //-------------------< Histiocytes, Accessory Lymphoid cells
-        } else if (morphology >= 9750 & morphology <= 9759) {
+        } else if (morphology >= 9750 & morphology <= 9758) {
             morphology_group = 13;
 
         //---------------------------------------< Unspecified types
-        } else if ((morphology >= 9590 & morphology <= 9999)) { // 1st edition J.Ferlay 2014
+        } else if ((morphology >= 9590 & morphology <= 9591) ||
+                (morphology == 9596) ||
+                (morphology == 9727) ||
+                (morphology == 9760) ||
+                (morphology >= 9800 & morphology <= 9801) ||
+                (morphology == 9805) ||
+                (morphology == 9820) ||
+                (morphology == 9832) ||
+                (morphology == 9835) ||
+                (morphology == 9860) ||
+                (morphology == 9960) ||
+                (morphology == 9970) ||
+                (morphology == 9975) ||
+                (morphology == 9989)) {
             morphology_group = 14;
 
         //==============================================< KAPOSI SARCOMA
@@ -229,17 +238,17 @@ public class DefaultMultiplePrimaryTester implements MultiplePrimaryTesterInterf
             morphology_group = 15;
 
         //=============================================< OTHER SPECIFIED
-        } else if ((morphology >= 8720 & morphology <= 8799) ||
-                (morphology >= 8930 & morphology <= 8939) ||
-                (morphology >= 8950 & morphology <= 8989) ||
-                (morphology >= 9000 & morphology <= 9039) ||
-                (morphology >= 9060 & morphology <= 9119) ||
-                (morphology >= 9260 & morphology <= 9369) ||
+        } else if ((morphology >= 8720 & morphology <= 8790) ||
+                (morphology >= 8930 & morphology <= 8936) ||
+                (morphology >= 8950 & morphology <= 8983) ||
+                (morphology >= 9000 & morphology <= 9030) ||
+                (morphology >= 9060 & morphology <= 9110) ||
+                (morphology >= 9260 & morphology <= 9365) ||
                 (morphology >= 9380 & morphology <= 9539)) {
             morphology_group = 16;
 
         //=================================================< UNSPECIFIED
-        } else  if (morphology >= 8000 & morphology <= 8005) {
+        } else if (morphology >= 8000 & morphology <= 8005) {
             morphology_group = 17;
 
         //---------------------------< not allocated, must be invalid

@@ -110,16 +110,9 @@ public class CheckAgeMorphology extends CheckInterface {
                 (morphologyNumber == 8910 || morphologyNumber == 8960 || morphologyNumber == 8961 ||
                 morphologyNumber == 8962 || morphologyNumber == 8970 || morphologyNumber == 8981 ||
                 morphologyNumber == 8991 || morphologyNumber == 9072 || morphologyNumber == 9470 ||
-                morphologyNumber == 9490 || morphologyNumber == 9500 || // J. Ferlay 2015
                 morphologyNumber == 9687)) {
             ok = false;
         }
-        
-        if (ageNumber < 15 && 
-                (morphologyNumber == 9724 || morphologyNumber == 9732 || morphologyNumber == 9823)) { // 1st 2014
-            ok = false;
-        }
-        
         if (ok) {
             result.setMessage("");
             result.setResultCode(CheckResult.ResultCode.OK);

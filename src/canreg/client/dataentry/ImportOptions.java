@@ -66,7 +66,6 @@ public class ImportOptions {
     private String tumourCheckStatus;
     private String tumourRecordStatus;
     private String ICD10VariableName;
-    private String ICCCVariableName;
     private Charset fileCharset;
     private Charset[] fileCharsets;
     private char[] separators;
@@ -517,16 +516,5 @@ public class ImportOptions {
      */
     public void setICD10VariableName(String ICD10VariableName) {
         this.ICD10VariableName = ICD10VariableName;
-    }
-
-    public void setICCCVariableName(String ICCCVariableName) {
-        this.ICCCVariableName = ICCCVariableName;
-    }
-
-    /**
-     * @return the ICCCVariableName
-     */
-    public String getICCCVariableName() {
-        return ICCCVariableName;
     }
 }

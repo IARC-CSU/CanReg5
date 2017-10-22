@@ -1,0 +1,43 @@
+name	case_col	pop_col	length	required	std_name
+Sex	118	16	1	true	Sex
+Year of diagnosis	287	1	4	true	IncidenceDate[0,4]
+Addr at DX--state	72	5	2	true	AddressCode
+County at DX	83	9	3	true	na
+Primary site	292		3	true	Topography
+Behavior code ICD-O-3	305		1	true	Behaviour
+Histologic type ICD-O-3	301		4	true	Morphology
+Behavior (92-00) ICD-O-2	300		1	true	na
+Histology (92-00) ICD-O-2	296		4	true	na
+Cause of death (ICD-7, 8 or 9)	1388		4	true	na
+Cause of death (ICD-10)	1388		4	true	na
+ICD revision number	1392		1	true	na
+Year of initial RX--SEER	839		4	true	na
+Month of initial RX--SEER	835		2	true	na
+Coding system for EOD	562		1	true	na
+Age at diagnosis	119		3	true	Age
+Race 1	103		2	true	na
+Spanish/Hispanic origin	115		1	true	na
+NHIA Derived Hisp Origin	231		1	true	na
+Year of last contact	1298		4	true	Lastcontact[0,4]
+Year of birth	126		4	true	BirthDate[0,4]
+Month of diagnosis	283		2	true	IncidenceDate[4,2]
+Month of last contact	1294		2	true	na
+Month of birth	122		2	true	BirthDate[4,2]
+Census Tract 2000	93		6	true	na
+Census Tract 1970/80/90	86		6	true	na
+Census Cod Sys 1970/80/90	92		1	true	na
+Census Tr Certainty 2000	101		1	true	na
+Census Tr Cert 1970/80/90	100		1	true	na
+Sequence number--central	281		2	true	na
+Diagnostic confirmation	311		1	true	na
+Vital status	1302		1	true	VitalStatus
+SEER type of follow-up	1214		1	true	na
+Type of Reporting Source	312		1	true	na
+Reporting hospital (last 6-digits)	386		6	true	na
+Accession number--hosp	402		9	true	na
+Patient ID number	2		8	true	PatientID
+Behavior recode for analysis	1460		1	true	na
+Primary site - labeled	292		3	true	na
+ICD-O-3 Hist/behavior, labeled	301		5	true	na
+Age recode with <1 year olds		17	2	true	AgeGroup
+Count		19	8	true	Count

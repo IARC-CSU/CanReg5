@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2017  International Agency for Research on Cancer
+ * Copyright (C) 2008-2015  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,18 +42,21 @@ public class CanRegLoginImpl extends UnicastRemoteObject
      * @throws java.rmi.RemoteException
      * @throws java.net.MalformedURLException
      */
-    public CanRegLoginImpl(CanRegServerInterface server)
+    public CanRegLoginImpl(CanRegServerInterface server/*<ictl.co>*/, int port/*</ictl.co>*/)
             throws RemoteException, MalformedURLException {
+        //<ictl.co>
+        super(port);
+        //<ictl.co>
         System.setProperty("java.security.auth.login.config", Globals.LOGIN_FILENAME);
         System.setProperty("java.security.policy", Globals.POLICY_FILENAME);
         this.theServer = server;
     }
 
-    public CanRegLoginImpl(String serverCode)
+    public CanRegLoginImpl(String serverCode/*<ictl.co>*/, int port/*<ictl.co>*/)
             throws RemoteException, MalformedURLException {
         System.setProperty("java.security.auth.login.config", Globals.LOGIN_FILENAME);
         System.setProperty("java.security.policy", Globals.POLICY_FILENAME);
-        theServer = new CanRegServerImpl(serverCode);
+        theServer = new CanRegServerImpl(serverCode/**/, port/**/);
     }
 
     @Override
@@ -68,7 +71,13 @@ public class CanRegLoginImpl extends UnicastRemoteObject
 
         // Return a reference to a proxy object that encapsulates the access
         // to the theServer, for this client
-        return new CanRegServerProxy(user, theServer);
+        //<ictl.co>
+        int port = 0;
+        if (theServer instanceof CanRegServerImpl) {
+            port = ((CanRegServerImpl) theServer).getPort();
+        }
+        //<ictl.co>
+        return new CanRegServerProxy(user, theServer/*<ictl.co>*/, port/*</ictl.co>*/);
     }
 
     /**

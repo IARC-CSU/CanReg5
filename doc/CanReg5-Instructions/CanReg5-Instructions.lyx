@@ -845,8 +845,8 @@ JRE
 \begin_layout Standard
 \align left
 Before you install and run CanReg5 for the first time it is recommended
- that you install the latest Java 8 Runtime Environment (July 2017: Version
- 8 Update 144 ) You can get that from here: 
+ that you install the latest Java 7 Runtime Environment (March 2016: Version
+ 8 Update 77 ) You can get that from here: 
 \begin_inset CommandInset href
 LatexCommand href
 target "http://java.com/en/download/manual.jsp"
@@ -7037,14 +7037,22 @@ Scalable Vector Graphics, or SVG, is a scalable editable file format that
 \end_layout
 
 \begin_layout Subsubsection
-Image files (Portable Network Graphics (PNG), Windows Meta files (WMF) or
- TIFFs)
+Portable Network Graphics (PNG)
 \end_layout
 
 \begin_layout Standard
-Image files are useful for presentation on screen or online, but less adapted
- to print, as they are not scalable.
- (If possible it is best to use PNG as that is an open format.)
+PNGs are useful for presentation on screen or online, but less adapted to
+ print, as they are not scalable.
+\end_layout
+
+\begin_layout Subsubsection
+Windows Meta File (WMF)
+\end_layout
+
+\begin_layout Standard
+WMFs are useful for presentation on screen, but less adapted to print, as
+ they are not scalable.
+ (If possible it is better to use PNG as that is an open format.
 \end_layout
 
 \begin_layout Subsubsection
@@ -7053,24 +7061,6 @@ Tabulated data (HTML)
 
 \begin_layout Standard
 This is the data from the tables in HTML format for further processing.
-\end_layout
-
-\begin_layout Subsubsection
-Word files (DOCX)
-\end_layout
-
-\begin_layout Standard
-This generates a word document that can be edited in any compatible software.
- (Microsoft Word, Libre Office Writer, Open Office Writer, etc.)
-\end_layout
-
-\begin_layout Subsubsection
-PowerPoint (PPTX)
-\end_layout
-
-\begin_layout Standard
-This generates a slide deck that can be edited in any compatible software.
- (Microsoft PowerPoint, Libre Office Impress, Open Office Impress, etc.)
 \end_layout
 
 \begin_layout Subsection
@@ -7093,7 +7083,7 @@ reference "fig:CanReg5-chart-editor"
 placement h
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -7236,7 +7226,7 @@ Generate files for SEER*Prep
 \begin_inset Quotes eld
 \end_inset
 
-Training Database 1999-2001
+Goiania1999-2001
 \begin_inset Quotes erd
 \end_inset
 
@@ -7334,10 +7324,18 @@ status open
 
 \begin_layout Plain Layout
 You can also do this manually.
- You then have to first specify that your files follow the CanReg5 format,
- by opening the corresponding .dd file from the folder you installed CanReg5
- in.
- Then under 
+ You then have to first specify that your files follow the NAACCR 1946 v11.3
+ format, by opening the corresponding .dd file from the folder you installed
+ SEER*prep to.
+ (Most probably 
+\begin_inset Quotes eld
+\end_inset
+
+naaccr1946.ver11_3.d02032011.dd
+\begin_inset Quotes erd
+\end_inset
+
+) Then under 
 \begin_inset Quotes eld
 \end_inset
 
@@ -11959,17 +11957,17 @@ script.basename <- dirname(script.name)
 
 \begin_layout Plain Layout
 
-source(paste(sep="/", script.basename, "makeTable.r")) 
+source(paste(sep="/", script.basename, "makeTable.R")) 
 \end_layout
 
 \begin_layout Plain Layout
 
-source(paste(sep="/", script.basename, "checkArgs.r")) 
+source(paste(sep="/", script.basename, "checkArgs.R")) 
 \end_layout
 
 \begin_layout Plain Layout
 
-source(paste(sep="/", script.basename, "makeFile.r"))
+source(paste(sep="/", script.basename, "makeFile.R"))
 \end_layout
 
 \begin_layout Plain Layout
@@ -11997,7 +11995,7 @@ fileType <- checkArgs(Args, "-ft")
 
 \begin_layout Plain Layout
 
-source(paste(sep="/", script.basename, "myLibrary1.r"))
+source(paste(sep="/", script.basename, "myLibrary1.R"))
 \end_layout
 
 \begin_layout Plain Layout
@@ -13575,10 +13573,6 @@ Jacques Ferlay (Original PostScript code, conversion tables, and original
 \end_layout
 
 \begin_layout Itemize
-Mathieu Laversanne (R code for analysis)
-\end_layout
-
-\begin_layout Itemize
 Anahita Rahimi (R code for analysis)
 \end_layout
 
@@ -13587,7 +13581,11 @@ Sebastien Antoni (R code for analysis)
 \end_layout
 
 \begin_layout Itemize
-Betty Carballo and Patricio Carranza (New Data Entry form)
+Hemant Dhivar (Migration Tool)
+\end_layout
+
+\begin_layout Itemize
+Betty Carballo and Patricio Carranza (New Dataentry form)
 \end_layout
 
 \begin_layout Subsection
@@ -13651,7 +13649,7 @@ Michel Smans, IARC/ITS
 \end_layout
 
 \begin_layout Itemize
-Lucile Alteyrac, IARC/ITS
+Lucile Alteyrac, IARC/BIO
 \end_layout
 
 \begin_layout Subsection

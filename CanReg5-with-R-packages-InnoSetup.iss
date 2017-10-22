@@ -52,7 +52,7 @@ Source: "{#CanReg5Dir}\dist\CanReg.jar"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#CanReg5Dir}\dist\README.TXT"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#CanReg5Dir}\changelog.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#CanReg5Dir}\doc\CanReg5-Instructions\CanReg5-Instructions.pdf"; DestDir: "{app}\doc"; Flags: ignoreversion
-; Source: "{#CanReg5Dir}\conf\tables\r\r-packages\*"; DestDir: "{app}\conf\tables\r\r-packages"; Flags: ignoreversion
+Source: "{#CanReg5Dir}\r-packages\*"; DestDir: "{app}\conf\tables\r\r-packages"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

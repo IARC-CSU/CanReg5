@@ -1,17 +1,17 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2017  International Agency for Research on Cancer
- *
+ * Copyright (C) 2008-2015  International Agency for Research on Cancer
+ * <p>
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -25,60 +25,50 @@
  */
 package canreg.client.gui.dataentry;
 
-// import au.com.bytecode.opencsv.CSVReader;
-import canreg.client.gui.components.VariableMappingPanel;
-import canreg.client.LocalSettings;
+import au.com.bytecode.opencsv.CSVReader;
 import canreg.client.CanRegClientApp;
-import canreg.common.DatabaseVariablesListElement;
+import canreg.client.LocalSettings;
 import canreg.client.dataentry.Import;
 import canreg.client.dataentry.ImportOptions;
 import canreg.client.dataentry.Relation;
+import canreg.client.gui.LoginInternalFrame;
+import canreg.client.gui.components.VariableMappingPanel;
+import canreg.client.gui.tools.WaitFrame;
 import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
+import canreg.common.DatabaseVariablesListElement;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
 import canreg.common.Tools;
 import canreg.server.database.RecordLockedException;
-import java.awt.Cursor;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.Charset;
-import java.rmi.RemoteException;
-import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.SortedMap;
-import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.ButtonGroup;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.table.DefaultTableModel;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
+import org.apache.commons.lang.StringUtils;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
 import org.w3c.dom.Document;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.rmi.RemoteException;
+import java.sql.SQLException;
+import java.util.*;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author morten
  *
- * This module
+ * This module 
  *
- * TODO: Accept various date formats? Implement the various options
+ * TODO: Accept various date formats?
+ * Implement the various options
  *
  *
  */
@@ -86,19 +76,23 @@ public class ImportView extends javax.swing.JInternalFrame {
 
     private boolean needToRebuildVariableMap = true;
     private File inFile;
-    private final Document doc;
+    private Document doc;
     private List<VariableMappingPanel> panelList;
-    private final DatabaseVariablesListElement[] variablesInDB;
-    private final JFileChooser chooser;
+    private DatabaseVariablesListElement[] variablesInDB;
+    private JFileChooser chooser;
     private String path;
-    private final LocalSettings localSettings;
-    private final GlobalToolBox globalToolBox;
+    private LocalSettings localSettings;
+    private GlobalToolBox globalToolBox;
     private Task importTask;
+    //<ictl.co>
+    JDesktopPane desktopPane;
+    //</ictl.co>
 
-    /**
-     * Creates new form ImportView
-     */
-    public ImportView() {
+    /** Creates new form ImportView */
+    public ImportView(/*<ictl.co>*/JDesktopPane desktopPane/*</ictl.co>*/) {
+        //<ictl.co>
+        this.desktopPane = desktopPane;
+        //</ictl.co>
         initComponents();
         previewPanel.setVisible(false);
 
@@ -162,10 +156,10 @@ public class ImportView extends javax.swing.JInternalFrame {
         backButton.setEnabled(tabNumber > 0);
     }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
+    /** This method is called from within the constructor to
+     * initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is
+     * always regenerated by the Form Editor.
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -237,6 +231,7 @@ public class ImportView extends javax.swing.JInternalFrame {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 fileNameTextFieldMousePressed(evt);
             }
+
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 fileNameTextFieldMouseReleased(evt);
             }
@@ -267,15 +262,15 @@ public class ImportView extends javax.swing.JInternalFrame {
         previewTableScrollPane.setName("previewTableScrollPane"); // NOI18N
 
         previewTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
+                new Object[][]{
+                        {null, null, null, null},
+                        {null, null, null, null},
+                        {null, null, null, null},
+                        {null, null, null, null}
+                },
+                new String[]{
+                        "Title 1", "Title 2", "Title 3", "Title 4"
+                }
         ));
         previewTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
         previewTable.setEnabled(false);
@@ -294,27 +289,27 @@ public class ImportView extends javax.swing.JInternalFrame {
         javax.swing.GroupLayout previewPanelLayout = new javax.swing.GroupLayout(previewPanel);
         previewPanel.setLayout(previewPanelLayout);
         previewPanelLayout.setHorizontalGroup(
-            previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(previewPanelLayout.createSequentialGroup()
-                .addComponent(numberOfRecordsLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(numberOfRecordsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(numberOfRecordsShownLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(numberOfRecordsShownTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE))
-            .addComponent(previewTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE)
+                previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(previewPanelLayout.createSequentialGroup()
+                                .addComponent(numberOfRecordsLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(numberOfRecordsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(numberOfRecordsShownLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(numberOfRecordsShownTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE))
+                        .addComponent(previewTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE)
         );
         previewPanelLayout.setVerticalGroup(
-            previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(previewPanelLayout.createSequentialGroup()
-                .addGroup(previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(numberOfRecordsLabel)
-                    .addComponent(numberOfRecordsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(numberOfRecordsShownLabel)
-                    .addComponent(numberOfRecordsShownTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(previewTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE))
+                previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(previewPanelLayout.createSequentialGroup()
+                                .addGroup(previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(numberOfRecordsLabel)
+                                        .addComponent(numberOfRecordsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(numberOfRecordsShownLabel)
+                                        .addComponent(numberOfRecordsShownTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(previewTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE))
         );
 
         previewButton.setAction(actionMap.get("previewAction")); // NOI18N
@@ -324,7 +319,7 @@ public class ImportView extends javax.swing.JInternalFrame {
         fileLabel.setName("fileLabel"); // NOI18N
 
         separatingCharacterComboBox.setEditable(true);
-        separatingCharacterComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tab", "Comma" }));
+        separatingCharacterComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"Tab", "Comma"}));
         separatingCharacterComboBox.setAction(actionMap.get("comboBoxChanged")); // NOI18N
         separatingCharacterComboBox.setName("separatingCharacterComboBox"); // NOI18N
 
@@ -339,59 +334,59 @@ public class ImportView extends javax.swing.JInternalFrame {
         fileEncodingLabel.setText(resourceMap.getString("fileEncodingLabel.text")); // NOI18N
         fileEncodingLabel.setName("fileEncodingLabel"); // NOI18N
 
-        charsetsComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        charsetsComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
         charsetsComboBox.setName("charsetsComboBox"); // NOI18N
 
         javax.swing.GroupLayout chooseFilePanelLayout = new javax.swing.GroupLayout(chooseFilePanel);
         chooseFilePanel.setLayout(chooseFilePanelLayout);
         chooseFilePanelLayout.setHorizontalGroup(
-            chooseFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, chooseFilePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(chooseFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(previewPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(chooseFilePanelLayout.createSequentialGroup()
-                        .addGroup(chooseFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(chooseFilePanelLayout.createSequentialGroup()
-                                .addComponent(fileLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(fileNameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 365, Short.MAX_VALUE))
-                            .addGroup(chooseFilePanelLayout.createSequentialGroup()
-                                .addComponent(fileEncodingLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(charsetsComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(autodetectButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(separatingCharacterLabel)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(chooseFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(separatingCharacterComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, chooseFilePanelLayout.createSequentialGroup()
-                                .addComponent(browseButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(previewButton)))))
-                .addContainerGap())
+                chooseFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, chooseFilePanelLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(chooseFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(previewPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGroup(chooseFilePanelLayout.createSequentialGroup()
+                                                .addGroup(chooseFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addGroup(chooseFilePanelLayout.createSequentialGroup()
+                                                                .addComponent(fileLabel)
+                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(fileNameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 365, Short.MAX_VALUE))
+                                                        .addGroup(chooseFilePanelLayout.createSequentialGroup()
+                                                                .addComponent(fileEncodingLabel)
+                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(charsetsComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(autodetectButton)
+                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(separatingCharacterLabel)))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addGroup(chooseFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                        .addComponent(separatingCharacterComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, chooseFilePanelLayout.createSequentialGroup()
+                                                                .addComponent(browseButton)
+                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(previewButton)))))
+                                .addContainerGap())
         );
         chooseFilePanelLayout.setVerticalGroup(
-            chooseFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(chooseFilePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(chooseFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(previewButton)
-                    .addComponent(browseButton)
-                    .addComponent(fileLabel)
-                    .addComponent(fileNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(chooseFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(fileEncodingLabel)
-                    .addComponent(charsetsComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(separatingCharacterComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(autodetectButton)
-                    .addComponent(separatingCharacterLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(previewPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                chooseFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(chooseFilePanelLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(chooseFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(previewButton)
+                                        .addComponent(browseButton)
+                                        .addComponent(fileLabel)
+                                        .addComponent(fileNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(chooseFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(fileEncodingLabel)
+                                        .addComponent(charsetsComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(separatingCharacterComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(autodetectButton)
+                                        .addComponent(separatingCharacterLabel))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(previewPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addContainerGap())
         );
 
         tabbedPane.addTab("Choose File", chooseFilePanel);
@@ -425,25 +420,25 @@ public class ImportView extends javax.swing.JInternalFrame {
         javax.swing.GroupLayout associateVariablesPanelLayout = new javax.swing.GroupLayout(associateVariablesPanel);
         associateVariablesPanel.setLayout(associateVariablesPanelLayout);
         associateVariablesPanelLayout.setHorizontalGroup(
-            associateVariablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(associateVariablesPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(associateVariablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
-                    .addComponent(jLabel8)
-                    .addComponent(variablesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE))
-                .addContainerGap())
+                associateVariablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(associateVariablesPanelLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(associateVariablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
+                                        .addComponent(jLabel8)
+                                        .addComponent(variablesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE))
+                                .addContainerGap())
         );
         associateVariablesPanelLayout.setVerticalGroup(
-            associateVariablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(associateVariablesPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel8)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(variablesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 305, Short.MAX_VALUE)
-                .addContainerGap())
+                associateVariablesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(associateVariablesPanelLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jLabel8)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(variablesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 305, Short.MAX_VALUE)
+                                .addContainerGap())
         );
 
         tabbedPane.addTab("Associate Variables", associateVariablesPanel);
@@ -474,24 +469,24 @@ public class ImportView extends javax.swing.JInternalFrame {
         javax.swing.GroupLayout discrepanciesPanelLayout = new javax.swing.GroupLayout(discrepanciesPanel);
         discrepanciesPanel.setLayout(discrepanciesPanelLayout);
         discrepanciesPanelLayout.setHorizontalGroup(
-            discrepanciesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(discrepanciesPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(discrepanciesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(rejectRadioButton)
-                    .addComponent(updateRadioButton)
-                    .addComponent(overwriteRadioButton))
-                .addContainerGap(12, Short.MAX_VALUE))
+                discrepanciesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(discrepanciesPanelLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(discrepanciesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(rejectRadioButton)
+                                        .addComponent(updateRadioButton)
+                                        .addComponent(overwriteRadioButton))
+                                .addContainerGap(12, Short.MAX_VALUE))
         );
         discrepanciesPanelLayout.setVerticalGroup(
-            discrepanciesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(discrepanciesPanelLayout.createSequentialGroup()
-                .addComponent(rejectRadioButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(updateRadioButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(overwriteRadioButton)
-                .addContainerGap(24, Short.MAX_VALUE))
+                discrepanciesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(discrepanciesPanelLayout.createSequentialGroup()
+                                .addComponent(rejectRadioButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(updateRadioButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(overwriteRadioButton)
+                                .addContainerGap(24, Short.MAX_VALUE))
         );
 
         jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder("CanReg data"));
@@ -521,27 +516,27 @@ public class ImportView extends javax.swing.JInternalFrame {
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(doChecksCheckBox)
-                    .addComponent(personSearchCheckBox)
-                    .addComponent(queryNewNameCheckBox)
-                    .addComponent(previousCanRegDataCheckBox))
-                .addContainerGap(94, Short.MAX_VALUE))
+                jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel7Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(doChecksCheckBox)
+                                        .addComponent(personSearchCheckBox)
+                                        .addComponent(queryNewNameCheckBox)
+                                        .addComponent(previousCanRegDataCheckBox))
+                                .addContainerGap(94, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addComponent(doChecksCheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(personSearchCheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(queryNewNameCheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(previousCanRegDataCheckBox)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel7Layout.createSequentialGroup()
+                                .addComponent(doChecksCheckBox)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(personSearchCheckBox)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(queryNewNameCheckBox)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(previousCanRegDataCheckBox)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         maxLinesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Max Lines"));
@@ -553,6 +548,7 @@ public class ImportView extends javax.swing.JInternalFrame {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 maxLinesTextFieldMousePressed(evt);
             }
+
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 maxLinesTextFieldMouseReleased(evt);
             }
@@ -561,25 +557,28 @@ public class ImportView extends javax.swing.JInternalFrame {
         testOnlyCheckBox.setText(resourceMap.getString("testOnlyCheckBox.text")); // NOI18N
         testOnlyCheckBox.setToolTipText(resourceMap.getString("testOnlyCheckBox.toolTipText")); // NOI18N
         testOnlyCheckBox.setName("testOnlyCheckBox"); // NOI18N
+        //<ictl.co>
+        testOnlyCheckBox.setVisible(false);
+        //</ictl.co>
 
         javax.swing.GroupLayout maxLinesPanelLayout = new javax.swing.GroupLayout(maxLinesPanel);
         maxLinesPanel.setLayout(maxLinesPanelLayout);
         maxLinesPanelLayout.setHorizontalGroup(
-            maxLinesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, maxLinesPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(maxLinesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(testOnlyCheckBox)
-                    .addComponent(maxLinesTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE))
-                .addContainerGap())
+                maxLinesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, maxLinesPanelLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(maxLinesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(testOnlyCheckBox)
+                                        .addComponent(maxLinesTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE))
+                                .addContainerGap())
         );
         maxLinesPanelLayout.setVerticalGroup(
-            maxLinesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(maxLinesPanelLayout.createSequentialGroup()
-                .addComponent(maxLinesTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(testOnlyCheckBox)
-                .addContainerGap(54, Short.MAX_VALUE))
+                maxLinesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(maxLinesPanelLayout.createSequentialGroup()
+                                .addComponent(maxLinesTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(testOnlyCheckBox)
+                                .addContainerGap(54, Short.MAX_VALUE))
         );
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel1.border.title"))); // NOI18N
@@ -590,44 +589,44 @@ public class ImportView extends javax.swing.JInternalFrame {
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE)
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         javax.swing.GroupLayout importFilePanelLayout = new javax.swing.GroupLayout(importFilePanel);
         importFilePanel.setLayout(importFilePanelLayout);
         importFilePanelLayout.setHorizontalGroup(
-            importFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(importFilePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(importFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(importFilePanelLayout.createSequentialGroup()
-                        .addComponent(discrepanciesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(maxLinesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(importButton, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addContainerGap())
+                importFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(importFilePanelLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(importFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(importFilePanelLayout.createSequentialGroup()
+                                                .addComponent(discrepanciesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(maxLinesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(importButton, javax.swing.GroupLayout.Alignment.TRAILING))
+                                .addContainerGap())
         );
         importFilePanelLayout.setVerticalGroup(
-            importFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(importFilePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(importFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(discrepanciesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(maxLinesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(importButton)
-                .addGap(115, 115, 115))
+                importFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(importFilePanelLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(importFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(discrepanciesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(maxLinesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(importButton)
+                                .addGap(115, 115, 115))
         );
 
         tabbedPane.addTab("Import File", importFilePanel);
@@ -644,34 +643,35 @@ public class ImportView extends javax.swing.JInternalFrame {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(tabbedPane, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(backButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cancelButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(nextButton)))
-                .addContainerGap())
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(tabbedPane, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(backButton)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(cancelButton)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(nextButton)))
+                                .addContainerGap())
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 383, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(nextButton)
-                    .addComponent(cancelButton)
-                    .addComponent(backButton))
-                .addContainerGap())
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 383, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(nextButton)
+                                        .addComponent(cancelButton)
+                                        .addComponent(backButton))
+                                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
     private void fileNameTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_fileNameTextFieldFocusLost
         changeFile();
     }//GEN-LAST:event_fileNameTextFieldFocusLost
@@ -760,6 +760,16 @@ public class ImportView extends javax.swing.JInternalFrame {
     @Action()
     public Task importAction() {
         // TODO: Add a handler for errors in the file structure...
+        //<ictl.co>
+        int showInternalConfirmDialog = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(),
+                java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("PERFORM_BACKUP_NOW?"),
+                java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("BACK_UP?"), JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+        if (showInternalConfirmDialog == JOptionPane.YES_OPTION) {
+            Task backupTask = new PerformBackUpActionTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
+            backupTask.execute();
+        }
+
+        //<ictl.co>
         localSettings.setProperty("import_path", path);
         localSettings.writeSettings();
         progressBar.setStringPainted(true);
@@ -800,6 +810,11 @@ public class ImportView extends javax.swing.JInternalFrame {
             try {
                 // Calls the client app import action with the file parameters provided,
                 success = CanRegClientApp.getApplication().importFile(this, doc, buildMap(), inFile, buildImportOptions());
+                //<ictl.co>
+            } catch (NullPointerException ex) {
+                Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+                this.firePropertyChange("error", null, ex.getMessage());
+                //</ictl.co>
             } catch (SecurityException ex) {
                 Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
             } catch (RecordLockedException ex) {
@@ -840,6 +855,11 @@ public class ImportView extends javax.swing.JInternalFrame {
                 // Read the first line of the file
                 br = new BufferedReader(new FileReader(inFile));
                 String line = br.readLine();
+//<ictl.co>
+                if(!StringUtils.isEmpty(line) && (int)line.charAt(0) == 65279){
+                    line = line.substring(1);
+                }
+//</ictl.co>
 //                String[] lineElements = canreg.common.Tools.breakDownLine('\t', line);
                 String[] lineElements = canreg.common.Tools.breakDownLine(getSeparator(), line);
                 // Build variable mapping
@@ -946,10 +966,13 @@ public class ImportView extends javax.swing.JInternalFrame {
         io.setTumourCheckStatus(globalToolBox.translateStandardVariableNameToDatabaseVariableName(Globals.StandardVariableNames.CheckStatus.toString()));
         io.setTumourRecordStatus(globalToolBox.translateStandardVariableNameToDatabaseVariableName(Globals.StandardVariableNames.TumourRecordStatus.toString()));
         io.setICD10VariableName(globalToolBox.translateStandardVariableNameToDatabaseVariableName(Globals.StandardVariableNames.ICD10.toString()));
-        io.setICCCVariableName(globalToolBox.translateStandardVariableNameToDatabaseVariableName(Globals.StandardVariableNames.ICCC.toString()));
+
         // Set the characterset
         io.setFileCharset((Charset) charsetsComboBox.getSelectedItem());
-
+//<ictl.co>
+        File file = new File(chooser.getCurrentDirectory().getAbsolutePath() + File.separatorChar + "import_report.txt");
+        io.setReportFileName(file.getAbsolutePath());
+//</ictl.co>
         return io;
     }
 
@@ -978,30 +1001,22 @@ public class ImportView extends javax.swing.JInternalFrame {
             // numberOfRecordsTextField.setText(""+(canreg.common.Tools.numberOfLinesInFile(inFile.getAbsolutePath())-1));
             FileInputStream fis = new FileInputStream(inFile);
             br = new BufferedReader(new InputStreamReader(fis, (Charset) charsetsComboBox.getSelectedItem()));
-            CSVFormat csvFormat = CSVFormat.DEFAULT.
-                    withFirstRecordAsHeader().
-                    withDelimiter(getSeparator());
 
-            CSVParser csvParser = new CSVParser(br, csvFormat);
+            CSVReader reader = new CSVReader(br, getSeparator());
+            String[] lineElements;
 
             int linesToRead = Globals.NUMBER_OF_LINES_IN_IMPORT_PREVIEW;
             int numberOfLinesRead = 0;
+            String[] headers = {};
             Vector<Vector<String>> data = new Vector<Vector<String>>();
-
-            String[] headers = csvParser.getHeaderMap().keySet().toArray(new String[0]);
-
-            for (CSVRecord csvRecord : csvParser) {
-                csvRecord.toMap();
-                Vector vec = new Vector();
-                Iterator<String> iterator = csvRecord.iterator();
-                while (iterator.hasNext()) {
-                    vec.add(iterator.next());
+            while ((lineElements = reader.readNext()) != null && (numberOfLinesRead < linesToRead)) {
+                if (numberOfLinesRead == 0) {
+                    headers = lineElements;
+                } else {
+                    Vector vec = new Vector(Arrays.asList(lineElements));
+                    data.add(vec);
                 }
-                data.add(vec);
                 numberOfLinesRead++;
-                if (numberOfLinesRead >= linesToRead) {
-                    break;
-                }
             }
             numberOfRecordsShownTextField.setText(numberOfLinesRead + "");
 
@@ -1014,13 +1029,10 @@ public class ImportView extends javax.swing.JInternalFrame {
             JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportView").getString("COULD_NOT_PREVIEW_FILE:") + " \'" + fileNameTextField.getText().trim() + "\'.", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportView").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, fileNotFoundException);
         } catch (IOException ex) {
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportView").getString("COULD_NOT_PREVIEW_FILE:") + " \'" + fileNameTextField.getText().trim() + "\'.", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportView").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
-                if (br != null) {
-                    br.close();
-                }
+                br.close();
             } catch (IOException ex) {
                 Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -1037,7 +1049,6 @@ public class ImportView extends javax.swing.JInternalFrame {
 
     /**
      *
-     * @throws java.io.IOException
      */
     @Action
     public void autodetectFileEncodingAction() throws java.io.IOException {
@@ -1050,7 +1061,50 @@ public class ImportView extends javax.swing.JInternalFrame {
             JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportView").getString("NO_ENCODING_DETECTED."), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportView").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             // System.out.println("No encoding detected.");
         }
+        return;
     }
+
+    //<ictl.co>
+    private class PerformBackUpActionTask extends org.jdesktop.application.Task<Object, Void> {
+
+        WaitFrame waitFrame;
+
+        PerformBackUpActionTask(org.jdesktop.application.Application app) {
+            super(app);
+            Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
+            setCursor(hourglassCursor);
+            waitFrame = new WaitFrame();
+            waitFrame.setLabel(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("PERFORMING_BACKUP..."));
+            waitFrame.setIndeterminate(true);
+            desktopPane.add(waitFrame, javax.swing.JLayeredPane.POPUP_LAYER);
+            waitFrame.setVisible(true);
+            waitFrame.setLocation((desktopPane.getWidth() - waitFrame.getWidth()) / 2, (desktopPane.getHeight() - waitFrame.getHeight()) / 2);
+        }
+
+        @Override
+        protected Object doInBackground() {
+            String result = null;
+            try {
+                result = CanRegClientApp.getApplication().performBackup();
+            } catch (RemoteException ex) {
+                Logger.getLogger(LoginInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return result;
+        }
+
+        @Override
+        protected void succeeded(Object resultObject) {
+            Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+            setCursor(normalCursor);
+            waitFrame.dispose();
+            String resultString = (String) resultObject;
+            if (resultString != null) {
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("SYSTEM_BACKED_UP_TO_") + resultString + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("BACKUP_PERFORMED."), JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+    }
+
+    //</ictl.co>
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel associateVariablesPanel;
     private javax.swing.JButton autodetectButton;

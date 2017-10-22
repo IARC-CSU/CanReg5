@@ -68,7 +68,7 @@ public class VariablesExportDetailsPanel extends javax.swing.JPanel {
      */
     public void setVariable(DatabaseVariablesListElement variable) {
         this.variable = variable;
-        setVariableName(variable.getDisplayVariableName());
+        setVariableName(variable.getFullName());
         setVariableType(variable.getVariableType());
     }
 

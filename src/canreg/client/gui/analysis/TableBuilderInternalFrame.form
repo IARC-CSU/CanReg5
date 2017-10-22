@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.1" encoding="UTF-8" ?>
 
 <Form version="1.5" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JInternalFrameFormInfo">
   <Properties>
@@ -30,7 +30,7 @@
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="tabbedPane" alignment="0" max="32767" attributes="0"/>
+                  <Component id="tabbedPane" alignment="0" pref="499" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="backButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -47,7 +47,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="tabbedPane" max="32767" attributes="0"/>
+              <Component id="tabbedPane" pref="456" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="nextButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -436,7 +436,36 @@
             </Constraint>
           </Constraints>
 
-          <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout"/>
+          <Layout>
+            <DimensionLayout dim="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="rangeFilterPanel" pref="474" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+            <DimensionLayout dim="1">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="rangeFilterPanel" pref="406" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+          </Layout>
+          <SubComponents>
+            <Component class="canreg.client.gui.components.RangeFilterPanel" name="rangeFilterPanel">
+              <Properties>
+                <Property name="name" type="java.lang.String" value="rangeFilterPanel" noResource="true"/>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="rangeFilterPanel.initValues();"/>
+              </AuxValues>
+            </Component>
+          </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="writeOutPanel">
           <Properties>
@@ -470,9 +499,6 @@
                           <Component id="csvButton" alignment="0" pref="474" max="32767" attributes="0"/>
                           <Component id="chartViewerButton" alignment="0" pref="474" max="32767" attributes="0"/>
                           <Component id="seerPrepButton" alignment="0" pref="474" max="32767" attributes="0"/>
-                          <Component id="tiffButton" alignment="0" pref="474" max="32767" attributes="0"/>
-                          <Component id="docxButton" alignment="0" pref="474" max="32767" attributes="0"/>
-                          <Component id="pptxButton" alignment="0" pref="474" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -499,18 +525,12 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="tabulatedButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="tiffButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="docxButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="pptxButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="csvButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="chartViewerButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="seerPrepButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="53" max="32767" attributes="0"/>
+                      <EmptySpace pref="136" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -631,35 +651,6 @@
                 <Property name="text" type="java.lang.String" resourceKey="csvButton.text"/>
                 <Property name="toolTipText" type="java.lang.String" resourceKey="csvButton.toolTipText"/>
                 <Property name="name" type="java.lang.String" value="csvButton" noResource="true"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JButton" name="tiffButton">
-              <Properties>
-                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="canreg.client.gui.analysis.TableBuilderInternalFrame" id="generateTIFF" methodName="generateTIFF"/>
-                </Property>
-                <Property name="text" type="java.lang.String" resourceKey="tiffButton.text"/>
-                <Property name="toolTipText" type="java.lang.String" resourceKey="tiffButton.toolTipText"/>
-                <Property name="name" type="java.lang.String" value="tiffButton" noResource="true"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JButton" name="docxButton">
-              <Properties>
-                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="canreg.client.gui.analysis.TableBuilderInternalFrame" id="generateDOCX" methodName="generateDOCX"/>
-                </Property>
-                <Property name="text" type="java.lang.String" resourceKey="docxButton.text"/>
-                <Property name="name" type="java.lang.String" value="docxButton" noResource="true"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JButton" name="pptxButton">
-              <Properties>
-                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="canreg.client.gui.analysis.TableBuilderInternalFrame" id="generatePPTX" methodName="generatePPTX"/>
-                </Property>
-                <Property name="text" type="java.lang.String" resourceKey="pptxButton.text"/>
-                <Property name="toolTipText" type="java.lang.String" resourceKey="pptxButton.toolTipText"/>
-                <Property name="name" type="java.lang.String" value="pptxButton" noResource="true"/>
               </Properties>
             </Component>
           </SubComponents>

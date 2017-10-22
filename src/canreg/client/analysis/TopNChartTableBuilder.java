@@ -201,7 +201,7 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
                 // calculate period pop
                 periodPop = new PopulationDataset();
                 periodPop.setAgeGroupStructure(populations[0].getAgeGroupStructure());
-                periodPop.setReferencePopulation(populations[0].getReferencePopulation());
+                periodPop.setWorldPopulation(populations[0].getWorldPopulation());
                 for (PopulationDatasetsEntry pde : populations[0].getAgeGroups()) {
                     int count = 0;
                     for (PopulationDataset pds : populations) {
@@ -253,7 +253,7 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
                         adjustedCases = (100000.0 * numberOfCases) / periodPop.getAgeGroupCount(sex, periodPop.getAgeGroupIndex(age));
                     } else if (countType == CountType.ASR) {
                         try {
-                            adjustedCases = 100.0 * (periodPop.getReferencePopulationForAgeGroupIndex(sex, periodPop.getAgeGroupIndex(age)) * numberOfCases) / periodPop.getAgeGroupCount(sex, periodPop.getAgeGroupIndex(age));
+                            adjustedCases = 100.0 * (periodPop.getWorldPopulationForAgeGroupIndex(sex, periodPop.getAgeGroupIndex(age)) * numberOfCases) / periodPop.getAgeGroupCount(sex, periodPop.getAgeGroupIndex(age));
                         } catch (IncompatiblePopulationDataSetException ex) {
                             Logger.getLogger(TopNChartTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
                         }

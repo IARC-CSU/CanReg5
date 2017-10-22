@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2017  International Agency for Research on Cancer
+ * Copyright (C) 2008-2016  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@ public class LockFile {
 
     public LockFile(String identifier) {
         lockFileName = Globals.CANREG_CLIENT_FOLDER + Globals.FILE_SEPARATOR + identifier + Globals.CANREG_LOCAL_LOCKED_RECORDS_FILE_NAME_SUFFIX;
-        locksMap = new TreeMap<>();
+        locksMap = new TreeMap<String, Set<Integer>>();
         loadMap();
     }
 
@@ -76,7 +76,7 @@ public class LockFile {
                     in.close();
                 }
                 if (!success) {
-                    locksMap = new TreeMap<>();
+                    locksMap = new TreeMap<String, Set<Integer>>();
                 }
             }
         } catch (FileNotFoundException ex) {
@@ -85,7 +85,7 @@ public class LockFile {
             Logger.getLogger(LockFile.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (locksMap == null) {
-            locksMap = new TreeMap<>();
+            locksMap = new TreeMap<String, Set<Integer>>();
         }
     }
 

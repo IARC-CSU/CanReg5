@@ -49,7 +49,7 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
     @Override
     public void setDatabaseVariablesListElement(DatabaseVariablesListElement databaseListElement) {
         this.databaseListElement = databaseListElement;
-        setVariableName(databaseListElement.getDisplayVariableName());
+        setVariableName(databaseListElement.getFullName());
 
         dateChooser = new JDateChooser();
         String dateFormatString = databaseListElement.getDateFormatString();

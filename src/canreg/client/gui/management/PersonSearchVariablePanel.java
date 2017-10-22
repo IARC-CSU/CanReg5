@@ -25,10 +25,14 @@
 package canreg.client.gui.management;
 
 import canreg.common.DatabaseVariablesListElement;
+import canreg.common.LocalizationHelper;
 import canreg.common.PersonSearchVariable;
 import canreg.common.qualitycontrol.PersonSearcher.CompareAlgorithms;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jdesktop.application.Action;
 
 /**
@@ -44,7 +48,20 @@ public class PersonSearchVariablePanel extends javax.swing.JPanel {
         initComponents();
         discPowerTextField.setVisible(false);
         discPowerjLabel.setVisible(false);
-        compareAlgorithmComboBox.setModel(new javax.swing.DefaultComboBoxModel(CompareAlgorithms.values()));
+        //<ictl.co>
+        if (LocalizationHelper.isRtlLanguageActive()) {
+            CompareAlgorithms[] algorithms = CompareAlgorithms.values();
+            List<CompareAlgorithms> result = new ArrayList<CompareAlgorithms>();
+            for (CompareAlgorithms item : algorithms) {
+                if (CompareAlgorithms.soundex != item) {
+                    result.add(item);
+                }
+            }
+            compareAlgorithmComboBox.setModel(new javax.swing.DefaultComboBoxModel(result.toArray(new CompareAlgorithms[]{})));
+        } else {
+            compareAlgorithmComboBox.setModel(new javax.swing.DefaultComboBoxModel(CompareAlgorithms.values()));
+        }
+        //<ictl.co>
     }
 
     /**

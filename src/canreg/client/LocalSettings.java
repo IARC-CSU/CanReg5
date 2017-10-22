@@ -19,8 +19,8 @@
  */
 package canreg.client;
 
-import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
+import canreg.common.Tools;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -37,10 +37,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public final class LocalSettings {
 
@@ -178,7 +177,6 @@ public final class LocalSettings {
      *
      */    
     public static String DATE_FORMAT_KEY = "date_format_string";
-    public static String DISPLAY_VARIABLE_TYPE_KEY = "display_variable_type";
 
     /**
      *
@@ -408,7 +406,9 @@ public final class LocalSettings {
 
     private String getDefaultProperty(String key) {
         String property = "";
-        if (key.equalsIgnoreCase(USERNAME_KEY) || key.equalsIgnoreCase(PASSWORD_KEY)) {
+        if (key.equalsIgnoreCase(USERNAME_KEY)) {
+            property = "";
+        } else if (key.equalsIgnoreCase(PASSWORD_KEY)) {
             property = "";
         } else if (key.equalsIgnoreCase(LOCALE_KEY)) {
             property = Locale.getDefault().getLanguage();
@@ -438,8 +438,6 @@ public final class LocalSettings {
             property = DATA_ENTRY_VERSION_NEW;
         } else if (key.equalsIgnoreCase(DATE_FORMAT_KEY)){
             property = Globals.DATE_FORMAT_STRING;
-        } else if (key.equalsIgnoreCase(DISPLAY_VARIABLE_TYPE_KEY)){
-            property = DatabaseVariablesListElement.VariableType.FULL.toString();
         }
         return property;
     }
@@ -458,7 +456,6 @@ public final class LocalSettings {
         setProperty(FONT_SIZE_KEY, getDefaultProperty(FONT_SIZE_KEY));
         setProperty(DATA_ENTRY_VERSION_KEY, getDefaultProperty(DATA_ENTRY_VERSION_KEY));
         setProperty(DATE_FORMAT_KEY, getDefaultProperty(DATE_FORMAT_KEY));
-        setProperty(DISPLAY_VARIABLE_TYPE_KEY, getDefaultProperty(DISPLAY_VARIABLE_TYPE_KEY));
         settingsChanged = true;
     }
 
@@ -505,10 +502,8 @@ public final class LocalSettings {
 
         while (i.hasNext()) {
             String s = i.next();
-            Pattern p = Pattern.compile("server\\.(\\d+)\\..*");
-            Matcher m = p.matcher(s);
-            if (m.matches()) {                
-                int serverNumber = Integer.parseInt(m.group(1));
+            if (s.length() > 7 && s.substring(0, 7).equalsIgnoreCase("server.")) {
+                int serverNumber = Integer.parseInt(s.substring(7, 8));
                 boolean notSeen = foundServers.add(serverNumber);
                 if (notSeen) {
                     String name = properties.getProperty("server." + serverNumber + ".name");
@@ -752,14 +747,5 @@ public final class LocalSettings {
         // Ref: https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
         df = df.replaceAll("m", "M");
         return df;
-    }
-
-    public DatabaseVariablesListElement.VariableType getDisplayVariableType() {
-        String dvt_s = getProperty(DISPLAY_VARIABLE_TYPE_KEY).toUpperCase();
-        DatabaseVariablesListElement.VariableType dvt_e = DatabaseVariablesListElement.VariableType.valueOf(dvt_s);
-        if (dvt_e == null) {
-            dvt_e = DatabaseVariablesListElement.VariableType.valueOf(getDefaultProperty(DISPLAY_VARIABLE_TYPE_KEY));
-        }
-        return dvt_e;
     }
 }

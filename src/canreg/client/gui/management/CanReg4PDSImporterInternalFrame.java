@@ -64,7 +64,7 @@ public class CanReg4PDSImporterInternalFrame extends javax.swing.JInternalFrame 
         LinkedList<PopulationDataset> populationDatasetsLinkedList = new LinkedList<PopulationDataset>();
         LinkedList<PopulationDataset> worldPopulationDatasetsLinkedList = new LinkedList<PopulationDataset>();
         for (PopulationDataset pds:populationDatasets.values()){
-            if (pds.isReferencePopulationBool()){
+            if (pds.isWorldPopulationBool()){
                 worldPopulationDatasetsLinkedList.add(pds);
             } else {
                 populationDatasetsLinkedList.add(pds);

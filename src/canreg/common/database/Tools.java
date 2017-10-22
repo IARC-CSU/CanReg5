@@ -17,18 +17,11 @@
  *
  * @author Morten Johannes Ervik, CSU/IARC, ervikm@iarc.fr
  */
+
+
 package canreg.common.database;
 
-import canreg.client.gui.dataentry.PDSEditorInternalFrame;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -37,7 +30,7 @@ import java.util.logging.Logger;
 public class Tools {
 
     // Ref: http://db.apache.org/derby/docs/10.1/ref/rrefkeywords29722.html    
-    private static final String[] RESERVED_WORDS_SQL = {"ADD",
+    private static final String[] reservedWordsSQL = {"ADD",
         "ALL",
         "ALLOCATE",
         "ALTER",
@@ -247,15 +240,15 @@ public class Tools {
     };
 
     /**
-     *
+     * 
      * @param word
      * @return
      */
     static public boolean isReservedWord(String word) {
         boolean found = false;
         int i = 0;
-        while (!found && i < RESERVED_WORDS_SQL.length) {
-            found = word.equalsIgnoreCase(RESERVED_WORDS_SQL[i++]);
+        while (!found && i < reservedWordsSQL.length) {
+            found = word.equalsIgnoreCase(reservedWordsSQL[i++]);
         }
         return found;
     }
@@ -264,8 +257,7 @@ public class Tools {
      *
      * @param newRecord
      * @param oldRecord
-     * @param variablesToSkip set of lower cased names of variables to be
-     * skipped
+     * @param variablesToSkip set of lower cased names of variables to be skipped
      * @return
      */
     static public boolean newRecordContainsNewInfo(DatabaseRecord newRecord, DatabaseRecord oldRecord, Set<String> variablesToSkip) {
@@ -286,9 +278,10 @@ public class Tools {
                     // compare
                     value1 = newRecord.getVariable(variableNames[pos]);
                     value2 = oldRecord.getVariable(variableNames[pos]);
-                    if (value1 == null || value2 == null) {
-                        noNewInfo = (value1 == value2);
-                    } else if (!value1.equals(value2)) {
+                    if (value1==null || value2==null){
+                        noNewInfo = (value1==value2);
+                    }
+                    else if (!value1.equals(value2)) {
                         noNewInfo = false;
                     }
                 }
@@ -298,27 +291,5 @@ public class Tools {
             noNewInfo = false;
         }
         return !noNewInfo;
-    }
-
-    static public void writePopulationDatasetToJSON(PopulationDataset pds, String path) {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
-        mapper.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
-        try (FileWriter fw
-                = new FileWriter(path)) {
-            mapper.writeValue(fw, pds);
-        } catch (IOException ex) {
-            Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    public static PopulationDataset loadPopulationDatasetFromJSON(String path) throws FileNotFoundException, IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
-        mapper.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
-        PopulationDataset pds;
-        FileReader fr = new FileReader(path);
-        pds = mapper.readValue(fr, PopulationDataset.class);
-        return pds;
     }
 }
