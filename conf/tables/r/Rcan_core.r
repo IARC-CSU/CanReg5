@@ -903,6 +903,7 @@ csu_merge_inc_pop <- function(inc_file,
                               pop_file,
                               var_cases = "CASES",
                               var_age = "AGE_GROUP",
+                              var_age_label = "AGE_GROUP_LABEL",
                               var_pop = "COUNT",
                               var_ref_count = "REFERENCE_COUNT",
                               var_by = NULL,
@@ -964,7 +965,15 @@ csu_merge_inc_pop <- function(inc_file,
     dt_all <- merge(dt_all, dt_color_map, by = c("cancer_label"), all.x=TRUE, sort=F )
   }
   
+  setnames(dt_all,var_age,"CSU_A")
+  setnames(dt_all,var_pop,"CSU_P")
   
+  
+  dt_all[is.na(get(var_age_label)), CSU_A := max(CSU_A)]
+  dt_all <-  dt_all[,list(CSU_C = sum(CSU_C), CSU_P = sum(CSU_P)), by=eval(colnames(dt_all)[!colnames(dt_all) %in% c("CSU_C", "CSU_P")])]
+
+  setnames(dt_all,"CSU_P",var_pop)
+  setnames(dt_all,"CSU_A",var_age)
   setnames(dt_all,"CSU_C",var_cases)
   return(dt_all)
 }
@@ -1133,13 +1142,13 @@ canreg_pop_data <- function(dt) {
 
 canreg_get_agegroup_label <- function(dt, first_age, last_age) {
   
-  temp_max <- max(dt$AGE_GROUP)
-  temp_min <- min(dt$AGE_GROUP)
+  temp_max <- max(dt[!is.na(AGE_GROUP_LABEL),]$AGE_GROUP)
+  temp_min <- min(dt[!is.na(AGE_GROUP_LABEL),]$AGE_GROUP)
   if (temp_max < last_age) {
-    last_age = temp_max
+    last_age <- temp_max
   } 
   if (temp_min > first_age) {
-    temp_min = first_age
+    first_age <- temp_min  
   } 
   temp1 <- as.character(unique(dt[dt$AGE_GROUP == first_age,]$AGE_GROUP_LABEL))
   temp2 <-as.character(unique(dt[dt$AGE_GROUP == last_age,]$AGE_GROUP_LABEL))
