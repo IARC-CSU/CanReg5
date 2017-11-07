@@ -99,6 +99,53 @@ canreg_error_log <- function(e,filename,out,Args,inc,pop) {
 
 
 
+canreg_args <- function(Args) {
+  
+  
+  arg_list <- list()
+  
+  ## get Args from canreg  
+  
+  for (logi_name in c("skin","landscape","logr","multi_graph")) {
+    
+    arg_list[[logi_name]] <- FALSE
+  }
+  
+  
+  for (i in 1:length(Args)) {
+    
+    temp <- Args[i]
+    pos <- regexpr("=",temp)[1]
+    
+    if (pos < 0) {
+      arg_list[[substring(temp,2)]] <- TRUE
+    } 
+    else {
+      varname <- substring(temp,2,pos-1)
+      assign(varname,substring(temp, pos+1)) 
+      if (suppressWarnings(!is.na(as.numeric(get(varname))))){
+        assign(varname, as.numeric(get(varname)))
+      }
+    }
+    arg_list[[varname]] <- get(varname)
+  }
+  
+  
+  if (substr(arg_list$out,nchar(arg_list$out)-nchar(arg_list$ft),nchar(arg_list$out)) == paste0(".", arg_list$ft)) {
+    arg_list[["filename"]] <- arg_list$out
+    arg_list$out <- substr(arg_list$out,1,nchar(arg_list$out)-nchar(arg_list$ft)-1)
+  } else {
+    arg_list[["filename"]] <- paste(arg_list$out, arg_list$ft, sep = "." )
+  }
+  
+  
+  return(list=arg_list)
+  
+  
+}
+
+
+
 canreg_load_packages <- function(packages_list) { 
   
   
@@ -218,6 +265,31 @@ canreg_load_packages <- function(packages_list) {
   
 }
 
+canreg_output_cat <- function(ft, filename,sex_graph=FALSE, list_graph=FALSE) {
+  
+  if (ft %in% c("png", "tiff", "svg") & sex_graph ) {
+    
+
+    temp_file <- substr(filename,0,nchar(filename)-nchar(ft)-1)
+    file.rename(paste0(temp_file,"001.",ft),paste0(temp_file,"-male.",ft))
+    file.rename(paste0(temp_file,"002.",ft),paste0(temp_file,"-female.",ft))
+    
+    cat(paste("-outFile",paste0(temp_file,"-male.",ft),sep=":"))
+    cat("\n")
+    cat(paste("-outFile",paste0(temp_file,"-female.",ft),sep=":"))
+    
+  } else if (ft %in% c("png", "tiff", "svg") & list_graph ) {
+      
+    temp_file <- substr(filename,0,nchar(filename)-nchar(ft)-1)  
+    cat(paste("-outFile",paste0(temp_file,"001.",ft),sep=":"))
+      
+  } else {
+    
+    cat(paste("-outFile",filename,sep=":"))
+    
+  }
+  
+}
 
 
 canreg_missing_age <- function(dt,

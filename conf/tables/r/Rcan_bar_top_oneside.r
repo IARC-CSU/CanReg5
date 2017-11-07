@@ -1,23 +1,36 @@
-## LIST OF ARGUMENTS FROM THE COMMAND LINE (CANREG) + SCRIPT DIRECTORY
-  Args <- commandArgs(TRUE)
-  
   ## To get the R folder of the actual script
   initial.options <- commandArgs(trailingOnly = FALSE)
   file.arg.name <- "--file="
   script.name <- sub(file.arg.name, "", 
                      initial.options[grep(file.arg.name, initial.options)])
   script.basename <- dirname(script.name)
-  source(paste(sep="/", script.basename, "Rcan_source.r"))
-  ################
-
   
-tryCatch({  
+  ## Load Rcan function
+  source(paste(sep="/", script.basename, "Rcan_core.r"))
+  
+  ## to get canreg argument list
+  Args <- commandArgs(TRUE)
+  ls_args <- canreg_args(Args)
+  
+  
+tryCatch({
+  
+  #load dependency packages
+  canreg_load_packages(c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","bmp", "jpeg"))
+  
+  #merge incidence and population
+  dt_all <- csu_merge_inc_pop(
+    inc_file =ls_args$inc,
+    pop_file =ls_args$pop,
+    var_by = c("ICD10GROUP", "ICD10GROUPLABEL","ICD10GROUPCOLOR", "YEAR", "SEX"),
+    column_group_list =list(c("ICD10GROUP", "ICD10GROUPLABEL", "ICD10GROUPCOLOR"))
+  )
   
   dt <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE, keep_year = FALSE)
   
   ## get age group label
-  first_age <- as.numeric(substr(agegroup,1,regexpr("-", agegroup)[1]-1))
-  last_age <- as.numeric(substr(agegroup,regexpr("-", agegroup)[1]+1,nchar(agegroup)))
+  first_age <- as.numeric(substr(ls_args$agegroup,1,regexpr("-", ls_args$agegroup)[1]-1))
+  last_age <- as.numeric(substr(ls_args$agegroup,regexpr("-", ls_args$agegroup)[1]+1,nchar(ls_args$agegroup)))
   
   ##calcul of ASR
   dt_asr<- csu_asr_core(df_data =dt, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
@@ -36,15 +49,15 @@ tryCatch({
   dt_bar <- dt_asr
   canreg_age_group <- canreg_get_agegroup_label(dt, first_age, last_age)
   
-  if (data=="CASES") {
+  if (ls_args$data=="CASES") {
     var_top <- "CASES"
     digit <- 0
     xtitle <- paste0("Number of cases, ", canreg_age_group)
-  } else if (data=="ASR") {
+  } else if (ls_args$data=="ASR") {
     var_top <- "asr"
     digit <- 1
     xtitle<-paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=","), ", ", canreg_age_group)
-  } else if (data=="CR") {
+  } else if (ls_args$data=="CR") {
     var_top <- "cum_risk"
     digit <- 2
     canreg_age_group <- canreg_get_agegroup_label(dt,0, last_age)
@@ -54,39 +67,27 @@ tryCatch({
   }
   
   
-  canreg_output(output_type = ft, filename = out,landscape = FALSE,list_graph = TRUE,
+  canreg_output(output_type = ls_args$ft, filename = ls_args$out,landscape = FALSE,list_graph = TRUE,
                 FUN=canreg_bar_top_single,
-                dt=dt_bar,var_top=var_top,nb_top = number,
-                canreg_header = header,digit=digit,
+                dt=dt_bar,var_top=var_top,nb_top = ls_args$number,
+                canreg_header = ls_args$header,digit=digit,
                 xtitle=xtitle)
   
-  if (ft %in% c("png", "tiff", "svg")) {
-    temp_file <- substr(filename,0,nchar(filename)-nchar(ft)-1)
-    file.rename(paste0(temp_file,"001.",ft),paste0(temp_file,"-male.",ft))
-    file.rename(paste0(temp_file,"002.",ft),paste0(temp_file,"-female.",ft))
-    
-    cat(paste("-outFile",paste0(temp_file,"-male.",ft),sep=":"))
-    cat("\n")
-    cat(paste("-outFile",paste0(temp_file,"-female.",ft),sep=":"))
-    
-  } else {
-    
-    cat(paste("-outFile",filename,sep=":"))
-    
-  }
+  	 #talk to canreg
+  canreg_output_cat(ls_args$ft, ls_args$filename, sex_graph=TRUE)
   
-	},
+  
+  	},
   
   error = function(e){
     if (dev.cur() > 1) {
       dev.off()
-	  temp_file <- substr(filename,0,nchar(filename)-nchar(ft)-1)
-      if (file.exists(filename)) file.remove(filename)
-	  if (file.exists(paste0(temp_file,"001.",ft))) file.remove(paste0(temp_file,"001.",ft))
-	  if (file.exists(paste0(temp_file,"002.",ft))) file.remove(paste0(temp_file,"002.",ft))
+	  temp_file <- substr(ls_args$filename,0,nchar(ls_args$filename)-nchar(ls_args$ft)-1)
+      if (file.exists(ls_args$filename)) file.remove(ls_args$filename)
+	  if (file.exists(paste0(temp_file,"001.",ls_args$ft))) file.remove(paste0(temp_file,"001.",ls_args$ft))
+	  if (file.exists(paste0(temp_file,"002.",ls_args$ft))) file.remove(paste0(temp_file,"002.",ls_args$ft))
     }
     
-    canreg_error_log(e,filename,out,Args,inc,pop)
+    canreg_error_log(e,ls_args$filename,ls_args$out,Args,ls_args$inc,ls_args$pop)
   }
 )
-	
