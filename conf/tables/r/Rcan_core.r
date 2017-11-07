@@ -745,7 +745,7 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all, folder, list_nu
                       log_scale = TRUE,  
                       color_trend=c("Male" = "#2c7bb6", "Female" = "#b62ca1"),
                       multi_graph= FALSE,
-                      canreg_header=header)
+                      canreg_header=ls_args$header)
         
         
         dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph001.png")), "dim" )
@@ -1212,7 +1212,11 @@ canreg_pop_data <- function(dt) {
 }
 
 
-canreg_get_agegroup_label <- function(dt, first_age, last_age) {
+canreg_get_agegroup_label <- function(dt, agegroup) {
+  
+  
+  first_age <- as.numeric(substr(agegroup,1,regexpr("-", agegroup)[1]-1))
+  last_age <- as.numeric(substr(agegroup,regexpr("-", agegroup)[1]+1,nchar(agegroup)))
   
   temp_max <- max(dt[!is.na(AGE_GROUP_LABEL),]$AGE_GROUP)
   temp_min <- min(dt[!is.na(AGE_GROUP_LABEL),]$AGE_GROUP)
@@ -1226,7 +1230,8 @@ canreg_get_agegroup_label <- function(dt, first_age, last_age) {
   temp2 <-as.character(unique(dt[dt$AGE_GROUP == last_age,]$AGE_GROUP_LABEL))
   temp1 <- substr(temp1,1,regexpr("-", temp1)[1]-1)
   temp2 <- substr(temp2,regexpr("-", temp2)[1]+1,nchar(temp2))
-  return(paste0(temp1,"-",temp2, " years"))
+  
+  return(list(first_age = first_age, last_age= last_age, label = paste0(temp1,"-",temp2, " years")))
 }
 
 csu_asr_core <- function(df_data, var_age, var_cases, var_py, var_by=NULL,

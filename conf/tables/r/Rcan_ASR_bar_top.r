@@ -28,18 +28,15 @@ tryCatch({
   
 	##Prepare canreg data for ageSpecific rate
 	dt_all <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE)
-
-	first_age <- as.numeric(substr(ls_args$agegroup,1,regexpr("-", ls_args$agegroup)[1]-1))
-	last_age <- as.numeric(substr(ls_args$agegroup,regexpr("-", ls_args$agegroup)[1]+1,nchar(ls_args$agegroup)))
 	
 	## get age group label
-	canreg_age_group <- canreg_get_agegroup_label(dt_all, first_age, last_age)
+	canreg_age_group <- canreg_get_agegroup_label(dt_all, ls_args$agegroup)
 	
 	##calcul of ASR
 	dt_all<- csu_asr_core(df_data =dt_all, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
 						   var_by = c("cancer_label", "SEX"), missing_age = canreg_missing_age(dt_all),
-						   first_age = first_age+1,
-						   last_age= last_age+1,
+						   first_age = canreg_age_group$first_age+1,
+						   last_age= canreg_age_group$last_age+1,
 						   pop_base_count = "REFERENCE_COUNT",
 						   age_label_list = "AGE_GROUP_LABEL")
 		
@@ -48,7 +45,7 @@ tryCatch({
               FUN=canreg_bar_top,
               df_data=dt_all,color_bar=c("Male" = "#2c7bb6", "Female" = "#b62ca1"),nb_top = ls_args$number,
 			  canreg_header = ls_args$header,
-			  ytitle=paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=","), ", ", canreg_age_group))
+			  ytitle=paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=","), ", ", canreg_age_group$label))
 
 	
 	

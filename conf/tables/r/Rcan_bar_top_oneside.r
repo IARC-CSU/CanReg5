@@ -29,40 +29,40 @@ tryCatch({
   dt <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE, keep_year = FALSE)
   
   ## get age group label
-  first_age <- as.numeric(substr(ls_args$agegroup,1,regexpr("-", ls_args$agegroup)[1]-1))
-  last_age <- as.numeric(substr(ls_args$agegroup,regexpr("-", ls_args$agegroup)[1]+1,nchar(ls_args$agegroup)))
+  canreg_age_group <- canreg_get_agegroup_label(dt_all, ls_args$agegroup)
   
   ##calcul of ASR
   dt_asr<- csu_asr_core(df_data =dt, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
                         var_by = c("cancer_label", "SEX","ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt_all),
-                        first_age = first_age+1,
-                        last_age= last_age+1,
+                        first_age = canreg_age_group$first_age+1,
+                        last_age= canreg_age_group$last_age+1,
                         pop_base_count = "REFERENCE_COUNT",
                         age_label_list = "AGE_GROUP_LABEL")
   
   ##calcul of cumulative risk
   dt_cum_risk <- csu_cum_risk_core(df_data = dt,var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
                                    group_by = c("cancer_label", "SEX","ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt_all),
-                                   last_age= last_age+1,
+                                   last_age= canreg_age_group$last_age+1,
                                    age_label_list = "AGE_GROUP_LABEL")
   
   dt_bar <- dt_asr
-  canreg_age_group <- canreg_get_agegroup_label(dt, first_age, last_age)
+
   
   if (ls_args$data=="CASES") {
     var_top <- "CASES"
     digit <- 0
-    xtitle <- paste0("Number of cases, ", canreg_age_group)
+    xtitle <- paste0("Number of cases, ", canreg_age_group$label)
   } else if (ls_args$data=="ASR") {
     var_top <- "asr"
     digit <- 1
-    xtitle<-paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=","), ", ", canreg_age_group)
+    xtitle<-paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=","), ", ", canreg_age_group$label)
   } else if (ls_args$data=="CR") {
     var_top <- "cum_risk"
     digit <- 2
-    canreg_age_group <- canreg_get_agegroup_label(dt,0, last_age)
+	temp_agegroup <- paste0("0-", canreg_age_group$last_age)
+    canreg_age_group <- canreg_get_agegroup_label(dt,temp_agegroup)
     dt_bar <- dt_cum_risk
-    xtitle<-paste0("Cumulative incidence risk (percent), ", canreg_age_group)
+    xtitle<-paste0("Cumulative incidence risk (percent), ", canreg_age_group$label)
     
   }
   

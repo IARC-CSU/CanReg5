@@ -36,13 +36,13 @@ tryCatch({
   last_age <- as.numeric(substr(ls_args$agegroup,regexpr("-", ls_args$agegroup)[1]+1,nchar(ls_args$agegroup)))
   
   ## get age group label
-  canreg_age_group <- canreg_get_agegroup_label(dt, first_age, last_age)
+  canreg_age_group <- canreg_get_agegroup_label(dt_all, ls_args$agegroup)
   
   ##calcul of ASR
   dt<- csu_asr_core(df_data =dt, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
                     var_by = c("cancer_label", "SEX", "YEAR"), missing_age = canreg_missing_age(dt_all),
-                    first_age = first_age+1,
-                    last_age= last_age+1,
+                    first_age = canreg_age_group$first_age+1,
+                    last_age= canreg_age_group$last_age+1,
                     pop_base_count = "REFERENCE_COUNT",
                     age_label_list = "AGE_GROUP_LABEL")
   dt <- as.data.table(dt)
@@ -67,7 +67,7 @@ tryCatch({
                 FUN=canreg_eapc_scatter_error_bar,
                 dt=dt_eapc,
                 canreg_header = ls_args$header,
-                ytitle=paste0("Estimated annual percentage change (%), ", canreg_age_group))
+                ytitle=paste0("Estimated annual percentage change (%), ", canreg_age_group$label))
 
 	
    #talk to canreg
