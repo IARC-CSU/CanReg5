@@ -146,7 +146,7 @@ canreg_args <- function(Args) {
 
 
 
-canreg_load_packages <- function(packages_list) { 
+canreg_load_packages <- function(packages_list, Rcan_source=NULL) { 
   
   
   if (getRversion() == '3.2.0') {
@@ -158,7 +158,9 @@ canreg_load_packages <- function(packages_list) {
   dir.create(file.path(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5")),recursive = TRUE)
   .libPaths(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5"))
   
-  missing_packages <- packages_list[!(packages_list %in% installed.packages()[,"Package"])]
+  list_installed_packages <- installed.packages()[,"Package"]
+  
+  missing_packages <- packages_list[!(packages_list %in% list_installed_packages)]
   
   #managing installing package for old R version. 
   if (getRversion() < '3.2.0') {
@@ -212,7 +214,7 @@ canreg_load_packages <- function(packages_list) {
   
   if ("scales" %in% missing_packages) {
     
-    if ("munsell" %in% installed.packages()[,"Package"]) {
+    if ("munsell" %in% list_installed_packages) {
       if (packageVersion("munsell") < "0.2") {
         missing_packages <- c(missing_packages,"munsell" )
       }
@@ -221,12 +223,12 @@ canreg_load_packages <- function(packages_list) {
 
   if ("ggplot2" %in% missing_packages) {
     
-    if ("gtable" %in% installed.packages()[,"Package"]) {
+    if ("gtable" %in% list_installed_packages) {
       if (packageVersion("gtable") < "0.1.1") {
         missing_packages <- c(missing_packages,"gtable" )
       }
     }
-    if ("plyr" %in% installed.packages()[,"Package"]) {
+    if ("plyr" %in% list_installed_packages) {
       if (packageVersion("plyr") < "1.7.1") {
         missing_packages <- c(missing_packages,"plyr" )
       }
@@ -237,7 +239,7 @@ canreg_load_packages <- function(packages_list) {
   
   if ("ReporteRs" %in% missing_packages) {
      
-    if ("rvg" %in% installed.packages()[,"Package"]) {
+    if ("rvg" %in% list_installed_packages) {
       if (packageVersion("rvg") < "0.1.2") {
         missing_packages <- c(missing_packages,"rvg")
       }
@@ -261,7 +263,24 @@ canreg_load_packages <- function(packages_list) {
     }
   }
   
+  
+  #install Rcan package
+  
+  Rcan_file <- list.files(path=Rcan_source, pattern= "Rcan_\\d\\.\\d\\.\\d\\.tar\\.gz")
+  Rcan_version <- regmatches(Rcan_file,regexpr(pattern= "\\d\\.\\d\\.\\d", Rcan_file))
+
+  
+  if ("Rcan" %in% list_installed_packages) {
+    if (packageVersion("Rcan") < Rcan_version) {
+      install.packages(paste0(Rcan_source, "/",Rcan_file), repos=NULL)
+    }
+  } else {
+      install.packages(paste0(Rcan_source, "/",Rcan_file), repos=NULL)
+  }
+      
+
   lapply(packages_list, require, character.only = TRUE)
+  library(Rcan)
   
 }
 

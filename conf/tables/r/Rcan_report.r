@@ -16,7 +16,7 @@
 tryCatch({
   
   #load dependency packages
-  canreg_load_packages(c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","ReporteRs", "zip", "bmp", "jpeg"))
+  canreg_load_packages(c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","ReporteRs", "zip", "bmp", "jpeg"), Rcan_source=script.basename)
   
   #merge incidence and population
   dt_all <- csu_merge_inc_pop(

@@ -16,7 +16,7 @@
 tryCatch({
   
   #load dependency packages
-  canreg_load_packages(c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","ReporteRs", "zip", "bmp", "jpeg"))
+  canreg_load_packages(c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","ReporteRs", "zip", "bmp", "jpeg"), Rcan_source=script.basename)
   
   #merge incidence and population
   dt_all <- csu_merge_inc_pop(
@@ -44,7 +44,7 @@ tryCatch({
   
   doc <- pptx(template=paste(sep="/", script.basename,"slide_template", "canreg_template.pptx"))
   
-  slide.layouts(doc)
+  #slide.layouts(doc)
   
   doc <- addSlide(doc, "Canreg_title") ## add PPTX TITLE
   doc <- addTitle(doc, ls_args$header)
