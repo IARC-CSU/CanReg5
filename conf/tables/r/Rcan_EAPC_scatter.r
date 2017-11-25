@@ -22,7 +22,7 @@ tryCatch({
   dt_all <- csu_merge_inc_pop(
     inc_file =ls_args$inc,
     pop_file =ls_args$pop,
-    var_by = c("ICD10GROUP", "ICD10GROUPLABEL","ICD10GROUPCOLOR", "YEAR", "SEX"),
+    group_by = c("ICD10GROUP", "ICD10GROUPLABEL","ICD10GROUPCOLOR", "YEAR", "SEX"),
     column_group_list =list(c("ICD10GROUP", "ICD10GROUPLABEL", "ICD10GROUPCOLOR"))
   )
   
@@ -37,8 +37,8 @@ tryCatch({
   canreg_age_group <- canreg_get_agegroup_label(dt_all, ls_args$agegroup)
   
   ##calcul of ASR
-  dt<- csu_asr_core(df_data =dt, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
-                    var_by = c("cancer_label", "SEX", "YEAR"), missing_age = canreg_missing_age(dt_all),
+  dt<- Rcan:::core.csu_asr(df_data =dt, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
+                    group_by = c("cancer_label", "SEX", "YEAR"), missing_age = canreg_missing_age(dt_all),
                     first_age = canreg_age_group$first_age+1,
                     last_age= canreg_age_group$last_age+1,
                     pop_base_count = "REFERENCE_COUNT",
@@ -54,7 +54,7 @@ tryCatch({
   
   
   ##calcul eapc
-  dt_eapc <- csu_eapc_core(dt, var_rate = "asr",var_year = "YEAR" ,group_by =c("cancer_label", "SEX","CSU_RANK"))
+  dt_eapc <- Rcan:::core.csu_eapc(dt, var_rate = "asr",var_year = "YEAR" ,group_by =c("cancer_label", "SEX","CSU_RANK"))
   dt_eapc <-as.data.table(dt_eapc)
   
   

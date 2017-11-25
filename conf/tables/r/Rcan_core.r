@@ -421,8 +421,8 @@ canreg_import_CI5_data <- function(dt,CI5_file,var_ICD_canreg="ICD10GROUP",var_a
 canreg_merge_CI5_registry <- function(dt, dt_CI5, registry_region, registry_label, number=5) {
   
   ##calcul of ASR for canreg
-  dt<- csu_asr_core(df_data =dt, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
-                    var_by = c("cancer_label", "SEX","ICD10GROUP","ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt_all),
+  dt<- Rcan:::core.csu_asr(df_data =dt, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
+                    group_by = c("cancer_label", "SEX","ICD10GROUP","ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt_all),
                     pop_base_count = "REFERENCE_COUNT",
                     age_label_list = "AGE_GROUP_LABEL")
   
@@ -434,8 +434,8 @@ canreg_merge_CI5_registry <- function(dt, dt_CI5, registry_region, registry_labe
   
   dt_temp <- dt[,c("SEX", "ICD10GROUP", "CSU_RANK"),  with=FALSE]
   dt_CI5 <- merge(dt_CI5,dt_temp, by=c("SEX", "ICD10GROUP"),all.y=TRUE )
-  dt_CI5 <- csu_asr_core(df_data =dt_CI5, var_age ="AGE_GROUP",var_cases = "cases", var_py = "py",
-                         var_by = c("country_label","cr" ,"SEX","ICD10GROUP", "CSU_RANK"),
+  dt_CI5 <- Rcan:::core.csu_asr(df_data =dt_CI5, var_age ="AGE_GROUP",var_cases = "cases", var_py = "py",
+                         group_by = c("country_label","cr" ,"SEX","ICD10GROUP", "CSU_RANK"),
                          var_age_group=c("country_label"),
                          missing_age = canreg_missing_age(dt_CI5),
                          pop_base_count = "REFERENCE_COUNT",
@@ -760,8 +760,8 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all, folder, list_nu
         
         canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph"),landscape = FALSE,
                       list_graph = TRUE,
-                      FUN=canreg_ageSpecific_rate_multi_plot,dt=dt_report,var_by="SEX",var_age_label_list = "AGE_GROUP_LABEL",
-                      log_scale = TRUE,  
+                      FUN=canreg_ageSpecific_rate_multi_plot,dt=dt_report,group_by="SEX",var_age_label_list = "AGE_GROUP_LABEL",
+                      logscale = TRUE,  
                       color_trend=c("Male" = "#2c7bb6", "Female" = "#b62ca1"),
                       multi_graph= FALSE,
                       canreg_header=ls_args$header)
@@ -997,7 +997,7 @@ csu_merge_inc_pop <- function(inc_file,
                               var_age_label = "AGE_GROUP_LABEL",
                               var_pop = "COUNT",
                               var_ref_count = "REFERENCE_COUNT",
-                              var_by = NULL,
+                              group_by = NULL,
                               column_group_list = NULL){
   
   df_inc <- read.table(inc_file, header=TRUE)
@@ -1009,9 +1009,9 @@ csu_merge_inc_pop <- function(inc_file,
   setnames(dt_inc, var_cases, "CSU_C")
   
   column_group_list[[1]]  <- intersect(column_group_list[[1]],colnames(dt_inc))
-  var_by <- intersect(var_by,colnames(dt_inc))
+  group_by <- intersect(group_by,colnames(dt_inc))
   
-  dt_inc <- dt_inc[, c(var_age, var_by, "CSU_C"), with = FALSE]
+  dt_inc <- dt_inc[, c(var_age, group_by, "CSU_C"), with = FALSE]
   dt_inc <-  dt_inc[,list(CSU_C = sum(CSU_C)), by=eval(colnames(dt_inc)[!colnames(dt_inc) %in% c("CSU_C")])]
   
   if (!is.null(column_group_list)){
@@ -1036,7 +1036,7 @@ csu_merge_inc_pop <- function(inc_file,
   if (nrow(dt_inc[!SEX %in% c(1,2)]) > 0){
     
     var_group2 <- "ICD10GROUP"
-    if ("BASIS" %in% var_by) {
+    if ("BASIS" %in% group_by) {
       var_group2 <- c(var_group2,"BASIS" )
     }
     
@@ -1154,20 +1154,20 @@ canreg_desc_missing_sex <- function(inc_file,
 
 canreg_ageSpecific_rate_data <- function(dt, keep_ref=FALSE, keep_year=FALSE, keep_basis = FALSE) { 
   
-  var_by <- c("cancer_label","ICD10GROUP", "ICD10GROUPLABEL","ICD10GROUPCOLOR", "AGE_GROUP","AGE_GROUP_LABEL", "SEX")
+  group_by <- c("cancer_label","ICD10GROUP", "ICD10GROUPLABEL","ICD10GROUPCOLOR", "AGE_GROUP","AGE_GROUP_LABEL", "SEX")
   if (keep_ref) {
-    var_by <- c(var_by, "REFERENCE_COUNT")
+    group_by <- c(group_by, "REFERENCE_COUNT")
   }
   
   if (keep_year) {
-    var_by <- c(var_by, "YEAR")
+    group_by <- c(group_by, "YEAR")
   }
   
   if (keep_basis) {
-    var_by <- c(var_by, "BASIS")
+    group_by <- c(group_by, "BASIS")
   }
   
-  dt <-  dt[AGE_GROUP != canreg_missing_age(dt) ,list(CASES=sum(CASES), COUNT=sum(COUNT)), by=var_by]
+  dt <-  dt[AGE_GROUP != canreg_missing_age(dt) ,list(CASES=sum(CASES), COUNT=sum(COUNT)), by=group_by]
   dt$cancer_sex <- canreg_cancer_info(dt)$cancer_sex
   dt$cancer_title <- paste(dt$cancer_label, "\n(", dt$ICD10GROUP, ")", sep="")
   dt$SEX <- factor(dt$SEX, levels=c(1,2), labels=c("Male", "Female"))
@@ -1253,295 +1253,6 @@ canreg_get_agegroup_label <- function(dt, agegroup) {
   return(list(first_age = first_age, last_age= last_age, label = paste0(temp1,"-",temp2, " years")))
 }
 
-csu_asr_core <- function(df_data, var_age, var_cases, var_py, var_by=NULL,
-                         var_age_group=NULL, missing_age = NULL, var_st_err=NULL,
-                         first_age = 1, last_age = 18,db_rate = 100000, pop_base = "SEGI",
-                         correction_info=FALSE, var_asr="asr", age_dropped = FALSE,
-                         pop_base_count = NULL, age_label_list = NULL) {
-  
-  
-  
-  bool_dum_by <- FALSE
-  bool_dum_age <- FALSE
-  
-  if (first_age < 1 | first_age > 17 ) {
-    stop('The argument "first_age" must be comprise between 1 (0-4) and 17 (80-85), see documentation: help(csu_asr)')
-  }
-  
-  if (last_age < 2 | last_age > 18 ) {
-    stop('The argument "last_age" must be comprise between 2 (5-9) and 18 (85+), see documentation: help(csu_asr)')
-  }
-  
-  if (!(var_age%in% colnames(df_data))) {
-    
-    stop('var_age value is not a variable name of the data, see documentation: Help(csu_asr)')
-    
-  }
-  
-  if (!(var_cases%in% colnames(df_data))) {
-    
-    stop('var_cases value is not a variable name of the data, see documentation: Help(csu_asr)')
-    
-  }
-  
-  if (!(var_py%in% colnames(df_data))) {
-    
-    stop('var_py value is not a variable name of the datae, see documentation: Help(csu_asr)')
-    
-  }
-  
-  
-  
-  if (is.null(var_by)) {
-    
-    df_data$CSU_dum_by <- "dummy_by"
-    var_by <- "CSU_dum_by"
-    bool_dum_by <- TRUE
-    
-  }
-  
-
-  
-  if (is.null(var_age_group)) {
-    
-    df_data$CSU_dum_age <- "dummy_age_gr"
-    var_age_group <- "CSU_dum_age"
-    var_by <- c(var_by, "CSU_dum_age")
-    bool_dum_age <- TRUE
-    
-  }
-  
-  
-  dt_data <- data.table(df_data, key = var_by) 
-  setnames(dt_data, var_age, "CSU_A")
-  setnames(dt_data, var_cases, "CSU_C")
-  setnames(dt_data, var_py, "CSU_P")
-  
-  temp <- dt_data[, lapply(.SD, function(x) is.numeric(x)) ]
-  
-  if (!temp[["CSU_A"]]) {
-    
-    stop('The variable "age" must be numeric, see documentation: help(csu_asr)')
-    
-  }
-  
-  if (!temp[["CSU_P"]]) {
-    
-    stop('The variable "population" must be numeric, see documentation: help(csu_asr)')
-    
-  }
-  
-  if (!temp[["CSU_C"]]) {
-    
-    stop('The variable "age" must be numeric, see documentation: help(csu_asr)')
-    
-  }
-  
-  temp <- NULL
-  
-  # create index to keep order
-  index_order <- c(1:nrow(dt_data))
-  dt_data$index_order <- index_order
-  
-  # missing age 
-  dt_data[dt_data$CSU_A==missing_age,CSU_A:=NA ] 
-  dt_data[is.na(dt_data$CSU_A),CSU_P:=0 ] 
-  
-  #create age dummy: 1 2 3 4 --- 19
-  dt_data$age_factor <- c(as.factor(dt_data$CSU_A))
-  
-  # correction factor 
-  dt_data$correction <- 1 
-  if (!is.null(missing_age)) {
-    
-    
-    dt_data[, total:=sum(CSU_C), by=var_by] #add total
-    dt_data[!is.na(dt_data$age_factor) , total_known:=sum(CSU_C), by=var_by] #add total_know
-    dt_data$correction <- dt_data$total / dt_data$total_know 
-    dt_data[is.na(dt_data$correction),correction:=1 ] 
-    dt_data$total <- NULL
-    dt_data$total_known <- NULL
-    
-  }
-  
-  if (is.null(pop_base_count)) {
-    
-    # create world population DF for different nb of age group
-    SEGI_pop <- c(12000,10000,9000,9000,8000,8000,6000,6000,6000,6000,5000,4000,4000,3000,2000,1000,500,500)
-    EURO_pop <- c(8000,7000,7000,7000,7000,7000,7000,7000,7000,7000,7000,6000,5000,4000,3000,2000,1000,1000)
-    
-    if (pop_base == "EURO") {
-      pop <- EURO_pop
-    } else {
-      pop <- SEGI_pop
-    }
-    
-    # calculated total pop for age selected 
-    total_pop <- sum(pop[first_age:last_age])
-    
-    Standard_pop <- data.table(pop = pop, age_factor= c(1:18))
-    
-    pop[17] <- pop[17]+ pop[18]
-    pop[18] <- 0
-    Standard_pop$pop17 <- pop
-    pop[16] <- pop[16]+ pop[17]
-    pop[17] <- 0
-    Standard_pop$pop16 <- pop
-    pop[15] <- pop[15]+ pop[16]
-    pop[16] <- 0
-    Standard_pop$pop15 <- pop
-    
-    #age dropped option
-    if (age_dropped) {
-      dt_data$age_factor <- dt_data$age_factor + first_age -1   
-    }
-    
-    
-    # keep age selected 
-    dt_data=dt_data[dt_data$age_factor %in% c(first_age:last_age) | is.na(dt_data$age_factor), ]
-    
-    # calculated maximum age group with population data
-    if (last_age == 18) {
-      dt_data <- merge(dt_data, dt_data[dt_data$CSU_P != 0,list(nb_age_group = max(age_factor)), by=var_age_group], by=var_age_group)  
-    } else {
-      dt_data$nb_age_group <- 18
-    }
-    
-    # show population with less than 18 age group
-    if (last_age == 18) {
-      temp <- subset(dt_data,nb_age_group <18, select= c(var_age_group, "nb_age_group"))
-      if (nrow(temp) >0) {
-        setkey(temp,NULL)
-        #cat("\n")
-        #cat("Population with less than 18 age group:\n\n" )
-        #print
-        #print(unique(temp), row.names = FALSE)
-        #cat("\n")
-      }
-      temp <- NULL
-    }
-    
-    #regroup case for population with nb of age group <  18 
-    for (i in 15:17) {
-      
-      if (i %in% dt_data$nb_age_group) {
-        
-        dt_data[nb_age_group == i & age_factor >= i , CSU_C:=sum(CSU_C), by=var_by] #add total_know
-        dt_data[nb_age_group == i & age_factor > i & !is.na(age_factor), CSU_C := 0] 
-        
-      } 
-    }
-    
-    #add world pop to database 
-    dt_data <- merge(dt_data,Standard_pop, by =c("age_factor"), all.x=TRUE )
-    Standard_pop <- NULL
-    dt_data[nb_age_group==17, pop:=pop17[dt_data$nb_age_group==17]]
-    dt_data[nb_age_group==16, pop:=pop16[dt_data$nb_age_group==16]]
-    dt_data[nb_age_group==15, pop:=pop15[dt_data$nb_age_group==15]]
-    
-  } else {
-    
-    #keep age group selected 
-    dt_data <- dt_data[age_factor %in% (first_age:last_age), ]
-    
-    #calcul total pop for canreg
-    total_pop <-sum(unique(dt_data[, c("age_factor", pop_base_count), with=FALSE])[[pop_base_count]])
-    
-    #get age group list variable
-    if (is.null(age_label_list)) {
-      age_label_list <- var_age
-    }
-    age_group_list <- as.character(unique(dt_data[[age_label_list]]))
-    age_group_list <- paste(age_group_list,  collapse=" ")
-    
-    #rename variable population reference
-    setnames(dt_data, pop_base_count, "pop")
-  }
-  
-  #calcul ASR
-  
-  dt_data[dt_data$CSU_P != 0,rate:= dt_data$CSU_C[dt_data$CSU_P != 0]/ dt_data$CSU_P[dt_data$CSU_P != 0] * db_rate]
-  dt_data$asr <- dt_data$rate * dt_data$pop
-  dt_data[is.na(dt_data$asr),asr:=0 ] 
-  
-  dt_data$st_err <- ( dt_data$rate * (dt_data$pop^2) * (db_rate - dt_data$rate))/dt_data$CSU_P
-  dt_data[is.na(dt_data$st_err),st_err:=0 ] 
-  
-  # to check order 
-  dt_data<- dt_data[order(dt_data$index_order ),]
-  dt_data<-  dt_data[,list( CSU_C=sum(CSU_C), CSU_P=sum(CSU_P),asr=sum(asr),st_err = sum(st_err),correction = max(correction)), by=var_by]
-  
-  dt_data$asr <- dt_data$asr / total_pop
-  dt_data$asr <- dt_data$asr * dt_data$correction
-  dt_data$st_err <- (dt_data$st_err / (total_pop^2))^(1/2)
-  dt_data$st_err <- dt_data$st_err * dt_data$correction
-  
-  dt_data$asr <- round(dt_data$asr, digits = 2)
-  dt_data$st_err <- round(dt_data$st_err, digits = 2)
-  dt_data$correction <- round((dt_data$correction-1)*100, digits = 1)
-  
-  if (is.null(var_st_err)) {
-    dt_data$st_err <- NULL
-  } else {
-    setnames(dt_data, "st_err", var_st_err)
-  }
-  
-  if (var_asr!="asr") {
-    setnames(dt_data, "asr", var_asr)
-  }
-  
-  if (!correction_info) {
-    dt_data$correction <- NULL
-  }
-  
-  
-  df_data <- data.frame(dt_data)
-  
-  
-  
-  if (bool_dum_age) {
-    df_data$CSU_dum_age <- NULL
-  }
-  if (bool_dum_by) {
-    df_data$CSU_dum_by <- NULL
-  }
-  
-  setnames(df_data, "CSU_C", var_cases)
-  setnames(df_data,  "CSU_P", var_py)
-  
-  
-  if (is.null(pop_base_count)) {
-    
-    temp <- last_age*5-1
-    if (last_age == 18)  temp <- "99+"
-    #cat("ASR have been computed for the age group ", (first_age-1)*5,"-", temp , "\n",  sep="" )
-    temp<- NULL
-    
-  } else {
-    
-    #cat("ASR have been computed for the age groups:\n",age_group_list , "\n",  sep="" )
-    age_group_list<- NULL
-    
-  }
-  
-  return(df_data)
-  
-}
-
-csu_asr_new <-
-  function(df_data,var_age="age", var_cases="cases", var_py="py", var_by=NULL, 
-           var_age_group=NULL, missing_age = NULL, var_st_err=NULL,
-           first_age = 1, last_age = 18, db_rate = 100000, pop_base = "SEGI",
-           correction_info=FALSE, var_asr="asr", age_dropped = FALSE) {
-    
-    
-    df_data <- csu_asr_core(df_data,var_age,var_cases,var_py,var_by,var_age_group,missing_age,var_st_err,
-                            first_age,last_age,db_rate,pop_base,correction_info,var_asr,age_dropped)
-    
-    
-    return(df_data)
-    
-  }
 
 
 csu_cum_risk_core <- function(df_data, var_age, var_cases, var_py, group_by=NULL,
@@ -1652,537 +1363,6 @@ csu_cum_risk_core <- function(df_data, var_age, var_cases, var_py, group_by=NULL
   
 }
 
-csu_eapc_core <-
-  function(df_data,
-           var_rate="asr",
-           var_year="year",
-           group_by= NULL,
-           var_eapc="eapc") {
-    
-    #create fake group to have group_by optional 
-    bool_dum_by <- FALSE
-    
-    if (is.null(group_by)) {
-      
-      df_data$CSU_dum_by <- "dummy_by"
-      group_by <- "CSU_dum_by"
-      bool_dum_by <- TRUE
-    }
-    
-    dt_data <- data.table(df_data, key = c(group_by)) 
-    
-    setnames(dt_data, var_rate, "CSU_R")
-    setnames(dt_data, var_year, "CSU_Y")
-    
-    #check by variable adapted (ie: 1 year per variable)
-    dt_data$temp <- 1
-    nrow_base <- nrow(dt_data)
-    dt_test <- dt_data[ ,temp:=sum(temp), by=c("CSU_Y", group_by)]
-    nrow_test <-  nrow(dt_data[ ,sum(temp), by=c("CSU_Y", group_by)]) 
-    dt_data$temp <- NULL
-    
-    if (nrow_test != nrow_base) {
-      setkeyv(dt_test, c(group_by,"CSU_Y"))
-      print(head(dt_test[temp>1, ]))
-      dt_data <- NULL
-      stop("There is more than 1 data per year (see above).\nUse the 'group_by' option or call the function on a subset to define the sub-population of interest.\n")
-    }
-    
-    
-    dt_data[, id_group:=.GRP, by=group_by]
-    
-    temp_max <- max(dt_data$id_group)
-    for (i in 1:temp_max) {
-      suppressWarnings(
-        temp <- summary(glm(CSU_R ~ CSU_Y,
-                            family=poisson(link="log"),
-                            data=dt_data[dt_data$id_group  == i,] 
-        )
-        )
-      )
-      dt_data[dt_data$id_group  == i, CSU_EAPC:=temp$coefficients[[2]]]
-      dt_data[dt_data$id_group  == i, CSU_ST:=temp$coefficients[[4]]]
-      
-    }
-    
-    dt_data$CSU_UP <- 100*(exp(dt_data$CSU_EAPC+(1.65*dt_data$CSU_ST))-1)
-    dt_data$CSU_LOW <- 100*(exp(dt_data$CSU_EAPC-(1.65*dt_data$CSU_ST))-1)
-    dt_data$CSU_EAPC <- 100*(exp(dt_data$CSU_EAPC)-1)
-    
-    
-    
-    dt_data<-  dt_data[,list( CSU_EAPC=mean(CSU_EAPC), CSU_UP=mean(CSU_UP),CSU_LOW=mean(CSU_LOW)), by=group_by]
-    
-    
-    setnames(dt_data, "CSU_EAPC", var_eapc)
-    setnames(dt_data, "CSU_UP", paste(var_eapc, "up", sep="_"))
-    setnames(dt_data, "CSU_LOW", paste(var_eapc, "low", sep="_"))
-    
-    df_data <- data.frame(dt_data)
-    if (bool_dum_by) {
-      df_data$CSU_dum_by <- NULL
-    }
-    
-    
-    return(df_data)
-    
-  }
-
-
-
-csu_ageSpecific_core <-
-  function(df_data,var_age="age",
-           var_cases="cases",
-           var_py="py",
-           var_by = NULL,
-           missing_age = NULL,
-           db_rate = 100000,
-           log_scale=FALSE,
-           log_point=TRUE,
-           plot_title=NULL,
-           plot_subtitle=NULL,
-           plot_caption=NULL,
-           legend=csu_trend_legend(),
-           CI5_comparaison=NULL,
-           color_trend = NULL,
-           age_label_list = NULL) {
-    
-
-    
-    
-    if (!(legend$position %in% c("bottom", "right"))) {
-      
-      stop('legend position must be "bottom" or "right", see documentation: Help(csu_ageSpecific)')
-      
-    }
-    
-    if (legend$right_space_margin > 20) {
-      
-      stop('legend right space margin must be < 20, see documentation: Help(csu_ageSpecific)')
-      
-    }
-    
-    
-    if (!(var_age%in% colnames(df_data))) {
-      
-      stop('var_age value is not a variable name of the data, see documentation: Help(csu_ageSpecific)')
-      
-    }
-    
-    if (!(var_cases%in% colnames(df_data))) {
-      
-      stop('var_cases value is not a variable name of the data, see documentation: Help(csu_ageSpecific)')
-      
-    }
-    
-    if (!(var_py%in% colnames(df_data))) {
-      
-      stop('var_py value is not a variable name of the data, see documentation: Help(csu_ageSpecific)')
-      
-    }
-    
-    bool_CI5_comp <- FALSE
-    CI5_cancer_label <- NULL
-    
-    if (!is.null(CI5_comparaison)) {
-      
-      bool_CI5_comp <- TRUE
-      data(csu_ci5x_mean, envir = e <- new.env())
-      df_CI5 <- e$csu_ci5x_mean
-      dt_CI5 <- data.table(df_CI5)
-      if (is.character(CI5_comparaison)) {
-        if (!(CI5_comparaison%in% dt_CI5$ci5_cancer_label)) {
-          stop('CI5_comparaison value must be a correct cancer label, see documentation: Help(CI5X_mean_data)')
-          
-        } else {
-          dt_CI5 <- dt_CI5[dt_CI5$ci5_cancer_label == CI5_comparaison, ]
-        }
-        
-      } else {
-        if (is.numeric(CI5_comparaison)) {
-          if (!(CI5_comparaison%in% dt_CI5$ci5_cancer_code)) {
-            stop('CI5_comparaison value must be a correct cancer code, see documentation: Help(CI5X_mean_data)')
-            
-          } else {
-            dt_CI5 <- dt_CI5[dt_CI5$ci5_cancer_code == CI5_comparaison, ]
-          }
-        }
-      }
-      CI5_cancer_label <- toString(dt_CI5$ci5_cancer_label[1])
-    }
-    
-    bool_dum_by <- FALSE
-    
-    if (is.null(var_by)) {
-      
-      df_data$CSU_dum_by <- "dummy_by"
-      var_by <- "CSU_dum_by"
-      bool_dum_by <- TRUE
-    }
-    
-    
-    if ( length(var_by) > 1) {
-      
-      stop('Only one variable can be use in the "var_by" option, see documentation: Help(csu_ageSpecific)')
-      
-    }
-    
-    if (!(var_by%in% colnames(df_data))) {
-      
-      stop('var_by value is not a variable name of the data, see documentation: Help(csu_ageSpecific)')
-      
-    }
-    
-    dt_data <- data.table(df_data, key = var_by)
-    setnames(dt_data, var_age, "CSU_A")
-    setnames(dt_data, var_cases, "CSU_C")
-    setnames(dt_data, var_py, "CSU_P")
-    setnames(dt_data, var_by, "CSU_BY")
-    
-    temp <- dt_data[, lapply(.SD, function(x) is.numeric(x)) ]
-    
-    if (!temp[["CSU_A"]]) {
-      
-      stop('The variable "age" must be numeric, see documentation:  Help(csu_ageSpecific)')
-      
-    }
-    
-    if (!temp[["CSU_P"]]) {
-      
-      stop('The variable "population" must be numeric, see documentation:  Help(csu_ageSpecific)')
-      
-    }
-    
-    if (!temp[["CSU_C"]]) {
-      
-      stop('The variable "age" must be numeric, see documentation:  Help(csu_ageSpecific)')
-      
-    }
-    
-    if (!is.null(missing_age)) {
-      if (!(missing_age %in% dt_data$CSU_A)) {
-        stop('missing_age is not in the age value, see documentation: Help(csu_ageSpecific)')
-      }
-    }
-    
-    ##group population (use sum)
-    dt_data <- dt_data[, list(CSU_C=sum(CSU_C),CSU_P=sum(CSU_P)), by=c("CSU_BY", "CSU_A") ]
-    
-    ##calcul rate 
-    dt_data$rate <- dt_data$CSU_C/dt_data$CSU_P *db_rate
-    
-    ##change by to factor
-    dt_data$CSU_BY <- factor(dt_data$CSU_BY)
-    
-    ##to calcul age group
-    
-    dt_data[CSU_A==missing_age,CSU_A:=NA ] 
-    dt_data[is.na(CSU_A),CSU_P:=0 ] 
-    dt_data <- dt_data[CSU_P!=0] 
-    
-    dt_data$CSU_age_factor <- c(as.factor(dt_data$CSU_A))
-    dt_data[CSU_P != 0,nb_age_group := max(CSU_age_factor), by="CSU_BY"] 
-    max_age <- max(dt_data$nb_age_group)
-    
-    for (i in 15:17) {
-      if (i %in% dt_data$nb_age_group) {
-        dt_data[nb_age_group == i & CSU_age_factor >= i , CSU_C:=sum(CSU_C), by="CSU_BY"] ##add total_know
-        dt_data[nb_age_group == i & CSU_age_factor > i & !is.na(CSU_age_factor), CSU_C := 0] 
-      } 
-    }
-    ##create age label:
-    if (is.null(age_label_list)) {
-      
-      
-      ##create age dummy: 1 2 3 4 --- 18
-      
-      
-      
-      ##regroup case for population with nb of age group <  18 
-      
-      
-      
-      age_label <- c("0-4","5-9","10-14","15-19","20-24","25-39","30-34","35-39","40-44", "45-49","50-54","55-59","60-64","65-69","70-74","75-79","80-84","85+")
-      
-      if (max_age  < 18 ) {
-        age_label <- c(age_label[1:16],"80+") 
-        if (max_age  < 17) {
-          age_label <- c(age_label[1:15],"75+") 
-          if (max_age  < 16) {
-            age_label <- c(age_label[1:14],"70+") 
-            if (max_age  == 15) {
-              age_label <- c(age_label[1:14],"65+") 
-            } else {
-              stop('The data need at least 15 age-group, see documentation: Help(csu_graph_ageSpecific)')
-            }
-          }
-        }
-      } else {
-        if (max_age > 18) {
-          stop('The function cannot have more than 18 age-group, see documentation: Help(csu_graph_ageSpecific)')
-        }
-      }
-    } else {
-      age_label <-age_label_list
-      max_age <- length(age_label)
-    }
-    
-    
-    
-    
-    ## to calcul breaks
-    tick <- csu_tick_generator(max = max(dt_data$rate), min=min(dt_data[rate != 0,]$rate), log_scale = log_scale )
-
-
-    
-    tick_space <- tick$tick_list[length(tick$tick_list)] - tick$tick_list[length(tick$tick_list)-1]
-    
-
-    temp_top <- ceiling(max(dt_data$rate)/tick_space)*tick_space
-    temp_expand_y <- max(dt_data$rate)/35
-    temp_expand_y_up <- max(dt_data$rate)+temp_expand_y
-    if (temp_expand_y_up > temp_top-(tick_space/2)) {
-      temp_expand_y_up <- temp_top+temp_expand_y
-    }
-    
-    th_legend <- list(theme(legend.position="none"))
-    
-    if (!bool_dum_by & legend$position == "bottom") {
-      
-      th_legend <- list(theme(
-        legend.key = element_rect(fill="transparent"),
-        legend.position = "bottom",
-        legend.text = element_text(size = 14),
-        legend.title = element_text(size = 14),
-        legend.key.size=unit(1,"cm"),
-        legend.margin = margin(0, 0, 0, 0)
-      ))
-    }
-    
-    if (bool_CI5_comp & is.null(age_label_list)) {
-      
-      if (max_age < 18) {
-        dt_CI5[CSU_age_factor >= max_age , CSU_C:=sum(CSU_C)] ##add total_know
-        dt_CI5[ CSU_age_factor >= max_age , CSU_P:=sum(CSU_P)]
-        dt_CI5 <- dt_CI5[CSU_age_factor <= max_age]    
-      }
-      
-      dt_CI5$rate <- dt_CI5$CSU_C/dt_CI5$CSU_P *db_rate
-      
-    }
-    
-    
-    
-    ##csu_plot
-    
-    
-    
-    if (log_scale) {
-      base_plot <- ggplot(dt_data[, rate := ifelse(rate==0,NA, rate )], aes(CSU_age_factor, rate))
-    } else {
-      base_plot <- ggplot(dt_data, aes(CSU_age_factor, rate))
-    }
-    if (bool_CI5_comp) {
-      
-      pos_y_text = - tick_space
-      if (temp_top/tick_space > 7) {
-        
-        pos_y_text = pos_y_text*1.5
-        
-      }
-      
-      str_CI5 <- textGrob("- - - - - - : CI5 X", gp=gpar(fontsize=11, col = "grey30"))
-      
-      base_plot <- base_plot + 
-        geom_line(data = dt_CI5,
-                  size = 1,
-                  linetype=2,
-                  colour = "grey50", 
-                  show.legend=FALSE)##+
-      ##annotation_custom(str_CI5,xmin=max_age-2,xmax=max_age-2,ymin=pos_y_text,ymax=pos_y_text)
-      
-    } 
-    
-    
-    csu_plot <- base_plot+
-      geom_line(aes(color=CSU_BY), size = 1,na.rm=TRUE)+
-      guides(color = guide_legend(override.aes = list(size=0.75)))+
-      labs(title = plot_title,
-           subtitle = plot_subtitle,
-           caption = plot_caption)+
-      scale_x_continuous(name = "Age at diagnosis",
-                         breaks=seq(1, max_age, 1),
-                         labels = age_label,
-                         minor_breaks = NULL,
-                         expand = c(0.015,0.015)
-      )
-    
-    if (log_scale){
-      if (log_point) {
-        csu_plot <- csu_plot +
-          geom_point(aes(fill=CSU_BY), size = 3,na.rm=TRUE,shape=21,stroke=0.5,colour="black", show.legend=FALSE)
-      }
-      csu_plot <- csu_plot +
-        scale_y_continuous(name = paste("Age-specific incidence rate per", formatC(db_rate, format="d", big.mark=",")),
-                           breaks=tick$tick_list,
-                           minor_breaks = tick$tick_minor_list,
-                           limits=c(tick$tick_list[1],tick$tick_list[length(tick$tick_list)]),
-                           labels=csu_axes_label,
-                           trans = "log10"
-        )
-    } else {
-      
-      csu_plot <- csu_plot +
-        coord_cartesian( ylim=c(-temp_expand_y, temp_expand_y_up),  expand = TRUE)+
-        scale_y_continuous(name = paste("Age-specific incidence rate per", formatC(db_rate, format="d", big.mark=",")),
-                           breaks=tick$tick_list,
-                           labels=csu_axes_label,
-                           expand = c(0,0)
-        )
-    } 
-    
-
-    
-    csu_plot <- csu_plot +
-      theme(
-        plot.background= element_blank(),
-        panel.background = element_blank(),
-        panel.grid.major= element_line(colour = "grey70"),
-        panel.grid.minor= element_line(colour = "grey70"),
-        plot.title = element_text(size=16, margin=margin(0,0,15,0),hjust = 0.5),
-        plot.subtitle = element_text(size=15, margin=margin(0,0,15,0),hjust = 0.5),
-        plot.caption = element_text(size=10, margin=margin(15,0,0,0)),
-        axis.title = element_text(size=14),
-        axis.title.y = element_text(margin=margin(0,15,0,0)),
-        axis.title.x = element_text(margin=margin(15,0,0,0)),
-        plot.margin=margin(20,20,20,20),
-        axis.text = element_text(size=14, colour = "black"),
-        axis.text.x = element_text(size=14, angle = 60,  hjust = 1),
-        axis.ticks= element_line(colour = "black", size = 0.5),
-        axis.ticks.length = unit(0.2, "cm"),
-        axis.line.x = element_line(colour = "black", 
-                                   size = 0.5, linetype = "solid"),
-        axis.line.y = element_line(colour = "black", 
-                                   size = 0.5, linetype = "solid")
-      )+
-      th_legend
-    
-    
-    if (!is.null(color_trend)) {
-      
-      csu_plot <- csu_plot +
-        scale_colour_manual(name=legend$title,
-                            values= color_trend,
-                            drop = FALSE)
-      
-      if (log_scale) {
-        csu_plot <- csu_plot +
-          scale_fill_manual(values= color_trend,
-                            drop = FALSE)
-      }
-      
-      
-    } else {
-      csu_plot <- csu_plot +
-        scale_colour_discrete(name=legend$title)
-    }
-    
-    if (!bool_dum_by & legend$position=="right") {
-
-      csu_plot <- csu_plot + 
-        geom_text(data = dt_data[CSU_age_factor == nb_age_group, ],
-                  aes(label = CSU_BY),
-                  hjust=-0.05)+
-        theme(plot.margin = unit(c(0.5, legend$right_space_margin, 0.5, 0.5), "lines"))
-      
-    } else {
-     
-      csu_plot <- csu_plot +
-        guides(color = guide_legend(nrow=legend$nrow))
-    }
-
-
-    
-    dt_data$nb_age_group <- NULL
-    dt_data$CSU_age_factor <- NULL
-    
-    if (log_scale){
-      dt_data[, rate := ifelse(is.na(rate),0, rate )]
-    }
-    
-    
-    return(list(csu_plot = csu_plot, dt_data = dt_data, CI5_cancer_label = CI5_cancer_label,legend_position=legend$position, bool_dum_by = bool_dum_by))
-    
-  }
-
-
-
-
-csu_ageSpecific_new <- 
-  function(df_data,var_age="age", var_cases="cases", var_py="py", var_by = NULL, missing_age = NULL,db_rate = 100000,  plot_title=NULL, legend=csu_trend_legend(),log_scale=FALSE, CI5_comparaison=NULL, format_export=NULL, draw_plot=TRUE,var_rate="rate") {
-    
-    csu_list <- csu_ageSpecific_core(df_data,var_age, var_cases, var_py, var_by , missing_age,db_rate,log_scale = log_scale,  plot_title, legend, CI5_comparaison)
-    dt_data <- csu_list$dt_data
-    
-    ##format
-    if (!is.null(format_export)) {
-      if (format_export == "pdf") {
-        
-        pdf(paste(plot_title,".pdf", sep=""))
-        
-      } else {
-        if (format_export == "svg") {
-          svg(paste(plot_title,".svg", sep=""))
-        }
-      }
-    }
-    
-    if (draw_plot) {
-      if (csu_list$legend_position=="right") {
-        gb_plot <- ggplot_build(csu_list$csu_plot)
-        gt_plot <- ggplot_gtable(gb_plot)
-        gt_plot$layout$clip[gt_plot$layout$name=="panel"] <- "off"
-        if(is.null(format_export)) {
-          plot.new()
-        }
-        grid.draw(gt_plot)
-      } else {
-        print(csu_list$csu_plot)
-      }
-    }
-    
-    if (!is.null(csu_list$CI5_cancer_label)) {
-      cat("the dotted grey line represente the mean for ", csu_list$CI5_cancer_label, " cancer in CI5 X\n", sep="")
-      
-    }
-    
-    if (!is.null(format_export)) {
-      dev.off()
-    }
-    
-    
-    if (var_rate!="rate") {
-      setnames(dt_data, "rate", var_rate)
-    }
-    
-    setorder(dt_data,CSU_BY,CSU_A)
-    
-    df_data <- data.frame(dt_data)
-    
-    setnames(df_data, "CSU_A", var_age)
-    setnames(df_data, "CSU_C", var_cases)
-    setnames(df_data,  "CSU_P", var_py)
-    if (!csu_list$bool_dum_by) {
-      setnames(df_data,  "CSU_BY", var_by)
-    } else {
-      
-      df_data$CSU_BY <- NULL
-    }
-    
-    return(df_data)
-    
-  }
-
 
 
 csu_trend_legend <-
@@ -2199,10 +1379,10 @@ canreg_ageSpecific_rate_multi_plot <- function(dt,
                                                var_age = "AGE_GROUP",
                                                var_cases= "CASES",
                                                var_py= "COUNT",
-                                               var_by="SEX",
+                                               group_by="SEX",
                                                var_age_label_list = "AGE_GROUP_LABEL",
                                                color_trend=c("Male" = "#08519c", "Female" = "#a50f15"),
-                                               log_scale=FALSE,
+                                               logscale=FALSE,
                                                multi_graph=TRUE,
                                                list_graph=TRUE,
                                                landscape = FALSE,
@@ -2280,7 +1460,7 @@ canreg_ageSpecific_rate_multi_plot <- function(dt,
     
   }
   
-  if (log_scale){
+  if (logscale){
     
     theme_log <- list(theme(axis.text.y = element_text(size=axis_text_y_log)))
     
@@ -2312,16 +1492,16 @@ canreg_ageSpecific_rate_multi_plot <- function(dt,
     dt_temp <- dt[ICD10GROUP ==i]
     
     cancer_title <- unique(dt_temp$cancer_title)
-    temp <- csu_ageSpecific_core(dt_temp,
+    temp <- Rcan:::core.csu_ageSpecific(dt_temp,
                                  var_age=var_age,
                                  var_cases= var_cases,
                                  var_py=var_py,
-                                 var_by = var_by,
+                                 group_by = group_by,
                                  plot_title = canreg_header,
                                  plot_subtitle = cancer_title,
                                  plot_caption = canreg_header,
                                  color_trend = color_trend,
-                                 log_scale = log_scale,
+                                 logscale = logscale,
                                  age_label_list = unique(dt[[var_age_label_list]])
     )$csu_plot
     
@@ -2347,7 +1527,7 @@ canreg_ageSpecific_rate_multi_plot <- function(dt,
       plotlist_grid[[j]]$layers[[geom_line_index]]$aes_params$size <- 0.5
       
       
-      if (log_scale) {
+      if (logscale) {
         geom_point_index <- which(sapply(plotlist_grid[[j]]$layers, function(x) class(x$geom)[1]) == "GeomPoint")
         plotlist_grid[[j]]$layers[[geom_point_index]]$aes_params$size <-1
         plotlist_grid[[j]]$layers[[geom_point_index]]$aes_params$stroke <-0.25
@@ -2397,7 +1577,7 @@ canreg_ageSpecific_rate_multi_plot <- function(dt,
       plotlist[[i]] <- plotlist[[i]] +
         guides(color = guide_legend(override.aes = list(size=0.75)))
       
-      if (log_scale) {
+      if (logscale) {
         geom_point_index <- which(sapply(plotlist[[i]]$layers, function(x) class(x$geom)[1]) == "GeomPoint")
         plotlist[[i]]$layers[[geom_point_index]]$aes_params$size <-3
         plotlist[[i]]$layers[[geom_point_index]]$aes_params$stroke <-0.5
@@ -2513,9 +1693,9 @@ canreg_age_cases_pie_multi_plot <- function(dt,
 canreg_ageSpecific_rate_top <- function(dt, var_age="AGE_GROUP", 
                                         var_cases= "CASES", 
                                         var_py= "COUNT",
-                                        var_by="SEX",
+                                        group_by="SEX",
                                         var_age_label_list = "AGE_GROUP_LABEL",
-                                        log_scale = TRUE,
+                                        logscale = TRUE,
                                         nb_top = 5,
                                         landscape = FALSE,
                                         list_graph = FALSE,
@@ -2557,7 +1737,7 @@ canreg_ageSpecific_rate_top <- function(dt, var_age="AGE_GROUP",
   
   plotlist <- list()
   j <- 1 
-  for (i in levels(dt[[var_by]])) {
+  for (i in levels(dt[[group_by]])) {
     
     if (j == 1) {
       plot_title <- canreg_header
@@ -2572,7 +1752,7 @@ canreg_ageSpecific_rate_top <- function(dt, var_age="AGE_GROUP",
 
 
     
-    dt_plot <- dt[get(var_by) == i]
+    dt_plot <- dt[get(group_by) == i]
     dt_label_order <- setkey(unique(dt_plot[, c("cancer_label","ICD10GROUPCOLOR", "CSU_RANK"), with=FALSE]), CSU_RANK)
     dt_plot$cancer_label <- factor(dt_plot$cancer_label,levels = dt_label_order$cancer_label) 
     color_cancer <- as.character(dt_label_order$ICD10GROUPCOLOR)
@@ -2580,16 +1760,16 @@ canreg_ageSpecific_rate_top <- function(dt, var_age="AGE_GROUP",
     #color_cancer <- csu_cancer_color(cancer_list =dt_label_order$cancer_label)
 
     
-    plotlist[[j]] <- csu_ageSpecific_core(dt_plot,
+    plotlist[[j]] <- Rcan:::core.csu_ageSpecific(dt_plot,
                                           var_age=var_age,
                                           var_cases= var_cases,
                                           var_py=var_py,
-                                          var_by = "cancer_label",
+                                          group_by = "cancer_label",
                                           plot_title = plot_title,
                                           plot_subtitle = paste0("Top ",nb_top, " cancer sites\n",i),
                                           plot_caption = plot_caption,
                                           color_trend = color_cancer,
-                                          log_scale = log_scale,
+                                          logscale = logscale,
                                           log_point=FALSE,
                                           age_label_list = unique(dt_plot[[var_age_label_list]]),
     )$csu_plot
@@ -2859,7 +2039,7 @@ csu_bar_plot <- function(dt,
   
   setnames(dt,var_top,"plot_value")
   
-  tick_major_list <- csu_tick_generator(max = max(dt$plot_value), 0)$tick_list
+  tick_major_list <- Rcan:::core.csu_tick_generator(max = max(dt$plot_value), 0)$tick_list
   nb_tick <- length(tick_major_list) 
   tick_space <- tick_major_list[nb_tick] - tick_major_list[nb_tick-1]
   if ((tick_major_list[nb_tick] -  max(dt$plot_value))/tick_space < 1/4){
@@ -2883,7 +2063,7 @@ csu_bar_plot <- function(dt,
     scale_y_continuous(name = xtitle,
                        breaks=tick_major_list,
                        minor_breaks = tick_minor_list,
-                       labels=csu_axes_label
+                       labels=Rcan:::core.csu_axes_label
                        
     )+
     scale_fill_manual(name="",
@@ -2927,7 +2107,7 @@ csu_bar_plot <- function(dt,
 canreg_bar_top <- function(df_data,
                                var_top = "asr",
                                var_bar = "cancer_label",
-                               var_by = "SEX",
+                               group_by = "SEX",
                                nb_top = 10,
                                color_bar=c("Male" = "#2c7bb6", "Female" = "#b62ca1"),
                                landscape = FALSE,
@@ -2955,7 +2135,7 @@ canreg_bar_top <- function(df_data,
   
   setnames(dt, var_top, "CSU_ASR")
   setnames(dt, var_bar, "CSU_BAR")
-  setnames(dt, var_by, "CSU_BY")
+  setnames(dt, group_by, "CSU_BY")
   
   plot_subtitle <- paste("top",nb_top,"cancer sites")
   
@@ -2966,7 +2146,7 @@ canreg_bar_top <- function(df_data,
   if (return_data) {
     dt[, rank_value := NULL]
     setnames(dt, "CSU_BAR",var_bar)
-    setnames(dt, "CSU_BY", var_by)
+    setnames(dt, "CSU_BY", group_by)
     setnames(dt, "CSU_ASR", var_top)
     setnames(dt, "CSU_RANK","cancer_rank")
     setkeyv(dt, c("cancer_rank",var_bar))
@@ -2985,7 +2165,7 @@ canreg_bar_top <- function(df_data,
   dt$CSU_BAR <- factor(dt$CSU_BAR,
                        levels = rev(setkeyv(factor_order, "CSU_RANK")$CSU_BAR)) 
   
-  tick_minor_list <- csu_tick_generator(max = max(dt$CSU_ASR), 0)$tick_list
+  tick_minor_list <- Rcan:::core.csu_tick_generator(max = max(dt$CSU_ASR), 0)$tick_list
   nb_tick <- length(tick_minor_list) 
   tick_space <- tick_minor_list[nb_tick] - tick_minor_list[nb_tick-1]
   if ((tick_minor_list[nb_tick] -  max(dt$CSU_ASR))/tick_space < 1/4){
@@ -3067,7 +2247,7 @@ canreg_bar_top <- function(df_data,
 canreg_population_pyramid <- function(df_data,
                                       var_cases = "Percent",
                                       var_bar = "AGE_GROUP_LABEL",
-                                      var_by = "SEX",
+                                      group_by = "SEX",
                                       var_age_cut="AGE_GROUP",
                                       color_bar=c("Male" = "#2c7bb6", "Female" = "#b62ca1"),
                                       landscape = FALSE,
@@ -3100,7 +2280,7 @@ canreg_population_pyramid <- function(df_data,
   
   setnames(dt, var_cases, "CSU_CASES")
   setnames(dt, var_bar, "CSU_BAR")
-  setnames(dt, var_by, "CSU_BY")
+  setnames(dt, group_by, "CSU_BY")
   
   dt$CSU_BY <- factor(dt$CSU_BY)
   dt$CSU_BAR <- factor(dt$CSU_BAR)
@@ -3112,7 +2292,7 @@ canreg_population_pyramid <- function(df_data,
   dt$CSU_BAR <- factor(dt$CSU_BAR,
                        levels = setkeyv(factor_order, var_age_cut)$CSU_BAR) 
   
-  tick_minor_list <- csu_tick_generator(max = max(dt$CSU_CASES), 0)$tick_list
+  tick_minor_list <- Rcan:::core.csu_tick_generator(max = max(dt$CSU_CASES), 0)$tick_list
   nb_tick <- length(tick_minor_list) 
   tick_space <- tick_minor_list[nb_tick] - tick_minor_list[nb_tick-1]
   
@@ -3251,7 +2431,7 @@ canreg_cases_year_bar <- function(dt,
   
   dt$CSU_BAR <- factor(dt$CSU_BAR)
   
-  tick_major_list <- csu_tick_generator(max = max(dt$CSU_CASES), 0)$tick_list
+  tick_major_list <- Rcan:::core.csu_tick_generator(max = max(dt$CSU_CASES), 0)$tick_list
   nb_tick <- length(tick_major_list) 
   tick_space <- tick_major_list[nb_tick] - tick_major_list[nb_tick-1]
   if ((tick_major_list[nb_tick] -  max(dt$CSU_CASES))/tick_space < 1/4){
@@ -3321,7 +2501,7 @@ canreg_cases_year_bar <- function(dt,
 canreg_cases_age_bar <- function(df_data,
                                      var_cases = "CASES",
                                      var_bar = "group_label",
-                                     var_by = "SEX",
+                                     group_by = "SEX",
                                      var_age_cut="age_cut",
                                      color_bar=c("Male" = "#2c7bb6", "Female" = "#b62ca1"),
                                      landscape = FALSE,
@@ -3363,7 +2543,7 @@ canreg_cases_age_bar <- function(df_data,
   
   setnames(dt, var_cases, "CSU_CASES")
   setnames(dt, var_bar, "CSU_BAR")
-  setnames(dt, var_by, "CSU_BY")
+  setnames(dt, group_by, "CSU_BY")
   
   dt$CSU_BY <- factor(dt$CSU_BY)
   dt$CSU_BAR <- factor(dt$CSU_BAR)
@@ -3375,7 +2555,7 @@ canreg_cases_age_bar <- function(df_data,
   dt$CSU_BAR <- factor(dt$CSU_BAR,
                        levels = setkeyv(factor_order, var_age_cut)$CSU_BAR) 
   
-  tick_minor_list <- csu_tick_generator(max = max(dt$CSU_CASES), 0)$tick_list
+  tick_minor_list <- Rcan:::core.csu_tick_generator(max = max(dt$CSU_CASES), 0)$tick_list
   nb_tick <- length(tick_minor_list) 
   tick_space <- tick_minor_list[nb_tick] - tick_minor_list[nb_tick-1]
   
@@ -3544,7 +2724,7 @@ canreg_asr_trend_top <- function(dt, var_asr="asr",
                                  var_cases= "CASES", 
                                  var_year= "YEAR",
                                  group_by="cancer_label",
-                                 log_scale = TRUE,
+                                 logscale = TRUE,
                                  number = 5,
                                  ytitle=NULL,
                                  landscape = FALSE,
@@ -3599,17 +2779,17 @@ canreg_asr_trend_top <- function(dt, var_asr="asr",
 
     
     
-    plotlist[[j]] <- csu_trend_core(dt_plot,
+    plotlist[[j]] <- Rcan:::core.csu_time_trend(dt_plot,
                                     var_trend = "asr",
                                     var_year = "YEAR",
                                     group_by = "cancer_label",
-                                    logscale = log_scale,
+                                    logscale = logscale,
                                     smoothing = NULL,
                                     ytitle = ytitle,
-                                    canreg_header = canreg_header,
+                                    plot_title = canreg_header,
                                     plot_subtitle = paste0("Top ",number, " cancer sites\n",i),
                                     plot_caption = plot_caption,
-                                    color_cancer = color_cancer)$csu_plot
+                                    color_trend = color_cancer)$csu_plot
     
     j <- j+1
   }
@@ -3625,194 +2805,10 @@ canreg_asr_trend_top <- function(dt, var_asr="asr",
 }
 
 
-csu_trend_core <- function (
-  df_data,
-  var_trend = "asr",
-  var_year = "year",
-  group_by = NULL,
-  logscale = TRUE,
-  smoothing = 0.3,
-  legend = csu_trend_legend(),
-  ytitle = "Age standardized rate per 100000",
-  canreg_header = "test", 
-  plot_subtitle = NULL,
-  plot_caption = NULL,
-  color_cancer= NULL) {
-  
-  linesize <- 0.5
-  
-  if (!is.null(smoothing)) {
-    if (smoothing == 0) {
-      smoothing <- NULL
-    }
-  }
-  
-  bool_dum_by <- FALSE
-  if (is.null(group_by)) {
-    
-    df_data$CSU_dum_by <- "dummy_by"
-    group_by <- "CSU_dum_by"
-    bool_dum_by <- TRUE
-  }
-  
-  dt_data <- data.table(df_data, key = group_by)
-  setnames(dt_data, var_year, "CSU_Y")
-  setnames(dt_data, var_trend, "CSU_T")
-  setnames(dt_data, group_by, "CSU_BY")
-  
-
-
-  #smooth with loess  fonction
-  if (!is.null(smoothing))
-  {
-    dt_data[,CSU_T:= loess( CSU_T ~ CSU_Y, span=smoothing)$fitted, by=CSU_BY]
-  }
-  
-  dt_data[, max_year:=max(CSU_Y), by=CSU_BY]
-  
-  # to calcul y axes breaks
-  tick <- csu_tick_generator(max = max(dt_data$CSU_T), min=min(dt_data[CSU_T != 0,]$CSU_T), log_scale = logscale )
-  tick_space <- tick$tick_list[length(tick$tick_list)] - tick$tick_list[length(tick$tick_list)-1]
-  
-  
-  #to calcul year axes break
-
-  year_tick <- csu_year_tick_generator(min(dt_data$CSU_Y),max(dt_data$CSU_Y))
-  
-
-  
-  
-  temp_top <- ceiling(max(dt_data$CSU_T)/tick_space)*tick_space
-  temp_expand_y <- max(dt_data$CSU_T)/35
-  temp_expand_y_up <- max(dt_data$CSU_T)+temp_expand_y
-  if (temp_expand_y_up > temp_top-(tick_space/2)) {
-    temp_expand_y_up <- temp_top+temp_expand_y
-  }
-  
-  th_legend <- list(theme(legend.position="none"))
-  
-  if (!bool_dum_by & legend$position == "bottom") {
-    
-    th_legend <- list(theme(
-      legend.key = element_rect(fill="transparent"),
-      legend.position = "bottom",
-      legend.text = element_text(size = 12),
-      legend.title = element_text(size = 12),
-      legend.key.size=unit(1,"cm"),
-      legend.margin = margin(0, 0, 0, 0)
-    ))
-  }
-  
-
-  xlim_inf <- min(c(year_tick$tick_list, year_tick$tick_minor_list))
-  xlim_sup <- max(c(year_tick$tick_list, year_tick$tick_minor_list))
-  
-
-  
-  #csu_plot
-  if (logscale) {
-    base_plot <- ggplot(dt_data[, CSU_T := ifelse(CSU_T==0,NA, CSU_T )], aes(CSU_Y, CSU_T))
-  } else {
-    base_plot <- ggplot(dt_data, aes(CSU_Y, CSU_T))
-  }
-  
-  csu_plot <- base_plot+
-    geom_line(aes(color=CSU_BY), size = 0.75,na.rm=TRUE)+
-    guides(color = guide_legend(override.aes = list(size=0.75)))+
-    labs(title = canreg_header, 
-         subtitle = plot_subtitle,
-         caption = plot_caption)+
-    scale_x_continuous(name = "Year",
-                       breaks=year_tick$tick_list,
-                       limits=c(xlim_inf,xlim_sup),
-                       minor_breaks = year_tick$tick_minor_list,
-                       expand = c(0.015,0.015)
-    )
-  
-
-  
-  if (logscale){
-    
-    
-    csu_plot <- csu_plot +
-      scale_y_continuous(name = ytitle,
-                         breaks=tick$tick_list,
-                         minor_breaks = tick$tick_minor_list,
-                         limits=c(tick$tick_list[1],tick$tick_list[length(tick$tick_list)]),
-                         labels=csu_axes_label,
-                         trans = "log10"
-      )
-  } else {
-    
-    csu_plot <- csu_plot +
-      coord_cartesian( ylim=c(-temp_expand_y, temp_expand_y_up),  expand = TRUE)+
-      scale_y_continuous(name = ytitle,
-                         breaks=tick$tick_list,
-                         labels=csu_axes_label,
-                         expand = c(0,0)
-      )
-  } 
-  
-  if (is.null(color_cancer)) {
-    csu_plot <- csu_plot +scale_colour_discrete(name=legend$title)
-  } 
-  else {
-    csu_plot <- csu_plot +scale_colour_manual(name=NULL, values=color_cancer)
-  }
-  
-
-  csu_plot <- csu_plot +
-    theme(
-      plot.background= element_blank(),
-      panel.background = element_blank(),
-      panel.grid.major= element_line(colour = "grey70"),
-      panel.grid.minor= element_line(colour = "grey70"),
-      plot.title = element_text(size=16, margin=margin(0,0,15,0),hjust = 0.5),
-      plot.subtitle = element_text(size=15, margin=margin(0,0,15,0),hjust = 0.5),
-      plot.caption = element_text(size=10, margin=margin(15,0,0,0)),
-      axis.title = element_text(size=12),
-      axis.title.y = element_text(margin=margin(0,15,0,0)),
-      axis.title.x = element_text(margin=margin(15,0,0,0)),
-      plot.margin=margin(20,20,20,20),
-      axis.text = element_text(size=12, colour = "black"),
-      axis.text.x = element_text(size=12,  hjust = 0.5),
-      axis.ticks= element_line(colour = "black", size = linesize),
-      axis.ticks.length = unit(0.2, "cm"),
-      axis.line.x = element_line(colour = "black", 
-                                 size = linesize, linetype = "solid"),
-      axis.line.y = element_line(colour = "black", 
-                                 size = linesize, linetype = "solid")
-    )+
-    th_legend
-  
-  
-  
-  if (!bool_dum_by & legend$position=="right") {
-    
-    csu_plot <- csu_plot + 
-      geom_text(data = dt_data[CSU_Y == max_year, ],
-                aes(label = CSU_BY),
-                hjust=0,
-                nudge_x=0.5)+
-      theme(plot.margin = unit(c(0.5, legend$right_space_margin, 0.5, 0.5), "lines"))
-    
-  } else {
-    
-    csu_plot <- csu_plot +
-      guides(color = guide_legend(nrow=legend$nrow))
-  }
-  
-  return(list(csu_plot = csu_plot))
-  
-  
-}
-
-
-
 canreg_eapc_scatter <- function(dt_plot,
                                 var_bar = "cancer_label",
                                 var_eapc = "eapc",
-                                var_by = "SEX",
+                                group_by = "SEX",
                                 color_bar=c("Male" = "#2c7bb6", "Female" = "#b62ca1"),
                                 landscape = FALSE,
                                 list_graph = FALSE,
@@ -3840,7 +2836,7 @@ canreg_eapc_scatter <- function(dt_plot,
   text_size <- 14
   
   #calcul ticks:
-  tick <- csu_tick_generator(max = max(dt_plot[[var_eapc]]), min=min(dt_plot[[var_eapc]]))
+  tick <- Rcan:::core.csu_tick_generator(max = max(dt_plot[[var_eapc]]), min=min(dt_plot[[var_eapc]]))
   
   #to have positive and negative side
   tick_space <- tick$tick_list[length(tick$tick_list)] - tick$tick_list[length(tick$tick_list)-1]
@@ -3857,7 +2853,7 @@ canreg_eapc_scatter <- function(dt_plot,
   
   setnames(dt_plot, var_eapc, "CSU_EAPC")
   setnames(dt_plot, var_bar, "CSU_BAR")
-  setnames(dt_plot, var_by, "CSU_BY")
+  setnames(dt_plot, group_by, "CSU_BY")
   
   csu_plot <- 
     ggplot(dt_plot, aes(CSU_EAPC, CSU_BAR)) +
@@ -3865,7 +2861,7 @@ canreg_eapc_scatter <- function(dt_plot,
     scale_x_continuous(name = ytitle,
                        breaks=tick$tick_list,
                        limits=c(tick$tick_list[1],tick$tick_list[length(tick$tick_list)]),
-                       labels=csu_axes_label)+
+                       labels=Rcan:::core.csu_axes_label)+
     scale_fill_manual(name="",
                       values= color_bar,
                       drop = FALSE)+
@@ -3922,7 +2918,7 @@ canreg_eapc_scatter_error_bar <- function(dt,
                                           var_eapc_up = "eapc_up",
                                           var_eapc_low = "eapc_low",
                                           var_bar = "cancer_label",
-                                          var_by = "SEX",
+                                          group_by = "SEX",
                                           landscape = FALSE,
                                           list_graph = TRUE,
                                           canreg_header=NULL,
@@ -3939,7 +2935,7 @@ canreg_eapc_scatter_error_bar <- function(dt,
   
   
   #calcul ticks:
-  tick <- csu_tick_generator(max = max(dt[[var_eapc_up]]), min=min(dt[[var_eapc_low]]))
+  tick <- Rcan:::core.csu_tick_generator(max = max(dt[[var_eapc_up]]), min=min(dt[[var_eapc_low]]))
   
   #to have positive and negative side
   tick_space <- tick$tick_list[length(tick$tick_list)] - tick$tick_list[length(tick$tick_list)-1]
@@ -3952,13 +2948,13 @@ canreg_eapc_scatter_error_bar <- function(dt,
   
   plotlist <- list()
   j <- 1 
-  for (i in levels(dt[[var_by]])) {
+  for (i in levels(dt[[group_by]])) {
     
     plot_title <- canreg_header
     plot_subtitle <-  i
     axe_title = paste0(ytitle, ", ",i)
     
-    dt_plot <- dt[get(var_by) == i]
+    dt_plot <- dt[get(group_by) == i]
     
     plotlist[[j]] <-
       rcan_scatter_error_bar(
@@ -4035,7 +3031,7 @@ rcan_scatter_error_bar <- function(dt_plot,
       scale_x_continuous(name = ytitle,
                          breaks=tick_list,
                          limits=c(tick_list[1],tick_list[length(tick_list)]),
-                         labels=csu_axes_label)
+                         labels=Rcan:::core.csu_axes_label)
   }
   
   csu_plot <- csu_plot +
@@ -4176,167 +3172,6 @@ csu_dt_rank <- function(dt,
   
 } 
 
-csu_tick_generator <- function(max,min = 0,log_scale=FALSE) {
-  
-
-  
-  if (!log_scale) {
-    
-    if (min > 0) {
-      min = 0
-    } 
-    
-    if (max < 0) {
-      max = 0
-    }
-    
-    
-    temp_log_max = 10^floor(log10(max-min))
-    temp_unit_floor_max = floor((max-min)/(temp_log_max))
-    
-    if (temp_unit_floor_max < 2) {
-      tick_space = 0.2*temp_log_max
-    } else {
-      if (temp_unit_floor_max < 5) {
-        tick_space = 0.5*temp_log_max
-      } else {
-        tick_space = temp_log_max
-      }
-    }
-    
-    temp_top <- ceiling(max/tick_space)*tick_space
-    temp_floor <- floor(min/tick_space)*tick_space
-    tick_list <- seq(temp_floor, temp_top, tick_space)
-    tick_minor_list <- NULL
-    
-  } else {
-    
-    
-    temp_log_max = 10^floor(log10(max))
-    temp_unit_floor_max = floor(max/(temp_log_max))
-    
-    temp_log_min <- 10^floor(log10(min))
-    temp_unit_floor_min <- floor(min/(temp_log_min))
-    
-    if (temp_log_min == temp_log_max) {
-      
-      tick_list <- c(temp_unit_floor_min:(temp_unit_floor_max+1)*temp_log_min)
-      
-      
-      if (temp_unit_floor_max == temp_unit_floor_min) {
-        tick_minor_list <- c((temp_unit_floor_min*temp_log_min)+0:9*(temp_log_min/10)) 
-      } else {
-        tick_minor_list <- c((temp_unit_floor_min*temp_log_min)+0:19*(temp_log_min/10)) 
-      }
-      
-    } else if (temp_log_max/temp_log_min < 1000) {
-      
-      
-      if (temp_unit_floor_min < 6) {
-        tick_list <- temp_unit_floor_min:5*temp_log_min 
-        tick_list <- c(tick_list, temp_log_min*7) ## min . . 5 7
-      } else  {
-        tick_list <- temp_unit_floor_min*temp_log_min ## min 
-      }
-      
-      tick_minor_list <- temp_unit_floor_min:19*temp_log_min ## min .  . 19
-      
-      while (temp_log_min != (temp_log_max/10)) {
-        temp_log_min = temp_log_min*10 
-        tick_list <- c(tick_list, c(1,2,3,5,7)*temp_log_min)
-        tick_minor_list <- c(tick_minor_list, 2:19*temp_log_min)
-      }
-      
-      tick_minor_list <- c(tick_minor_list, 2:(temp_unit_floor_max+1)*temp_log_max)
-      
-      if (temp_unit_floor_max <5) {
-        tick_list <- c(tick_list, 1:(temp_unit_floor_max+1)*temp_log_max)
-      } else if (temp_unit_floor_max <7) {
-        tick_list <- c(tick_list, c(1,2,3,5,temp_unit_floor_max+1)*temp_log_max)
-      } else {
-        tick_list <- c(tick_list, c(1,2,3,5,7,temp_unit_floor_max+1)*temp_log_max)
-      }
-      
-    } else {
-      
-      if (temp_unit_floor_min == 1) {
-        tick_list <- c(1,2,3,5)*temp_log_min
-      } else  if (temp_unit_floor_min == 2) {
-        tick_list <- c(2,3,5)*temp_log_min
-      } else  if (temp_unit_floor_min < 6) {
-        tick_list <- c(5,7)*temp_log_min
-      } else {
-        tick_list <- 7*temp_log_min
-      }
-      tick_minor_list <- temp_unit_floor_min:9*temp_log_min ## min .  . 19
-      
-      while (temp_log_min != (temp_log_max/10)) {
-        temp_log_min = temp_log_min*10 
-        tick_list <- c(tick_list, c(1,2,5)*temp_log_min)
-        tick_minor_list <- c(tick_minor_list, 2:9*temp_log_min)
-      }
-      
-      tick_minor_list <- c(tick_minor_list, 2:(temp_unit_floor_max+1)*temp_log_max)
-      
-      if (temp_unit_floor_max <5) {
-        tick_list <- c(tick_list, unique(c(1,2,temp_unit_floor_max+1)*temp_log_max))
-      } else if (temp_unit_floor_max <6) {
-        tick_list <-c(tick_list, c(1,2,5)*temp_log_max)
-      } else if (temp_unit_floor_max < 7) {
-        tick_list <- c(tick_list, c(1,2,5,7)*temp_log_max)
-      } else {
-        tick_list <- c(tick_list, c(1,2,5,7,temp_unit_floor_max+1)*temp_log_max)
-      }
-      
-      
-      
-    }
-    
-  }
-  
-  return(list(tick_list=tick_list, tick_minor_list=tick_minor_list))
-  
-}
-
-csu_year_tick_generator <- function(min, max) {
-  
-  mod <- 5
-  if (max - min < 10 ) {
-    mod <- 1 
-  } else if (max - min < 20){
-    mod <- 2
-  } 
-  
-
-  temp1 <- min - (min %% mod)
-  temp2 <- max - (max %% mod) +ifelse(mod>=5,mod,0)
-  
-  if (temp2 - temp1 <= mod*6) {
-    year_space <- mod 
-    year_list <- seq(temp1,temp2,year_space)
-    year_minor_list <- year_list
-    
-  } else  {
-    year_space <- mod*2 
-    if (temp1 %% mod*2 > 0) {
-      year_list <- seq(temp1+mod,temp2,year_space)
-      year_minor_list <-  seq(temp1,temp2,year_space/2)
-    } else {
-      year_list <- seq(temp1,temp2,year_space)
-      year_minor_list <-  seq(temp1,temp2,year_space/2)
-    }
-  }
-  
-  return(list(tick_list=year_list, tick_minor_list=year_minor_list))
-  
-}
-
-
-csu_axes_label <- function(l) {
-  
-  l <- format(l, big.mark = ",", scientific = FALSE, drop0trailing = TRUE)
-  
-}
 
 csu_legend_wrapper <- function(label, width) {
   

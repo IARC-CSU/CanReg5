@@ -22,7 +22,7 @@ tryCatch({
   dt_all <- csu_merge_inc_pop(
     inc_file =ls_args$inc,
     pop_file =ls_args$pop,
-    var_by = c("ICD10GROUP", "ICD10GROUPLABEL","ICD10GROUPCOLOR", "YEAR", "SEX"),
+    group_by = c("ICD10GROUP", "ICD10GROUPLABEL","ICD10GROUPCOLOR", "YEAR", "SEX"),
     column_group_list =list(c("ICD10GROUP", "ICD10GROUPLABEL", "ICD10GROUPCOLOR"))
   )
   
@@ -176,8 +176,8 @@ tryCatch({
   
 
   
-  dt_report<- csu_asr_core(df_data =dt_report, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
-                           var_by = c("cancer_label", "SEX"),
+  dt_report<- Rcan:::core.csu_asr(df_data =dt_report, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
+                           group_by = c("cancer_label", "SEX"),
                            missing_age = canreg_missing_age(dt_report),
                            first_age = canreg_age_group$first_age+1,
                            last_age= canreg_age_group$last_age+1,
@@ -226,8 +226,8 @@ tryCatch({
   
   
   ##calcul of ASR
-  dt_asr<- csu_asr_core(df_data =dt_report, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
-                        var_by = c("cancer_label", "SEX","ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt_all),
+  dt_asr <- Rcan:::core.csu_asr(df_data =dt_report, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
+                        group_by = c("cancer_label", "SEX","ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt_all),
                         first_age = canreg_age_group$first_age+1,
                         last_age= canreg_age_group$last_age+1,
                         pop_base_count = "REFERENCE_COUNT",
@@ -334,7 +334,7 @@ tryCatch({
   
   canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph"),landscape = FALSE,list_graph = TRUE,
                 FUN=canreg_ageSpecific_rate_top,
-                dt=dt_report,log_scale = TRUE,nb_top = 5,
+                dt=dt_report,logscale = TRUE,nb_top = 5,
                 canreg_header = "")
   
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph001.png")), "dim" )
@@ -363,8 +363,8 @@ tryCatch({
 	dt_report <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE, keep_year = TRUE)
     
     ##calcul of ASR
-    dt_report<- csu_asr_core(df_data =dt_report, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
-                             var_by = c("cancer_label", "SEX", "YEAR", "ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt_all),
+    dt_report<- Rcan:::core.csu_asr(df_data =dt_report, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
+                             group_by = c("cancer_label", "SEX", "YEAR", "ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt_all),
                              first_age =canreg_age_group$first_age+1,
                              last_age= canreg_age_group$last_age+1,
                              pop_base_count = "REFERENCE_COUNT",
@@ -406,8 +406,8 @@ tryCatch({
     
     
     ##calcul of ASR
-    dt_report<- csu_asr_core(df_data =dt_report, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
-                             var_by = c("cancer_label", "SEX", "YEAR"), missing_age = canreg_missing_age(dt_all),
+    dt_report<- Rcan:::core.csu_asr(df_data =dt_report, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
+                             group_by = c("cancer_label", "SEX", "YEAR"), missing_age = canreg_missing_age(dt_all),
                              first_age = canreg_age_group$first_age+1,
                              last_age= canreg_age_group$last_age+1,
                              pop_base_count = "REFERENCE_COUNT",
@@ -423,7 +423,7 @@ tryCatch({
     
     
     ##calcul eapc
-    dt_report <- csu_eapc_core(dt_report, var_rate = "asr",var_year = "YEAR" ,group_by =c("cancer_label", "SEX","CSU_RANK"))
+    dt_report <- Rcan:::core.csu_eapc(dt_report, var_rate = "asr",var_year = "YEAR" ,group_by =c("cancer_label", "SEX","CSU_RANK"))
     dt_report <-as.data.table(dt_report)
     
     
@@ -523,7 +523,7 @@ tryCatch({
   dt_basis <- csu_merge_inc_pop(
     inc_file =ls_args$inc,
     pop_file =ls_args$pop,
-    var_by = c("ICD10GROUP", "ICD10GROUPLABEL", "YEAR", "SEX", "BASIS"),
+    group_by = c("ICD10GROUP", "ICD10GROUPLABEL", "YEAR", "SEX", "BASIS"),
     column_group_list =list(c("ICD10GROUP", "ICD10GROUPLABEL"))
   )
   

@@ -22,7 +22,7 @@ tryCatch({
   dt_all <- csu_merge_inc_pop(
     inc_file =ls_args$inc,
     pop_file =ls_args$pop,
-    var_by = c("ICD10GROUP", "ICD10GROUPLABEL","ICD10GROUPCOLOR", "YEAR", "SEX"),
+    group_by = c("ICD10GROUP", "ICD10GROUPLABEL","ICD10GROUPCOLOR", "YEAR", "SEX"),
     column_group_list =list(c("ICD10GROUP", "ICD10GROUPLABEL", "ICD10GROUPCOLOR"))
   )
   ##Prepare canreg data for ageSpecific rate
@@ -33,7 +33,7 @@ tryCatch({
 	##Produce output
 	canreg_output(output_type = ls_args$ft, filename = ls_args$out,landscape = FALSE,list_graph = TRUE,
 	              FUN=canreg_ageSpecific_rate_top,
-	              dt=dt_all,log_scale = ls_args$logr,nb_top = ls_args$number,
+	              dt=dt_all,logscale = ls_args$logr,nb_top = ls_args$number,
 				  canreg_header = ls_args$header)
 
   	 #talk to canreg

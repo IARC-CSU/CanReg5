@@ -22,7 +22,7 @@ tryCatch({
   dt_all <- csu_merge_inc_pop(
     inc_file =ls_args$inc,
     pop_file =ls_args$pop,
-    var_by = c("ICD10GROUP", "ICD10GROUPLABEL","ICD10GROUPCOLOR", "YEAR", "SEX"),
+    group_by = c("ICD10GROUP", "ICD10GROUPLABEL","ICD10GROUPCOLOR", "YEAR", "SEX"),
     column_group_list =list(c("ICD10GROUP", "ICD10GROUPLABEL", "ICD10GROUPCOLOR"))
   )
   
@@ -33,8 +33,8 @@ tryCatch({
 	##Produce output
 	canreg_output(output_type = ls_args$ft, filename = ls_args$out,landscape = FALSE,
 	              list_graph = TRUE,
-	              FUN=canreg_ageSpecific_rate_multi_plot,dt=dt_all,var_by="SEX",var_age_label_list = "AGE_GROUP_LABEL",
-	              log_scale = ls_args$logr,  
+	              FUN=canreg_ageSpecific_rate_multi_plot,dt=dt_all,group_by="SEX",var_age_label_list = "AGE_GROUP_LABEL",
+	              logscale = ls_args$logr,  
 	              color_trend=c("Male" = "#2c7bb6", "Female" = "#b62ca1"),
 	              multi_graph= ls_args$multi_graph,
 				  canreg_header=ls_args$header)
