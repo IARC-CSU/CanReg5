@@ -1598,8 +1598,7 @@ canreg_age_cases_pie_multi_plot <- function(dt,
                                             list_graph=FALSE,
                                             landscape = TRUE,
                                             return_data = FALSE,
-                                            canreg_header=NULL,
-                                            canreg_report = FALSE) {
+                                            canreg_header=NULL) {
   
   
   
@@ -1640,8 +1639,8 @@ canreg_age_cases_pie_multi_plot <- function(dt,
                                  color_age = color_age,
                                  list_graph = list_graph,
                                  plot_subtitle = i,
-                                 canreg_header = canreg_header,
-                                 canreg_report = canreg_report
+                                 canreg_header = canreg_header
+
     )
     if (j==1) {
       
@@ -1660,32 +1659,19 @@ canreg_age_cases_pie_multi_plot <- function(dt,
   plotlist_grid[[j+1]] <- grid_legend$title
 
 
-  
-  if(!canreg_report) {
-    grid.arrange(
-      grobs=plotlist_grid,
-      layout_matrix = lay,
-      widths = widths,
-      heights=heights,
-      left=" ",
-      top= " ",
-      bottom= " ",
-      right= " "
-    )
-    
-  } else {
-    return(
-      grid.arrange(
-      grobs=plotlist_grid,
-      layout_matrix = lay,
-      widths = widths,
-      heights=heights,
-      left=" ",
-      top= " ",
-      bottom= " ",
-      right= " "
-    ))
-  }
+ 
+	grid.arrange(
+	  grobs=plotlist_grid,
+	  layout_matrix = lay,
+	  widths = widths,
+	  heights=heights,
+	  left=" ",
+	  top= " ",
+	  bottom= " ",
+	  right= " "
+	)
+
+ 
   
   
 }
@@ -1700,8 +1686,7 @@ canreg_ageSpecific_rate_top <- function(dt, var_age="AGE_GROUP",
                                         landscape = FALSE,
                                         list_graph = FALSE,
                                         return_data = FALSE,
-                                        canreg_header="",
-                                        canreg_report=FALSE) {
+                                        canreg_header="") {
   
   
   
@@ -1778,12 +1763,10 @@ canreg_ageSpecific_rate_top <- function(dt, var_age="AGE_GROUP",
   }
   
   
-  if(!canreg_report) {
+
     print(plotlist[[1]]+guides(color = guide_legend(override.aes = list(size=1), nrow=1,byrow=TRUE)))
     print(plotlist[[2]]+guides(color = guide_legend(override.aes = list(size=1), nrow=1,byrow=TRUE)))
-  } else {
-    return(list(male=plotlist[[1]], female=plotlist[[2]]))
-  }
+
   
 }
 
@@ -2116,8 +2099,7 @@ canreg_bar_top <- function(df_data,
                                ytitle = "",
                                nsmall = 1,
                                return_data = FALSE,
-                               plot_caption= NULL,
-                               canreg_report=FALSE) {
+                               plot_caption= NULL) {
   
   
   dt <- data.table(df_data)
@@ -2156,7 +2138,7 @@ canreg_bar_top <- function(df_data,
   
   
   
-  if (!canreg_report) dt$CSU_BAR <-csu_legend_wrapper(dt$CSU_BAR, 15)
+  dt$CSU_BAR <-csu_legend_wrapper(dt$CSU_BAR, 15)
   dt[CSU_BY==levels(dt$CSU_BY)[[1]], asr_plot:= CSU_ASR*(-1)]
   dt[CSU_BY==levels(dt$CSU_BY)[[2]], asr_plot:= CSU_ASR]
   
@@ -2234,13 +2216,9 @@ canreg_bar_top <- function(df_data,
       legend.margin = margin(0, 0, 0, 0)
     )
   
-  if(!canreg_report){
+
     print(csu_plot)
-  } 
-  else {
-    return(csu_plot)
-  }
-  
+
   
 }
 
@@ -2254,8 +2232,7 @@ canreg_population_pyramid <- function(df_data,
                                       list_graph = FALSE,
                                       canreg_header=NULL,
                                       return_data = FALSE,
-                                      plot_caption= NULL,
-                                      canreg_report=FALSE) {
+                                      plot_caption= NULL) {
   
   
   
@@ -2376,12 +2353,9 @@ canreg_population_pyramid <- function(df_data,
   )
   
 
-if(!canreg_report){
   print(csu_plot)
-} 
-else {
-  return(csu_plot)
-}
+
+
 
 
 
@@ -2395,8 +2369,7 @@ canreg_cases_year_bar <- function(dt,
                                   list_graph = FALSE,
                                   canreg_header=NULL,
                                   return_data = FALSE,
-                                  plot_caption= NULL,
-                                  canreg_report=FALSE) {
+                                  plot_caption= NULL) {
   
   
   dt <- as.data.table(dt)
@@ -2489,12 +2462,9 @@ canreg_cases_year_bar <- function(dt,
       
     )
   
-  if(!canreg_report){
+
     print(csu_plot)
-  } 
-  else {
-    return(csu_plot)
-  }
+
   
 }
 
@@ -2509,8 +2479,7 @@ canreg_cases_age_bar <- function(df_data,
                                      canreg_header=NULL,
                                      return_data = FALSE,
                                      skin=TRUE,
-                                     plot_caption= NULL,
-                                     canreg_report=FALSE) {
+                                     plot_caption= NULL) {
   
   
   dt <- as.data.table(df_data)
@@ -2625,12 +2594,8 @@ canreg_cases_age_bar <- function(df_data,
       legend.margin = margin(0, 0, 0, 0)
     )
   
-  if(!canreg_report){
     print(csu_plot)
-  } 
-  else {
-    return(csu_plot)
-  }
+
   
 }
 
@@ -2642,8 +2607,7 @@ canreg_cases_age_pie <- function(
                         color_age = c("#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3", "#a6d854"),
                         list_graph  =  FALSE,
                         plot_subtitle = "Male",
-                        canreg_header  = NULL,
-                        canreg_report=FALSE) {
+                        canreg_header  = NULL) {
   
   dt <- as.data.table(df_data)
   dt[, percent:=sum(get(var_cases))]
@@ -2707,11 +2671,9 @@ canreg_cases_age_pie <- function(
           legend.margin = margin(0, 0, 0, 0),
           axis.ticks = element_blank()) 
     
-  if (!canreg_report) {
+
     csu_plot <- csu_plot + guides(fill=guide_legend(reverse = TRUE))
-  } else {
-    csu_plot <- csu_plot +   guides(fill=guide_legend(title.vjust=0, label.vjust=0, reverse = TRUE))
-  }
+
     
   return(csu_plot)
   
@@ -2730,8 +2692,7 @@ canreg_asr_trend_top <- function(dt, var_asr="asr",
                                  landscape = FALSE,
                                  list_graph = FALSE,
                                  return_data = FALSE,
-                                 canreg_header="",
-                                 canreg_report=FALSE) {
+                                 canreg_header="") {
   
   
   dt <- csu_dt_rank(dt,
@@ -2795,12 +2756,10 @@ canreg_asr_trend_top <- function(dt, var_asr="asr",
   }
   
   
-  if(!canreg_report) {
-    print(plotlist[[1]]+guides(color = guide_legend(override.aes = list(size=1), nrow=1,byrow=TRUE)))
-    print(plotlist[[2]]+guides(color = guide_legend(override.aes = list(size=1), nrow=1,byrow=TRUE)))
-  } else {
-    return(list(male=plotlist[[1]], female=plotlist[[2]]))
-  }
+
+	print(plotlist[[1]]+guides(color = guide_legend(override.aes = list(size=1), nrow=1,byrow=TRUE)))
+	print(plotlist[[2]]+guides(color = guide_legend(override.aes = list(size=1), nrow=1,byrow=TRUE)))
+
   
 }
 
@@ -2815,8 +2774,7 @@ canreg_eapc_scatter <- function(dt_plot,
                                 canreg_header=NULL,
                                 ytitle = "",
                                 return_data = FALSE,
-                                plot_caption= NULL,
-                                canreg_report=FALSE) {
+                                plot_caption= NULL) {
   
   if (return_data) {
     dt_plot[, CSU_RANK := NULL]
@@ -2903,12 +2861,8 @@ canreg_eapc_scatter <- function(dt_plot,
   
   
   
-  if(!canreg_report){
-    print(csu_plot)
-  } 
-  else {
-    return(csu_plot)
-  }
+   print(csu_plot)
+
   
 }
 
@@ -2984,8 +2938,7 @@ rcan_scatter_error_bar <- function(dt_plot,
                                    plot_title=NULL,
                                    plot_subtitle=NULL,
                                    plot_caption= NULL,
-                                   tick_list=NULL,
-                                   canreg_report=FALSE) {
+                                   tick_list=NULL) {
   
   
   
