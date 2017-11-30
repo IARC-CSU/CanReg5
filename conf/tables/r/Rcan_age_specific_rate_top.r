@@ -33,8 +33,8 @@ tryCatch({
 	##Produce output
 	canreg_output(output_type = ls_args$ft, filename = ls_args$out,landscape = FALSE,list_graph = TRUE,
 	              FUN=canreg_ageSpecific_rate_top,
-	              dt=dt_all,logscale = ls_args$logr,nb_top = ls_args$number,
-				  canreg_header = ls_args$header)
+	              df_data=dt_all,logscale = ls_args$logr,nb_top = ls_args$number,
+				  plot_title = ls_args$header)
 
   	 #talk to canreg
   canreg_output_cat(ls_args$ft, ls_args$filename, sex_graph=TRUE)

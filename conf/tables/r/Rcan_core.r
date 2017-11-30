@@ -427,7 +427,7 @@ canreg_merge_CI5_registry <- function(dt, dt_CI5, registry_region, registry_labe
                     age_label_list = "AGE_GROUP_LABEL")
   
   ##keep top 5 cancer for men and top 5 cancer women of canreg.
-  dt <- csu_dt_rank(dt,var_value = "CASES",var_rank = "cancer_label",
+  dt <- Rcan:::core.csu_dt_rank(dt,var_value = "CASES",var_rank = "cancer_label",
                     group_by = "SEX", number =number, ties.method = "first") 
   
   #Keep selected cancer in CI5 data and prepare CI5 data
@@ -1676,99 +1676,65 @@ canreg_age_cases_pie_multi_plot <- function(dt,
   
 }
 
-canreg_ageSpecific_rate_top <- function(dt, var_age="AGE_GROUP", 
-                                        var_cases= "CASES", 
+
+canreg_ageSpecific_rate_top <- function(df_data, 
+										var_age="AGE_GROUP",
+										var_cases= "CASES", 
                                         var_py= "COUNT",
                                         group_by="SEX",
+										var_top = "cancer_label",
                                         var_age_label_list = "AGE_GROUP_LABEL",
-                                        logscale = TRUE,
-                                        nb_top = 5,
-                                        landscape = FALSE,
-                                        list_graph = FALSE,
-                                        return_data = FALSE,
-                                        canreg_header="") {
-  
-  
-  
-  dt <- csu_dt_rank(dt, var_value = var_cases, var_rank = "cancer_label",group_by = "SEX", number = nb_top) 
-  
-
-  
-  
-  
-  
-  if (return_data) {
-    dt[, rate := CASES/COUNT*10000]
-    dt[, cancer_sex := NULL]
-    dt[, cancer_title := NULL]
-    dt[, AGE_GROUP_LABEL := paste0("'",AGE_GROUP_LABEL,"'")]
-    setnames(dt, "CSU_RANK","cancer_rank")
-    dt <- dt[, c("cancer_label",
+										var_color="ICD10GROUPCOLOR",
+										logscale = TRUE,
+										nb_top = 5,
+										plot_title=NULL,
+										landscape = FALSE,
+									    list_graph = FALSE,
+										return_data = FALSE) {
+		 
+if (return_data) {
+	dt_data <- Rcan:::core.csu_dt_rank(df_data, var_value = var_cases, var_rank = var_top ,group_by = group_by, number = nb_top) 		 
+	dt_data[, rate := CASES/COUNT*10000]
+    dt_data[, cancer_sex := NULL]
+    dt_data[, cancer_title := NULL]
+    dt_data[, AGE_GROUP_LABEL := paste0("'",AGE_GROUP_LABEL,"'")]
+    setnames(dt_data, "CSU_RANK","cancer_rank")
+    dt_data <- dt_data[, c(var_top,
                  "ICD10GROUP",
                  "cancer_rank",
-                 "SEX",
-                 "AGE_GROUP",
-                 "AGE_GROUP_LABEL",
-                 "CASES",
-                 "COUNT",
+                 group_by,
+                 var_age,
+                 var_age_label_list,
+                 var_cases,
+                 var_py,
                  "rate"), with=FALSE]
-    setkeyv(dt, c("SEX","cancer_rank","ICD10GROUP" ,"AGE_GROUP" ))
-    return(dt)
+    setkeyv(dt_data, c(group_by,"cancer_rank","ICD10GROUP" ,var_age ))
+    return(dt_data)
     stop() 
-  }
-  
-  dt$cancer_label <-csu_legend_wrapper(dt$cancer_label, 14)
-  
-  
-  plotlist <- list()
-  j <- 1 
-  for (i in levels(dt[[group_by]])) {
-    
-    if (j == 1) {
-      plot_title <- canreg_header
-      plot_caption <- ""
-    } else {
-      plot_title <- ""
-      plot_caption <- canreg_header
-    }
-      
-
-    
-
-
-    
-    dt_plot <- dt[get(group_by) == i]
-    dt_label_order <- setkey(unique(dt_plot[, c("cancer_label","ICD10GROUPCOLOR", "CSU_RANK"), with=FALSE]), CSU_RANK)
-    dt_plot$cancer_label <- factor(dt_plot$cancer_label,levels = dt_label_order$cancer_label) 
-    color_cancer <- as.character(dt_label_order$ICD10GROUPCOLOR)
-    
-    #color_cancer <- csu_cancer_color(cancer_list =dt_label_order$cancer_label)
-
-    
-    plotlist[[j]] <- Rcan:::core.csu_ageSpecific(dt_plot,
-                                          var_age=var_age,
-                                          var_cases= var_cases,
-                                          var_py=var_py,
-                                          group_by = "cancer_label",
-                                          plot_title = plot_title,
-                                          plot_subtitle = paste0("Top ",nb_top, " cancer sites\n",i),
-                                          plot_caption = plot_caption,
-                                          color_trend = color_cancer,
-                                          logscale = logscale,
-                                          log_point=FALSE,
-                                          age_label_list = unique(dt_plot[[var_age_label_list]]),
-    )$csu_plot
-    
-    j <- j+1
-  }
-  
-  
-
-    print(plotlist[[1]]+guides(color = guide_legend(override.aes = list(size=1), nrow=1,byrow=TRUE)))
-    print(plotlist[[2]]+guides(color = guide_legend(override.aes = list(size=1), nrow=1,byrow=TRUE)))
-
-  
 }
+
+plot_subtitle <- paste0("Top ",nb_top, " cancer sites" )
+
+temp <- Rcan:::core.csu_ageSpecific_top(df_data,var_age, var_cases, var_py,var_top, group_by,
+									   logscale=logscale, 
+									   nb_top=nb_top, 
+									   plot_title=plot_title,
+									   plot_subtitle=plot_subtitle,
+									   var_color=var_color,
+									   var_age_label_list=var_age_label_list,
+									   caption_bypass=TRUE)
+
+for (i in  1:length(temp$plotlist)) {
+  
+  print(temp$plotlist[[i]]+guides(color = guide_legend(override.aes = list(size=1), nrow=1,byrow=TRUE)))
+
+}
+
+
+}
+
+
+
 
 
 canreg_bar_top_single <- function(dt, var_top, var_bar = "cancer_label" ,group_by = "SEX",
@@ -1776,7 +1742,7 @@ canreg_bar_top_single <- function(dt, var_top, var_bar = "cancer_label" ,group_b
                                   canreg_header = "", xtitle = "",digit  =  1,
                                   return_data  =  FALSE) {
   
-  dt <- csu_dt_rank(dt, var_value = var_top, var_rank = var_bar,group_by = group_by, number = nb_top) 
+  dt <- Rcan:::core.csu_dt_rank(dt, var_value = var_top, var_rank = var_bar,group_by = group_by, number = nb_top) 
   
   if (return_data) {
     setnames(dt, "CSU_RANK","cancer_rank")
@@ -1787,7 +1753,7 @@ canreg_bar_top_single <- function(dt, var_top, var_bar = "cancer_label" ,group_b
     stop() 
   }
   
-  dt$cancer_label <-csu_legend_wrapper(dt$cancer_label, 15)
+  dt$cancer_label <-Rcan:::core.csu_legend_wrapper(dt$cancer_label, 15)
   
   plotlist <- list()
   j <- 1 
@@ -1898,7 +1864,7 @@ canreg_bar_CI5_compare <- function(dt,group_by = "SEX", landscape = TRUE,list_gr
       k <- k
       dt_plot <- dt_temp[get(group_by) == k]
       
-      dt_plot[["country_label"]] <-csu_legend_wrapper(dt_plot[["country_label"]], 14)
+      dt_plot[["country_label"]] <-Rcan:::core.csu_legend_wrapper(dt_plot[["country_label"]], 14)
       dt_plot[,country_label:=factor(country_label, levels=country_label)]
       
       
@@ -2121,7 +2087,7 @@ canreg_bar_top <- function(df_data,
   
   plot_subtitle <- paste("top",nb_top,"cancer sites")
   
-  dt <- csu_dt_rank(dt, var_value = "CSU_ASR", var_rank = "CSU_BAR",number = nb_top)
+  dt <- Rcan:::core.csu_dt_rank(dt, var_value = "CSU_ASR", var_rank = "CSU_BAR",number = nb_top)
   
   
   
@@ -2138,7 +2104,7 @@ canreg_bar_top <- function(df_data,
   
   
   
-  dt$CSU_BAR <-csu_legend_wrapper(dt$CSU_BAR, 15)
+  dt$CSU_BAR <-Rcan:::core.csu_legend_wrapper(dt$CSU_BAR, 15)
   dt[CSU_BY==levels(dt$CSU_BY)[[1]], asr_plot:= CSU_ASR*(-1)]
   dt[CSU_BY==levels(dt$CSU_BY)[[2]], asr_plot:= CSU_ASR]
   
@@ -2695,7 +2661,7 @@ canreg_asr_trend_top <- function(dt, var_asr="asr",
                                  canreg_header="") {
   
   
-  dt <- csu_dt_rank(dt,
+  dt <- Rcan:::core.csu_dt_rank(dt,
                     var_value= var_cases, 
                     var_rank = group_by,
                     group_by = "SEX",
@@ -2715,7 +2681,7 @@ canreg_asr_trend_top <- function(dt, var_asr="asr",
   }
   
   #wrap label for legend
-  dt[[group_by]] <-csu_legend_wrapper(dt[[group_by]], 14)
+  dt[[group_by]] <-Rcan:::core.csu_legend_wrapper(dt[[group_by]], 14)
   
   plotlist <- list()
   j <- 1 
@@ -3090,48 +3056,6 @@ canreg_output <- function(output_type="pdf",filename=NULL, landscape = FALSE,lis
 }
 
 
-csu_dt_rank <- function(dt,
-                        var_value = "CASES",
-                        var_rank = "cancer_label",
-                        group_by = NULL,
-                        number = NULL, 
-                        ties.method="min") {
-  
-  bool_dum_by <- FALSE
-  if (is.null(group_by)) {
-    
-    dt$CSU_dum_by <- "dummy_by"
-    group_by <- "CSU_dum_by"
-    bool_dum_by <- TRUE
-  }
-  
-  dt <- as.data.table(dt)
-  dt_rank <- dt[, list(rank_value=sum(get(var_value))), by=c(var_rank, group_by)]
-  dt_rank[, CSU_RANK:= frank(-rank_value, ties.method=ties.method), by=group_by]
-
-  if (!is.null(number)){
-    dt_rank <- dt_rank[CSU_RANK <= number,c(group_by, var_rank, "CSU_RANK"), with=FALSE]
-  }
-
-  dt <- merge(dt_rank, dt,by=c(group_by, var_rank), all.x=TRUE)
-  
-  if (bool_dum_by) {
-    
-    dt[,CSU_dum_by:=NULL]
-    
-  }
-  
-  return(dt)
-  
-} 
-
-
-csu_legend_wrapper <- function(label, width) {
-  
-  label <- sapply(strwrap(label, width = width, simplify = FALSE), paste, collapse="\n")
-  return(label)
-  
-}
 
 
 csu_cancer_color <- function(cancer_list) {

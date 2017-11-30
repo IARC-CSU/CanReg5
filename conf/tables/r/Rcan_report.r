@@ -334,8 +334,8 @@ tryCatch({
   
   canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph"),landscape = FALSE,list_graph = TRUE,
                 FUN=canreg_ageSpecific_rate_top,
-                dt=dt_report,logscale = TRUE,nb_top = 5,
-                canreg_header = "")
+                df_data=dt_report,logscale = TRUE,nb_top = 5,
+                plot_title = "")
   
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph001.png")), "dim" )
   
@@ -414,7 +414,7 @@ tryCatch({
                              age_label_list = "AGE_GROUP_LABEL")
     
     ##Keep top based on rank
-    dt_report <- csu_dt_rank(dt_report,
+    dt_report <- Rcan:::core.csu_dt_rank(dt_report,
                              var_value= "CASES",
                              var_rank = "cancer_label",
                              group_by = "SEX",
