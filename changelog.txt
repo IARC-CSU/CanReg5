@@ -1,5 +1,10 @@
 ﻿Changelog
 
+5.00.43-ALPHA
+- Fixed bug in file copy during restore from backup.
+- Fixed bug with headless splash screen.
+- Other fixes.
+
 5.00.42
 - Analysis features updated in collaboration with Mathieu Laversanne:
   - Default report for further editing in Word or similar added.
