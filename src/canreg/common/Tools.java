@@ -38,6 +38,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import java.net.*;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -49,6 +51,7 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.mozilla.universalchardet.UniversalDetector;
+import static java.nio.file.StandardCopyOption.*;
 
 /**
  *
@@ -658,18 +661,7 @@ public class Tools {
      * @throws java.io.IOException
      */
     public static void fileCopy(String from, String to) throws IOException {
-        File inputFile = new File(from);
-        File outputFile = new File(to);
-
-        FileWriter out;
-        try (FileReader in = new FileReader(inputFile)) {
-            out = new FileWriter(outputFile);
-            int c;
-            while ((c = in.read()) != -1) {
-                out.write(c);
-            }
-        }
-        out.close();
+        Files.copy(Paths.get(from), Paths.get(to), REPLACE_EXISTING);
     }
 
     public static String increment(String ID) {
