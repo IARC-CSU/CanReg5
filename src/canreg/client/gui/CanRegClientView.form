@@ -510,7 +510,7 @@
                 </MenuItem>
               </SubComponents>
             </Menu>
-            <Menu class="javax.swing.JMenu" name="jMenu1">
+            <Menu class="javax.swing.JMenu" name="populationsMenu">
               <Properties>
                 <Property name="text" type="java.lang.String" resourceKey="populationsMenu.text"/>
                 <Property name="actionCommand" type="java.lang.String" resourceKey="populationsMenu.actionCommand"/>
@@ -520,7 +520,7 @@
                 <Property name="AccessibleContext.accessibleName" type="java.lang.String" resourceKey="populationsMenu.AccessibleContext.accessibleName"/>
               </AccessibilityProperties>
               <SubComponents>
-                <MenuItem class="javax.swing.JMenuItem" name="jMenuItem1">
+                <MenuItem class="javax.swing.JMenuItem" name="writePopulationsMenuItem">
                   <Properties>
                     <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                       <action class="canreg.client.gui.CanRegClientView" id="writeAllPDSAction" methodName="writeAllPDSAction"/>
@@ -529,7 +529,7 @@
                     <Property name="name" type="java.lang.String" value="writeAllPopulationsMenuItem" noResource="true"/>
                   </Properties>
                 </MenuItem>
-                <MenuItem class="javax.swing.JMenuItem" name="jMenuItem2">
+                <MenuItem class="javax.swing.JMenuItem" name="loadPopulationsMenuItem">
                   <Properties>
                     <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                       <action class="canreg.client.gui.CanRegClientView" id="loadAllPDSAction" methodName="loadAllPDSAction"/>
