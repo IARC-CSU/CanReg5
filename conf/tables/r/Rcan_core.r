@@ -1,3 +1,69 @@
+
+
+CSU_country_info <- function(df_data,var_code, folder_dict) {
+  
+  df_data <- data.table(df_data)
+  
+  if (var_code == "country_code") {
+    
+    df_data[, country_code_old:=NULL]
+    setnames(df_data, "country_code", "country_code_old")
+  }
+  
+  setnames(df_data, var_code, "CSU_varcode")
+  
+  if (mean(df_data[["CSU_varcode"]]) > 100000) {
+    
+    df_data[CSU_varcode==250091,CSU_varcode:= 474000] #special for french martinique for CI5XI
+    df_data[CSU_varcode==250093,CSU_varcode:= 540000] #special for new caledonia for CI5XI
+    df_data[CSU_varcode==250094,CSU_varcode:= 254000] #special for french guiana for CI5XI
+    
+  
+    df_data[, temp:=CSU_varcode/1000]
+    df_data[, country_code:=floor(temp)]
+    df_data[, regional:=ifelse(temp-country_code>0,1,0)]
+    
+  } else if (mean(df_data[["CSU_varcode"]]) > 1000) {
+    
+    df_data[, temp:=CSU_varcode/100]
+    df_data[, country_code:=floor(temp)]
+    df_data[, regional:=ifelse(temp-country_code>0,1,0)]
+    
+    
+  } else {
+    
+    df_data[, country_code:=CSU_varcode]
+    df_data[, regional:=0]
+    
+  }
+  
+  setnames(df_data, "CSU_varcode",var_code )
+  
+  df_data[,temp := NULL]
+  df_data[country_code==891, country_code:=688] #special for serbia in CI5X
+  
+  df_UNcode<- read.csv(paste0(folder_dict, "UN_country_info.csv"))
+  df_data <- merge(df_data,df_UNcode, by=c("country_code"),  all.x = TRUE)  
+  
+  unique(df_data$country_label)
+  
+  list_country <- unique(df_data[is.na(country_label) & is.na(area_code) & is.na(area_label)]$country_code)
+  
+  
+  if (length(list_country) > 0) {
+    cat("these country have not been associated with an area!!\n")
+    cat(list_country)
+  } else {
+    cat("All country have been associated with an area!!")
+  }
+  
+  return(df_data)
+  
+}
+
+
+
+
 canreg_error_log <- function(e,filename,out,Args,inc,pop) {
   
   ## get Args from canreg  
@@ -1256,9 +1322,8 @@ canreg_get_agegroup_label <- function(dt, agegroup) {
 
 
 csu_cum_risk_core <- function(df_data, var_age, var_cases, var_py, group_by=NULL,
-                              missing_age = NULL,last_age = 15,
-                              var_cum_risk="cum_risk",
-                              age_label_list = "AGE_GROUP_LABEL") {
+                              missing_age = NULL,age_label_list = NULL,last_age = 15,
+                              var_cum_risk="cum_risk") {
   
   
   
@@ -1305,22 +1370,33 @@ csu_cum_risk_core <- function(df_data, var_age, var_cases, var_py, group_by=NULL
     dt_data$total <- NULL
     dt_data$total_known <- NULL
     
+    dt_data<- dt_data[!is.na(age_factor),]
+    
   }
   
 
   
+  if (!is.null(age_label_list)) {
   # calcul year interval from age group label
   
-  dt_temp <- unique(dt_data[, c(age_label_list), with=FALSE])
-  dt_temp[, min:=as.numeric(regmatches(get(age_label_list), regexpr("[0-9]+",get(age_label_list))))]
-  dt_temp[, max:=shift(min, type ="lead")]
-  dt_temp[, age_span := max-min]
-  dt_temp <- dt_temp[, c("age_span",age_label_list), with=FALSE]
-  dt_data <- merge(dt_data, dt_temp,by= age_label_list, all.x=TRUE)
+    dt_temp <- unique(dt_data[, c(age_label_list), with=FALSE])
+    dt_temp[, min:=as.numeric(regmatches(get(age_label_list), regexpr("[0-9]+",get(age_label_list))))]
+    dt_temp[, max:=shift(min, type ="lead")]
+    dt_temp[, age_span := max-min]
+    dt_temp <- dt_temp[, c("age_span",age_label_list), with=FALSE]
+    dt_data <- merge(dt_data, dt_temp,by= age_label_list, all.x=TRUE)
+  } else {
+    
+    dt_data[, age_span:=5]
+  }
+
   
   #keep age group selected 
   
+
+  
   age_max <- max(dt_data$age_factor)
+
   if (age_max-1 < last_age) {
     last_age <- age_max-1 
   }
