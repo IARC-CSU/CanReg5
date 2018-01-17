@@ -1,16 +1,30 @@
-## LIST OF ARGUMENTS FROM THE COMMAND LINE (CANREG) + SCRIPT DIRECTORY
-  Args <- commandArgs(TRUE)
-  
   ## To get the R folder of the actual script
   initial.options <- commandArgs(trailingOnly = FALSE)
   file.arg.name <- "--file="
   script.name <- sub(file.arg.name, "", 
                      initial.options[grep(file.arg.name, initial.options)])
   script.basename <- dirname(script.name)
-  source(paste(sep="/", script.basename, "Rcan_source_reporteR.r"))
-  ################
-
-tryCatch({  
+  
+  ## Load Rcan function
+  source(paste(sep="/", script.basename, "Rcan_core.r"))
+  
+  ## to get canreg argument list
+  Args <- commandArgs(TRUE)
+  ls_args <- canreg_args(Args)
+  
+  
+tryCatch({
+  
+  #load dependency packages
+  canreg_load_packages(c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","ReporteRs", "zip", "bmp", "jpeg"), Rcan_source=script.basename)
+  
+  #merge incidence and population
+  dt_all <- csu_merge_inc_pop(
+    inc_file =ls_args$inc,
+    pop_file =ls_args$pop,
+    group_by = c("ICD10GROUP", "ICD10GROUPLABEL","ICD10GROUPCOLOR", "YEAR", "SEX"),
+    column_group_list =list(c("ICD10GROUP", "ICD10GROUPLABEL", "ICD10GROUPCOLOR"))
+  )
   
   graph_width <- 8
   graph_width_split <- 4
@@ -19,14 +33,21 @@ tryCatch({
   
   year_info <- canreg_get_years(dt_all)
   
+   ## get age group label
+  canreg_age_group <- canreg_get_agegroup_label(dt_all, ls_args$agegroup)
+  
+  ## get age group for cumulative risk 
+  temp <- min(as.numeric(substr(ls_args$agegroup,regexpr("-", ls_args$agegroup)[1]+1,nchar(ls_args$agegroup))),14)
+  canreg_age_group_cr <- canreg_get_agegroup_label(dt_all, paste0("0-",temp))
+  
 
   
   doc <- pptx(template=paste(sep="/", script.basename,"slide_template", "canreg_template.pptx"))
   
-  slide.layouts(doc)
+  #slide.layouts(doc)
   
   doc <- addSlide(doc, "Canreg_title") ## add PPTX TITLE
-  doc <- addTitle(doc, header)
+  doc <- addTitle(doc, ls_args$header)
   
   date <- format(Sys.time(), "%B/%Y")
   date <- paste0(toupper(substr(date,1,1)),substr(date,2,nchar(date)))
@@ -121,18 +142,14 @@ tryCatch({
   
   dt_report <- canreg_ageSpecific_rate_data(dt_report, keep_ref = TRUE)
   
-  agegroup <- "0-17"
-  first_age <- as.numeric(substr(agegroup,1,regexpr("-", agegroup)[1]-1))
-  last_age <- as.numeric(substr(agegroup,regexpr("-", agegroup)[1]+1,nchar(agegroup)))
+
+ 
   
-  ## get age group label
-  canreg_age_group <- canreg_get_agegroup_label(dt_report, first_age, last_age)
-  
-  dt_report<- csu_asr_core(df_data =dt_report, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
-                           var_by = c("cancer_label", "SEX"),
+  dt_report<- Rcan:::core.csu_asr(df_data =dt_report, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
+                           group_by = c("cancer_label", "SEX"),
                            missing_age = canreg_missing_age(dt_report),
-                           first_age = first_age+1,
-                           last_age= last_age+1,
+                           first_age = canreg_age_group$first_age+1,
+                           last_age= canreg_age_group$last_age+1,
                            pop_base_count = "REFERENCE_COUNT",
                            age_label_list = "AGE_GROUP_LABEL")
   
@@ -144,7 +161,7 @@ tryCatch({
                 nsmall=0,
                 color_bar=c("Male" = "#2c7bb6", "Female" = "#b62ca1"),nb_top = 10,
                 canreg_header = "",
-                ytitle=paste0("Number of cases, ", canreg_age_group))
+                ytitle=paste0("Number of cases, ", canreg_age_group$label))
   
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph.png")), "dim" )
   doc <- addImage(doc, paste0(tempdir(), "\\temp_graph.png"),width=graph_width,height=graph_width*dims[1]/dims[2] )
@@ -158,7 +175,7 @@ tryCatch({
                 FUN=canreg_bar_top,
                 df_data=dt_report,color_bar=c("Male" = "#2c7bb6", "Female" = "#b62ca1"),nb_top = 10,
                 canreg_header = "",
-                ytitle=paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=","), ", ", canreg_age_group))
+                ytitle=paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=","), ", ", canreg_age_group$label))
   
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph.png")), "dim" )
   doc <- addImage(doc, paste0(tempdir(), "\\temp_graph.png"),width=graph_width,height=graph_width*dims[1]/dims[2] )
@@ -174,24 +191,23 @@ tryCatch({
   
   
   ##calcul of ASR
-  dt_asr<- csu_asr_core(df_data =dt_report, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
-                        var_by = c("cancer_label", "SEX","ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt_all),
-                        first_age = 1,
-                        last_age= 18,
+  dt_asr<- Rcan:::core.csu_asr(df_data =dt_report, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
+                        group_by = c("cancer_label", "SEX","ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt_all),
+                        first_age = canreg_age_group$first_age+1,
+                        last_age= canreg_age_group$last_age+1,
                         pop_base_count = "REFERENCE_COUNT",
                         age_label_list = "AGE_GROUP_LABEL")
   
   ##calcul of cumulative risk
   dt_cum_risk <- csu_cum_risk_core(df_data = dt_report,var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
                                    group_by = c("cancer_label", "SEX","ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt_all),
-                                   last_age= 15,
+                                   last_age= canreg_age_group_cr$last_age+1,
                                    age_label_list = "AGE_GROUP_LABEL")
   
   dt_bar <- dt_asr
-  canreg_age_group <- canreg_get_agegroup_label(dt_report, 0, 17)
   var_top <- "CASES"
   digit <- 0
-  xtitle <- paste0("Number of cases, ", canreg_age_group)
+  xtitle <- paste0("Number of cases, ", canreg_age_group$label)
   
   canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph"),landscape = FALSE,list_graph = TRUE,
                 FUN=canreg_bar_top_single,
@@ -209,7 +225,7 @@ tryCatch({
   
   var_top <- "asr"
   digit <- 1
-  xtitle<-paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=","), ", ", canreg_age_group)
+  xtitle<-paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=","), ", ", canreg_age_group$label)
   
   canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph"),landscape = FALSE,list_graph = TRUE,
                 FUN=canreg_bar_top_single,
@@ -227,9 +243,8 @@ tryCatch({
   
   var_top <- "cum_risk"
   digit <- 2
-  canreg_age_group <- canreg_get_agegroup_label(dt_report,0, 14)
   dt_bar <- dt_cum_risk
-  xtitle<-paste0("Cumulative incidence risk (percent), ", canreg_age_group)
+  xtitle<-paste0("Cumulative incidence risk (percent), ", canreg_age_group_cr$label)
   
   canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph"),landscape = FALSE,list_graph = TRUE,
                 FUN=canreg_bar_top_single,
@@ -250,8 +265,8 @@ tryCatch({
   
   canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph"),landscape = FALSE,list_graph = TRUE,
                 FUN=canreg_ageSpecific_rate_top,
-                dt=dt_report,log_scale = TRUE,nb_top = 5,
-                canreg_header = "")
+                df_data=dt_report,logscale = TRUE,nb_top = 5,
+                plot_title = "")
   
   doc <- addSlide(doc, "Canreg_vertical") ## add PPTX slide (Title + 2 content)
   doc <- addTitle(doc, "Age-specific rates:\r\nMales")
@@ -272,13 +287,12 @@ tryCatch({
     
     ## get age group label
     
-    canreg_age_group <- canreg_get_agegroup_label(dt_report, 0, 17)
     
     ##calcul of ASR
-    dt_report<- csu_asr_core(df_data =dt_report, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
-                             var_by = c("cancer_label", "SEX", "YEAR", "ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt_all),
-                             first_age = 1,
-                             last_age= 18,
+    dt_report<- Rcan:::core.csu_asr(df_data =dt_report, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
+                             group_by = c("cancer_label", "SEX", "YEAR", "ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt_all),
+                             first_age = canreg_age_group$first_age+1,
+                             last_age= canreg_age_group$last_age+1,
                              pop_base_count = "REFERENCE_COUNT",
                              age_label_list = "AGE_GROUP_LABEL")
     
@@ -288,7 +302,7 @@ tryCatch({
                   FUN=canreg_asr_trend_top,
                   dt=dt_report,number = 5,
                   canreg_header = "",
-                  ytitle=paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=","), ", ", canreg_age_group))
+                  ytitle=paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=","), ", ", canreg_age_group$label))
     
     doc <- addSlide(doc, "Canreg_vertical") ## add PPTX slide (Title + 2 content)
     doc <- addTitle(doc, "Trend in ASR:\r\nMales")
@@ -305,23 +319,18 @@ tryCatch({
   if (year_info$span > time_limit) {
     
     dt_report <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE, keep_year = TRUE)
-    agegroup <- "0-17"
-    first_age <- as.numeric(substr(agegroup,1,regexpr("-", agegroup)[1]-1))
-    last_age <- as.numeric(substr(agegroup,regexpr("-", agegroup)[1]+1,nchar(agegroup)))
     
-    ## get age group label
-    canreg_age_group <- canreg_get_agegroup_label(dt_report, first_age, last_age)
     
     ##calcul of ASR
-    dt_report<- csu_asr_core(df_data =dt_report, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
-                             var_by = c("cancer_label", "SEX", "YEAR"), missing_age = canreg_missing_age(dt_all),
-                             first_age = first_age+1,
-                             last_age= last_age+1,
+    dt_report<- Rcan:::core.csu_asr(df_data =dt_report, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
+                             group_by = c("cancer_label", "SEX", "YEAR"), missing_age = canreg_missing_age(dt_all),
+                             first_age = canreg_age_group$first_age+1,
+                             last_age= canreg_age_group$last_age+1,
                              pop_base_count = "REFERENCE_COUNT",
                              age_label_list = "AGE_GROUP_LABEL")
     
     ##Keep top based on rank
-    dt_report <- csu_dt_rank(dt_report,
+    dt_report <- Rcan:::core.csu_dt_rank(dt_report,
                              var_value= "CASES",
                              var_rank = "cancer_label",
                              group_by = "SEX",
@@ -330,7 +339,7 @@ tryCatch({
     
     
     ##calcul eapc
-    dt_report <- csu_eapc_core(dt_report, var_rate = "asr",var_year = "YEAR" ,group_by =c("cancer_label", "SEX","CSU_RANK"))
+    dt_report <- Rcan:::core.csu_eapc(dt_report, var_rate = "asr",var_year = "YEAR" ,group_by =c("cancer_label", "SEX","CSU_RANK"))
     dt_report <-as.data.table(dt_report)
     
     
@@ -339,7 +348,7 @@ tryCatch({
                   FUN=canreg_eapc_scatter_error_bar,
                   dt=dt_report,
                   canreg_header = "Estimated Average Percentage Change",
-                  ytitle=paste0("Estimated average percentage change (%), ", canreg_age_group))
+                  ytitle=paste0("Estimated average percentage change (%), ", canreg_age_group$label))
     
     
     dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph001.png")), "dim" )
@@ -356,7 +365,7 @@ tryCatch({
   }
   
   region_admit <- c("EastMed", "Americas", "West Pacific", "Europe", "SEAsia", "Africa")
-  if (sr %in% region_admit) {
+  if (ls_args$sr %in% region_admit) {
     
     dt_report <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE)
     
@@ -364,12 +373,12 @@ tryCatch({
     dt_CI5_data <- canreg_import_CI5_data(dt_report, paste0(script.basename, "/CI5_data.rds"))
     
     #merge CI5 and canreg data
-    dt_both <- canreg_merge_CI5_registry(dt_report,dt_CI5_data, registry_region = sr, registry_label = header )
+    dt_both <- canreg_merge_CI5_registry(dt_report,dt_CI5_data, registry_region = ls_args$sr, registry_label = ls_args$header )
     
     #create bar chart graphique 
     setkeyv(dt_both, c("CSU_RANK", "SEX","asr"))
-    dt_both[country_label!=header,ICD10GROUPCOLOR:=paste0(ICD10GROUPCOLOR,"6E")]
-    dt_both[country_label==header,ICD10GROUPCOLOR:=paste0(ICD10GROUPCOLOR,"FF")]
+    dt_both[country_label!=ls_args$header,ICD10GROUPCOLOR:=paste0(ICD10GROUPCOLOR,"6E")]
+    dt_both[country_label==ls_args$header,ICD10GROUPCOLOR:=paste0(ICD10GROUPCOLOR,"FF")]
     
     
     canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph"),landscape = TRUE,list_graph = TRUE,
@@ -406,9 +415,9 @@ tryCatch({
   doc <- addTitle(doc, "Basis of diagnosis (DCO/Clinical/MV) by site")
   
   dt_basis <- csu_merge_inc_pop(
-    inc_file =inc,
-    pop_file =pop,
-    var_by = c("ICD10GROUP", "ICD10GROUPLABEL", "YEAR", "SEX", "BASIS"),
+    inc_file =ls_args$inc,
+    pop_file =ls_args$pop,
+    group_by = c("ICD10GROUP", "ICD10GROUPLABEL", "YEAR", "SEX", "BASIS"),
     column_group_list =list(c("ICD10GROUP", "ICD10GROUPLABEL"))
   )
   
@@ -456,11 +465,11 @@ tryCatch({
   
   canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph"),landscape = FALSE,
                 list_graph = TRUE,
-                FUN=canreg_ageSpecific_rate_multi_plot,dt=dt_report,var_by="SEX",var_age_label_list = "AGE_GROUP_LABEL",
-                log_scale = TRUE,  
+                FUN=canreg_ageSpecific_rate_multi_plot,dt=dt_report,group_by="SEX",var_age_label_list = "AGE_GROUP_LABEL",
+                logscale = TRUE,  
                 color_trend=c("Male" = "#2c7bb6", "Female" = "#b62ca1"),
                 multi_graph= FALSE,
-                canreg_header=header)
+                canreg_header=ls_args$header)
   
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph001.png")), "dim" )
   
@@ -477,22 +486,22 @@ tryCatch({
   
   
   
-  writeDoc(doc, file = filename)
+  writeDoc(doc, file = ls_args$filename)
   
 
 #talk to canreg
-  cat(paste("-outFile",filename,sep=":"))
+  cat(paste("-outFile",ls_args$filename,sep=":"))
 	
 	
   },
   
   error = function(e){
     if (exists("doc")) {
-     writeDoc(doc, file = filename)
-     if (file.exists(filename)) file.remove(filename)
+     writeDoc(doc, file = ls_args$filename)
+     if (file.exists(ls_args$filename)) file.remove(ls_args$filename)
     }
     
-    canreg_error_log(e,filename,out,Args,inc,pop)
+    canreg_error_log(e,ls_args$filename,ls_args$out,Args,ls_args$inc,ls_args$pop)
   }
 )
 	
