@@ -529,9 +529,13 @@ public class Globals {
          */
         Count,
         /**
-         * The count
+         * The vital status
          */
-        VitalStatus
+        VitalStatus,
+        /**
+         * The date of death
+         */
+        DeathDate
     }
     public static String FILL_IN_STATUS_MANDATORY_STRING = "Mandatory";
     public static String FILL_IN_STATUS_AUTOMATIC_STRING = "Automatic";
