@@ -57,7 +57,8 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
         Globals.StandardVariableNames.ICD10,
         Globals.StandardVariableNames.Morphology,
         Globals.StandardVariableNames.Behaviour,
-        Globals.StandardVariableNames.BasisDiagnosis
+        Globals.StandardVariableNames.BasisDiagnosis,
+        Globals.StandardVariableNames.ICCC
     };
     private FileTypes[] fileTypesGenerated;
     private final String separator = "\t";
@@ -74,7 +75,8 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
     private static final int MORPHOLOGY_COLUMN = 4;
     private static final int BEHAVIOUR_COLUMN = 5;
     private static final int BASIS_DIAGNOSIS_COLUMN = 6;
-    private static final int CASES_COLUMN = 7;
+    private static final int ICCC_COLUMN = 7;
+    private static final int CASES_COLUMN = 8;
     private int unknownAgeInt;
     static int numberOfAgeGroups = 21;
     static int allAgeGroupsIndex = 20;
@@ -189,6 +191,7 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
             String sexString;
             String icdString;
             String morphologyString;
+            String icccString;
             String yearString;
             String ageString;
             String behaviourString;
@@ -212,6 +215,7 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
                 incheader += separator + "MORPHOLOGY";
                 incheader += separator + "BEHAVIOUR";
                 incheader += separator + "BASIS";
+                incheader += separator + "ICCC";
                 incheader += separator + "CASES";
                 incoutput.append(incheader);
                 incoutput.newLine();
@@ -235,6 +239,7 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
                         }
 
                         morphologyString = (String) line[MORPHOLOGY_COLUMN];
+                        icccString = (String) line[ICCC_COLUMN];
                         icdString = (String) line[ICD10_COLUMN];
 
                         icdIndex = Tools.assignICDGroupIndex(keyGroupsMap, icdString, morphologyString, cancerGroupsLocal);
@@ -270,6 +275,7 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
                             outLine.append(morphologyString).append(separator);
                             outLine.append(behaviourString).append(separator);
                             outLine.append(basisString).append(separator);
+                            outLine.append(icccString).append(separator);
                             outLine.append(cases);
                             incoutput.append(outLine);
                             incoutput.newLine();
