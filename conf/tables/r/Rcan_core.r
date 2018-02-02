@@ -1066,8 +1066,8 @@ csu_merge_inc_pop <- function(inc_file,
                               group_by = NULL,
                               column_group_list = NULL){
   
-  df_inc <- read.table(inc_file, header=TRUE)
-  df_pop <- read.table(pop_file, header=TRUE)
+  df_inc <- read.table(inc_file, header=TRUE, sep="\t")
+  df_pop <- read.table(pop_file, header=TRUE, sep="\t")
   
   dt_inc <- data.table(df_inc)
   dt_pop <- data.table(df_pop)
