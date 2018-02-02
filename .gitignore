@@ -251,3 +251,5 @@ conf/tables/r/r-packages/*.zip
 buildnumber.properties
 out/*
 
+doc/CanReg5-Instructions.zip
+doc/CanReg5-Future.pdf
