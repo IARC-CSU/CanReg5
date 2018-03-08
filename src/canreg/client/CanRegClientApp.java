@@ -497,7 +497,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     public String getSystemRegion() throws RemoteException {
         return server.getCanRegSystemRegion();
     }
-    
+
     public DatabaseStats getDatabaseStats() throws SecurityException, RemoteException {
         try {
             return server.getDatabaseStats();
@@ -1543,16 +1543,21 @@ public class CanRegClientApp extends SingleFrameApplication {
             init();
             initializeLookAndFeels();
             if (args.length > 0) {
-                SplashScreen splash = SplashScreen.getSplashScreen();
-                if (splash != null) {
-                    Graphics2D g = splash.createGraphics();
-                    g.setComposite(AlphaComposite.Clear);
-                    g.fillRect(0, 0, splash.getSize().width, splash.getSize().height);
-                    g.setPaintMode();
-                    g.setColor(Color.BLACK);
-                    g.setFont(new Font("SansSerif", Font.BOLD, 20));
-                    g.drawString(java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("CANREG5 SERVER STARTING..."), 35, splash.getSize().height / 2);
-                    splash.update();
+                SplashScreen splash = null;
+                try {
+                    splash = SplashScreen.getSplashScreen();
+                    if (splash != null) {
+                        Graphics2D g = splash.createGraphics();
+                        g.setComposite(AlphaComposite.Clear);
+                        g.fillRect(0, 0, splash.getSize().width, splash.getSize().height);
+                        g.setPaintMode();
+                        g.setColor(Color.BLACK);
+                        g.setFont(new Font("SansSerif", Font.BOLD, 20));
+                        g.drawString(java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("CANREG5 SERVER STARTING..."), 35, splash.getSize().height / 2);
+                        splash.update();
+                    }
+                } catch (java.awt.HeadlessException he) {
+                    Logger.getLogger(CanRegClientApp.class.getName()).log(Level.INFO, null, he);
                 }
                 try {
                     canreg.common.ServerLauncher.start(Globals.DEFAULT_SERVER_ADDRESS, args[0], Globals.DEFAULT_PORT);
@@ -1572,7 +1577,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     private synchronized void lockRecord(int recordID, String tableName) {
         Set lockSet = locksMap.get(tableName);
         if (lockSet == null) {
-            lockSet = new TreeSet<Integer>();
+            lockSet = new TreeSet<>();
             locksMap.put(tableName, lockSet);
         }
         lockSet.add(recordID);
@@ -1642,19 +1647,23 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     private static void splashMessage(String message, int progress) {
-        SplashScreen splash = SplashScreen.getSplashScreen();
-        int maxProgress = 100;
-        if (splash != null) {
-            Graphics2D g = splash.createGraphics();
-            g.setComposite(AlphaComposite.Clear);
-            g.fillRect(0, 0, splash.getSize().width, splash.getSize().height);
-            g.setPaintMode();
-            g.setColor(Color.BLACK);
-            g.setFont(new Font("SansSerif", Font.BOLD, 10));
-            g.drawString(message, 35, splash.getSize().height / 2 + 20);
-            g.drawRect(35, splash.getSize().height / 2 + 30, splash.getSize().width - 70, 9);
-            g.fillRect(37, splash.getSize().height / 2 + 32, (progress * (splash.getSize().width - 68) / maxProgress), 5);
-            splash.update();
+        try {
+            SplashScreen splash = SplashScreen.getSplashScreen();
+            int maxProgress = 100;
+            if (splash != null) {
+                Graphics2D g = splash.createGraphics();
+                g.setComposite(AlphaComposite.Clear);
+                g.fillRect(0, 0, splash.getSize().width, splash.getSize().height);
+                g.setPaintMode();
+                g.setColor(Color.BLACK);
+                g.setFont(new Font("SansSerif", Font.BOLD, 10));
+                g.drawString(message, 35, splash.getSize().height / 2 + 20);
+                g.drawRect(35, splash.getSize().height / 2 + 30, splash.getSize().width - 70, 9);
+                g.fillRect(37, splash.getSize().height / 2 + 32, (progress * (splash.getSize().width - 68) / maxProgress), 5);
+                splash.update();
+            }
+        } catch (java.awt.HeadlessException he) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.INFO, null, he);
         }
     }
 
@@ -1728,6 +1737,5 @@ public class CanRegClientApp extends SingleFrameApplication {
             return canRegClientView.getDesktopPane();
         }
     }
-
 
 }
