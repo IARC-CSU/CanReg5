@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2017  International Agency for Research on Cancer
+ * Copyright (C) 2008-2018  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -357,10 +357,13 @@ public class Import {
                         ConversionResult[] conversionResult = canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICD10, patient, tumour);
                         tumour.setVariable(io.getICD10VariableName(), conversionResult[0].getValue());
                     }
-                    String iccc = (String) tumour.getVariable(io.getICCCVariableName());
-                    if (iccc == null || iccc.trim().length() == 0) {
-                        ConversionResult[] conversionResult = canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICCC3, patient, tumour);
-                        tumour.setVariable(io.getICCCVariableName(), conversionResult[0].getValue());
+                    // check if iccc variable is defined
+                    if (io.getICCCVariableName() != null) {
+                        String iccc = (String) tumour.getVariable(io.getICCCVariableName());
+                        if (iccc == null || iccc.trim().length() == 0) {
+                            ConversionResult[] conversionResult = canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICCC3, patient, tumour);
+                            tumour.setVariable(io.getICCCVariableName(), conversionResult[0].getValue());
+                        }
                     }
                 }
                 if (tumour.getVariable(io.getPatientIDTumourTableVariableName()) == null) {
@@ -378,24 +381,16 @@ public class Import {
                     throw new InterruptedException();
                 }
             }
-            task.firePropertyChange("finished", null, null);
+            if (task != null) {
+                task.firePropertyChange("finished", null, null);
+            }
             success = true;
-        } catch (IOException ex) {
-            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
-            success = false;
-        } catch (NumberFormatException ex) {
+        } catch (IOException | NumberFormatException | IndexOutOfBoundsException | SQLException ex) {
             Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
             success = false;
         } catch (InterruptedException ex) {
             Logger.getLogger(Import.class.getName()).log(Level.INFO, "Interupted on line: " + (numberOfLinesRead + 1) + ". ", ex);
             success = true;
-        } catch (IndexOutOfBoundsException ex) {
-            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Error in line: " + (numberOfLinesRead + 1 + 1) + ". ",
-                    ex);
-            success = false;
-        } catch (SQLException ex) {
-            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
-            success = false;
         } finally {
             if (parser != null) {
                 try {
@@ -741,8 +736,13 @@ public class Import {
                                 ConversionResult[] conversionResult = canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICD10, patient, tumour);
                                 tumour.setVariable(io.getICD10VariableName(), conversionResult[0].getValue());
                                 // generate ICCC codes
-                                ConversionResult[] conversionResultICCC = canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICCC3, patient, tumour);
-                                tumour.setVariable(io.getICCCVariableName(), conversionResultICCC[0].getValue());
+                                if (io.getICCCVariableName() != null) {
+                                    String iccc = (String) tumour.getVariable(io.getICCCVariableName());
+                                    if (iccc == null || iccc.trim().length() == 0) {
+                                        ConversionResult[] conversionResultICCC = canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICCC3, patient, tumour);
+                                        tumour.setVariable(io.getICCCVariableName(), conversionResultICCC[0].getValue());
+                                    }
+                                }
                             } else {
                                 tumour.setVariable(io.getTumourRecordStatus(), "0");
                             }
