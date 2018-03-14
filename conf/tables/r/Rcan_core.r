@@ -777,7 +777,8 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all, folder, list_nu
   
       
       if (temp != "") {
-        doc <- body_add_par(doc,temp) 
+        temp_1 <- strsplit(temp, "\n\n")
+        invisible(lapply(temp_1[[1]],body_add_par, x=doc))
       }
       
 
@@ -812,7 +813,7 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all, folder, list_nu
                       canreg_header = "")
         
         dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph.png")), "dim" )
-        doc <- body_add_img(doc, paste0(tempdir(), "\\temp_graph.png"),width=graph_width,height=graph_width*dims[1]/dims[2] )
+        doc <- body_add_img(doc, paste0(tempdir(), "\\temp_graph.png"),width=graph_width,height=graph_width*dims[1]/dims[2], style="centered")
         doc <- body_add_par(doc,  paste0("Fig ",list_number$fig,". Estimated average annual population"))
         list_number$fig <- list_number$fig+1
         
@@ -921,7 +922,8 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all, folder, list_nu
     temp <- substr(text, start ,nchar(text)) # add text after markup
     
     if (temp != "") {
-      doc <- body_add_par(doc,temp) 
+      temp_1 <- strsplit(temp, "\n\n")
+      invisible(lapply(temp_1[[1]],body_add_par, x=doc))
     }
     
   }
