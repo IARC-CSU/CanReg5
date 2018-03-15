@@ -632,12 +632,13 @@ canreg_report_chapter_table <- function(file) {
 
 canreg_report_chapter_txt <- function(dt_chapter, doc, folder, dt_all, list_number, appendix=FALSE) {
   
-  doc <- addPageBreak(doc) # go to the next page
+  doc <- body_add_break(doc) # go to the next page
   
   if (!appendix) {
-    doc <- addTitle(doc, paste(dt_chapter$title[1], tolower(dt_chapter$title[2]), sep= " and "), level=1)
+    doc <- body_add_par(doc, paste(dt_chapter$title[1], tolower(dt_chapter$title[2]), sep= " and "), style =  paste("heading",1))
+    
   } else {
-    doc <- addTitle(doc, "Appendix", level=1)
+    doc <- body_add_par(doc, "Appendix", style =  paste("heading",1))
   }
   
   last_landscape <- FALSE
@@ -661,22 +662,22 @@ canreg_report_chapter_txt <- function(dt_chapter, doc, folder, dt_all, list_numb
     }
 
     if (chapter_info$title_level == 1 ) {
-      doc <- addPageBreak(doc)
+      doc <- body_add_break(doc)
     }
       
     if (doc_landscape) {
       text <- text[2:length(text)]
-      doc <- addSection(doc, landscape = TRUE)
+      doc <- body_end_section (doc, landscape = TRUE)
       last_landscape <- TRUE
       
     } else {
       if (last_landscape){
-        doc <- addSection(doc, landscape = FALSE)
+        doc <- body_end_section (doc, landscape = FALSE)
         last_landscape <- FALSE
       }
     }
       
-    doc <- addTitle(doc, chapter_info$title, level=chapter_info$title_level)
+    doc <- body_add_par(doc, chapter_info$title, style =  paste("heading",chapter_info$title_level))
       
     pop_data <- ((i==2) & !appendix)
       
@@ -758,7 +759,7 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all, folder, list_nu
   if (nrow(mark_table)==0) { #no markup
     
     if (!is.na(text)) {
-      doc <- addParagraph(doc,text) 
+      doc <- body_add_par(doc,text) 
     } 
     
   } else {
@@ -776,7 +777,8 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all, folder, list_nu
   
       
       if (temp != "") {
-        doc <- addParagraph(doc,temp) 
+        temp_1 <- strsplit(temp, "\n\n")
+        invisible(lapply(temp_1[[1]],body_add_par, x=doc))
       }
       
 
@@ -784,47 +786,47 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all, folder, list_nu
       if (type == "PATH") {
         
         temp <- paste0("If you want to keep changes for future reports, this text can be edit directly in the template file folder:\n",folder,"\n")
-        doc <- addParagraph(doc,temp) 
+        doc <- body_add_par(doc,temp) 
         
       } else if (type == "MAP") {
         
         temp <- paste0("If you want to keep changes for future reports, this map can be updated directly in the template file folder:\n",folder,"\\map_example.png\n")
-        doc <- addParagraph(doc,temp) 
+        doc <- body_add_par(doc,temp) 
         
       } else if (type == "POP"){
         
         dt_report <- dt_all
         dt_report <- canreg_pop_data(dt_report)
-        doc <- addParagraph(doc, "\r\n")
+        doc <- body_add_par(doc, "\r\n")
         
         total_pop <- formatC(round(unique(dt_report$Total)), format="d", big.mark=",") 
         total_male <- formatC(round(dt_report[SEX==levels(SEX)[1], sum(COUNT)]), format="d", big.mark=",")
         total_female <- formatC(round(dt_report[SEX==levels(SEX)[2], sum(COUNT)]), format="d", big.mark=",")
         
-        doc <- addParagraph(doc,
+        doc <- body_add_par(doc,
                             paste0("The average annual population was ", total_pop,
                                    " (",total_male," males and ",total_female, " females).\n"))
         
-        canreg_output(output_type = "png", filename =  paste0(tempdir(), "\\temp_graph"),landscape = TRUE,list_graph = FALSE,
+        canreg_output(output_type = "png", filename =  paste0(tempdir(), "\\temp_graph", list_number$fig),landscape = TRUE,list_graph = FALSE,
                       FUN=canreg_population_pyramid,
                       df_data =dt_report,
                       canreg_header = "")
         
-        dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph.png")), "dim" )
-        doc <- addImage(doc, paste0(tempdir(), "\\temp_graph.png"),width=graph_width,height=graph_width*dims[1]/dims[2] )
-        doc <- addParagraph(doc,  paste0("Fig ",list_number$fig,". Estimated average annual population"))
+        dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", list_number$fig, ".png")), "dim" )
+        doc <- body_add_img(doc, paste0(tempdir(),"\\temp_graph", list_number$fig, ".png"),width=graph_width,height=graph_width*dims[1]/dims[2], style="centered")
+        doc <- body_add_par(doc,  paste0("Fig ",list_number$fig,". Estimated average annual population"))
         list_number$fig <- list_number$fig+1
         
       } else if (type == "ASRD"){
         
         
         
-        doc <- addParagraph(doc, "\r\n")
+        doc <- body_add_par(doc, "\r\n")
         dt_report <- dt_all
         
         dt_report <- canreg_ageSpecific_rate_data(dt_report)
         
-        canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph"),landscape = FALSE,
+        canreg_output(output_type = "png", filename = paste0(tempdir(), "\\ann_temp_graph"),landscape = FALSE,
                       list_graph = TRUE,
                       FUN=canreg_ageSpecific_rate_multi_plot,dt=dt_report,group_by="SEX",var_age_label_list = "AGE_GROUP_LABEL",
                       logscale = TRUE,  
@@ -833,11 +835,11 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all, folder, list_nu
                       canreg_header=ls_args$header)
         
         
-        dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph001.png")), "dim" )
+        dims <- attr( png::readPNG (paste0(tempdir(), "\\ann_temp_graph001.png")), "dim" )
         
         for (j in 1:length(levels(dt_report$ICD10GROUP))) {
-          doc <- addImage(doc, paste0(tempdir(), "\\temp_graph",sprintf("%03d",j) ,".png"),width=graph_width*0.8,height=graph_width*0.8*dims[1]/dims[2] )
-          doc <- addParagraph(doc,  
+          doc <- body_add_img(doc, paste0(tempdir(), "\\ann_temp_graph" , sprintf("%03d",j) ,".png"),width=graph_width*0.8,height=graph_width*0.8*dims[1]/dims[2] )
+          doc <- body_add_par(doc,  
                               paste0("Appendix fig ",list_number$fig,". ", unique(dt_report[ICD10GROUP== levels(ICD10GROUP)[j] ,cancer_label]),  
                                      ": Age-specific incidence rate per ", formatC(100000, format="d", big.mark=",")))
           list_number$fig <- list_number$fig+1
@@ -847,7 +849,7 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all, folder, list_nu
       } else if (type %in% c("IMG", "TBL")) {
         
         table <- type == "TBL"
-        doc <- addParagraph(doc, "\r\n")
+        doc <- body_add_par(doc, "\r\n")
         
         caption_markdown <- regexpr("\\[(.*)\\]", substr(text, stop+1,stop+1+mark_table$mark_length[i] ))
 
@@ -900,13 +902,14 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all, folder, list_nu
             dims <- attr(bmp::read.bmp(paste0(tempdir(),"\\", tolower(img_file))), "dim" )
           }
           
-          doc <- addImage(doc, paste0(tempdir(),"\\", tolower(img_file)),width=graph_width,height=graph_width*dims[1]/dims[2],par.properties = parProperties(text.align = "left"))
-          doc <- addParagraph(doc, paste0(caption_start,caption))
+          doc <- body_add_img(doc, paste0(tempdir(),"\\", tolower(img_file)),width=graph_width,height=graph_width*dims[1]/dims[2])
+          doc <- body_add_par(doc, paste0(caption_start,caption))
 
           
         } else {
           temp <- paste0("The file: ",folder,"\\",img_file," does not exist\n")
-          doc <- addParagraph(doc,temp)
+          doc <- body_add_par(doc, temp)
+
           
         }
       }
@@ -920,7 +923,8 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all, folder, list_nu
     temp <- substr(text, start ,nchar(text)) # add text after markup
     
     if (temp != "") {
-      doc <- addParagraph(doc,temp) 
+      temp_1 <- strsplit(temp, "\n\n")
+      invisible(lapply(temp_1[[1]],body_add_par, x=doc))
     }
     
   }
