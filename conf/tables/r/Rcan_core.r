@@ -807,13 +807,13 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all, folder, list_nu
                             paste0("The average annual population was ", total_pop,
                                    " (",total_male," males and ",total_female, " females).\n"))
         
-        canreg_output(output_type = "png", filename =  paste0(tempdir(), "\\temp_graph"),landscape = TRUE,list_graph = FALSE,
+        canreg_output(output_type = "png", filename =  paste0(tempdir(), "\\temp_graph", list_number$fig),landscape = TRUE,list_graph = FALSE,
                       FUN=canreg_population_pyramid,
                       df_data =dt_report,
                       canreg_header = "")
         
-        dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph.png")), "dim" )
-        doc <- body_add_img(doc, paste0(tempdir(), "\\temp_graph.png"),width=graph_width,height=graph_width*dims[1]/dims[2], style="centered")
+        dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", list_number$fig, ".png")), "dim" )
+        doc <- body_add_img(doc, paste0(tempdir(),"\\temp_graph", list_number$fig, ".png"),width=graph_width,height=graph_width*dims[1]/dims[2], style="centered")
         doc <- body_add_par(doc,  paste0("Fig ",list_number$fig,". Estimated average annual population"))
         list_number$fig <- list_number$fig+1
         
@@ -826,7 +826,7 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all, folder, list_nu
         
         dt_report <- canreg_ageSpecific_rate_data(dt_report)
         
-        canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph"),landscape = FALSE,
+        canreg_output(output_type = "png", filename = paste0(tempdir(), "\\ann_temp_graph"),landscape = FALSE,
                       list_graph = TRUE,
                       FUN=canreg_ageSpecific_rate_multi_plot,dt=dt_report,group_by="SEX",var_age_label_list = "AGE_GROUP_LABEL",
                       logscale = TRUE,  
@@ -835,10 +835,10 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all, folder, list_nu
                       canreg_header=ls_args$header)
         
         
-        dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph001.png")), "dim" )
+        dims <- attr( png::readPNG (paste0(tempdir(), "\\ann_temp_graph001.png")), "dim" )
         
         for (j in 1:length(levels(dt_report$ICD10GROUP))) {
-          doc <- body_add_img(doc, paste0(tempdir(), "\\temp_graph",sprintf("%03d",j) ,".png"),width=graph_width*0.8,height=graph_width*0.8*dims[1]/dims[2] )
+          doc <- body_add_img(doc, paste0(tempdir(), "\\ann_temp_graph" , sprintf("%03d",j) ,".png"),width=graph_width*0.8,height=graph_width*0.8*dims[1]/dims[2] )
           doc <- body_add_par(doc,  
                               paste0("Appendix fig ",list_number$fig,". ", unique(dt_report[ICD10GROUP== levels(ICD10GROUP)[j] ,cancer_label]),  
                                      ": Age-specific incidence rate per ", formatC(100000, format="d", big.mark=",")))
