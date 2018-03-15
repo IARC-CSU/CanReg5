@@ -170,7 +170,7 @@ tryCatch({
                 ytitle=paste0("Number of cases, ", canreg_age_group$label))
   
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", nb_slide, ".png")), "dim" )
-  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, ".png"), index=4, width=graph_width,height=graph_width*dims[1]/dims[2])
+  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, ".png"),  width=graph_width,height=graph_width*dims[1]/dims[2])
   nb_slide <- nb_slide +1
   
   
@@ -188,7 +188,7 @@ tryCatch({
                 ytitle=paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=","), ", ", canreg_age_group$label))
   
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", nb_slide, ".png")), "dim" )
-  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, ".png"), index=4, width=graph_width,height=graph_width*dims[1]/dims[2])
+  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, ".png"),  width=graph_width,height=graph_width*dims[1]/dims[2])
   nb_slide <- nb_slide +1
   #################
   
@@ -227,8 +227,8 @@ tryCatch({
                 xtitle=xtitle)
   
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", nb_slide, "001.png")), "dim" )
-  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "001.png"), index=2, width=graph_width_split,height=graph_width_split*dims[1]/dims[2])
-  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "002.png"), index=4, width=graph_width_split,height=graph_width_split*dims[1]/dims[2])
+  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "001.png"), index=1, width=graph_width_split,height=graph_width_split*dims[1]/dims[2])
+  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "002.png"), index=2, width=graph_width_split,height=graph_width_split*dims[1]/dims[2])
   nb_slide <- nb_slide +1
   
   
@@ -249,8 +249,8 @@ tryCatch({
                 xtitle=xtitle)
   
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", nb_slide, "001.png")), "dim" )
-  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "001.png"), index=2, width=graph_width_split,height=graph_width_split*dims[1]/dims[2])
-  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "002.png"), index=4, width=graph_width_split,height=graph_width_split*dims[1]/dims[2])
+  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "001.png"), index=1, width=graph_width_split,height=graph_width_split*dims[1]/dims[2])
+  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "002.png"), index=2, width=graph_width_split,height=graph_width_split*dims[1]/dims[2])
   nb_slide <- nb_slide +1
   ################# 
   doc <-  add_slide(doc, layout="Canreg_split", master="Office Theme") ## add PPTX slide (Title + content)
@@ -268,8 +268,8 @@ tryCatch({
                 xtitle=xtitle)
   
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", nb_slide, "001.png")), "dim" )
-  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "001.png"), index=2, width=graph_width_split,height=graph_width_split*dims[1]/dims[2])
-  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "002.png"), index=4, width=graph_width_split,height=graph_width_split*dims[1]/dims[2])
+  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "001.png"), index=1, width=graph_width_split,height=graph_width_split*dims[1]/dims[2])
+  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "002.png"), index=2, width=graph_width_split,height=graph_width_split*dims[1]/dims[2])
   nb_slide <- nb_slide +1
   ################# ####
   
@@ -291,11 +291,11 @@ tryCatch({
   doc <- ph_with_text(doc, type = "title", str = "Age-specific rates:\r\nMales")
   
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", nb_slide, "001.png")), "dim" )
-  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "001.png"), index=2, width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
+  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "001.png"), index=1, width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
   
   doc <-  add_slide(doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
   doc <- ph_with_text(doc, type = "title", str = "Age-specific rates:\r\nFemales")
-  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "002.png"), index=2, width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
+  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "002.png"), index=1, width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
   nb_slide <- nb_slide +1
   
   
@@ -330,11 +330,11 @@ tryCatch({
     doc <- ph_with_text(doc, type = "title", str = "Trend in ASR:\r\nMales")
     
     dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", nb_slide, "001.png")), "dim" )
-    doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "001.png"), index=2, width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
+    doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "001.png"), index=1, width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
     
     doc <-  add_slide(doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
     doc <- ph_with_text(doc, type = "title", str = "Trend in ASR:\r\nFemales")
-    doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "002.png"), index=2, width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
+    doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "002.png"), index=1, width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
     nb_slide <- nb_slide +1
     
   }
@@ -496,7 +496,7 @@ tryCatch({
     
     doc <-  add_slide(doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
     doc <- ph_with_text(doc, type = "title", str = paste0("Age-specific incidence rate:\r\n",  unique(dt_report[ICD10GROUP== levels(ICD10GROUP)[j] ,cancer_label])))
-    doc <- ph_with_img(doc, paste0(tempdir(), "\\ann_temp_graph",sprintf("%03d",j) ,".png"), index=2, width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
+    doc <- ph_with_img(doc, paste0(tempdir(), "\\ann_temp_graph",sprintf("%03d",j) ,".png"), index=1, width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
     
   }
   
@@ -514,7 +514,7 @@ tryCatch({
   
   error = function(e){
     if (exists("doc")) {
-     writeDoc(doc, file = ls_args$filename)
+      print(doc, target = ls_args$filename)
      if (file.exists(ls_args$filename)) file.remove(ls_args$filename)
     }
     
