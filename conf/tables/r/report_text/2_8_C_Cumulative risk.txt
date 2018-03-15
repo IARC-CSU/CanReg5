@@ -1,3 +1,4 @@
 Cumulative mortality is the probability or risk of individuals dying from the disease during a specified period.
+
 For cancer, it is expressed as the number of new born children (out of 100, or 1000) who would be expected to die from a particular cancer before the age of 75 or (65 or 70) if they had the rates of cancer observed in the period in the absence of competing causes.
 Like the age standardised rate, it permits comparisons between populations of different age structures.

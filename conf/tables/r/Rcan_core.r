@@ -821,7 +821,7 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all, folder, list_nu
         
         
         
-        doc <- addParagraph(doc, "\r\n")
+        doc <- body_add_par(doc, "\r\n")
         dt_report <- dt_all
         
         dt_report <- canreg_ageSpecific_rate_data(dt_report)
@@ -908,7 +908,8 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all, folder, list_nu
           
         } else {
           temp <- paste0("The file: ",folder,"\\",img_file," does not exist\n")
-          doc <- addParagraph(doc,temp)
+          doc <- body_add_par(doc, temp)
+
           
         }
       }
