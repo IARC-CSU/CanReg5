@@ -638,7 +638,7 @@ tryCatch({
   
   error = function(e){
     if (exists("doc")) {
-     writeDoc(doc, file = ls_args$filename)
+      print(doc, ls_args$filename)
      if (file.exists(ls_args$filename)) file.remove(ls_args$filename)
     }
     
