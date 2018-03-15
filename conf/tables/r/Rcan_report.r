@@ -478,7 +478,7 @@ tryCatch({
   
   
   
-  ## comparaison with CI5 registries.
+  ## comparison with CI5 registries.
   
   region_admit <- c("EastMed", "Americas", "West Pacific", "Europe", "SEAsia", "Africa")
   
@@ -510,7 +510,7 @@ tryCatch({
     CI5_registries <- gsub("\\*","",CI5_registries)
     
     doc <- body_add_par(doc,
-                        paste0("Figure ",list_number$fig," shows a comparaison of the age standardised incidence rates in ",
+                        paste0("Figure ",list_number$fig," shows a comparison of the age-standardised incidence rates in ",
                                ls_args$header, " with those observed in ", 
                                CI5_registries[1], ", ", CI5_registries[2],
                                " and ", CI5_registries[3], " (CI5 X, 2013)." ))
@@ -543,7 +543,7 @@ tryCatch({
       doc <- body_add_flextable(doc,ft, align = "center")
     }
     
-    doc <- body_add_par(doc, paste0("Fig ",list_number$fig,". Comparaison with other registries"))
+    doc <- body_add_par(doc, paste0("Fig ",list_number$fig,". Comparison with other registries"))
     list_number$fig=list_number$fig+1
     
     doc <- body_add_par(doc, "\r\n")
@@ -606,7 +606,7 @@ tryCatch({
   doc <- body_add_par(doc, "\r\n")
   
   doc <- body_add_par(doc,
-                      paste0("Table ",list_number$tbl," shows the percentage of cases at the major sites that were registered on the basis of information from a death certificate only (DCO) and with morphological verification (MV) - that is, based on cytology or histology (of the primary tumour, or a metastasis)."))
+                      paste0("Table ",list_number$tbl," shows the percentage of cases at the major sites that were registered on the basis of information from a death certificate only (DCO) and with morphological verification (MV) - that is, based on cytology or histology (of the primary tumor, or a metastasis)."))
   
   doc <- body_add_par(doc, "\r\n")
   doc <- body_add_flextable(doc,ft, align = "center")
