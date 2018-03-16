@@ -127,7 +127,7 @@ canreg_error_log <- function(e,filename,out,Args,inc,pop) {
   
   #print missing package
 
-  packages_list <- c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","ReporteRs", "zip", "bmp", "jpeg")
+  packages_list <- c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","officer","flextable", "zip", "bmp", "jpeg", "png")
 
   missing_packages <- packages_list[!(packages_list %in% installed.packages()[,"Package"])]  
   if (length(missing_packages) == 0) {
@@ -145,10 +145,10 @@ canreg_error_log <- function(e,filename,out,Args,inc,pop) {
   cat("\n")
   #print incidence / population file (r format)
   cat("Incidence file\n")
-  dput(read.table(inc, header=TRUE))
+  dput(read.table(inc, header=TRUE, sep="\t"))
   cat("\n")
   cat("population file\n")
-  dput(read.table(pop, header=TRUE))
+  dput(read.table(pop, header=TRUE, sep="\t"))
   cat("\n")
   
   #close log_file and send to canreg
@@ -255,7 +255,7 @@ canreg_load_packages <- function(packages_list, Rcan_source=NULL) {
   options(repos = new.repos) 
   
   if (!"Rcpp" %in% missing_packages) {
-    if (packageVersion("Rcpp") < "0.11.0") {
+    if (packageVersion("Rcpp") < "0.12.12") {
       missing_packages <- c(missing_packages,"Rcpp" )
     }
   }
@@ -275,6 +275,12 @@ canreg_load_packages <- function(packages_list, Rcan_source=NULL) {
   if (!"scales" %in% missing_packages) {
     if (packageVersion("scales") < "0.4.1") {
       missing_packages <- c(missing_packages,"scales" )
+    }
+  }
+  
+  if (!"officer" %in% missing_packages) {
+    if (packageVersion("officer") < "0.2.2") {
+      missing_packages <- c(missing_packages,"officer" )
     }
   }
   
@@ -301,13 +307,20 @@ canreg_load_packages <- function(packages_list, Rcan_source=NULL) {
     }
   }
 
+  if ("officer" %in% missing_packages) {
+    
+    if ("xml2" %in% list_installed_packages) {
+      if (packageVersion("xml2") < "1.1.0") {
+        missing_packages <- c(missing_packages,"xml2")
+      }
+    }
+  }
   
-  
-  if ("ReporteRs" %in% missing_packages) {
+  if ("flextable" %in% missing_packages) {
      
-    if ("rvg" %in% list_installed_packages) {
-      if (packageVersion("rvg") < "0.1.2") {
-        missing_packages <- c(missing_packages,"rvg")
+    if ("gdtools" %in% list_installed_packages) {
+      if (packageVersion("gdtools") < "0.1.6") {
+        missing_packages <- c(missing_packages,"gdtools")
       }
     }
   }

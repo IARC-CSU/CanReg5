@@ -468,7 +468,6 @@ tryCatch({
     dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", list_number$fig, "001.png")), "dim" )
     doc <- body_add_img(doc, paste0(tempdir(), "\\temp_graph", list_number$fig, "001.png"),width=graph_width*0.9,height=graph_width*0.9*dims[1]/dims[2],style="centered" )
     doc <- body_add_par(doc, paste0("Fig ",list_number$fig,". Estimated annual percentage change, male"))
-    list_number$fig=list_number$fig+1 
     doc <- body_add_img(doc, paste0(tempdir(), "\\temp_graph", list_number$fig, "002.png"),width=graph_width*0.9,height=graph_width*0.9*dims[1]/dims[2],style="centered" )
     doc <- body_add_par(doc, paste0("Fig ",list_number$fig,". Estimated annual percentage change, female"))
     list_number$fig=list_number$fig+1 
@@ -638,7 +637,7 @@ tryCatch({
   
   error = function(e){
     if (exists("doc")) {
-     writeDoc(doc, file = ls_args$filename)
+      print(doc, ls_args$filename)
      if (file.exists(ls_args$filename)) file.remove(ls_args$filename)
     }
     
