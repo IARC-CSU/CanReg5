@@ -145,10 +145,10 @@ canreg_error_log <- function(e,filename,out,Args,inc,pop) {
   cat("\n")
   #print incidence / population file (r format)
   cat("Incidence file\n")
-  dput(read.table(inc, header=TRUE))
+  dput(read.table(inc, header=TRUE, sep="\t"))
   cat("\n")
   cat("population file\n")
-  dput(read.table(pop, header=TRUE))
+  dput(read.table(pop, header=TRUE, sep="\t"))
   cat("\n")
   
   #close log_file and send to canreg
