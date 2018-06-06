@@ -18,16 +18,8 @@ tryCatch({
   #load dependency packages
   canreg_load_packages(c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","bmp", "jpeg"), Rcan_source=script.basename)
   
-  #merge incidence and population
-  dt_all <- csu_merge_inc_pop(
-    inc_file =ls_args$inc,
-    pop_file =ls_args$pop,
-    group_by = c("ICD10GROUP", "ICD10GROUPLABEL","ICD10GROUPCOLOR", "YEAR", "SEX"),
-    column_group_list =list(c("ICD10GROUP", "ICD10GROUPLABEL", "ICD10GROUPCOLOR"))
-  )
-
   #Prepare canreg data population pyramid
-  dt_all <- canreg_pop_data(dt_all)
+  dt_all <- canreg_pop_data(pop_file =ls_args$pop)
 
 	##Produce output
   canreg_output(output_type = ls_args$ft, filename = ls_args$out,landscape = ls_args$landscape,list_graph = FALSE,

@@ -73,7 +73,7 @@ tryCatch({
     dt_chapter <- dt_chapter[title != "Estimated annual percentage change"]
   }
   
-  list_number <- canreg_report_chapter_txt(dt_chapter, doc, report_path,dt_all,list_number)
+  list_number <- canreg_report_chapter_txt(dt_chapter, doc, report_path,dt_all,pop_file =ls_args$pop,list_number)
   
   
   doc <- body_add_break(doc)
@@ -619,7 +619,7 @@ tryCatch({
   list_number$tbl <- 1
   
   if (!is.null(dt_appendix)) {
-    list_number <- canreg_report_chapter_txt(dt_appendix, doc, report_path,dt_all,list_number, appendix=TRUE)
+    list_number <- canreg_report_chapter_txt(dt_appendix, doc, report_path,dt_all,pop_file =ls_args$pop,list_number, appendix=TRUE)
   }
   
   
