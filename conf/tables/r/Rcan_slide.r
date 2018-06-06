@@ -57,7 +57,7 @@ tryCatch({
   doc <- ph_with_text(doc, type = "title", str = "Population pyramid")
   
   dt_report <- dt_all
-  dt_report <- canreg_pop_data(dt_report)
+  dt_report <- canreg_pop_data(pop_file =ls_args$pop)
   
   canreg_output(output_type = "png", filename =  paste0(tempdir(), "\\temp_graph", nb_slide),landscape = TRUE,list_graph = FALSE,
                 FUN=canreg_population_pyramid,
