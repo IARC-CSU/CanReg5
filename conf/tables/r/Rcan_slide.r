@@ -57,7 +57,7 @@ tryCatch({
   doc <- ph_with_text(doc, type = "title", str = "Population pyramid")
   
   dt_report <- dt_all
-  dt_report <- canreg_pop_data(dt_report)
+  dt_report <- canreg_pop_data(pop_file =ls_args$pop)
   
   canreg_output(output_type = "png", filename =  paste0(tempdir(), "\\temp_graph", nb_slide),landscape = TRUE,list_graph = FALSE,
                 FUN=canreg_population_pyramid,
@@ -139,7 +139,7 @@ tryCatch({
   ################# 
   
   doc <-  add_slide(doc, layout="Canreg_basic_subtitle", master="Office Theme") ## add PPTX slide (Title + content)
-  doc <- ph_with_text(doc, type = "title", str = "Top 10 cancer, both sexes")
+  doc <- ph_with_text(doc, type = "title", str = "Top 10 cancers, both sexes")
   doc <- ph_with_text(doc, type = "body", str = "Number of cases")
   
   dt_report <- dt_all
@@ -178,7 +178,7 @@ tryCatch({
   
   ################# 
   doc <-  add_slide(doc, layout="Canreg_basic_subtitle", master="Office Theme") ## add PPTX slide (Title + content)
-  doc <- ph_with_text(doc, type = "title", str = "Top 10 cancer, both sexes")
+  doc <- ph_with_text(doc, type = "title", str = "Top 10 cancers, both sexes")
   doc <- ph_with_text(doc, type = "body", str = "Age-standardized incidence rate")
   
   canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph", nb_slide),landscape = TRUE,list_graph = FALSE,
@@ -193,7 +193,7 @@ tryCatch({
   #################
   
   doc <-  add_slide(doc, layout="Canreg_split", master="Office Theme") ## add PPTX slide (Title + content)
-  doc <- ph_with_text(doc, type = "title", str = "Top 10 cancer: Number of cases")
+  doc <- ph_with_text(doc, type = "title", str = "Top 10 cancers: Number of cases")
   
   dt_report <- dt_all
   dt_report <- dt_report[ICD10GROUP != "C44",]
@@ -235,7 +235,7 @@ tryCatch({
   
   ################# 
   doc <-  add_slide(doc, layout="Canreg_split", master="Office Theme") ## add PPTX slide (Title + content)
-  doc <- ph_with_text(doc, type = "title", str = "Top 10 cancer: ASR")
+  doc <- ph_with_text(doc, type = "title", str = "Top 10 cancers: ASR")
   
   
   var_top <- "asr"
@@ -254,7 +254,7 @@ tryCatch({
   nb_slide <- nb_slide +1
   ################# 
   doc <-  add_slide(doc, layout="Canreg_split", master="Office Theme") ## add PPTX slide (Title + content)
-  doc <- ph_with_text(doc, type = "title", str = "Top 10 cancer: Cumulative risk")
+  doc <- ph_with_text(doc, type = "title", str = "Top 10 cancers: Cumulative risk")
   
   var_top <- "cum_risk"
   digit <- 2

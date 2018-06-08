@@ -643,7 +643,7 @@ canreg_report_chapter_table <- function(file) {
 }
 
 
-canreg_report_chapter_txt <- function(dt_chapter, doc, folder, dt_all, list_number, appendix=FALSE) {
+canreg_report_chapter_txt <- function(dt_chapter, doc, folder, dt_all,pop_file, list_number, appendix=FALSE) {
   
   doc <- body_add_break(doc) # go to the next page
   
@@ -695,7 +695,7 @@ canreg_report_chapter_txt <- function(dt_chapter, doc, folder, dt_all, list_numb
     pop_data <- ((i==2) & !appendix)
       
     if (length(text) > 0) {  
-      list_number <- canreg_report_import_txt(doc,text,folder, dt_all, list_number,pop_data, appendix)
+      list_number <- canreg_report_import_txt(doc,text,folder, dt_all,pop_file, list_number,pop_data, appendix)
     }
   }
   
@@ -704,7 +704,7 @@ canreg_report_chapter_txt <- function(dt_chapter, doc, folder, dt_all, list_numb
 }
 
 
-canreg_report_import_txt <- function(doc,text,folder, dt_all, list_number, pop_data=FALSE, appendix=FALSE) {
+canreg_report_import_txt <- function(doc,text,folder, dt_all,pop_file, list_number, pop_data=FALSE, appendix=FALSE) {
   
   
   if (length(text) > 1){
@@ -761,13 +761,13 @@ canreg_report_import_txt <- function(doc,text,folder, dt_all, list_number, pop_d
   }
   
   
-  list_number <- canreg_report_add_text(doc,text,mark_table,dt_all, folder, list_number, appendix )
+  list_number <- canreg_report_add_text(doc,text,mark_table,dt_all,pop_file, folder, list_number, appendix )
   
   return(list_number)
   
 }
 
-canreg_report_add_text <- function(doc, text, mark_table,dt_all, folder, list_number, appendix=FALSE) {
+canreg_report_add_text <- function(doc, text, mark_table,dt_all,pop_file, folder, list_number, appendix=FALSE) {
   
   if (nrow(mark_table)==0) { #no markup
     
@@ -809,7 +809,7 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all, folder, list_nu
       } else if (type == "POP"){
         
         dt_report <- dt_all
-        dt_report <- canreg_pop_data(dt_report)
+        dt_report <- canreg_pop_data(pop_file)
         doc <- body_add_par(doc, "\r\n")
         
         total_pop <- formatC(round(unique(dt_report$Total)), format="d", big.mark=",") 
@@ -1153,7 +1153,6 @@ csu_merge_inc_pop <- function(inc_file,
 }
 
 
-
 canreg_attr_missing_sex <- function(dt, var_age, var_group2) {
   
   
@@ -1299,9 +1298,12 @@ canreg_year_cases_data <- function(dt, var_year="YEAR", skin=FALSE, missing_age 
   return(dt)
 }
 
-canreg_pop_data <- function(dt) {
+canreg_pop_data <- function(pop_file) {
   
-  dt_pop <- dt[, .(AGE_GROUP, YEAR, SEX, COUNT, AGE_GROUP_LABEL)]
+  df_pop <- read.table(pop_file, header=TRUE, sep="\t")
+  dt_pop <- as.data.table(df_pop)
+  dt_pop <- dt_pop[COUNT != 0,]
+  dt_pop <- dt_pop[, .(AGE_GROUP, YEAR, SEX, COUNT, AGE_GROUP_LABEL)]
   dt_pop <- unique(dt_pop)
   dt_pop <- dt_pop[!is.na(AGE_GROUP_LABEL),]
   dt_pop <- dt_pop[,.(COUNT=mean(COUNT)), by=.(AGE_GROUP,SEX,AGE_GROUP_LABEL)]
