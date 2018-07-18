@@ -1,6 +1,5 @@
 
-The Kampala Cancer Registry covers the population of Kyadondo County, which includes the city of Kampala (the capital of Uganda) and a peri-urban area extending approximately 30 km to the north.
-The majority of residents are members of the Ganda ethnic group.
+The Kampala Cancer Registry covers the population of Kyadondo County, which includes the city of Kampala (the capital of Uganda) and a peri-urban area extending approximately 30 km to the north. The majority of residents are members of the Ganda ethnic group.
 
 <POPULATION DATA>
 img:[Geographical area example]map_example.png

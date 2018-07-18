@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2017 International Agency for Research on Cancer
+ * Copyright (C) 2008-2018 International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,6 +38,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import java.net.*;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -49,6 +51,7 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.mozilla.universalchardet.UniversalDetector;
+import static java.nio.file.StandardCopyOption.*;
 
 /**
  *
@@ -467,7 +470,7 @@ public class Tools {
             dictionaries[i].setCodeLength(Integer.parseInt(e.getElementsByTagName(namespace + "code_length").item(0).getTextContent()));
             dictionaries[i].setCategoryDescriptionLength(Integer.parseInt(e.getElementsByTagName(namespace + "category_description_length").item(0).getTextContent()));
             dictionaries[i].setFullDictionaryCodeLength(Integer.parseInt(e.getElementsByTagName(namespace + "full_dictionary_code_length").item(0).getTextContent()));
-            dictionaries[i].setFullDictionaryCategoryDescriptionLength(Integer.parseInt(e.getElementsByTagName(namespace + "full_dictionary_description_length").item(0).getTextContent()));
+            dictionaries[i].setFullDictionaryDescriptionLength(Integer.parseInt(e.getElementsByTagName(namespace + "full_dictionary_description_length").item(0).getTextContent()));
             // lock part
             NodeList elem = e.getElementsByTagName(namespace + "locked");
             if (elem != null && elem.getLength() > 0) {
@@ -475,7 +478,13 @@ public class Tools {
             } else {
                 dictionaries[i].setLocked(false);
             }
-
+            // allow different length
+            elem = e.getElementsByTagName(namespace + "allow_different_length");
+            if (elem != null && elem.getLength() > 0) {
+                dictionaries[i].setAllowCodesOfDifferentLength("true".equalsIgnoreCase(elem.item(0).getTextContent()));
+            } else {
+                dictionaries[i].setAllowCodesOfDifferentLength(false);
+            }
 
             // TODO -- capture more info...
         }
@@ -658,18 +667,7 @@ public class Tools {
      * @throws java.io.IOException
      */
     public static void fileCopy(String from, String to) throws IOException {
-        File inputFile = new File(from);
-        File outputFile = new File(to);
-
-        FileWriter out;
-        try (FileReader in = new FileReader(inputFile)) {
-            out = new FileWriter(outputFile);
-            int c;
-            while ((c = in.read()) != -1) {
-                out.write(c);
-            }
-        }
-        out.close();
+        Files.copy(Paths.get(from), Paths.get(to), REPLACE_EXISTING);
     }
 
     public static String increment(String ID) {

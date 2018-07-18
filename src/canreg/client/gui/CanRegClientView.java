@@ -47,6 +47,7 @@ import canreg.common.Globals;
 import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.common.database.DatabaseRecord;
 import canreg.common.database.Patient;
+import canreg.common.database.PopulationDataset;
 import canreg.common.database.Tumour;
 import canreg.server.database.RecordLockedException;
 import canreg.server.database.UnknownTableException;
@@ -54,11 +55,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -66,10 +69,12 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JDesktopPane;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.FrameView;
 import org.jdesktop.application.ResourceMap;
@@ -261,6 +266,9 @@ public final class CanRegClientView extends FrameView {
         jSeparator4 = new javax.swing.JPopupMenu.Separator();
         databaseStructureMenu = new javax.swing.JMenu();
         setUpDatabaseMenuItem = new javax.swing.JMenuItem();
+        populationsMenu = new javax.swing.JMenu();
+        writePopulationsMenuItem = new javax.swing.JMenuItem();
+        loadPopulationsMenuItem = new javax.swing.JMenuItem();
         installRPackagesMenuItem = new javax.swing.JMenuItem();
         garbleDatabaseMenuItem = new javax.swing.JMenuItem();
         javax.swing.JMenu helpMenu = new javax.swing.JMenu();
@@ -567,6 +575,23 @@ public final class CanRegClientView extends FrameView {
         databaseStructureMenu.add(setUpDatabaseMenuItem);
 
         toolsMenu.add(databaseStructureMenu);
+
+        populationsMenu.setText(resourceMap.getString("populationsMenu.text")); // NOI18N
+        populationsMenu.setActionCommand(resourceMap.getString("populationsMenu.actionCommand")); // NOI18N
+        populationsMenu.setName("populationsMenu"); // NOI18N
+
+        writePopulationsMenuItem.setAction(actionMap.get("writeAllPDSAction")); // NOI18N
+        writePopulationsMenuItem.setText(resourceMap.getString("writeAllPopulationsMenuItem.text")); // NOI18N
+        writePopulationsMenuItem.setName("writeAllPopulationsMenuItem"); // NOI18N
+        populationsMenu.add(writePopulationsMenuItem);
+
+        loadPopulationsMenuItem.setAction(actionMap.get("loadAllPDSAction")); // NOI18N
+        loadPopulationsMenuItem.setText(resourceMap.getString("loadAllPopulationsMenuItem.text")); // NOI18N
+        loadPopulationsMenuItem.setName("loadAllPopulationsMenuItem"); // NOI18N
+        populationsMenu.add(loadPopulationsMenuItem);
+
+        toolsMenu.add(populationsMenu);
+        populationsMenu.getAccessibleContext().setAccessibleName(resourceMap.getString("populationsMenu.AccessibleContext.accessibleName")); // NOI18N
 
         installRPackagesMenuItem.setAction(actionMap.get("installRpackagesAction")); // NOI18N
         installRPackagesMenuItem.setName("installRPackagesMenuItem"); // NOI18N
@@ -974,9 +999,9 @@ public final class CanRegClientView extends FrameView {
 
         backupMenuItem.setEnabled(loggedIn);
         restoreMenuItem.setEnabled(management);
-        
+
         usersMenuItem.setEnabled(loggedIn);
-        
+
         advancedMenu.setEnabled(management);
         qualityControlMenu.setEnabled(management);
 
@@ -985,9 +1010,11 @@ public final class CanRegClientView extends FrameView {
 
         importDataMenuItem.setEnabled(management);
         importFromCR4MenuItem.setEnabled(management);
-        
-        migratePopulationSetMenuItem.setEnabled(analysis);
 
+        populationsMenu.setEnabled(management);
+
+        migratePopulationSetMenuItem.setEnabled(analysis);
+        
         // If we are accessing a remote CanReg system not all things are available to us...
         if (!CanRegClientApp.getApplication().isCanRegServerRunningOnThisMachine()) {
             toolsMenu.setEnabled(!loggedIn);
@@ -1003,7 +1030,7 @@ public final class CanRegClientView extends FrameView {
         canreg4migrationMenuItem.setVisible(Globals.DEBUG);
 
         latestNewsMenuItem.setVisible(false);
-        
+
         installRPackagesMenuItem.setVisible(new File(Globals.R_INSTALL_PACKAGES_SCRIPT).exists());
     }
 
@@ -1111,7 +1138,7 @@ public final class CanRegClientView extends FrameView {
         maximizeHeight(desktopPane, importInternalFrame);
     }
 
-        /**
+    /**
      *
      */
     @Action
@@ -1120,7 +1147,7 @@ public final class CanRegClientView extends FrameView {
         showAndPositionInternalFrame(desktopPane, importInternalFrame);
         maximizeHeight(desktopPane, importInternalFrame);
     }
-    
+
     /**
      *
      */
@@ -1262,10 +1289,11 @@ public final class CanRegClientView extends FrameView {
     public void showLastRecord() {
         canreg.client.gui.dataentry2.RecordEditor internalFrame = null;
         String dataEntryVersion = localSettings.getProperty(LocalSettings.DATA_ENTRY_VERSION_KEY);
-        if (dataEntryVersion.equalsIgnoreCase(LocalSettings.DATA_ENTRY_VERSION_NEW))
+        if (dataEntryVersion.equalsIgnoreCase(LocalSettings.DATA_ENTRY_VERSION_NEW)) {
             internalFrame = new canreg.client.gui.dataentry2.RecordEditorMainFrame(desktopPane);
-        else 
+        } else {
             internalFrame = new RecordEditor(desktopPane);
+        }
 
         internalFrame.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
         internalFrame.setDictionary(CanRegClientApp.getApplication().getDictionary());
@@ -1293,9 +1321,9 @@ public final class CanRegClientView extends FrameView {
         } catch (RecordLockedException ex) {
             Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        showAndPositionInternalFrame(desktopPane, (JInternalFrame)internalFrame);
-        maximizeHeight(desktopPane, (JInternalFrame)internalFrame);
+
+        showAndPositionInternalFrame(desktopPane, (JInternalFrame) internalFrame);
+        maximizeHeight(desktopPane, (JInternalFrame) internalFrame);
     }
 
     /**
@@ -1314,17 +1342,18 @@ public final class CanRegClientView extends FrameView {
     public void createNewRecordSetAction() {
         canreg.client.gui.dataentry2.RecordEditor internalFrame = null;
         String dataEntryVersion = localSettings.getProperty(LocalSettings.DATA_ENTRY_VERSION_KEY);
-        if (dataEntryVersion.equalsIgnoreCase(LocalSettings.DATA_ENTRY_VERSION_NEW))
+        if (dataEntryVersion.equalsIgnoreCase(LocalSettings.DATA_ENTRY_VERSION_NEW)) {
             internalFrame = new canreg.client.gui.dataentry2.RecordEditorMainFrame(desktopPane);
-        else 
+        } else {
             internalFrame = new RecordEditor(desktopPane);
-        
+        }
+
         internalFrame.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
         internalFrame.setDictionary(CanRegClientApp.getApplication().getDictionary());
         internalFrame.addRecord(new Patient());
         internalFrame.addRecord(new Tumour());
-        showAndPositionInternalFrame(desktopPane, (JInternalFrame)internalFrame);
-        maximizeHeight(desktopPane, (JInternalFrame)internalFrame);
+        showAndPositionInternalFrame(desktopPane, (JInternalFrame) internalFrame);
+        maximizeHeight(desktopPane, (JInternalFrame) internalFrame);
     }
 
     /**
@@ -1633,13 +1662,13 @@ public final class CanRegClientView extends FrameView {
             } else {
                 File scriptFile = new File(Globals.R_INSTALL_PACKAGES_SCRIPT);
                 if (scriptFile.exists()) {
-                    
+
                     ArrayList<String> commandList = new ArrayList();
                     commandList.add(rpath);
                     commandList.add("--vanilla");
                     commandList.add("--slave");
                     commandList.add("--file=" + scriptFile.getAbsolutePath());
-                    
+
                     System.out.println("Command: " + commandList);
                     System.out.flush();
 
@@ -1698,7 +1727,72 @@ public final class CanRegClientView extends FrameView {
     @Action
     public void canreg4Migration() {
         JInternalFrame internalFrame = new CanReg4MigrationInternalFrame(desktopPane);
-        showAndPositionInternalFrame(desktopPane, internalFrame);        
+        showAndPositionInternalFrame(desktopPane, internalFrame);
+    }
+
+    @Action
+    public void writeAllPDSAction() {
+
+        JFileChooser chooser = new JFileChooser(".");
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        chooser.setAcceptAllFileFilterUsed(false);
+
+        int returnVal = chooser.showOpenDialog(desktopPane);
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            try {
+                //set the file name
+                String path = chooser.getSelectedFile().getCanonicalPath();
+                // changeFile();
+                try {
+                    Map<Integer, PopulationDataset> populationDatasetsMap = CanRegClientApp.getApplication().getPopulationDatasets();
+                    for (PopulationDataset pds : populationDatasetsMap.values()) {
+                        canreg.common.database.Tools.writePopulationDatasetToJSON(pds, path + "/" + pds.getPopulationDatasetID() + "-" + pds.getPopulationDatasetName() + ".json");
+                    }
+                    JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("Population_datasets_written_to_file") + ": " + populationDatasetsMap.values().size() + "." , java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("MESSAGE"), JOptionPane.INFORMATION_MESSAGE);
+                } catch (SecurityException | RemoteException ex) {
+                    Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(InstallNewSystemInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    @Action
+    public void loadAllPDSAction() {
+        // ;
+        JFileChooser chooser = new JFileChooser(".");
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        chooser.setAcceptAllFileFilterUsed(false);
+        
+        int returnVal = chooser.showOpenDialog(desktopPane);
+        
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            try {
+                File folder = new File(chooser.getSelectedFile().getCanonicalPath());
+                File[] listOfFiles = folder.listFiles(new FilenameFilter() {
+                    @Override
+                    public boolean accept(File folder, String name) {
+                        return name.toLowerCase().endsWith(".json");
+                    }
+                });
+                int saved = 0;
+                for (File file : listOfFiles) {
+                    PopulationDataset pds = canreg.common.database.Tools.loadPopulationDatasetFromJSON(file.getCanonicalPath());
+                    try {
+                        CanRegClientApp.getApplication().deletePopulationDataset(pds.getPopulationDatasetID());
+                        CanRegClientApp.getApplication().saveNewPopulationDataset(pds);
+                        saved++;
+                    } catch (SQLException | SecurityException | RemoteException ex) {
+                        Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("Population_datasets_loaded_from_file") + ": " + saved + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("MESSAGE"), JOptionPane.INFORMATION_MESSAGE);
+            } catch (IOException ex) {
+                Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1753,6 +1847,7 @@ public final class CanRegClientView extends FrameView {
     private javax.swing.JSeparator jSeparator8;
     private javax.swing.JMenuItem latestNewsMenuItem;
     private javax.swing.JMenu linksMenu;
+    private javax.swing.JMenuItem loadPopulationsMenuItem;
     private javax.swing.JMenuItem logInMenuItem;
     private javax.swing.JMenuItem logOutMenuItem;
     private javax.swing.JPanel mainPanel;
@@ -1763,6 +1858,7 @@ public final class CanRegClientView extends FrameView {
     private javax.swing.JMenuItem nameSexMenuItem;
     private javax.swing.JButton optionsButton;
     private javax.swing.JMenuItem optionsMenuItem;
+    private javax.swing.JMenu populationsMenu;
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JMenu qualityControlMenu;
     private javax.swing.JMenuItem restoreMenuItem;
@@ -1776,6 +1872,7 @@ public final class CanRegClientView extends FrameView {
     private javax.swing.JLabel userLevelLabel;
     private javax.swing.JMenuItem usersMenuItem;
     private javax.swing.JMenuItem viewWorkFilesMenuItem;
+    private javax.swing.JMenuItem writePopulationsMenuItem;
     // End of variables declaration//GEN-END:variables
     // private javax.swing.JInternalFrame internalFrame;
     // private javax.swing.JInternalFrame welcomeInternalFrame;
