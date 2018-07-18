@@ -215,6 +215,8 @@ canreg_args <- function(Args) {
 canreg_load_packages <- function(packages_list, Rcan_source=NULL) { 
   
   
+
+  
   if (getRversion() == '3.2.0') {
    
     stop("The table builder do not work with R '3.2.0', please install any version after '3.2.1'.\n '3.2.1' would do as well as '3.3.0' for instance.\n You can edit the Path in the 'Option' in CanReg.") 
@@ -278,7 +280,9 @@ canreg_load_packages <- function(packages_list, Rcan_source=NULL) {
     }
   }
   
-  if (!"officer" %in% missing_packages) {
+
+  
+  if ((!"officer" %in% missing_packages) & ("officer" %in% packages_list)) {
     if (packageVersion("officer") < "0.2.2") {
       missing_packages <- c(missing_packages,"officer" )
     }
