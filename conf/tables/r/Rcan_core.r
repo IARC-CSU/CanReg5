@@ -349,8 +349,8 @@ canreg_load_packages <- function(packages_list, Rcan_source=NULL) {
   
   #install Rcan package
   
-  Rcan_file <- list.files(path=Rcan_source, pattern= "Rcan_\\d\\.\\d\\.\\d\\.tar\\.gz")
-  Rcan_version <- regmatches(Rcan_file,regexpr(pattern= "\\d\\.\\d\\.\\d", Rcan_file))
+  Rcan_file <- list.files(path=Rcan_source, pattern= "Rcan_\\d\\.\\d\\.\\d+\\.tar\\.gz")
+  Rcan_version <- regmatches(Rcan_file,regexpr(pattern= "\\d\\.\\d\\.\\d+", Rcan_file))
 
   
   if ("Rcan" %in% list_installed_packages) {
