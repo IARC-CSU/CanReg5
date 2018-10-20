@@ -282,7 +282,7 @@ canreg_load_packages <- function(packages_list, Rcan_source=NULL) {
   
 
   
-  if ((!"officer" %in% missing_packages) & ("officer" %in% packages_list)) {
+  if (!"officer" %in% missing_packages) {
     if (packageVersion("officer") < "0.2.2") {
       missing_packages <- c(missing_packages,"officer" )
     }
