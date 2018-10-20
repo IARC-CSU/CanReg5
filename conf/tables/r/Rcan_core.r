@@ -355,10 +355,10 @@ canreg_load_packages <- function(packages_list, Rcan_source=NULL) {
   
   if ("Rcan" %in% list_installed_packages) {
     if (packageVersion("Rcan") < Rcan_version) {
-      install.packages(paste0(Rcan_source, "/",Rcan_file), repos=NULL)
+      install.packages(paste0(Rcan_source, "/",Rcan_file), repos=NULL, type = "source")
     }
   } else {
-      install.packages(paste0(Rcan_source, "/",Rcan_file), repos=NULL)
+      install.packages(paste0(Rcan_source, "/",Rcan_file), repos=NULL, type = "source")
   }
       
 
