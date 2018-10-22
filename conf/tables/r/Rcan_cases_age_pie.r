@@ -40,7 +40,7 @@ tryCatch({
   canreg_output(output_type = ls_args$ft, filename = ls_args$out,landscape = ls_args$landscape,list_graph = FALSE,
                 FUN=canreg_age_cases_pie_multi_plot,
                 dt=dt_all,
-                canreg_header = ls_args$header)
+                canreg_header = header)
 
 	 #talk to canreg
   canreg_output_cat(ls_args$ft, ls_args$filename, list_graph=FALSE)
