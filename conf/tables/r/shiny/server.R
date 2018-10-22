@@ -1,0 +1,386 @@
+
+
+
+shinyServer(function(input, output, session) {
+
+  #app close when the session is stopped  
+  session$onSessionEnded(function() {
+    cat(paste("-outFile",ls_args$filename,sep=":"))
+    stopApp()
+  })
+  
+
+  source("source/shiny_core.r")
+
+  file_data <- "data/"
+  file_pptx <-paste(sep="/","slide_template", "canreg_template.pptx")
+  file_utf8 <- ""
+  
+  #Change for shinyappio: 
+  #file_utf8 <- "_UTF8"
+  
+  
+  #Parametre and fixed variable
+  
+  #dataset
+
+  
+  
+  graph_width <- 8
+  graph_width_vertical <- 4
+	graph_width_split <- 4
+  
+  
+  #reactive values init
+  values <- reactiveValues(doc = NULL, nb_slide = 0, text= "Slide included")
+  bool_rv <- reactiveValues(trigger1=FALSE)
+  registry_info <- reactiveValues(data=NULL, label ="")
+  progress_bar <- reactiveValues(object=NULL)
+  cancer_group <- reactiveValues(select = "ci5")
+  table <- reactiveValues(label="")
+
+  
+  output$UI_nbSlide <- renderUI({
+    
+    
+    if (values$nb_slide == 0) {
+      
+      
+      
+      values$text <- "Slide included:"
+    } else {
+      
+      values$text <- paste0(isolate(values$text), '<br>',paste0(isolate(registry_info$label), " ", isolate(table$label)))
+      
+      if (isolate(input$select_table == 30)) {
+        values$text <- paste(isolate(values$text), isolate(input$selectCancerSite))
+      }
+      
+     
+      
+    }
+    
+    tags$div(id="divSlidelist", class="mat_text", checked=NA,
+             tags$p(HTML(isolate(values$text)))
+    )
+    
+  })
+  
+  output$UI_control1 <- renderUI({
+    
+    if  (input$select_table %in% c(2,3)) {
+      
+	   radioButtons("radioSkin", "",
+                   c("excluding C44 skin" = 1,
+                     "including C44 skin" = 2)
+      )
+    
+    }  
+    
+    else if  (input$select_table %in% c(4,5)) {
+      
+      radioButtons("radioValue", "Value:",
+                   c("Age-standardized rate" = "asr",
+                     "Number of cases" = "cases",
+                     "Cumulative risk" = "cum")
+      )
+      
+    }
+    
+    else if (input$select_table %in% c(30)) {
+      
+      radioButtons("radioLog", "y axes scale:",
+                   c("Logarithmic" = "log",
+                     "Normal" = "normal")
+      )
+      
+    }
+  })
+  
+  output$UI_control2 <- renderUI({
+    if (input$select_table==2) {
+      
+        radioButtons("radioAgeGroup", "Age-group division:",
+                   c("0-4,5-9,...,80-84,85+" = 1,
+                     "0-14, 15-29,30-49,50-69,70+" = 2)
+      )
+      
+    }  
+    
+  })
+  
+  output$UI_control3 <- renderUI({
+    
+    
+    if  (input$select_table %in% c(4,5)) {
+      
+      sliderInput("slideNbTopBar", "Number of cancer sites:", 3, 20, 10)
+      
+      
+    } 
+    else if (input$select_table==30) {
+      
+      sliderInput("slideNbTopAgeSpe", "Number of cancer sites:", 1, 10, 5)
+      
+      
+    } 
+    
+  })
+  
+  output$UI_control4 <- renderUI({
+    
+    if (input$select_table %in% c(4,5)) {
+      sliderInput("slideAgeRange", "Age group:", 0, 90, c(0,90), step=5)
+    }
+  })
+
+
+    
+  
+  observeEvent(input$select_table,{
+    
+    
+    if (input$select_table==1) {
+      table$label <- "Population pyramid"
+      hide(id="controls_COL1", anim=TRUE)
+      hide(id="controls_COL2", anim=TRUE)
+    }
+	else if (input$select_table== 2) {
+      table$label <- "Barchart by age and sex"
+      show(id="controls_COL1", anim=TRUE)
+      hide(id="controls_COL2", anim=TRUE)
+    }
+	else if (input$select_table== 3) {
+      table$label <- "Piechart by age and sex"
+      show(id="controls_COL1", anim=TRUE)
+      hide(id="controls_COL2", anim=TRUE)
+    }
+    else if (input$select_table== 4) {
+      table$label <- "Barchart Top cancer both sexes"
+      show(id="controls_COL1", anim=TRUE)
+      show(id="controls_COL2", anim=TRUE)
+    }
+    else if (input$select_table== 5) {
+      table$label <- "Barchart Top cancer by sexes"
+      show(id="controls_COL1", anim=TRUE)
+      show(id="controls_COL2", anim=TRUE)
+    }
+  })
+  
+  observeEvent(values$nb_slide,{
+    
+    
+    
+    if (values$nb_slide==0) {
+      hide(id="downloadPres", anim=TRUE)
+      hide(id="pptx_filename", anim=TRUE)
+      hide(id="UI_nbSlide", anim=TRUE)
+    } else {
+      show(id="downloadPres", anim=TRUE)
+      show(id="pptx_filename", anim=TRUE)
+      show(id="UI_nbSlide", anim=TRUE)
+    } 
+    
+  })
+
+  observeEvent(input$radioValue , {
+    
+    
+    if (input$radioValue == "cum") {
+      vals <- 75
+    } else {
+      vals <- 90
+    }
+    
+    # If the slide range value are not update, the trigger1 is turn on, so the graph will be update
+    bool_rv$trigger1 = input$slideAgeRange[2] == vals
+    updateSliderInput(session, "slideAgeRange", "Age group:", value=c(0,90), min=0, max=vals,step=5)
+    
+  })
+  
+
+  
+  #Calcul statistics
+  dt_all <-  reactive({ 
+    
+    if (!is.null(dt_base)) {
+	    
+      isolate(progress_bar$object)$set(value = 0, message = 'Please wait:', detail = 'Calculate statistics')
+      
+
+	
+	  dt_temp <- shiny_data(input)
+		
+	  
+	  if (input$select_table %in% c(4,5)) {
+			if (length(bool_rv$trigger1) != 0) {
+				if (bool_rv$trigger1) {
+					bool_rv$trigger1 <- FALSE
+					}
+				}
+			}
+				
+
+		
+      
+      
+      return(dt_temp)
+      
+	}
+    else {
+      return(NULL)
+    }
+  })
+  
+
+  #Render plot
+  output$plot <- renderPlot({ 
+    
+    progress_bar$object <- Progress$new(session, min=0, max=100)
+    on.exit(progress_bar$object$close())
+
+    if (!is.null(dt_all()))  {
+      
+      isolate(progress_bar$object)$set(value = 30,  message = 'Please wait:', detail = 'Render graph')
+      
+	  shiny_plot(dt_all(), input, FALSE)
+	  
+    }
+    
+  })
+  
+  #Download file
+  output$downloadFile <- downloadHandler(
+    
+    filename = function() {
+      
+      #multiple file
+      if (input$select_table %in% c(5) & 
+          input$select_format %in% c("png", "tiff", "svg")
+          ) 
+        {
+	    paste0(input$text_filename, ".", "zip")
+      } 
+      else {
+        paste0(input$text_filename, ".", input$select_format)
+      }
+      
+    },
+    
+    content = function(file) {
+      
+      file_temp <- substr(file,1, nchar(file)-nchar(input$select_format)-1)
+			shiny_plot(dt_all(),  input, TRUE,FALSE,file_temp)
+			
+			if (input$select_table %in% c(5) & input$select_format %in% c("png", "tiff", "svg")) {
+          
+          file_male <- paste0(file_temp, "001", ".", input$select_format)
+          file_female <- paste0(file_temp, "002", ".", input$select_format)
+          
+          tempfile1 <- paste0(input$text_filename, "-male.", input$select_format)
+          tempfile2 <- paste0(input$text_filename, "-female.", input$select_format)
+          
+          file.copy(file_male, tempfile1, overwrite = TRUE)
+          file.copy(file_female,tempfile2, overwrite = TRUE)
+          
+          zip(file, c(tempfile1, tempfile2))
+          
+          file.remove(c(tempfile1,tempfile2))
+
+       }
+      
+    })
+  
+  #Action button: Add slide
+  observeEvent(
+    input$actionSlide,
+    { 
+
+      if (values$nb_slide == 0) {
+        
+		withProgress(message = 'create powerpoint', value = 0, {
+        values$doc <- read_pptx(file_pptx)
+        })
+      }
+      
+	  withProgress(message = 'add powerpoint slide', value = 0, {
+      filename <- paste0(tempdir(), "\\temp_graph",values$nb_slide+1)  
+      
+	  shiny_plot(dt_all(),  input, TRUE,TRUE,filename)
+	  
+			if (input$select_table == 1) {
+                
+				values$doc <-  add_slide(values$doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
+				values$doc <- ph_with_text(values$doc, type = "title", str = "Population pyramid")
+				dims <- attr( png::readPNG (paste0(filename, ".png")), "dim" )
+				values$doc <- ph_with_img(values$doc, paste0(filename, ".png"),width=graph_width,height=graph_width*dims[1]/dims[2])
+        
+      } 
+			else if (input$select_table==2) {
+        
+				values$doc <-  add_slide(values$doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
+				values$doc <- ph_with_text(values$doc, type = "title", str = "Number of cases by age group & sex")
+				dims <- attr( png::readPNG (paste0(filename, ".png")), "dim" )
+				values$doc <- ph_with_img(values$doc, paste0(filename, ".png"),width=graph_width,height=graph_width*dims[1]/dims[2])
+        
+        
+      }
+	   else if (input$select_table==3) {
+        
+     
+        values$doc <-  add_slide(values$doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
+				values$doc <- ph_with_text(values$doc, type = "title", str = "Proportion of cases by age group & sex")
+        dims <- attr( png::readPNG (paste0(filename, ".png")), "dim" )
+        values$doc <- ph_with_img(values$doc, paste0(filename, ".png"),width=graph_width,height=graph_width*dims[1]/dims[2])
+        
+        
+      }
+      else if (input$select_table==4) {
+        
+     
+				str_temp <- paste0("top ", isolate(input$slideNbTopBar), " cancers, both sexes")
+				
+        values$doc <-  add_slide(values$doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
+				values$doc <- ph_with_text(values$doc, type = "title", str = str_temp)
+        dims <- attr( png::readPNG (paste0(filename, ".png")), "dim" )
+        values$doc <- ph_with_img(values$doc, paste0(filename, ".png"),width=graph_width,height=graph_width*dims[1]/dims[2])
+        
+        
+      }
+			 else if (input$select_table==5) {
+        
+     
+				str_temp <- paste0("top ", isolate(input$slideNbTopBar), " cancers")
+				
+        values$doc <-  add_slide(values$doc, layout="Canreg_split", master="Office Theme") ## add PPTX slide (Title + content)
+				values$doc <- ph_with_text(values$doc, type = "title", str = str_temp)
+
+				dims <- attr( png::readPNG (paste0(filename, "001.png")), "dim" )
+				values$doc <- ph_with_img(values$doc, paste0(filename, "001.png"), index=1,width=graph_width_split,height=graph_width_split*dims[1]/dims[2])
+        values$doc <- ph_with_img(values$doc, paste0(filename, "002.png"), index=2,width=graph_width_split,height=graph_width_split*dims[1]/dims[2])
+        
+      }
+     
+      
+      values$nb_slide <- values$nb_slide + 1
+    
+      })
+    }
+  )
+  
+  #Download presentation
+  output$downloadPres <- downloadHandler(
+    filename = function() {
+      paste0(input$pptx_filename, ".", "pptx")
+      
+    },
+    content = function(file) {
+      invalidateLater(100)
+      values$nb_slide <- 0
+      print(isolate(values$doc), file) 
+     
+    }
+    
+  )
+  
+})
