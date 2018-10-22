@@ -1,0 +1,97 @@
+
+
+
+.mat_text {
+  margin-left: 15px;
+
+}
+
+.mat_btn {
+  width: 215px;
+  display:block;
+  color: #444 !important;
+  margin-left: 50px!important;
+  margin-bottom: 10px;
+  border-radius: 15px;
+  
+
+}
+
+.subHeader {
+    font-size: 20px;
+    background-color: #12a562;
+	text-align: center;
+	margin: 0px 0px 0px 0px;
+
+}
+
+.regtitle {
+    text-align: center;
+    font-size: 25px;
+    color: white;
+		height: 50px;
+}
+
+div.content-wrapper {
+	background-color: #f5f5f5 !important;
+}
+
+span.logo {
+	background-color: #0b80b7 !important;
+}
+
+nav.navbar.navbar-static-top {
+	
+	background-color: #0b80b7 !important;
+}
+
+div.row {
+	
+    margin-left: 0px;
+	
+}
+
+.box {
+	
+	margin-top: 10px;
+    border: 1px solid #212121;
+}
+
+aside.main-sidebar.shiny-bound-input {
+	 background-color: #1e4273;
+}
+
+
+div.checkbox label {
+	font-size: 14px!important;
+   
+}
+
+div.form-group.shiny-input-container label {
+	font-size: 18px;
+	font-weight: 100;
+}
+
+
+
+section.sidebar .shiny-input-container {
+    padding: 1px 0px 0px 15px;
+    white-space: normal;
+}
+
+
+
+.checkbox {
+	margin-top: 0px ;
+    margin-bottom: 0px;
+}
+
+.radio {
+	margin-top: 5px ;
+    margin-bottom: 5px;
+}
+
+
+.form-group {
+    margin-bottom: 10px;
+}

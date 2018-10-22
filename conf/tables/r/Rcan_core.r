@@ -1839,7 +1839,7 @@ for (i in  1:length(temp$plotlist)) {
 canreg_bar_top_single <- function(dt, var_top, var_bar = "cancer_label" ,group_by = "SEX",
                                   nb_top = 10, landscape = FALSE,list_graph=TRUE,
                                   canreg_header = "", xtitle = "",digit  =  1,
-                                  return_data  =  FALSE) {
+                                  return_data  =  FALSE, return_plot=FALSE) {
   
   dt <- Rcan:::core.csu_dt_rank(dt, var_value = var_top, var_rank = var_bar,group_by = group_by, number = nb_top) 
   
@@ -1854,11 +1854,12 @@ canreg_bar_top_single <- function(dt, var_top, var_bar = "cancer_label" ,group_b
   
   dt$cancer_label <-Rcan:::core.csu_legend_wrapper(dt$cancer_label, 15)
   
-  plotlist <- list()
+
   j <- 1 
   
-  for (i in levels(dt[[group_by]])) {
-    
+	#Use lapply to avoid loop (problem with ggplot lazy evaluation)
+  plotlist <- lapply(levels(dt[[group_by]]), function (i) {
+	
     if (j == 1) {
       plot_title <- canreg_header
       plot_caption <- ""
@@ -1876,18 +1877,27 @@ canreg_bar_top_single <- function(dt, var_top, var_bar = "cancer_label" ,group_b
     
 
     
-    plotlist[[j]] <-
+     return(
       csu_bar_plot(
         dt_plot,var_top=var_top,var_bar=var_bar,
         plot_title=plot_title,plot_caption=plot_caption,plot_subtitle = plot_subtitle,
         color_bar=color_cancer,
         landscape=landscape,digit=digit,
         xtitle=xtitle)
+				)
+				
+			  j <- j+1
+		})
     
-    print(plotlist[[j]])
-    j <- j+1
-    
-  }
+		if (!return_plot) {
+			print(plotlist[[1]])
+			print(plotlist[[2]])
+		}
+		else {
+			return(list(plotlist = plotlist))
+		}
+  
+
 }
 
 
