@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2015  International Agency for Research on Cancer
+ * Copyright (C) 2008-2018  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -66,6 +66,7 @@ public class DatabaseDictionaryEditorPanel extends javax.swing.JPanel {
         String font = databaseDictionaryListElement.getFont();
         typeComboBox.setSelectedItem(new TranslatableListElement(font, font));
         lockedCheckBox.setSelected(databaseDictionaryListElement.isLocked());
+        differentCodeLengthsCheckBox.setSelected(databaseDictionaryListElement.isAllowCodesOfDifferentLength());
     }
 
     /** This method is called from within the constructor to
@@ -88,6 +89,7 @@ public class DatabaseDictionaryEditorPanel extends javax.swing.JPanel {
         fullCodeLengthLabel = new javax.swing.JLabel();
         codeLengthLabel = new javax.swing.JLabel();
         lockedCheckBox = new javax.swing.JCheckBox();
+        differentCodeLengthsCheckBox = new javax.swing.JCheckBox();
 
         setName("Form"); // NOI18N
 
@@ -147,6 +149,9 @@ public class DatabaseDictionaryEditorPanel extends javax.swing.JPanel {
         lockedCheckBox.setText(resourceMap.getString("lockedCheckBox.text")); // NOI18N
         lockedCheckBox.setName("lockedCheckBox"); // NOI18N
 
+        differentCodeLengthsCheckBox.setText(resourceMap.getString("differentCodeLengthsCheckBox.text")); // NOI18N
+        differentCodeLengthsCheckBox.setName("differentCodeLengthsCheckBox"); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -161,18 +166,22 @@ public class DatabaseDictionaryEditorPanel extends javax.swing.JPanel {
                     .addComponent(codeLengthLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lockedCheckBox)
-                    .addComponent(nameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
-                    .addComponent(fontComboBox, 0, 130, Short.MAX_VALUE)
-                    .addComponent(typeComboBox, 0, 130, Short.MAX_VALUE)
-                    .addComponent(fullCodeLengthTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
-                    .addComponent(codeLengthTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE))
+                    .addComponent(nameTextField)
+                    .addComponent(fontComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(typeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(fullCodeLengthTextField)
+                    .addComponent(codeLengthTextField)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(differentCodeLengthsCheckBox)
+                            .addComponent(lockedCheckBox))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(nameLabel))
@@ -193,8 +202,9 @@ public class DatabaseDictionaryEditorPanel extends javax.swing.JPanel {
                     .addComponent(codeLengthTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(codeLengthLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lockedCheckBox)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(differentCodeLengthsCheckBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lockedCheckBox))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -225,6 +235,7 @@ public class DatabaseDictionaryEditorPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel codeLengthLabel;
     private javax.swing.JTextField codeLengthTextField;
+    private javax.swing.JCheckBox differentCodeLengthsCheckBox;
     private javax.swing.JComboBox fontComboBox;
     private javax.swing.JLabel fontLabel;
     private javax.swing.JLabel fullCodeLengthLabel;
@@ -253,10 +264,11 @@ public class DatabaseDictionaryEditorPanel extends javax.swing.JPanel {
         }
 
         databaseDictionaryListElement.setLocked(lockedCheckBox.isSelected());
+        databaseDictionaryListElement.setAllowCodesOfDifferentLength(differentCodeLengthsCheckBox.isSelected());
 
         // set some defaults
         databaseDictionaryListElement.setCategoryDescriptionLength(Globals.DICTIONARY_DESCRIPTION_LENGTH);
-        databaseDictionaryListElement.setFullDictionaryCategoryDescriptionLength(Globals.DICTIONARY_DESCRIPTION_LENGTH);
+        databaseDictionaryListElement.setFullDictionaryDescriptionLength(Globals.DICTIONARY_DESCRIPTION_LENGTH);
 
     }
 
@@ -265,11 +277,14 @@ public class DatabaseDictionaryEditorPanel extends javax.swing.JPanel {
         if (typeComboBox.getSelectedItem().equals(new TranslatableListElement(Globals.DICTIONARY_TYPE_COMPOUND, Globals.DICTIONARY_TYPE_COMPOUND))) {
             codeLengthLabel.setEnabled(true);
             codeLengthTextField.setEnabled(true);
-            codeLengthTextField.setEditable(true);
+            codeLengthTextField.setEditable(true);            
+            differentCodeLengthsCheckBox.setEnabled(false);
+//            differentCodeLengthsCheckBox.setSelected(false);
         } else {
             codeLengthLabel.setEnabled(false);
             codeLengthTextField.setEnabled(false);
             codeLengthTextField.setEditable(false);
+            differentCodeLengthsCheckBox.setEnabled(true);
         }
     }
 }

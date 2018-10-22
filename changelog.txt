@@ -1,9 +1,14 @@
 ﻿Changelog
 
-5.00.43-ALPHA
-- Fixed bug in file copy during restore from backup.
+5.00.43 ALPHA 2
+- Fixed bug in file copy during restore from backup for some users with non-Latin character sets.
 - Fixed bug with headless splash screen.
-- Updated JavaDB to version 10.14.1.0.
+- Replaced ReportR with Officer for generating docx and pptx documents. (This should take care of troubles related to the different architecture of R/Java.)
+- Import now works for dbs that does not collect ICCC.
+- Simple (one level) dictionaries can now allow varying code lengths.
+- Male breast cancer into account in rapport generator/other visualizations.
+- Empty values accepted in analytical files
+- Population dataset batch import/export added.
 - Other fixes.
 
 5.00.42
