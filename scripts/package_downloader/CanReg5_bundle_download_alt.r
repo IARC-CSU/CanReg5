@@ -9,8 +9,10 @@ dir.create(file.path(destdir),recursive = TRUE)
 unlink(paste0(destdir,"/*.zip"),recursive = TRUE)
 
 
+
+
 # package list
-packages_list <- c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","ReporteRs","zip","bmp", "jpeg")
+packages_list <- c("flextable","Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","officer","zip","bmp", "jpeg")
 
 #Select https repos
 old.repos <- getOption("repos") 
@@ -35,5 +37,5 @@ for (i in packages_list) {
   install.packages(i, destdir = destdir,dependencies=  c("Depends", "Imports", "LinkingTo"), quiet = TRUE)
 }
   
-unlink(file.path(paste0(Sys.getenv("R_LIBS_USER"), "-temp")),recursive = TRUE)
+#unlink(file.path(paste0(Sys.getenv("R_LIBS_USER"), "-temp")),recursive = TRUE)
 
