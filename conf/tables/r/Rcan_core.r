@@ -348,7 +348,7 @@ canreg_load_packages <- function(packages_list, Rcan_source=NULL) {
   
   
   #install Rcan package
-  
+  Rcan_source <- paste0(Rcan_source, "/", "r-packages")
   Rcan_file <- list.files(path=Rcan_source, pattern= "Rcan_\\d\\.\\d\\.\\d+\\.tar\\.gz")
   Rcan_version <- regmatches(Rcan_file,regexpr(pattern= "\\d\\.\\d\\.\\d+", Rcan_file))
 
@@ -1226,7 +1226,7 @@ canreg_attr_missing_sex <- function(dt, var_age, var_group2) {
 canreg_desc_missing_sex <- function(inc_file,
                                     var_cases = "CASES"){
   
-  df_inc <- read.table(inc_file, header=TRUE)
+  df_inc <- read.table(inc_file, header=TRUE, sep="\t")
   dt_inc <- data.table(df_inc)
   setnames(dt_inc, var_cases, "CSU_C")
   nb_total <- sum(dt_inc[,CSU_C])
