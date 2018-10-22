@@ -27,8 +27,8 @@
 ############################### FORMATING DATA ################################# 
 
 ## LOADING INCIDENCE AND POPULATION DATA
-    dataInc <- read.table(fileInc, header=TRUE)
-    dataPop <- read.table(filePop, header=TRUE)    
+    dataInc <- read.table(fileInc, header=TRUE, sep="\t")
+    dataPop <- read.table(filePop, header=TRUE, sep="\t")   
 
 ## LOADING STANDARD POPULATION (to compute the most common cancers)
     standpop <- GetStandPop(dataPop) 

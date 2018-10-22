@@ -1226,7 +1226,7 @@ canreg_attr_missing_sex <- function(dt, var_age, var_group2) {
 canreg_desc_missing_sex <- function(inc_file,
                                     var_cases = "CASES"){
   
-  df_inc <- read.table(inc_file, header=TRUE)
+  df_inc <- read.table(inc_file, header=TRUE, sep="\t"))
   dt_inc <- data.table(df_inc)
   setnames(dt_inc, var_cases, "CSU_C")
   nb_total <- sum(dt_inc[,CSU_C])
