@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2018  International Agency for Research on Cancer
+ * Copyright (C) 2008-2015  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
  *
  * @author Morten Johannes Ervik, CSU/IARC, ervikm@iarc.fr
  */
+
 package canreg.common;
 
 import java.io.Serializable;
@@ -30,18 +31,16 @@ public class DatabaseDictionaryListElement implements Serializable, DatabaseElem
     private int dictionaryID;
     private String name = null;
     private String font = null;
-    protected String type = null;
+    private String type = null;
     private int codeLength;
     private int categoryDescriptionLength;
     private int fullDictionaryCodeLength;
-    private int fullDictionaryDescriptionLength;
+    private int fullDictionaryCategoryDescriptionLength;
     private boolean locked = false;
     private String unknownCode = null;
-    private boolean allowCodesOfDifferentLength = false;
-    private boolean compoundDictionary = false;
 
     /**
-     *
+     * 
      * @return
      */
     public int getDictionaryID() {
@@ -49,7 +48,7 @@ public class DatabaseDictionaryListElement implements Serializable, DatabaseElem
     }
 
     /**
-     *
+     * 
      * @param dictionaryID
      */
     public void setDictionaryID(int dictionaryID) {
@@ -57,7 +56,7 @@ public class DatabaseDictionaryListElement implements Serializable, DatabaseElem
     }
 
     /**
-     *
+     * 
      * @return
      */
     public String getName() {
@@ -65,7 +64,7 @@ public class DatabaseDictionaryListElement implements Serializable, DatabaseElem
     }
 
     /**
-     *
+     * 
      * @param name
      */
     public void setName(String name) {
@@ -73,7 +72,7 @@ public class DatabaseDictionaryListElement implements Serializable, DatabaseElem
     }
 
     /**
-     *
+     * 
      * @return
      */
     public String getFont() {
@@ -81,7 +80,7 @@ public class DatabaseDictionaryListElement implements Serializable, DatabaseElem
     }
 
     /**
-     *
+     * 
      * @param font
      */
     public void setFont(String font) {
@@ -89,7 +88,7 @@ public class DatabaseDictionaryListElement implements Serializable, DatabaseElem
     }
 
     /**
-     *
+     * 
      * @return
      */
     public String getType() {
@@ -97,7 +96,7 @@ public class DatabaseDictionaryListElement implements Serializable, DatabaseElem
     }
 
     /**
-     *
+     * 
      * @param type
      */
     public void setType(String type) {
@@ -105,7 +104,7 @@ public class DatabaseDictionaryListElement implements Serializable, DatabaseElem
     }
 
     /**
-     *
+     * 
      * @return
      */
     public int getCodeLength() {
@@ -113,7 +112,7 @@ public class DatabaseDictionaryListElement implements Serializable, DatabaseElem
     }
 
     /**
-     *
+     * 
      * @param codeLength
      */
     public void setCodeLength(int codeLength) {
@@ -121,7 +120,7 @@ public class DatabaseDictionaryListElement implements Serializable, DatabaseElem
     }
 
     /**
-     *
+     * 
      * @return
      */
     public int getCategoryDescriptionLength() {
@@ -129,7 +128,7 @@ public class DatabaseDictionaryListElement implements Serializable, DatabaseElem
     }
 
     /**
-     *
+     * 
      * @param categoryDescriptionLength
      */
     public void setCategoryDescriptionLength(int categoryDescriptionLength) {
@@ -137,7 +136,7 @@ public class DatabaseDictionaryListElement implements Serializable, DatabaseElem
     }
 
     /**
-     *
+     * 
      * @return
      */
     public int getFullDictionaryCodeLength() {
@@ -145,7 +144,7 @@ public class DatabaseDictionaryListElement implements Serializable, DatabaseElem
     }
 
     /**
-     *
+     * 
      * @param fullDictionaryCodeLength
      */
     public void setFullDictionaryCodeLength(int fullDictionaryCodeLength) {
@@ -153,23 +152,23 @@ public class DatabaseDictionaryListElement implements Serializable, DatabaseElem
     }
 
     /**
-     *
+     * 
      * @return
      */
-    public int getFullDictionaryDescriptionLength() {
-        return fullDictionaryDescriptionLength;
+    public int getFullDictionaryCategoryDescriptionLength() {
+        return fullDictionaryCategoryDescriptionLength;
     }
 
     /**
-     *
-     * @param fullDictionaryDescriptionLength
+     * 
+     * @param fullDictionaryCategoryDescriptionLength
      */
-    public void setFullDictionaryDescriptionLength(int fullDictionaryDescriptionLength) {
-        this.fullDictionaryDescriptionLength = fullDictionaryDescriptionLength;
+    public void setFullDictionaryCategoryDescriptionLength(int fullDictionaryCategoryDescriptionLength) {
+        this.fullDictionaryCategoryDescriptionLength = fullDictionaryCategoryDescriptionLength;
     }
 
     /**
-     *
+     * 
      * @param o
      * @return
      */
@@ -204,17 +203,17 @@ public class DatabaseDictionaryListElement implements Serializable, DatabaseElem
         return unknownCode;
     }
 
-    public void setUnknownCode(String unknownCode) {
+    public void setUnkownCode(String unknownCode) {
         this.unknownCode = unknownCode;
     }
 
     @Override
     public String getDescriptiveString() {
         String desc = getName();
-        if (isCompound()) {
-            desc += " (Compound, Code Length: " + getCodeLength() + ", Full length: " + getFullDictionaryCodeLength() + ")";
+        if (isCompound()){
+            desc += " (Compound, Code Length: " + getCodeLength() + ", Full length: "+ getFullDictionaryCodeLength() +")";  
         } else {
-            desc += " (Simple, Full length: " + getFullDictionaryCodeLength() + ")";
+            desc += " (Simple, Full length: "+ getFullDictionaryCodeLength() +")";
         }
         return desc;
     }
@@ -223,33 +222,4 @@ public class DatabaseDictionaryListElement implements Serializable, DatabaseElem
     public boolean userVariable() {
         return true;
     }
-
-    /**
-     * @return the allowCodesOfDifferentLength
-     */
-    public boolean isAllowCodesOfDifferentLength() {
-        return allowCodesOfDifferentLength;
-    }
-
-    /**
-     * @param allowCodesOfDifferentLength the allowCodesOfDifferentLength to set
-     */
-    public void setAllowCodesOfDifferentLength(boolean allowCodesOfDifferentLength) {
-        this.allowCodesOfDifferentLength = allowCodesOfDifferentLength;
-    }
-
-    /**
-     * @return the compoundDictionary
-     */
-    public boolean isCompoundDictionary() {
-        return compoundDictionary;
-    }
-
-    /**
-     * @param compoundDictionary the compoundDictionary to set
-     */
-    public void setCompoundDictionary(boolean compoundDictionary) {
-        this.compoundDictionary = compoundDictionary;
-    }
-
 }

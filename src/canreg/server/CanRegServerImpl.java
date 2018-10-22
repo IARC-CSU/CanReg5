@@ -96,8 +96,6 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      * @throws java.rmi.RemoteException
      */
     public CanRegServerImpl(String systemCode) throws RemoteException {
-        // Prevent JAVA to use a random port.
-        super(1099);
         
         Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.INFO, "Java version: {0}", System.getProperty("java.version"));
                 

@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2018  International Agency for Research on Cancer
+ * Copyright (C) 2008-2015  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,22 +38,21 @@ import org.w3c.dom.NodeList;
 
 /**
  * Some static tools to work with dictionaries
- *
  * @author ervikm
  */
 public class DictionaryHelper {
 
     /**
-     *
+     * 
      * @param dictionary
      * @return
      */
     public static Map<String, DictionaryEntry> buildDictionaryEntriesFromMap(Map<String, String> dictionary) {
-        Map<String, DictionaryEntry> dictionaryEntries = new LinkedHashMap<>();
+        Map<String, DictionaryEntry> dictionaryEntries = new LinkedHashMap<String, DictionaryEntry>();
         Iterator<String> iterator = dictionary.keySet().iterator();
         int i = 0;
         while (iterator.hasNext()) {
-            String code = iterator.next();
+            String code = iterator.next().toString();
             String description = dictionary.get(code);
             dictionaryEntries.put(code, new DictionaryEntry(0, code, description));
         }
@@ -61,7 +60,7 @@ public class DictionaryHelper {
     }
 
     /**
-     *
+     * 
      * @param doc
      * @param name
      * @return
@@ -148,7 +147,7 @@ public class DictionaryHelper {
     }
 
     /**
-     *
+     * 
      * @param dictionaryID
      * @param app
      * @return
@@ -159,7 +158,7 @@ public class DictionaryHelper {
     }
 
     /**
-     *
+     * 
      * @param dictionaryEntry
      * @param server
      * @return
@@ -171,7 +170,7 @@ public class DictionaryHelper {
     }
 
     private static LinkedList<DictionaryEntry> parseDictionaryText(int dictionaryID, String str) {
-        LinkedList <DictionaryEntry> dictionaryEntries = new LinkedList<>();
+        LinkedList dictionaryEntries = new LinkedList<DictionaryEntry>();
         String[] stringArray = str.split("[\\n|\\r]");
         if (stringArray.length > 0 && stringArray[0].trim().length() > 0) {
             for (String string : stringArray) {
@@ -185,7 +184,7 @@ public class DictionaryHelper {
     }
 
     /**
-     *
+     * 
      * @param dictionary
      * @param str
      * @return
@@ -199,7 +198,7 @@ public class DictionaryHelper {
     }
 
     private static Map<Integer, String> testDictionary(DatabaseDictionaryListElement dictionary, LinkedList<DictionaryEntry> contents) {
-        Map<Integer, String> errors = new LinkedHashMap<>();
+        Map<Integer, String> errors = new LinkedHashMap<Integer, String>();
         Set<String> codes = new LinkedHashSet();
         int codeLength = 0;
         int fullCodeLength = 0;
@@ -211,18 +210,14 @@ public class DictionaryHelper {
             }
         }
         int i = 1;
-        if (contents.isEmpty()) {
+        if (contents.size() == 0) {
             errors.put(0, "Empty dictionary");
         } else {
             for (DictionaryEntry de : contents) {
                 // first check length of code if we have a dictionary
                 String code = de.getCode();
                 if (dictionary != null) {
-                    if ((dictionary.isAllowCodesOfDifferentLength() && code.length() <= fullCodeLength) || 
-                            (code.length() == codeLength || code.length() == fullCodeLength)) {
-                        // all is swell
-                    }
-                    else {
+                    if (code.length() != codeLength && code.length() != fullCodeLength) {
                         errors.put(i, "Line " + i + " - Wrong length: " + code);
                     }
                 }
@@ -237,7 +232,7 @@ public class DictionaryHelper {
     }
 
     /**
-     *
+     * 
      * @param dictionaryID
      * @param str
      * @param app
@@ -256,45 +251,42 @@ public class DictionaryHelper {
     }
 
     /**
-     * Returns a list of DictionaryEntry's which code starts with the passed
-     * parameter. Example: if codeStart = 0023, then all entries that have those
-     * 4 digits at the start will be returned.
-     *
+     * Returns a list of DictionaryEntry's which code starts with the passed 
+     * parameter. Example: if codeStart = 0023, then all entries that have 
+     * those 4 digits at the start will be returned.
      * @param codeStart
      * @param dictionaryEntries
-     * @return
+     * @return 
      */
-    public static List<DictionaryEntry> getDictionaryEntriesCodeStartingWith(String codeStart,
-            DictionaryEntry[] dictionaryEntries) {
-        LinkedList<DictionaryEntry> entriesList = new LinkedList<>();
+    public static List<DictionaryEntry> getDictionaryEntriesCodeStartingWith(String codeStart, 
+                                                                             DictionaryEntry[] dictionaryEntries) {
+        LinkedList<DictionaryEntry> entriesList = new LinkedList<DictionaryEntry>();
         for (DictionaryEntry entry : dictionaryEntries) {
             String code = entry.getCode();
-            if (code.startsWith(codeStart) && code.length() > codeStart.length()) {
-                entriesList.add(entry);
-            }
+            if (code.startsWith(codeStart) && code.length() > codeStart.length()) 
+                entriesList.add(entry);            
         }
         return entriesList;
     }
-
+    
     /**
-     * Returns the DictionaryEntry with the best code match. Example: we have
-     * the dictionary entries 00235 0023579 0023. If we run this method passing
-     * 00235 as parameter, then the Dictionary Entry with 00235 is returned. But
-     * if we pass 0023, then the Dictionary Entry with 0023 is returned.
-     *
+     * Returns the DictionaryEntry with the best code match.
+     * Example: we have the dictionary entries 00235 0023579 0023. If we run
+     * this method passing 00235 as parameter, then the Dictionary Entry with
+     * 00235 is returned. But if we pass 0023, then the Dictionary Entry with
+     * 0023 is returned.
      * @param code
      * @param dictionaryEntries
-     * @return
+     * @return 
      */
-    public static DictionaryEntry getDictionaryEntryBestMatchingSubcode(String code,
-            DictionaryEntry[] dictionaryEntries) {
-        for (int i = (code.length() - 1); i > 0; i--) {
+    public static DictionaryEntry getDictionaryEntryBestMatchingSubcode(String code, 
+                                                                        DictionaryEntry[] dictionaryEntries) {       
+        for(int i = (code.length() - 1); i > 0; i--) {
             String possibleMatch = code.substring(0, i);
-            for (DictionaryEntry entry : dictionaryEntries) {
-                if (entry.getCode().equalsIgnoreCase(possibleMatch)) {
+            for(DictionaryEntry entry : dictionaryEntries) {   
+                if(entry.getCode().equalsIgnoreCase(possibleMatch))
                     return entry;
-                }
-            }
+            }    
         }
         return null;
     }
