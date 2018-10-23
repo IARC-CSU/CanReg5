@@ -50,7 +50,7 @@ shinyServer(function(input, output, session) {
       
       values$text <- paste0(isolate(values$text), '<br>',isolate(table$label))
       
-      if (isolate(input$select_table == 30)) {
+      if (isolate(input$select_table == 7)) {
         values$text <- paste(isolate(values$text), isolate(input$selectCancerSite))
       }
       
@@ -83,7 +83,7 @@ shinyServer(function(input, output, session) {
       
     }
     
-    else if (input$select_table %in% c(6)) {
+    else if (input$select_table %in% c(6,7)) {
       
       radioButtons("radioLog", "y axes scale:",
                    c("Logarithmic" = "log",
@@ -126,6 +126,18 @@ shinyServer(function(input, output, session) {
       
       
     } 
+		else if (input$select_table %in% c(7)) {
+			
+			
+			cancer_list <-  unique(dt_base$cancer_label)
+      n <- length(cancer_list)
+      cancer_list <- as.character(cancer_list)
+			cancer_list <- cancer_list[1:(n-1)]
+			
+			selectInput("selectCancerSite", "Select cancer sites", cancer_list)
+			
+		
+		}
     
   })
   
@@ -169,6 +181,11 @@ shinyServer(function(input, output, session) {
     }
     else if (input$select_table== 6) {
       table$label <- "Age-specific trend top cancer"
+      show(id="controls_COL1", anim=TRUE)
+      show(id="controls_COL2", anim=TRUE)
+    }
+		else if (input$select_table== 7) {
+      table$label <- "Age-specific trend"
       show(id="controls_COL1", anim=TRUE)
       show(id="controls_COL2", anim=TRUE)
     }
@@ -378,6 +395,17 @@ shinyServer(function(input, output, session) {
 		values$doc <-  add_slide(values$doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
 		values$doc <- ph_with_text(values$doc, type = "title", str = "Age-specific rates:\r\nFemales")
 		values$doc <- ph_with_img(values$doc, paste0(filename, "002.png"), index=1,width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
+			
+		}
+		
+		else if (input$select_table==7) {
+			
+		str_temp <- paste0("Age-specific rates:\r\n", isolate(input$selectCancerSite))
+		dims <- attr( png::readPNG (paste0(filename, ".png")), "dim" )
+		values$doc <-  add_slide(values$doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
+		values$doc <- ph_with_text(values$doc, type = "title", str = str_temp)
+		values$doc <- ph_with_img(values$doc, paste0(filename, ".png"), index=1,width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
+			
 			
 		}
      

@@ -24,11 +24,12 @@ ui <- dashboardPage(
 					   "Top cancer both sexes" = 4 ,
 		         "Top cancer by sexes" = 5 ,
 		         "Age-specific rates (Top Cancer Sites)" = 6,
-		         "Age-specific rate by cancer sites" = 7,
-					   "CI5 comparison" = 8,
-					   "Time trends (Top cancer Sites)" = 9,
-					   "EAPC scatter graph" = 10
-		          )
+		         "Age-specific rate by cancer sites" = 7)
+					   
+						 #"CI5 comparison" = 8,
+					   #"Time trends (Top cancer Sites)" = 9,
+					   #"EAPC scatter graph" = 10
+		         # )
 		              # add bar number of cases per year# opton with cancer sites selection ?
 		            ),
 		

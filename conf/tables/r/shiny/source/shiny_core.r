@@ -161,6 +161,14 @@ shiny_data <- function(input) {
 		dt_temp <- canreg_ageSpecific_rate_data(dt_temp)
       
   }
+	else if (table_number == 7){
+
+		dt_temp <- dt_base
+		dt_temp <- dt_temp[ICD10GROUP != "C44",]
+		dt_temp <- dt_temp[ICD10GROUP != "O&U",]
+		dt_temp <- canreg_ageSpecific_rate_data(dt_temp)
+      
+  }
  
   return(dt_temp)
   
@@ -462,6 +470,46 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
     }
     
   }
+	else if (table_number == 7){
+		
+		if (!is.null( input$selectCancerSite) & !is.null(input$radioLog)) {
+		
+			bool_log <- (input$radioLog == "log")
+			color_trend <- c("Male" = "#2c7bb6", "Female" = "#b62ca1")
+			dt_plot <- dt_plot[cancer_label == input$selectCancerSite,]
+			
+			 if (download) {
+			 
+				canreg_output(output_type = output_type, filename =file,landscape = FALSE,list_graph = FALSE,
+							FUN=canreg_ageSpecific,
+							dt_plot=dt_plot,
+							logscale = bool_log,
+							plot_subtitle = isolate(input$selectCancerSite),
+							color_trend = color_trend
+							)
+						
+      }
+      else {
+				
+				Rcan:::core.csu_ageSpecific(dt_plot,
+					var_age="AGE_GROUP",
+					var_cases= "CASES", 
+					var_py= "COUNT",
+					group_by="SEX",
+					plot_title = ls_args$header,
+					plot_subtitle = isolate(input$selectCancerSite),
+					color_trend = color_trend,
+					logscale = bool_log,
+					age_label_list = unique(dt_plot[["AGE_GROUP_LABEL"]])
+					
+					)
+			}
+			
+		
+		
+		}
+	
+	}
 
   
   
@@ -469,9 +517,42 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 
 
 
-										
-                                        
-                                        
+#create a new function to print the graph and return data (adapt to canreg_output function)
+canreg_ageSpecific <- function(dt_plot,color_trend,plot_subtitle="",logscale=FALSE, landscape = TRUE,list_graph = FALSE, return_data = FALSE) {
+	
+	if (return_data) {
+		
+		dt_temp <- dt_plot[COUNT > 0,]
+		dt_temp[, rate := CASES/COUNT*10000]
+		dt_temp[, AGE_GROUP_LABEL := paste0("'",AGE_GROUP_LABEL,"'")]
+		dt_temp <- dt_temp[, c("cancer_label",
+								"AGE_GROUP",
+								"AGE_GROUP_LABEL",
+								"SEX",
+								"CASES",
+								"COUNT",
+								"rate"), with=FALSE]
+		setkeyv(dt_temp, c("SEX","AGE_GROUP"))
+		return(dt_temp)
+		stop() 
+		
+	} 
+		
+	plot<- Rcan:::core.csu_ageSpecific(dt_plot,
+																		 var_age="AGE_GROUP",
+																		 var_cases= "CASES",
+																		 var_py="COUNT",
+																		 group_by = "SEX",
+																		 plot_title = ls_args$header,
+																		 plot_subtitle = plot_subtitle,
+																		 color_trend = color_trend,
+																		 logscale = logscale,
+																		 age_label_list = unique(dt_plot[["AGE_GROUP_LABEL"]]))$csu_plot
+																		
+	print(plot)
+
+}
+ 
 										
                                         
 										
