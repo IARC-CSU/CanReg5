@@ -473,6 +473,7 @@
                           <Component id="tiffButton" alignment="0" pref="474" max="32767" attributes="0"/>
                           <Component id="docxButton" alignment="0" pref="474" max="32767" attributes="0"/>
                           <Component id="pptxButton" alignment="0" pref="474" max="32767" attributes="0"/>
+                          <Component id="browserButton" alignment="0" pref="474" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -510,7 +511,9 @@
                       <Component id="chartViewerButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="seerPrepButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="53" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="browserButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="28" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -660,6 +663,15 @@
                 <Property name="text" type="java.lang.String" resourceKey="pptxButton.text"/>
                 <Property name="toolTipText" type="java.lang.String" resourceKey="pptxButton.toolTipText"/>
                 <Property name="name" type="java.lang.String" value="pptxButton" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JButton" name="browserButton">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="canreg.client.gui.analysis.TableBuilderInternalFrame" id="launchBrowserAction" methodName="launchBrowserAction"/>
+                </Property>
+                <Property name="text" type="java.lang.String" resourceKey="browserButton.text"/>
+                <Property name="name" type="java.lang.String" value="browserButton" noResource="true"/>
               </Properties>
             </Component>
           </SubComponents>

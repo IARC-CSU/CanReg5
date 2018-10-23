@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2017 International Agency for Research on Cancer
+ * Copyright (C) 2008-2018 International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -103,9 +103,9 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     public TableBuilderInternalFrame() {
         initComponents();
         setCursor(hourglassCursor);
-        
+
         initRangeFilterPanel();
-        
+
         initData();
 
         localSettings = CanRegClientApp.getApplication().getLocalSettings();
@@ -131,7 +131,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
 
         //tabbedPane.remove(3);
         setCursor(normalCursor);
-        
+
         turnAllOutputButtonsOff();
     }
 
@@ -271,6 +271,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         tiffButton = new javax.swing.JButton();
         docxButton = new javax.swing.JButton();
         pptxButton = new javax.swing.JButton();
+        browserButton = new javax.swing.JButton();
         backButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
         nextButton = new javax.swing.JButton();
@@ -615,6 +616,10 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         pptxButton.setToolTipText(resourceMap.getString("pptxButton.toolTipText")); // NOI18N
         pptxButton.setName("pptxButton"); // NOI18N
 
+        browserButton.setAction(actionMap.get("launchBrowserAction")); // NOI18N
+        browserButton.setText(resourceMap.getString("browserButton.text")); // NOI18N
+        browserButton.setName("browserButton"); // NOI18N
+
         javax.swing.GroupLayout writeOutPanelLayout = new javax.swing.GroupLayout(writeOutPanel);
         writeOutPanel.setLayout(writeOutPanelLayout);
         writeOutPanelLayout.setHorizontalGroup(
@@ -637,7 +642,8 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     .addComponent(seerPrepButton, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
                     .addComponent(tiffButton, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
                     .addComponent(docxButton, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
-                    .addComponent(pptxButton, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE))
+                    .addComponent(pptxButton, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
+                    .addComponent(browserButton, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE))
                 .addContainerGap())
         );
         writeOutPanelLayout.setVerticalGroup(
@@ -671,7 +677,9 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                 .addComponent(chartViewerButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(seerPrepButton)
-                .addContainerGap(53, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(browserButton)
+                .addContainerGap(28, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab(resourceMap.getString("writeOutPanel.TabConstraints.tabTitle"), writeOutPanel); // NOI18N
@@ -850,6 +858,9 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                             case pptx:
                                 pptxButton.setEnabled(true);
                                 break;
+                            case browser:
+                                browserButton.setEnabled(true);
+                                break;
                             default:
                                 break;
                         }
@@ -903,6 +914,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_dontUsePopulationDatasetCheckBoxActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backButton;
+    private javax.swing.JButton browserButton;
     private javax.swing.JButton cancelButton;
     private javax.swing.JButton chartViewerButton;
     private javax.swing.JButton csvButton;
@@ -964,9 +976,9 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         tiffButton.setEnabled(false);
         docxButton.setEnabled(false);
         pptxButton.setEnabled(false);
+        browserButton.setEnabled(false);
     }
-            
-    
+
     private void initData() {
         JSpinner spinnerStart = (JSpinner) startYearChooser.getSpinner();
         spinnerStart.getEditor()
@@ -975,6 +987,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                     public void focusLost(java.awt.event.FocusEvent evt) {
                         startYearChooserFocusLost(evt);
                     }
+
                     private void startYearChooserFocusLost(FocusEvent evt) {
                         if (startYearChooser.getYear() > endYearChooser.getYear()) {
                             endYearChooser.setYear(startYearChooser.getYear());
@@ -1153,7 +1166,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
             if (tableBuilder.areThesePopulationDatasetsCompatible(populations)) {
                 String fileName = null;
                 // Choose file name;
-                if (filetype != FileTypes.jchart) {
+                if (filetype != FileTypes.jchart && filetype != FileTypes.browser) {
                     if (chooser == null) {
                         path = localSettings.getProperty(LocalSettings.TABLES_PATH_KEY);
                         if (path == null) {
@@ -1267,10 +1280,18 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
 
                         // Opening the resulting files if the list is not empty...
                         if (filesGenerated.isEmpty()) {
-                            JOptionPane.showMessageDialog(this,
-                                    "Please use \"View work files\" in the \"File\"-menu to open them",
-                                    java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("TABLE(S)_BUILT."),
-                                    JOptionPane.INFORMATION_MESSAGE);
+                            if (filetype == FileTypes.browser) {
+                                // TODO write proper message
+                                JOptionPane.showMessageDialog(this,
+                                        "Your webbrowser will launch. Please wait.", // (If not, please open a web browser and go to: http://127.0.0.1:5676/ )",
+                                        java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("TABLE(S)_BUILT."),
+                                        JOptionPane.INFORMATION_MESSAGE);
+                            } else {
+                                JOptionPane.showMessageDialog(this,
+                                        "Please use \"View work files\" in the \"File\"-menu to open them",
+                                        java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("TABLE(S)_BUILT."),
+                                        JOptionPane.INFORMATION_MESSAGE);
+                            }
                         } else {
                             JOptionPane.showMessageDialog(this,
                                     filesGeneratedList,
@@ -1377,7 +1398,12 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
     public void generatePPTX() {
         generateTablesAction(FileTypes.pptx);
     }
-    
+
+    @Action
+    public void launchBrowserAction() {
+        generateTablesAction(FileTypes.browser);
+    }
+
     @Action
     public void dontUsePopsCheckboxUpdated() {
         boolean enabled = !dontUsePopulationDatasetCheckBox.isSelected();
@@ -1385,10 +1411,10 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         pleaseChooseLabel.setVisible(enabled);
         tabbedPane.setEnabledAt(filterTabPos, !enabled);
     }
-    
+
     private void initRangeFilterPanel() {
         rangeFilterPanel = new canreg.client.gui.components.RangeFilterPanel();
-        
+
         filterPanel.setEnabled(false);
         filterPanel.setFocusable(false);
         filterPanel.setName("filterPanel"); // NOI18N
@@ -1400,18 +1426,19 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         javax.swing.GroupLayout filterPanelLayout = new javax.swing.GroupLayout(filterPanel);
         filterPanel.setLayout(filterPanelLayout);
         filterPanelLayout.setHorizontalGroup(
-            filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(filterPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(rangeFilterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
-                .addContainerGap())
+                filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(filterPanelLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(rangeFilterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
+                                .addContainerGap())
         );
         filterPanelLayout.setVerticalGroup(
-            filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(filterPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(rangeFilterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE)
-                .addContainerGap())
+                filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(filterPanelLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(rangeFilterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE)
+                                .addContainerGap())
         );
     }
+
 }
