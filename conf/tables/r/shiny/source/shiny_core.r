@@ -153,8 +153,15 @@ shiny_data <- function(input) {
     }
     
   }
-  
-  
+	else if (table_number == 6){
+
+		dt_temp <- dt_base
+		dt_temp <- dt_temp[ICD10GROUP != "C44",]
+		dt_temp <- dt_temp[ICD10GROUP != "O&U",]
+		dt_temp <- canreg_ageSpecific_rate_data(dt_temp)
+      
+  }
+ 
   return(dt_temp)
   
 }
@@ -403,6 +410,58 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
     }
     
   }
+	else if (table_number == 6){
+	
+		if (!is.null( input$slideNbTopBar) & !is.null(input$radioLog)) {
+		
+			nb_top <- input$slideNbTopBar
+			
+			if (input$radioLog == "log") {
+				bool_log <- TRUE
+			}
+			else {
+				bool_log <- FALSE
+			}
+
+      if (download) {
+				
+				canreg_output(output_type = output_type, filename =file,landscape = FALSE,list_graph = TRUE,
+							FUN=canreg_ageSpecific_rate_top,
+							df_data=dt_plot,logscale = bool_log,nb_top = nb_top,
+							plot_title = ls_args$header
+							)
+						
+      }
+      else {
+				temp <- Rcan:::core.csu_ageSpecific_top(
+					df_data=dt_plot,
+					var_age="AGE_GROUP",
+					var_cases= "CASES", 
+					var_py= "COUNT",
+					var_top = "cancer_label",
+					var_age_label_list = "AGE_GROUP_LABEL",
+					group_by="SEX",
+					missing_age=canreg_missing_age(dt_plot),
+					var_color="ICD10GROUPCOLOR",
+					logscale = bool_log,
+					nb_top = nb_top,
+					plot_title = ls_args$header
+				)
+            
+            
+				temp$plotlist[[1]] <- temp$plotlist[[1]]+guides(color = guide_legend(override.aes = list(size=1), nrow=2,byrow=TRUE))
+				temp$plotlist[[2]] <- temp$plotlist[[2]]+guides(color = guide_legend(override.aes = list(size=1), nrow=2,byrow=TRUE))
+				grid.arrange(temp$plotlist[[1]], temp$plotlist[[2]], ncol=2)
+
+      }
+     
+      
+      
+      
+      
+    }
+    
+  }
 
   
   
@@ -410,3 +469,9 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 
 
 
+										
+                                        
+                                        
+										
+                                        
+										
