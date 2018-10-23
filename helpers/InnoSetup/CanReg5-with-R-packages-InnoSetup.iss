@@ -6,7 +6,7 @@
 #define MyAppURL "http://www.iacr.com.fr"
 #define MyAppExeName "CanReg.exe"
 #define CanReg5Dir "C:\Users\ervikm\Documents\GitHub\CanReg5"
-#include "inno-settings.txt"
+#include "..\..\inno-settings.txt"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
