@@ -248,7 +248,6 @@ version.txt
 inno-settings.txt
 conf/tables/r/r-packages/*.zip
 .gitignore.orig
-buildnumber.properties
 out/*
 
 doc/CanReg5-Instructions.zip
