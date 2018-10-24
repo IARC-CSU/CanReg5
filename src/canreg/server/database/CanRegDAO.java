@@ -880,12 +880,12 @@ public class CanRegDAO {
             statement.execute(command);
             return true;
         } else if (newPasswordArray.length == 0) {
-            // remove password? 
-            // Doesn't work!
+            // remove password
             String oldPassword = new String(oldPasswordArray);
             dbProperties.setProperty("bootPassword", oldPassword);
             try {
                 disconnect();
+                // side effect of removing password is that we have to upgrade the database version
                 dbConnection = DriverManager.getConnection(getDatabaseUrl()+";bootPassword= "+ oldPassword+ ";upgrade=true", dbProperties);
                 disconnect();
             } catch (SQLException ex) {
