@@ -48,7 +48,7 @@ shiny_data <- function(input) {
     }
     
   }
-   else if (table_number == 3){
+  else if (table_number == 3){
     
     
     if (!is.null(input$radioSkin)) {
@@ -167,6 +167,28 @@ shiny_data <- function(input) {
 		dt_temp <- dt_temp[ICD10GROUP != "C44",]
 		dt_temp <- dt_temp[ICD10GROUP != "O&U",]
 		dt_temp <- canreg_ageSpecific_rate_data(dt_temp)
+      
+  }
+	else if (table_number == 8){
+
+		if (!is.null(input$radioSkin)) {
+      
+
+      if (input$radioSkin == 1 ){
+        bool_skin <- FALSE
+      }
+      else {
+        bool_skin <- TRUE
+      }
+
+			dt_temp <- dt_base
+			dt_temp[ICD10GROUP != "C44",]$ICD10GROUP ="O&U"
+			dt_temp[ICD10GROUP != "C44",]$ICD10GROUPLABEL ="Other and unspecified"
+			dt_temp <- dt_temp[, .(CASES=sum(CASES)),by=.(ICD10GROUP, ICD10GROUPLABEL, YEAR,SEX, AGE_GROUP,AGE_GROUP_LABEL,COUNT,REFERENCE_COUNT) ]
+				
+			dt_temp <- canreg_year_cases_data(dt_temp, skin=bool_skin)
+      
+    }
       
   }
  
@@ -510,6 +532,31 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 		}
 	
 	}
+	else if (table_number == 8){
+    
+    if (isolate(input$radioSkin) == 1 ){
+      bool_skin  <- FALSE
+    }
+    else {
+      bool_skin  <- TRUE
+    }
+    
+    if (download) {
+      canreg_output(output_type = output_type, filename =file,landscape = TRUE,list_graph = FALSE,
+                    FUN=canreg_cases_year_bar,
+                    dt=dt_plot,
+                    canreg_header = ls_args$header,
+                    skin=bool_skin)
+    }
+    else {
+       canreg_cases_year_bar(
+				dt=dt_plot,
+				canreg_header = ls_args$header,
+				skin=bool_skin
+			)
+    }
+    
+  }
 
   
   

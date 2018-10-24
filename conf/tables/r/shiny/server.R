@@ -64,7 +64,7 @@ shinyServer(function(input, output, session) {
   
   output$UI_control1 <- renderUI({
     
-    if  (input$select_table %in% c(2,3)) {
+    if  (input$select_table %in% c(2,3,8)) {
       
 	   radioButtons("radioSkin", "",
                    c("excluding C44 skin" = 1,
@@ -169,26 +169,31 @@ shinyServer(function(input, output, session) {
       show(id="controls_COL1", anim=TRUE)
       hide(id="controls_COL2", anim=TRUE)
     }
-    else if (input$select_table== 4) {
-      table$label <- "Barchart Top cancer both sexes"
-      show(id="controls_COL1", anim=TRUE)
-      show(id="controls_COL2", anim=TRUE)
-    }
-    else if (input$select_table== 5) {
-      table$label <- "Barchart Top cancer by sexes"
-      show(id="controls_COL1", anim=TRUE)
-      show(id="controls_COL2", anim=TRUE)
-    }
-    else if (input$select_table== 6) {
-      table$label <- "Age-specific trend top cancer"
-      show(id="controls_COL1", anim=TRUE)
-      show(id="controls_COL2", anim=TRUE)
-    }
-		else if (input$select_table== 7) {
-      table$label <- "Age-specific trend"
-      show(id="controls_COL1", anim=TRUE)
-      show(id="controls_COL2", anim=TRUE)
-    }
+	else if (input$select_table== 4) {
+		table$label <- "Barchart Top cancer both sexes"
+		show(id="controls_COL1", anim=TRUE)
+		show(id="controls_COL2", anim=TRUE)
+	}
+	else if (input$select_table== 5) {
+		table$label <- "Barchart Top cancer by sexes"
+		show(id="controls_COL1", anim=TRUE)
+		show(id="controls_COL2", anim=TRUE)
+	}
+	else if (input$select_table== 6) {
+		table$label <- "Age-specific trend top cancer"
+		show(id="controls_COL1", anim=TRUE)
+		show(id="controls_COL2", anim=TRUE)
+	}
+	else if (input$select_table== 7) {
+		table$label <- "Age-specific trend"
+		show(id="controls_COL1", anim=TRUE)
+		show(id="controls_COL2", anim=TRUE)
+	}
+	else if (input$select_table== 8) {
+		table$label <- "Barchart by year"
+		show(id="controls_COL1", anim=TRUE)
+		hide(id="controls_COL2", anim=TRUE)
+	}
   })
   
   observeEvent(values$nb_slide,{
@@ -414,6 +419,15 @@ shinyServer(function(input, output, session) {
 			values$doc <-  add_slide(values$doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
 			values$doc <- ph_with_text(values$doc, type = "title", str = str_temp)
 			values$doc <- ph_with_img(values$doc, paste0(filename, ".png"), index=1,width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
+				
+				
+			}
+			else if (input$select_table==8) {
+				
+				values$doc <-  add_slide(values$doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
+				values$doc <- ph_with_text(values$doc, type = "title", str = "Number of cases by year")
+				dims <- attr( png::readPNG (paste0(filename, ".png")), "dim" )
+				values$doc <- ph_with_img(values$doc, paste0(filename, ".png"),width=graph_width,height=graph_width*dims[1]/dims[2])
 				
 				
 			}
