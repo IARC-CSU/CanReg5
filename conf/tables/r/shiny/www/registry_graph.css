@@ -25,6 +25,11 @@
 
 }
 
+img.canreg_logo {
+    height: 48px;
+    margin-top: 2px;
+}
+
 .regtitle {
     text-align: center;
     font-size: 25px;

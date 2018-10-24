@@ -5,19 +5,25 @@ library(shinyjs)
 ui <- dashboardPage(
 
   title="Canreg5 table",
-  dashboardHeader(title = "CanReg5",
+  dashboardHeader(	title = HTML(
+      "<div style = 'vertical-align:middle'>
+       <img src = 'LogoBetaNew64x64.ico' class='canreg_logo' align = 'center'>
+       </div>"),
                   titleWidth = 350),
   
+	
+
+	
   dashboardSidebar(
     
     tags$link(rel = "stylesheet", type = "text/css", href = "registry_graph.css"),
     width = 350,
     
     tags$div(class="subHeader", checked=NA,
-             tags$p("Graph Selection")
+             tags$p("Graphics")
     ),
     		
-		selectInput("select_table", "Graphics", 
+		selectInput("select_table", NULL, 
 		            c( "Population pyramid" = 1,
 					   "Barchart of cases by age group by sex" = 2, 
 					   "piechart of cases by age group by sex" = 3, 
