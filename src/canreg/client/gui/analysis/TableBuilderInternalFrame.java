@@ -1283,7 +1283,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                             if (filetype == FileTypes.browser) {
                                 // TODO write proper message
                                 JOptionPane.showMessageDialog(this,
-                                        "Your webbrowser will launch. Please wait.", // (If not, please open a web browser and go to: http://127.0.0.1:5676/ )",
+                                        "Your browser will now launch. Please wait.", // (If not, please open a web browser and go to: http://127.0.0.1:5676/ )",
                                         java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("TABLE(S)_BUILT."),
                                         JOptionPane.INFORMATION_MESSAGE);
                             } else {
