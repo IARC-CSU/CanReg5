@@ -88,6 +88,11 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
         changeDBPasswordButton = new javax.swing.JButton();
         currentDBPasswordLabel = new javax.swing.JLabel();
         currentDBPasswordField = new javax.swing.JPasswordField();
+        encryptionAlgorrithmComboBox = new javax.swing.JComboBox<>();
+        algorithmLabel = new javax.swing.JLabel();
+        encryptionKeyLengthComboBox = new javax.swing.JComboBox<>();
+        keyLengthLabel = new javax.swing.JLabel();
+        changeDBPasswordButton1 = new javax.swing.JButton();
         userManagerPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         usernameTextField = new javax.swing.JTextField();
@@ -251,6 +256,24 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
 
         currentDBPasswordField.setName("currentDBPasswordField"); // NOI18N
 
+        encryptionAlgorrithmComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "DES", "AES" }));
+        encryptionAlgorrithmComboBox.setName("encryptionAlgorrithmComboBox"); // NOI18N
+
+        algorithmLabel.setText(resourceMap.getString("algorithmLabel.text")); // NOI18N
+        algorithmLabel.setName("algorithmLabel"); // NOI18N
+
+        encryptionKeyLengthComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "56", "128", "192", "256", "512" }));
+        encryptionKeyLengthComboBox.setName("encryptionKeyLengthComboBox"); // NOI18N
+
+        keyLengthLabel.setText(resourceMap.getString("keyLengthLabel.text")); // NOI18N
+        keyLengthLabel.setName("keyLengthLabel"); // NOI18N
+
+        changeDBPasswordButton1.setAction(actionMap.get("removeDatabasePassword")); // NOI18N
+        changeDBPasswordButton1.setText(resourceMap.getString("changeDBPasswordButton1.text")); // NOI18N
+        changeDBPasswordButton1.setToolTipText(resourceMap.getString("changeDBPasswordButton1.toolTipText")); // NOI18N
+        changeDBPasswordButton1.setActionCommand(resourceMap.getString("changeDBPasswordButton1.actionCommand")); // NOI18N
+        changeDBPasswordButton1.setName("changeDBPasswordButton1"); // NOI18N
+
         javax.swing.GroupLayout passwordPanel1Layout = new javax.swing.GroupLayout(passwordPanel1);
         passwordPanel1.setLayout(passwordPanel1Layout);
         passwordPanel1Layout.setHorizontalGroup(
@@ -258,24 +281,30 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
             .addGroup(passwordPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(passwordPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(passwordPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(passwordPanel1Layout.createSequentialGroup()
-                            .addGroup(passwordPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(currentDBPasswordLabel)
-                                .addComponent(newDBPasswordLabel))
-                            .addGap(27, 27, 27)
-                            .addGroup(passwordPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(newDBPasswordField, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
-                                .addComponent(currentDBPasswordField, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE))
-                            .addContainerGap())
-                        .addGroup(passwordPanel1Layout.createSequentialGroup()
-                            .addComponent(confirmNewDBPasswordLabel)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(confirmNewDBPasswordField, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
-                            .addContainerGap()))
+                    .addGroup(passwordPanel1Layout.createSequentialGroup()
+                        .addGroup(passwordPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(currentDBPasswordLabel)
+                            .addComponent(newDBPasswordLabel))
+                        .addGap(27, 27, 27)
+                        .addGroup(passwordPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(newDBPasswordField, javax.swing.GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE)
+                            .addComponent(currentDBPasswordField, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)))
+                    .addGroup(passwordPanel1Layout.createSequentialGroup()
+                        .addGroup(passwordPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(confirmNewDBPasswordLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(algorithmLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(keyLengthLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(passwordPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(encryptionKeyLengthComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(encryptionAlgorrithmComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(confirmNewDBPasswordField, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, passwordPanel1Layout.createSequentialGroup()
-                        .addComponent(changeDBPasswordButton)
-                        .addContainerGap())))
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(passwordPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(changeDBPasswordButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(changeDBPasswordButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap())
         );
         passwordPanel1Layout.setVerticalGroup(
             passwordPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -292,8 +321,17 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
                     .addComponent(confirmNewDBPasswordLabel)
                     .addComponent(confirmNewDBPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(passwordPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(encryptionAlgorrithmComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(algorithmLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(passwordPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(encryptionKeyLengthComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(keyLengthLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(changeDBPasswordButton)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(changeDBPasswordButton1))
         );
 
         javax.swing.GroupLayout databasePasswordPanelLayout = new javax.swing.GroupLayout(databasePasswordPanel);
@@ -306,8 +344,10 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
             databasePasswordPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(databasePasswordPanelLayout.createSequentialGroup()
                 .addComponent(passwordPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(169, Short.MAX_VALUE))
+                .addGap(0, 110, Short.MAX_VALUE))
         );
+
+        passwordPanel1.getAccessibleContext().setAccessibleName(resourceMap.getString("passwordPanel1.AccessibleContext.accessibleName")); // NOI18N
 
         tabbedPane.addTab(resourceMap.getString("databasePasswordPanel.TabConstraints.tabTitle"), databasePasswordPanel); // NOI18N
 
@@ -436,11 +476,11 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 436, Short.MAX_VALUE)
+            .addComponent(tabbedPane)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)
+            .addComponent(tabbedPane)
         );
 
         pack();
@@ -501,19 +541,15 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
             user.setPassword(encrypted.toCharArray());
             canreg.client.CanRegClientApp.getApplication().saveUser(user);
             JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("USER ADDED. TEMPORARY PASSWORD IS ") + userName + ".");
-        } catch (SystemUnavailableException ex) {
-            Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RemoteException ex) {
-            Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SecurityException ex) {
+        } catch (SystemUnavailableException | SQLException | RemoteException | SecurityException ex) {
             Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
         refreshUsersList();
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel algorithmLabel;
     private javax.swing.JButton changeDBPasswordButton;
+    private javax.swing.JButton changeDBPasswordButton1;
     private javax.swing.JButton changePasswordButton;
     private javax.swing.JPasswordField confirmNewDBPasswordField;
     private javax.swing.JLabel confirmNewDBPasswordLabel;
@@ -525,6 +561,8 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
     private javax.swing.JPanel databasePasswordPanel;
     private javax.swing.JLabel emailLabel;
     private javax.swing.JTextField emailTextField;
+    private javax.swing.JComboBox<String> encryptionAlgorrithmComboBox;
+    private javax.swing.JComboBox<String> encryptionKeyLengthComboBox;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -533,6 +571,7 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel keyLengthLabel;
     private javax.swing.JList lockedRecordsList;
     private javax.swing.JPanel lockedRecordsPanel;
     private javax.swing.JScrollPane lockedRecordsScrollPane;
@@ -559,9 +598,7 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
                 usersListModel.addElement(user);
             }
             usersList.setModel(usersListModel);
-        } catch (SecurityException ex) {
-            Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RemoteException ex) {
+        } catch (SecurityException | RemoteException ex) {
             Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -586,9 +623,7 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
                 try {
                     canreg.client.CanRegClientApp.getApplication().changePassword(encrypted);
                     JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("PASSWORD CHANGED."));
-                } catch (SecurityException ex) {
-                    Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (RemoteException ex) {
+                } catch (SecurityException | RemoteException ex) {
                     Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } catch (SystemUnavailableException ex) {
@@ -628,11 +663,7 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
         try {
             canreg.client.CanRegClientApp.getApplication().saveUser(user);
             JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("USER UPDATED."));
-        } catch (SQLException ex) {
-            Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RemoteException ex) {
-            Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SecurityException ex) {
+        } catch (SQLException | RemoteException | SecurityException ex) {
             Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
         refreshUsersList();
@@ -647,13 +678,7 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
             user.setPassword(encrypted.toCharArray());
             canreg.client.CanRegClientApp.getApplication().saveUser(user);
             JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("PASSWORD_RESET") + "\n" + java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("TEMPORARY_PASSWORD_IS_") + user.getUserName() + ".");
-        } catch (SystemUnavailableException ex) {
-            Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RemoteException ex) {
-            Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SecurityException ex) {
+        } catch (SystemUnavailableException | SQLException | RemoteException | SecurityException ex) {
             Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -672,13 +697,7 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
         if (okToDelete && id > 0) {
             try {
                 canreg.client.CanRegClientApp.getApplication().deleteRecord(id, Globals.USERS_TABLE_NAME);
-            } catch (SQLException ex) {
-                Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (RecordLockedException ex) {
-                Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SecurityException ex) {
-                Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (RemoteException ex) {
+            } catch (SQLException | RecordLockedException | SecurityException | RemoteException ex) {
                 Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -721,7 +740,7 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
         //        return null;
         //    }
         // } else   
-        if (newDBPasswordField.getPassword().length < 8) {
+        if (newDBPasswordField.getPassword().length < 8 && !(newDBPasswordField.getPassword().length == 0 && currentDBPasswordField.getPassword().length > 0 )) {
             JOptionPane.showInternalMessageDialog(
                     databasePasswordPanel, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("BOOT PASSWORD MUST BE AT LEAST 8 CHARACTERS LONG."), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("PASSWORD TOO SHORT"), JOptionPane.YES_NO_OPTION);
             changeDBPasswordButton.setEnabled(true);
@@ -743,6 +762,8 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
 
         private final char[] newPassword;
         private final char[] oldPassword;
+        private final String encryptionAlgorithm;
+        private final String encryptionKeyLength;
 
         ChangeDBPasswordActionTask(org.jdesktop.application.Application app) {
             // Runs on the EDT.  Copy GUI state that
@@ -751,6 +772,8 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
             super(app);
             newPassword = newDBPasswordField.getPassword();
             oldPassword = currentDBPasswordField.getPassword();
+            encryptionAlgorithm = encryptionAlgorrithmComboBox.getSelectedItem().toString();
+            encryptionKeyLength = encryptionKeyLengthComboBox.getSelectedItem().toString();
         }
 
         @Override
@@ -760,12 +783,11 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
             // the Swing GUI from here.
             Boolean success = false;
             try {
-                success = canreg.client.CanRegClientApp.getApplication().setDBPassword(newPassword, oldPassword);
-            } catch (SecurityException ex) {
-                JOptionPane.showInternalMessageDialog(databasePasswordPanel, "Something went wrong during password change.\n" + ex.getLocalizedMessage(), "Password not changed.", JOptionPane.WARNING_MESSAGE);
-                Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (RemoteException ex) {
-                JOptionPane.showInternalMessageDialog(databasePasswordPanel, "Something went wrong during password change.\n" + ex.getLocalizedMessage(), "Password not changed.", JOptionPane.WARNING_MESSAGE);
+                success = canreg.client.CanRegClientApp.getApplication().encryptDatabase(newPassword, oldPassword, encryptionAlgorithm, encryptionKeyLength);
+            } 
+            catch (SecurityException | RemoteException ex) {
+                // TODO i18n
+                JOptionPane.showInternalMessageDialog(databasePasswordPanel, "Something went wrong during password change.\n" + ex.getLocalizedMessage() +"\nPlease restart CanReg5.", "Password not changed.", JOptionPane.WARNING_MESSAGE);
                 Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
             return success;  // return your result
@@ -779,9 +801,16 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
             if (success) {
                 JOptionPane.showInternalMessageDialog(databasePasswordPanel, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("PASSWORD CHANGED."));
             } else {
-                JOptionPane.showInternalMessageDialog(databasePasswordPanel, "Something went wrong during password change.", "Password not changed.", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showInternalMessageDialog(databasePasswordPanel, "Something went wrong during password change.\nPlease restart CanReg5.", "Password not changed.", JOptionPane.WARNING_MESSAGE);
             }
             changeDBPasswordButton.setEnabled(true);
         }
+    }
+
+    @Action
+    public void removeDatabasePassword() {
+        newPasswordField.setText("");
+        ChangeDBPasswordActionTask task = new ChangeDBPasswordActionTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
+        task.run();
     }
 }

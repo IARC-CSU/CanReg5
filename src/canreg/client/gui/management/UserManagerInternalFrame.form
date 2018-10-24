@@ -1,4 +1,4 @@
-<?xml version="1.1" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 
 <Form version="1.5" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JInternalFrameFormInfo">
   <Properties>
@@ -28,12 +28,12 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="tabbedPane" alignment="0" pref="436" max="32767" attributes="0"/>
+          <Component id="tabbedPane" alignment="0" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="tabbedPane" alignment="0" pref="339" max="32767" attributes="0"/>
+          <Component id="tabbedPane" alignment="0" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
   </Layout>
@@ -253,7 +253,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="passwordPanel1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="169" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="110" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -263,13 +263,16 @@
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="Password">
+                    <TitledBorder title="Password (for database encryption)">
                       <Property name="titleX" resourceKey="passwordPanel1.border.title"/>
                     </TitledBorder>
                   </Border>
                 </Property>
                 <Property name="name" type="java.lang.String" value="passwordPanel1" noResource="true"/>
               </Properties>
+              <AccessibilityProperties>
+                <Property name="AccessibleContext.accessibleName" type="java.lang.String" resourceKey="passwordPanel1.AccessibleContext.accessibleName"/>
+              </AccessibilityProperties>
 
               <Layout>
                 <DimensionLayout dim="0">
@@ -277,31 +280,39 @@
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="currentDBPasswordLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                          <Component id="newDBPasswordLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="newDBPasswordField" alignment="0" pref="278" max="32767" attributes="1"/>
-                                          <Component id="currentDBPasswordField" alignment="0" pref="278" max="32767" attributes="1"/>
-                                      </Group>
-                                      <EmptySpace max="-2" attributes="0"/>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="currentDBPasswordLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="newDBPasswordLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="confirmNewDBPasswordLabel" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="newDBPasswordField" alignment="0" pref="282" max="32767" attributes="1"/>
+                                      <Component id="currentDBPasswordField" alignment="0" pref="278" max="32767" attributes="1"/>
+                                  </Group>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="confirmNewDBPasswordLabel" max="32767" attributes="0"/>
+                                      <Component id="algorithmLabel" max="32767" attributes="0"/>
+                                      <Component id="keyLengthLabel" max="32767" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="encryptionKeyLengthComboBox" alignment="1" max="32767" attributes="0"/>
+                                      <Component id="encryptionAlgorrithmComboBox" max="32767" attributes="0"/>
                                       <Component id="confirmNewDBPasswordField" pref="278" max="32767" attributes="1"/>
-                                      <EmptySpace max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
-                                  <Component id="changeDBPasswordButton" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="changeDBPasswordButton" max="32767" attributes="0"/>
+                                      <Component id="changeDBPasswordButton1" max="32767" attributes="0"/>
+                                  </Group>
                               </Group>
                           </Group>
+                          <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -323,8 +334,19 @@
                               <Component id="confirmNewDBPasswordField" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="encryptionAlgorrithmComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="algorithmLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="encryptionKeyLengthComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="keyLengthLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Component id="changeDBPasswordButton" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="changeDBPasswordButton1" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -372,6 +394,60 @@
                 <Component class="javax.swing.JPasswordField" name="currentDBPasswordField">
                   <Properties>
                     <Property name="name" type="java.lang.String" value="currentDBPasswordField" noResource="true"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JComboBox" name="encryptionAlgorrithmComboBox">
+                  <Properties>
+                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                      <StringArray count="2">
+                        <StringItem index="0" value="DES"/>
+                        <StringItem index="1" value="AES"/>
+                      </StringArray>
+                    </Property>
+                    <Property name="name" type="java.lang.String" value="encryptionAlgorrithmComboBox" noResource="true"/>
+                  </Properties>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+                  </AuxValues>
+                </Component>
+                <Component class="javax.swing.JLabel" name="algorithmLabel">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" resourceKey="algorithmLabel.text"/>
+                    <Property name="name" type="java.lang.String" value="algorithmLabel" noResource="true"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JComboBox" name="encryptionKeyLengthComboBox">
+                  <Properties>
+                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                      <StringArray count="5">
+                        <StringItem index="0" value="56"/>
+                        <StringItem index="1" value="128"/>
+                        <StringItem index="2" value="192"/>
+                        <StringItem index="3" value="256"/>
+                        <StringItem index="4" value="512"/>
+                      </StringArray>
+                    </Property>
+                    <Property name="name" type="java.lang.String" value="encryptionKeyLengthComboBox" noResource="true"/>
+                  </Properties>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+                  </AuxValues>
+                </Component>
+                <Component class="javax.swing.JLabel" name="keyLengthLabel">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" resourceKey="keyLengthLabel.text"/>
+                    <Property name="name" type="java.lang.String" value="keyLengthLabel" noResource="true"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JButton" name="changeDBPasswordButton1">
+                  <Properties>
+                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                      <action class="canreg.client.gui.management.UserManagerInternalFrame" id="removeDatabasePassword" methodName="removeDatabasePassword"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" resourceKey="changeDBPasswordButton1.text"/>
+                    <Property name="toolTipText" type="java.lang.String" resourceKey="changeDBPasswordButton1.toolTipText"/>
+                    <Property name="actionCommand" type="java.lang.String" resourceKey="changeDBPasswordButton1.actionCommand"/>
+                    <Property name="name" type="java.lang.String" value="changeDBPasswordButton1" noResource="true"/>
                   </Properties>
                 </Component>
               </SubComponents>
