@@ -784,8 +784,10 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
             Boolean success = false;
             try {
                 success = canreg.client.CanRegClientApp.getApplication().encryptDatabase(newPassword, oldPassword, encryptionAlgorithm, encryptionKeyLength);
-            } catch (SecurityException | RemoteException ex) {
-                JOptionPane.showInternalMessageDialog(databasePasswordPanel, "Something went wrong during password change.\n" + ex.getLocalizedMessage(), "Password not changed.", JOptionPane.WARNING_MESSAGE);
+            } 
+            catch (SecurityException | RemoteException ex) {
+                // TODO i18n
+                JOptionPane.showInternalMessageDialog(databasePasswordPanel, "Something went wrong during password change.\n" + ex.getLocalizedMessage() +"\nPlease restart CanReg5.", "Password not changed.", JOptionPane.WARNING_MESSAGE);
                 Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
             return success;  // return your result
@@ -799,7 +801,7 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
             if (success) {
                 JOptionPane.showInternalMessageDialog(databasePasswordPanel, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("PASSWORD CHANGED."));
             } else {
-                JOptionPane.showInternalMessageDialog(databasePasswordPanel, "Something went wrong during password change.", "Password not changed.", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showInternalMessageDialog(databasePasswordPanel, "Something went wrong during password change.\nPlease restart CanReg5.", "Password not changed.", JOptionPane.WARNING_MESSAGE);
             }
             changeDBPasswordButton.setEnabled(true);
         }
