@@ -537,18 +537,14 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
       }
       else {
 				
-				Rcan:::core.csu_ageSpecific(dt_plot,
-					var_age="AGE_GROUP",
-					var_cases= "CASES", 
-					var_py= "COUNT",
-					group_by="SEX",
-					plot_title = ls_args$header,
-					plot_subtitle = isolate(input$selectCancerSite),
-					color_trend = color_trend,
-					logscale = bool_log,
-					age_label_list = unique(dt_plot[["AGE_GROUP_LABEL"]])
-					
-					)
+				
+				canreg_ageSpecific(
+							dt_plot=dt_plot,
+							logscale = bool_log,
+							plot_subtitle = isolate(input$selectCancerSite),
+							color_trend = color_trend
+							)
+							
 			}
 			
 		
