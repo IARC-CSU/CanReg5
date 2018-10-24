@@ -4,7 +4,7 @@ library(shinyjs)
 
 ui <- dashboardPage(
 
-  title="Canreg5 table",
+  title="Canreg5 interactive graph",
   dashboardHeader(	title = HTML(
       "<div style = 'vertical-align:middle'>
        <img src = 'LogoBetaNew64x64.ico' class='canreg_logo' align = 'center'>
@@ -45,7 +45,7 @@ ui <- dashboardPage(
 		
 		selectInput("select_format", "Format", as.list(c( "pdf","tiff","png", "svg", "ps","csv"))),
 		
-		textInput("text_filename", "Filename", "CR5_graph"),
+		textInput("text_filename", "Filename", "CanReg5_graph"),
 		
 		downloadButton('downloadFile', 'Export graph', class="mat_btn"),
 		
@@ -55,7 +55,7 @@ ui <- dashboardPage(
 		
 		actionButton('actionSlide', "Add to presentation",  class="mat_btn"),
 		
-		textInput("pptx_filename", "Powerpoint filename", "CR5_slide"),
+		textInput("pptx_filename", "Powerpoint filename", "CanReg5_slide"),
 		
 		downloadButton('downloadPres', 'Create presentation',  class="mat_btn"),
 		
