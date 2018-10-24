@@ -2767,6 +2767,7 @@ canreg_asr_trend_top <- function(dt, var_asr="asr",
                                  landscape = FALSE,
                                  list_graph = FALSE,
                                  return_data = FALSE,
+																 return_plot= FALSE,
                                  canreg_header="") {
   
   
@@ -2830,10 +2831,14 @@ canreg_asr_trend_top <- function(dt, var_asr="asr",
     j <- j+1
   }
   
-  
+	if (!return_plot) {
+		print(plotlist[[1]]+guides(color = guide_legend(override.aes = list(size=1), nrow=1,byrow=TRUE)))
+		print(plotlist[[2]]+guides(color = guide_legend(override.aes = list(size=1), nrow=1,byrow=TRUE)))
+	}
+	else {
+		return(list(plotlist = plotlist))
+	}
 
-	print(plotlist[[1]]+guides(color = guide_legend(override.aes = list(size=1), nrow=1,byrow=TRUE)))
-	print(plotlist[[2]]+guides(color = guide_legend(override.aes = list(size=1), nrow=1,byrow=TRUE)))
 
   
 }
