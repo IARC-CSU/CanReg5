@@ -667,8 +667,10 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 				
 				if (bool_CI) {
 					group_by <- "SEX"
+					graph_list <- TRUE
 				} else{
 					group_by <- NULL
+					graph_list <- FALSE
 				}
 				
 				dt_plot <- Rcan:::core.csu_dt_rank(dt_plot,
@@ -697,19 +699,45 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 
 				if (download) {
 				
-					canreg_output(output_type = output_type, filename =file,landscape = FALSE,list_graph = TRUE,
-								FUN=canreg_eapc_scatter,
-                dt_plot=dt_plot,color_bar=color_bar,
-                canreg_header = ls_args$header,
-                ytitle=ytitle)
+					if (bool_CI) {
+					
+							canreg_output(output_type = output_type, filename =file,landscape = TRUE,list_graph = graph_list,
+									FUN=canreg_eapc_scatter_error_bar,
+									dt=dt_plot,
+									canreg_header = ls_args$header,
+									ytitle=ytitle)
+					
+					
+					
+					}
+					else {
+						canreg_output(output_type = output_type, filename =file,landscape = TRUE,list_graph = graph_list,
+									FUN=canreg_eapc_scatter,
+									dt_plot=dt_plot,color_bar=color_bar,
+									canreg_header = ls_args$header,
+									ytitle=ytitle)
+					}
 
 				}
 				else {
-					canreg_eapc_scatter(
-						dt_plot=dt_plot,color_bar=color_bar,
-						canreg_header = ls_args$header,
-						ytitle=ytitle)
-
+					if (bool_CI) {
+					
+						temp <- canreg_eapc_scatter_error_bar(
+								dt=dt_plot,
+								canreg_header = ls_args$header,
+								return_plot = TRUE, 
+								ytitle=ytitle)
+								
+						grid.arrange(temp$plotlist[[1]], temp$plotlist[[2]], ncol=2)
+					
+					}
+					else {
+					
+						canreg_eapc_scatter(
+							dt_plot=dt_plot,color_bar=color_bar,
+							canreg_header = ls_args$header,
+							ytitle=ytitle)
+					}
 				}
 			}
 				
@@ -775,4 +803,6 @@ multiple_output <- function(table_number, bool_ci, output_format) {
 	return(bool_temp)
 
 }                                        
+										
+
 										

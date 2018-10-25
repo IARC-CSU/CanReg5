@@ -72,9 +72,7 @@ shinyServer(function(input, output, session) {
     
     
     if (values$nb_slide == 0) {
-      
-      
-      
+
       values$text <- "Slide included:"
     } else {
       
@@ -83,6 +81,18 @@ shinyServer(function(input, output, session) {
       if (isolate(input$select_table == 7)) {
         values$text <- paste(isolate(values$text), isolate(input$selectCancerSite))
       }
+			else if (isolate(input$select_table == 10)) {
+				
+				if (isolate(input$checkCI)) {
+					values$text <- paste(isolate(values$text), isolate(input$selectCancerSite), "with CI")
+				}
+				else {
+					values$text <- paste(isolate(values$text), isolate(input$selectCancerSite))
+				
+				}
+			
+			
+			}
       
     }
     
@@ -523,11 +533,26 @@ shinyServer(function(input, output, session) {
 			}
 			else if (input$select_table==10) {
 
-			
-				values$doc <-  add_slide(values$doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
-				values$doc <- ph_with_text(values$doc, type = "title", str = "Estimated annual percentage change")
-				dims <- attr( png::readPNG (paste0(filename, ".png")), "dim" )
-				values$doc <- ph_with_img(values$doc, paste0(filename, ".png"),width=graph_width,height=graph_width*dims[1]/dims[2])
+				if (input$checkCI) {
+					
+					dims <- attr( png::readPNG (paste0(filename, "001.png")), "dim" )
+
+					values$doc <-  add_slide(values$doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
+					values$doc <- ph_with_text(values$doc, type = "title", str = "Estimated annual percentage change:\r\nMales")
+					values$doc <- ph_with_img(values$doc, paste0(filename, "001.png"), index=1,width=graph_width,height=graph_width*dims[1]/dims[2])
+
+					values$doc <-  add_slide(values$doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
+					values$doc <- ph_with_text(values$doc, type = "title", str = "Estimated annual percentage change:\r\nFemales")
+					values$doc <- ph_with_img(values$doc, paste0(filename, "002.png"), index=1,width=graph_width,height=graph_width*dims[1]/dims[2])
+				
+				
+				}
+				else {
+					values$doc <-  add_slide(values$doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
+					values$doc <- ph_with_text(values$doc, type = "title", str = "Estimated annual percentage change")
+					dims <- attr( png::readPNG (paste0(filename, ".png")), "dim" )
+					values$doc <- ph_with_img(values$doc, paste0(filename, ".png"),width=graph_width,height=graph_width*dims[1]/dims[2])
+				}
 				
 			}
 			 

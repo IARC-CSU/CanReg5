@@ -2951,6 +2951,7 @@ canreg_eapc_scatter_error_bar <- function(dt,
                                           list_graph = TRUE,
                                           canreg_header=NULL,
                                           return_data = FALSE,
+																					return_plot = FALSE, 
                                           ytitle="") {
   
   if (return_data) {
@@ -2992,10 +2993,18 @@ canreg_eapc_scatter_error_bar <- function(dt,
         landscape=landscape,
         ytitle=axe_title)
     
-    print(plotlist[[j]])
+    #print(plotlist[[j]])
     j <- j+1
     
   }
+	
+	if (!return_plot) {
+		print(plotlist[[1]])
+		print(plotlist[[2]])
+	}
+	else {
+		return(list(plotlist = plotlist))
+	}
 }
 
 
