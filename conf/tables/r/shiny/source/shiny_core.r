@@ -243,6 +243,30 @@ shiny_data <- function(input) {
 			}
 				
 		}
+		else if (table_number == 11){
+
+			if (!is.null(input$slideAgeRange)) {
+			
+				dt_temp <- dt_base
+				dt_temp <- dt_temp[ICD10GROUP != "C44",]
+				dt_temp <- dt_temp[ICD10GROUP != "O&U",]
+				
+				first_age <- (input$slideAgeRange[1]/5)+1
+				last_age <- input$slideAgeRange[2]/5
+				max_age <- canreg_age_group$last_age+1 
+				if (last_age >= max_age) last_age <- 18
+				
+				dt_temp <- canreg_ageSpecific_rate_data(dt_temp, keep_ref = TRUE, keep_year = TRUE)
+				
+				dt_temp<- Rcan:::core.csu_asr(df_data =dt_temp, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
+																				group_by = c("cancer_label", "SEX", "YEAR", "ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt_temp),
+																				first_age = first_age,
+																				last_age= last_age,
+																				pop_base_count = "REFERENCE_COUNT",
+																				age_label_list = "AGE_GROUP_LABEL")  
+			}
+				
+		}
 	}
  
   return(dt_temp)
@@ -742,6 +766,42 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 			}
 				
 			
+		}
+		else if (table_number == 11){
+			
+			if (!is.null( input$selectCancerSite) & !is.null(input$radioLog)) {
+			
+				bool_log <- (input$radioLog == "log")
+				color_trend <- c("Male" = "#2c7bb6", "Female" = "#b62ca1")
+				dt_plot <- dt_plot[cancer_label == input$selectCancerSite,]
+				
+				 if (download) {
+				 
+					canreg_output(output_type = output_type, filename =file,landscape = FALSE,list_graph = FALSE,
+								FUN=canreg_ageSpecific,
+								dt_plot=dt_plot,
+								logscale = bool_log,
+								plot_subtitle = isolate(input$selectCancerSite),
+								color_trend = color_trend
+								)
+							
+				}
+				else {
+					
+					
+					canreg_ageSpecific(
+								dt_plot=dt_plot,
+								logscale = bool_log,
+								plot_subtitle = isolate(input$selectCancerSite),
+								color_trend = color_trend
+								)
+								
+				}
+				
+			
+			
+			}
+		
 		}
 
   }
