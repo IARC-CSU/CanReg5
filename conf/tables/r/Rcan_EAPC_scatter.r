@@ -45,7 +45,7 @@ tryCatch({
                     age_label_list = "AGE_GROUP_LABEL")
   
   ##Keep top based on rank
-  dt <- csu_dt_rank(dt,
+  dt <- Rcan:::core.csu_dt_rank(dt,
                     var_value= "CASES",
                     var_rank = "cancer_label",
                     group_by = "SEX",
