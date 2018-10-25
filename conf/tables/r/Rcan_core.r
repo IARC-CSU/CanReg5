@@ -1464,13 +1464,7 @@ csu_cum_risk_core <- function(df_data, var_age, var_cases, var_py, group_by=NULL
 
 
 
-csu_trend_legend <-
-  function(title=NULL, position="bottom",nrow=1, right_space_margin=1) {
-    
-    structure(list(title = title, position = position,
-                   nrow = nrow,
-                   right_space_margin = right_space_margin))
-  }
+
 
 
 

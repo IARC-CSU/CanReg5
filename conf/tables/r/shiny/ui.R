@@ -23,22 +23,7 @@ ui <- dashboardPage(
              tags$p("Graphics")
     ),
     		
-		selectInput("select_table", NULL, 
-		            c( "Population pyramid" = 1,
-					   "Barchart of cases by age group by sex" = 2, 
-					   "piechart of cases by age group by sex" = 3, 
-						 "Barchart of cases by year" = 8,
-					   "Top cancer both sexes" = 4 ,
-		         "Top cancer by sexes" = 5 ,
-		         "Age-specific rates (Top Cancer Sites)" = 6,
-		         "Age-specific rate by cancer sites" = 7,
-						 "Time trends (Top cancer Sites)" = 9)
-					   
-						 #"CI5 comparison" = 8,
-					   #"Time trends (Top cancer Sites)" = 9,
-					   #"EAPC scatter graph" = 10
-		         # )
-		),
+		uiOutput("UI_select_table"),
 		
 		tags$div(class="subHeader", checked=NA,
 		         tags$p("Export Graph")

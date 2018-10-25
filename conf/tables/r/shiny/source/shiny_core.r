@@ -3,218 +3,219 @@
 shiny_data <- function(input) {
   
   dt_temp <- NULL
-  
-  table_number <- input$select_table
-  if ( table_number == 1) {
-    dt_temp <- canreg_pop_data(pop_file =ls_args$pop)
-    
-    
-  }
-  else if (table_number == 2){
-    
-    
-    if (!is.null(input$radioSkin) & !is.null(input$radioAgeGroup)) {
-      
+  if  (!is.null(input$select_table)) {
+		table_number <- input$select_table
+		if ( table_number == 1) {
+			dt_temp <- canreg_pop_data(pop_file =ls_args$pop)
+			
+			
+		}
+		else if (table_number == 2){
+			
+			
+			if (!is.null(input$radioSkin) & !is.null(input$radioAgeGroup)) {
+				
 
-      if (input$radioSkin == 1 ){
-        bool_skin <- FALSE
-      }
-      else {
-        bool_skin <- TRUE
-      }
-	  
-	  if (input$radioAgeGroup == 1 ){
-		temp <- (canreg_age_group$last_age-2)*5
-		
-        age_group = seq(5,temp,5)
-      }
-      else {
-        age_group  <- c(15,30,50,70)
-      }
-		  
-	  dt_temp <- dt_base
-	  dt_temp[ICD10GROUP != "C44",]$ICD10GROUP ="O&U"
-	  dt_temp[ICD10GROUP != "C44",]$ICD10GROUPLABEL ="Other and unspecified"
-	  dt_temp <- dt_temp[, .(CASES=sum(CASES)),by=.(ICD10GROUP, ICD10GROUPLABEL, YEAR,SEX, AGE_GROUP,AGE_GROUP_LABEL,COUNT,REFERENCE_COUNT) ]
-	  
-	  
-	  
-	  
-	  #dt_report <- canreg_age_cases_data(dt_report,age_group = c(5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80), skin=TRUE)
-	  
-      
-      dt_temp <- canreg_age_cases_data(dt_temp,age_group= age_group, skin=bool_skin)
-      
-    }
-    
-  }
-  else if (table_number == 3){
-    
-    
-    if (!is.null(input$radioSkin)) {
-      
-
-      if (input$radioSkin == 1 ){
-        bool_skin <- FALSE
-      }
-      else {
-        bool_skin <- TRUE
-      }
-	  
-	 
-		  
-	  dt_temp <- dt_base
-	  dt_temp[ICD10GROUP != "C44",]$ICD10GROUP ="O&U"
-	  dt_temp[ICD10GROUP != "C44",]$ICD10GROUPLABEL ="Other and unspecified"
-	  dt_temp <- dt_temp[, .(CASES=sum(CASES)),by=.(ICD10GROUP, ICD10GROUPLABEL, YEAR,SEX, AGE_GROUP,AGE_GROUP_LABEL,COUNT,REFERENCE_COUNT) ]
-      
-      dt_temp <- canreg_age_cases_data(dt_temp, skin=bool_skin)
-      
-    }
-    
-  }
-  else if (table_number == 4){
-    
-    
-    if (!is.null(input$slideAgeRange)& !is.null(input$radioValue)) {
-	
+				if (input$radioSkin == 1 ){
+					bool_skin <- FALSE
+				}
+				else {
+					bool_skin <- TRUE
+				}
+			
+			if (input$radioAgeGroup == 1 ){
+			temp <- (canreg_age_group$last_age-2)*5
+			
+					age_group = seq(5,temp,5)
+				}
+				else {
+					age_group  <- c(15,30,50,70)
+				}
+				
 			dt_temp <- dt_base
-			dt_temp <- dt_temp[ICD10GROUP != "C44",]
-			dt_temp <- dt_temp[ICD10GROUP != "O&U",]
-      
-			first_age <- (input$slideAgeRange[1]/5)+1
-      last_age <- input$slideAgeRange[2]/5
-      max_age <- canreg_age_group$last_age 
-      if (last_age >= max_age) last_age <- 18
-      
-      dt_temp <- canreg_ageSpecific_rate_data( dt_temp, keep_ref = TRUE)
-      
-      if (isolate(input$radioValue) == "cum") {
-        if (last_age > 15) last_age <-15
-        dt_temp <- csu_cum_risk_core(df_data =dt_temp,
-                                     var_age="AGE_GROUP", var_cases="CASES", var_py="COUNT",
-                                     group_by = c("cancer_label", "SEX"),
-                                     missing_age = canreg_missing_age(dt_temp),
-                                     age_label_list = "AGE_GROUP_LABEL",
-                                     last_age= last_age)
-      }
-      else{
-      
-      
-      dt_temp<- Rcan:::core.csu_asr(df_data =dt_temp, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
-                                    group_by = c("cancer_label", "SEX"), missing_age = canreg_missing_age(dt_temp),
-                                    first_age = first_age,
-                                    last_age= last_age,
-                                    pop_base_count = "REFERENCE_COUNT",
-                                    age_label_list = "AGE_GROUP_LABEL")
-      
-      }
-    
-    }
-    
-  }
-	else if (table_number == 5){
-    
-    
-    if (!is.null(input$slideAgeRange) & !is.null(input$radioValue)) {
-	
-			dt_temp <- dt_base
-			dt_temp <- dt_temp[ICD10GROUP != "C44",]
-			dt_temp <- dt_temp[ICD10GROUP != "O&U",]
-      
-			first_age <- (input$slideAgeRange[1]/5)+1
-      last_age <- input$slideAgeRange[2]/5
-      max_age <- canreg_age_group$last_age 
-      if (last_age >= max_age) last_age <- 18
-    
-      dt_temp <- canreg_ageSpecific_rate_data( dt_temp, keep_ref = TRUE)
-      
-      if (isolate(input$radioValue) == "cum") {
-        if (last_age > 15) last_age <-15
-        dt_temp <- csu_cum_risk_core(df_data =dt_temp,
-                                     var_age="AGE_GROUP", var_cases="CASES", var_py="COUNT",
-                                     group_by = c("cancer_label", "SEX","ICD10GROUPCOLOR"),
-                                     missing_age = canreg_missing_age(dt_temp),
-                                     age_label_list = "AGE_GROUP_LABEL",
-                                     last_age= last_age)
-      }
-      else{
-      
-      
-      dt_temp<- Rcan:::core.csu_asr(df_data =dt_temp, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
-                                    group_by = c("cancer_label", "SEX","ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt_temp),
-                                    first_age = first_age,
-                                    last_age= last_age,
-                                    pop_base_count = "REFERENCE_COUNT",
-                                    age_label_list = "AGE_GROUP_LABEL")
-      
-      }
-    
-    }
-    
-  }
-	else if (table_number == 6){
+			dt_temp[ICD10GROUP != "C44",]$ICD10GROUP ="O&U"
+			dt_temp[ICD10GROUP != "C44",]$ICD10GROUPLABEL ="Other and unspecified"
+			dt_temp <- dt_temp[, .(CASES=sum(CASES)),by=.(ICD10GROUP, ICD10GROUPLABEL, YEAR,SEX, AGE_GROUP,AGE_GROUP_LABEL,COUNT,REFERENCE_COUNT) ]
+			
+			
+			
+			
+			#dt_report <- canreg_age_cases_data(dt_report,age_group = c(5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80), skin=TRUE)
+			
+				
+				dt_temp <- canreg_age_cases_data(dt_temp,age_group= age_group, skin=bool_skin)
+				
+			}
+			
+		}
+		else if (table_number == 3){
+			
+			
+			if (!is.null(input$radioSkin)) {
+				
 
-		dt_temp <- dt_base
-		dt_temp <- dt_temp[ICD10GROUP != "C44",]
-		dt_temp <- dt_temp[ICD10GROUP != "O&U",]
-		dt_temp <- canreg_ageSpecific_rate_data(dt_temp)
-      
-  }
-	else if (table_number == 7){
-
-		dt_temp <- dt_base
-		dt_temp <- dt_temp[ICD10GROUP != "C44",]
-		dt_temp <- dt_temp[ICD10GROUP != "O&U",]
-		dt_temp <- canreg_ageSpecific_rate_data(dt_temp)
-      
-  }
-	else if (table_number == 8){
-
-		if (!is.null(input$radioSkin)) {
-      
-
-      if (input$radioSkin == 1 ){
-        bool_skin <- FALSE
-      }
-      else {
-        bool_skin <- TRUE
-      }
-
+				if (input$radioSkin == 1 ){
+					bool_skin <- FALSE
+				}
+				else {
+					bool_skin <- TRUE
+				}
+			
+		 
+				
 			dt_temp <- dt_base
 			dt_temp[ICD10GROUP != "C44",]$ICD10GROUP ="O&U"
 			dt_temp[ICD10GROUP != "C44",]$ICD10GROUPLABEL ="Other and unspecified"
 			dt_temp <- dt_temp[, .(CASES=sum(CASES)),by=.(ICD10GROUP, ICD10GROUPLABEL, YEAR,SEX, AGE_GROUP,AGE_GROUP_LABEL,COUNT,REFERENCE_COUNT) ]
 				
-			dt_temp <- canreg_year_cases_data(dt_temp, skin=bool_skin)
-      
-    }
-      
-  }
-	else if (table_number == 9){
-
-		if (!is.null(input$slideAgeRange)) {
+				dt_temp <- canreg_age_cases_data(dt_temp, skin=bool_skin)
+				
+			}
+			
+		}
+		else if (table_number == 4){
+			
+			
+			if (!is.null(input$slideAgeRange)& !is.null(input$radioValue)) {
 		
+				dt_temp <- dt_base
+				dt_temp <- dt_temp[ICD10GROUP != "C44",]
+				dt_temp <- dt_temp[ICD10GROUP != "O&U",]
+				
+				first_age <- (input$slideAgeRange[1]/5)+1
+				last_age <- input$slideAgeRange[2]/5
+				max_age <- canreg_age_group$last_age 
+				if (last_age >= max_age) last_age <- 18
+				
+				dt_temp <- canreg_ageSpecific_rate_data( dt_temp, keep_ref = TRUE)
+				
+				if (isolate(input$radioValue) == "cum") {
+					if (last_age > 15) last_age <-15
+					dt_temp <- csu_cum_risk_core(df_data =dt_temp,
+																			 var_age="AGE_GROUP", var_cases="CASES", var_py="COUNT",
+																			 group_by = c("cancer_label", "SEX"),
+																			 missing_age = canreg_missing_age(dt_temp),
+																			 age_label_list = "AGE_GROUP_LABEL",
+																			 last_age= last_age)
+				}
+				else{
+				
+				
+				dt_temp<- Rcan:::core.csu_asr(df_data =dt_temp, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
+																			group_by = c("cancer_label", "SEX"), missing_age = canreg_missing_age(dt_temp),
+																			first_age = first_age,
+																			last_age= last_age,
+																			pop_base_count = "REFERENCE_COUNT",
+																			age_label_list = "AGE_GROUP_LABEL")
+				
+				}
+			
+			}
+			
+		}
+		else if (table_number == 5){
+			
+			
+			if (!is.null(input$slideAgeRange) & !is.null(input$radioValue)) {
+		
+				dt_temp <- dt_base
+				dt_temp <- dt_temp[ICD10GROUP != "C44",]
+				dt_temp <- dt_temp[ICD10GROUP != "O&U",]
+				
+				first_age <- (input$slideAgeRange[1]/5)+1
+				last_age <- input$slideAgeRange[2]/5
+				max_age <- canreg_age_group$last_age 
+				if (last_age >= max_age) last_age <- 18
+			
+				dt_temp <- canreg_ageSpecific_rate_data( dt_temp, keep_ref = TRUE)
+				
+				if (isolate(input$radioValue) == "cum") {
+					if (last_age > 15) last_age <-15
+					dt_temp <- csu_cum_risk_core(df_data =dt_temp,
+																			 var_age="AGE_GROUP", var_cases="CASES", var_py="COUNT",
+																			 group_by = c("cancer_label", "SEX","ICD10GROUPCOLOR"),
+																			 missing_age = canreg_missing_age(dt_temp),
+																			 age_label_list = "AGE_GROUP_LABEL",
+																			 last_age= last_age)
+				}
+				else{
+				
+				
+				dt_temp<- Rcan:::core.csu_asr(df_data =dt_temp, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
+																			group_by = c("cancer_label", "SEX","ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt_temp),
+																			first_age = first_age,
+																			last_age= last_age,
+																			pop_base_count = "REFERENCE_COUNT",
+																			age_label_list = "AGE_GROUP_LABEL")
+				
+				}
+			
+			}
+			
+		}
+		else if (table_number == 6){
+
 			dt_temp <- dt_base
 			dt_temp <- dt_temp[ICD10GROUP != "C44",]
 			dt_temp <- dt_temp[ICD10GROUP != "O&U",]
-      
-			first_age <- (input$slideAgeRange[1]/5)+1
-      last_age <- input$slideAgeRange[2]/5
-      max_age <- canreg_age_group$last_age 
-      if (last_age >= max_age) last_age <- 18
+			dt_temp <- canreg_ageSpecific_rate_data(dt_temp)
+				
+		}
+		else if (table_number == 7){
+
+			dt_temp <- dt_base
+			dt_temp <- dt_temp[ICD10GROUP != "C44",]
+			dt_temp <- dt_temp[ICD10GROUP != "O&U",]
+			dt_temp <- canreg_ageSpecific_rate_data(dt_temp)
+				
+		}
+		else if (table_number == 8){
+
+			if (!is.null(input$radioSkin)) {
+				
+
+				if (input$radioSkin == 1 ){
+					bool_skin <- FALSE
+				}
+				else {
+					bool_skin <- TRUE
+				}
+
+				dt_temp <- dt_base
+				dt_temp[ICD10GROUP != "C44",]$ICD10GROUP ="O&U"
+				dt_temp[ICD10GROUP != "C44",]$ICD10GROUPLABEL ="Other and unspecified"
+				dt_temp <- dt_temp[, .(CASES=sum(CASES)),by=.(ICD10GROUP, ICD10GROUPLABEL, YEAR,SEX, AGE_GROUP,AGE_GROUP_LABEL,COUNT,REFERENCE_COUNT) ]
+					
+				dt_temp <- canreg_year_cases_data(dt_temp, skin=bool_skin)
+				
+			}
+				
+		}
+		else if (table_number == 9){
+
+			if (!is.null(input$slideAgeRange)) {
 			
-			dt_temp <- canreg_ageSpecific_rate_data(dt_temp, keep_ref = TRUE, keep_year = TRUE)
-			
-			dt_temp<- Rcan:::core.csu_asr(df_data =dt_temp, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
-																			group_by = c("cancer_label", "SEX", "YEAR", "ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt_temp),
-																		  first_age = first_age,
-																			last_age= last_age,
-																			pop_base_count = "REFERENCE_COUNT",
-																			age_label_list = "AGE_GROUP_LABEL")  
-    }
-      
-  }
+				dt_temp <- dt_base
+				dt_temp <- dt_temp[ICD10GROUP != "C44",]
+				dt_temp <- dt_temp[ICD10GROUP != "O&U",]
+				
+				first_age <- (input$slideAgeRange[1]/5)+1
+				last_age <- input$slideAgeRange[2]/5
+				max_age <- canreg_age_group$last_age 
+				if (last_age >= max_age) last_age <- 18
+				
+				dt_temp <- canreg_ageSpecific_rate_data(dt_temp, keep_ref = TRUE, keep_year = TRUE)
+				
+				dt_temp<- Rcan:::core.csu_asr(df_data =dt_temp, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
+																				group_by = c("cancer_label", "SEX", "YEAR", "ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt_temp),
+																				first_age = first_age,
+																				last_age= last_age,
+																				pop_base_count = "REFERENCE_COUNT",
+																				age_label_list = "AGE_GROUP_LABEL")  
+			}
+				
+		}
+	}
  
   return(dt_temp)
   
@@ -225,14 +226,14 @@ shiny_data <- function(input) {
 
 shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL) {
   
-
+	if  (!is.null(input$select_table)) {
   
-  if (download) {
-    table_number <- input$select_table
-    if (slide) {
-			ls_args$header  <- ""
-      output_type <- "png"
-    }
+		if (download) {
+			table_number <- input$select_table
+			if (slide) {
+				ls_args$header  <- ""
+				output_type <- "png"
+			}
     else {
       output_type <- input$select_format
     }
@@ -631,7 +632,7 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
     
   }
 
-  
+  }
   
 }
 

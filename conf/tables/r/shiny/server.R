@@ -37,6 +37,30 @@ shinyServer(function(input, output, session) {
   progress_bar <- reactiveValues(object=NULL)
   table <- reactiveValues(label="")
 
+
+	
+	output$UI_select_table <- renderUI({
+	
+		table_list <- c( "Population pyramid" = 1,
+			"Barchart of cases by age group by sex" = 2, 
+			"piechart of cases by age group by sex" = 3, 
+			"Barchart of cases by year" = 8,
+			"Top cancer both sexes" = 4 ,
+			"Top cancer by sexes" = 5 ,
+			"Age-specific rates (Top Cancer Sites)" = 6,
+			"Age-specific rate by cancer sites" = 7)
+			
+			if (year_info$span >= 3) {
+			
+			table_list = c(table_list, "Time trends (Top cancer Sites)" = 9)
+			
+			} 
+		
+			
+		selectInput("select_table", NULL,selected = 4, table_list)
+
+
+	})	
   
   output$UI_nbSlide <- renderUI({
     
@@ -62,95 +86,107 @@ shinyServer(function(input, output, session) {
     
   })
   
-  output$UI_control1 <- renderUI({
-    
-    if  (input$select_table %in% c(2,3,8)) {
-      
-	   radioButtons("radioSkin", "",
-                   c("excluding C44 skin" = 1,
-                     "including C44 skin" = 2)
-      )
-    
-    }  
-    
-    else if  (input$select_table %in% c(4,5)) {
-      
-      radioButtons("radioValue", "Value:",
-                   c("Age-standardized rate" = "asr",
-                     "Number of cases" = "cases",
-                     "Cumulative risk" = "cum")
-      )
-      
-    }
-    
-    else if (input$select_table %in% c(6,7,9)) {
-      
-      radioButtons("radioLog", "y axes scale:",
-                   c("Logarithmic" = "log",
-                     "Normal" = "normal")
-      )
-      
-    }
-  })
-  
-  output$UI_control2 <- renderUI({
-    if (input$select_table==2) {
-      
-        radioButtons("radioAgeGroup", "Age-group division:",
-                   c("0-4,5-9,...,80-84,85+" = 1,
-                     "0-14, 15-29,30-49,50-69,70+" = 2)
-      )
-      
-    }  
-    
-  })
-  
-  output$UI_control3 <- renderUI({
-    
-    
-    if  (input$select_table %in% c(4,5,6,9)) {
+
+	output$UI_control1 <- renderUI({
 		
-			slide_min <- 3
-			slide_max <- 20
-			slide_def <- 10
+		if  (!is.null(input$select_table)) {
+			if  (input$select_table %in% c(2,3,8)) {
+				
+			 radioButtons("radioSkin", "",
+										 c("excluding C44 skin" = 1,
+											 "including C44 skin" = 2)
+				)
 			
-			if (input$select_table %in%  c(6,9) ) {
+			}  
 			
-				slide_min <- 1
-				slide_max <- 10
-				slide_def <- 5
+			else if  (input$select_table %in% c(4,5)) {
+				
+				radioButtons("radioValue", "Value:",
+										 c("Age-standardized rate" = "asr",
+											 "Number of cases" = "cases",
+											 "Cumulative risk" = "cum")
+				)
+				
+			}
+			
+			else if (input$select_table %in% c(6,7,9)) {
+				
+				radioButtons("radioLog", "y axes scale:",
+										 c("Logarithmic" = "log",
+											 "Normal" = "normal")
+				)
+				
+			}
+		}
+		
+		
+			
+	})
+	
+	output$UI_control2 <- renderUI({
+	
+		if  (!is.null(input$select_table)) {
+			if (input$select_table==2) {
+				
+					radioButtons("radioAgeGroup", "Age-group division:",
+										 c("0-4,5-9,...,80-84,85+" = 1,
+											 "0-14, 15-29,30-49,50-69,70+" = 2)
+				)
+				
+			}  
+		}
+		
+	})
+	
+	output$UI_control3 <- renderUI({
+		
+		if  (!is.null(input$select_table)) {
+			if  (input$select_table %in% c(4,5,6,9)) {
+			
+				slide_min <- 3
+				slide_max <- 20
+				slide_def <- 10
+				
+				if (input$select_table %in%  c(6,9) ) {
+				
+					slide_min <- 1
+					slide_max <- 10
+					slide_def <- 5
+				
+				}
+				
+				sliderInput("slideNbTopBar", "Number of cancer sites:", slide_min, slide_max, slide_def)
+				
+				
+			} 
+			else if (input$select_table %in% c(7)) {
+				
+				
+				cancer_list <-  unique(dt_base$cancer_label)
+				n <- length(cancer_list)
+				cancer_list <- as.character(cancer_list)
+				cancer_list <- cancer_list[1:(n-1)]
+				
+				selectInput("selectCancerSite", "Select cancer sites", cancer_list)
+				
 			
 			}
-      
-      sliderInput("slideNbTopBar", "Number of cancer sites:", slide_min, slide_max, slide_def)
-      
-      
-    } 
-		else if (input$select_table %in% c(7)) {
-			
-			
-			cancer_list <-  unique(dt_base$cancer_label)
-      n <- length(cancer_list)
-      cancer_list <- as.character(cancer_list)
-			cancer_list <- cancer_list[1:(n-1)]
-			
-			selectInput("selectCancerSite", "Select cancer sites", cancer_list)
+		}
 			
 		
+	})
+	
+	output$UI_control4 <- renderUI({
+		
+		if  (!is.null(input$select_table)) {
+			if (input$select_table %in% c(4,5,9)) {
+				sliderInput("slideAgeRange", "Age group:", 0, 90, c(0,90), step=5)
+			}
 		}
-    
-  })
-  
-  output$UI_control4 <- renderUI({
-    
-    if (input$select_table %in% c(4,5,9)) {
-      sliderInput("slideAgeRange", "Age group:", 0, 90, c(0,90), step=5)
-    }
-  })
+			
+	})
+	
 
-
-    
-  
   observeEvent(input$select_table,{
     
     
@@ -236,33 +272,34 @@ shinyServer(function(input, output, session) {
   
   #Calcul statistics
   dt_all <-  reactive({ 
-    
-    if (!is.null(dt_base)) {
-	    
-      isolate(progress_bar$object)$set(value = 0, message = 'Please wait:', detail = 'Calculate statistics')
-      
 
-	
-			dt_temp <- shiny_data(input)
-	  
-			if (input$select_table %in% c(4,5,9)) {
-				if (length(bool_rv$trigger1) != 0) {
-					if (bool_rv$trigger1) {
-						bool_rv$trigger1 <- FALSE
-						}
-					}
-				}
+			if (!is.null(dt_base) & !is.null(input$select_table)) {
+				
+				isolate(progress_bar$object)$set(value = 0, message = 'Please wait:', detail = 'Calculate statistics')
 				
 
 		
-      
-      
-      return(dt_temp)
-      
-	}
-    else {
-      return(NULL)
-    }
+				dt_temp <- shiny_data(input)
+			
+				if (input$select_table %in% c(4,5,9)) {
+					if (length(bool_rv$trigger1) != 0) {
+						if (bool_rv$trigger1) {
+							bool_rv$trigger1 <- FALSE
+							}
+						}
+					}
+					
+
+			
+				
+				
+				return(dt_temp)
+				
+		}
+			else {
+				return(NULL)
+			}
+		
   })
   
 
