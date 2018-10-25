@@ -52,7 +52,13 @@ shinyServer(function(input, output, session) {
 			
 			if (year_info$span >= 3) {
 			
-			table_list = c(table_list, "Time trends (Top cancer Sites)" = 9)
+				table_list = c(table_list, "Time trends (Top cancer Sites)" = 9)
+			
+			} 
+			
+			if (year_info$span >= 3) {
+			
+				table_list = c(table_list, "Estimated Average Percentage Change" = 10)
 			
 			} 
 		
@@ -117,6 +123,11 @@ shinyServer(function(input, output, session) {
 				)
 				
 			}
+			else if (input$select_table %in% c(10)) {
+				
+				checkboxInput("checkCI", "Confidence intervalle",FALSE)
+
+			}
 		}
 		
 		
@@ -141,7 +152,7 @@ shinyServer(function(input, output, session) {
 	output$UI_control3 <- renderUI({
 		
 		if  (!is.null(input$select_table)) {
-			if  (input$select_table %in% c(4,5,6,9)) {
+			if  (input$select_table %in% c(4,5,6,9,10)) {
 			
 				slide_min <- 3
 				slide_max <- 20
@@ -152,6 +163,13 @@ shinyServer(function(input, output, session) {
 					slide_min <- 1
 					slide_max <- 10
 					slide_def <- 5
+				
+				}
+				else if (input$select_table %in%  c(10) ) {
+					
+					slide_min <- 1
+					slide_max <- 25
+					slide_def <- 20
 				
 				}
 				
@@ -179,7 +197,7 @@ shinyServer(function(input, output, session) {
 	output$UI_control4 <- renderUI({
 		
 		if  (!is.null(input$select_table)) {
-			if (input$select_table %in% c(4,5,9)) {
+			if (input$select_table %in% c(4,5,9,10)) {
 				sliderInput("slideAgeRange", "Age group:", 0, 90, c(0,90), step=5)
 			}
 		}
@@ -235,6 +253,11 @@ shinyServer(function(input, output, session) {
 			show(id="controls_COL1", anim=TRUE)
 			show(id="controls_COL2", anim=TRUE)
 		}
+		else if (input$select_table== 10) {
+			table$label <- "Estimated Annual Percentage Change"
+			show(id="controls_COL1", anim=TRUE)
+			show(id="controls_COL2", anim=TRUE)
+		}
   })
   
   observeEvent(values$nb_slide,{
@@ -281,7 +304,7 @@ shinyServer(function(input, output, session) {
 		
 				dt_temp <- shiny_data(input)
 			
-				if (input$select_table %in% c(4,5,9)) {
+				if (input$select_table %in% c(4,5,9,10)) {
 					if (length(bool_rv$trigger1) != 0) {
 						if (bool_rv$trigger1) {
 							bool_rv$trigger1 <- FALSE
@@ -327,16 +350,22 @@ shinyServer(function(input, output, session) {
     
     filename = function() {
       
+			bool_CI <- FALSE
+			if (!is.null(input$checkCI)) {
+				bool_CI <- input$checkCI
+			}
+			
       #multiple file
-      if (input$select_table %in% c(5,6,9) & 
-          input$select_format %in% c("png", "tiff", "svg")
-          ) 
-        {
-	    paste0(input$text_filename, ".", "zip")
-      } 
-      else {
-        paste0(input$text_filename, ".", input$select_format)
-      }
+			bool_multiple <- multiple_output(input$select_table, bool_CI, input$select_format)
+			
+      if (bool_multiple) {
+				paste0(input$text_filename, ".", "zip")
+			}
+			else {
+       paste0(input$text_filename, ".", input$select_format)
+			}
+						
+
       
     },
     
@@ -348,7 +377,13 @@ shinyServer(function(input, output, session) {
 			shiny_plot(dt_all(),  input, TRUE,FALSE,file_temp)
 			incProgress(1, detail = "")
 			
-			if (input$select_table %in% c(5,6,9) & input$select_format %in% c("png", "tiff", "svg")) {
+			bool_CI <- FALSE
+			if (!is.null(input$checkCI)) {
+				bool_CI <- input$checkCI
+			}
+			bool_multiple <- multiple_output(input$select_table, bool_CI, input$select_format)
+			
+			if (bool_multiple) {
 					
 					file_male <- paste0(file_temp, "001", ".", input$select_format)
 					file_female <- paste0(file_temp, "002", ".", input$select_format)
@@ -455,11 +490,11 @@ shinyServer(function(input, output, session) {
 			
 			else if (input$select_table==7) {
 				
-			str_temp <- paste0("Age-specific rates:\r\n", isolate(input$selectCancerSite))
-			dims <- attr( png::readPNG (paste0(filename, ".png")), "dim" )
-			values$doc <-  add_slide(values$doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
-			values$doc <- ph_with_text(values$doc, type = "title", str = str_temp)
-			values$doc <- ph_with_img(values$doc, paste0(filename, ".png"), index=1,width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
+				str_temp <- paste0("Age-specific rates:\r\n", isolate(input$selectCancerSite))
+				dims <- attr( png::readPNG (paste0(filename, ".png")), "dim" )
+				values$doc <-  add_slide(values$doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
+				values$doc <- ph_with_text(values$doc, type = "title", str = str_temp)
+				values$doc <- ph_with_img(values$doc, paste0(filename, ".png"), index=1,width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
 				
 				
 			}
@@ -475,15 +510,24 @@ shinyServer(function(input, output, session) {
 			else if (input$select_table==9) {
 
 			
-			dims <- attr( png::readPNG (paste0(filename, "001.png")), "dim" )
+				dims <- attr( png::readPNG (paste0(filename, "001.png")), "dim" )
 
-			values$doc <-  add_slide(values$doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
-			values$doc <- ph_with_text(values$doc, type = "title", str = "Trend in ASR:\r\nMales")
-			values$doc <- ph_with_img(values$doc, paste0(filename, "001.png"), index=1,width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
+				values$doc <-  add_slide(values$doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
+				values$doc <- ph_with_text(values$doc, type = "title", str = "Trend in ASR:\r\nMales")
+				values$doc <- ph_with_img(values$doc, paste0(filename, "001.png"), index=1,width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
+				
+				values$doc <-  add_slide(values$doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
+				values$doc <- ph_with_text(values$doc, type = "title",  str = "Trend in ASR:\r\nFemales")
+				values$doc <- ph_with_img(values$doc, paste0(filename, "002.png"), index=1,width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
+				
+			}
+			else if (input$select_table==10) {
+
 			
-			values$doc <-  add_slide(values$doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
-			values$doc <- ph_with_text(values$doc, type = "title",  str = "Trend in ASR:\r\nFemales")
-			values$doc <- ph_with_img(values$doc, paste0(filename, "002.png"), index=1,width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
+				values$doc <-  add_slide(values$doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
+				values$doc <- ph_with_text(values$doc, type = "title", str = "Estimated annual percentage change")
+				dims <- attr( png::readPNG (paste0(filename, ".png")), "dim" )
+				values$doc <- ph_with_img(values$doc, paste0(filename, ".png"),width=graph_width,height=graph_width*dims[1]/dims[2])
 				
 			}
 			 

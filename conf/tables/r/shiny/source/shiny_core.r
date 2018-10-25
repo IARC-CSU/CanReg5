@@ -215,6 +215,33 @@ shiny_data <- function(input) {
 			}
 				
 		}
+		else if (table_number == 10){
+
+			if (!is.null(input$slideAgeRange)) {
+			
+				dt_temp <- dt_base
+				dt_temp <- dt_temp[ICD10GROUP != "C44",]
+				dt_temp <- dt_temp[ICD10GROUP != "O&U",]
+				
+				first_age <- (input$slideAgeRange[1]/5)+1
+				last_age <- input$slideAgeRange[2]/5
+				max_age <- canreg_age_group$last_age 
+				if (last_age >= max_age) last_age <- 18
+				
+				dt_temp <- canreg_ageSpecific_rate_data(dt_temp, keep_ref = TRUE, keep_year = TRUE)
+				
+				dt_temp<- Rcan:::core.csu_asr(df_data =dt_temp, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
+																				group_by = c("cancer_label", "SEX", "YEAR", "ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt_temp),
+																				first_age = first_age,
+																				last_age= last_age,
+																				pop_base_count = "REFERENCE_COUNT",
+																				age_label_list = "AGE_GROUP_LABEL")
+
+				dt_temp <- Rcan:::core.csu_eapc(dt_temp, var_rate = "asr",var_year = "YEAR" ,group_by =c("cancer_label", "SEX"))
+				dt_temp <-as.data.table(dt_temp)																				
+			}
+				
+		}
 	}
  
   return(dt_temp)
@@ -238,399 +265,447 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
       output_type <- input$select_format
     }
   }
-  else {
-	  ls_args$header  <- ""
-    table_number <- isolate(input$select_table)
-  }
-  
-  
-  
-  
-  
-  if ( table_number == 1) {
-    
-    if (download) {
-      
-
-      canreg_output(output_type = output_type, filename =file,landscape = TRUE,list_graph = FALSE,
-                    FUN=canreg_population_pyramid,
-                    df_data=dt_plot,
-                    canreg_header = ls_args$header)
-    }
-    else {
-      canreg_population_pyramid( df_data=dt_plot, canreg_header = ls_args$header)
-    }
-  
-    
-  }
-  else if (table_number == 2){
-    
-    if (isolate(input$radioSkin) == 1 ){
-      bool_skin  <- FALSE
-    }
-    else {
-      bool_skin  <- TRUE
-    }
-    
-    if (download) {
-      canreg_output(output_type = output_type, filename =file,landscape = TRUE,list_graph = FALSE,
-                    FUN=canreg_cases_age_bar,
-                    df_data=dt_plot,
-                    color_bar=c("Male" = "#2c7bb6", "Female" = "#b62ca1"),
-                    canreg_header = ls_args$header,
-                    skin=bool_skin)
-    }
-    else {
-      canreg_cases_age_bar(
-        df_data=dt_plot,
-        color_bar=c("Male" = "#2c7bb6", "Female" = "#b62ca1"),
-        canreg_header = ls_args$header,
-        skin=bool_skin
-      )
-    }
-    
-  }
-  else if (table_number == 3){
-    
-    if (isolate(input$radioSkin) == 1 ){
-	  header = paste0(ls_args$header, "\n\nAll cancers but C44")
-    }
-    else {
-	  header = paste0(ls_args$header, "\n\nAll cancers")
-    }
-    
-    if (download) {
-	  canreg_output(output_type = output_type, filename =file,landscape = TRUE,list_graph = FALSE,
-                FUN=canreg_age_cases_pie_multi_plot,
-                dt=dt_plot,
-                canreg_header = header)
-    }
-    else {
-      canreg_age_cases_pie_multi_plot(
-        dt=dt_plot,
-        canreg_header = header)
-      
-    }
-    
-  }
-  else if (table_number == 4){
-	
-		if (!is.null( input$slideNbTopBar)& !is.null(input$radioValue)) {
-		
-			nb_top <- input$slideNbTopBar
-      last_age <- (isolate(input$slideAgeRange)[2]/5)
-      max_age <- canreg_age_group$last_age 
-      
-
-      
-      if (last_age < max_age) {
-        age2 <- isolate(input$slideAgeRange)[2]-1
-      } else {
-        age2 <- paste0(((max_age-1)*5), "+")
-      }
-      
-      
-      if (isolate(input$radioValue) == "asr") {
-        var_top <- "asr"
-        digit <- 1
-        ytitle <- paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=","), ", ", isolate(input$slideAgeRange)[1], "-", age2, " years old" )
-        
-        
-      } 
-      else if (isolate(input$radioValue) == "cases"){
-        var_top <- "CASES"
-        digit <- 0
-        ytitle <-  paste0("Number of cases, ", isolate(input$slideAgeRange)[1], "-", age2, " years old" )
-        
-        
-      }
-      else if (isolate(input$radioValue) == "cum") {
-        var_top <- "cum_risk"
-        digit <- 2
-        if (last_age >= 15) {
-          age2 <- 74
-        } else {
-          age2 <- isolate(input$slideAgeRange)[2]-1
-        }
-        ytitle<-paste0("Cumulative incidence risk (percent), 0-",age2, " years old" )
-        
-        
-      }
-      
-      if (download) {
-        canreg_output(output_type = output_type, filename =file,landscape = TRUE,list_graph = FALSE,
-                      FUN=canreg_bar_top,
-                      df_data=dt_plot,
-                      var_top = var_top,
-                      color_bar=c("Male" = "#2c7bb6", "Female" = "#b62ca1"),
-                      nb_top = nb_top,nsmall=digit,
-                      canreg_header  = ls_args$header,
-                      ytitle=ytitle)
-      }
-      else {
-        canreg_bar_top(df_data=dt_plot,
-                       var_top = var_top,
-                       color_bar=c("Male" = "#2c7bb6", "Female" = "#b62ca1"),
-                       nb_top = nb_top,nsmall=digit,
-                       canreg_header = ls_args$header,
-                       ytitle=ytitle)
-      }
-     
-      
-      
-      
-      
-    }
-    
-  }
-  
-	else if (table_number == 5){
-	
-		if (!is.null( input$slideNbTopBar)& !is.null(input$radioValue)) {
-		
-			nb_top <- input$slideNbTopBar
-      last_age <- (isolate(input$slideAgeRange)[2]/5)
-      max_age <- canreg_age_group$last_age # to change 
-      
-
-      
-      if (last_age < max_age) {
-        age2 <- isolate(input$slideAgeRange)[2]-1
-      } else {
-        age2 <- paste0(((max_age-1)*5), "+")
-      }
-      
-      
-      if (isolate(input$radioValue) == "asr") {
-        var_top <- "asr"
-        digit <- 1
-        ytitle <- paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=","), ", ", isolate(input$slideAgeRange)[1], "-", age2, " years old" )
-        
-        
-      } 
-      else if (isolate(input$radioValue) == "cases"){
-        var_top <- "CASES"
-        digit <- 0
-        ytitle <-  paste0("Number of cases, ", isolate(input$slideAgeRange)[1], "-", age2, " years old" )
-        
-        
-      }
-      else if (isolate(input$radioValue) == "cum") {
-        var_top <- "cum_risk"
-        digit <- 2
-        if (last_age >= 15) {
-          age2 <- 74
-        } else {
-          age2 <- isolate(input$slideAgeRange)[2]-1
-        }
-        ytitle<-paste0("Cumulative incidence risk (percent), 0-",age2, " years old" )
-        
-        
-      }
-      
-      if (download) {
-									
-        canreg_output(output_type = output_type, filename =file,landscape = FALSE,list_graph = TRUE,
-                      FUN=canreg_bar_top_single,
-                      dt=dt_plot,
-                      var_top = var_top,
-                      nb_top = nb_top,digit=digit,
-                      canreg_header  = ls_args$header,
-                      xtitle=ytitle)
-      }
-      else {
-				 temp <- canreg_bar_top_single(
-					dt=dt_plot,
-					var_top = var_top,
-					nb_top = nb_top,digit=digit,
-					canreg_header  = ls_args$header,
-					xtitle=ytitle,
-					return_plot=TRUE)
-					
-					
-
-    
-        grid.arrange(temp$plotlist[[1]], temp$plotlist[[2]], ncol=2)
-					
-				
-					
-					
-					
-      }
-     
-      
-      
-      
-      
-    }
-    
-  }
-	else if (table_number == 6){
-	
-		if (!is.null( input$slideNbTopBar) & !is.null(input$radioLog)) {
-		
-			nb_top <- input$slideNbTopBar
-			
-			if (input$radioLog == "log") {
-				bool_log <- TRUE
-			}
-			else {
-				bool_log <- FALSE
-			}
-
-      if (download) {
-				
-				canreg_output(output_type = output_type, filename =file,landscape = FALSE,list_graph = TRUE,
-							FUN=canreg_ageSpecific_rate_top,
-							df_data=dt_plot,logscale = bool_log,nb_top = nb_top,
-							plot_title = ls_args$header
-							)
-						
-      }
-      else {
-				temp <- Rcan:::core.csu_ageSpecific_top(
-					df_data=dt_plot,
-					var_age="AGE_GROUP",
-					var_cases= "CASES", 
-					var_py= "COUNT",
-					var_top = "cancer_label",
-					var_age_label_list = "AGE_GROUP_LABEL",
-					group_by="SEX",
-					missing_age=canreg_missing_age(dt_plot),
-					var_color="ICD10GROUPCOLOR",
-					logscale = bool_log,
-					nb_top = nb_top,
-					plot_title = ls_args$header
-				)
-            
-            
-				temp$plotlist[[1]] <- temp$plotlist[[1]]+guides(color = guide_legend(override.aes = list(size=1), nrow=2,byrow=TRUE))
-				temp$plotlist[[2]] <- temp$plotlist[[2]]+guides(color = guide_legend(override.aes = list(size=1), nrow=2,byrow=TRUE))
-				grid.arrange(temp$plotlist[[1]], temp$plotlist[[2]], ncol=2)
-
-      }
-     
-      
-      
-      
-      
-    }
-    
-  }
-	else if (table_number == 7){
-		
-		if (!is.null( input$selectCancerSite) & !is.null(input$radioLog)) {
-		
-			bool_log <- (input$radioLog == "log")
-			color_trend <- c("Male" = "#2c7bb6", "Female" = "#b62ca1")
-			dt_plot <- dt_plot[cancer_label == input$selectCancerSite,]
-			
-			 if (download) {
-			 
-				canreg_output(output_type = output_type, filename =file,landscape = FALSE,list_graph = FALSE,
-							FUN=canreg_ageSpecific,
-							dt_plot=dt_plot,
-							logscale = bool_log,
-							plot_subtitle = isolate(input$selectCancerSite),
-							color_trend = color_trend
-							)
-						
-      }
-      else {
-				
-				
-				canreg_ageSpecific(
-							dt_plot=dt_plot,
-							logscale = bool_log,
-							plot_subtitle = isolate(input$selectCancerSite),
-							color_trend = color_trend
-							)
-							
-			}
-			
-		
-		
+		else {
+			ls_args$header  <- ""
+			table_number <- isolate(input$select_table)
 		}
-	
-	}
-	else if (table_number == 8){
-    
-    if (isolate(input$radioSkin) == 1 ){
-      bool_skin  <- FALSE
-    }
-    else {
-      bool_skin  <- TRUE
-    }
-    
-    if (download) {
-      canreg_output(output_type = output_type, filename =file,landscape = TRUE,list_graph = FALSE,
-                    FUN=canreg_cases_year_bar,
-                    dt=dt_plot,
-                    canreg_header = ls_args$header,
-                    skin=bool_skin)
-    }
-    else {
-       canreg_cases_year_bar(
-				dt=dt_plot,
-				canreg_header = ls_args$header,
-				skin=bool_skin
-			)
-    }
-    
-  }
-	else if (table_number == 9){
-    
-   if (!is.null( input$slideNbTopBar) & !is.null(input$radioLog)) {
+		
+		
+		
+		
+		
+		if ( table_number == 1) {
 			
-			if (input$radioLog == "log") {
-				bool_log <- TRUE
-			}
-			else {
-				bool_log <- FALSE
-			}
-			
-			nb_top <- input$slideNbTopBar
-			last_age <- (isolate(input$slideAgeRange)[2]/5)
-      max_age <- canreg_age_group$last_age 
-
-			if (last_age < max_age) {
-        age2 <- isolate(input$slideAgeRange)[2]-1
-      } else {
-        age2 <- paste0(((max_age-1)*5), "+")
-      }
-			
-			 ytitle <- paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=","), ", ", isolate(input$slideAgeRange)[1], "-", age2, " years old" )
-	 
-
 			if (download) {
-			
-				canreg_output(output_type = output_type, filename =file,landscape = FALSE,list_graph = TRUE,
-							FUN=canreg_asr_trend_top,
-							dt=dt_plot,number = nb_top,
-							canreg_header = ls_args$header,
-							logscale = bool_log,
-							ytitle=ytitle)
+				
 
+				canreg_output(output_type = output_type, filename =file,landscape = TRUE,list_graph = FALSE,
+											FUN=canreg_population_pyramid,
+											df_data=dt_plot,
+											canreg_header = ls_args$header)
 			}
 			else {
-				temp <- canreg_asr_trend_top(
-					dt=dt_plot,number = nb_top,
-					canreg_header = ls_args$header,
-					logscale = bool_log,
-					return_plot=TRUE,
-					ytitle=ytitle)
-					
-					
-			grid.arrange(
-				temp$plotlist[[1]]+guides(color = guide_legend(override.aes = list(size=1), nrow=1,byrow=TRUE)),
-				temp$plotlist[[2]]+guides(color = guide_legend(override.aes = list(size=1), nrow=1,byrow=TRUE)),
-				ncol=2)
-
+				canreg_population_pyramid( df_data=dt_plot, canreg_header = ls_args$header)
 			}
-		}
+		
 			
-    
-  }
+		}
+		else if (table_number == 2){
+			
+			if (isolate(input$radioSkin) == 1 ){
+				bool_skin  <- FALSE
+			}
+			else {
+				bool_skin  <- TRUE
+			}
+			
+			if (download) {
+				canreg_output(output_type = output_type, filename =file,landscape = TRUE,list_graph = FALSE,
+											FUN=canreg_cases_age_bar,
+											df_data=dt_plot,
+											color_bar=c("Male" = "#2c7bb6", "Female" = "#b62ca1"),
+											canreg_header = ls_args$header,
+											skin=bool_skin)
+			}
+			else {
+				canreg_cases_age_bar(
+					df_data=dt_plot,
+					color_bar=c("Male" = "#2c7bb6", "Female" = "#b62ca1"),
+					canreg_header = ls_args$header,
+					skin=bool_skin
+				)
+			}
+			
+		}
+		else if (table_number == 3){
+			
+			if (isolate(input$radioSkin) == 1 ){
+			header = paste0(ls_args$header, "\n\nAll cancers but C44")
+			}
+			else {
+			header = paste0(ls_args$header, "\n\nAll cancers")
+			}
+			
+			if (download) {
+			canreg_output(output_type = output_type, filename =file,landscape = TRUE,list_graph = FALSE,
+									FUN=canreg_age_cases_pie_multi_plot,
+									dt=dt_plot,
+									canreg_header = header)
+			}
+			else {
+				canreg_age_cases_pie_multi_plot(
+					dt=dt_plot,
+					canreg_header = header)
+				
+			}
+			
+		}
+		else if (table_number == 4){
+		
+			if (!is.null( input$slideNbTopBar)& !is.null(input$radioValue)) {
+			
+				nb_top <- input$slideNbTopBar
+				last_age <- (isolate(input$slideAgeRange)[2]/5)
+				max_age <- canreg_age_group$last_age 
+				
+
+				
+				if (last_age < max_age) {
+					age2 <- isolate(input$slideAgeRange)[2]-1
+				} else {
+					age2 <- paste0(((max_age-1)*5), "+")
+				}
+				
+				
+				if (isolate(input$radioValue) == "asr") {
+					var_top <- "asr"
+					digit <- 1
+					ytitle <- paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=","), ", ", isolate(input$slideAgeRange)[1], "-", age2, " years old" )
+					
+					
+				} 
+				else if (isolate(input$radioValue) == "cases"){
+					var_top <- "CASES"
+					digit <- 0
+					ytitle <-  paste0("Number of cases, ", isolate(input$slideAgeRange)[1], "-", age2, " years old" )
+					
+					
+				}
+				else if (isolate(input$radioValue) == "cum") {
+					var_top <- "cum_risk"
+					digit <- 2
+					if (last_age >= 15) {
+						age2 <- 74
+					} else {
+						age2 <- isolate(input$slideAgeRange)[2]-1
+					}
+					ytitle<-paste0("Cumulative incidence risk (percent), 0-",age2, " years old" )
+					
+					
+				}
+				
+				if (download) {
+					canreg_output(output_type = output_type, filename =file,landscape = TRUE,list_graph = FALSE,
+												FUN=canreg_bar_top,
+												df_data=dt_plot,
+												var_top = var_top,
+												color_bar=c("Male" = "#2c7bb6", "Female" = "#b62ca1"),
+												nb_top = nb_top,nsmall=digit,
+												canreg_header  = ls_args$header,
+												ytitle=ytitle)
+				}
+				else {
+					canreg_bar_top(df_data=dt_plot,
+												 var_top = var_top,
+												 color_bar=c("Male" = "#2c7bb6", "Female" = "#b62ca1"),
+												 nb_top = nb_top,nsmall=digit,
+												 canreg_header = ls_args$header,
+												 ytitle=ytitle)
+				}
+			 
+				
+				
+				
+				
+			}
+			
+		}
+		
+		else if (table_number == 5){
+		
+			if (!is.null( input$slideNbTopBar)& !is.null(input$radioValue)) {
+			
+				nb_top <- input$slideNbTopBar
+				last_age <- (isolate(input$slideAgeRange)[2]/5)
+				max_age <- canreg_age_group$last_age # to change 
+				
+
+				
+				if (last_age < max_age) {
+					age2 <- isolate(input$slideAgeRange)[2]-1
+				} else {
+					age2 <- paste0(((max_age-1)*5), "+")
+				}
+				
+				
+				if (isolate(input$radioValue) == "asr") {
+					var_top <- "asr"
+					digit <- 1
+					ytitle <- paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=","), ", ", isolate(input$slideAgeRange)[1], "-", age2, " years old" )
+					
+					
+				} 
+				else if (isolate(input$radioValue) == "cases"){
+					var_top <- "CASES"
+					digit <- 0
+					ytitle <-  paste0("Number of cases, ", isolate(input$slideAgeRange)[1], "-", age2, " years old" )
+					
+					
+				}
+				else if (isolate(input$radioValue) == "cum") {
+					var_top <- "cum_risk"
+					digit <- 2
+					if (last_age >= 15) {
+						age2 <- 74
+					} else {
+						age2 <- isolate(input$slideAgeRange)[2]-1
+					}
+					ytitle<-paste0("Cumulative incidence risk (percent), 0-",age2, " years old" )
+					
+					
+				}
+				
+				if (download) {
+										
+					canreg_output(output_type = output_type, filename =file,landscape = FALSE,list_graph = TRUE,
+												FUN=canreg_bar_top_single,
+												dt=dt_plot,
+												var_top = var_top,
+												nb_top = nb_top,digit=digit,
+												canreg_header  = ls_args$header,
+												xtitle=ytitle)
+				}
+				else {
+					 temp <- canreg_bar_top_single(
+						dt=dt_plot,
+						var_top = var_top,
+						nb_top = nb_top,digit=digit,
+						canreg_header  = ls_args$header,
+						xtitle=ytitle,
+						return_plot=TRUE)
+						
+						
+
+			
+					grid.arrange(temp$plotlist[[1]], temp$plotlist[[2]], ncol=2)
+						
+					
+						
+						
+						
+				}
+			 
+				
+				
+				
+				
+			}
+			
+		}
+		else if (table_number == 6){
+		
+			if (!is.null( input$slideNbTopBar) & !is.null(input$radioLog)) {
+			
+				nb_top <- input$slideNbTopBar
+				
+				if (input$radioLog == "log") {
+					bool_log <- TRUE
+				}
+				else {
+					bool_log <- FALSE
+				}
+
+				if (download) {
+					
+					canreg_output(output_type = output_type, filename =file,landscape = FALSE,list_graph = TRUE,
+								FUN=canreg_ageSpecific_rate_top,
+								df_data=dt_plot,logscale = bool_log,nb_top = nb_top,
+								plot_title = ls_args$header
+								)
+							
+				}
+				else {
+					temp <- Rcan:::core.csu_ageSpecific_top(
+						df_data=dt_plot,
+						var_age="AGE_GROUP",
+						var_cases= "CASES", 
+						var_py= "COUNT",
+						var_top = "cancer_label",
+						var_age_label_list = "AGE_GROUP_LABEL",
+						group_by="SEX",
+						missing_age=canreg_missing_age(dt_plot),
+						var_color="ICD10GROUPCOLOR",
+						logscale = bool_log,
+						nb_top = nb_top,
+						plot_title = ls_args$header
+					)
+							
+							
+					temp$plotlist[[1]] <- temp$plotlist[[1]]+guides(color = guide_legend(override.aes = list(size=1), nrow=2,byrow=TRUE))
+					temp$plotlist[[2]] <- temp$plotlist[[2]]+guides(color = guide_legend(override.aes = list(size=1), nrow=2,byrow=TRUE))
+					grid.arrange(temp$plotlist[[1]], temp$plotlist[[2]], ncol=2)
+
+				}
+			 
+				
+				
+				
+				
+			}
+			
+		}
+		else if (table_number == 7){
+			
+			if (!is.null( input$selectCancerSite) & !is.null(input$radioLog)) {
+			
+				bool_log <- (input$radioLog == "log")
+				color_trend <- c("Male" = "#2c7bb6", "Female" = "#b62ca1")
+				dt_plot <- dt_plot[cancer_label == input$selectCancerSite,]
+				
+				 if (download) {
+				 
+					canreg_output(output_type = output_type, filename =file,landscape = FALSE,list_graph = FALSE,
+								FUN=canreg_ageSpecific,
+								dt_plot=dt_plot,
+								logscale = bool_log,
+								plot_subtitle = isolate(input$selectCancerSite),
+								color_trend = color_trend
+								)
+							
+				}
+				else {
+					
+					
+					canreg_ageSpecific(
+								dt_plot=dt_plot,
+								logscale = bool_log,
+								plot_subtitle = isolate(input$selectCancerSite),
+								color_trend = color_trend
+								)
+								
+				}
+				
+			
+			
+			}
+		
+		}
+		else if (table_number == 8){
+			
+			if (isolate(input$radioSkin) == 1 ){
+				bool_skin  <- FALSE
+			}
+			else {
+				bool_skin  <- TRUE
+			}
+			
+			if (download) {
+				canreg_output(output_type = output_type, filename =file,landscape = TRUE,list_graph = FALSE,
+											FUN=canreg_cases_year_bar,
+											dt=dt_plot,
+											canreg_header = ls_args$header,
+											skin=bool_skin)
+			}
+			else {
+				 canreg_cases_year_bar(
+					dt=dt_plot,
+					canreg_header = ls_args$header,
+					skin=bool_skin
+				)
+			}
+			
+		}
+		else if (table_number == 9){
+			
+		 if (!is.null( input$slideNbTopBar) & !is.null(input$radioLog)) {
+				
+				if (input$radioLog == "log") {
+					bool_log <- TRUE
+				}
+				else {
+					bool_log <- FALSE
+				}
+				
+				nb_top <- input$slideNbTopBar
+				last_age <- (isolate(input$slideAgeRange)[2]/5)
+				max_age <- canreg_age_group$last_age 
+
+				if (last_age < max_age) {
+					age2 <- isolate(input$slideAgeRange)[2]-1
+				} else {
+					age2 <- paste0(((max_age-1)*5), "+")
+				}
+				
+				 ytitle <- paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=","), ", ", isolate(input$slideAgeRange)[1], "-", age2, " years old" )
+		 
+
+				if (download) {
+				
+					canreg_output(output_type = output_type, filename =file,landscape = FALSE,list_graph = TRUE,
+								FUN=canreg_asr_trend_top,
+								dt=dt_plot,number = nb_top,
+								canreg_header = ls_args$header,
+								logscale = bool_log,
+								ytitle=ytitle)
+
+				}
+				else {
+					temp <- canreg_asr_trend_top(
+						dt=dt_plot,number = nb_top,
+						canreg_header = ls_args$header,
+						logscale = bool_log,
+						return_plot=TRUE,
+						ytitle=ytitle)
+						
+						
+				grid.arrange(
+					temp$plotlist[[1]]+guides(color = guide_legend(override.aes = list(size=1), nrow=1,byrow=TRUE)),
+					temp$plotlist[[2]]+guides(color = guide_legend(override.aes = list(size=1), nrow=1,byrow=TRUE)),
+					ncol=2)
+
+				}
+			}
+				
+			
+		}
+		else if (table_number == 10){
+			
+		 if (!is.null( input$slideNbTopBar) & !is.null(input$checkCI)) {
+				
+				bool_CI <- input$checkCI
+				nb_top <- input$slideNbTopBar
+				
+				
+				dt_plot <- Rcan:::core.csu_dt_rank(dt_plot,
+									var_value= "CASES",
+									var_rank = "cancer_label",
+									group_by = "SEX",
+									number = nb_top)
+				
+				
+				last_age <- (isolate(input$slideAgeRange)[2]/5)
+				max_age <- canreg_age_group$last_age 
+
+				if (last_age < max_age) {
+					age2 <- isolate(input$slideAgeRange)[2]-1
+				} else {
+					age2 <- paste0(((max_age-1)*5), "+")
+				}
+				
+				 ytitle <- paste0("Estimated average percentage change (%), ", isolate(input$slideAgeRange)[1], "-", age2, " years old" )
+				 color_bar <- c("Male" = "#2c7bb6", "Female" = "#b62ca1")
+		 
+
+				if (download) {
+				
+					canreg_output(output_type = output_type, filename =file,landscape = FALSE,list_graph = TRUE,
+								FUN=canreg_eapc_scatter,
+                dt_plot=dt_plot,color_bar=color_bar,
+                canreg_header = ls_args$header,
+                ytitle=ytitle)
+
+				}
+				else {
+					canreg_eapc_scatter(
+						dt_plot=dt_plot,color_bar=color_bar,
+						canreg_header = ls_args$header,
+						ytitle=ytitle)
+
+				}
+			}
+				
+			
+		}
 
   }
   
@@ -675,5 +750,20 @@ canreg_ageSpecific <- function(dt_plot,color_trend,plot_subtitle="",logscale=FAL
 }
  
 										
-                                        
+#function for multiple file download output_type
+multiple_output <- function(table_number, bool_ci, output_format) {
+	
+	bool_temp <- FALSE
+	if (output_format %in% c("png", "tiff", "svg")) {
+		if (table_number %in% c(5,6,9)) {
+			bool_temp <- TRUE
+		}
+		else if (table_number == 10 & bool_ci) {
+			bool_temp <- TRUE
+		}
+	}
+	
+	return(bool_temp)
+
+}                                        
 										
