@@ -5,7 +5,7 @@ shinyServer(function(input, output, session) {
 
   #app close when the session is stopped  
   session$onSessionEnded(function() {
-    cat(paste("-outFile",ls_args$filename,sep=":"))
+    cat("back to static life")
     stopApp()
   })
   
@@ -37,14 +37,42 @@ shinyServer(function(input, output, session) {
   progress_bar <- reactiveValues(object=NULL)
   table <- reactiveValues(label="")
 
+
+	
+	output$UI_select_table <- renderUI({
+	
+		table_list <- c( "Population pyramid" = 1,
+			"Barchart of cases by age group by sex" = 2, 
+			"piechart of cases by age group by sex" = 3, 
+			"Barchart of cases by year" = 8,
+			"Top cancer both sexes" = 4 ,
+			"Top cancer by sexes" = 5 ,
+			"Age-specific rates (Top Cancer Sites)" = 6,
+			"Age-specific rate by cancer sites" = 7)
+			
+			if (year_info$span >= 3) {
+			
+				table_list = c(table_list, "Time trends (Top cancer Sites)" = 9)
+			
+			} 
+			
+			if (year_info$span >= 3) {
+			
+				table_list = c(table_list, "Estimated Average Percentage Change" = 10)
+			
+			} 
+		
+			
+		selectInput("select_table", NULL,selected = 4, table_list)
+
+
+	})	
   
   output$UI_nbSlide <- renderUI({
     
     
     if (values$nb_slide == 0) {
-      
-      
-      
+
       values$text <- "Slide included:"
     } else {
       
@@ -53,6 +81,18 @@ shinyServer(function(input, output, session) {
       if (isolate(input$select_table == 7)) {
         values$text <- paste(isolate(values$text), isolate(input$selectCancerSite))
       }
+			else if (isolate(input$select_table == 10)) {
+				
+				if (isolate(input$checkCI)) {
+					values$text <- paste(isolate(values$text), isolate(input$selectCancerSite), "with CI")
+				}
+				else {
+					values$text <- paste(isolate(values$text), isolate(input$selectCancerSite))
+				
+				}
+			
+			
+			}
       
     }
     
@@ -62,95 +102,119 @@ shinyServer(function(input, output, session) {
     
   })
   
-  output$UI_control1 <- renderUI({
-    
-    if  (input$select_table %in% c(2,3,8)) {
-      
-	   radioButtons("radioSkin", "",
-                   c("excluding C44 skin" = 1,
-                     "including C44 skin" = 2)
-      )
-    
-    }  
-    
-    else if  (input$select_table %in% c(4,5)) {
-      
-      radioButtons("radioValue", "Value:",
-                   c("Age-standardized rate" = "asr",
-                     "Number of cases" = "cases",
-                     "Cumulative risk" = "cum")
-      )
-      
-    }
-    
-    else if (input$select_table %in% c(6,7,9)) {
-      
-      radioButtons("radioLog", "y axes scale:",
-                   c("Logarithmic" = "log",
-                     "Normal" = "normal")
-      )
-      
-    }
-  })
-  
-  output$UI_control2 <- renderUI({
-    if (input$select_table==2) {
-      
-        radioButtons("radioAgeGroup", "Age-group division:",
-                   c("0-4,5-9,...,80-84,85+" = 1,
-                     "0-14, 15-29,30-49,50-69,70+" = 2)
-      )
-      
-    }  
-    
-  })
-  
-  output$UI_control3 <- renderUI({
-    
-    
-    if  (input$select_table %in% c(4,5,6,9)) {
+
+	output$UI_control1 <- renderUI({
 		
-			slide_min <- 3
-			slide_max <- 20
-			slide_def <- 10
+		if  (!is.null(input$select_table)) {
+			if  (input$select_table %in% c(2,3,8)) {
+				
+			 radioButtons("radioSkin", "",
+										 c("excluding C44 skin" = 1,
+											 "including C44 skin" = 2)
+				)
 			
-			if (input$select_table %in%  c(6,9) ) {
+			}  
 			
-				slide_min <- 1
-				slide_max <- 10
-				slide_def <- 5
+			else if  (input$select_table %in% c(4,5)) {
+				
+				radioButtons("radioValue", "Value:",
+										 c("Age-standardized rate" = "asr",
+											 "Number of cases" = "cases",
+											 "Cumulative risk" = "cum")
+				)
+				
+			}
+			
+			else if (input$select_table %in% c(6,7,9)) {
+				
+				radioButtons("radioLog", "y axes scale:",
+										 c("Logarithmic" = "log",
+											 "Normal" = "normal")
+				)
+				
+			}
+			else if (input$select_table %in% c(10)) {
+				
+				checkboxInput("checkCI", "Confidence intervalle",FALSE)
+
+			}
+		}
+		
+		
+			
+	})
+	
+	output$UI_control2 <- renderUI({
+	
+		if  (!is.null(input$select_table)) {
+			if (input$select_table==2) {
+				
+					radioButtons("radioAgeGroup", "Age-group division:",
+										 c("0-4,5-9,...,80-84,85+" = 1,
+											 "0-14, 15-29,30-49,50-69,70+" = 2)
+				)
+				
+			}  
+		}
+		
+	})
+	
+	output$UI_control3 <- renderUI({
+		
+		if  (!is.null(input$select_table)) {
+			if  (input$select_table %in% c(4,5,6,9,10)) {
+			
+				slide_min <- 3
+				slide_max <- 20
+				slide_def <- 10
+				
+				if (input$select_table %in%  c(6,9) ) {
+				
+					slide_min <- 1
+					slide_max <- 10
+					slide_def <- 5
+				
+				}
+				else if (input$select_table %in%  c(10) ) {
+					
+					slide_min <- 1
+					slide_max <- 25
+					slide_def <- 20
+				
+				}
+				
+				sliderInput("slideNbTopBar", "Number of cancer sites:", slide_min, slide_max, slide_def)
+				
+				
+			} 
+			else if (input$select_table %in% c(7)) {
+				
+				
+				cancer_list <-  unique(dt_base$cancer_label)
+				n <- length(cancer_list)
+				cancer_list <- as.character(cancer_list)
+				cancer_list <- cancer_list[1:(n-1)]
+				
+				selectInput("selectCancerSite", "Select cancer sites", cancer_list)
+				
 			
 			}
-      
-      sliderInput("slideNbTopBar", "Number of cancer sites:", slide_min, slide_max, slide_def)
-      
-      
-    } 
-		else if (input$select_table %in% c(7)) {
-			
-			
-			cancer_list <-  unique(dt_base$cancer_label)
-      n <- length(cancer_list)
-      cancer_list <- as.character(cancer_list)
-			cancer_list <- cancer_list[1:(n-1)]
-			
-			selectInput("selectCancerSite", "Select cancer sites", cancer_list)
+		}
 			
 		
+	})
+	
+	output$UI_control4 <- renderUI({
+		
+		if  (!is.null(input$select_table)) {
+			if (input$select_table %in% c(4,5,9,10)) {
+				sliderInput("slideAgeRange", "Age group:", 0, 90, c(0,90), step=5)
+			}
 		}
-    
-  })
-  
-  output$UI_control4 <- renderUI({
-    
-    if (input$select_table %in% c(4,5,9)) {
-      sliderInput("slideAgeRange", "Age group:", 0, 90, c(0,90), step=5)
-    }
-  })
+			
+	})
+	
 
-
-    
-  
   observeEvent(input$select_table,{
     
     
@@ -199,6 +263,11 @@ shinyServer(function(input, output, session) {
 			show(id="controls_COL1", anim=TRUE)
 			show(id="controls_COL2", anim=TRUE)
 		}
+		else if (input$select_table== 10) {
+			table$label <- "Estimated Annual Percentage Change"
+			show(id="controls_COL1", anim=TRUE)
+			show(id="controls_COL2", anim=TRUE)
+		}
   })
   
   observeEvent(values$nb_slide,{
@@ -236,33 +305,34 @@ shinyServer(function(input, output, session) {
   
   #Calcul statistics
   dt_all <-  reactive({ 
-    
-    if (!is.null(dt_base)) {
-	    
-      isolate(progress_bar$object)$set(value = 0, message = 'Please wait:', detail = 'Calculate statistics')
-      
 
-	
-			dt_temp <- shiny_data(input)
-	  
-			if (input$select_table %in% c(4,5,9)) {
-				if (length(bool_rv$trigger1) != 0) {
-					if (bool_rv$trigger1) {
-						bool_rv$trigger1 <- FALSE
-						}
-					}
-				}
+			if (!is.null(dt_base) & !is.null(input$select_table)) {
+				
+				isolate(progress_bar$object)$set(value = 0, message = 'Please wait:', detail = 'Calculate statistics')
 				
 
 		
-      
-      
-      return(dt_temp)
-      
-	}
-    else {
-      return(NULL)
-    }
+				dt_temp <- shiny_data(input)
+			
+				if (input$select_table %in% c(4,5,9,10)) {
+					if (length(bool_rv$trigger1) != 0) {
+						if (bool_rv$trigger1) {
+							bool_rv$trigger1 <- FALSE
+							}
+						}
+					}
+					
+
+			
+				
+				
+				return(dt_temp)
+				
+		}
+			else {
+				return(NULL)
+			}
+		
   })
   
 
@@ -290,16 +360,22 @@ shinyServer(function(input, output, session) {
     
     filename = function() {
       
+			bool_CI <- FALSE
+			if (!is.null(input$checkCI)) {
+				bool_CI <- input$checkCI
+			}
+			
       #multiple file
-      if (input$select_table %in% c(5,6,9) & 
-          input$select_format %in% c("png", "tiff", "svg")
-          ) 
-        {
-	    paste0(input$text_filename, ".", "zip")
-      } 
-      else {
-        paste0(input$text_filename, ".", input$select_format)
-      }
+			bool_multiple <- multiple_output(input$select_table, bool_CI, input$select_format)
+			
+      if (bool_multiple) {
+				paste0(input$text_filename, ".", "zip")
+			}
+			else {
+       paste0(input$text_filename, ".", input$select_format)
+			}
+						
+
       
     },
     
@@ -311,7 +387,13 @@ shinyServer(function(input, output, session) {
 			shiny_plot(dt_all(),  input, TRUE,FALSE,file_temp)
 			incProgress(1, detail = "")
 			
-			if (input$select_table %in% c(5,6,9) & input$select_format %in% c("png", "tiff", "svg")) {
+			bool_CI <- FALSE
+			if (!is.null(input$checkCI)) {
+				bool_CI <- input$checkCI
+			}
+			bool_multiple <- multiple_output(input$select_table, bool_CI, input$select_format)
+			
+			if (bool_multiple) {
 					
 					file_male <- paste0(file_temp, "001", ".", input$select_format)
 					file_female <- paste0(file_temp, "002", ".", input$select_format)
@@ -418,11 +500,11 @@ shinyServer(function(input, output, session) {
 			
 			else if (input$select_table==7) {
 				
-			str_temp <- paste0("Age-specific rates:\r\n", isolate(input$selectCancerSite))
-			dims <- attr( png::readPNG (paste0(filename, ".png")), "dim" )
-			values$doc <-  add_slide(values$doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
-			values$doc <- ph_with_text(values$doc, type = "title", str = str_temp)
-			values$doc <- ph_with_img(values$doc, paste0(filename, ".png"), index=1,width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
+				str_temp <- paste0("Age-specific rates:\r\n", isolate(input$selectCancerSite))
+				dims <- attr( png::readPNG (paste0(filename, ".png")), "dim" )
+				values$doc <-  add_slide(values$doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
+				values$doc <- ph_with_text(values$doc, type = "title", str = str_temp)
+				values$doc <- ph_with_img(values$doc, paste0(filename, ".png"), index=1,width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
 				
 				
 			}
@@ -438,15 +520,39 @@ shinyServer(function(input, output, session) {
 			else if (input$select_table==9) {
 
 			
-			dims <- attr( png::readPNG (paste0(filename, "001.png")), "dim" )
+				dims <- attr( png::readPNG (paste0(filename, "001.png")), "dim" )
 
-			values$doc <-  add_slide(values$doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
-			values$doc <- ph_with_text(values$doc, type = "title", str = "Trend in ASR:\r\nMales")
-			values$doc <- ph_with_img(values$doc, paste0(filename, "001.png"), index=1,width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
-			
-			values$doc <-  add_slide(values$doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
-			values$doc <- ph_with_text(values$doc, type = "title",  str = "Trend in ASR:\r\nFemales")
-			values$doc <- ph_with_img(values$doc, paste0(filename, "002.png"), index=1,width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
+				values$doc <-  add_slide(values$doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
+				values$doc <- ph_with_text(values$doc, type = "title", str = "Trend in ASR:\r\nMales")
+				values$doc <- ph_with_img(values$doc, paste0(filename, "001.png"), index=1,width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
+				
+				values$doc <-  add_slide(values$doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
+				values$doc <- ph_with_text(values$doc, type = "title",  str = "Trend in ASR:\r\nFemales")
+				values$doc <- ph_with_img(values$doc, paste0(filename, "002.png"), index=1,width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
+				
+			}
+			else if (input$select_table==10) {
+
+				if (input$checkCI) {
+					
+					dims <- attr( png::readPNG (paste0(filename, "001.png")), "dim" )
+
+					values$doc <-  add_slide(values$doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
+					values$doc <- ph_with_text(values$doc, type = "title", str = "Estimated annual percentage change:\r\nMales")
+					values$doc <- ph_with_img(values$doc, paste0(filename, "001.png"), index=1,width=graph_width,height=graph_width*dims[1]/dims[2])
+
+					values$doc <-  add_slide(values$doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
+					values$doc <- ph_with_text(values$doc, type = "title", str = "Estimated annual percentage change:\r\nFemales")
+					values$doc <- ph_with_img(values$doc, paste0(filename, "002.png"), index=1,width=graph_width,height=graph_width*dims[1]/dims[2])
+				
+				
+				}
+				else {
+					values$doc <-  add_slide(values$doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
+					values$doc <- ph_with_text(values$doc, type = "title", str = "Estimated annual percentage change")
+					dims <- attr( png::readPNG (paste0(filename, ".png")), "dim" )
+					values$doc <- ph_with_img(values$doc, paste0(filename, ".png"),width=graph_width,height=graph_width*dims[1]/dims[2])
+				}
 				
 			}
 			 

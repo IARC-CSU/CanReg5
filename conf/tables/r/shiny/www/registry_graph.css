@@ -1,5 +1,23 @@
 
 
+div#plot{
+	height:600px!important
+}
+
+div#plot img{
+	height:600px!important
+}
+
+@media screen and (max-height : 750px){
+
+	div#plot{
+		height:500px!important
+	}
+
+	div#plot img{
+		height:500px!important
+	}
+}
 
 .mat_text {
   margin-left: 15px;

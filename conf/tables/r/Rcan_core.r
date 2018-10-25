@@ -1464,13 +1464,7 @@ csu_cum_risk_core <- function(df_data, var_age, var_cases, var_py, group_by=NULL
 
 
 
-csu_trend_legend <-
-  function(title=NULL, position="bottom",nrow=1, right_space_margin=1) {
-    
-    structure(list(title = title, position = position,
-                   nrow = nrow,
-                   right_space_margin = right_space_margin))
-  }
+
 
 
 
@@ -2957,6 +2951,7 @@ canreg_eapc_scatter_error_bar <- function(dt,
                                           list_graph = TRUE,
                                           canreg_header=NULL,
                                           return_data = FALSE,
+																					return_plot = FALSE, 
                                           ytitle="") {
   
   if (return_data) {
@@ -2998,10 +2993,18 @@ canreg_eapc_scatter_error_bar <- function(dt,
         landscape=landscape,
         ytitle=axe_title)
     
-    print(plotlist[[j]])
+    #print(plotlist[[j]])
     j <- j+1
     
   }
+	
+	if (!return_plot) {
+		print(plotlist[[1]])
+		print(plotlist[[2]])
+	}
+	else {
+		return(list(plotlist = plotlist))
+	}
 }
 
 
