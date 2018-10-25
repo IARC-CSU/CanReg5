@@ -237,8 +237,7 @@ shiny_data <- function(input) {
 																				pop_base_count = "REFERENCE_COUNT",
 																				age_label_list = "AGE_GROUP_LABEL")
 
-				dt_temp <- Rcan:::core.csu_eapc(dt_temp, var_rate = "asr",var_year = "YEAR" ,group_by =c("cancer_label", "SEX"))
-				dt_temp <-as.data.table(dt_temp)																				
+																	
 			}
 				
 		}
@@ -665,12 +664,21 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 				bool_CI <- input$checkCI
 				nb_top <- input$slideNbTopBar
 				
+				if (bool_CI) {
+					group_by <- "SEX"
+				} else{
+					group_by <- NULL
+				}
 				
 				dt_plot <- Rcan:::core.csu_dt_rank(dt_plot,
 									var_value= "CASES",
 									var_rank = "cancer_label",
-									group_by = "SEX",
+									group_by = group_by,
 									number = nb_top)
+									
+				dt_plot <- Rcan:::core.csu_eapc(dt_plot, var_rate = "asr",var_year = "YEAR" ,group_by =c("cancer_label", "SEX",  "CSU_RANK"))
+				dt_plot <-as.data.table(dt_plot)		
+				
 				
 				
 				last_age <- (isolate(input$slideAgeRange)[2]/5)
