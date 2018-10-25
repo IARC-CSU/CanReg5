@@ -24,7 +24,7 @@ shiny_data <- function(input) {
 				}
 			
 			if (input$radioAgeGroup == 1 ){
-			temp <- (canreg_age_group$last_age-2)*5
+			temp <- (canreg_age_group$last_age)*5
 			
 					age_group = seq(5,temp,5)
 				}
@@ -44,6 +44,7 @@ shiny_data <- function(input) {
 			
 				
 				dt_temp <- canreg_age_cases_data(dt_temp,age_group= age_group, skin=bool_skin)
+				
 				
 			}
 			
@@ -84,8 +85,9 @@ shiny_data <- function(input) {
 				
 				first_age <- (input$slideAgeRange[1]/5)+1
 				last_age <- input$slideAgeRange[2]/5
-				max_age <- canreg_age_group$last_age 
+				max_age <- canreg_age_group$last_age+1 
 				if (last_age >= max_age) last_age <- 18
+				
 				
 				dt_temp <- canreg_ageSpecific_rate_data( dt_temp, keep_ref = TRUE)
 				
@@ -124,7 +126,7 @@ shiny_data <- function(input) {
 				
 				first_age <- (input$slideAgeRange[1]/5)+1
 				last_age <- input$slideAgeRange[2]/5
-				max_age <- canreg_age_group$last_age 
+				max_age <- canreg_age_group$last_age+1 
 				if (last_age >= max_age) last_age <- 18
 			
 				dt_temp <- canreg_ageSpecific_rate_data( dt_temp, keep_ref = TRUE)
@@ -201,7 +203,7 @@ shiny_data <- function(input) {
 				
 				first_age <- (input$slideAgeRange[1]/5)+1
 				last_age <- input$slideAgeRange[2]/5
-				max_age <- canreg_age_group$last_age 
+				max_age <- canreg_age_group$last_age+1 
 				if (last_age >= max_age) last_age <- 18
 				
 				dt_temp <- canreg_ageSpecific_rate_data(dt_temp, keep_ref = TRUE, keep_year = TRUE)
@@ -225,7 +227,7 @@ shiny_data <- function(input) {
 				
 				first_age <- (input$slideAgeRange[1]/5)+1
 				last_age <- input$slideAgeRange[2]/5
-				max_age <- canreg_age_group$last_age 
+				max_age <- canreg_age_group$last_age+1 
 				if (last_age >= max_age) last_age <- 18
 				
 				dt_temp <- canreg_ageSpecific_rate_data(dt_temp, keep_ref = TRUE, keep_year = TRUE)
@@ -345,7 +347,7 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 			
 				nb_top <- input$slideNbTopBar
 				last_age <- (isolate(input$slideAgeRange)[2]/5)
-				max_age <- canreg_age_group$last_age 
+				max_age <- canreg_age_group$last_age+1 
 				
 
 				
@@ -416,8 +418,7 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 			
 				nb_top <- input$slideNbTopBar
 				last_age <- (isolate(input$slideAgeRange)[2]/5)
-				max_age <- canreg_age_group$last_age # to change 
-				
+				max_age <- canreg_age_group$last_age+1
 
 				
 				if (last_age < max_age) {
@@ -617,7 +618,7 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 				
 				nb_top <- input$slideNbTopBar
 				last_age <- (isolate(input$slideAgeRange)[2]/5)
-				max_age <- canreg_age_group$last_age 
+				max_age <- canreg_age_group$last_age+1 
 
 				if (last_age < max_age) {
 					age2 <- isolate(input$slideAgeRange)[2]-1
@@ -682,7 +683,7 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 				
 				
 				last_age <- (isolate(input$slideAgeRange)[2]/5)
-				max_age <- canreg_age_group$last_age 
+				max_age <- canreg_age_group$last_age+1 
 
 				if (last_age < max_age) {
 					age2 <- isolate(input$slideAgeRange)[2]-1
