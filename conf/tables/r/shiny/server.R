@@ -5,7 +5,7 @@ shinyServer(function(input, output, session) {
 
   #app close when the session is stopped  
   session$onSessionEnded(function() {
-    cat(paste("-outFile",ls_args$filename,sep=":"))
+    cat("back to static life")
     stopApp()
   })
   
