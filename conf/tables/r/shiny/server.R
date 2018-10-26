@@ -53,12 +53,14 @@ shinyServer(function(input, output, session) {
 			if (year_info$span >= 3) {
 			
 				table_list = c(table_list, "Time trends (Top cancer Sites)" = 9)
+				table_list = c(table_list, "Time trends by cancer sites" = 11)
+				table_list = c(table_list, "Estimated Average Percentage Change" = 10)
 			
 			} 
 			
 			if (year_info$span >= 3) {
 			
-				table_list = c(table_list, "Estimated Average Percentage Change" = 10)
+			
 			
 			} 
 		
@@ -79,6 +81,9 @@ shinyServer(function(input, output, session) {
       values$text <- paste0(isolate(values$text), '<br>',isolate(table$label))
       
       if (isolate(input$select_table == 7)) {
+        values$text <- paste(isolate(values$text), isolate(input$selectCancerSite))
+      }
+			else if (isolate(input$select_table == 11)) {
         values$text <- paste(isolate(values$text), isolate(input$selectCancerSite))
       }
 			else if (isolate(input$select_table == 10)) {
@@ -125,7 +130,7 @@ shinyServer(function(input, output, session) {
 				
 			}
 			
-			else if (input$select_table %in% c(6,7,9)) {
+			else if (input$select_table %in% c(6,7,9,11)) {
 				
 				radioButtons("radioLog", "y axes scale:",
 										 c("Logarithmic" = "log",
@@ -187,7 +192,7 @@ shinyServer(function(input, output, session) {
 				
 				
 			} 
-			else if (input$select_table %in% c(7)) {
+			else if (input$select_table %in% c(7,11)) {
 				
 				
 				cancer_list <-  unique(dt_base$cancer_label)
@@ -207,7 +212,7 @@ shinyServer(function(input, output, session) {
 	output$UI_control4 <- renderUI({
 		
 		if  (!is.null(input$select_table)) {
-			if (input$select_table %in% c(4,5,9,10)) {
+			if (input$select_table %in% c(4,5,9,10,11)) {
 				sliderInput("slideAgeRange", "Age group:", 0, 90, c(0,90), step=5)
 			}
 		}
@@ -553,6 +558,16 @@ shinyServer(function(input, output, session) {
 					dims <- attr( png::readPNG (paste0(filename, ".png")), "dim" )
 					values$doc <- ph_with_img(values$doc, paste0(filename, ".png"),width=graph_width,height=graph_width*dims[1]/dims[2])
 				}
+				
+			}
+			else if (input$select_table==11) {
+				
+				str_temp <- paste0("Time trends:\r\n", isolate(input$selectCancerSite))
+				dims <- attr( png::readPNG (paste0(filename, ".png")), "dim" )
+				values$doc <-  add_slide(values$doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
+				values$doc <- ph_with_text(values$doc, type = "title", str = str_temp)
+				values$doc <- ph_with_img(values$doc, paste0(filename, ".png"), index=1,width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
+				
 				
 			}
 			 
