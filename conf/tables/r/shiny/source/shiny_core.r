@@ -264,6 +264,8 @@ shiny_data <- function(input) {
 																				last_age= last_age,
 																				pop_base_count = "REFERENCE_COUNT",
 																				age_label_list = "AGE_GROUP_LABEL")  
+																				
+				dt_temp <- as.data.table(dt_temp)
 			}
 				
 		}
@@ -775,25 +777,37 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 				color_trend <- c("Male" = "#2c7bb6", "Female" = "#b62ca1")
 				dt_plot <- dt_plot[cancer_label == input$selectCancerSite,]
 				
-				 if (download) {
+				last_age <- (isolate(input$slideAgeRange)[2]/5)
+				max_age <- canreg_age_group$last_age+1 
+
+				if (last_age < max_age) {
+					age2 <- isolate(input$slideAgeRange)[2]-1
+				} else {
+					age2 <- paste0(((max_age-1)*5), "+")
+				}
+				
+				ytitle <- paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=","), ", ", isolate(input$slideAgeRange)[1], "-", age2, " years old" )
+		 
+				
+				if (download) {
 				 
 					canreg_output(output_type = output_type, filename =file,landscape = FALSE,list_graph = FALSE,
-								FUN=canreg_ageSpecific,
+								FUN=canreg_asr_trend,
 								dt_plot=dt_plot,
 								logscale = bool_log,
-								plot_subtitle = isolate(input$selectCancerSite),
-								color_trend = color_trend
+								plot_title=ls_args$header,
+								ytitle = ytitle
 								)
 							
 				}
 				else {
 					
 					
-					canreg_ageSpecific(
+					canreg_asr_trend(
 								dt_plot=dt_plot,
 								logscale = bool_log,
-								plot_subtitle = isolate(input$selectCancerSite),
-								color_trend = color_trend
+								plot_title=ls_args$header,
+								ytitle = ytitle
 								)
 								
 				}
@@ -846,6 +860,48 @@ canreg_ageSpecific <- function(dt_plot,color_trend,plot_subtitle="",logscale=FAL
 
 }
  
+ 
+ canreg_asr_trend <- function(dt_plot,
+																 var_asr="asr", 
+                                 var_cases= "CASES", 
+                                 var_year= "YEAR",
+                                 group_by="SEX",
+                                 logscale = TRUE,
+                                 ytitle=NULL,
+                                 landscape = FALSE,
+                                 list_graph = FALSE,
+                                 return_data = FALSE,
+																 return_plot= FALSE,
+                                 plot_title="") {
+  
+ 
+  
+  if (return_data) {
+    dt <- dt[, c(group_by,var_year,var_asr), with=FALSE]
+    setkeyv(dt, c("SEX",var_year))
+    return(dt)
+    stop() 
+  }
+  
+	
+	color_trend <- c("Male" = "#2c7bb6", "Female" = "#b62ca1")
+    
+   plot <- Rcan:::core.csu_time_trend(dt_plot,
+                                    var_trend = "asr",
+                                    var_year = "YEAR",
+                                    group_by = "SEX",
+                                    logscale = logscale,
+                                    smoothing = NULL,
+                                    ytitle = ytitle,
+                                    plot_title = plot_title,
+                                    color_trend = color_trend)$csu_plot
+
+																		
+  
+  print(plot)
+
+}
+
 										
 #function for multiple file download output_type
 multiple_output <- function(table_number, bool_ci, output_format) {

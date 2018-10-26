@@ -560,6 +560,16 @@ shinyServer(function(input, output, session) {
 				}
 				
 			}
+			else if (input$select_table==11) {
+				
+				str_temp <- paste0("Time trends:\r\n", isolate(input$selectCancerSite))
+				dims <- attr( png::readPNG (paste0(filename, ".png")), "dim" )
+				values$doc <-  add_slide(values$doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
+				values$doc <- ph_with_text(values$doc, type = "title", str = str_temp)
+				values$doc <- ph_with_img(values$doc, paste0(filename, ".png"), index=1,width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
+				
+				
+			}
 			 
 				
 			values$nb_slide <- values$nb_slide + 1
