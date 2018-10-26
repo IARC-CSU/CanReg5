@@ -304,7 +304,6 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 		if ( table_number == 1) {
 			
 			if (download) {
-				
 
 				canreg_output(output_type = output_type, filename =file,landscape = TRUE,list_graph = FALSE,
 											FUN=canreg_population_pyramid,
@@ -921,4 +920,58 @@ multiple_output <- function(table_number, bool_ci, output_format) {
 }                                        
 										
 
-										
+shiny_error_log <- function(log_file,filename) {
+  
+  error_connection <- file(log_file,open="wt")
+  sink(error_connection)
+  sink(error_connection, type="message")
+  
+  #print error
+  cat("This file contains the data and parameter of this canreg5 R-shiny application.\n") 
+  cat(paste0("If an error occured, please restart this application send this log file: `",filename,"` to canreg@iarc.fr, with a description of the error\n"))
+  cat("The second part of this log (After '----------------------') contains your aggregated data, if you do not won't to share the aggregated data, you can delete this part.\n\n")
+  cat("\n")
+  
+  #print argument from canreg
+  print(ls_args)
+  cat("\n")
+  
+  #print environment
+  print(ls.str())
+  cat("\n")
+	
+	#print R version and package load
+  print(sessionInfo())
+  cat("\n")
+
+  #print missing package
+  packages_list <- c("Rcpp", "data.table", "ggplot2","shiny","shinydashboard", "shinyjs","gridExtra", "scales", "Cairo","grid","officer","flextable", "zip", "bmp", "jpeg", "png")
+
+  missing_packages <- packages_list[!(packages_list %in% installed.packages()[,"Package"])]  
+  if (length(missing_packages) == 0) {
+    print("No missing package")
+  } else {
+    print(missing_packages)
+  }
+  cat("\n")
+  
+  #test loading package
+  lapply(packages_list, require, character.only = TRUE)
+  cat("\n")
+  
+  print("----------------------")
+  cat("\n")
+  #print incidence / population file (r format)
+  cat("Incidence file\n")
+  dput(read.table(ls_args$inc, header=TRUE, sep="\t"))
+  cat("\n")
+  cat("population file\n")
+  dput(read.table(ls_args$pop, header=TRUE, sep="\t"))
+  cat("\n")
+	
+	#close log_file and send to canreg
+  sink(type="message")
+  sink()
+  close(error_connection)
+  
+}

@@ -9,7 +9,7 @@ ui <- dashboardPage(
       "<div style = 'vertical-align:middle'>
        <img src = 'LogoBetaNew64x64.ico' class='canreg_logo' align = 'center'>
        </div>"),
-                  titleWidth = 350),
+       titleWidth = 350),
   
 	
 
@@ -51,6 +51,8 @@ ui <- dashboardPage(
 	 ),
 	  
 	  
+  
+												
 	dashboardBody(
 	
 		tags$script(HTML(paste0('$(document).ready(function(){
@@ -58,7 +60,7 @@ ui <- dashboardPage(
                     })
    '))),
 	  useShinyjs(),
-	 
+		downloadButton('downloadLog', '', class="log"),
 	  fluidRow(
 
 	      plotOutput("plot", height ="600px")

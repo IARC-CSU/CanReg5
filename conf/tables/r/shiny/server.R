@@ -590,4 +590,15 @@ shinyServer(function(input, output, session) {
      
     })
   
+	 #Download log
+  output$downloadLog <- downloadHandler(
+	
+		filename =  paste0(gsub("\\W","", ls_args$label),"_",ls_args$sc,"_",gsub("\\D","", Sys.time()),"_error_log.txt"),
+		content = function(file) {
+			temp <- paste0(gsub("\\W","", ls_args$label),"_",ls_args$sc,"_",gsub("\\D","", Sys.time()),"_error_log.txt")
+			shiny_error_log(file,temp)
+		}
+	
+	)
+	
 })
