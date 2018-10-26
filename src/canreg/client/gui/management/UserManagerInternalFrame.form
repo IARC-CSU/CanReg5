@@ -288,7 +288,7 @@
                                   <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="newDBPasswordField" alignment="0" pref="282" max="32767" attributes="1"/>
-                                      <Component id="currentDBPasswordField" alignment="0" pref="278" max="32767" attributes="1"/>
+                                      <Component id="currentDBPasswordField" alignment="0" pref="282" max="32767" attributes="1"/>
                                   </Group>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
@@ -299,9 +299,13 @@
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="encryptionKeyLengthComboBox" alignment="1" max="32767" attributes="0"/>
+                                      <Group type="102" alignment="1" attributes="0">
+                                          <Component id="encryptionKeyLengthComboBox" max="32767" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                                      </Group>
                                       <Component id="encryptionAlgorrithmComboBox" max="32767" attributes="0"/>
-                                      <Component id="confirmNewDBPasswordField" pref="278" max="32767" attributes="1"/>
+                                      <Component id="confirmNewDBPasswordField" pref="282" max="32767" attributes="1"/>
                                   </Group>
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
@@ -342,6 +346,7 @@
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="encryptionKeyLengthComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="keyLengthLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="changeDBPasswordButton" min="-2" max="-2" attributes="0"/>
@@ -449,6 +454,19 @@
                     <Property name="actionCommand" type="java.lang.String" resourceKey="changeDBPasswordButton1.actionCommand"/>
                     <Property name="name" type="java.lang.String" value="changeDBPasswordButton1" noResource="true"/>
                   </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="jLabel3">
+                  <Properties>
+                    <Property name="foreground" type="java.awt.Color" resourceKey="jLabel3.foreground"/>
+                    <Property name="text" type="java.lang.String" resourceKey="jLabel3.text"/>
+                    <Property name="name" type="java.lang.String" value="jLabel3" noResource="true"/>
+                  </Properties>
+                  <AccessibilityProperties>
+                    <Property name="AccessibleContext.accessibleName" type="java.lang.String" resourceKey="jLabel3.AccessibleContext.accessibleName"/>
+                  </AccessibilityProperties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="keyLengthLabelMouseClicked"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>

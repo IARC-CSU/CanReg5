@@ -93,6 +93,7 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
         encryptionKeyLengthComboBox = new javax.swing.JComboBox<>();
         keyLengthLabel = new javax.swing.JLabel();
         changeDBPasswordButton1 = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
         userManagerPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         usernameTextField = new javax.swing.JTextField();
@@ -274,6 +275,15 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
         changeDBPasswordButton1.setActionCommand(resourceMap.getString("changeDBPasswordButton1.actionCommand")); // NOI18N
         changeDBPasswordButton1.setName("changeDBPasswordButton1"); // NOI18N
 
+        jLabel3.setForeground(resourceMap.getColor("jLabel3.foreground")); // NOI18N
+        jLabel3.setText(resourceMap.getString("jLabel3.text")); // NOI18N
+        jLabel3.setName("jLabel3"); // NOI18N
+        jLabel3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                keyLengthLabelMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout passwordPanel1Layout = new javax.swing.GroupLayout(passwordPanel1);
         passwordPanel1.setLayout(passwordPanel1Layout);
         passwordPanel1Layout.setHorizontalGroup(
@@ -288,7 +298,7 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
                         .addGap(27, 27, 27)
                         .addGroup(passwordPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(newDBPasswordField, javax.swing.GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE)
-                            .addComponent(currentDBPasswordField, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)))
+                            .addComponent(currentDBPasswordField, javax.swing.GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE)))
                     .addGroup(passwordPanel1Layout.createSequentialGroup()
                         .addGroup(passwordPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(confirmNewDBPasswordLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -296,9 +306,12 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
                             .addComponent(keyLengthLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(passwordPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(encryptionKeyLengthComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, passwordPanel1Layout.createSequentialGroup()
+                                .addComponent(encryptionKeyLengthComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel3))
                             .addComponent(encryptionAlgorrithmComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(confirmNewDBPasswordField, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)))
+                            .addComponent(confirmNewDBPasswordField, javax.swing.GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, passwordPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(passwordPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -327,12 +340,15 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(passwordPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(encryptionKeyLengthComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(keyLengthLabel))
+                    .addComponent(keyLengthLabel)
+                    .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(changeDBPasswordButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(changeDBPasswordButton1))
         );
+
+        jLabel3.getAccessibleContext().setAccessibleName(resourceMap.getString("jLabel3.AccessibleContext.accessibleName")); // NOI18N
 
         javax.swing.GroupLayout databasePasswordPanelLayout = new javax.swing.GroupLayout(databasePasswordPanel);
         databasePasswordPanel.setLayout(databasePasswordPanelLayout);
@@ -518,6 +534,12 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
 }//GEN-LAST:event_lockedRecordsListValueChanged
 
+    private void keyLengthLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_keyLengthLabelMouseClicked
+        // To use the AES algorithm with a key length of 192 or 256, you must use unrestricted policy jar files for your JRE. You can obtain these files from your Java provider. They might have a name like "Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files." If you specify a non-default key length using the default policy jar files, a Java exception occurs.
+        // https://db.apache.org/derby/docs/10.9/devguide/cdevcsecure67151.html
+        JOptionPane.showInternalMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("KEY LENGTH INFO") , java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("KEY LENGTH"), JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_keyLengthLabelMouseClicked
+
     @Action
     public void addUserAction() {
         User user = new User();
@@ -570,6 +592,7 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
     private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel keyLengthLabel;
     private javax.swing.JList lockedRecordsList;
