@@ -334,33 +334,35 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
 
                 // collect the output from the R program in a stream
                 is = new BufferedInputStream(pr.getInputStream());
-                try {
-                    pr.waitFor();
-                    // convert the output to a string
-                    String theString = convertStreamToString(is);
-                    Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.INFO, "Messages from R: \n{0}", theString);
-                    // System.out.println(theString.split("\\r?\\n").length);
-                    // and add all to the list of files to return
-                    for (String fileName : theString.split("\\r?\\n")) {
-                        if (fileName.startsWith("-outFile:")) {
-                            // System.out.println(fileName);
-                            fileName = fileName.replaceFirst("-outFile:", "");
-                            if (new File(fileName).exists()) {
-                                filesCreated.add(fileName);
+                if (fileType != FileTypes.browser) {
+                    try {
+                        pr.waitFor();
+                        // convert the output to a string
+                        String theString = convertStreamToString(is);
+                        Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.INFO, "Messages from R: \n{0}", theString);
+                        // System.out.println(theString.split("\\r?\\n").length);
+                        // and add all to the list of files to return
+                        for (String fileName : theString.split("\\r?\\n")) {
+                            if (fileName.startsWith("-outFile:")) {
+                                // System.out.println(fileName);
+                                fileName = fileName.replaceFirst("-outFile:", "");
+                                if (new File(fileName).exists()) {
+                                    filesCreated.add(fileName);
+                                }
                             }
                         }
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (java.util.NoSuchElementException ex) {
+                        Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.SEVERE, null, ex);
+                        BufferedInputStream errorStream = new BufferedInputStream(pr.getErrorStream());
+                        String errorMessage = convertStreamToString(errorStream);
+                        System.out.println(errorMessage);
+                        throw new TableErrorException("R says:\n" + errorMessage);
+                    } finally {
+                        System.out.println(pr.exitValue());
+                        // Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.INFO, null, pr.exitValue());
                     }
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (java.util.NoSuchElementException ex) {
-                    Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.SEVERE, null, ex);
-                    BufferedInputStream errorStream = new BufferedInputStream(pr.getErrorStream());
-                    String errorMessage = convertStreamToString(errorStream);
-                    System.out.println(errorMessage);
-                    throw new TableErrorException("R says:\n" + errorMessage);
-                } finally {
-                    System.out.println(pr.exitValue());
-                    // Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.INFO, null, pr.exitValue());
                 }
             }
 
