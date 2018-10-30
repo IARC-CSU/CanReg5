@@ -134,13 +134,13 @@ shinyServer(function(input, output, session) {
 				
 				radioButtons("radioLog", "y axes scale:",
 										 c("Logarithmic" = "log",
-											 "Normal" = "normal")
+											 "Linear" = "normal")
 				)
 				
 			}
 			else if (input$select_table %in% c(10)) {
 				
-				checkboxInput("checkCI", "Confidence intervalle",FALSE)
+				checkboxInput("checkCI", "Confidence interval",FALSE)
 
 			}
 		}
