@@ -4,6 +4,17 @@
 			{"en": "Male", "es": "Macho"},
 			{"en": "Female", "es": "Hembra"},
 			{"en": "Population", "es": "Población"},
-      {"en": "% of total population", "es": "% de la población total"}
+			{"en": "% of total population", "es": "% de la población total"},
+      {"en": "All cancers", "es": "Todos los cánceres"},
+			{"en": "All cancers but C44", "es": "Todos los cánceres pero C44"},
+			{"en": "Number of cases", "es": "Numero de casos"},
+			{"en": "Age Group", "es": "Grupo de edad"},
+			{"en": "Year", "es": "Año"},
+			{"en": "years", "es": "años"},
+			{"en": "Age-standardized incidence rate per", "es": "Tasa de incidencia estandarizada por edad por"},
+			{"en": "cancer sites", "es": "sitios de cáncer"},
+			{"en": "Time trend analysis need at least 2 years data", "es": "El análisis de tendencia temporal necesita al menos 2 años de datos"}
     ]
 }
+
+

@@ -1339,7 +1339,7 @@ canreg_get_agegroup_label <- function(dt, agegroup) {
   temp1 <- substr(temp1,1,regexpr("-", temp1)[1]-1)
   temp2 <- substr(temp2,regexpr("-", temp2)[1]+1,nchar(temp2))
   
-  return(list(first_age = first_age, last_age= last_age, label = paste0(temp1,"-",temp2, " years")))
+  return(list(first_age = first_age, last_age= last_age, label = paste0(temp1,"-",temp2, " ",i18n$t("years"))))
 }
 
 
@@ -1730,6 +1730,8 @@ canreg_age_cases_pie_multi_plot <- function(dt,
   j <- 1
   
   for ( i in levels(dt$SEX) ) { 
+	
+		plot_subtitle <- i18n$t(i)
     
     dt_temp <- dt[SEX ==i]
     temp <- canreg_cases_age_pie(df_data = dt_temp,
@@ -1737,7 +1739,7 @@ canreg_age_cases_pie_multi_plot <- function(dt,
                                  var_bar = var_bar,
                                  color_age = color_age,
                                  list_graph = list_graph,
-                                 plot_subtitle = i,
+                                 plot_subtitle = plot_subtitle,
                                  canreg_header = canreg_header
 
     )
@@ -1779,16 +1781,16 @@ canreg_age_cases_pie_multi_plot <- function(dt,
 canreg_ageSpecific_rate_top <- function(df_data, 
 										var_age="AGE_GROUP",
 										var_cases= "CASES", 
-                                        var_py= "COUNT",
-                                        group_by="SEX",
+                    var_py= "COUNT",
+                    group_by="SEX",
 										var_top = "cancer_label",
-                                        var_age_label_list = "AGE_GROUP_LABEL",
+                    var_age_label_list = "AGE_GROUP_LABEL",
 										var_color="ICD10GROUPCOLOR",
 										logscale = TRUE,
 										nb_top = 5,
 										plot_title=NULL,
 										landscape = FALSE,
-									    list_graph = FALSE,
+									   list_graph = FALSE,
 										return_data = FALSE) {
 		 
 if (return_data) {
@@ -1812,7 +1814,7 @@ if (return_data) {
     stop() 
 }
 
-plot_subtitle <- paste0("Top ",nb_top, " cancer sites" )
+plot_subtitle <- paste0("Top ",nb_top, " ",i18n$t("cancer sites") )
 
 temp <- Rcan:::core.csu_ageSpecific_top(df_data,var_age, var_cases, var_py,var_top, group_by,
 									   logscale=logscale, 
@@ -1867,7 +1869,7 @@ canreg_bar_top_single <- function(dt, var_top, var_bar = "cancer_label" ,group_b
       plot_caption <- canreg_header
     }
     
-    plot_subtitle <-  paste0("Top ",nb_top, " cancer sites\n",i)
+    plot_subtitle <-  paste0("Top ",nb_top," ",i18n$t("cancer sites"),"\n",i)
     
     dt_plot <- dt[get(group_by) == i]
     dt_label_order <- setkey(unique(dt_plot[, c(var_bar,"ICD10GROUPCOLOR", "CSU_RANK"), with=FALSE]), CSU_RANK)
@@ -2184,7 +2186,7 @@ canreg_bar_top <- function(df_data,
   setnames(dt, var_bar, "CSU_BAR")
   setnames(dt, group_by, "CSU_BY")
   
-  plot_subtitle <- paste("top",nb_top,"cancer sites")
+  plot_subtitle <- paste("top",nb_top,i18n$t("cancer sites"))
   
   dt <- Rcan:::core.csu_dt_rank(dt, var_value = "CSU_ASR", var_rank = "CSU_BAR",number = nb_top)
   
@@ -2244,6 +2246,7 @@ canreg_bar_top <- function(df_data,
                        labels=tick_label
     )+
     scale_fill_manual(name="",
+											labels = c(i18n$t("Male"),i18n$t("Female")),
                       values= color_bar,
                       drop = FALSE)+
     labs(title = canreg_header, 
@@ -2300,7 +2303,6 @@ canreg_population_pyramid <- function(df_data,
                                       plot_caption= NULL) {
   
   
-	print(color_bar)
 	
   
   dt <- as.data.table(df_data)
@@ -2460,9 +2462,9 @@ canreg_cases_year_bar <- function(dt,
   line_size <- 0.4
   text_size <- 18
   if (skin) {
-    plot_subtitle <- paste("All cancers")
+    plot_subtitle <- paste(i18n$t("All cancers"))
   } else {
-    plot_subtitle <- paste("All cancers but C44")
+    plot_subtitle <- paste(i18n$t("All cancers but C44"))
   }
   
   
@@ -2493,11 +2495,11 @@ canreg_cases_year_bar <- function(dt,
       ylim = c(0,tick_major_list[length(tick_major_list)]+(tick_space*0.25)),
       expand = FALSE
     )+
-    scale_y_continuous(name = "Number of cases",
+    scale_y_continuous(name = i18n$t("Number of cases"),
                        breaks=tick_major_list,
                        minor_breaks = tick_minor_list
     )+
-    scale_x_discrete(name = "Year")+
+    scale_x_discrete(name =  i18n$t("Year"))+
     labs(title = canreg_header, 
          subtitle = plot_subtitle,
          caption = plot_caption)+
@@ -2571,9 +2573,9 @@ canreg_cases_age_bar <- function(df_data,
   line_size <- 0.4
   text_size <- 14
   if (skin) {
-    plot_subtitle <- paste("All cancers")
+    plot_subtitle <- paste(i18n$t("All cancers"))
   } else {
-    plot_subtitle <- paste("All cancers but C44")
+    plot_subtitle <- paste(i18n$t("All cancers but C44"))
   }
   
  
@@ -2618,13 +2620,14 @@ canreg_cases_age_bar <- function(df_data,
               size = csu_bar_label_size,
               hjust = 1)+
     coord_flip(ylim = c(tick_minor_list[1]-(tick_space*0.25),tick_minor_list[length(tick_minor_list)]+(tick_space*0.25)), expand = TRUE)+
-    scale_y_continuous(name = "Number of cases",
+    scale_y_continuous(name = i18n$t("Number of cases"),
                        breaks=tick_major_list,
                        minor_breaks = tick_minor_list,
                        labels=tick_label
     )+
-    scale_x_discrete(name = "Age Group")+
+    scale_x_discrete(name = i18n$t("Age Group"))+
     scale_fill_manual(name="",
+											labels = c(i18n$t("Male"),i18n$t("Female")),
                       values= color_bar,
                       drop = FALSE)+
     labs(title = canreg_header, 
@@ -2717,7 +2720,7 @@ canreg_cases_age_pie <- function(
     geom_bar(width = 1, stat = "identity") +
     geom_text(aes(label = percent(percent), x=x_label, y= y_label, size=text_size), show.legend=FALSE) +
     coord_polar(theta = "y") +
-    scale_fill_manual(name = "Age Group", values = color_age) + 
+    scale_fill_manual(name = i18n$t("Age Group"), values = color_age) + 
     scale_size_continuous(range=c(4,6))+
     labs(title = canreg_header, 
          subtitle = plot_subtitle)+
@@ -2806,7 +2809,7 @@ canreg_asr_trend_top <- function(dt, var_asr="asr",
     color_cancer <- as.character(dt_label_order$ICD10GROUPCOLOR)
     
 
-    
+    sex_label <- i18n$t(i)
     
     plotlist[[j]] <- Rcan:::core.csu_time_trend(dt_plot,
                                     var_trend = "asr",
@@ -2816,7 +2819,7 @@ canreg_asr_trend_top <- function(dt, var_asr="asr",
                                     smoothing = NULL,
                                     ytitle = ytitle,
                                     plot_title = canreg_header,
-                                    plot_subtitle = paste0("Top ",number, " cancer sites\n",i),
+                                    plot_subtitle = paste0("Top ",number," ",i18n$t("cancer sites"),"\n",sex_label),
                                     plot_caption = plot_caption,
                                     color_trend = color_cancer)$csu_plot
     
@@ -2889,6 +2892,7 @@ canreg_eapc_scatter <- function(dt_plot,
                        limits=c(tick$tick_list[1],tick$tick_list[length(tick$tick_list)]),
                        labels=Rcan:::core.csu_axes_label)+
     scale_fill_manual(name="",
+											labels = c(i18n$t("Male"),i18n$t("Female")),
                       values= color_bar,
                       drop = FALSE)+
     geom_vline(xintercept = 0, size=0.8)+
