@@ -1,0 +1,9 @@
+{
+  "languages": ["en", "es"],
+  "translation": [
+			{"en": "Male", "es": "Macho"},
+			{"en": "Female", "es": "Hembra"},
+			{"en": "Population", "es": "Población"},
+      {"en": "% of total population", "es": "% de la población total"}
+    ]
+}

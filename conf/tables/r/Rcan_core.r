@@ -1314,7 +1314,7 @@ canreg_pop_data <- function(pop_file) {
   dt_pop[,Total:=sum(COUNT)]
   dt_pop[,Percent:=COUNT/sum(COUNT)*100, by=SEX]
   dt_pop[,Percent:=round(Percent,1)]
-  dt_pop$SEX <- factor(dt_pop$SEX, levels=c(1,2), labels=c("Male", "Female"))
+  dt_pop$SEX <- factor(dt_pop$SEX, levels=c(1,2), labels=c("Male","Female"))
   return(dt_pop)
   
 }
@@ -2300,6 +2300,8 @@ canreg_population_pyramid <- function(df_data,
                                       plot_caption= NULL) {
   
   
+	print(color_bar)
+	
   
   dt <- as.data.table(df_data)
   
@@ -2373,17 +2375,18 @@ canreg_population_pyramid <- function(df_data,
     geom_polygon(data=dt_poly, aes(x=AGE_GROUP, y=cases_plot, group=CSU_BY), colour="black" )+
     geom_hline(yintercept = 0, colour="black",size = line_size)+
     coord_flip(ylim = c(tick_minor_list[1]-(tick_space*0.25),tick_minor_list[length(tick_minor_list)]+(tick_space*0.25)), expand = TRUE)+
-    scale_y_continuous(name = "% of total population",
+    scale_y_continuous(name = i18n$t("% of total population"),
                        breaks=tick_major_list,
                        minor_breaks = tick_minor_list,
                        labels=tick_label
     )+
     scale_x_discrete(name = "")+
     scale_fill_manual(name="",
+											labels = c(i18n$t("Male"),i18n$t("Female")),
                       values= color_bar,
                       drop = FALSE)+
     labs(title = canreg_header, 
-         subtitle = paste("Population:", formatC( total_pop, format="d", big.mark=",")),
+         subtitle = paste0(i18n$t("Population"),": ", formatC( total_pop, format="d", big.mark=",")),
          caption = plot_caption)+
   theme(
     aspect.ratio = csu_ratio,
