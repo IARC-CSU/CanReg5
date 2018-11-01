@@ -1599,6 +1599,8 @@ canreg_ageSpecific_rate_multi_plot <- function(dt,
                                  plot_title = canreg_header,
                                  plot_subtitle = cancer_title,
                                  plot_caption = canreg_header,
+																 xtitle = i18n$t("Age at diagnosis"),
+																 ytitle = i18n$t("Age-standardized incidence rate per"),
                                  color_trend = color_trend,
                                  logscale = logscale,
                                  age_label_list = unique(dt[[var_age_label_list]])
@@ -1823,6 +1825,8 @@ temp <- Rcan:::core.csu_ageSpecific_top(df_data,var_age, var_cases, var_py,var_t
 									   plot_subtitle=plot_subtitle,
 									   var_color=var_color,
 									   var_age_label_list=var_age_label_list,
+										 xtitle = i18n$t("Age at diagnosis"),
+										 ytitle = i18n$t("Age-standardized incidence rate per"),
 									   caption_bypass=TRUE)
 
 for (i in  1:length(temp$plotlist)) {
