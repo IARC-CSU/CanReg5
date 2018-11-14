@@ -1,4 +1,4 @@
-%% LyX 2.1.2 created this file.  For more info, see http://www.lyx.org/.
+%% LyX 2.1.4 created this file.  For more info, see http://www.lyx.org/.
 %% Do not edit unless you really know what you are doing.
 \documentclass[12pt,a4paper,english,portrait]{scrbook}
 \usepackage[T1]{fontenc}
@@ -102,11 +102,7 @@ from the previous version are the new database engine, the improved
 multi user capacities and that the development is managed like an
 open source project. Also included is a tool to facilitate the set
 up of a new or modification of an existing database by adding new
-variables, tailoring the data entry forms etc. 
-\par\end{flushleft}
-
-\begin{flushleft}
-Version 5 of CanReg is now ready for download.
+variables, tailoring the data entry forms etc.
 \par\end{flushleft}
 
 
@@ -159,8 +155,8 @@ This can be set up while migrating your system definition files.
 site\index{community site@community\textsf{\textbf{ }}site}, twitter\index{twitter}}
 
 \begin{flushleft}
-We have created a project page at SourceForge to help us keep track
-of issues with CanReg5: \href{http://sourceforge.net/projects/canreg/}{http://sourceforge.net/projects/canreg/}.
+We have created a project page at GitHub to help us keep track of
+issues with CanReg5: \href{https://github.com/IARC-CSU/CanReg5}{https://github.com/IARC-CSU/CanReg5}.
 Using tools there allows you to see what error reports other CanReg
 users have already filed and if solutions have already been proposed
 and also discuss potential improvements for CanReg5, before posting
@@ -183,8 +179,8 @@ screen. (For example Version: ``4.99.0b586'')
 
 \begin{flushleft}
 Please be aware that some problems can be avoided by installing the
-latest version of the Java Runtime Environment (Version 6) before
-you start. (Available from \href{http://java.com/en/download/manual.jsp}{http://java.com/en/download/manual.jsp}.) 
+latest version of the Java Runtime Environment (Version 6 or newer)
+before you start. (Available from \href{http://java.com/en/download/manual.jsp}{http://java.com/en/download/manual.jsp}.) 
 \par\end{flushleft}
 
 \begin{flushleft}
@@ -216,7 +212,7 @@ recent version of CanReg5.
 \includegraphics[width=4.72917in,height=5.36458in]{1}
 \par\end{centering}
 
-\protect\caption{Checking if you have the latest version of CanReg installed.}
+\caption{Checking if you have the latest version of CanReg installed.}
 
 
 \end{figure}
@@ -296,8 +292,8 @@ Environment\index{Java Runtime Environment@Java\textbf{ }Runtime\textbf{ }Enviro
 
 \begin{flushleft}
 Before you install and run CanReg5 for the first time it is recommended
-that you install the latest Java 7 Runtime Environment (April 2013:
-Version 7 Update 21 ) You can get that from here: \href{http://java.com/en/download/manual.jsp}{http://java.com/en/download/manual.jsp}
+that you install the latest Java 8 Runtime Environment (July 2017:
+Version 8 Update 144 ) You can get that from here: \href{http://java.com/en/download/manual.jsp}{http://java.com/en/download/manual.jsp}
 \par\end{flushleft}
 
 
@@ -392,7 +388,7 @@ You should now be presented with the CanReg5 welcome window (See figure
 \includegraphics[width=0.9\linewidth]{CanRegWelcomeScreen}
 \par\end{centering}
 
-\protect\caption{\label{fig:The-welcome-window}The welcome window}
+\caption{\label{fig:The-welcome-window}The welcome window}
 
 
 \end{figure}
@@ -464,7 +460,7 @@ Go to ``Tool'' in CanReg5 menu and click ``Convert system definition''
 \includegraphics{4}
 \par\end{centering}
 
-\protect\caption{\label{fig:CanReg-systems-definition-menu}CanReg systems definition
+\caption{\label{fig:CanReg-systems-definition-menu}CanReg systems definition
 converter menu}
 
 
@@ -814,6 +810,18 @@ an icon in your notification area\index{notification area}.
 \par\end{center}
 
 
+\subsection{Launching server from \index{command line}command line}
+
+To launch CanReg5 from command line, you'll have to open command line
+on your computer (Windows: Win+R, ``cmd'') change into the folder
+you have \emph{installed} CanReg5 (Windows: ``cd \%programfiles(x86)\%\textbackslash{}CanReg5'')
+and type the following to launch the server:
+
+``java -jar CanReg5.jar <registry-code>'' (where <registry-code>
+should be replace by the code of your registry, ie ``java -jar CanReg5.jar
+TRN-E'')
+
+
 \section{Login\index{login@\textsf{\textbf{login}}}\label{sub:Login}}
 
 \begin{flushleft}
@@ -902,7 +910,7 @@ of the CanReg system you want to connect to.
 \par\end{flushleft}
 
 
-\section{Import the dictionaries\index{import dictionaries}}
+\section{Import the dictionaries\index{import dictionaries} from CanReg4}
 
 \begin{flushleft}
 If you are migrating from CanReg4 make sure to export the most updated
@@ -1116,7 +1124,7 @@ panel. (See \vref{sub:Login} for more information.)
 \includegraphics{loginsettings}
 \par\end{centering}
 
-\protect\caption{\label{fig:Login-settings}Login settings}
+\caption{\label{fig:Login-settings}Login settings}
 
 
 \end{figure}
@@ -1312,7 +1320,7 @@ aged more than 60.)
 \includegraphics{filterwizard}
 \par\end{centering}
 
-\protect\caption{\label{fig:Filter-Wizard}Filter Wizard}
+\caption{\label{fig:Filter-Wizard}Filter Wizard}
 \end{figure}
 
 
@@ -1940,7 +1948,11 @@ all.
 
 Tick \textquotedbl{}Format Date\index{format date}\textquotedbl{},
 for example, to export \textquotedbl{}21/04/2001\textquotedbl{} instead
-of numeric form \textquotedbl{}20010421\textquotedbl{}.
+of numeric form \textquotedbl{}20010421\textquotedbl{}. (The date
+format can be any format specified by a text string using dd for days,
+MM for months, and yyyy for year, for example: \textquotedblleft yyyyMMdd\textquotedblright{}
+(the default), \textquotedblleft dd/MM/yyyy\textquotedblright , or
+\textquotedblleft MM.dd.yyyy\textquotedblright .)
 
 Tick \textquotedbl{}Correct Unknown\index{correct unknown}\textquotedbl{}
 so that unknown day will be written as \textquotedbl{}01\textquotedbl{}
@@ -1973,7 +1985,7 @@ find it under analysis --> table builder.
 \includegraphics[width=4.07292in,height=1.57292in]{40}
 \par\end{centering}
 
-\protect\caption{\label{fig:Table-builder-in-the-menu}Table builder in the menu.}
+\caption{\label{fig:Table-builder-in-the-menu}Table builder in the menu.}
 \end{figure}
 
 \par\end{center}
@@ -1996,14 +2008,14 @@ Pick Incidence per 100,000 by age group (Period):
 \includegraphics[width=5.04167in,height=4.125in]{41}
 \par\end{centering}
 
-\protect\caption{\label{fig:Table-builder}Table builder}
+\caption{\label{fig:Table-builder}Table builder}
 \end{figure}
 
 \par\end{center}
 
 The incidence rate is defined as:
 
-$\frac{incidence\: cases\: per\: year}{population\: at\: risk}\times10000$
+$\frac{incidence\:cases\:per\:year}{population\:at\:risk}\times10000$
 
 This gives an idea of the risk of getting each type of cancer - the
 tables consist of Incidence Rates by Sex, Age group and ICD10\index{ICD10}
@@ -2021,7 +2033,7 @@ City, 1991 to 1993:
 \includegraphics[width=5.02083in,height=4.125in]{42}
 \par\end{centering}
 
-\protect\caption{\label{fig:The-range-chooser}The range chooser.}
+\caption{\label{fig:The-range-chooser}The range chooser.}
 \end{figure}
 
 \par\end{center}
@@ -2045,7 +2057,7 @@ See figure \vref{fig:The-population-dataset}.
 \includegraphics[width=5in,height=4.11458in]{43}
 \par\end{centering}
 
-\protect\caption{\label{fig:The-population-dataset}The population dataset chooser.}
+\caption{\label{fig:The-population-dataset}The population dataset chooser.}
 
 
 \end{figure}
@@ -2067,7 +2079,7 @@ name you give for each file.)
 \includegraphics[width=1\columnwidth]{44}
 \par\end{centering}
 
-\protect\caption{\label{fig:File-formats-selector}File formats selector}
+\caption{\label{fig:File-formats-selector}File formats selector}
 \end{figure}
 
 \par\end{center}
@@ -2089,7 +2101,7 @@ and choose Portrait to get the table in the proper orientation.)
 \includegraphics[angle=90,width=0.9\columnwidth]{46}
 \par\end{centering}
 
-\protect\caption{\label{fig:Incidence-Rates-per}Incidence Rates per 100.000}
+\caption{\label{fig:Incidence-Rates-per}Incidence Rates per 100.000}
 \end{figure}
 
 \par\end{center}
@@ -2123,22 +2135,31 @@ or Adobe Illustrator. They can also be directly embedded in many documents
 using Google Docs or Open Office.
 
 
-\subsubsection{Portable Network Graphics (PNG)}
+\subsubsection{Image files (Portable Network Graphics (PNG), Windows Meta files
+(WMF) or TIFFs)}
 
-PNGs are useful for presentation on screen or online, but less adapted
-to print, as they are not scalable.
-
-
-\subsubsection{Windows Meta File (WMF)}
-
-WMFs are useful for presentation on screen, but less adapted to print,
-as they are not scalable. (If possible it is better to use PNG as
-that is an open format.
+Image files are useful for presentation on screen or online, but less
+adapted to print, as they are not scalable. (If possible it is best
+to use PNG as that is an open format.)
 
 
 \subsubsection{Tabulated data (HTML)}
 
 This is the data from the tables in HTML format for further processing.
+
+
+\subsubsection{Word files (DOCX)}
+
+This generates a word document that can be edited in any compatible
+software. (Microsoft Word, Libre Office Writer, Open Office Writer,
+etc.)
+
+
+\subsubsection{PowerPoint (PPTX)}
+
+This generates a slide deck that can be edited in any compatible software.
+(Microsoft PowerPoint, Libre Office Impress, Open Office Impress,
+etc.)
 
 
 \subsection{CanReg5 Chart Editor}
@@ -2151,7 +2172,7 @@ PDF or SVG or printing it. (See figure \vref{fig:CanReg5-chart-editor}.)
 \includegraphics[width=0.6\columnwidth]{charteditor}
 \par\end{centering}
 
-\protect\caption{\label{fig:CanReg5-chart-editor}CanReg5 chart editor}
+\caption{\label{fig:CanReg5-chart-editor}CanReg5 chart editor}
 \end{figure}
 
 
@@ -2181,13 +2202,13 @@ Afterwards you can use the table builder in CanReg and choose the
 SEER{*}Prep as table type, specify the range of years you want to
 look at, the population datasets matching each year in the period
 and click ``Generate files for SEER{*}Prep''. This will ask you
-to specify the base name of the files for SEER{*}Prep, i.e. ``Goiania1999-2001''.
-(Please note that you can only use ASCII (English) characters in the
-paths of the datafiles.) CanReg will add ``cases-'' and ``pop-''
-for respectively the incidence file and the population file, as well
-as the suffix ``.txd'' so that SEER{*}Prep recognises the files.
-CanReg will also create a file describing the data for SEER{*}Prep
-- a socalled .dd-file.
+to specify the base name of the files for SEER{*}Prep, i.e. ``Training
+Database 1999-2001''. (Please note that you can only use ASCII (English)
+characters in the paths of the datafiles.) CanReg will add ``cases-''
+and ``pop-'' for respectively the incidence file and the population
+file, as well as the suffix ``.txd'' so that SEER{*}Prep recognises
+the files. CanReg will also create a file describing the data for
+SEER{*}Prep - a socalled .dd-file.
 
 Start SEER{*}Prep.
 
@@ -2199,7 +2220,7 @@ Start SEER{*}Prep.
 \includegraphics[width=0.9\columnwidth]{seerprep}
 \par\end{centering}
 
-\protect\caption{SEER{*}Prep in action}
+\caption{SEER{*}Prep in action}
 \end{figure}
 
 
@@ -2208,10 +2229,9 @@ icon.
 
 \fbox{\begin{minipage}[t]{1\columnwidth}%
 You can also do this manually. You then have to first specify that
-your files follow the NAACCR 1946 v11.3 format, by opening the corresponding
-.dd file from the folder you installed SEER{*}prep to. (Most probably
-``naaccr1946.ver11\_3.d02032011.dd'') Then under ``Database name:''
-you can specify something more instructive than the default.
+your files follow the CanReg5 format, by opening the corresponding
+.dd file from the folder you installed CanReg5 in. Then under ``Database
+name:'' you can specify something more instructive than the default.
 
 Then you add your case file and population files from above using
 the ``Add...'' buttons.
@@ -2263,6 +2283,11 @@ that SEER{*}Prep writes data to.
 
 Under ``Other variables'' you have to specify valid paths for the
 ``User Variables'', ``Open or Save'' and ``Temporary Files''.
+
+
+\subsection{Launch browser}
+
+This launches your web browser for an interactive data analysis session.
 
 
 \section{Frequency distributions\index{frequency distributions}}
@@ -2431,7 +2456,7 @@ tab in the user manager and enter your new password twice. (See figure
 \includegraphics{30}
 \par\end{centering}
 
-\protect\caption{\label{fig:Change-your-own-pqd}Change your own password}
+\caption{\label{fig:Change-your-own-pqd}Change your own password}
 
 
 \end{figure}
@@ -2442,16 +2467,16 @@ tab in the user manager and enter your new password twice. (See figure
 \subsection{Database password}
 
 \begin{flushleft}
-The CanReg5 database can be encrypted using 56-bit DES encryption.
-To enable this you need to provide a minimum 8 characters long password
-on the ``Database password'' tab. (See figure \vref{fig:Set-database-password}.)
-This protects your database in case somebody gets hold of it. The
-user will now be asked for this password everytime she launches the
-server. (Once it is running others can connect to the database as
-usual.) This is a one way process - the only way to remove the encryption
-of your database is to export all the data, build an empty database
-and import everything again. The password can, however, be changed
-at any point in time.
+The CanReg5 database can be encrypted using DES or AES encryption
+with keys up to 512 bits. To enable this you need to provide a minimum
+8 characters long password on the ``Database password'' tab. (See
+figure \vref{fig:Set-database-password}.) This protects your database
+in case somebody gets hold of it. The user will now be asked for this
+password everytime she launches the server. (Once it is running others
+can connect to the database as usual.) This is a one way process -
+the only way to remove the encryption of your database is to export
+all the data, build an empty database and import everything again.
+The password can, however, be changed at any point in time.
 \par\end{flushleft}
 
 \begin{flushleft}
@@ -2466,12 +2491,20 @@ This functionality is only available to users with supervisor access.
 \includegraphics{databasePassword}
 \par\end{centering}
 
-\protect\caption{\label{fig:Set-database-password}Set database password}
-
-
+\caption{\label{fig:Set-database-password}Set database password}
 \end{figure}
 
 \par\end{flushleft}
+
+Note: ``To use the AES algorithm with a key length of 192 or 256,
+you must use unrestricted policy jar files for your JRE. You can obtain
+these files from your Java provider. They might have a name like \textquotedbl{}Java
+Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy
+Files.\textquotedbl{} If you specify a non-default key length using
+the default policy jar files, a Java exception occurs.'' (Ref: \href{https://db.apache.org/derby/docs/10.9/devguide/cdevcsecure67151.html}{https://db.apache.org/derby/docs/10.9/devguide/cdevcsecure67151.html})
+Simply download the Java Cryptographic Extension (from \href{https://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html}{https://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html}
+if you're using Java 8.), unzip the archive and copy the .jar files
+to the ``lib'' folder inside your CanReg5 installation.
 
 
 \subsection{User manager\index{user manager@user\textbf{ }manager} }
@@ -2498,7 +2531,7 @@ Only analysis options are available.
 \includegraphics{31}
 \par\end{centering}
 
-\protect\caption{\label{fig:User-manager}User manager}
+\caption{\label{fig:User-manager}User manager}
 
 
 \end{figure}
@@ -2575,8 +2608,11 @@ Results from the search appears here as potential duplicates are found.
 
 \subsection{Language\index{language}}
 
-Change language of CanReg5. You need to restart your CanReg5 system
-if you change language.
+Change the program language and date format (for data entry) of CanReg5.
+(You need to restart your CanReg5 system if you change program language.)
+The date format can be any format specified by a text string using
+dd for days, MM for months, and yyyy for year, for example: ``yyyyMMdd''
+(the default), ``dd/MM/yyyy'', or ``MM.dd.yyyy''.
 
 
 \subsection{Look \& Feel\index{look & feel@look \& feel}}
@@ -2608,6 +2644,40 @@ the user interface of CanReg. Tick this if moving windows around the
 screen is slow.
 
 
+\subsubsection{{[}NEW{]} Data Entry Version}
+
+Here you can choose between the ``New Version'' of the data entry
+form and the original version. 
+
+\begin{center}
+\begin{figure}[h]
+\begin{centering}
+\includegraphics[width=0.6\textwidth]{DataEntryNew}
+\par\end{centering}
+
+\caption{\label{fig:data-entry-new}The new data entry form}
+\end{figure}
+
+\par\end{center}
+
+\begin{center}
+\begin{figure}[h]
+\begin{centering}
+\includegraphics[width=0.6\columnwidth]{DataEntryOriginal}
+\par\end{centering}
+
+\caption{\label{fig:data-entry-original}The original data entry form}
+\end{figure}
+
+\par\end{center}
+
+
+\subsubsection{{[}NEW{]}Show sources to the right side of tumours}
+
+This relates to the new version of the data entry form. Sources can
+either be shown below or to the right of the tumours.
+
+
 \subsection{Periodic backup\index{backup}}
 
 \includegraphics{options12}
@@ -2631,7 +2701,7 @@ get the latest universal version of CanReg (The zip-file.) or click
 \includegraphics{options4}
 
 Here you can set the paths to the various helper applications of CanReg.
-(So far only ``R''.)
+(So far only ``R'' and GhostScript.)
 
 \newpage{}
 
@@ -2880,7 +2950,7 @@ of physician.
 Note: Registries can choose to collect Date of Birth OR Age, but most
 choose to collect both.
 
-\protect\caption{\label{fig:Minimum-variables.}Minimum variables.}
+\caption{\label{fig:Minimum-variables.}Minimum variables.}
 \end{figure}
 
 \par\end{flushleft}
@@ -3237,7 +3307,7 @@ folder. For each line in the Table Builder you will find a corresponding
 \includegraphics{41}
 \par\end{centering}
 
-\protect\caption{\label{fig:The-Table-Builder}The Table Builder}
+\caption{\label{fig:The-Table-Builder}The Table Builder}
 
 
 \end{figure}
@@ -3419,7 +3489,7 @@ preview\_image~\{
 \begin{figure}[h]
 \includegraphics[width=1\linewidth]{pieChart}
 
-\protect\caption{\label{fig:Pie-Chart}Pie Chart}
+\caption{\label{fig:Pie-Chart}Pie Chart}
 
 
 \end{figure}
@@ -3486,15 +3556,15 @@ script.name <- sub(file.arg.name, "",
 initial.options[grep(file.arg.name, initial.options)]) 
 script.basename <- dirname(script.name) 
 
-source(paste(sep="/", script.basename, "makeTable.R")) 
-source(paste(sep="/", script.basename, "checkArgs.R")) 
-source(paste(sep="/", script.basename, "makeFile.R"))
+source(paste(sep="/", script.basename, "makeTable.r")) 
+source(paste(sep="/", script.basename, "checkArgs.r")) 
+source(paste(sep="/", script.basename, "makeFile.r"))
 
 ##OutFile out <- checkArgs(Args, "-out")
 fileType <- checkArgs(Args, "-ft")
 
 # Load dependencies 
-source(paste(sep="/", script.basename, "myLibrary1.R"))
+source(paste(sep="/", script.basename, "myLibrary1.r"))
 ...
 source(paste(sep="/", script.basename, "myLibraryN.r"))
 
@@ -3716,8 +3786,8 @@ To download R\index{R} go to \href{http://cran.r-project.org/mirrors.html}{http:
 and choose a mirror near you, for example \href{http://cran.univ-lyon1.fr/}{http://cran.univ-lyon1.fr/}.
 Choose your platform, i.e. Windows, click the link that says ``base'',
 i.e. \href{http://cran.univ-lyon1.fr/bin/windows/base/}{http://cran.univ-lyon1.fr/bin/windows/base/}
-and then click ``Download R...''. The latest as of the 25th of September
-2013 is version 3.0.2 and you can get more information on the installation
+and then click ``Download R...''. The latest as of the 18th of October
+2016 is version 3.3.1 and you can get more information on the installation
 procedure here: \url{http://cran.r-project.org/src/base/NEWS.html}.
 
 
@@ -3770,14 +3840,14 @@ analysis, and reporting package. Available from \href{http://www.sofastatistics.
 \section{Data cleaning and record linkage\index{data cleaning}}
 
 
-\subsection{Google Refine\index{Google Refine}}
+\subsection{Open Refine\index{Google Refine}}
 
-Google Refine is a free and open source tool that allows you to standardise
+Open Refine is a free and open source tool that allows you to standardise
 and clean your data prior to importing it into CanReg5. Please note
 that even though you access and manipulate your data using a web browser
 your data is kept locally on your machine. 
 
-More information about it on: \href{http://code.google.com/p/google-refine/}{http://code.google.com/p/google-refine/}
+More information about it on: \href{https://github.com/OpenRefine}{https://github.com/OpenRefine}
 
 
 \subsection{Talend Open Studio\index{Talend Open Studio}}
@@ -3872,10 +3942,9 @@ On Windows, the tool I recommend is the open sourced and free GSview\index{GSvie
 
 \begin{flushleft}
 To run GS View you need to install \index{Ghostscript}Ghostscript
-first. This can be for example be downloaded from here: \href{http://pages.cs.wisc.edu/~ghost/doc/GPL/gpl900.htm}{http://pages.cs.wisc.edu/$\sim$ghost/doc/GPL/gpl900.htm}
-(Scroll all the way down, under the heading Microsoft windows and
-download the ``GPL Ghostscript 9.00 for 32-bit Windows (the common
-variety)'' (\href{http://mirror.cs.wisc.edu/pub/mirrors/ghost/GPL/gs900/gs900w32.exe}{http://mirror.cs.wisc.edu/pub/mirrors/ghost/GPL/gs900/gs900w32.exe}) 
+first. This can be for example be downloaded from here: \href{http://www.ghostscript.com/download/gsdnld.html}{http://www.ghostscript.com/download/gsdnld.html}
+(Look under the heading ``Platform'' and download the ``GPL Ghostscript
+9.xx for Windows (32-bit)'' AGPL Release.
 \par\end{flushleft}
 
 \begin{flushleft}
@@ -3883,9 +3952,9 @@ Run this file to install Ghostscript.
 \par\end{flushleft}
 
 \begin{flushleft}
-Then you can get GS View from here: \href{http://pages.cs.wisc.edu/~ghost/gsview/get49.htm}{http://pages.cs.wisc.edu/$\sim$ghost/gsview/get49.htm}
+Then you can get GS View from here: \href{http://pages.cs.wisc.edu/~ghost/gsview/get50.htm}{http://pages.cs.wisc.edu/$\sim$ghost/gsview/get50.htm}
 (Most probably, you should pick the Win32 self extracting archive
-- the first download option. \href{http://mirror.cs.wisc.edu/pub/mirrors/ghost/ghostgum/gsv49w32.exe}{http://mirror.cs.wisc.edu/pub/mirrors/ghost/ghostgum/gsv49w32.exe}) 
+- the first download option.)
 \par\end{flushleft}
 
 \begin{flushleft}
@@ -4011,7 +4080,7 @@ Default:~``Here~be~Data.txt''~
 
 \section{Copyright}
 
-© 2008-2015 International Agency for Research on Cancer World Health
+© 2008-2017 International Agency for Research on Cancer World Health
 Organization All rights reserved.
 
 
@@ -4020,7 +4089,7 @@ Organization All rights reserved.
 
 \subsection{Lead developement and design: }
 \begin{itemize}
-\item Morten Johannes Ervik, IARC/CIN
+\item Morten Johannes Ervik, IARC/CSU
 \end{itemize}
 
 \subsection{Additional developement}
@@ -4028,8 +4097,10 @@ Organization All rights reserved.
 \item Andy Cooke (Original quality control module) 
 \item Jacques Ferlay (Original PostScript code, conversion tables, and original
 quality control module)
+\item Mathieu Laversanne (R code for analysis)
 \item Anahita Rahimi (R code for analysis)
 \item Sebastien Antoni (R code for analysis)
+\item Betty Carballo and Patricio Carranza (New Data Entry form)
 \end{itemize}
 
 \subsection{Additional design}
@@ -4054,7 +4125,7 @@ quality control module)
 \subsection{Technical consultants}
 \begin{itemize}
 \item Michel Smans, IARC/ITS 
-\item Lucile Alteyrac, IARC/BIO
+\item Lucile Alteyrac, IARC/ITS
 \end{itemize}
 
 \subsection{Thanks}
@@ -4093,7 +4164,8 @@ quality control module)
 \item M. Ramadan, Gharbiah Cancer Registry, Egypt 
 \item Kevin Ward, Emory University, USA 
 \item Cankut Yakut, Izmir Cancer Registry, Turkey
-\item Antoine Buemi, Registre des Cancers du Haut-Rhin
+\item Antoine Buemi, Registre des Cancers du Haut-Rhin, France
+\item Gonçalo Forjaz, Azores Cancer Registry, Portugal
 \end{itemize}
 
 \subsection{Translators}
@@ -4102,7 +4174,8 @@ quality control module)
 \item \textbf{Portugese: }Edesio Martins, Goiania Cancer Registry, Brazil 
 \item \textbf{Russian: }Evgeniya Ostroumova, IARC, France and Anton Ryzhov,
 Ukraine
-\item \textbf{Spanish:} Graciela Cristina Nicolas, Cordoba, Argentina
+\item \textbf{Spanish:} Graciela Cristina Nicolas and Betty Carballo, Cordoba,
+Argentina
 \item \textbf{Chinese:} Yayun Dai, IARC, France and Shixuan Liu, China
 \item \textbf{Portugese, Portugal: }Gonçalo Lacerda, Azores, Portugal
 \item \textbf{Turkish:} Cankut Yakut, Izmir Cancer Registry, Turkey
