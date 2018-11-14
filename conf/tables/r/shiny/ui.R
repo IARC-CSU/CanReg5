@@ -61,6 +61,7 @@ ui <- dashboardPage(
    '))),
 	  useShinyjs(),
 		downloadButton('downloadLog', '', class="log"),
+		downloadButton('downloadData', '', class="log"),
 	  fluidRow(
 
 	      plotOutput("plot", height ="600px")

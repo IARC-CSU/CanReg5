@@ -10,7 +10,7 @@ div#plot img{
 
 a#downloadLog {
     right: 20px;
-    z-index: 2000;
+    z-index: 2100;
     top: 5px;
     position: absolute;
     height: 40px;
@@ -22,6 +22,23 @@ a#downloadLog {
 }
 
 a#downloadLog i.fa{
+	    color: #00000000!important;
+}
+
+a#downloadData {
+    right: 60px;
+    z-index: 2000;
+    top: 5px;
+    position: absolute;
+    height: 40px;
+    background-image: url(log_data.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+		background-color: #0b80b7;
+    border: none;
+}
+
+a#downloadData i.fa{
 	    color: #00000000!important;
 }
 

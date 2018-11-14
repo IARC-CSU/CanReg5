@@ -601,4 +601,14 @@ shinyServer(function(input, output, session) {
 	
 	)
 	
+		 #Download data
+  output$downloadData <- downloadHandler(
+	
+		filename =  paste0(ls_args$sc,"_",gsub("\\D","", Sys.time()),"_data.csv"),
+		content = function(file) {
+			shiny_dwn_data(file)
+		}
+	
+	)
+	
 })
