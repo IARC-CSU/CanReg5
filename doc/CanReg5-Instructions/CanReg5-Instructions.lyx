@@ -8388,6 +8388,7 @@ lib
 \end_inset
 
  folder inside your CanReg5 installation.
+ 
 \end_layout
 
 \begin_layout Subsection
@@ -8521,6 +8522,7 @@ analyst
 
  cannot make any changes to the database.
  Only analysis options are available.
+ 
 \end_layout
 
 \begin_layout Standard
