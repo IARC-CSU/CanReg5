@@ -43,7 +43,8 @@ public interface TableBuilderInterface {
         seer,
         tiff,
         docx,
-        pptx
+        pptx,
+        browser
     };
 
     public static enum ChartType {

@@ -7591,6 +7591,14 @@ Temporary Files
 .
 \end_layout
 
+\begin_layout Subsection
+Launch browser
+\end_layout
+
+\begin_layout Standard
+This launches your web browser for an interactive data analysis session.
+\end_layout
+
 \begin_layout Section
 
 \family sans
@@ -8266,7 +8274,8 @@ Database password
 
 \begin_layout Standard
 \align left
-The CanReg5 database can be encrypted using 56-bit DES encryption.
+The CanReg5 database can be encrypted using DES or AES encryption with keys
+ up to 512 bits.
  To enable this you need to provide a minimum 8 characters long password
  on the 
 \begin_inset Quotes eld
@@ -8336,13 +8345,49 @@ Set database password
 
 \end_layout
 
-\begin_layout Plain Layout
-
-\end_layout
-
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+Note: 
+\begin_inset Quotes eld
+\end_inset
+
+To use the AES algorithm with a key length of 192 or 256, you must use unrestric
+ted policy jar files for your JRE.
+ You can obtain these files from your Java provider.
+ They might have a name like "Java Cryptography Extension (JCE) Unlimited
+ Strength Jurisdiction Policy Files." If you specify a non-default key length
+ using the default policy jar files, a Java exception occurs.
+\begin_inset Quotes erd
+\end_inset
+
+ (Ref: 
+\begin_inset CommandInset href
+LatexCommand href
+target "https://db.apache.org/derby/docs/10.9/devguide/cdevcsecure67151.html"
+
+\end_inset
+
+) Simply download the Java Cryptographic Extension (from 
+\begin_inset CommandInset href
+LatexCommand href
+target "https://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html"
+
+\end_inset
+
+ if you're using Java 8.), unzip the archive and copy the .jar files to the
+ 
+\begin_inset Quotes eld
+\end_inset
+
+lib
+\begin_inset Quotes erd
+\end_inset
+
+ folder inside your CanReg5 installation.
 \end_layout
 
 \begin_layout Subsection
