@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2017  International Agency for Research on Cancer
+ * Copyright (C) 2008-2018  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -67,7 +67,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import org.w3c.dom.Document;
 
 /**
@@ -91,14 +94,16 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     private TrayIcon trayIcon;
 
     /**
-     * 
+     *
      * @param systemCode
      * @throws java.rmi.RemoteException
      */
     public CanRegServerImpl(String systemCode) throws RemoteException {
-        
+        // Prevent JAVA to use a random port.
+        super(1099);
+
         Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.INFO, "Java version: {0}", System.getProperty("java.version"));
-                
+
         this.systemCode = systemCode;
 
         // If we can we add a tray icon to show that the CanReg server is running.
@@ -135,7 +140,6 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         }
 
         // end-try-catch
-
         // Step one load the system definition...
         if (!initSystemDefinition()) {
             throw new RemoteException("Faulty system definitions...");
@@ -160,7 +164,6 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
 
         // temp!
         // db.setSystemPropery("DATABASE_VERSION", "5.00.05");
-
         // migrate the database if necessary
         Migrator migrator = new Migrator(getCanRegVersion(), db);
         setTrayIconToolTip("Migrating CanReg5 " + systemCode + " database to newest version specification...");
@@ -169,7 +172,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         // Step four: initiate the quality controllers
         personSearcher = new DefaultPersonSearch(
                 Tools.getVariableListElements(
-                systemDescription.getSystemDescriptionDocument(), Globals.NAMESPACE));
+                        systemDescription.getSystemDescriptionDocument(), Globals.NAMESPACE));
         PersonSearchVariable[] searchVariables = Tools.getPersonSearchVariables(systemDescription.getSystemDescriptionDocument(), Globals.NAMESPACE);
         personSearcher.setSearchVariables(searchVariables);
         personSearcher.setThreshold(Tools.getPersonSearchMinimumMatch(systemDescription.getSystemDescriptionDocument(), Globals.NAMESPACE));
@@ -203,13 +206,20 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             // System.out.println("Error-code: " + ex.getErrorCode());
             //  System.out.println("SQL-state:" + ex.getSQLState());
             // If we reach this step and get a SQLexception - try with passord
-            String password = JOptionPane.showInputDialog("Please enter database boot password:");
-            if (password != null) {
-                connected = initDataBase(password);
-                if (!connected) {
-                    Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+
+            JPasswordField pf = new JPasswordField();                   
+            int okCxl = JOptionPane.showConfirmDialog(null, pf, "Please enter the database boot password", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+            if (okCxl == JOptionPane.OK_OPTION) {
+                String password = new String(pf.getPassword());
+                if (password.length()>0) {
+                    connected = initDataBase(password);
+                    if (!connected) {
+                        Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
+
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
             throw ex;
@@ -270,7 +280,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     // Windows: http://www.ibm.com/developerworks/db2/library/techarticle/dm-0409cline2/readme_win.txt
     //
     /**
-     * 
+     *
      */
     @Override
     public void startNetworkDBServer() {
@@ -284,7 +294,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     /**
-     * 
+     *
      */
     @Override
     public void stopNetworkDBServer() {
@@ -299,9 +309,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     /**
-     * 
-     * @return
-     * @throws java.rmi.RemoteException
+     *
+     * @return @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
     @Override
@@ -310,7 +319,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     /**
-     * 
+     *
      * @param user
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
@@ -321,7 +330,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     /**
-     * 
+     *
      * @param user
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
@@ -332,7 +341,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     /**
-     * 
+     *
      * @param username
      * @param password
      * @throws java.rmi.RemoteException
@@ -349,9 +358,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     /**
-     * 
-     * @return
-     * @throws java.rmi.RemoteException
+     *
+     * @return @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
     @Override
@@ -365,9 +373,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     /**
-     * 
-     * @return
-     * @throws java.rmi.RemoteException
+     *
+     * @return @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
     @Override
@@ -377,8 +384,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
 
     /**
      *
-     * @return
-     * @throws RemoteException
+     * @return @throws RemoteException
      * @throws SecurityException
      */
     @Override
@@ -387,7 +393,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     /**
-     * 
+     *
      * @param username
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
@@ -400,7 +406,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     /**
-     * 
+     *
      * @param username
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
@@ -414,8 +420,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
 
     // 
     /**
-     * For testing purposes only - not secure enough...
-     * Not used!
+     * For testing purposes only - not secure enough... Not used!
+     *
      * @return
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
@@ -433,7 +439,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     // add and remove records
 
     /**
-     * 
+     *
      * @param patient
      * @return
      * @throws SQLException
@@ -444,7 +450,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     /**
-     * 
+     *
      * @param tumour
      * @return
      * @throws SQLException
@@ -457,7 +463,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     /**
-     * 
+     *
      * @param dictionaryEntry
      * @return
      */
@@ -467,9 +473,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     /**
-     * 
-     * @return
-     * @throws java.rmi.RemoteException
+     *
+     * @return @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
     @Override
@@ -480,9 +485,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     /**
-     * 
-     * @return
-     * @throws java.rmi.RemoteException
+     *
+     * @return @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
     @Override
@@ -495,7 +499,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     /**
-     * 
+     *
      * @param dictionaryID
      * @return
      * @throws java.rmi.RemoteException
@@ -507,9 +511,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     /**
-     * 
-     * @return
-     * @throws java.rmi.RemoteException
+     *
+     * @return @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
     @Override
@@ -518,7 +521,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     /**
-     * 
+     *
      * @param path
      * @return
      * @throws java.rmi.RemoteException
@@ -531,9 +534,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     /**
-     * 
-     * @return
-     * @throws java.rmi.RemoteException
+     *
+     * @return @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
     @Override
@@ -548,7 +550,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     /**
-     * 
+     *
      * @param filter
      * @param tableName
      * @return
@@ -564,7 +566,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     /**
-     * 
+     *
      * @param patientID
      * @return
      * @throws java.rmi.RemoteException
@@ -575,7 +577,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     /**
-     * 
+     *
      * @param recordID
      * @param tableName
      * @return
@@ -601,11 +603,11 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     /**
-     * 
+     *
      * @param patient
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
-     * @throws RecordLockedException 
+     * @throws RecordLockedException
      */
     @Override
     public synchronized void editPatient(Patient patient) throws RemoteException, SecurityException, RecordLockedException {
@@ -613,7 +615,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     /**
-     * 
+     *
      * @param tumour
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
@@ -625,7 +627,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     /**
-     * 
+     *
      * @param resultSetID
      * @param from
      * @param to
@@ -646,7 +648,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     /**
-     * 
+     *
      * @param resultSetID
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
@@ -658,9 +660,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     /**
-     * 
-     * @return
-     * @throws java.rmi.RemoteException
+     *
+     * @return @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
     @Override
@@ -669,7 +670,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     /**
-     * 
+     *
      * @param pds
      * @return
      * @throws java.rmi.RemoteException
@@ -681,9 +682,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     /**
-     * 
-     * @return
-     * @throws java.rmi.RemoteException
+     *
+     * @return @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
     @Override
@@ -692,9 +692,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     /**
-     * 
-     * @return
-     * @throws java.rmi.RemoteException
+     *
+     * @return @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
     @Override
@@ -703,7 +702,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     /**
-     * 
+     *
      * @param nameSexRecord
      * @param replace
      * @return
@@ -716,9 +715,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     /**
-     * 
-     * @return
-     * @throws java.rmi.RemoteException
+     *
+     * @return @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
     @Override
@@ -727,9 +725,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     /**
-     * 
-     * @return
-     * @throws java.rmi.RemoteException
+     *
+     * @return @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
     @Override
@@ -739,9 +736,9 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     /**
-     * 
+     *
      * @param searcher
-     * @param rangeStart 
+     * @param rangeStart
      * @param rangeEnd
      * @return
      * @throws java.rmi.RemoteException
@@ -784,7 +781,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             Logger.getLogger(DefaultPersonSearch.class.getName()).log(Level.SEVERE, null, ex);
         } catch (UnknownTableException ex) {
             Logger.getLogger(DefaultPersonSearch.class.getName()).log(Level.SEVERE, null, ex);
-        }catch (DistributedTableDescriptionException ex) {
+        } catch (DistributedTableDescriptionException ex) {
             Logger.getLogger(DefaultPersonSearch.class.getName()).log(Level.SEVERE, null, ex);
         }
         return resultSetID;
@@ -854,7 +851,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     /**
-     * 
+     *
      * @param patient
      * @param searcher
      * @return
@@ -990,8 +987,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
 
     /**
      *
-     * @return
-     * @throws RemoteException
+     * @return @throws RemoteException
      * @throws SecurityException
      */
     @Override
@@ -1020,10 +1016,10 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     @Override
-    public boolean setDBPassword(char[] newPasswordArray, char[] oldPasswordArray) throws RemoteException, SecurityException {
+    public boolean setDBPassword(char[] newPasswordArray, char[] oldPasswordArray, String encryptionAlgorithm, String encryptionKeyLength) throws RemoteException, SecurityException {
         boolean success = false;
         try {
-            success = db.encryptDatabase(newPasswordArray, oldPasswordArray);
+            success = db.encryptDatabase(newPasswordArray, oldPasswordArray, encryptionAlgorithm, encryptionKeyLength);
         } catch (SQLException ex) {
             Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
         }

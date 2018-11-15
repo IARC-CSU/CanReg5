@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2015  International Agency for Research on Cancer
+ * Copyright (C) 2008-2018  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,6 +54,7 @@ public class CheckDateOfLastContact extends CheckInterface {
      *
      * @return
      */
+    @Override
     public Globals.StandardVariableNames[] getVariablesNeeded() {
         return variablesNeeded;
     }
@@ -63,6 +64,7 @@ public class CheckDateOfLastContact extends CheckInterface {
      * @param variables
      * @return
      */
+    @Override
     public CheckResult performCheck(Map<Globals.StandardVariableNames, Object> variables) {
 
         CheckResult result = new CheckResult();
@@ -148,6 +150,7 @@ public class CheckDateOfLastContact extends CheckInterface {
      *
      * @return
      */
+    @Override
     public CheckNames getCheckName() {
         return checkName;
     }

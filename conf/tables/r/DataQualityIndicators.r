@@ -31,11 +31,15 @@
 	
 ## Getting and Formatting INCIDENCE data
 	fileInc <- checkArgs(Args, "-inc")
-	dataInc <- read.table(fileInc, header=TRUE)
+	dataInc <- read.table(fileInc, header=TRUE, sep="\t") 
+	
+	dataInc <- dataInc[, c("YEAR", "ICD10GROUP","ICD10GROUPLABEL" ,
+											 "SEX", "AGE_GROUP","MORPHOLOGY","BEHAVIOUR" ,
+											 "BASIS","CASES")]
 		
 ## Getting POPULATION data
 	filePop <- checkArgs(Args, "-pop")
-	dataPop <- read.table(filePop, header=TRUE)	
+	dataPop <- read.table(filePop, header=TRUE, sep="\t")	 
 	
 ## Getting age group labels
 	agegrs <- unique(dataPop[,c("AGE_GROUP","AGE_GROUP_LABEL")])

@@ -1,0 +1,64 @@
+cancer_lab,cancer,cancer_color
+Lip,1,#AE563E
+Tongue,2,#AE563E
+Mouth,3,#AE563E
+Salivary glands,4,#AE563E
+Tonsil,5,#AE563E
+Other oropharynx,6,#AE563E
+Nasopharynx,7,#AE563E
+Hypopharynx,8,#AE563E
+Pharynx unspecified,9,#AE563E
+Oesophagus,10,#DC1341
+Stomach,11,#ae56a2
+Small intestine,12,#ae56a2
+Colon,13,#FFD803
+Rectum,14,#FFD803
+Anus,15,#FFD803
+Liver,16,#F3A654
+Gallbladder etc.,17,#940009
+Pancreas,18,#940009
+"Nose, sinuses etc.",19,#94dd09
+Larynx,20,#6D8A6D
+Lung (incl. trachea and bronchus),21,#1E90FF
+Other thoracic organs,22,#1E90FF
+Bone,23,#888888
+Melanoma of skin,24,#894919
+Other skin,25,#2A4950
+Mesothelioma,26,#2DD950
+Kaposi sarcoma,27,#FFC2CA
+Connective and soft tissue,28,#FDD2CA
+Breast,29,#FF68BC
+Vulva,30,#FA10DC
+Vagina,31,#FA10DC
+Cervix uteri,32,#FF7500
+Corpus uteri,33,#9FE72D
+Uterus unspecified,34,#9FE72D
+Ovary,35,#8C07C2
+Other female genital organs,36,#8DD7C2
+Placenta,37,#8DD7C2
+Penis,38,#5063A9
+Prostate,39,#34A76E
+Testis,40,#4682B4
+Other male genital organs,41,#46DDD4
+Kidney,42,#040186
+Renal pelvis,43,#040186
+Ureter,44,#040186
+Bladder,45,#7FF76F
+Other urinary organs,46,#04EE86
+Eye,47,#9BE73A
+"Brain, nervous system",48,#D5BED2
+Thyroid,49,#ADD9E4
+Adrenal gland,50,#ADD9E4
+Other endocrine,51,#ADD9E4
+Hodgkin disease,52,#9931D0
+Non-Hodgkin lymphoma,53,#9931D0
+Immunoproliferative diseases,54,#9931D0
+Multiple myeloma,55,#6D8A6D
+Lymphoid leukaemia,56,#FFFFA6
+Myeloid leukaemia,57,#FFFFA6
+Leukaemia unspecified,58,#FFFFA6
+Myeloproliferative disorders,59,#AFFFA6
+Myelodysplastic syndromes,60,#AFFFA6
+Other and unspecified,61,#DCDCDC
+All sites,62,#DCDCDC
+All sites but skin,63,#DCDCDC

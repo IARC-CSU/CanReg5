@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes"?>
+<installation version="1.0">
+    <info>
+        <appname>CanReg5</appname>
+        <appversion>5.00.03</appversion>
+        <authors>
+            <author email="ervikm@iarc.fr" name="Morten Ervik"/>
+        </authors>
+        <url>http://www.iacr.com.fr/canreg5.htm</url>
+        <uninstaller name="Uninstaller.jar" write="yes"/>
+        <javaversion>1.6.0</javaversion>
+        <requiresjdk>no</requiresjdk>
+        <writeinstallationinformation>no</writeinstallationinformation>
+        <pack200/>
+        <run-privileged condition="izpack.windowsinstall.vista|izpack.windowsinstall.7"/>
+    </info>
+    <guiprefs height="480" resizable="no" width="640">
+        <modifier key="useFlags" value="yes"/>
+        <modifier key="langDisplayType" value="default"/>
+    </guiprefs>
+    <locale>
+        <langpack iso3="eng"/>
+        <langpack iso3="fra"/>
+        <langpack iso3="por"/>
+        <langpack iso3="rus"/>
+    </locale>
+    <resources>
+        <res id="shortcutSpec.xml" src="CanRegPackJacket_shortcutSpec.xml"/>
+        <res id="Unix_shortcutSpec.xml" src="CanRegPackJacket_Unix_shortcutSpec.xml"/>
+        <res id="installer.langsel.img" src="C:\Documents and Settings\ervikm\My Documents\NetBeansProjects\CanReg\src\canreg\client\gui\resources\LogoBetaNew64x64.png"/>
+    </resources>
+    <panels>
+        <panel classname="CheckedHelloPanel"/>
+        <panel classname="PacksPanel"/>
+        <panel classname="TargetPanel"/>
+        <panel classname="InstallPanel"/>
+        <panel classname="ShortcutPanel"/>
+        <panel classname="SimpleFinishPanel"/>
+    </panels>
+    <variables>
+        <variable name="DesktopShortcutCheckboxEnabled" value="true"/>
+    </variables>
+    <packs>
+        <pack name="CanReg5" preselected="yes" required="yes">
+            <description>CanReg5 itself</description>
+            <file override="update"
+                src="C:\Documents and Settings\ervikm\Desktop\CanReg5\CanReg.jar" targetdir="$INSTALL_PATH/"/>
+            <file override="update"
+                src="C:\Documents and Settings\ervikm\Desktop\CanReg5\changelog.txt" targetdir="$INSTALL_PATH/"/>
+            <file override="update"
+                src="C:\Documents and Settings\ervikm\Desktop\CanReg5\README.TXT" targetdir="$INSTALL_PATH/"/>
+            <file override="update"
+                src="C:\Documents and Settings\ervikm\Desktop\CanReg5\lib" targetdir="$INSTALL_PATH/"/>
+            <file override="update"
+                src="C:\Documents and Settings\ervikm\Desktop\CanReg5\CanReg.exe" targetdir="$INSTALL_PATH/"/>
+            <file override="update"
+                src="C:\Documents and Settings\ervikm\Desktop\CanReg5\conf" targetdir="$INSTALL_PATH/"/>
+        </pack>
+        <pack name="Demo system" preselected="yes" required="no">
+            <description>An empty demo system of CanReg5.</description>
+            <depends packname="CanReg5"/>
+            <file override="update"
+                src="C:\Documents and Settings\ervikm\Desktop\CanReg5\demo" targetdir="$INSTALL_PATH/"/>
+        </pack>
+        <pack name="Handbook" preselected="yes" required="no">
+            <description>The CanReg handbook.</description>
+            <file override="update"
+                src="C:\Documents and Settings\ervikm\Desktop\CanReg5\doc" targetdir="$INSTALL_PATH/"/>
+        </pack>
+    </packs>
+    <native name="ShellLink.dll" type="izpack"/>
+    <native name="ShellLink_x64.dll" type="izpack"/>
+</installation>

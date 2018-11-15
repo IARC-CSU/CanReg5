@@ -1,5 +1,79 @@
 Changelog
 
+5.00.42
+- Analysis features updated in collaboration with Mathieu Laversanne:
+  - Default report for further editing in Word or similar added.
+    - Template system implemented.
+  - Default slide deck for further editing in Power Point or similar added.
+  - Updated and harmonized look of most data visualizations.
+  - New visualizations added.
+  - Log files for analysis improved.
+  - Changed all .R references in CanReg code and conf files to .r. (This improves Linux/Mac compatibility.) 
+- Updated the R package installer 
+  - Created an installer that comes with bundled R packages for the latest version of R (Currently 3.4.2).
+  - R packages that CanReg5 uses are installed in a separate folder among the user's R libs so that we have more control over packages we use.
+  - R script to clean the folder for R packages added.
+- ICD-O-3 1st revision is now implemented in the checks and conversions by translating and adapting Jacques Ferlay's C++-code and tables.
+  - New codes are added to the dictionaries when setting up a new CanReg5 system. Existing users must add the codes manually if desired. 
+  - Added a default dictionary of morphological codes on 5 characters.
+  - Default labels harmonized with http://codes.iarc.fr .
+- Improved messages from Topography and Morphology checks.
+- Big parts of importing/exporting rewritten using an updated Java CSV library.
+- Users can save and load population datasets to and from (JSON) files.
+- SEER stat integration improved.
+  - CanReg specific DD file compatibility. (Requires SEER*prep from August 2017 or newer.)
+  - Vital Status and Grade (if collected and configured in CanReg XML) properly exported
+- Users can choose English/Short/Standard labels instead of the full variable names as labels for data entry forms, as well as in the variable chooser (Export/frequencies etc.).
+- Fixed a bug in the list of defined servers during login that occurred sometimes when users had more than a certain number defined.
+- Files generated (either by exporting or saving tables in frequencies by year) now open in the associated software automatically.
+- Fixed off by one error when counting cases to be imported.
+- Fix bug where ICCC codes were not generated during import.
+- Updates to the Russian translation by Anton Ryzhov.
+- Some updates to the French translation by Eric Masuyer.
+- Java Runtime Environment (JRE) 8 is now required.
+- Stability improvements.
+- Other fixes.
+
+5.00.41b
+- Fixed bug in generation of variables list if source table contains more fields than patient table.
+
+5.00.41
+- New data entry form. (Developed in collaboration with Betty Carballo and Patricio Carranza.)
+- Ability to enable/disble new data entry form in Options.
+- Removed latest news since Twitter no longer allows access to their API like that.
+- Improved layout for login and welcome screens for big fonts.
+- Updated Spanish translation.
+- Updated JavaDB to version 10.13.1.1.
+- Small fixes.
+
+5.00.40
+- Date format for data entry can now be chosen at user level. (Under "Options".)
+- Added detection of uninstallation/reinstallation/updates of R/GS software.
+- Improved year selection in table builder.
+- Updated R libraries and R script for installation of those.
+- Character separated file extension now defaults to CSV even for tab separated files.
+- Added another common population format for children ([0,5>,[5,10>,[10,15>).
+- Fixed a bug in that hindered user setting number of cancers in top N cancer trends. (R tables configuration files.)
+- Updated Spanish translation.
+- Various fixes.
+
+5.00.39
+- Users can now perform "Exact search" while entering a new case.
+- System definition files are now always saved in UTF-8.
+- [ModifuDatabaseStructureInternalFrame] Save button now disabled while saving a file.
+- Slight restructure of the main menus to make them more consistent.
+  - Options are now always visible - even when not logged in.
+  - Migrate from CR4 is a separate sub-menu under Tools.
+  - Import under data entry always wants data in CR5 format, the CR4 import function is under Tools->Migrate from CR4.
+- Enter now skips to next field during data entry.
+- Fixed a bug in the filter wizard where it would not pick up the change of table when changing to a join of all three tables.
+- Fixed a bug where the date was sometimes not saved if it was unparsable.
+- Frequencies by year now does not allow selection of patients or sources alone.
+- Range and filters now work again when selecting only Tumour table in frequencies by year.
+- Fixed a bug where pie-charts and bar-charts would not be generated if any cases were recorded with unknown sex codes.
+- Versioning system changed from Mercurial to Git.
+- Better handling of Unicode characters in output files.
+- Other improvements.
 5.00.38
 - Improved handling of non-standard database filenames.
 - Improved error messages.

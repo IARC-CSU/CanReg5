@@ -3,7 +3,7 @@ Args <- commandArgs(TRUE)
 
 
 
-packages_list <- c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","ReporteRs", "zip","bmp", "jpeg")
+packages_list <- c("Rcpp", "data.table", "ggplot2","shiny","shinydashboard", "shinyjs","gridExtra", "scales", "Cairo","grid","officer","flextable", "zip", "bmp", "jpeg", "png")
 
 
 ## get Args from canreg  
@@ -92,7 +92,7 @@ options(repos = new.repos)
 
 ap <- available.packages()
 
-for (i in c(packages_list, "rvg","plyr", "gtable","munsell" )) {
+for (i in c(packages_list, "xml2", "gdtools","plyr", "gtable","munsell" )) {
 
   bool_internet <- FALSE
   if (i %in% rownames(ap)) {
@@ -111,7 +111,7 @@ dir.create(file.path(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5")),recursive = 
 missing_packages <- packages_list[!(packages_list %in% installed.packages()[,"Package"])]
 
 if (!"Rcpp" %in% missing_packages) {
-  if (packageVersion("Rcpp") < "0.11.0") {
+  if (packageVersion("Rcpp") < "0.12.12") {
     missing_packages <- c(missing_packages,"Rcpp" )
   }
 }
@@ -134,6 +134,12 @@ if (!"scales" %in% missing_packages) {
   }
 }
 
+if (!"officer" %in% missing_packages) {
+  if (packageVersion("officer") < "0.2.2") {
+    missing_packages <- c(missing_packages,"officer" )
+  }
+}
+
 if ("scales" %in% missing_packages) {
   
   if ("munsell" %in% installed.packages()[,"Package"]) {
@@ -142,6 +148,8 @@ if ("scales" %in% missing_packages) {
     }
   }
 }
+
+
 
 if ("ggplot2" %in% missing_packages) {
   
@@ -159,11 +167,20 @@ if ("ggplot2" %in% missing_packages) {
 
 
 
-if ("ReporteRs" %in% missing_packages) {
+if ("officer" %in% missing_packages) {
   
-  if ("rvg" %in% installed.packages()[,"Package"]) {
-    if (packageVersion("rvg") < "0.1.2") {
-      missing_packages <- c(missing_packages,"rvg")
+  if ("xml2" %in% installed.packages()[,"Package"]) {
+    if (packageVersion("xml2") < "1.1.0") {
+      missing_packages <- c(missing_packages,"xml2")
+    }
+  }
+}
+
+if ("flextable" %in% missing_packages) {
+  
+  if ("gdtools" %in% installed.packages()[,"Package"]) {
+    if (packageVersion("gdtools") < "0.1.6") {
+      missing_packages <- c(missing_packages,"gdtools")
     }
   }
 }
@@ -174,7 +191,7 @@ cat("This is the actual repository\n")
 
 print(getOption("repos"))
 
-for (i in c(packages_list, "rvg","plyr", "gtable","munsell" )) {
+for (i in c(packages_list, "xml2","gdtools", "plyr", "gtable","munsell" )) {
   
   print(paste0(i," available: ", i %in% rownames(ap)))
   

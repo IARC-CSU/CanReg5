@@ -1,5 +1,22 @@
 ﻿Changelog
 
+5.00.43 BETA 3
+- Fixed bug in file copy during restore from backup for some users with non-Latin character sets.
+- Fixed bug with headless splash screen.
+- Replaced ReportR with Officer for generating docx and pptx documents. (This should take care of troubles related to the different architecture of R/Java.)
+- Web based data analysis functionality added using the Shiny R library.
+- Fixed various data visualizations (pies, ...)
+- Fixed CI5 and DQ table
+- Import now works for dbs that does not collect ICCC.
+- Simple (one level) dictionaries can now allow varying code lengths.
+- When encrypting your database you can specify the length of the key and algorithm (AES/DES) used for improved security. 
+- Male breast cancer into account in rapport generator/other visualizations.
+- Empty values accepted in analytical files
+- Population dataset batch import/export added.
+- RMI now uses a fixed port for communication.
+- Rcan updated.
+- Other fixes.
+
 5.00.42
 - Analysis features updated in collaboration with Mathieu Laversanne:
   - Default report for further editing in Word or similar added.
