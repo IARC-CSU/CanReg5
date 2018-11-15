@@ -1147,7 +1147,7 @@ public class CanRegDAO {
         try {
             stmtSaveNewDictionary.clearParameters();
 
-            stmtSaveNewDictionary.setInt(1, dictionary.getDictionaryId());
+            stmtSaveNewDictionary.setInt(1, dictionary.getDictionaryID());
             stmtSaveNewDictionary.setString(2, dictionary.getName());
             stmtSaveNewDictionary.setString(3, dictionary.getFont());
             stmtSaveNewDictionary.setString(4, dictionary.getType());
@@ -1734,28 +1734,27 @@ public class CanRegDAO {
     private synchronized static Map<Integer, Dictionary> buildDictionaryMap(Document doc) {
 
         Map<Integer, Dictionary> dictionariesMap = new LinkedHashMap();
-        // Get the dictionaries node in the XML
-        NodeList nodes = doc.getElementsByTagName(Globals.NAMESPACE + "dictionaries");
-        Element variablesElement = (Element) nodes.item(0);
 
-        NodeList dictionaries = variablesElement.getElementsByTagName(Globals.NAMESPACE + "dictionary");
-
+        // NodeList dictionaries = variablesElement.getElementsByTagName(Globals.NAMESPACE + "dictionary");
+        DatabaseDictionaryListElement[] dictionaries = canreg.common.Tools.getDictionaryListElements(doc, Globals.NAMESPACE);
+        
         // Go through all the variable definitions
-        for (int i = 0; i < dictionaries.getLength(); i++) {
+        for (DatabaseDictionaryListElement ddle:dictionaries) {
             Dictionary dic = new Dictionary();
 
-            // Get element
-            Element element = (Element) dictionaries.item(i);
             // Create dictionary
-            dic.setName(element.getElementsByTagName(Globals.NAMESPACE + "name").item(0).getTextContent());
-            dic.setFont(element.getElementsByTagName(Globals.NAMESPACE + "font").item(0).getTextContent());
-            dic.setType(element.getElementsByTagName(Globals.NAMESPACE + "type").item(0).getTextContent());
+            dic.setDictionaryID(ddle.getDictionaryID());
+            dic.setName(ddle.getName());
+            dic.setFont(ddle.getFont());
+            dic.setType(ddle.getType());
+            dic.setCodeLength(ddle.getCodeLength());
+            dic.setCategoryDescriptionLength(ddle.getCategoryDescriptionLength());
+            dic.setFullDictionaryCodeLength(ddle.getFullDictionaryCodeLength());
+            dic.setFullDictionaryDescriptionLength(ddle.getFullDictionaryDescriptionLength()); // Not implemented
+            // dic.setLocked(ddle.isLocked());
+            dic.setAllowCodesOfDifferentLength(ddle.isAllowCodesOfDifferentLength());
 
-            dic.setCodeLength(element.getElementsByTagName(Globals.NAMESPACE + "code_length").item(0).getTextContent());
-            dic.setCategoryDescriptionLength(element.getElementsByTagName(Globals.NAMESPACE + "category_description_length").item(0).getTextContent());
-            dic.setFullDictionaryCodeLength(element.getElementsByTagName(Globals.NAMESPACE + "full_dictionary_code_length").item(0).getTextContent());
-            dic.setFullDictionaryDescriptionLength(element.getElementsByTagName(Globals.NAMESPACE + "full_dictionary_description_length").item(0).getTextContent());
-            dictionariesMap.put(i, dic);
+            dictionariesMap.put(ddle.getDictionaryID(), dic);
         }
         return dictionariesMap;
     }
