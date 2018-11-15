@@ -862,9 +862,14 @@ public class CanRegDAO {
         return success;
     }
 
-    public boolean encryptDatabase(char[] newPasswordArray, char[] oldPasswordArray) throws RemoteException, SQLException {
+    public boolean encryptDatabase(char[] newPasswordArray, char[] oldPasswordArray, String encryptionAlgorithm, String encryptionKeyLength) throws RemoteException, SQLException {
+        // To use the AES algorithm with a key length of 192 or 256, you must use unrestricted policy jar files for your JRE. You can obtain these files from your Java provider. They might have a name like "Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files." If you specify a non-default key length using the default policy jar files, a Java exception occurs.
+        // https://db.apache.org/derby/docs/10.9/devguide/cdevcsecure67151.html
 
-        if (oldPasswordArray.length != 0) {
+        String defaultFeedbackMode = "CBC";
+        String defaultPadding = "NoPadding";
+        boolean success;
+        if (oldPasswordArray.length != 0 && newPasswordArray.length > 0) {
             // already encrypted? Change password
             // http://db.apache.org/derby/docs/10.4/devguide/cdevcsecure55054.html
             String oldPassword = new String(oldPasswordArray);
@@ -875,16 +880,22 @@ public class CanRegDAO {
             statement.execute(command);
             return true;
         } else if (newPasswordArray.length == 0) {
-            // remove password? 
-            // Doesn't work!
+            // remove password
             String oldPassword = new String(oldPasswordArray);
             dbProperties.setProperty("bootPassword", oldPassword);
             try {
                 disconnect();
+                // side effect of removing password is that we have to upgrade the database version
+                dbConnection = DriverManager.getConnection(getDatabaseUrl()+";bootPassword= "+ oldPassword+ ";upgrade=true", dbProperties);
+                disconnect();
             } catch (SQLException ex) {
                 Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
-            dbProperties.setProperty("dataEncryption", "false");
+
+            dbProperties.setProperty("decryptDatabase", "true");
+            Connection conn = DriverManager.getConnection(getDatabaseUrl(), dbProperties);
+            conn.commit();
+
         } else {
             // Encrypt database
             // http://db.apache.org/derby/docs/10.4/devguide/cdevcsecure866716.html
@@ -894,12 +905,19 @@ public class CanRegDAO {
                 Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
             dbProperties.setProperty("dataEncryption", "true");
+            dbProperties.setProperty("encryptionKeyLength", encryptionKeyLength);
+            dbProperties.setProperty("encryptionAlgorithm", encryptionAlgorithm + "/" + defaultFeedbackMode + "/" + defaultPadding);
             String password = new String(newPasswordArray);
             dbProperties.setProperty("bootPassword", password);
         }
         dbProperties.remove("bootPassword");
         dbProperties.remove("newBootPassword");
-        boolean success = connectWithBootPassword(newPasswordArray);
+
+        if (newPasswordArray.length == 0) {
+            success = connect();
+        } else {
+            success = connectWithBootPassword(newPasswordArray);
+        }
         dbProperties.remove("dataEncryption");
         return success;
     }
@@ -2369,7 +2387,7 @@ public class CanRegDAO {
                 filterString = " AND ( " + filterString + " )";
             }
         }
-        
+
         // Add the range part
         if ((filter.getRangeStart() != null && filter.getRangeStart().length() > 0) || (filter.getRangeEnd() != null && filter.getRangeEnd().length() > 0)) {
             if (!filterString.isEmpty()) {
@@ -2681,5 +2699,13 @@ public class CanRegDAO {
      */
     public String getSystemCode() {
         return systemCode;
+    }
+
+    void upgrade() throws SQLException, RemoteException {
+        // disconnect();
+        dbConnection = DriverManager.getConnection(getDatabaseUrl()+";upgrade=true", dbProperties);
+        Logger.getLogger(CanRegDAO.class.getName()).log(Level.INFO, "JavaDB Version: {0}", dbConnection.getMetaData().getDatabaseProductVersion());
+        // disconnect();
+        // connect();
     }
 }

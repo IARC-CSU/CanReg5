@@ -1687,9 +1687,9 @@ public class CanRegClientApp extends SingleFrameApplication {
         canRegClientView.showLoginFrame();
     }
 
-    public boolean setDBPassword(char[] newPasswordArray, char[] oldPasswordArray) throws SecurityException, RemoteException {
+    public boolean encryptDatabase(char[] newPasswordArray, char[] oldPasswordArray, String encryptionAlgorithm, String encryptionKeyLength) throws SecurityException, RemoteException {
         try {
-            return server.setDBPassword(newPasswordArray, oldPasswordArray);
+            return server.setDBPassword(newPasswordArray, oldPasswordArray, encryptionAlgorithm, encryptionKeyLength);
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
             if (!handlePotentialDisconnect(ex)) {
