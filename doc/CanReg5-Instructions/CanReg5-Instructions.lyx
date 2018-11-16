@@ -7599,6 +7599,11 @@ Launch browser
 This launches your web browser for an interactive data analysis session.
 \end_layout
 
+\begin_layout Standard
+Note: Your data is kept on your local machine even though it is accessed
+ using your web browser.
+\end_layout
+
 \begin_layout Section
 
 \family sans
@@ -13592,7 +13597,7 @@ Copyright
 \end_layout
 
 \begin_layout Standard
-© 2008-2017 International Agency for Research on Cancer World Health Organizatio
+© 2008-2018 International Agency for Research on Cancer World Health Organizatio
 n All rights reserved.
 \end_layout
 
@@ -13766,7 +13771,7 @@ iText Software Corp (iText)
 \end_layout
 
 \begin_layout Subsection
-Alpha-testers
+Testers
 \end_layout
 
 \begin_layout Itemize
@@ -13775,10 +13780,6 @@ Mathieu Mazuir, IARC/DEP
 
 \begin_layout Itemize
 Antoine Buemi, Registre des Cancers du Haut-Rhin
-\end_layout
-
-\begin_layout Subsection
-Beta-testers
 \end_layout
 
 \begin_layout Itemize
@@ -13824,6 +13825,50 @@ Antoine Buemi, Registre des Cancers du Haut-Rhin, France
 
 \begin_layout Itemize
 Gonçalo Forjaz, Azores Cancer Registry, Portugal
+\end_layout
+
+\begin_layout Itemize
+Gladys Chesumbai, Nairobi, Kenya
+\end_layout
+
+\begin_layout Itemize
+Guy Nda, Abidjan, Ivory Coast
+\end_layout
+
+\begin_layout Itemize
+Soner Sabirli, Istanbul, Turkey
+\end_layout
+
+\begin_layout Itemize
+Amani Elbasmi, Kuwait
+\end_layout
+
+\begin_layout Itemize
+Claudia Uribe, Bucaramanga, Colombia
+\end_layout
+
+\begin_layout Itemize
+Beatriz Carballo, Cordoba, Argentina,
+\end_layout
+
+\begin_layout Itemize
+Nikhil Dethe, Mumbai, India
+\end_layout
+
+\begin_layout Itemize
+Hyunjoo Kong, Seoul, Korea
+\end_layout
+
+\begin_layout Itemize
+Kyu-won Jung, WPRO, Philippines
+\end_layout
+
+\begin_layout Itemize
+Victoria Medina, Manila, Philippines
+\end_layout
+
+\begin_layout Itemize
+Suchita Yadav, Mumbai, India
 \end_layout
 
 \begin_layout Subsection
