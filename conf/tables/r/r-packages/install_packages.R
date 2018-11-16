@@ -19,3 +19,8 @@ for(x in packages) {
 eval(parse(text=paste("install.packages('", x, "', lib='", rlibs,"', repos = NULL  )", sep=""))) 
 }
 
+## install Rcan from source
+
+Rcan_file <- list.files(path=script.basename, pattern= "Rcan_\\d\\.\\d\\.\\d+\\.tar\\.gz")
+Rcan_version <- regmatches(Rcan_file,regexpr(pattern= "\\d\\.\\d\\.\\d+", Rcan_file))
+install.packages(paste0(script.basename, "/",Rcan_file), repos=NULL, type="source")
