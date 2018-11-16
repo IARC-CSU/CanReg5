@@ -1,0 +1,156 @@
+
+
+div#plot{
+	height:600px!important
+}
+
+div#plot img{
+	height:600px!important
+}
+
+a#downloadLog {
+    right: 20px;
+    z-index: 2100;
+    top: 5px;
+    position: absolute;
+    height: 40px;
+    background-image: url(log_icon.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+		background-color: #0b80b7;
+    border: none;
+}
+
+a#downloadLog i.fa{
+	    color: #00000000!important;
+}
+
+a#downloadData {
+    right: 60px;
+    z-index: 2000;
+    top: 5px;
+    position: absolute;
+    height: 40px;
+    background-image: url(log_data.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+		background-color: #0b80b7;
+    border: none;
+}
+
+a#downloadData i.fa{
+	    color: #00000000!important;
+}
+
+
+
+@media screen and (max-height : 750px){
+
+	div#plot{
+		height:500px!important
+	}
+
+	div#plot img{
+		height:500px!important
+	}
+}
+
+.mat_text {
+  margin-left: 15px;
+
+}
+
+.mat_btn {
+  width: 215px;
+  display:block;
+  color: #444 !important;
+  margin-left: 50px!important;
+  margin-bottom: 10px;
+  border-radius: 15px;
+  
+
+}
+
+.subHeader {
+    font-size: 20px;
+    background-color: #12a562;
+	text-align: center;
+	margin: 0px 0px 0px 0px;
+
+}
+
+img.canreg_logo {
+    height: 48px;
+    margin-top: 2px;
+}
+
+.regtitle {
+    text-align: center;
+    font-size: 25px;
+    color: white;
+		height: 50px;
+}
+
+div.content-wrapper {
+	background-color: #f5f5f5 !important;
+}
+
+span.logo {
+	background-color: #0b80b7 !important;
+}
+
+nav.navbar.navbar-static-top {
+	
+	background-color: #0b80b7 !important;
+}
+
+div.row {
+	
+    margin-left: 0px;
+	
+}
+
+.box {
+	
+	margin-top: 10px;
+    border: 1px solid #212121;
+}
+
+aside.main-sidebar.shiny-bound-input {
+	 background-color: #1e4273;
+}
+
+
+div.checkbox label {
+	font-size: 14px!important;
+   
+}
+
+div.form-group.shiny-input-container label {
+	font-size: 18px;
+	font-weight: 100;
+}
+
+
+
+section.sidebar .shiny-input-container {
+    padding: 1px 0px 0px 15px;
+    white-space: normal;
+}
+
+
+
+.checkbox {
+	margin-top: 0px ;
+    margin-bottom: 0px;
+}
+
+.radio {
+	margin-top: 5px ;
+    margin-bottom: 5px;
+}
+
+
+.form-group {
+    margin-bottom: 10px;
+}
