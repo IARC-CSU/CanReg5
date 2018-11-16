@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2015  International Agency for Research on Cancer
+ * Copyright (C) 2008-2018  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -57,7 +57,8 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
         Globals.StandardVariableNames.ICD10,
         Globals.StandardVariableNames.Morphology,
         Globals.StandardVariableNames.Behaviour,
-        Globals.StandardVariableNames.BasisDiagnosis
+        Globals.StandardVariableNames.BasisDiagnosis,
+        Globals.StandardVariableNames.ICCC
     };
     private FileTypes[] fileTypesGenerated;
     private final String separator = "\t";
@@ -74,7 +75,8 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
     private static final int MORPHOLOGY_COLUMN = 4;
     private static final int BEHAVIOUR_COLUMN = 5;
     private static final int BASIS_DIAGNOSIS_COLUMN = 6;
-    private static final int CASES_COLUMN = 7;
+    private static final int ICCC_COLUMN = 7;
+    private static final int CASES_COLUMN = 8;
     private int unknownAgeInt;
     static int numberOfAgeGroups = 21;
     static int allAgeGroupsIndex = 20;
@@ -125,7 +127,7 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
         cancerGroupsLocal = EditorialTableTools.generateICD10Groups(icd10GroupDescriptions);
 
         // indexes
-        keyGroupsMap = new EnumMap<KeyCancerGroupsEnum, Integer>(KeyCancerGroupsEnum.class);
+        keyGroupsMap = new EnumMap<>(KeyCancerGroupsEnum.class);
 
         keyGroupsMap.put(KeyCancerGroupsEnum.allCancerGroupsIndex, EditorialTableTools.getICD10index("ALL", icd10GroupDescriptions));
         keyGroupsMap.put(KeyCancerGroupsEnum.leukemiaNOSCancerGroupIndex, EditorialTableTools.getICD10index(950, cancerGroupsLocal));
@@ -189,6 +191,7 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
             String sexString;
             String icdString;
             String morphologyString;
+            String icccString;
             String yearString;
             String ageString;
             String behaviourString;
@@ -212,6 +215,7 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
                 incheader += separator + "MORPHOLOGY";
                 incheader += separator + "BEHAVIOUR";
                 incheader += separator + "BASIS";
+                incheader += separator + "ICCC";
                 incheader += separator + "CASES";
                 incoutput.append(incheader);
                 incoutput.newLine();
@@ -235,6 +239,7 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
                         }
 
                         morphologyString = (String) line[MORPHOLOGY_COLUMN];
+                        icccString = (String) line[ICCC_COLUMN];
                         icdString = (String) line[ICD10_COLUMN];
 
                         icdIndex = Tools.assignICDGroupIndex(keyGroupsMap, icdString, morphologyString, cancerGroupsLocal);
@@ -270,6 +275,7 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
                             outLine.append(morphologyString).append(separator);
                             outLine.append(behaviourString).append(separator);
                             outLine.append(basisString).append(separator);
+                            outLine.append(icccString).append(separator);
                             outLine.append(cases);
                             incoutput.append(outLine);
                             incoutput.newLine();
@@ -328,33 +334,35 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
 
                 // collect the output from the R program in a stream
                 is = new BufferedInputStream(pr.getInputStream());
-                try {
-                    pr.waitFor();
-                    // convert the output to a string
-                    String theString = convertStreamToString(is);
-                    Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.INFO, "Messages from R: \n{0}", theString);
-                    // System.out.println(theString.split("\\r?\\n").length);
-                    // and add all to the list of files to return
-                    for (String fileName : theString.split("\\r?\\n")) {
-                        if (fileName.startsWith("-outFile:")) {
-                            // System.out.println(fileName);
-                            fileName = fileName.replaceFirst("-outFile:", "");
-                            if (new File(fileName).exists()) {
-                                filesCreated.add(fileName);
+                if (fileType != FileTypes.browser) {
+                    try {
+                        pr.waitFor();
+                        // convert the output to a string
+                        String theString = convertStreamToString(is);
+                        Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.INFO, "Messages from R: \n{0}", theString);
+                        // System.out.println(theString.split("\\r?\\n").length);
+                        // and add all to the list of files to return
+                        for (String fileName : theString.split("\\r?\\n")) {
+                            if (fileName.startsWith("-outFile:")) {
+                                // System.out.println(fileName);
+                                fileName = fileName.replaceFirst("-outFile:", "");
+                                if (new File(fileName).exists()) {
+                                    filesCreated.add(fileName);
+                                }
                             }
                         }
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (java.util.NoSuchElementException ex) {
+                        Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.SEVERE, null, ex);
+                        BufferedInputStream errorStream = new BufferedInputStream(pr.getErrorStream());
+                        String errorMessage = convertStreamToString(errorStream);
+                        System.out.println(errorMessage);
+                        throw new TableErrorException("R says:\n" + errorMessage);
+                    } finally {
+                        System.out.println(pr.exitValue());
+                        // Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.INFO, null, pr.exitValue());
                     }
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (java.util.NoSuchElementException ex) {
-                    Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.SEVERE, null, ex);
-                    BufferedInputStream errorStream = new BufferedInputStream(pr.getErrorStream());
-                    String errorMessage = convertStreamToString(errorStream);
-                    System.out.println(errorMessage);
-                    throw new TableErrorException("R says:\n" + errorMessage);
-                } finally {
-                    System.out.println(pr.exitValue());
-                    // Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.INFO, null, pr.exitValue());
                 }
             }
 

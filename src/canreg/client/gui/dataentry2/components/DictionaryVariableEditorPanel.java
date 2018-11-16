@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2015  International Agency for Research on Cancer
+ * Copyright (C) 2008-2018  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -304,19 +304,19 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
                     }
                 }  
                 else {
-                    if (codeTextField.getText().length() == dictionary.getFullDictionaryCodeLength()) {
+                    if (codeTextField.getText().length() == dictionary.getFullDictionaryCodeLength()  || dictionary.isAllowCodesOfDifferentLength()) {
                         this.doNotSetText = true;
                         
                         //The dictionary code could be in Upper case or in lower. First
                         //we try as the user wrote it, and then we try in upper and lower.
                         DictionaryEntry entry = dictionary.getDictionaryEntries().get(
-                                codeTextField.getText().substring(0, dictionary.getFullDictionaryCodeLength()));
+                                codeTextField.getText()); // .substring(0, dictionary.getFullDictionaryCodeLength()));
                         if(entry == null)
                             entry = dictionary.getDictionaryEntries().get(
-                                codeTextField.getText().toUpperCase().substring(0, dictionary.getFullDictionaryCodeLength()));
+                                codeTextField.getText().toUpperCase()); // .substring(0, dictionary.getFullDictionaryCodeLength()));
                         if(entry == null)
                             entry = dictionary.getDictionaryEntries().get(
-                                codeTextField.getText().toLowerCase().substring(0, dictionary.getFullDictionaryCodeLength()));
+                                codeTextField.getText().toLowerCase()); //.substring(0, dictionary.getFullDictionaryCodeLength()));
                         
                         descriptionCombo.setSelectedItem(entry);
                         

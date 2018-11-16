@@ -56,7 +56,7 @@ public final class SystemDescription {
     private DatabaseIndexesListElement[] indexListElements;
 
     /**
-     * 
+     *
      * @param fileName
      */
     public SystemDescription(String fileName) {
@@ -82,7 +82,7 @@ public final class SystemDescription {
     }
 
     /**
-     * 
+     *
      * @param fileName
      * @throws org.xml.sax.SAXException
      * @throws java.io.IOException
@@ -99,7 +99,7 @@ public final class SystemDescription {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public Document getSystemDescriptionDocument() {
@@ -107,7 +107,7 @@ public final class SystemDescription {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String getSystemName() {
@@ -152,7 +152,7 @@ public final class SystemDescription {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String getSystemCode() {
@@ -170,7 +170,7 @@ public final class SystemDescription {
     }
 
     /**
-     * 
+     *
      * @param systemName
      */
     public void setSystemName(String systemName) {
@@ -185,7 +185,7 @@ public final class SystemDescription {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public Element getVariables() {
@@ -232,7 +232,7 @@ public final class SystemDescription {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public Element getIndexes() {
@@ -408,9 +408,12 @@ public final class SystemDescription {
         element.appendChild(createElement(namespace + "code_length", "" + dictionary.getCodeLength()));
         element.appendChild(createElement(namespace + "category_description_length", "" + dictionary.getCategoryDescriptionLength()));
         element.appendChild(createElement(namespace + "full_dictionary_code_length", "" + dictionary.getFullDictionaryCodeLength()));
-        element.appendChild(createElement(namespace + "full_dictionary_description_length", "" + dictionary.getFullDictionaryCategoryDescriptionLength()));
+        element.appendChild(createElement(namespace + "full_dictionary_description_length", "" + dictionary.getFullDictionaryDescriptionLength()));
         if (dictionary.isLocked()) {
             element.appendChild(createElement(namespace + "locked", "true"));
+        }
+        if (dictionary.isAllowCodesOfDifferentLength()) {
+            element.appendChild(createElement(namespace + "allow_different_length", "true"));
         }
         return element;
     }

@@ -9,7 +9,7 @@
 
 # canreg_load_packages(c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","ReporteRs", "zip", "bmp", "jpeg"))
 
-canreg_load_packages(c("ggplot2", "Cairo"))
+canreg_load_packages(c("ggplot2", "Cairo"),Rcan_source=script.basename) 
 
 	
 ############################## NEW FUNCTIONS ############################## 	

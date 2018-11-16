@@ -1,4 +1,4 @@
-<?xml version="1.1" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 
 <Form version="1.5" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
   <Properties>
@@ -30,12 +30,18 @@
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="lockedCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="nameTextField" alignment="0" pref="130" max="32767" attributes="1"/>
-                  <Component id="fontComboBox" alignment="0" pref="130" max="32767" attributes="1"/>
-                  <Component id="typeComboBox" alignment="0" pref="130" max="32767" attributes="1"/>
-                  <Component id="fullCodeLengthTextField" alignment="0" pref="130" max="32767" attributes="1"/>
-                  <Component id="codeLengthTextField" alignment="0" pref="130" max="32767" attributes="1"/>
+                  <Component id="nameTextField" alignment="0" max="32767" attributes="1"/>
+                  <Component id="fontComboBox" alignment="0" max="32767" attributes="1"/>
+                  <Component id="typeComboBox" alignment="0" max="32767" attributes="1"/>
+                  <Component id="fullCodeLengthTextField" alignment="0" max="32767" attributes="1"/>
+                  <Component id="codeLengthTextField" alignment="0" max="32767" attributes="1"/>
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="differentCodeLengthsCheckBox" min="-2" max="-2" attributes="0"/>
+                          <Component id="lockedCheckBox" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -44,7 +50,7 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="nameTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="nameLabel" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -70,8 +76,9 @@
                   <Component id="codeLengthLabel" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
+              <Component id="differentCodeLengthsCheckBox" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="lockedCheckBox" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -170,6 +177,12 @@
       <Properties>
         <Property name="text" type="java.lang.String" resourceKey="lockedCheckBox.text"/>
         <Property name="name" type="java.lang.String" value="lockedCheckBox" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="differentCodeLengthsCheckBox">
+      <Properties>
+        <Property name="text" type="java.lang.String" resourceKey="differentCodeLengthsCheckBox.text"/>
+        <Property name="name" type="java.lang.String" value="differentCodeLengthsCheckBox" noResource="true"/>
       </Properties>
     </Component>
   </SubComponents>
