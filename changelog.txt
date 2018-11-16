@@ -1,14 +1,21 @@
 ﻿Changelog
 
-5.00.43 ALPHA 2
+5.00.43
+- Analysis features updated in collaboration with Mathieu Laversanne:
+  - Replaced ReportR with Officer for generating docx and pptx documents. (This should take care of troubles related to the different architecture of R/Java.)
+  - Web based data analysis functionality added using the Shiny R library. (This functionality is still at a BETA stage.)
+  - Fixed various data visualizations (pies, ...)
+  - Fixed CI5 and DQ table
+  - Empty values accepted in analytical files.
+  - Male breast cancer into account in rapport generator/other visualizations.
+  - Rcan updated.
 - Fixed bug in file copy during restore from backup for some users with non-Latin character sets.
 - Fixed bug with headless splash screen.
-- Replaced ReportR with Officer for generating docx and pptx documents. (This should take care of troubles related to the different architecture of R/Java.)
-- Import now works for dbs that does not collect ICCC.
+- Import now works for databases that do not collect ICCC.
 - Simple (one level) dictionaries can now allow varying code lengths.
-- Male breast cancer into account in rapport generator/other visualizations.
-- Empty values accepted in analytical files
+- When encrypting your database you can specify the length of the key and algorithm (AES/DES) used for improved security. 
 - Population dataset batch import/export added.
+- RMI now uses a fixed port for communication.
 - Other fixes.
 
 5.00.42
@@ -51,7 +58,7 @@
 5.00.41
 - New data entry form. (Developed in collaboration with Betty Carballo and Patricio Carranza.)
 - Ability to enable/disble new data entry form in Options.
-- Removed latest news since Twitter no longer allows access to their API like that.
+- Removed latest news since Twitter no longer allows access to their API as RSS.
 - Improved layout for login and welcome screens for big fonts.
 - Updated Spanish translation.
 - Updated JavaDB to version 10.13.1.1.
