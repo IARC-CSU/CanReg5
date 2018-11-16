@@ -922,9 +922,9 @@ multiple_output <- function(table_number, bool_ci, output_format) {
 
 shiny_error_log <- function(log_file,filename) {
   
-  error_connection <- file(log_file,open="wt")
-  sink(error_connection)
-  sink(error_connection, type="message")
+  shiny_log <- file(log_file,open="wt")
+  sink(shiny_log)
+  sink(shiny_log, type="message")
   
   #print error
   cat("This file contains the data and parameter of this canreg5 R-shiny application.\n") 
@@ -937,8 +937,8 @@ shiny_error_log <- function(log_file,filename) {
   cat("\n")
   
   #print environment
-  print(ls.str())
-  cat("\n")
+  ##print(ls.str())
+  ##cat("\n")
 	
 	#print R version and package load
   print(sessionInfo())
@@ -972,7 +972,7 @@ shiny_error_log <- function(log_file,filename) {
 	#close log_file and send to canreg
   sink(type="message")
   sink()
-  close(error_connection)
+  close(shiny_log)
   
 }
 
