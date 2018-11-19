@@ -675,7 +675,6 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
      * @param idString
      */
     public void editPatientID(String idString) {
-        Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, "PINCHILON FONSECA");
         Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
         Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
         setCursor(hourglassCursor);
@@ -689,21 +688,8 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
         
         recordEditor.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
         recordEditor.setDictionary(CanRegClientApp.getApplication().getDictionary());
-        
-//        UNNECESSARY CODE
-//        Patient patient = null;
-        
-//        UNNECESSARY CODE
-//        DatabaseFilter filter = new DatabaseFilter();
-//        filter.setFilterString(patientIDlookupVariable + " = '" + idString + "' ");
-
-//        UNNECESSARY CODE
-//        Patient[] patients;
-//        Object[][] rows;
-//        DatabaseRecord[] tumourRecords;
 
         try {
-
             Patient[] patients = CanRegClientApp.getApplication().getPatientRecordsByID(idString, false);
 
             if (patients.length < 1) {
@@ -762,19 +748,12 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
             CanRegClientView.showAndPositionInternalFrame(dtp, (JInternalFrame)recordEditor);
             CanRegClientView.maximizeHeight(dtp, (JInternalFrame)recordEditor);
 
-        } catch (DistributedTableDescriptionException ex) {
-            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnknownTableException ex) {
+        } catch (DistributedTableDescriptionException | UnknownTableException | SQLException |
+                 RemoteException | SecurityException ex) {
             Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         } catch (RecordLockedException ex) {
             JOptionPane.showMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("RECORD IS ALREADY BEING EDITED..."), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.INFO, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RemoteException ex) {
-            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SecurityException ex) {
-            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             setCursor(normalCursor);
         }
@@ -811,9 +790,6 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
         DatabaseFilter filter = new DatabaseFilter();
 
         filter.setFilterString(tumourIDlookupVariable + " ='" + idString + "'");
-        Object[][] rows;
-        DatabaseRecord[] tumourRecords;
-        String patientIdString = null;
 
         try {
             DistributedTableDescription distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.TUMOUR_TABLE_NAME);
@@ -821,7 +797,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
             if (numberOfRecords == 0) {
                 JOptionPane.showMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("TUMOUR_RECORD_NOT_FOUND..."), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             } else {
-                rows = CanRegClientApp.getApplication().retrieveRows(distributedTableDescription.getResultSetID(), 0, numberOfRecords);
+                Object[][] rows = CanRegClientApp.getApplication().retrieveRows(distributedTableDescription.getResultSetID(), 0, numberOfRecords);
                 CanRegClientApp.getApplication().releaseResultSet(distributedTableDescription.getResultSetID());
                 String[] columnNames = distributedTableDescription.getColumnNames();
                 int ids[] = new int[numberOfRecords];
@@ -841,20 +817,13 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                     JOptionPane.showMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("VARIABLE_NOT_FOUND..."), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
                 }
             }
-        } catch (UnknownTableException ex) {
-            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (DistributedTableDescriptionException ex) {
+        } catch (UnknownTableException | DistributedTableDescriptionException | 
+                 SQLException | RemoteException | SecurityException ex) {
             Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         } catch (RecordLockedException ex) {
             JOptionPane.showMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("RECORD IS ALREADY BEING EDITED..."), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RemoteException ex) {
-            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SecurityException ex) {
-            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } 
     }
 
     /**
