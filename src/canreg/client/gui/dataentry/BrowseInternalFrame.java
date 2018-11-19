@@ -675,6 +675,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
      * @param idString
      */
     public void editPatientID(String idString) {
+        Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, "PINCHILON FONSECA");
         Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
         Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
         setCursor(hourglassCursor);
@@ -688,17 +689,22 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
         
         recordEditor.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
         recordEditor.setDictionary(CanRegClientApp.getApplication().getDictionary());
-        Patient patient = null;
-        DatabaseFilter filter = new DatabaseFilter();
-        filter.setFilterString(patientIDlookupVariable + " = '" + idString + "' ");
+        
+//        UNNECESSARY CODE
+//        Patient patient = null;
+        
+//        UNNECESSARY CODE
+//        DatabaseFilter filter = new DatabaseFilter();
+//        filter.setFilterString(patientIDlookupVariable + " = '" + idString + "' ");
 
-        Patient[] patients;
-        Object[][] rows;
-        DatabaseRecord[] tumourRecords;
+//        UNNECESSARY CODE
+//        Patient[] patients;
+//        Object[][] rows;
+//        DatabaseRecord[] tumourRecords;
 
         try {
 
-            patients = CanRegClientApp.getApplication().getPatientRecordsByID(idString, false);
+            Patient[] patients = CanRegClientApp.getApplication().getPatientRecordsByID(idString, false);
 
             if (patients.length < 1) {
                 /*
@@ -706,7 +712,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                  */
                 int answer = JOptionPane.showInternalConfirmDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("NO_PATIENT_WITH_THAT_ID_FOUND,_DO_YOU_WANT_TO_CREATE_ONE?"), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("PATIENT_ID_NOT_FOUND"), JOptionPane.YES_NO_OPTION);
                 if (answer == JOptionPane.YES_OPTION) {
-                    patient = new Patient();
+                    Patient patient = new Patient();
                     patient.setVariable(patientIDlookupVariable, idString);
                     CanRegClientApp.getApplication().saveRecord(patient);
                     patients = CanRegClientApp.getApplication().getPatientRecordsByID(idString, false);
@@ -725,7 +731,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
             // Get all the tumour records for all the patient records...
             for (Patient p : patients) {
                 recordEditor.addRecord(p);
-                tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(idString, true);
+                DatabaseRecord[] tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(idString, true);
                 for (DatabaseRecord rec : tumourRecords) {
                     // store them in a set, so we don't show them several times
                     if (rec != null) {

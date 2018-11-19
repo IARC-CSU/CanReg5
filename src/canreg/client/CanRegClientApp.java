@@ -1185,6 +1185,7 @@ public class CanRegClientApp extends SingleFrameApplication {
                     records[j] = (Tumour) getRecord(id, lookUpTableName, lock);
                 } catch (RecordLockedException recordLockedException) {
                     Logger.getLogger(CanRegClientApp.class.getName()).log(Level.WARNING, "Tumour record " + id + " already locked?", recordLockedException);
+                    throw recordLockedException;
                 } catch (RemoteException ex) {
                     Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
                     if (!handlePotentialDisconnect(ex)) {
