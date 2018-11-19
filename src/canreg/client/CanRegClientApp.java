@@ -1057,15 +1057,6 @@ public class CanRegClientApp extends SingleFrameApplication {
         }
     }
 
-    private synchronized boolean isRecordLocked(int recordID, String tableName) {
-        boolean lock = false;
-        Set lockSet = locksMap.get(tableName);
-        if (lockSet != null) {
-            lock = lockSet.contains(recordID);
-        }
-        return lock;
-    }
-
     /**
      *
      * @param dictionaryID
