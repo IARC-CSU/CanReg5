@@ -978,11 +978,11 @@ shiny_error_log <- function(log_file,filename) {
 
 shiny_dwn_data <- function(log_file) {
 
+	dt_dwn_data <- dt_base
+	dt_dwn_data[, ICD10GROUPLABEL := NULL]
+	dt_dwn_data[, ICD10GROUPCOLOR := NULL]
+	dt_dwn_data[, AGE_GROUP := NULL]
 	
-	dt_base[, ICD10GROUPLABEL := NULL]
-	dt_base[, ICD10GROUPCOLOR := NULL]
-	dt_base[, AGE_GROUP := NULL]
-	
-	write.csv(dt_base, paste0(log_file),row.names = FALSE)
+	write.csv(dt_dwn_data, paste0(log_file),row.names = FALSE)
 
 }
