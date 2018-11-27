@@ -32,7 +32,7 @@ shiny_data <- function(input) {
 					age_group  <- c(15,30,50,70)
 				}
 				
-			dt_temp <- dt_base
+			dt_temp  <- copy(dt_base)
 			dt_temp[ICD10GROUP != "C44",]$ICD10GROUP ="O&U"
 			dt_temp[ICD10GROUP != "C44",]$ICD10GROUPLABEL ="Other and unspecified"
 			dt_temp <- dt_temp[, .(CASES=sum(CASES)),by=.(ICD10GROUP, ICD10GROUPLABEL, YEAR,SEX, AGE_GROUP,AGE_GROUP_LABEL,COUNT,REFERENCE_COUNT) ]
@@ -64,7 +64,7 @@ shiny_data <- function(input) {
 			
 		 
 				
-			dt_temp <- dt_base
+			dt_temp  <- copy(dt_base)
 			dt_temp[ICD10GROUP != "C44",]$ICD10GROUP ="O&U"
 			dt_temp[ICD10GROUP != "C44",]$ICD10GROUPLABEL ="Other and unspecified"
 			dt_temp <- dt_temp[, .(CASES=sum(CASES)),by=.(ICD10GROUP, ICD10GROUPLABEL, YEAR,SEX, AGE_GROUP,AGE_GROUP_LABEL,COUNT,REFERENCE_COUNT) ]
@@ -79,7 +79,7 @@ shiny_data <- function(input) {
 			
 			if (!is.null(input$slideAgeRange)& !is.null(input$radioValue)) {
 		
-				dt_temp <- dt_base
+				dt_temp  <- copy(dt_base)
 				dt_temp <- dt_temp[ICD10GROUP != "C44",]
 				dt_temp <- dt_temp[ICD10GROUP != "O&U",]
 				
@@ -120,7 +120,7 @@ shiny_data <- function(input) {
 			
 			if (!is.null(input$slideAgeRange) & !is.null(input$radioValue)) {
 		
-				dt_temp <- dt_base
+				dt_temp  <- copy(dt_base)
 				dt_temp <- dt_temp[ICD10GROUP != "C44",]
 				dt_temp <- dt_temp[ICD10GROUP != "O&U",]
 				
@@ -157,7 +157,7 @@ shiny_data <- function(input) {
 		}
 		else if (table_number == 6){
 
-			dt_temp <- dt_base
+			dt_temp  <- copy(dt_base)
 			dt_temp <- dt_temp[ICD10GROUP != "C44",]
 			dt_temp <- dt_temp[ICD10GROUP != "O&U",]
 			dt_temp <- canreg_ageSpecific_rate_data(dt_temp)
@@ -165,7 +165,7 @@ shiny_data <- function(input) {
 		}
 		else if (table_number == 7){
 
-			dt_temp <- dt_base
+			dt_temp  <- copy(dt_base)
 			dt_temp <- dt_temp[ICD10GROUP != "C44",]
 			dt_temp <- dt_temp[ICD10GROUP != "O&U",]
 			dt_temp <- canreg_ageSpecific_rate_data(dt_temp)
@@ -183,7 +183,7 @@ shiny_data <- function(input) {
 					bool_skin <- TRUE
 				}
 
-				dt_temp <- dt_base
+				dt_temp  <- copy(dt_base)
 				dt_temp[ICD10GROUP != "C44",]$ICD10GROUP ="O&U"
 				dt_temp[ICD10GROUP != "C44",]$ICD10GROUPLABEL ="Other and unspecified"
 				dt_temp <- dt_temp[, .(CASES=sum(CASES)),by=.(ICD10GROUP, ICD10GROUPLABEL, YEAR,SEX, AGE_GROUP,AGE_GROUP_LABEL,COUNT,REFERENCE_COUNT) ]
@@ -197,7 +197,7 @@ shiny_data <- function(input) {
 
 			if (!is.null(input$slideAgeRange)) {
 			
-				dt_temp <- dt_base
+				dt_temp  <- copy(dt_base)
 				dt_temp <- dt_temp[ICD10GROUP != "C44",]
 				dt_temp <- dt_temp[ICD10GROUP != "O&U",]
 				
@@ -221,7 +221,7 @@ shiny_data <- function(input) {
 
 			if (!is.null(input$slideAgeRange)) {
 			
-				dt_temp <- dt_base
+				dt_temp  <- copy(dt_base)
 				dt_temp <- dt_temp[ICD10GROUP != "C44",]
 				dt_temp <- dt_temp[ICD10GROUP != "O&U",]
 				
@@ -247,7 +247,7 @@ shiny_data <- function(input) {
 
 			if (!is.null(input$slideAgeRange)) {
 			
-				dt_temp <- dt_base
+				dt_temp  <- copy(dt_base)
 				dt_temp <- dt_temp[ICD10GROUP != "C44",]
 				dt_temp <- dt_temp[ICD10GROUP != "O&U",]
 				
@@ -978,11 +978,11 @@ shiny_error_log <- function(log_file,filename) {
 
 shiny_dwn_data <- function(log_file) {
 
-	dt_dwn_data <- dt_base
-	dt_dwn_data[, ICD10GROUPLABEL := NULL]
-	dt_dwn_data[, ICD10GROUPCOLOR := NULL]
-	dt_dwn_data[, AGE_GROUP := NULL]
+	dt_temp <- copy(dt_base)
+	dt_temp[, ICD10GROUPLABEL := NULL]
+	dt_temp[, ICD10GROUPCOLOR := NULL]
+	dt_temp[, AGE_GROUP := NULL]
 	
-	write.csv(dt_dwn_data, paste0(log_file),row.names = FALSE)
+	write.csv(dt_temp, paste0(log_file),row.names = FALSE)
 
 }
