@@ -279,7 +279,7 @@ public class CanRegClientApp extends SingleFrameApplication {
                 if (!isCanregServerRunningInThisThread()) {
                     int numberOfRecordsOpen = numberOfRecordsOpen();
                     if (numberOfRecordsOpen > 0) {
-                        option = JOptionPane.showConfirmDialog(null, java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?") + "\n" + java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("YOU_HAVE_") + numberOfRecordsOpen + java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("_RECORDS_OPEN."), java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?"), JOptionPane.YES_NO_OPTION);
+                        option = JOptionPane.showConfirmDialog(null, java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?") + "\n" + java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("YOU_HAVE_") + " " + numberOfRecordsOpen + java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("_RECORDS_OPEN."), java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?"), JOptionPane.YES_NO_OPTION);
                     } else {
                         option = JOptionPane.showConfirmDialog(null, java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?"), java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?"), JOptionPane.YES_NO_OPTION);
                     }
