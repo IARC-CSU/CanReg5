@@ -1062,12 +1062,12 @@ public final class CanRegClientView extends FrameView {
 
     public void setLoggedOut() {
         setUserRightsLevel(Globals.UserRightLevels.NOT_LOGGED_IN);
-        desktopPane.removeAll();
-        desktopPane.repaint();
         if (browseInternalFrame != null) {
-            browseInternalFrame.close();
+            browseInternalFrame.dispose();
             browseInternalFrame = null;
         }
+        desktopPane.removeAll();
+        desktopPane.repaint();
         getFrame().setTitle(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("CANREG5 - NOT LOGGED IN."));
         userLevelLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("NOT LOGGED IN."));
     }
