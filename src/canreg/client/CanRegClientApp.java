@@ -1660,18 +1660,10 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     private synchronized void releaseAllRecordsHeldByThisClient() {
-        locksMap.keySet().stream().forEach((tableName) -> {
-            Set<Integer> lockSet = locksMap.get(tableName);
-            if (lockSet != null) {
-                lockSet.stream().forEach((recordID) -> {
-                    try {
-                        releaseRecord(recordID, tableName);
-                    } catch (RemoteException | SecurityException ex) {
-                        Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                });
-            }
+        locksMap.forEach((t, u) -> {
+            locksMap.put(t, null);
         });
+        
         lockFile.writeMap();
     }
 
@@ -1703,6 +1695,9 @@ public class CanRegClientApp extends SingleFrameApplication {
             server = null;
             systemName = "";
             loggedIn = false;
+            
+//            aca liberar records papiiii
+            
             canRegClientView.setLoggedOut();
             showLogginFrame();
             return true;
