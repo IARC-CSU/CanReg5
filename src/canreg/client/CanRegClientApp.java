@@ -1629,7 +1629,8 @@ public class CanRegClientApp extends SingleFrameApplication {
         int numberOfRecords = 0;
         for (String tableName : locksMap.keySet()) {
             Set<Integer> lockSet = locksMap.get(tableName);
-            numberOfRecords += lockSet.size();
+            if(lockSet != null)
+                numberOfRecords += lockSet.size();
         }
         return numberOfRecords;
     }
@@ -1695,9 +1696,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             server = null;
             systemName = "";
             loggedIn = false;
-            
-//            aca liberar records papiiii
-            
+            releaseAllRecordsHeldByThisClient();
             canRegClientView.setLoggedOut();
             showLogginFrame();
             return true;
