@@ -3085,9 +3085,6 @@ rcan_scatter_error_bar <- function(dt_plot,
   }
   
   csu_plot <- csu_plot +
-    scale_fill_manual(name="",
-                      values= color_bar,
-                      drop = FALSE)+
     geom_vline(xintercept = 0, size=0.8)+
     labs(title = plot_title, 
          subtitle = plot_subtitle,
