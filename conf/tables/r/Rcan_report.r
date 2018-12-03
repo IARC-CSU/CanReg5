@@ -16,7 +16,9 @@
 tryCatch({
   
   #load dependency packages
-  canreg_load_packages(c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","officer","flextable", "zip", "bmp", "jpeg", "png"), Rcan_source=script.basename)
+  canreg_load_packages(c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","officer","flextable", "zip", "bmp", "jpeg", "png","shiny.i18n"), Rcan_source=script.basename)
+	i18n <- Translator(translation_csvs_path  = (paste(sep="/", script.basename, "translations")))
+	i18n$set_translation_language(ls_args$lang)
   
   #merge incidence and population
   dt_all <- csu_merge_inc_pop(
@@ -142,7 +144,7 @@ tryCatch({
   canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph_b", list_number$fig),landscape = TRUE,list_graph = FALSE,
                 FUN=canreg_age_cases_pie_multi_plot,
                 dt=dt_report,
-                canreg_header = "All cancers but C44")
+                canreg_header = i18n$t("All cancers but C44"))
   
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph_b", list_number$fig, ".png")), "dim" )
   doc <- body_add_img(doc, paste0(tempdir(), "\\temp_graph_b", list_number$fig, ".png"),width=graph_width,height=graph_width*dims[1]/dims[2],style="centered" )
@@ -206,7 +208,7 @@ tryCatch({
                 nsmall=0,
                 color_bar=c("Male" = "#2c7bb6", "Female" = "#b62ca1"),nb_top = 10,
                 canreg_header = "",
-                ytitle=paste0("Number of cases, ", canreg_age_group$label))
+                ytitle=paste0(i18n$t("Number of cases"),", ", canreg_age_group$label))
   
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph_a", list_number$fig, ".png")), "dim" )
   doc <- body_add_img(doc, paste0(tempdir(), "\\temp_graph_a", list_number$fig, ".png"),width=graph_width,height=graph_width*dims[1]/dims[2],style="centered" )
@@ -217,7 +219,7 @@ tryCatch({
                 FUN=canreg_bar_top,
                 df_data=dt_report,color_bar=c("Male" = "#2c7bb6", "Female" = "#b62ca1"),nb_top = 10,
                 canreg_header = "",
-                ytitle=paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=","), ", ", canreg_age_group$label))
+                ytitle=paste0(i18n$t("Age-standardized incidence rate per")," ", formatC(100000, format="d", big.mark=","), ", ", canreg_age_group$label))
   
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph_b", list_number$fig, ".png")), "dim" )
   doc <- body_add_img(doc, paste0(tempdir(), "\\temp_graph_b", list_number$fig, ".png"),width=graph_width,height=graph_width*dims[1]/dims[2],style="centered" )
@@ -251,7 +253,7 @@ tryCatch({
   dt_bar <- dt_asr
   var_top <- "CASES"
   digit <- 0
-  xtitle <- paste0("Number of cases, ", canreg_age_group$label)
+  xtitle <- paste0(i18n$t("Number of cases"),", ", canreg_age_group$label)
   
   canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph", list_number$fig),landscape = FALSE,list_graph = TRUE,
                 FUN=canreg_bar_top_single,
@@ -283,7 +285,7 @@ tryCatch({
   
   var_top <- "asr"
   digit <- 1
-  xtitle<-paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=","), ", ", canreg_age_group$label)
+  xtitle<-paste0(i18n$t("Age-standardized incidence rate per")," ", formatC(100000, format="d", big.mark=","), ", ", canreg_age_group$label)
   
   canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph", list_number$fig),landscape = FALSE,list_graph = TRUE,
                 FUN=canreg_bar_top_single,
@@ -315,7 +317,7 @@ tryCatch({
   var_top <- "cum_risk"
   digit <- 2
   dt_bar <- dt_cum_risk
-  xtitle<-paste0("Cumulative incidence risk (percent), ", canreg_age_group_cr$label)
+  xtitle<-paste0(i18n$t("Cumulative incidence risk (percent)"),", ", canreg_age_group_cr$label)
   
   canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph", list_number$fig),landscape = FALSE,list_graph = TRUE,
                 FUN=canreg_bar_top_single,
@@ -402,7 +404,7 @@ tryCatch({
                   FUN=canreg_asr_trend_top,
                   dt=dt_report,number = 5,
                   canreg_header = "",
-                  ytitle=paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=","), ", ", canreg_age_group$label))
+                  ytitle=paste0(i18n$t("Age-standardized incidence rate per")," ", formatC(100000, format="d", big.mark=","), ", ", canreg_age_group$label))
     
     dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", list_number$fig, "001.png")), "dim" )
     
@@ -430,7 +432,7 @@ tryCatch({
   if (year_info$span >  time_limit) {
     
     doc <- body_add_break(doc)
-    doc <- body_add_par(doc, "Estimated annual percentage change", style = "heading 2")
+    doc <- body_add_par(doc, i18n$t("Estimated annual percentage change"), style = "heading 2")
     
     dt_report <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE, keep_year = TRUE)
     
@@ -461,8 +463,8 @@ tryCatch({
     canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph", list_number$fig),landscape = TRUE,list_graph = TRUE,
                   FUN=canreg_eapc_scatter_error_bar,
                   dt=dt_report,
-                  canreg_header = "Estimated Average Percentage Change",
-                  ytitle=paste0("Estimated average percentage change (%), ", canreg_age_group$label))
+                  canreg_header = i18n$t("Estimated Average Percentage Change"),
+                  ytitle=paste0(i18n$t("Estimated average percentage change")," (%), ", canreg_age_group$label))
     
     
     dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", list_number$fig, "001.png")), "dim" )
@@ -519,7 +521,7 @@ tryCatch({
     
     canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph", list_number$fig),landscape = TRUE,list_graph = TRUE,
                   FUN=canreg_bar_CI5_compare,
-                  dt=dt_both,xtitle=paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=",")))
+                  dt=dt_both,xtitle=paste0(i18n$t("Age-standardized incidence rate per")," ", formatC(100000, format="d", big.mark=",")))
     
     dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", list_number$fig, "001.png")), "dim" )
     

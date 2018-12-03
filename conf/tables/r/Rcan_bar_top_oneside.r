@@ -17,8 +17,8 @@ tryCatch({
   
   #load dependency packages
   canreg_load_packages(c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","bmp", "jpeg",  "shiny.i18n"), Rcan_source=script.basename)
- 	i18n <- Translator(translation_json_path = (paste(sep="/", script.basename, "canreg_translation.json")))
-	i18n$set_translation_language("es")
+ 	i18n <- Translator(translation_csvs_path  = (paste(sep="/", script.basename, "translations")))
+	i18n$set_translation_language(ls_args$lang)
 	
   #merge incidence and population
   dt_all <- csu_merge_inc_pop(

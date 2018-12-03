@@ -177,6 +177,7 @@ canreg_args <- function(Args) {
     arg_list[[logi_name]] <- FALSE
   }
   
+	arg_list[["lang"]] <- "en"
   
   for (i in 1:length(Args)) {
     
@@ -407,12 +408,14 @@ canreg_missing_age <- function(dt,
   return(missing_age)
 }
 
-canreg_cancer_info <- function(dt,
-                               var_cancer_label = "ICD10GROUPLABEL") {
+canreg_cancer_info <- function(dt,var_cancer_label = "ICD10GROUPLABEL") {
   
   cancer_label <- substring(as.character(dt[[var_cancer_label]]),4,nchar(as.character(dt[[var_cancer_label]])))
+	cancer_label <- sapply(cancer_label, i18n$t)
   cancer_sex <- substring(as.character(dt[[var_cancer_label]]),1,3)
   
+	
+	
   return(list(cancer_label = cancer_label, cancer_sex = cancer_sex))
   
 }
@@ -1919,7 +1922,7 @@ canreg_bar_CI5_compare <- function(dt,group_by = "SEX", landscape = TRUE,list_gr
   CI5_registries <- as.character(unique(dt$country_label))
   caption <- NULL
   if (any(grepl("\\*",CI5_registries))) {
-    caption <- "*: Regional registries"
+    caption <- paste0("*: ",i18n$t("Regional registries"))
   }
   
   lay <- rbind(c(11,12),
@@ -1986,7 +1989,7 @@ canreg_bar_CI5_compare <- function(dt,group_by = "SEX", landscape = TRUE,list_gr
                      var_top="asr",
                      var_bar="country_label",
                      plot_title = unique(dt_plot$cancer_label),
-                     plot_subtitle = unique(dt_plot$SEX), 
+                     plot_subtitle = unique(i18n$t(dt_plot$SEX)), 
                      plot_caption = caption,
                      xtitle=xtitle,
                      digit = digit,
@@ -2994,8 +2997,8 @@ canreg_eapc_scatter_error_bar <- function(dt,
   for (i in levels(dt[[group_by]])) {
     
     plot_title <- canreg_header
-    plot_subtitle <-  i
-    axe_title = paste0(ytitle, ", ",i)
+    plot_subtitle <-  i18n$t(i)
+    axe_title = paste0(ytitle, ", ",i18n$t(i))
     
     dt_plot <- dt[get(group_by) == i]
     

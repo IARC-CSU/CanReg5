@@ -346,10 +346,10 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 		else if (table_number == 3){
 			
 			if (isolate(input$radioSkin) == 1 ){
-			header = paste0(ls_args$header, "\n\nAll cancers but C44")
+			header = paste0(ls_args$header, "\n\n",i18n$t("All cancers but C44"))
 			}
 			else {
-			header = paste0(ls_args$header, "\n\nAll cancers")
+			header = paste0(ls_args$header, "\n\n",i18n$t("All cancers"))
 			}
 			
 			if (download) {
@@ -386,14 +386,14 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 				if (isolate(input$radioValue) == "asr") {
 					var_top <- "asr"
 					digit <- 1
-					ytitle <- paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=","), ", ", isolate(input$slideAgeRange)[1], "-", age2, " years old" )
+					ytitle <- paste0(i18n$t("Age-standardized incidence rate per")," ", formatC(100000, format="d", big.mark=","), ", ", isolate(input$slideAgeRange)[1], "-", age2, " years old" )
 					
 					
 				} 
 				else if (isolate(input$radioValue) == "cases"){
 					var_top <- "CASES"
 					digit <- 0
-					ytitle <-  paste0("Number of cases, ", isolate(input$slideAgeRange)[1], "-", age2, " years old" )
+					ytitle <-  paste0(i18n$t("Number of cases"),", ", isolate(input$slideAgeRange)[1], "-", age2, " years old" )
 					
 					
 				}
@@ -405,7 +405,7 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 					} else {
 						age2 <- isolate(input$slideAgeRange)[2]-1
 					}
-					ytitle<-paste0("Cumulative incidence risk (percent), 0-",age2, " years old" )
+					ytitle<-paste0(i18n$t("Cumulative incidence risk (percent)"),", 0-",age2, " years old" )
 					
 					
 				}
@@ -456,14 +456,14 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 				if (isolate(input$radioValue) == "asr") {
 					var_top <- "asr"
 					digit <- 1
-					ytitle <- paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=","), ", ", isolate(input$slideAgeRange)[1], "-", age2, " years old" )
+					ytitle <- paste0(i18n$t("Age-standardized incidence rate per")," ", formatC(100000, format="d", big.mark=","), ", ", isolate(input$slideAgeRange)[1], "-", age2, " years old" )
 					
 					
 				} 
 				else if (isolate(input$radioValue) == "cases"){
 					var_top <- "CASES"
 					digit <- 0
-					ytitle <-  paste0("Number of cases, ", isolate(input$slideAgeRange)[1], "-", age2, " years old" )
+					ytitle <-  paste0(i18n$t("Number of cases"),", ", isolate(input$slideAgeRange)[1], "-", age2, " years old" )
 					
 					
 				}
@@ -475,7 +475,7 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 					} else {
 						age2 <- isolate(input$slideAgeRange)[2]-1
 					}
-					ytitle<-paste0("Cumulative incidence risk (percent), 0-",age2, " years old" )
+					ytitle<-paste0(i18n$t("Cumulative incidence risk (percent)"),", 0-",age2, " years old" )
 					
 					
 				}
@@ -651,7 +651,7 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 					age2 <- paste0(((max_age-1)*5), "+")
 				}
 				
-				 ytitle <- paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=","), ", ", isolate(input$slideAgeRange)[1], "-", age2, " years old" )
+				 ytitle <- paste0(i18n$t("Age-standardized incidence rate per")," ", formatC(100000, format="d", big.mark=","), ", ", isolate(input$slideAgeRange)[1], "-", age2, " years old" )
 		 
 
 				if (download) {
@@ -718,7 +718,7 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 					age2 <- paste0(((max_age-1)*5), "+")
 				}
 				
-				 ytitle <- paste0("Estimated average percentage change (%), ", isolate(input$slideAgeRange)[1], "-", age2, " years old" )
+				 ytitle <- paste0(i18n$t("Estimated average percentage change")," (%), ", isolate(input$slideAgeRange)[1], "-", age2, " ",i18n$t("years old"))
 				 color_bar <- c("Male" = "#2c7bb6", "Female" = "#b62ca1")
 		 
 
@@ -785,7 +785,7 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 					age2 <- paste0(((max_age-1)*5), "+")
 				}
 				
-				ytitle <- paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=","), ", ", isolate(input$slideAgeRange)[1], "-", age2, " years old" )
+				ytitle <- paste0(i18n$t("Age-standardized incidence rate per")," ", formatC(100000, format="d", big.mark=","), ", ", isolate(input$slideAgeRange)[1], "-", age2, " ",i18n$t("years old") )
 		 
 				
 				if (download) {
@@ -892,6 +892,7 @@ canreg_ageSpecific <- function(dt_plot,color_trend,plot_subtitle="",logscale=FAL
                                     logscale = logscale,
                                     smoothing = NULL,
                                     ytitle = ytitle,
+																		xtitle = i18n$t("Year"),
                                     plot_title = plot_title,
                                     color_trend = color_trend)$csu_plot
 
