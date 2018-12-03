@@ -16,8 +16,10 @@
 tryCatch({
   
   #load dependency packages
-  canreg_load_packages(c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","bmp", "jpeg"), Rcan_source=script.basename)
-  
+  canreg_load_packages(c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","bmp", "jpeg",  "shiny.i18n"), Rcan_source=script.basename)
+ 	i18n <- Translator(translation_json_path = (paste(sep="/", script.basename, "canreg_translation.json")))
+	i18n$set_translation_language("es")
+	
   #merge incidence and population
   dt_all <- csu_merge_inc_pop(
     inc_file =ls_args$inc,
@@ -51,18 +53,18 @@ tryCatch({
   if (ls_args$data=="CASES") {
     var_top <- "CASES"
     digit <- 0
-    xtitle <- paste0("Number of cases, ", canreg_age_group$label)
+    xtitle <- paste0( i18n$t("Number of cases"),", ", canreg_age_group$label)
   } else if (ls_args$data=="ASR") {
     var_top <- "asr"
     digit <- 1
-    xtitle<-paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=","), ", ", canreg_age_group$label)
+    xtitle<-paste0(i18n$t("Age-standardized incidence rate per")," ", formatC(100000, format="d", big.mark=","), ", ", canreg_age_group$label)
   } else if (ls_args$data=="CR") {
     var_top <- "cum_risk"
     digit <- 2
 	temp_agegroup <- paste0("0-", canreg_age_group$last_age)
     canreg_age_group <- canreg_get_agegroup_label(dt,temp_agegroup)
     dt_bar <- dt_cum_risk
-    xtitle<-paste0("Cumulative incidence risk (percent), ", canreg_age_group$label)
+    xtitle<-paste0(i18n$t("Cumulative incidence risk (percent)"),", ", canreg_age_group$label)
     
   }
   

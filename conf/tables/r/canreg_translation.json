@@ -12,9 +12,11 @@
 			{"en": "Year", "es": "Año"},
 			{"en": "years", "es": "años"},
 			{"en": "Age-standardized incidence rate per", "es": "Tasa de incidencia estandarizada por edad por"},
+			{"en": "Cumulative incidence risk (percent)", "es": "Riesgo de incidencia acumulada (porcentaje)"},
 			{"en": "cancer sites", "es": "sitios de cáncer"},
 			{"en": "Time trend analysis need at least 2 years data", "es": "El análisis de tendencia temporal necesita al menos 2 años de datos"},
-			{"en": "Age at diagnosis", "es": "Edad al diagnóstico"}
+			{"en": "Age at diagnosis", "es": "Edad al diagnóstico"},
+			{"en": "Estimated annual percentage change", "es": "Cambio porcentual anual estimado"}
     ]
 }
 
