@@ -1464,13 +1464,7 @@ csu_cum_risk_core <- function(df_data, var_age, var_cases, var_py, group_by=NULL
 
 
 
-csu_trend_legend <-
-  function(title=NULL, position="bottom",nrow=1, right_space_margin=1) {
-    
-    structure(list(title = title, position = position,
-                   nrow = nrow,
-                   right_space_margin = right_space_margin))
-  }
+
 
 
 
@@ -1847,7 +1841,7 @@ for (i in  1:length(temp$plotlist)) {
 canreg_bar_top_single <- function(dt, var_top, var_bar = "cancer_label" ,group_by = "SEX",
                                   nb_top = 10, landscape = FALSE,list_graph=TRUE,
                                   canreg_header = "", xtitle = "",digit  =  1,
-                                  return_data  =  FALSE) {
+                                  return_data  =  FALSE, return_plot=FALSE) {
   
   dt <- Rcan:::core.csu_dt_rank(dt, var_value = var_top, var_rank = var_bar,group_by = group_by, number = nb_top) 
   
@@ -1862,11 +1856,12 @@ canreg_bar_top_single <- function(dt, var_top, var_bar = "cancer_label" ,group_b
   
   dt$cancer_label <-Rcan:::core.csu_legend_wrapper(dt$cancer_label, 15)
   
-  plotlist <- list()
+
   j <- 1 
   
-  for (i in levels(dt[[group_by]])) {
-    
+	#Use lapply to avoid loop (problem with ggplot lazy evaluation)
+  plotlist <- lapply(levels(dt[[group_by]]), function (i) {
+	
     if (j == 1) {
       plot_title <- canreg_header
       plot_caption <- ""
@@ -1884,18 +1879,27 @@ canreg_bar_top_single <- function(dt, var_top, var_bar = "cancer_label" ,group_b
     
 
     
-    plotlist[[j]] <-
+     return(
       csu_bar_plot(
         dt_plot,var_top=var_top,var_bar=var_bar,
         plot_title=plot_title,plot_caption=plot_caption,plot_subtitle = plot_subtitle,
         color_bar=color_cancer,
         landscape=landscape,digit=digit,
         xtitle=xtitle)
+				)
+				
+			  j <- j+1
+		})
     
-    print(plotlist[[j]])
-    j <- j+1
-    
-  }
+		if (!return_plot) {
+			print(plotlist[[1]])
+			print(plotlist[[2]])
+		}
+		else {
+			return(list(plotlist = plotlist))
+		}
+  
+
 }
 
 
@@ -2769,6 +2773,7 @@ canreg_asr_trend_top <- function(dt, var_asr="asr",
                                  landscape = FALSE,
                                  list_graph = FALSE,
                                  return_data = FALSE,
+																 return_plot= FALSE,
                                  canreg_header="") {
   
   
@@ -2833,10 +2838,14 @@ canreg_asr_trend_top <- function(dt, var_asr="asr",
     j <- j+1
   }
   
-  
+	if (!return_plot) {
+		print(plotlist[[1]]+guides(color = guide_legend(override.aes = list(size=1), nrow=1,byrow=TRUE)))
+		print(plotlist[[2]]+guides(color = guide_legend(override.aes = list(size=1), nrow=1,byrow=TRUE)))
+	}
+	else {
+		return(list(plotlist = plotlist))
+	}
 
-	print(plotlist[[1]]+guides(color = guide_legend(override.aes = list(size=1), nrow=1,byrow=TRUE)))
-	print(plotlist[[2]]+guides(color = guide_legend(override.aes = list(size=1), nrow=1,byrow=TRUE)))
 
   
 }
@@ -2956,6 +2965,7 @@ canreg_eapc_scatter_error_bar <- function(dt,
                                           list_graph = TRUE,
                                           canreg_header=NULL,
                                           return_data = FALSE,
+																					return_plot = FALSE, 
                                           ytitle="") {
   
   if (return_data) {
@@ -2997,10 +3007,18 @@ canreg_eapc_scatter_error_bar <- function(dt,
         landscape=landscape,
         ytitle=axe_title)
     
-    print(plotlist[[j]])
+    #print(plotlist[[j]])
     j <- j+1
     
   }
+	
+	if (!return_plot) {
+		print(plotlist[[1]])
+		print(plotlist[[2]])
+	}
+	else {
+		return(list(plotlist = plotlist))
+	}
 }
 
 
