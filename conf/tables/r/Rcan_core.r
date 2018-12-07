@@ -1814,7 +1814,7 @@ if (return_data) {
     stop() 
 }
 
-plot_subtitle <- paste0("Top ",nb_top, " ",i18n$t("cancer sites") )
+plot_subtitle <- paste0(i18n$t("Top")," ",nb_top, " ",i18n$t("cancer sites") )
 
 temp <- Rcan:::core.csu_ageSpecific_top(df_data,var_age, var_cases, var_py,var_top, group_by,
 									   logscale=logscale, 
@@ -1873,7 +1873,7 @@ canreg_bar_top_single <- function(dt, var_top, var_bar = "cancer_label" ,group_b
       plot_caption <- canreg_header
     }
     
-    plot_subtitle <-  paste0("Top ",nb_top," ",i18n$t("cancer sites"),"\n",i)
+    plot_subtitle <-  paste0(i18n$t("Top")," ",nb_top," ",i18n$t("cancer sites"),"\n",i)
     
     dt_plot <- dt[get(group_by) == i]
     dt_label_order <- setkey(unique(dt_plot[, c(var_bar,"ICD10GROUPCOLOR", "CSU_RANK"), with=FALSE]), CSU_RANK)
@@ -2199,7 +2199,7 @@ canreg_bar_top <- function(df_data,
   setnames(dt, var_bar, "CSU_BAR")
   setnames(dt, group_by, "CSU_BY")
   
-  plot_subtitle <- paste("top",nb_top,i18n$t("cancer sites"))
+  plot_subtitle <- paste0(i18n$t("top")," ",nb_top," ",i18n$t("cancer sites"))
   
   dt <- Rcan:::core.csu_dt_rank(dt, var_value = "CSU_ASR", var_rank = "CSU_BAR",number = nb_top)
   
@@ -2834,7 +2834,7 @@ canreg_asr_trend_top <- function(dt, var_asr="asr",
                                     ytitle = ytitle,
 																		xtitle = i18n$t("Year"),
                                     plot_title = canreg_header,
-                                    plot_subtitle = paste0("Top ",number," ",i18n$t("cancer sites"),"\n",sex_label),
+                                    plot_subtitle = paste0(i18n$t("Top")," ",,number," ",i18n$t("cancer sites"),"\n",sex_label),
                                     plot_caption = plot_caption,
                                     color_trend = color_cancer)$csu_plot
     
