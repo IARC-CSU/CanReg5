@@ -180,6 +180,7 @@ public class RTableBuilder implements TableBuilderInterface {
                 commandList.add("-label="    + canreg.common.Tools.combine(tableLabel, "|"));
                 commandList.add("-header="   + tableHeader);
                 commandList.add("-ft="       + fileType);
+                commandList.add("-lang=" + CanRegClientApp.getApplication().getLocalSettings().getLanguageCode());
                 // add the rest of the arguments
                 commandList.addAll(Arrays.asList(rScriptsArguments));
                 
