@@ -16,6 +16,5 @@ rlibs <- gsub("\\", "/",file.path(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5"))
 packages  <- list.files(pattern=".*\\.zip$")
 
 for(x in packages) {
-eval(parse(text=paste("install.packages('", x, "', lib='", rlibs,"', repos = NULL  )", sep=""))) 
+    eval(parse(text=paste("install.packages('", x, "', lib='", rlibs,"', repos = NULL  )", sep=""))) 
 }
-
