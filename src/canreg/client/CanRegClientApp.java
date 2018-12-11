@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2017  International Agency for Research on Cancer
+ * Copyright (C) 2008-2018  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1687,9 +1687,9 @@ public class CanRegClientApp extends SingleFrameApplication {
         canRegClientView.showLoginFrame();
     }
 
-    public boolean setDBPassword(char[] newPasswordArray, char[] oldPasswordArray) throws SecurityException, RemoteException {
+    public boolean encryptDatabase(char[] newPasswordArray, char[] oldPasswordArray, String encryptionAlgorithm, String encryptionKeyLength) throws SecurityException, RemoteException {
         try {
-            return server.setDBPassword(newPasswordArray, oldPasswordArray);
+            return server.setDBPassword(newPasswordArray, oldPasswordArray, encryptionAlgorithm, encryptionKeyLength);
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
             if (!handlePotentialDisconnect(ex)) {
