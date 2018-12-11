@@ -318,6 +318,7 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
                 commandList.add("-ft=" + fileType);
                 commandList.add("-sc=" + CanRegClientApp.getApplication().getSystemCode());
                 commandList.add("-sr=" + CanRegClientApp.getApplication().getSystemRegion());
+                commandList.add("-lang=" + CanRegClientApp.getApplication().getLocalSettings().getLanguageCode());
                 // add the rest of the arguments
                 commandList.addAll(Arrays.asList(rScriptsArguments));
                 // if (rScriptsArguments != null) {
