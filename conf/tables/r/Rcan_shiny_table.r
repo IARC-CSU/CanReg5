@@ -15,7 +15,7 @@
   
 tryCatch({
   
-  canreg_load_packages(c("Rcpp", "data.table", "ggplot2","shiny","shinydashboard", "shinyjs","gridExtra", "scales", "Cairo","grid","officer","flextable", "zip", "bmp", "jpeg", "png"), Rcan_source=script.basename)
+  canreg_load_packages(c("flextable","Rcpp", "data.table", "ggplot2","shiny","shinydashboard", "shinyjs","gridExtra", "scales", "Cairo","grid","officer", "zip", "bmp", "jpeg", "png"), Rcan_source=script.basename)
   
   dt_base <- csu_merge_inc_pop(
     inc_file =ls_args$inc,
