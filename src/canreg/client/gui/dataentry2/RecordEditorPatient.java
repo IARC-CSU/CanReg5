@@ -431,15 +431,15 @@ public class RecordEditorPatient extends javax.swing.JPanel
         }
 
         if (recordStatusVariableListElement != null) {
-            if (recordStatusVariableListElement != null && recordStatusVariableListElement.getUseDictionary() != null) {                                
+//            if (recordStatusVariableListElement != null && recordStatusVariableListElement.getUseDictionary() != null) {                                
+//                databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), "0");
+//                Logger.getLogger(RecordEditorPatient.class.getName()).log(Level.WARNING, 
+//                                 "Warning! Record status dictionary entries missing.");
+//            } else {
                 databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), "0");
-                Logger.getLogger(RecordEditorPatient.class.getName()).log(Level.WARNING, 
-                                 "Warning! Record status dictionary entries missing.");
-            } else {
-                databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), "0");
-                Logger.getLogger(RecordEditorPatient.class.getName()).log(Level.WARNING, 
-                                 "Warning! Record status dictionary entries missing.");
-            }
+//                Logger.getLogger(RecordEditorPatient.class.getName()).log(Level.WARNING, 
+//                                 "Warning! Record status dictionary entries missing.");
+//            }
         }
     }
     
