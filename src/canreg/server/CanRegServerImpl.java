@@ -67,9 +67,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import org.w3c.dom.Document;
 
@@ -399,22 +397,17 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      * @throws java.lang.SecurityException
      */
     @Override
-    public void userLoggedIn(String username)
+    public void userLoggedIn(CanRegServerInterface client, String username)
             throws RemoteException, SecurityException {
-        userManager.userLoggedIn(username);
+        userManager.userLoggedIn(client, username);
         displayTrayIconPopUpMessage("User logged in", "User " + username + " logged in.", MessageType.INFO);
     }
 
-    /**
-     *
-     * @param username
-     * @throws java.rmi.RemoteException
-     * @throws java.lang.SecurityException
-     */
+
     @Override
-    public void userLoggedOut(String username)
+    public void userLoggedOut(CanRegServerInterface client, String username)
             throws RemoteException, SecurityException {
-        userManager.userLoggedOut(username);
+        userManager.userLoggedOut(client);
         displayTrayIconPopUpMessage("User logged out", "User " + username + " logged out.", MessageType.INFO);
     }
 
@@ -1034,5 +1027,12 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     @Override
     public String getCanRegSystemRegion() throws RemoteException, SecurityException {
         return systemDescription.getRegion();
+    }
+
+    @Override
+    public boolean pingRemote() 
+            throws SecurityException, RemoteException, Exception {
+        //This is a server, so it should throw false.
+        return false;
     }
 }

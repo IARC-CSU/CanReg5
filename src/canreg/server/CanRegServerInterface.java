@@ -235,20 +235,22 @@ public interface CanRegServerInterface extends Remote {
 
     /**
      * User logs in
+     * @param client
      * @param username
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
-    public void userLoggedIn(String username)
+    public void userLoggedIn(CanRegServerInterface client, String username)
             throws RemoteException, SecurityException;
 
     /**
      * User logs out
-     * @param username
+     * @param client the remote that is logging out
+     * @param username the user that is logging out
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
-    public void userLoggedOut(String username)
+    public void userLoggedOut(CanRegServerInterface client, String username)
             throws RemoteException, SecurityException;
 
     /**
@@ -468,4 +470,16 @@ public interface CanRegServerInterface extends Remote {
     public String getCanRegSystemCode() throws RemoteException, SecurityException;
 
     public String getCanRegSystemRegion()throws RemoteException, SecurityException;
+
+    /**
+     * Method to be used by a CanReg server to ping clients. If a client is found
+     * then it will return true, otherwise most likely an exception will be thrown.
+     * @return true if the implementation is a client/proxy, false if the implementation
+     * is a server (if the remote can't be reached, most likely an Exception 
+     * will be thrown).
+     * @throws SecurityException
+     * @throws RemoteException
+     * @throws Exception 
+     */
+    public boolean pingRemote() throws SecurityException, RemoteException, Exception;
 }

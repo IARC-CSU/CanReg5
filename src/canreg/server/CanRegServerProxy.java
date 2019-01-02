@@ -55,7 +55,8 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     private final CanRegServerInterface theServer;
     private final Subject theUser;
 
-    public CanRegServerProxy(Subject user, CanRegServerInterface server) throws RemoteException {
+    public CanRegServerProxy(Subject user, CanRegServerInterface server) 
+            throws RemoteException {
         // Prevent JAVA to use a random port.
         super(1099);
         
@@ -129,15 +130,16 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     }
 
     @Override
-    public void userLoggedIn(String username) throws RemoteException, SecurityException {
+    public void userLoggedIn(CanRegServerInterface client, String username) throws RemoteException, SecurityException {
         checkPermission("userLoggedIn");
-        theServer.userLoggedIn(username);
+        theServer.userLoggedIn(client, username);
     }
 
     @Override
-    public void userLoggedOut(String username) throws RemoteException, SecurityException {
+    public void userLoggedOut(CanRegServerInterface client, String username) 
+            throws RemoteException, SecurityException {
         checkPermission("userLoggedOut");
-        theServer.userLoggedOut(username);
+        theServer.userLoggedOut(client, username);
     }
 
     @Override
@@ -375,5 +377,12 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     public String getCanRegSystemRegion() throws RemoteException, SecurityException {
         checkPermission("getSystemRegion");
         return theServer.getCanRegSystemRegion();
+    }
+
+    @Override
+    public boolean pingRemote() 
+            throws SecurityException, RemoteException, Exception {
+        //This class represents a client, should always return true.
+        return true;
     }
 }

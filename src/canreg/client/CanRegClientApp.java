@@ -800,16 +800,13 @@ public class CanRegClientApp extends SingleFrameApplication {
         }
     }
 
-    /**
-     *
-     * @throws java.rmi.RemoteException
-     */
+
     public void logOut() throws RemoteException {
         try {
             releaseAllRecordsHeldByThisClient();
             if (server != null) {
                 try {
-                    server.userLoggedOut(username);
+                    server.userLoggedOut(server, username);
                 } catch (RemoteException ex) {
                     Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
                     if (!handlePotentialDisconnect(ex)) {

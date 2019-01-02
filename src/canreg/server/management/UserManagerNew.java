@@ -30,6 +30,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -44,17 +45,10 @@ import java.util.logging.Logger;
  */
 public class UserManagerNew {
 
-        /**
-     *
-     */
     static public String DEFAULT_PASS_FILENAME = "Passwords.properties";
-
-    /**
-     *
-     */
     static public String DEFAULT_LEVELS_FILENAME = "Levels.properties";
 
-    LinkedList fClients = new LinkedList();
+    private Map<Integer, String> clientsMap = new HashMap<>();
     CanRegDAO db;
 
     /**
@@ -74,7 +68,7 @@ public class UserManagerNew {
      * @return
      */
     public int getNumberOfUsersLoggedIn() {
-        return fClients.size();
+        return clientsMap.size();
     }
 
     /**
@@ -221,20 +215,12 @@ public class UserManagerNew {
         return users;
     }
 
-    /**
-     *
-     * @param userName
-     */
-    public void userLoggedIn(String userName) {
-        fClients.add(userName);
+    public void userLoggedIn(CanRegServerInterface client, String userName) {        
+        clientsMap.put(client.hashCode(), userName);
     }
 
-    /**
-     *
-     * @param userName
-     */
-    public void userLoggedOut(String userName) {
-        fClients.remove(fClients.indexOf(userName));
+    public void userLoggedOut(CanRegServerInterface client) {
+        clientsMap.remove(client.hashCode());
     }
 
     /**
@@ -242,10 +228,10 @@ public class UserManagerNew {
      * @return
      */
     public String[] listCurrentUsers() {
-        String[] users = new String[fClients.size()];
+        String[] users = new String[clientsMap.size()];
         int i = 0;
-        for (Iterator it = fClients.iterator(); it.hasNext();) {
-            users[i] = (String) it.next();
+        for(String user : clientsMap.values()) {
+            users[i] = user; 
             // debugOut("element is " + users[i]);
             i++;
         }
