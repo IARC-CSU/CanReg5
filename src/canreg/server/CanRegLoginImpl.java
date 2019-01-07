@@ -67,7 +67,7 @@ public class CanRegLoginImpl extends UnicastRemoteObject
         Subject user = lc.getSubject();
         
         CanRegServerInterface proxy = new CanRegServerProxy(user, theServer);
-        theServer.userLoggedIn(proxy, username);
+        theServer.userLoggedIn(proxy.hashCode(), username);
 
         // Return a reference to a proxy object that encapsulates the access
         // to the theServer, for this client

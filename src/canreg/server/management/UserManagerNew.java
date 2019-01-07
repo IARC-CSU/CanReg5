@@ -31,53 +31,51 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  *
- * @author ervikm
+ * @author ervikm, Patricio Carranza
  */
 public class UserManagerNew {
 
     static public String DEFAULT_PASS_FILENAME = "Passwords.properties";
     static public String DEFAULT_LEVELS_FILENAME = "Levels.properties";
 
-    private Map<Integer, String> clientsMap = new HashMap<>();
+    private final ConcurrentHashMap<Integer, ClientSessionData> clientSessionsMap;
+    private final ScheduledExecutorService checkAliveClients;
     CanRegDAO db;
 
-    /**
-     *
-     * @param db
-     */
+
     public UserManagerNew(CanRegDAO db) {
         this.db = db;
         Map<String, User> userMap = db.getUsers();
-        if (userMap.isEmpty()) {
+        if (userMap.isEmpty()) 
             installDefaultUsers();
-        }
+        
+        clientSessionsMap = new ConcurrentHashMap<>();
+        checkAliveClients = Executors.newSingleThreadScheduledExecutor();
+        checkAliveClients.scheduleAtFixedRate(new CheckClientSessionAlive(), 0, 45, TimeUnit.SECONDS);
     }
 
-    /**
-     *
-     * @return
-     */
     public int getNumberOfUsersLoggedIn() {
-        return clientsMap.size();
+        return clientSessionsMap.size();
     }
 
-    /**
-     *
-     * @return
-     */
     public List<User> listUsers() {
         Map<String, User> userMap = db.getUsers();
-        LinkedList<User> users = new LinkedList<User>();
+        LinkedList<User> users = new LinkedList<>();
         for (String userName : userMap.keySet()) {
             users.add(userMap.get(userName));
         }
@@ -91,19 +89,10 @@ public class UserManagerNew {
         }
     }
 
-    /**
-     *
-     * @return
-     */
     public boolean writePasswordsToFile(){
         return writePasswordFile() && writeLevelsFile();
     }
 
-
-    /**
-     *
-     * @return
-     */
     public boolean writePasswordFile() {
         boolean success = false;
         OutputStream propOutputStream = null;
@@ -141,10 +130,6 @@ public class UserManagerNew {
         return success;
     }
 
-    /**
-     *
-     * @return
-     */
     public boolean writeLevelsFile() {
         boolean success = false;
         OutputStream propOutputStream = null;
@@ -183,7 +168,7 @@ public class UserManagerNew {
     }
 
     private LinkedList<User> listDefaultUsers() {
-        LinkedList<User> users = new LinkedList<User>();
+        LinkedList<User> users = new LinkedList<>();
         try {
             InputStream levelsPropInputStream = null;
             levelsPropInputStream = CanRegLoginModule.class.getResourceAsStream(DEFAULT_LEVELS_FILENAME);
@@ -215,48 +200,100 @@ public class UserManagerNew {
         return users;
     }
 
-    public void userLoggedIn(CanRegServerInterface client, String userName) {        
-        clientsMap.put(client.hashCode(), userName);
+
+    public void userLoggedIn(Integer remoteHashCode, String userName) {
+        clientSessionsMap.put(remoteHashCode, new ClientSessionData(userName, remoteHashCode));
+    }
+    
+    public void lockRecord(int recordID, String tableName, Integer remoteHashCode) {
+        if(remoteHashCode == null)
+            return;
+        
+        Set lockSet = clientSessionsMap.get(remoteHashCode).records.get(tableName);
+        if (lockSet == null) {
+            lockSet = new TreeSet<>();
+            clientSessionsMap.get(remoteHashCode).records.put(tableName, lockSet);
+        }
+        lockSet.add(recordID);
+    }
+    
+    public void releaseRecord(int recordID, String tableName, Integer remoteHashCode) {
+        db.releaseRecord(recordID, tableName);
+        if(remoteHashCode == null)
+            return;
+        
+        Set lockSet = clientSessionsMap.get(remoteHashCode).records.get(tableName);
+        if (lockSet != null) 
+            lockSet.remove(recordID);
     }
 
-    public void userLoggedOut(CanRegServerInterface client) {
-        clientsMap.remove(client.hashCode());
+    public void userLoggedOut(Integer remoteHashCode) {
+        Map<String, Set<Integer>> recordsLocked = clientSessionsMap.remove(remoteHashCode).records;
+        for(String tableName : recordsLocked.keySet()) {
+            Set<Integer> recordsIds = recordsLocked.get(tableName);
+            for(Integer recId : recordsIds)
+                db.releaseRecord(recId, tableName);
+        }
+    }    
+    
+    public void remotePingReceived(Integer remoteHashCode) {
+        if(clientSessionsMap.get(remoteHashCode) != null)
+            clientSessionsMap.get(remoteHashCode).pingReceived = true;
     }
 
-    /**
-     *
-     * @return
-     */
     public String[] listCurrentUsers() {
-        String[] users = new String[clientsMap.size()];
+        String[] users = new String[clientSessionsMap.size()];
         int i = 0;
-        for(String user : clientsMap.values()) {
-            users[i] = user; 
+        for(ClientSessionData user : clientSessionsMap.values()) {
+            users[i] = user.userName; 
             // debugOut("element is " + users[i]);
             i++;
         }
         return users;
     }
 
-    /**
-     *
-     * @param user
-     * @return
-     */
     public boolean addUser(User user) {
         boolean success = false;
         db.saveUser(user);
         return success;
     }
 
-    /**
-     *
-     * @param user
-     * @return
-     */
     public boolean removeUser(User user) {
         boolean success = false;
         // TODO: Why is this empty? And it seems to work... Aie.
         return success;
+    }
+    
+    
+    
+    private class ClientSessionData { 
+        
+        final Integer remoteHashCode;
+        final String userName;
+        final Map<String, Set<Integer>> records;
+        volatile boolean pingReceived;
+        
+        ClientSessionData(String userName, Integer remoteHashCode) {
+            this.records = new HashMap<>();
+            this.userName = userName;
+            this.remoteHashCode = remoteHashCode;
+            this.pingReceived = false;
+        }
+    }
+    
+    private class CheckClientSessionAlive implements Runnable {
+        @Override
+        public void run() {
+            LinkedList<Integer> sessionsToRemove = new LinkedList<>();
+            
+            for(ClientSessionData session : clientSessionsMap.values()) {
+                if( ! session.pingReceived)
+                    sessionsToRemove.add(session.remoteHashCode);
+                session.pingReceived = false;
+            }
+            
+            for(Integer session : sessionsToRemove)
+                userLoggedOut(session);
+        }
     }
 }

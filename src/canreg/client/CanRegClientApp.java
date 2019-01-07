@@ -80,6 +80,9 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -102,6 +105,8 @@ import org.w3c.dom.Document;
 public class CanRegClientApp extends SingleFrameApplication {
 
     private CanRegServerInterface server;
+    private ScheduledExecutorService pingExecutor;
+    
     static boolean debug = true;
     private boolean canregServerRunningInThisThread = false;
     private String systemName = null;
@@ -461,8 +466,11 @@ public class CanRegClientApp extends SingleFrameApplication {
         }
         //do the loginRMI 
         debugOut("ATTEMPTING LOGIN");
-        server = loginServer.login(username, password);
+        server = loginServer.login(username, password);        
         if (server != null) {
+            this.pingExecutor = Executors.newSingleThreadScheduledExecutor();
+            this.pingExecutor.scheduleAtFixedRate(new PingToServer(), 0, 20, TimeUnit.SECONDS);
+            
             // See if server version of CanReg matches the 
             debugOut("LOGIN SUCCESSFULL");
             // This should work...
@@ -806,7 +814,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             releaseAllRecordsHeldByThisClient();
             if (server != null) {
                 try {
-                    server.userLoggedOut(server, username);
+                    server.userLoggedOut(server.hashCode(), username);
                 } catch (RemoteException ex) {
                     Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
                     if (!handlePotentialDisconnect(ex)) {
@@ -815,6 +823,9 @@ public class CanRegClientApp extends SingleFrameApplication {
                 }
             }
             server = null;
+            this.pingExecutor.shutdownNow();
+            this.pingExecutor = null;
+            
             systemName = "";
             loggedIn = false;
             canRegClientView.setUserRightsLevel(Globals.UserRightLevels.NOT_LOGGED_IN);
@@ -925,7 +936,8 @@ public class CanRegClientApp extends SingleFrameApplication {
      * canreg.common.cachingtableapi.DistributedTableDescriptionException
      * @throws java.lang.SecurityException
      */
-    public DistributedTableDescription getDistributedTableDescription(DatabaseFilter filter, String tableName) throws SQLException, SecurityException, UnknownTableException, DistributedTableDescriptionException, RemoteException {
+    public DistributedTableDescription getDistributedTableDescription(DatabaseFilter filter, String tableName)
+            throws SQLException, SecurityException, UnknownTableException, DistributedTableDescriptionException, RemoteException {
         try {
             return server.getDistributedTableDescription(filter, tableName);
         } catch (RemoteException ex) {
@@ -947,9 +959,10 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @throws canreg.server.database.RecordLockedException
      * @throws java.rmi.RemoteException
      */
-    public DatabaseRecord getRecord(int recordID, String tableName, boolean lock) throws SecurityException, RecordLockedException, RemoteException {
+    public DatabaseRecord getRecord(int recordID, String tableName, boolean lock)
+            throws SecurityException, RecordLockedException, RemoteException {
         try {
-            DatabaseRecord record = server.getRecord(recordID, tableName, lock);
+            DatabaseRecord record = server.getRecord(recordID, tableName, lock, server.hashCode());
             if (lock && record != null) {
                 lockRecord(recordID, tableName);
             }
@@ -1046,7 +1059,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     public synchronized void releaseRecord(int recordID, String tableName) throws SecurityException, RemoteException {
         try {
             // release a locked record
-            server.releaseRecord(recordID, tableName);
+            server.releaseRecord(recordID, tableName, server.hashCode());
             Set lockSet = locksMap.get(tableName);
             if (lockSet != null) {
                 lockSet.remove(recordID);
@@ -1697,6 +1710,9 @@ public class CanRegClientApp extends SingleFrameApplication {
                     "You seem to have been disconnected from the server. \n"
                     + "Please log in again...");
             server = null;
+            this.pingExecutor.shutdownNow();
+            this.pingExecutor = null;
+            
             systemName = "";
             loggedIn = false;
             releaseAllRecordsHeldByThisClient();
@@ -1727,4 +1743,19 @@ public class CanRegClientApp extends SingleFrameApplication {
         }
     }
 
+    
+    private class PingToServer implements Runnable {
+        @Override
+        public void run() {
+            try {
+                //pingRemote's parameter is not needed here
+                if(server != null)
+                    server.pingRemote(null);
+            } catch (RemoteException ex) {
+                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception ex) {
+                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
 }
