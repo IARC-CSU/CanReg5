@@ -19,6 +19,7 @@
  */
 package canreg.server;
 
+import canreg.client.LocalSettings;
 import canreg.common.database.User;
 import canreg.server.management.UserManagerNew;
 import canreg.common.cachingtableapi.DistributedTableDescription;

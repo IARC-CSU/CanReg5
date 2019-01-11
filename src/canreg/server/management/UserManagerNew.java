@@ -20,6 +20,7 @@
 
 package canreg.server.management;
 
+import canreg.client.LocalSettings;
 import canreg.common.database.User;
 import canreg.server.*;
 import canreg.common.Globals;
@@ -51,10 +52,10 @@ import java.util.logging.Logger;
 public class UserManagerNew {
 
     static public String DEFAULT_PASS_FILENAME = "Passwords.properties";
-    static public String DEFAULT_LEVELS_FILENAME = "Levels.properties";
+    static public String DEFAULT_LEVELS_FILENAME = "Levels.properties";        
 
     private final ConcurrentHashMap<Integer, ClientSessionData> clientSessionsMap;
-    private final ScheduledExecutorService checkAliveClients;
+    private ScheduledExecutorService checkAliveClients;
     CanRegDAO db;
 
 
@@ -65,8 +66,16 @@ public class UserManagerNew {
             installDefaultUsers();
         
         clientSessionsMap = new ConcurrentHashMap<>();
-        checkAliveClients = Executors.newSingleThreadScheduledExecutor();
-        checkAliveClients.scheduleAtFixedRate(new CheckClientSessionAlive(), 0, 45, TimeUnit.SECONDS);
+        
+        try {
+            checkAliveClients = Executors.newSingleThreadScheduledExecutor();
+            LocalSettings localSettings = new LocalSettings("settings.xml");
+//            te falta que estos jtextfield solo acepten integers. Fijate en el codigo del jewel en la caja de texto de los channels
+            Integer seconds = Integer.parseInt(localSettings.getProperty(LocalSettings.CLIENT_SESSIONS_CHECK_KEY));
+            checkAliveClients.scheduleAtFixedRate(new CheckClientSessionAlive(), 0, seconds, TimeUnit.SECONDS);
+        } catch (IOException ex) {
+            Logger.getLogger(UserManagerNew.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public int getNumberOfUsersLoggedIn() {

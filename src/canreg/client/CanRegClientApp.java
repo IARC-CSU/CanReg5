@@ -469,7 +469,8 @@ public class CanRegClientApp extends SingleFrameApplication {
         server = loginServer.login(username, password);        
         if (server != null) {
             this.pingExecutor = Executors.newSingleThreadScheduledExecutor();
-            this.pingExecutor.scheduleAtFixedRate(new PingToServer(), 0, 20, TimeUnit.SECONDS);
+            Integer seconds = Integer.parseInt(localSettings.getProperty(LocalSettings.CLIENT_TO_SERVER_PING_KEY));
+            this.pingExecutor.scheduleAtFixedRate(new PingToServer(), 0, seconds, TimeUnit.SECONDS);
             
             // See if server version of CanReg matches the 
             debugOut("LOGIN SUCCESSFULL");
