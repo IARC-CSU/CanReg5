@@ -51,6 +51,7 @@ import canreg.common.database.PopulationDataset;
 import canreg.common.database.Tumour;
 import canreg.server.database.RecordLockedException;
 import canreg.server.database.UnknownTableException;
+import com.sun.java.swing.plaf.windows.WindowsDesktopIconUI;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedInputStream;
@@ -72,6 +73,7 @@ import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
+import javax.swing.JInternalFrame.JDesktopIcon;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -1340,20 +1342,29 @@ public final class CanRegClientView extends FrameView {
      */
     @Action
     public void createNewRecordSetAction() {
-        canreg.client.gui.dataentry2.RecordEditor internalFrame = null;
-        String dataEntryVersion = localSettings.getProperty(LocalSettings.DATA_ENTRY_VERSION_KEY);
-        if (dataEntryVersion.equalsIgnoreCase(LocalSettings.DATA_ENTRY_VERSION_NEW)) {
-            internalFrame = new canreg.client.gui.dataentry2.RecordEditorMainFrame(desktopPane);
-        } else {
-            internalFrame = new RecordEditor(desktopPane);
-        }
+        for(int i = 0; i < 100; i++) {
+            canreg.client.gui.dataentry2.RecordEditor internalFrame = null;
+            String dataEntryVersion = localSettings.getProperty(LocalSettings.DATA_ENTRY_VERSION_KEY);
+            if (dataEntryVersion.equalsIgnoreCase(LocalSettings.DATA_ENTRY_VERSION_NEW)) {
+                internalFrame = new canreg.client.gui.dataentry2.RecordEditorMainFrame(desktopPane);
+            } else {
+                internalFrame = new RecordEditor(desktopPane);
+            }
 
-        internalFrame.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
-        internalFrame.setDictionary(CanRegClientApp.getApplication().getDictionary());
-        internalFrame.addRecord(new Patient());
-        internalFrame.addRecord(new Tumour());
-        showAndPositionInternalFrame(desktopPane, (JInternalFrame) internalFrame);
-        maximizeHeight(desktopPane, (JInternalFrame) internalFrame);
+            internalFrame.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
+            internalFrame.setDictionary(CanRegClientApp.getApplication().getDictionary());
+            internalFrame.addRecord(new Patient());
+            internalFrame.addRecord(new Tumour());
+            showAndPositionInternalFrame(desktopPane, (JInternalFrame) internalFrame);
+            maximizeHeight(desktopPane, (JInternalFrame) internalFrame);
+            
+            JInternalFrame intFrame = (JInternalFrame) internalFrame;
+            desktopPane.remove(intFrame);
+            intFrame.dispose();
+            intFrame = null;
+            internalFrame = null;
+            System.out.println("Vev Closed frame number " + i);
+        }
     }
 
     /**
