@@ -97,6 +97,8 @@ public class RecordEditorPatient extends javax.swing.JPanel
     private final SimpleDateFormat dateFormat;
     private final LinkedList<DatabaseVariablesListElement> autoFillList;
     
+    private Map<Integer, VariableEditorGroupPanel> groupIDtoPanelMap;
+    
     private LinkedList<RecordEditorTumour> tumours;
     private HashMap<VariableEditorPanel, Boolean> changesMap;
             
@@ -387,9 +389,6 @@ public class RecordEditorPatient extends javax.swing.JPanel
         }*/
     }
     
-    void setActionListener(ActionListener listener) {
-        this.actionListener = listener;
-    }
     
     @Action
     public void runExactSearch() {
@@ -443,16 +442,66 @@ public class RecordEditorPatient extends javax.swing.JPanel
         }
     }
     
-    private void buildPanel() {
+    void releaseResources() {
+        if (variableEditorPanels != null) {
+            for (VariableEditorPanelInterface vep : variableEditorPanels.values()) {
+                vep.removeListener();
+                if(vep instanceof DateVariableEditorPanel)
+                    ((DateVariableEditorPanel)vep).releaseResources();
+            }
+        }
+        
+        databaseRecord = null;
+        doc = null;
+        dictionary.clear();
+        dictionary = null;
+        groupListElements = null;
+        actionListener = null;
+        variableEditorPanels.clear();
+        variableEditorPanels = null;
+        variablesInTable = null;
+        recordStatusVariableListElement = null;
+        unduplicationVariableListElement = null;        
+        recStatusDictMap = null;
+        recStatusDictWithConfirmArray = null;
+        recStatusDictWithoutConfirmArray = null;
+        patientIDVariableListElement = null;
+        patientRecordIDVariableListElement = null;
+        updatedByVariableListElement = null;
+        autoFillList.clear();
+        groupIDtoPanelMap.clear();
+        groupIDtoPanelMap = null;
+        tumours = null;
+        changesMap.clear();
+        changesMap = null;
+
+        clearMainPanel();
+        dataPanel = null;
+    }
+    
+    private void clearMainPanel() {
         dataPanel.removeAll();
-        this.changesMap = new HashMap<VariableEditorPanel, Boolean>();
+        dataPanel.revalidate();
+        dataPanel.repaint();
+    }
+    
+    private void buildPanel() {
+        clearMainPanel();
+        
+        changesMap = new HashMap<VariableEditorPanel, Boolean>();
 
         if (variableEditorPanels != null) {
             for (VariableEditorPanelInterface vep : variableEditorPanels.values()) 
                 vep.removeListener();            
         }
+        
+//        if(groupIDtoPanelMap != null)
+//            groupIDtoPanelMap.clear();
+//        if(variableEditorPanels != null)
+//            variableEditorPanels.clear();
+        
         variableEditorPanels = new LinkedHashMap();
-        Map<Integer, VariableEditorGroupPanel> groupIDtoPanelMap = new LinkedHashMap<Integer, VariableEditorGroupPanel>();
+        groupIDtoPanelMap = new LinkedHashMap<Integer, VariableEditorGroupPanel>();
 
         for (int i = 0; i < variablesInTable.length; i++) {
             DatabaseVariablesListElement currentVariable = variablesInTable[i];
