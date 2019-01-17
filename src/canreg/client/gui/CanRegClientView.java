@@ -53,6 +53,7 @@ import canreg.server.database.RecordLockedException;
 import canreg.server.database.UnknownTableException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyVetoException;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FilenameFilter;
@@ -1246,29 +1247,20 @@ public final class CanRegClientView extends FrameView {
 
     @Action
     public void createNewRecordSetAction() {
-        for(int i = 0; i < 100; i++) {
-            canreg.client.gui.dataentry2.RecordEditor internalFrame = null;
-            String dataEntryVersion = localSettings.getProperty(LocalSettings.DATA_ENTRY_VERSION_KEY);
-            if (dataEntryVersion.equalsIgnoreCase(LocalSettings.DATA_ENTRY_VERSION_NEW)) {
-                internalFrame = new canreg.client.gui.dataentry2.RecordEditorMainFrame(desktopPane);
-            } else {
-                internalFrame = new RecordEditor(desktopPane);
-            }
-
-            internalFrame.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
-            internalFrame.setDictionary(CanRegClientApp.getApplication().getDictionary());
-            internalFrame.addRecord(new Patient());
-            internalFrame.addRecord(new Tumour());
-            showAndPositionInternalFrame(desktopPane, (JInternalFrame) internalFrame);
-            maximizeHeight(desktopPane, (JInternalFrame) internalFrame);
-            
-            JInternalFrame intFrame = (JInternalFrame) internalFrame;
-            desktopPane.remove(intFrame);
-            intFrame.dispose();
-            intFrame = null;
-            internalFrame = null;
-            System.out.println("Vev Closed frame number " + i);
+        canreg.client.gui.dataentry2.RecordEditor internalFrame = null;
+        String dataEntryVersion = localSettings.getProperty(LocalSettings.DATA_ENTRY_VERSION_KEY);
+        if (dataEntryVersion.equalsIgnoreCase(LocalSettings.DATA_ENTRY_VERSION_NEW)) {
+            internalFrame = new canreg.client.gui.dataentry2.RecordEditorMainFrame(desktopPane);
+        } else {
+            internalFrame = new RecordEditor(desktopPane);
         }
+
+        internalFrame.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
+        internalFrame.setDictionary(CanRegClientApp.getApplication().getDictionary());
+        internalFrame.addRecord(new Patient());
+        internalFrame.addRecord(new Tumour());
+        showAndPositionInternalFrame(desktopPane, (JInternalFrame) internalFrame);
+        maximizeHeight(desktopPane, (JInternalFrame) internalFrame);
     }
 
 
