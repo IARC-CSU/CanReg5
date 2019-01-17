@@ -21,7 +21,6 @@
 package canreg.client.gui.dataentry2;
 
 import canreg.client.CanRegClientApp;
-import canreg.client.gui.components.TextFieldVariableEditorPanel;
 import canreg.client.gui.components.VariableEditorPanelInterface;
 import canreg.client.gui.dataentry2.components.DateVariableEditorPanel;
 import canreg.client.gui.dataentry2.components.DictionaryVariableEditorPanel;
@@ -453,7 +452,6 @@ public class RecordEditorPatient extends javax.swing.JPanel
         
         databaseRecord = null;
         doc = null;
-        dictionary.clear();
         dictionary = null;
         groupListElements = null;
         actionListener = null;
@@ -468,7 +466,6 @@ public class RecordEditorPatient extends javax.swing.JPanel
         patientIDVariableListElement = null;
         patientRecordIDVariableListElement = null;
         updatedByVariableListElement = null;
-        autoFillList.clear();
         groupIDtoPanelMap.clear();
         groupIDtoPanelMap = null;
         tumours = null;
@@ -491,14 +488,12 @@ public class RecordEditorPatient extends javax.swing.JPanel
         changesMap = new HashMap<VariableEditorPanel, Boolean>();
 
         if (variableEditorPanels != null) {
-            for (VariableEditorPanelInterface vep : variableEditorPanels.values()) 
-                vep.removeListener();            
+            for (VariableEditorPanelInterface vep : variableEditorPanels.values()) {
+                vep.removeListener();
+                if(vep instanceof DateVariableEditorPanel)
+                    ((DateVariableEditorPanel)vep).releaseResources();
+            }
         }
-        
-//        if(groupIDtoPanelMap != null)
-//            groupIDtoPanelMap.clear();
-//        if(variableEditorPanels != null)
-//            variableEditorPanels.clear();
         
         variableEditorPanels = new LinkedHashMap();
         groupIDtoPanelMap = new LinkedHashMap<Integer, VariableEditorGroupPanel>();

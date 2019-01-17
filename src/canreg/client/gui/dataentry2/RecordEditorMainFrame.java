@@ -230,11 +230,21 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
            ((RecordEditorPatient)c).releaseResources();
            c = null;           
         }
-        for(int i = 0; i < totalTabs; i++) 
-            patientTabbedPane.remove(i);
             
         patientTabbedPane.removeAll();
         patientTabbedPane = null;
+        
+        tumourTabbedPane.removeChangeListener(tabbedPaneChangeListener);
+        
+        totalTabs = tumourTabbedPane.getTabCount();
+        for(int i = 0; i < totalTabs; i++) {
+           Component c = tumourTabbedPane.getComponentAt(i);
+           ((RecordEditorTumour)c).releaseResources();
+           c = null;           
+        }
+            
+        tumourTabbedPane.removeAll();
+        tumourTabbedPane = null;
     }
 
     private void addToPatientMap(RecordEditorPatient recordEditorPanel, DatabaseRecord dbr) {
@@ -373,16 +383,6 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                 }
             }                        
         } 
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         else if (dbr instanceof Tumour) {
             //If no patients were previosly added, it gets very very difficult 
             //to link the tumours and the patients.
