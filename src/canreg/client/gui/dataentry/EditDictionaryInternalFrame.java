@@ -38,6 +38,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.rmi.RemoteException;
 import java.util.Iterator;
 import java.util.Map;
@@ -255,9 +258,7 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
         chooseDictionaryComboBox.setSelectedIndex(0);
     }
 
-    /**
-     * 
-     */
+
     @Action
     public void exportCompleteDictionaryAction() {
         int returnVal = chooser.showSaveDialog(this);
@@ -270,7 +271,16 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
                 fileName = chooser.getSelectedFile().getCanonicalPath();
                 File file = new File(fileName);
                 if (file.exists()) {
-                    int choice = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/EditDictionaryInternalFrame").getString("FILE_EXISTS")+": " + fileName + ".\n "+java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/EditDictionaryInternalFrame").getString("OVERWRITE?"), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/EditDictionaryInternalFrame").getString("FILE_EXISTS")+".", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+                    int choice = JOptionPane.showInternalConfirmDialog(
+                            CanRegClientApp.getApplication().getMainFrame().getContentPane(), 
+                            java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/EditDictionaryInternalFrame")
+                                    .getString("FILE_EXISTS") + ": " + fileName + ".\n " + 
+                                    java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/EditDictionaryInternalFrame")
+                                            .getString("OVERWRITE?"), 
+                            java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/EditDictionaryInternalFrame")
+                                    .getString("FILE_EXISTS") + ".", 
+                            JOptionPane.YES_NO_CANCEL_OPTION, 
+                            JOptionPane.QUESTION_MESSAGE);
                     if (choice == JOptionPane.CANCEL_OPTION) {
                         return;
                     } else if (choice == JOptionPane.NO_OPTION) {
@@ -283,7 +293,9 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
                 localSettings.setProperty("dictionary_import_path", file.getParent());
                 localSettings.writeSettings();
 
-                bw = new BufferedWriter(new FileWriter(file));
+                bw = Files.newBufferedWriter(Paths.get(file.getAbsolutePath()), 
+                                             StandardCharsets.UTF_8);
+//                bw = new BufferedWriter(new FileWriter(file));
 
                 for (DatabaseDictionaryListElement dbdle : dictionariesInDB) {
                     bw.write("#" + dbdle.getDictionaryID() + "\t----" + dbdle.getName() + Globals.newline);
@@ -322,18 +334,13 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
         this.dispose();
     }
 
-    /**
-     * 
-     */
+
     @Action
     public void selectDictionaryAction() {
         //TODO select dictionary action
     }
 
-    /**
-     * 
-     * @return
-     */
+
     @Action
     public Task updateDictionaryAction() {
         return new UpdateDictionaryActionTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
@@ -412,9 +419,7 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
         }
     }
 
-    /**
-     * 
-     */
+
     @Action
     public void refreshSelectedDictionaryAction() {
         DatabaseDictionaryListElement dbdle = (DatabaseDictionaryListElement) chooseDictionaryComboBox.getSelectedItem();
