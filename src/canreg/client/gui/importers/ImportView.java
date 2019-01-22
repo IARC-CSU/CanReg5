@@ -23,7 +23,7 @@
  *
  * Created on 22 February 2008, 09:30
  */
-package canreg.client.gui.dataentry;
+package canreg.client.gui.importers;
 
 // import au.com.bytecode.opencsv.CSVReader;
 import canreg.client.gui.components.VariableMappingPanel;
@@ -302,8 +302,8 @@ public class ImportView extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(numberOfRecordsShownLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(numberOfRecordsShownTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE))
-            .addComponent(previewTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE)
+                .addComponent(numberOfRecordsShownTextField))
+            .addComponent(previewTableScrollPane)
         );
         previewPanelLayout.setVerticalGroup(
             previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -314,7 +314,7 @@ public class ImportView extends javax.swing.JInternalFrame {
                     .addComponent(numberOfRecordsShownLabel)
                     .addComponent(numberOfRecordsShownTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(previewTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE))
+                .addComponent(previewTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE))
         );
 
         previewButton.setAction(actionMap.get("previewAction")); // NOI18N
@@ -355,7 +355,7 @@ public class ImportView extends javax.swing.JInternalFrame {
                             .addGroup(chooseFilePanelLayout.createSequentialGroup()
                                 .addComponent(fileLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(fileNameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 365, Short.MAX_VALUE))
+                                .addComponent(fileNameTextField))
                             .addGroup(chooseFilePanelLayout.createSequentialGroup()
                                 .addComponent(fileEncodingLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -442,7 +442,7 @@ public class ImportView extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(variablesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 305, Short.MAX_VALUE)
+                .addComponent(variablesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 309, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -491,7 +491,7 @@ public class ImportView extends javax.swing.JInternalFrame {
                 .addComponent(updateRadioButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(overwriteRadioButton)
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder("CanReg data"));
@@ -529,7 +529,7 @@ public class ImportView extends javax.swing.JInternalFrame {
                     .addComponent(personSearchCheckBox)
                     .addComponent(queryNewNameCheckBox)
                     .addComponent(previousCanRegDataCheckBox))
-                .addContainerGap(94, Short.MAX_VALUE))
+                .addContainerGap(106, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -570,7 +570,7 @@ public class ImportView extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(maxLinesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(testOnlyCheckBox)
-                    .addComponent(maxLinesTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE))
+                    .addComponent(maxLinesTextField))
                 .addContainerGap())
         );
         maxLinesPanelLayout.setVerticalGroup(
@@ -579,7 +579,7 @@ public class ImportView extends javax.swing.JInternalFrame {
                 .addComponent(maxLinesTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(testOnlyCheckBox)
-                .addContainerGap(54, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel1.border.title"))); // NOI18N
@@ -591,7 +591,7 @@ public class ImportView extends javax.swing.JInternalFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE)
+            .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 527, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -661,7 +661,7 @@ public class ImportView extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 383, Short.MAX_VALUE)
+                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 387, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nextButton)

@@ -26,6 +26,7 @@
  */
 package canreg.client.gui.dataentry;
 
+import canreg.client.gui.importers.ImportCompleteDictionaryInternalFrame;
 import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
 import canreg.client.gui.CanRegClientView;
@@ -36,7 +37,6 @@ import canreg.common.database.Dictionary;
 import canreg.common.database.DictionaryEntry;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -316,7 +316,7 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
                 bw.flush();
                 bw.close();
             } catch (IOException ex) {
-                Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(EditDictionaryInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/EditDictionaryInternalFrame").getString("SUCCESSFULLY_WROTE_DICTIONARIES")+": " + fileName, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/EditDictionaryInternalFrame").getString("DICTIONARIES_SUCCESSFULLY_WRITTEN"), JOptionPane.INFORMATION_MESSAGE);
             }

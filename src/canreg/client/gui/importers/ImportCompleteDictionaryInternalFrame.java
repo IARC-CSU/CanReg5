@@ -23,10 +23,11 @@
  *
  * Created on 26 September 2008, 14:46
  */
-package canreg.client.gui.dataentry;
+package canreg.client.gui.importers;
 
 import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
+import canreg.client.gui.dataentry.EditDictionaryInternalFrame;
 import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
@@ -172,7 +173,7 @@ public class ImportCompleteDictionaryInternalFrame extends javax.swing.JInternal
         );
         previewPanelLayout.setVerticalGroup(
             previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(previewScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
+            .addComponent(previewScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 257, Short.MAX_VALUE)
         );
 
         previewButton.setAction(actionMap.get("previewAction")); // NOI18N

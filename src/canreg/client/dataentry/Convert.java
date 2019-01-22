@@ -22,7 +22,7 @@ package canreg.client.dataentry;
 
 import canreg.common.Globals;
 import canreg.client.CanRegClientApp;
-import canreg.client.gui.dataentry.ImportView;
+import canreg.client.gui.importers.ImportView;
 import canreg.server.management.SystemDescription;
 import canreg.server.CanRegServerInterface;
 import canreg.server.database.*;

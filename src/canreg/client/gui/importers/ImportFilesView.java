@@ -23,7 +23,7 @@
  *
  * Created on 22 February 2008, 09:30
  */
-package canreg.client.gui.dataentry;
+package canreg.client.gui.importers;
 
 import canreg.client.LocalSettings;
 import canreg.client.CanRegClientApp;
@@ -355,7 +355,7 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
                 .addContainerGap()
                 .addGroup(maxLinesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(testOnlyCheckBox)
-                    .addComponent(maxLinesTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE))
+                    .addComponent(maxLinesTextField))
                 .addContainerGap())
         );
         maxLinesPanelLayout.setVerticalGroup(
@@ -364,7 +364,7 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
                 .addComponent(maxLinesTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(testOnlyCheckBox)
-                .addContainerGap(31, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel2.border.title"))); // NOI18N
@@ -515,7 +515,7 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
                 .addGroup(importFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(importButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(maxLinesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(discrepanciesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)
+                    .addComponent(discrepanciesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -542,7 +542,7 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(tabbedPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 616, Short.MAX_VALUE)
+                    .addComponent(tabbedPane, javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(backButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -555,7 +555,7 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 387, Short.MAX_VALUE)
+                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 395, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nextButton)
@@ -983,7 +983,7 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
                 reportFileNameTextField.setText(chooser.getSelectedFile().getCanonicalPath());
                 // changeFile();
             } catch (IOException ex) {
-                Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
             }
             reportFileNameSet = true;
         }
