@@ -181,7 +181,9 @@ public class RTableBuilder implements TableBuilderInterface {
                 commandList.add("-header="   + tableHeader);
                 commandList.add("-ft="       + fileType);
                 // add the rest of the arguments
-                commandList.addAll(Arrays.asList(rScriptsArguments));
+                
+                if(rScriptsArguments != null)
+                    commandList.addAll(Arrays.asList(rScriptsArguments));
                 
                 System.out.println(commandList);
                 Process pr = rt.exec(commandList.toArray(new String[]{}));
