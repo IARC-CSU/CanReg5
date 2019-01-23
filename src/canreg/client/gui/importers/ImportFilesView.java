@@ -100,7 +100,6 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
 
         // Add a listener for changing the active tab
         ChangeListener tabbedPaneChangeListener = new ChangeListener() {
-
             @Override
             public void stateChanged(ChangeEvent e) {
                 initializeVariableMappingTab();
@@ -707,6 +706,8 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
                 // chooser.setSelectedFile(file);
                 reportFileNameTextField.setText(file.getAbsolutePath());
             }
+        } else if(e.getActionCommand().equals(PreviewFilePanel.SEPARATING_CHARACTER_CHANGED_ACTION)) {
+            this.comboBoxChanged();
         }
     }
 

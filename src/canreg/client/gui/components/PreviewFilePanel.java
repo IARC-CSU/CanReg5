@@ -62,10 +62,10 @@ public class PreviewFilePanel extends javax.swing.JPanel {
     private JFileChooser chooser;
     private ActionListener listener;
     public static final String FILE_CHANGED_ACTION = "file_changed";
+    public static final String SEPARATING_CHARACTER_CHANGED_ACTION = "separating_character_changed";
+    
 
-    /**
-     * Creates new form PreviewFilePanel
-     */
+
     public PreviewFilePanel() {
         initComponents();
     }
@@ -391,6 +391,12 @@ public class PreviewFilePanel extends javax.swing.JPanel {
             // JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/PreviewFilePanel").getString("NO_ENCODING_DETECTED."), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/components/PreviewFilePanel").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
         }
     }
+    
+    @Action
+    public void comboBoxChanged() {
+        listener.actionPerformed(new ActionEvent(this, 0, SEPARATING_CHARACTER_CHANGED_ACTION));
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton autodetectButton;
     private javax.swing.JButton browseButton;
