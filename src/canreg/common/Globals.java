@@ -122,6 +122,11 @@ public class Globals {
     static public String USER_TABLES_PREVIEW_PATH = USER_TABLES_CONF_PATH + "/previews";
     static public String DEFAULT_PREVIEW_FILENAME = "blanc.png";
     public static String R_INSTALL_PACKAGES_SCRIPT = R_SCRIPTS_PATH + "/" + "r-packages/install_packages.r";
+    
+    public static final String IMPORT_CONF_PATH = "./conf/import";
+    public static final String USER_IMPORT_CONF_PATH = CANREG_CLIENT_FOLDER + FILE_SEPARATOR + IMPORT_CONF_PATH;
+    public static final String IMPORT_R_SCRIPTS_PATH = IMPORT_CONF_PATH + FILE_SEPARATOR + "r";
+    public static final String USER_IMPORT_R_SCRIPTS_PATH = CANREG_CLIENT_FOLDER + FILE_SEPARATOR + IMPORT_R_SCRIPTS_PATH;
     /**
      *
      */
