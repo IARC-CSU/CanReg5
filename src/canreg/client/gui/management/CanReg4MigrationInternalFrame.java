@@ -32,7 +32,7 @@ import canreg.server.management.SystemDefinitionConverter;
 import canreg.exceptions.WrongCanRegVersionException;
 import canreg.client.dataentry.Relation;
 import canreg.client.gui.components.VariableMappingPanel;
-import canreg.client.dataentry.ImportOptions;
+import canreg.client.gui.importers.ImportOptions;
 
 import java.io.*;
 import java.io.File;

@@ -19,7 +19,7 @@
  */
 
 
-package canreg.client.dataentry;
+package canreg.client.gui.importers;
 
 import java.nio.charset.Charset;
 
@@ -262,7 +262,7 @@ public class ImportOptions {
     /**
      * @return the tumourUpdateDateVariableName
      */
-    String getTumourUpdateDateVariableName() {
+    public String getTumourUpdateDateVariableName() {
         return tumourUpdateDateVariableName;
     }
 

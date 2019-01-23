@@ -30,8 +30,6 @@ import canreg.client.gui.components.VariableMappingPanel;
 import canreg.client.LocalSettings;
 import canreg.client.CanRegClientApp;
 import canreg.common.DatabaseVariablesListElement;
-import canreg.client.dataentry.Import;
-import canreg.client.dataentry.ImportOptions;
 import canreg.client.dataentry.Relation;
 import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 import canreg.common.GlobalToolBox;

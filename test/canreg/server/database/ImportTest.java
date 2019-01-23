@@ -5,7 +5,7 @@
 
 package canreg.server.database;
 
-import canreg.client.dataentry.Import;
+import canreg.client.gui.importers.Import;
 import canreg.server.CanRegServerImpl;
 import canreg.server.CanRegServerInterface;
 import java.io.File;

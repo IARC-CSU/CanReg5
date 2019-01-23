@@ -17,7 +17,7 @@
  *
  * @author Morten Johannes Ervik, CSU/IARC, ervikm@iarc.fr
  */
-package canreg.client.dataentry;
+package canreg.client.gui.importers;
 
 import canreg.common.database.Patient;
 import canreg.common.database.Tools;
@@ -27,6 +27,7 @@ import canreg.common.database.NameSexRecord;
 import canreg.common.database.DatabaseRecord;
 import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.client.CanRegClientApp;
+import canreg.client.dataentry.Relation;
 import canreg.common.Globals;
 import canreg.common.conversions.ConversionResult;
 import canreg.common.conversions.Converter;

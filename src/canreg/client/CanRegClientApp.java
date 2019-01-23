@@ -23,7 +23,7 @@ import canreg.common.cachingtableapi.DistributedTableDescription;
 import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.client.dataentry.Relation;
 import canreg.client.gui.CanRegClientView;
-import canreg.client.dataentry.ImportOptions;
+import canreg.client.gui.importers.ImportOptions;
 import canreg.client.gui.tools.UITools;
 import canreg.common.DatabaseFilter;
 import canreg.common.GlobalToolBox;
@@ -676,7 +676,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     public boolean importFile(Task<Object, String> task, Document doc, List<Relation> map, File file, ImportOptions io) throws SQLException, SecurityException, RecordLockedException, RemoteException {
         //public boolean importFile(canreg.client.gui.management.CanReg4MigrationInternalFrame.MigrationTask task, Document doc, List<Relation> map, File file, ImportOptions io) throws SQLException, SecurityException, RecordLockedException, RemoteException {
         try {
-            return canreg.client.dataentry.Import.importFile(task, doc, map, file, server, io);
+            return canreg.client.gui.importers.Import.importFile(task, doc, map, file, server, io);
             //return canreg.client.dataentry.Convert.importFile(task, doc, map, file, server, io);
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
@@ -713,7 +713,7 @@ public class CanRegClientApp extends SingleFrameApplication {
      */
     public boolean importFiles(Task<Object, Void> task, Document doc, List<Relation> map, File[] files, ImportOptions io) throws SQLException, SecurityException, RecordLockedException, RemoteException {
         try {
-            return canreg.client.dataentry.Import.importFiles(task, doc, map, files, server, io);
+            return canreg.client.gui.importers.Import.importFiles(task, doc, map, files, server, io);
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
             if (!handlePotentialDisconnect(ex)) {

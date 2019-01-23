@@ -20,6 +20,8 @@
  */
 package canreg.client.dataentry;
 
+import canreg.client.gui.importers.ImportOptions;
+import canreg.client.gui.importers.Import;
 import canreg.common.Globals;
 import canreg.client.CanRegClientApp;
 import canreg.client.gui.importers.ImportView;
