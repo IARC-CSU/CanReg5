@@ -25,7 +25,8 @@ import canreg.client.gui.tools.BareBonesBrowserLaunch;
 import canreg.client.gui.tools.ImageSelection;
 import canreg.common.Globals.StandardVariableNames;
 import canreg.common.qualitycontrol.PersonSearcher.CompareAlgorithms;
-// import fr.iarc.cin.iarctools.Globals.IARCStandardVariableNames;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import java.awt.AWTException;
 import java.awt.Image;
 import java.awt.Robot;
@@ -38,6 +39,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import java.net.*;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -1072,4 +1074,62 @@ public class Tools {
 //            return fileName;
 //        }
 //    }
+    
+    /**
+     * Saves an object data into a JSON file. The file will be encoded in UTF-8.
+     * @param obj object to be stored as JSON.
+     * @param jsonDestination complete path (including "fileName.json") to the location
+     * of the JSON that is being created.
+     * @throws IOException 
+     */
+    public static void objectToJSON(Object obj, File jsonDestination) 
+            throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
+        //Commented because it makes the process slower
+        // mapper.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
+        Writer out = null;
+        try {
+            out = new OutputStreamWriter(new FileOutputStream(jsonDestination), StandardCharsets.UTF_8);
+            mapper.writeValue(out, obj);
+        } finally {
+            if(out != null) {
+                try { out.close(); }
+                catch(IOException ex) {
+                    Logger.getLogger(Tools.class.getName()).log(Level.WARNING, null, ex);
+                }   
+            }
+        }
+    }
+    
+    /**
+     * Reads an existent JSON file and transforms it into a Java Object. You must cast
+     * the returning object into a specific class. The JSON HAS to be encoded in UTF-8.
+     * @param jsonOrigin complete path (including "fileName.json") of the JSON file
+     * to be read.
+     * @return an object containing all the data from the JSON file.
+     * @throws IOException 
+     */
+    public static Object JSONtoObject(File jsonOrigin, Class clazz) 
+            throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
+        //Commented because it makes the process slower
+        // mapper.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
+        Reader in = null;
+        Object obj = null;
+        try {
+            in = new InputStreamReader(new FileInputStream(jsonOrigin), StandardCharsets.UTF_8);
+            obj = mapper.readValue(in, clazz);
+        } finally {
+            if(in != null) {
+                try { in.close(); }
+                catch(IOException ex) {
+                    Logger.getLogger(Tools.class.getName()).log(Level.WARNING, null, ex);
+                } 
+            }
+        }
+        
+        return obj;
+    }
 }
