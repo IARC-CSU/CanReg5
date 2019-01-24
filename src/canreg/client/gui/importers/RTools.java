@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Morten Johannes Ervik, CSU/IARC, ervikm@iarc.fr
+ * @author Patricio Carranza (patocarranza@gmail.com)
  */
 package canreg.client.gui.importers;
 
@@ -36,7 +36,7 @@ import java.util.logging.Logger;
  *
  * @author Patricio Carranza (patocarranza@gmail.com)
  */
-public class Tools {
+public class RTools {
     
     private static String fixPath(String path) {
         if(path == null || path.isEmpty())
@@ -82,7 +82,7 @@ public class Tools {
         commandList.add(rpath);
         commandList.add("--vanilla");
         commandList.add("--slave");
-        commandList.add("--file="+ scriptFile.getAbsolutePath() );
+        commandList.add("--file=" + scriptFile.getAbsolutePath() );
         commandList.add("--args");
         commandList.add("-paramsFile=" + fixPath(paramsFile.getAbsolutePath()));
         System.out.println(commandList);
@@ -96,7 +96,7 @@ public class Tools {
             proc.waitFor();
             // convert the output to a string
             String theString = canreg.client.analysis.Tools.convertStreamToString(is);
-            Logger.getLogger(Tools.class.getName()).log(Level.INFO, "Messages from R: \n{0}", theString);
+            Logger.getLogger(RTools.class.getName()).log(Level.INFO, "Messages from R: \n{0}", theString);
             // and add all to the list of files to return
             for (String fileName : theString.split("\\r?\\n")) {
                 if (fileName.startsWith("-outFile:")) {
@@ -106,13 +106,13 @@ public class Tools {
                 }
             }
         } catch (java.util.NoSuchElementException ex) {
-            Logger.getLogger(Tools.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(RTools.class.getName()).log(Level.SEVERE, null, ex);
             BufferedInputStream errorStream = new BufferedInputStream(proc.getErrorStream());
             String errorMessage = canreg.client.analysis.Tools.convertStreamToString(errorStream);
             System.out.println(errorMessage);
             throw new RuntimeException("R says:\n \"" + errorMessage + "\"");
         } catch(InterruptedException | IOException ex) {
-            Logger.getLogger(Tools.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(RTools.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             System.out.println(proc.exitValue());
         }
