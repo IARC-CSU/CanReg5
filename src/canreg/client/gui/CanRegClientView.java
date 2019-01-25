@@ -866,6 +866,7 @@ public final class CanRegClientView extends FrameView {
     public Task startDatabaseServer() {
         return new StartDatabaseServerTask(getApplication());
     }
+    
 
     private class StartDatabaseServerTask extends org.jdesktop.application.Task<Object, Void> {
 
@@ -911,7 +912,6 @@ public final class CanRegClientView extends FrameView {
         try {
             CanRegClientApp.getApplication().stopDatabaseServer();
             JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("Database_server_stopped."), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("MESSAGE"), JOptionPane.INFORMATION_MESSAGE);
-
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SecurityException ex) {
@@ -1022,12 +1022,12 @@ public final class CanRegClientView extends FrameView {
 
     public void setLoggedOut() {
         setUserRightsLevel(Globals.UserRightLevels.NOT_LOGGED_IN);
-        desktopPane.removeAll();
-        desktopPane.validate();
         if (browseInternalFrame != null) {
-            browseInternalFrame.close();
+            browseInternalFrame.dispose();
             browseInternalFrame = null;
         }
+        desktopPane.removeAll();
+        desktopPane.repaint();
         getFrame().setTitle(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("CANREG5 - NOT LOGGED IN."));
         userLevelLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("NOT LOGGED IN."));
     }
@@ -1170,7 +1170,6 @@ public final class CanRegClientView extends FrameView {
         internalFrame.toFront();
     }
 
-
     @Action
     public void installSystemAction() {
         // Choose a system.xml
@@ -1180,7 +1179,6 @@ public final class CanRegClientView extends FrameView {
         showAndPositionInternalFrame(desktopPane, internalFrame);
     }
 
-
     @Action
     public void convertCanReg4SystemAction() {
         CanReg4SystemConverterInternalFrame internalFrame = new CanReg4SystemConverterInternalFrame();
@@ -1188,13 +1186,11 @@ public final class CanRegClientView extends FrameView {
         showAndPositionInternalFrame(desktopPane, internalFrame);
     }
 
-
     @Action
     public void restoreAction() {
         JInternalFrame internalFrame = new RestoreInternalFrame();
         showAndPositionInternalFrame(desktopPane, internalFrame);
     }
-
 
     @Action
     public void showLastRecord() {
@@ -1237,13 +1233,11 @@ public final class CanRegClientView extends FrameView {
         maximizeHeight(desktopPane, (JInternalFrame) internalFrame);
     }
 
-
     @Action
     public void showFrequenciesFrame() {
         JInternalFrame internalFrame = new FrequenciesByYearInternalFrame(desktopPane);
         showAndPositionInternalFrame(desktopPane, internalFrame);
     }
-
 
     @Action
     public void createNewRecordSetAction() {
@@ -1263,7 +1257,6 @@ public final class CanRegClientView extends FrameView {
         maximizeHeight(desktopPane, (JInternalFrame) internalFrame);
     }
 
-
     @Action
     public void editPopulationDataSets() {
         JInternalFrame internalFrame;
@@ -1276,7 +1269,6 @@ public final class CanRegClientView extends FrameView {
             Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
 
     @Action
     public void duplicateSearchAction() {
@@ -1355,12 +1347,10 @@ public final class CanRegClientView extends FrameView {
         int r = JOptionPane.showConfirmDialog(null, "Do you really want to garble the database?\nAll your data will be garbled!");
         if (r == JOptionPane.YES_OPTION) {
             int r2 = JOptionPane.showConfirmDialog(null, "Do you REALLY really want to garble the database?\nAll your data will be scrambled!!!");
-            if (r2 == JOptionPane.YES_OPTION) {
+            if (r2 == JOptionPane.YES_OPTION) 
                 return new GarbleDatabaseActionTask(getApplication());
-            }
         }
         return null;
-
     }
 
     private class GarbleDatabaseActionTask extends org.jdesktop.application.Task<Object, Void> {
@@ -1398,9 +1388,8 @@ public final class CanRegClientView extends FrameView {
         File instructionsFile = new File(fileName);
         file = new File(Globals.CANREG_UPDATED_INSTRUCTIONS_LOCAL_FILE);
         if (file.exists()) {
-            if (file.lastModified() > new File(docPath + Globals.FILE_SEPARATOR + Globals.CANREG_INSTRUCTIONS_LOCAL_FILE).lastModified()) {
+            if (file.lastModified() > new File(docPath + Globals.FILE_SEPARATOR + Globals.CANREG_INSTRUCTIONS_LOCAL_FILE).lastModified()) 
                 instructionsFile = file;
-            }
         }
         try {
             canreg.common.Tools.openFile(instructionsFile.getAbsolutePath());
@@ -1615,11 +1604,10 @@ public final class CanRegClientView extends FrameView {
         @Override
         protected void succeeded(Object result) {
             waitFrame.dispose();
-            if (result == null) {
+            if (result == null) 
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("R_packages_installed."), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("MESSAGE"), JOptionPane.INFORMATION_MESSAGE);
-            } else {
+            else
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("R_packages_not_installed."), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("MESSAGE"), JOptionPane.ERROR_MESSAGE);
-            }
         }
     }
 
@@ -1635,7 +1623,6 @@ public final class CanRegClientView extends FrameView {
 
     @Action
     public void writeAllPDSAction() {
-
         JFileChooser chooser = new JFileChooser(".");
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         chooser.setAcceptAllFileFilterUsed(false);
