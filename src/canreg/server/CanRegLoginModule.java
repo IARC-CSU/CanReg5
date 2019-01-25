@@ -101,7 +101,6 @@ public class CanRegLoginModule implements LoginModule {
      */
     @Override
     public boolean login() throws LoginException {
-
         if (callbackHandler == null) {
             throw new LoginException("Error: no CallbackHandler available to retrieve user credentials");
         }

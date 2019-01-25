@@ -27,7 +27,9 @@ package canreg.client.gui.management;
 import canreg.client.gui.*;
 import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
+import static canreg.client.LocalSettings.CLIENT_SESSIONS_CHECK_KEY;
 import canreg.common.Globals;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.rmi.RemoteException;
@@ -124,6 +126,11 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         downloadLatestButton = new javax.swing.JButton();
         checkButton = new javax.swing.JButton();
         downloadLatestButton1 = new javax.swing.JButton();
+        timersPanel = new javax.swing.JPanel();
+        clientToServerLabel = new javax.swing.JLabel();
+        clientSessionsCheckLabel = new javax.swing.JLabel();
+        clientToServerTextField = new javax.swing.JFormattedTextField();
+        clientSessionsCheckTextField = new javax.swing.JFormattedTextField();
         pathsPanel = new javax.swing.JPanel();
         rPanel = new javax.swing.JPanel();
         rInstallationLabel = new javax.swing.JLabel();
@@ -193,7 +200,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
                     .addComponent(languageLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(languagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(dateFormatComboBox, 0, 284, Short.MAX_VALUE)
+                    .addComponent(dateFormatComboBox, 0, 363, Short.MAX_VALUE)
                     .addComponent(languageComboBox, 0, 1, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -261,22 +268,22 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
                             .addComponent(fontSizeLabel))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(lookAndFeelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(fontSizeComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, 361, Short.MAX_VALUE)
-                            .addComponent(fontNameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE))
+                            .addComponent(fontSizeComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, 449, Short.MAX_VALUE)
+                            .addComponent(fontNameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE))
                         .addContainerGap())
                     .addGroup(lookAndFeelPanelLayout.createSequentialGroup()
-                        .addComponent(showOutlineCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE)
+                        .addComponent(showOutlineCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, 506, Short.MAX_VALUE)
                         .addGap(18, 18, 18))
                     .addGroup(lookAndFeelPanelLayout.createSequentialGroup()
                         .addComponent(dataEntryLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dataEntryVersionComboBox, 0, 323, Short.MAX_VALUE)
+                        .addComponent(dataEntryVersionComboBox, 0, 404, Short.MAX_VALUE)
                         .addContainerGap())
-                    .addComponent(newDataEntryVerticalSources, javax.swing.GroupLayout.DEFAULT_SIZE, 431, Short.MAX_VALUE)
+                    .addComponent(newDataEntryVerticalSources, javax.swing.GroupLayout.DEFAULT_SIZE, 524, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, lookAndFeelPanelLayout.createSequentialGroup()
                         .addComponent(dataEntryDisplayVariableLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dataEntryDisplayVariableComboBox, 0, 312, Short.MAX_VALUE)
+                        .addComponent(dataEntryDisplayVariableComboBox, 0, 385, Short.MAX_VALUE)
                         .addContainerGap())))
         );
         lookAndFeelPanelLayout.setVerticalGroup(
@@ -301,7 +308,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
                 .addGroup(lookAndFeelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(dataEntryDisplayVariableComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(dataEntryDisplayVariableLabel))
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout generalPanelLayout = new javax.swing.GroupLayout(generalPanel);
@@ -319,7 +326,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
             generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(generalPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(languagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(languagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lookAndFeelPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -364,7 +371,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
                 .addGroup(automaticBackupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(automaticBackupPanelLayout.createSequentialGroup()
                         .addComponent(automaticbackupCheckBox)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 199, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 257, Short.MAX_VALUE))
                     .addGroup(automaticBackupPanelLayout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
@@ -407,7 +414,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
             .addGroup(systemPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(automaticBackupPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(193, Short.MAX_VALUE))
+                .addContainerGap(235, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab(resourceMap.getString("systemPanel.TabConstraints.tabTitle"), systemPanel); // NOI18N
@@ -469,10 +476,10 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
                 .addGroup(versionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(versionPanelLayout.createSequentialGroup()
                         .addComponent(downloadLatestButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 80, Short.MAX_VALUE)
                         .addComponent(downloadLatestButton1))
-                    .addComponent(latestVersionTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE)
-                    .addComponent(versionInstalledTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE))
+                    .addComponent(latestVersionTextField, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(versionInstalledTextField, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(checkButton))
         );
@@ -487,19 +494,77 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
                     .addComponent(latestVersionLabel)
                     .addComponent(checkButton)
                     .addComponent(latestVersionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(versionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(downloadLatestButton)
                     .addComponent(downloadLatestButton1)))
+        );
+
+        timersPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("timersPanel.border.title"))); // NOI18N
+        timersPanel.setName("timersPanel"); // NOI18N
+
+        clientToServerLabel.setText(resourceMap.getString("clientToServerLabel.text")); // NOI18N
+        clientToServerLabel.setName("clientToServerLabel"); // NOI18N
+
+        clientSessionsCheckLabel.setText(resourceMap.getString("clientSessionsCheckLabel.text")); // NOI18N
+        clientSessionsCheckLabel.setName("clientSessionsCheckLabel"); // NOI18N
+
+        clientToServerTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        clientToServerTextField.setText(resourceMap.getString("clientToServerTextField.text")); // NOI18N
+        clientToServerTextField.setName("clientToServerTextField"); // NOI18N
+        clientToServerTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                clientToServerTextFieldKeyTyped(evt);
+            }
+        });
+
+        clientSessionsCheckTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        clientSessionsCheckTextField.setText(resourceMap.getString("clientSessionsCheckTextField.text")); // NOI18N
+        clientSessionsCheckTextField.setToolTipText(resourceMap.getString("clientSessionsCheckTextField.toolTipText")); // NOI18N
+        clientSessionsCheckTextField.setName("clientSessionsCheckTextField"); // NOI18N
+        clientSessionsCheckTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                clientToServerTextFieldKeyTyped(evt);
+            }
+        });
+
+        javax.swing.GroupLayout timersPanelLayout = new javax.swing.GroupLayout(timersPanel);
+        timersPanel.setLayout(timersPanelLayout);
+        timersPanelLayout.setHorizontalGroup(
+            timersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(timersPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(timersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(clientSessionsCheckLabel)
+                    .addComponent(clientToServerLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(timersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(clientSessionsCheckTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(clientToServerTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        timersPanelLayout.setVerticalGroup(
+            timersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(timersPanelLayout.createSequentialGroup()
+                .addGroup(timersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(clientToServerLabel)
+                    .addComponent(clientToServerTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(timersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(clientSessionsCheckLabel)
+                    .addComponent(clientSessionsCheckTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout advancedPanelLayout = new javax.swing.GroupLayout(advancedPanel);
         advancedPanel.setLayout(advancedPanelLayout);
         advancedPanelLayout.setHorizontalGroup(
             advancedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, advancedPanelLayout.createSequentialGroup()
+            .addGroup(advancedPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(versionPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(advancedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(versionPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(timersPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         advancedPanelLayout.setVerticalGroup(
@@ -507,7 +572,9 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
             .addGroup(advancedPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(versionPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(190, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(timersPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(113, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab(resourceMap.getString("advancedPanel.TabConstraints.tabTitle"), advancedPanel); // NOI18N
@@ -535,7 +602,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
             .addGroup(rPanelLayout.createSequentialGroup()
                 .addComponent(rInstallationLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(rInstallationTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE)
+                .addComponent(rInstallationTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(rInstallationBrowseButton)
                 .addContainerGap())
@@ -567,7 +634,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
             .addGroup(gsPanelLayout.createSequentialGroup()
                 .addComponent(gsInstallationLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(gsInstallationTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
+                .addComponent(gsInstallationTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 396, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(gsInstallationBrowseButton)
                 .addContainerGap())
@@ -598,7 +665,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
                 .addComponent(rPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(gsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(186, Short.MAX_VALUE))
+                .addContainerGap(208, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab(resourceMap.getString("pathsPanel.TabConstraints.tabTitle"), pathsPanel); // NOI18N
@@ -633,20 +700,26 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void dateFormatComboBoxMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dateFormatComboBoxMousePressed
-
         // TODO add your handling code here:}//GEN-LAST:event_dateFormatComboBoxMousePressed
     }
-    /**
-     * 
-     */
+    private void clientToServerTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_clientToServerTextFieldKeyTyped
+        /* Restrict input to only integers */
+        char c = evt.getKeyChar();
+        if (!((c >= '0') && (c <= '9') ||
+            (c == KeyEvent.VK_BACK_SPACE) ||
+            (c == KeyEvent.VK_ENTER) ||
+            (c == KeyEvent.VK_DELETE))) {
+            getToolkit().beep();
+            evt.consume();
+        } 
+    }//GEN-LAST:event_clientToServerTextFieldKeyTyped
+    
+
     @Action
     public void cancelAction() {
         this.dispose();
     }
 
-    /**
-     * 
-     */
     @Action
     public void okAction() {
         // First test filds that can be tested
@@ -666,6 +739,10 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
     private javax.swing.JCheckBox automaticbackupCheckBox;
     private javax.swing.JTextField backUpPerformedTextField;
     private javax.swing.JButton checkButton;
+    private javax.swing.JLabel clientSessionsCheckLabel;
+    private javax.swing.JFormattedTextField clientSessionsCheckTextField;
+    private javax.swing.JLabel clientToServerLabel;
+    private javax.swing.JFormattedTextField clientToServerTextField;
     private javax.swing.JComboBox dataEntryDisplayVariableComboBox;
     private javax.swing.JLabel dataEntryDisplayVariableLabel;
     private javax.swing.JLabel dataEntryLabel;
@@ -704,6 +781,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
     private javax.swing.JCheckBox showOutlineCheckBox;
     private javax.swing.JPanel systemPanel;
     private javax.swing.JTabbedPane tabbedPane;
+    private javax.swing.JPanel timersPanel;
     private javax.swing.JLabel versionInstalledLabel;
     private javax.swing.JTextField versionInstalledTextField;
     private javax.swing.JPanel versionPanel;
@@ -714,7 +792,6 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         // Languages
         locales = Locale.getAvailableLocales();
         Arrays.sort(locales, new Comparator<Locale>() {
-
             @Override
             public int compare(Locale o1, Locale o2) {
                 return o1.getDisplayName(o1).compareToIgnoreCase(o2.getDisplayName(o2));
@@ -764,8 +841,8 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         } catch (RemoteException ex) {
             Logger.getLogger(OptionsFrame.class.getName()).log(Level.INFO, null, ex);
         }
+        
         String backUpEvery = localSettings.getProperty(LocalSettings.BACKUP_EVERY_KEY);
-
         numberOfDaysTextField.setText(backUpEvery);
         automaticbackupCheckBox.setSelected(localSettings.isAutoBackup());
 
@@ -794,6 +871,9 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         dataEntryVersionComboBox.setSelectedItem(dataEntryVersion);
 
         dataEntryDisplayVariableComboBox.setSelectedItem(localSettings.getDisplayVariableType().toString());
+        
+        clientToServerTextField.setText(localSettings.getProperty(LocalSettings.CLIENT_TO_SERVER_PING_KEY));
+        clientSessionsCheckTextField.setText(localSettings.getProperty(LocalSettings.CLIENT_SESSIONS_CHECK_KEY));
     }
 
     private String getNewestVersionNumber() {
@@ -856,6 +936,9 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         } else {
             localSettings.setDataEntryVerticalSources(false);
         }
+        
+        localSettings.setProperty(LocalSettings.CLIENT_TO_SERVER_PING_KEY, clientToServerTextField.getText());
+        localSettings.setProperty(LocalSettings.CLIENT_SESSIONS_CHECK_KEY, clientSessionsCheckTextField.getText());
         
         // write settings to file
         localSettings.writeSettings();
