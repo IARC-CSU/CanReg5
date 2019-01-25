@@ -105,10 +105,11 @@ public class RecordEditorTumour extends javax.swing.JPanel
     private DatabaseVariablesListElement tumourSequenceTotalVariableListElement;
     private final SimpleDateFormat dateFormat;
     private final LinkedList<DatabaseVariablesListElement> autoFillList;
-    private final RecordEditorMainFrame recordEditor;
+    private RecordEditorMainFrame recordEditor;
     private final org.jdesktop.application.ResourceMap resourceMap;
     private Set<Source> sources;
     private boolean avoidTumourLinkedToComboBoxListener;
+    private Map<Integer, VariableEditorGroupPanel> groupIDtoPanelMap;
     //Contains all the variables hold by this tumour and a boolean indicating if
     //there are changes in that variable that need to be saved (true if there
     //are changes, false otherwise)
@@ -202,16 +203,77 @@ public class RecordEditorTumour extends javax.swing.JPanel
         }
     }
     
-    private void buildPanel() {
+    void releaseResources() {
+        if (variableEditorPanels != null) {
+            for (VariableEditorPanelInterface vep : variableEditorPanels.values()) {
+                vep.removeListener();
+                if(vep instanceof DateVariableEditorPanel)
+                    ((DateVariableEditorPanel)vep).releaseResources();
+            }
+        }
+        
+        for (Component comp : sourcesTabbedPane.getComponents()) {
+            RecordEditorSource rep = (RecordEditorSource) comp;
+            rep.releaseResources();
+        }
+        sourcesTabbedPane.removeAll();
+        sourcesTabbedPane = null;
+        
+        databaseRecord = null;
+        doc = null;
+        variablesInTable = null;
+        dictionary = null;
+        groupListElements = null;
+        actionListener = null;
+        variableEditorPanels.clear();
+        variableEditorPanels = null;
+        recordStatusVariableListElement = null;
+        unduplicationVariableListElement = null;
+        checkVariableListElement = null;
+        recStatusDictMap = null;
+        recStatusDictWithConfirmArray = null;
+        recStatusDictWithoutConfirmArray = null;
+        patientIDVariableListElement = null;
+        patientRecordIDVariableListElement = null;
+        obsoleteFlagVariableListElement = null;
+        updatedByVariableListElement = null;
+        updateDateVariableListElement = null;
+        tumourSequenceNumberVariableListElement = null;
+        tumourSequenceTotalVariableListElement = null;
+        recordEditor = null;
+        sources.clear();
+        sources = null;
+        groupIDtoPanelMap.clear();
+        groupIDtoPanelMap = null;        
+        changesMap.clear();
+        changesMap = null;
+        patient = null;
+
+        clearMainPanel();
+        dataPanel = null;
+    }
+    
+    private void clearMainPanel() {
         dataPanel.removeAll();
+        dataPanel.revalidate();
+        dataPanel.repaint();
+    }
+
+    private void buildPanel() {
+        clearMainPanel();
+        
         this.changesMap = new HashMap<VariableEditorPanel, Boolean>();
 
-        if (variableEditorPanels != null) 
-            for (VariableEditorPanelInterface vep : variableEditorPanels.values()) 
-                vep.removeListener();            
+        if (variableEditorPanels != null) {
+            for (VariableEditorPanelInterface vep : variableEditorPanels.values()) {
+                vep.removeListener();
+                if(vep instanceof DateVariableEditorPanel)
+                    ((DateVariableEditorPanel)vep).releaseResources();
+            }
+        }            
         
         variableEditorPanels = new LinkedHashMap();
-        Map<Integer, VariableEditorGroupPanel> groupIDtoPanelMap = new LinkedHashMap<Integer, VariableEditorGroupPanel>();        
+        groupIDtoPanelMap = new LinkedHashMap<Integer, VariableEditorGroupPanel>();        
 
         for(int i = 0; i < variablesInTable.length; i++) {
             DatabaseVariablesListElement currentVariable = variablesInTable[i];

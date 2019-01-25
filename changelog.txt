@@ -1,5 +1,10 @@
 ﻿Changelog
 
+5.00.43b
+- Updated the install_packages script.
+- Language codes sent to R scripts.
+- Various fixes.
+
 5.00.43
 - Analysis features updated in collaboration with Mathieu Laversanne:
   - Replaced ReportR with Officer for generating docx and pptx documents. (This should take care of troubles related to the different architecture of R/Java.)
