@@ -20,13 +20,14 @@
 
 package canreg.server;
 
+import java.rmi.Remote;
 import javax.security.auth.login.LoginException;
 
 /**
  *
  * @author ervikm
  */
-public interface CanRegLoginInterface extends java.rmi.Remote{
+public interface CanRegLoginInterface extends Remote {
 
     /**
      * Returns the name of the CanReg system running on the server
@@ -43,9 +44,9 @@ public interface CanRegLoginInterface extends java.rmi.Remote{
     public String getSystemVersion() throws java.rmi.RemoteException ;
     
    /** Method that lets clients login, returning an interface to the server.
-   * @param username The name of the user.
-   * @param password The password of the user.
-   * @return A reference to a proxy of the server object.
+    * @param username The name of the user.
+    * @param password The password of the user.
+    * @return A reference to a proxy of the server object.
     * @throws java.rmi.RemoteException 
     * @throws SecurityException If the client is not allowed to login.
     * @throws LoginException 

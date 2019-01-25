@@ -1,4 +1,4 @@
-<?xml version="1.1" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 
 <Form version="1.5" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
   <Properties>
@@ -195,11 +195,17 @@
       <Properties>
         <Property name="background" type="java.awt.Color" resourceKey="shortNameTextField.background"/>
         <Property name="text" type="java.lang.String" resourceKey="shortNameTextField.text"/>
+        <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+          <action class="canreg.client.gui.management.systemeditor.DatabaseVariableEditorPanel" id="shortNameSet" methodName="shortNameSet"/>
+        </Property>
         <Property name="inputVerifier" type="javax.swing.InputVerifier" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="new InputVerifier() {&#xa;&#xa;    @Override&#xa;    public boolean verify(JComponent input) {&#xa;        JTextField tf = (JTextField) input;&#xa;        String textToVerify = tf.getText();&#xa;        Pattern p = Pattern.compile(&quot;(^[\\w]+$)&quot;);&#xa;        Matcher m = p.matcher(textToVerify);&#xa;        if (m.matches()) {&#xa;            tf.setText(textToVerify);&#xa;            return true;&#xa;        } else {&#xa;            JOptionPane.showMessageDialog(input, &quot;Invalid short name (No special character, whitespace, ., ;, :, (, ), etc allowed - only word characters [a-zA-Z_0-9].)&quot;);&#xa;            return false;&#xa;        }&#xa;    }&#xa;}" type="code"/>
         </Property>
         <Property name="name" type="java.lang.String" value="shortNameTextField" noResource="true"/>
       </Properties>
+      <Events>
+        <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="shortNameTextFieldFocusLost"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JTextField" name="englishNameTextField">
       <Properties>

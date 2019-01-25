@@ -26,7 +26,6 @@
 package canreg.client.gui.dataentry;
 
 import canreg.client.CanRegClientApp;
-import canreg.client.LocalSettings;
 import canreg.client.gui.components.DateVariableEditorPanel;
 import canreg.client.gui.components.TextFieldVariableEditorPanel;
 import canreg.client.gui.components.VariableEditorGroupPanel;
@@ -104,6 +103,8 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
     private SourcesPanel sourcesPanel;
     private final SimpleDateFormat dateFormat;
     private final LinkedList<DatabaseVariablesListElement> autoFillList;
+    private Map<Integer, VariableEditorGroupPanel> groupIDtoPanelMap;
+    
 
     boolean areAllVariablesPresent() {
         boolean allPresent = true;
@@ -137,10 +138,6 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         this.actionListener = listener;
     }
 
-    /**
-     * 
-     * @return
-     */
     public boolean isSaveNeeded() {
         // hasChanged = false;
 
@@ -154,18 +151,13 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         return hasChanged;
     }
 
-    /**
-     * 
-     * @param saveNeeded
-     */
     public void setSaveNeeded(boolean saveNeeded) {
         this.hasChanged = saveNeeded;
     }
 
 
-    /*
+    /**
      * Set the resultcode of individual variables.
-     *
      */
     public void setResultCodeOfVariable(String databaseVariableName, ResultCode resultCode) {
         VariableEditorPanelInterface panel = variableEditorPanels.get(databaseVariableName);
@@ -412,26 +404,14 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         autoFillList = new LinkedList<DatabaseVariablesListElement>();
     }
 
-    /**
-     *
-     * @param doc
-     */
     public void setDocument(Document doc) {
         this.doc = doc;
     }
 
-    /**
-     *
-     * @param dictionary
-     */
     public void setDictionary(Map<Integer, Dictionary> dictionary) {
         this.dictionary = dictionary;
     }
 
-    /**
-     *
-     * @param dbr
-     */
     public void setRecordAndBuildPanel(DatabaseRecord dbr) {
         setChecksResultCode(ResultCode.NotDone);
         setRecord(dbr);
@@ -481,13 +461,11 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
             unduplicationVariableListElement = null;
             obsoleteFlagVariableListElement = null;
             checkVariableListElement = null;
-            
         }
 
         /*
          * Build the record status map.
          */
-
         if (recordStatusVariableListElement != null && recordStatusVariableListElement.getUseDictionary() != null) {
             recStatusDictMap = dictionary.get(canreg.client.dataentry.DictionaryHelper.getDictionaryIDbyName(doc, recordStatusVariableListElement.getUseDictionary())).getDictionaryEntries();
 
@@ -506,7 +484,6 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         }
 
         String tableName = null;
-
         if (null != panelType) switch (panelType) {
             case PATIENT:
                 tableName = Globals.PATIENT_TABLE_NAME;
@@ -533,37 +510,73 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         Arrays.sort(variablesInTable, new DatabaseVariablesListElementPositionSorter());
     }
 
-    /**
-     *
-     * @return
-     */
     public DatabaseRecord getDatabaseRecord() {
         buildDatabaseRecord();
         return databaseRecord;
     }
+    
+    void releaseResources() {
+        if (variableEditorPanels != null) {
+            for (VariableEditorPanelInterface vep : variableEditorPanels.values()) {
+                vep.removeListener();
+                if(vep instanceof DateVariableEditorPanel)
+                    ((DateVariableEditorPanel)vep).releaseResources();
+            }
+        }
+        
+        if(sourcesPanel != null) {
+            sourcesPanel.releaseResources();
+            sourcesPanel = null;
+        }
+        
+        databaseRecord = null;
+        doc = null;
+        dictionary = null;
+        groupListElements = null;
+        actionListener = null;
+        variableEditorPanels.clear();
+        variableEditorPanels = null;
+        variablesInTable = null;
+        recordStatusVariableListElement = null;
+        unduplicationVariableListElement = null;        
+        recStatusDictMap = null;
+        recStatusDictWithConfirmArray = null;
+        recStatusDictWithoutConfirmArray = null;
+        patientIDVariableListElement = null;
+        patientRecordIDVariableListElement = null;
+        updatedByVariableListElement = null;
+        groupIDtoPanelMap.clear();
+        groupIDtoPanelMap = null;
+
+        clearMainPanel();
+        dataPanel = null;
+    }
+    
+    private void clearMainPanel() {
+        dataPanel.removeAll();
+        dataPanel.revalidate();
+        dataPanel.repaint();
+    }
 
     private void buildPanel() {
-        dataPanel.removeAll();
+        clearMainPanel();        
 
         if (variableEditorPanels != null) {
             for (VariableEditorPanelInterface vep : variableEditorPanels.values()) {
                 vep.removeListener();
+                if(vep instanceof DateVariableEditorPanel)
+                    ((DateVariableEditorPanel)vep).releaseResources();
             }
         }
-        variableEditorPanels =
-                new LinkedHashMap();
+        variableEditorPanels = new LinkedHashMap();
 
-        Map<Integer, VariableEditorGroupPanel> groupIDtoPanelMap = new LinkedHashMap<Integer, VariableEditorGroupPanel>();
-
+        groupIDtoPanelMap = new LinkedHashMap<Integer, VariableEditorGroupPanel>();
         Map<String, DictionaryEntry> possibleValues;
 
-        for (int i = 0; i
-                < variablesInTable.length; i++) {
+        for (int i = 0; i < variablesInTable.length; i++) {
             DatabaseVariablesListElement currentVariable = variablesInTable[i];
             VariableEditorPanel vep;
-
             String variableType = currentVariable.getVariableType();
-
             if (Globals.VARIABLE_TYPE_DATE_NAME.equalsIgnoreCase(variableType)) {
                 vep = new DateVariableEditorPanel(this);
             } else if (Globals.VARIABLE_TYPE_TEXT_AREA_NAME.equalsIgnoreCase(variableType)) {
@@ -575,14 +588,11 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
             vep.setDatabaseVariablesListElement(currentVariable);
 
             int dictionaryID = currentVariable.getDictionaryID();
-
             if (dictionaryID >= 0) {
                 Dictionary dic = dictionary.get(dictionaryID);
-
                 if (dic != null) {
                     vep.setDictionary(dic);
                 }
-
             } else {
                 vep.setDictionary(null);
             }
@@ -616,7 +626,6 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         }
 
         // Iterate trough groups
-
         // Iterator<Integer> iterator = groupIDtoPanelMap.keySet().iterator();
         for (DatabaseGroupsListElement groupListElement : groupListElements) {
             int groupID = groupListElement.getGroupIndex();
@@ -638,12 +647,12 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
             dataPanel.add(sourcesPanel);
             refreshSequence();
         }
-
         if (panelType != panelTypes.SOURCE) {
             refreshObsoleteStatus(databaseRecord);
             refreshRecordStatus(databaseRecord);
             refreshCheckStatus(databaseRecord);
         }
+        
         refreshUpdatedBy();
         dataPanel.revalidate();
         dataPanel.repaint();
@@ -1059,9 +1068,6 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         return clone();
     }
 
-    /**
-     * 
-     */
     @Action
     public void saveRecord() {
         buildDatabaseRecord();
@@ -1126,9 +1132,6 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
         vep.setValue(value);
     }
 
-    /**
-     * 
-     */
     @Action
     public void runPersonSearch() {
         autoFill();
@@ -1136,9 +1139,6 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
 
     }
 
-    /**
-     * 
-     */
     @Action
     public void runChecksAction() {
         autoFill();

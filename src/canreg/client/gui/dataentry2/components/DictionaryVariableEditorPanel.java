@@ -768,7 +768,7 @@ public class DictionaryVariableEditorPanel extends VariableEditorPanel {
         descriptionComboActionPerformed(null);
 
         if (evt.getKeyChar() == KeyEvent.VK_ENTER ||
-           evt.getKeyChar() == KeyEvent.VK_TAB) 
+            evt.getKeyChar() == KeyEvent.VK_TAB) 
             KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent();
         
         //Change the sorting

@@ -65,7 +65,6 @@
   </NonVisualComponents>
   <Properties>
     <Property name="closable" type="boolean" value="true"/>
-    <Property name="defaultCloseOperation" type="int" value="0"/>
     <Property name="iconifiable" type="boolean" value="true"/>
     <Property name="maximizable" type="boolean" value="true"/>
     <Property name="resizable" type="boolean" value="true"/>

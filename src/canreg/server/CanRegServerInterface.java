@@ -43,7 +43,6 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-// import javax.security.auth.Subject;
 import org.w3c.dom.Document;
 
 /**
@@ -141,12 +140,13 @@ public interface CanRegServerInterface extends Remote {
      * @param recordID the database record id
      * @param tableName the table to get the record from
      * @param lock lock the record? true/false
+     * @param remoteHashCode
      * @return a DatabaseRecord
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      * @throws RecordLockedException
      */
-    public DatabaseRecord getRecord(int recordID, String tableName, boolean lock)
+    public DatabaseRecord getRecord(int recordID, String tableName, boolean lock, Integer remoteHashCode)
             throws RemoteException, SecurityException, RecordLockedException ;
 
     // administrative tools
@@ -235,20 +235,22 @@ public interface CanRegServerInterface extends Remote {
 
     /**
      * User logs in
+     * @param remoteHashCode
      * @param username
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
-    public void userLoggedIn(String username)
+    public void userLoggedIn(Integer remoteHashCode, String username)
             throws RemoteException, SecurityException;
 
     /**
      * User logs out
-     * @param username
+     * @param remoteHashCode the remote that is logging out
+     * @param username the user that is logging out
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
-    public void userLoggedOut(String username)
+    public void userLoggedOut(Integer remoteHashCode, String username)
             throws RemoteException, SecurityException;
 
     /**
@@ -375,10 +377,11 @@ public interface CanRegServerInterface extends Remote {
      *
      * @param recordID
      * @param tableName
+     * @param remoteHashCode
      * @throws RemoteException
      * @throws SecurityException
      */
-    public void releaseRecord(int recordID, String tableName) throws RemoteException, SecurityException;
+    public void releaseRecord(int recordID, String tableName, Integer remoteHashCode) throws RemoteException, SecurityException;
 
     /**
      * Get the population datasets
@@ -463,9 +466,22 @@ public interface CanRegServerInterface extends Remote {
 
     public void shutDownServer() throws RemoteException, SecurityException;
 
-    public boolean setDBPassword(char[] newPasswordArray, char[] oldPasswordArray, String encryptionAlgorithm, String encryptionKeyLength) throws RemoteException, SecurityException;
+    public boolean setDBPassword(char[] newPasswordArray, char[] oldPasswordArray, 
+                                 String encryptionAlgorithm, String encryptionKeyLength)
+            throws RemoteException, SecurityException;
 
     public String getCanRegSystemCode() throws RemoteException, SecurityException;
 
     public String getCanRegSystemRegion()throws RemoteException, SecurityException;
+
+    /**
+     * Method to be used by a CanReg client to notify a CanReg server that the client
+     * is still alive.
+     * @param remoteClientHashCode the remote object hashcode that represents a 
+     * client logged into CanReg (most likely a CanRegServerProxy instance).
+     * @throws SecurityException
+     * @throws RemoteException
+     * @throws Exception 
+     */
+    public void pingRemote(Integer remoteClientHashCode) throws RemoteException, Exception;
 }
