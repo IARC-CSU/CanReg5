@@ -53,6 +53,7 @@ import canreg.server.database.RecordLockedException;
 import canreg.server.database.UnknownTableException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyVetoException;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FilenameFilter;
@@ -74,7 +75,6 @@ import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.FrameView;
 import org.jdesktop.application.ResourceMap;
@@ -87,10 +87,7 @@ import org.jdesktop.application.TaskMonitor;
  */
 public final class CanRegClientView extends FrameView {
 
-    /**
-     *
-     * @param app
-     */
+
     public CanRegClientView(SingleFrameApplication app) {
         super(app);
 
@@ -173,9 +170,6 @@ public final class CanRegClientView extends FrameView {
         }
     }
 
-    /**
-     *
-     */
     @Action
     public void showAboutBox() {
         if (aboutBox == null) {
@@ -186,9 +180,6 @@ public final class CanRegClientView extends FrameView {
         CanRegClientApp.getApplication().show(aboutBox);
     }
 
-    /**
-     *
-     */
     public void applyPreferences() {
         localSettings = CanRegClientApp.getApplication().getLocalSettings();
         // Apply the outline drag mode
@@ -781,9 +772,6 @@ public final class CanRegClientView extends FrameView {
         }
     }
 
-    /**
-     *
-     */
     @Action
     public void showLoginFrame() {
         if (CanRegClientApp.getApplication().isLoggedIn()) {
@@ -801,9 +789,6 @@ public final class CanRegClientView extends FrameView {
         }
     }
 
-    /**
-     *
-     */
     @Action
     public void logOutaction() {
         int i = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("DO YOU REALLY WANT TO LOG OUT?"), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("LOG OUT?"), JOptionPane.YES_NO_OPTION);
@@ -812,10 +797,6 @@ public final class CanRegClientView extends FrameView {
         }
     }
 
-    /**
-     *
-     * @return
-     */
     @Action
     public Task viewWorkFiles() {
         return new ViewWorkFilesTask(getApplication());
@@ -857,9 +838,6 @@ public final class CanRegClientView extends FrameView {
         }
     }
 
-    /**
-     *
-     */
     @Action
     public void showUsersLoggedIn() {
         try {
@@ -884,10 +862,6 @@ public final class CanRegClientView extends FrameView {
         }
     }
 
-    /**
-     *
-     * @return
-     */
     @Action
     public Task startDatabaseServer() {
         return new StartDatabaseServerTask(getApplication());
@@ -932,9 +906,6 @@ public final class CanRegClientView extends FrameView {
         }
     }
 
-    /**
-     *
-     */
     @Action
     public void stopDatabaseServer() {
         try {
@@ -948,10 +919,6 @@ public final class CanRegClientView extends FrameView {
         }
     }
 
-    /**
-     *
-     * @param userRightsLevel
-     */
     public void setUserRightsLevel(Globals.UserRightLevels userRightsLevel) {
         this.userRightsLevel = userRightsLevel;
         userLevelLabel.setText(userRightsLevel.toString());
@@ -1034,18 +1001,11 @@ public final class CanRegClientView extends FrameView {
         installRPackagesMenuItem.setVisible(new File(Globals.R_INSTALL_PACKAGES_SCRIPT).exists());
     }
 
-    /**
-     *
-     */
     @Action
     public void showPatient() {
         // PatientFrame1.setVisible(!PatientFrame1.isVisible());
     }
 
-    /**
-     *
-     * @return
-     */
     @Action
     public Task openICDO3Manual() {
         return new OpenICDO3ManualTask(getApplication());
@@ -1072,9 +1032,6 @@ public final class CanRegClientView extends FrameView {
         userLevelLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("NOT LOGGED IN."));
     }
 
-    /**
-     *
-     */
     @Action
     public void openIacrWebsite() {
         try {
@@ -1084,9 +1041,6 @@ public final class CanRegClientView extends FrameView {
         }
     }
 
-    /**
-     *
-     */
     @Action
     public void openICDO3web() {
         try {
@@ -1096,9 +1050,6 @@ public final class CanRegClientView extends FrameView {
         }
     }
 
-    /**
-     *
-     */
     @Action
     public void showCanRegHelpFile() {
         try {
@@ -1109,9 +1060,6 @@ public final class CanRegClientView extends FrameView {
         }
     }
 
-    /**
-     *
-     */
     @Action
     public void openENCRweb() {
         try {
@@ -1121,9 +1069,6 @@ public final class CanRegClientView extends FrameView {
         }
     }
 
-    /**
-     *
-     */
     @Action
     public void importData() {
         JInternalFrame importInternalFrame;
@@ -1138,9 +1083,6 @@ public final class CanRegClientView extends FrameView {
         maximizeHeight(desktopPane, importInternalFrame);
     }
 
-    /**
-     *
-     */
     @Action
     public void importDataFromCR4() {
         JInternalFrame importInternalFrame = new ImportView();
@@ -1148,9 +1090,6 @@ public final class CanRegClientView extends FrameView {
         maximizeHeight(desktopPane, importInternalFrame);
     }
 
-    /**
-     *
-     */
     @Action
     public void showExportFrame() {
         ExportReportInternalFrame exportFrame = new ExportReportInternalFrame(desktopPane);
@@ -1158,9 +1097,6 @@ public final class CanRegClientView extends FrameView {
         maximizeHeight(desktopPane, exportFrame);
     }
 
-    /**
-     *
-     */
     @Action
     public void browseEditAction() {
         if (browseInternalFrame == null) {
@@ -1190,47 +1126,30 @@ public final class CanRegClientView extends FrameView {
         }
     }
 
-    /**
-     *
-     */
     @Action
     public void backupAction() {
         JInternalFrame internalFrame = new BackUpInternalFrame();
         showAndPositionInternalFrame(desktopPane, internalFrame);
     }
 
-    /**
-     *
-     */
     @Action
     public void editDictionaryAction() {
         JInternalFrame internalFrame = new EditDictionaryInternalFrame(desktopPane);
         showAndPositionInternalFrame(desktopPane, internalFrame);
     }
 
-    /**
-     *
-     */
     @Action
     public void showOptionFrame() {
         JInternalFrame internalFrame = new OptionsFrame(this);
         showAndPositionInternalFrame(desktopPane, internalFrame);
     }
 
-    /**
-     *
-     */
     @Action
     public void showNameSexAction() {
         JInternalFrame internalFrame = new FirstNameSexInternalFrame();
         showAndPositionInternalFrame(desktopPane, internalFrame);
     }
 
-    /**
-     *
-     * @param desktopPane
-     * @param internalFrame
-     */
     public static void showAndPositionInternalFrame(JDesktopPane desktopPane, JInternalFrame internalFrame) {
         int numberOfOpenFrames = desktopPane.getAllFrames().length;
         try {
@@ -1251,9 +1170,7 @@ public final class CanRegClientView extends FrameView {
         internalFrame.toFront();
     }
 
-    /**
-     *
-     */
+
     @Action
     public void installSystemAction() {
         // Choose a system.xml
@@ -1263,9 +1180,7 @@ public final class CanRegClientView extends FrameView {
         showAndPositionInternalFrame(desktopPane, internalFrame);
     }
 
-    /**
-     *
-     */
+
     @Action
     public void convertCanReg4SystemAction() {
         CanReg4SystemConverterInternalFrame internalFrame = new CanReg4SystemConverterInternalFrame();
@@ -1273,18 +1188,14 @@ public final class CanRegClientView extends FrameView {
         showAndPositionInternalFrame(desktopPane, internalFrame);
     }
 
-    /**
-     *
-     */
+
     @Action
     public void restoreAction() {
         JInternalFrame internalFrame = new RestoreInternalFrame();
         showAndPositionInternalFrame(desktopPane, internalFrame);
     }
 
-    /**
-     *
-     */
+
     @Action
     public void showLastRecord() {
         canreg.client.gui.dataentry2.RecordEditor internalFrame = null;
@@ -1326,18 +1237,14 @@ public final class CanRegClientView extends FrameView {
         maximizeHeight(desktopPane, (JInternalFrame) internalFrame);
     }
 
-    /**
-     *
-     */
+
     @Action
     public void showFrequenciesFrame() {
         JInternalFrame internalFrame = new FrequenciesByYearInternalFrame(desktopPane);
         showAndPositionInternalFrame(desktopPane, internalFrame);
     }
 
-    /**
-     *
-     */
+
     @Action
     public void createNewRecordSetAction() {
         canreg.client.gui.dataentry2.RecordEditor internalFrame = null;
@@ -1356,9 +1263,7 @@ public final class CanRegClientView extends FrameView {
         maximizeHeight(desktopPane, (JInternalFrame) internalFrame);
     }
 
-    /**
-     *
-     */
+
     @Action
     public void editPopulationDataSets() {
         JInternalFrame internalFrame;
@@ -1372,9 +1277,7 @@ public final class CanRegClientView extends FrameView {
         }
     }
 
-    /**
-     *
-     */
+
     @Action
     public void duplicateSearchAction() {
         JInternalFrame internalFrame = new PersonSearchFrame(desktopPane);
@@ -1706,7 +1609,7 @@ public final class CanRegClientView extends FrameView {
                 }
             }
 
-            return null;  // return your result
+            return null;
         }
 
         @Override
@@ -1761,7 +1664,6 @@ public final class CanRegClientView extends FrameView {
 
     @Action
     public void loadAllPDSAction() {
-        // ;
         JFileChooser chooser = new JFileChooser(".");
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         chooser.setAcceptAllFileFilterUsed(false);

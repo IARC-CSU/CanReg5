@@ -51,7 +51,7 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
         this.databaseListElement = databaseListElement;
         setVariableName(databaseListElement.getDisplayVariableName());
 
-        dateChooser = new JDateChooser();
+        dateChooser = new JDateChooser();        
         String dateFormatString = databaseListElement.getDateFormatString();
         dateChooser.setDateFormatString(dateFormatString);
         
@@ -176,5 +176,12 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
             }
         }
         return valueObjectString;
+    }
+    
+    public void releaseResources() {
+        this.dateChooser.cleanup();
+        this.dateChooser = null;
+        this.dateField = null;
+        this.databaseListElement = null;
     }
 }

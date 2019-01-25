@@ -213,9 +213,6 @@ public class VariableEditorPanel extends javax.swing.JPanel
     }
 
     protected void componentFocusLost(FocusEvent evt) {
-        // if (!getValue().toString().equals(initialValue)) {
-        //     hasChanged = true;
-        // }
     }
 
     @Override
@@ -286,7 +283,6 @@ public class VariableEditorPanel extends javax.swing.JPanel
     
     @Override
     public void requestFocus() {
-        this.codeTextField.setText("niggaaahhh");
         this.codeTextField.setFocusable(true);
         this.codeTextField.grabFocus();
     }
