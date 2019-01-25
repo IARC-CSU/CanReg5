@@ -42,7 +42,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -69,7 +68,8 @@ public class RecordEditorSource extends javax.swing.JPanel
     private final LinkedList<DatabaseVariablesListElement> autoFillList;
     private final GlobalToolBox globalToolBox;
     private final panelTypes panelType = panelTypes.SOURCE;
-    private final SimpleDateFormat dateFormat;
+    private Map<Integer, VariableEditorGroupPanel> groupIDtoPanelMap;
+
    
     public RecordEditorSource(ActionListener listener) {
         initComponents();
@@ -77,7 +77,6 @@ public class RecordEditorSource extends javax.swing.JPanel
         autoFillList = new LinkedList<DatabaseVariablesListElement>();
         globalToolBox = CanRegClientApp.getApplication().getGlobalToolBox();
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(this);
-        dateFormat = new SimpleDateFormat(Globals.DATE_FORMAT_STRING);
     }
                
     public void setRecordAndBuildPanel(DatabaseRecord dbr) {
@@ -134,16 +133,49 @@ public class RecordEditorSource extends javax.swing.JPanel
         Arrays.sort(variablesInTable, new DatabaseVariablesListElementPositionSorter());
     }
     
-    private void buildPanel() {
-        dataPanel.removeAll();
+    void releaseResources() {
+        if (variableEditorPanels != null) {
+            for (VariableEditorPanelInterface vep : variableEditorPanels.values()) {
+                vep.removeListener();
+                if(vep instanceof DateVariableEditorPanel)
+                    ((DateVariableEditorPanel)vep).releaseResources();
+            }
+        }
+        
+        databaseRecord = null;
+        doc = null;
+        variablesInTable = null;
+        dictionary = null;
+        groupListElements = null;
+        actionListener = null;
+        variableEditorPanels.clear();
+        variableEditorPanels = null;
+        groupIDtoPanelMap.clear();
+        groupIDtoPanelMap = null;
 
-        if (variableEditorPanels != null) 
-            for (VariableEditorPanelInterface vep : variableEditorPanels.values()) 
-                vep.removeListener();            
+        clearMainPanel();
+        dataPanel = null;
+    }
+    
+    private void clearMainPanel() {
+        dataPanel.removeAll();
+        dataPanel.revalidate();
+        dataPanel.repaint();
+    }
+    
+    private void buildPanel() {
+        clearMainPanel();
+
+        if (variableEditorPanels != null) {
+            for (VariableEditorPanelInterface vep : variableEditorPanels.values()) {
+                vep.removeListener();
+                if(vep instanceof DateVariableEditorPanel)
+                    ((DateVariableEditorPanel)vep).releaseResources();
+            }
+        }           
         
         variableEditorPanels = new LinkedHashMap();
-
-        Map<Integer, VariableEditorGroupPanel> groupIDtoPanelMap = new LinkedHashMap<Integer, VariableEditorGroupPanel>();        
+        groupIDtoPanelMap = new LinkedHashMap<Integer, VariableEditorGroupPanel>();        
 
         for (int i = 0; i < variablesInTable.length; i++) {
             DatabaseVariablesListElement currentVariable = variablesInTable[i];

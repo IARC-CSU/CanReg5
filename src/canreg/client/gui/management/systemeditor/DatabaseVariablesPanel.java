@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2015  International Agency for Research on Cancer
+ * Copyright (C) 2008-2018  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -94,6 +94,20 @@ public class DatabaseVariablesPanel extends DatabaseElementsPanel {
         for (DatabaseElementPanel elementPanel : elementPanelsSet) {
             element = (DatabaseVariablesListElement) elementPanel.getDatabaseElement();
             if (element.getStandardVariableName() != null && variableName.equalsIgnoreCase(element.getStandardVariableName())) {
+                return element;
+            }
+        }
+        return null;
+    }
+    
+        public DatabaseVariablesListElement isThisShortVariableNameAlreadyPresent(String variableName) {
+        DatabaseVariablesListElement element;
+        if (variableName.trim().length()==0){
+            return null;
+        }
+        for (DatabaseElementPanel elementPanel : elementPanelsSet) {
+            element = (DatabaseVariablesListElement) elementPanel.getDatabaseElement();
+            if (element.getShortName()!= null && variableName.equalsIgnoreCase(element.getShortName())) {
                 return element;
             }
         }
