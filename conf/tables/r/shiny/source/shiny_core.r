@@ -32,7 +32,7 @@ shiny_data <- function(input) {
 					age_group  <- c(15,30,50,70)
 				}
 				
-			dt_temp <- dt_base
+			dt_temp  <- copy(dt_base)
 			dt_temp[ICD10GROUP != "C44",]$ICD10GROUP ="O&U"
 			dt_temp[ICD10GROUP != "C44",]$ICD10GROUPLABEL ="Other and unspecified"
 			dt_temp <- dt_temp[, .(CASES=sum(CASES)),by=.(ICD10GROUP, ICD10GROUPLABEL, YEAR,SEX, AGE_GROUP,AGE_GROUP_LABEL,COUNT,REFERENCE_COUNT) ]
@@ -64,7 +64,7 @@ shiny_data <- function(input) {
 			
 		 
 				
-			dt_temp <- dt_base
+			dt_temp  <- copy(dt_base)
 			dt_temp[ICD10GROUP != "C44",]$ICD10GROUP ="O&U"
 			dt_temp[ICD10GROUP != "C44",]$ICD10GROUPLABEL ="Other and unspecified"
 			dt_temp <- dt_temp[, .(CASES=sum(CASES)),by=.(ICD10GROUP, ICD10GROUPLABEL, YEAR,SEX, AGE_GROUP,AGE_GROUP_LABEL,COUNT,REFERENCE_COUNT) ]
@@ -79,7 +79,7 @@ shiny_data <- function(input) {
 			
 			if (!is.null(input$slideAgeRange)& !is.null(input$radioValue)) {
 		
-				dt_temp <- dt_base
+				dt_temp  <- copy(dt_base)
 				dt_temp <- dt_temp[ICD10GROUP != "C44",]
 				dt_temp <- dt_temp[ICD10GROUP != "O&U",]
 				
@@ -120,7 +120,7 @@ shiny_data <- function(input) {
 			
 			if (!is.null(input$slideAgeRange) & !is.null(input$radioValue)) {
 		
-				dt_temp <- dt_base
+				dt_temp  <- copy(dt_base)
 				dt_temp <- dt_temp[ICD10GROUP != "C44",]
 				dt_temp <- dt_temp[ICD10GROUP != "O&U",]
 				
@@ -157,7 +157,7 @@ shiny_data <- function(input) {
 		}
 		else if (table_number == 6){
 
-			dt_temp <- dt_base
+			dt_temp  <- copy(dt_base)
 			dt_temp <- dt_temp[ICD10GROUP != "C44",]
 			dt_temp <- dt_temp[ICD10GROUP != "O&U",]
 			dt_temp <- canreg_ageSpecific_rate_data(dt_temp)
@@ -165,7 +165,7 @@ shiny_data <- function(input) {
 		}
 		else if (table_number == 7){
 
-			dt_temp <- dt_base
+			dt_temp  <- copy(dt_base)
 			dt_temp <- dt_temp[ICD10GROUP != "C44",]
 			dt_temp <- dt_temp[ICD10GROUP != "O&U",]
 			dt_temp <- canreg_ageSpecific_rate_data(dt_temp)
@@ -183,7 +183,7 @@ shiny_data <- function(input) {
 					bool_skin <- TRUE
 				}
 
-				dt_temp <- dt_base
+				dt_temp  <- copy(dt_base)
 				dt_temp[ICD10GROUP != "C44",]$ICD10GROUP ="O&U"
 				dt_temp[ICD10GROUP != "C44",]$ICD10GROUPLABEL ="Other and unspecified"
 				dt_temp <- dt_temp[, .(CASES=sum(CASES)),by=.(ICD10GROUP, ICD10GROUPLABEL, YEAR,SEX, AGE_GROUP,AGE_GROUP_LABEL,COUNT,REFERENCE_COUNT) ]
@@ -197,7 +197,7 @@ shiny_data <- function(input) {
 
 			if (!is.null(input$slideAgeRange)) {
 			
-				dt_temp <- dt_base
+				dt_temp  <- copy(dt_base)
 				dt_temp <- dt_temp[ICD10GROUP != "C44",]
 				dt_temp <- dt_temp[ICD10GROUP != "O&U",]
 				
@@ -221,7 +221,7 @@ shiny_data <- function(input) {
 
 			if (!is.null(input$slideAgeRange)) {
 			
-				dt_temp <- dt_base
+				dt_temp  <- copy(dt_base)
 				dt_temp <- dt_temp[ICD10GROUP != "C44",]
 				dt_temp <- dt_temp[ICD10GROUP != "O&U",]
 				
@@ -247,7 +247,7 @@ shiny_data <- function(input) {
 
 			if (!is.null(input$slideAgeRange)) {
 			
-				dt_temp <- dt_base
+				dt_temp  <- copy(dt_base)
 				dt_temp <- dt_temp[ICD10GROUP != "C44",]
 				dt_temp <- dt_temp[ICD10GROUP != "O&U",]
 				
@@ -922,9 +922,9 @@ multiple_output <- function(table_number, bool_ci, output_format) {
 
 shiny_error_log <- function(log_file,filename) {
   
-  error_connection <- file(log_file,open="wt")
-  sink(error_connection)
-  sink(error_connection, type="message")
+  shiny_log <- file(log_file,open="wt")
+  sink(shiny_log)
+  sink(shiny_log, type="message")
   
   #print error
   cat("This file contains the data and parameter of this canreg5 R-shiny application.\n") 
@@ -937,8 +937,8 @@ shiny_error_log <- function(log_file,filename) {
   cat("\n")
   
   #print environment
-  print(ls.str())
-  cat("\n")
+  ##print(ls.str())
+  ##cat("\n")
 	
 	#print R version and package load
   print(sessionInfo())
@@ -972,17 +972,17 @@ shiny_error_log <- function(log_file,filename) {
 	#close log_file and send to canreg
   sink(type="message")
   sink()
-  close(error_connection)
+  close(shiny_log)
   
 }
 
 shiny_dwn_data <- function(log_file) {
 
+	dt_temp <- copy(dt_base)
+	dt_temp[, ICD10GROUPLABEL := NULL]
+	dt_temp[, ICD10GROUPCOLOR := NULL]
+	dt_temp[, AGE_GROUP := NULL]
 	
-	dt_base[, ICD10GROUPLABEL := NULL]
-	dt_base[, ICD10GROUPCOLOR := NULL]
-	dt_base[, AGE_GROUP := NULL]
-	
-	write.csv(dt_base, paste0(log_file),row.names = FALSE)
+	write.csv(dt_temp, paste0(log_file),row.names = FALSE)
 
 }

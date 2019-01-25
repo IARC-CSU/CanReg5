@@ -53,6 +53,7 @@ import canreg.server.database.RecordLockedException;
 import canreg.server.database.UnknownTableException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyVetoException;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FilenameFilter;
@@ -1597,7 +1598,7 @@ public final class CanRegClientView extends FrameView {
                 }
             }
 
-            return null;  // return your result
+            return null;
         }
 
         @Override
