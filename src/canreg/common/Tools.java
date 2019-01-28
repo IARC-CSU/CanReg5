@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2018 International Agency for Research on Cancer
+ * Copyright (C) 2008-2019 International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +24,8 @@ import canreg.client.LocalSettings;
 import canreg.client.gui.tools.BareBonesBrowserLaunch;
 import canreg.client.gui.tools.ImageSelection;
 import canreg.common.Globals.StandardVariableNames;
+import canreg.common.database.Dictionary;
+import canreg.common.database.DictionaryEntry;
 import canreg.common.qualitycontrol.PersonSearcher.CompareAlgorithms;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -54,6 +56,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.mozilla.universalchardet.UniversalDetector;
 import static java.nio.file.StandardCopyOption.*;
+import java.util.Iterator;
 
 /**
  *
@@ -1131,5 +1134,33 @@ public class Tools {
         }
         
         return obj;
+    }
+    
+    /**
+     * Writes a database dictionary to a File encoded in UTF-8
+     * @param folderDestination
+     * @param dictionariesInDB
+     * @return 
+     */
+    public static void writeDictionaryToFileUTF8(File dictionaryDestination, 
+                                                 DatabaseDictionaryListElement[] dictionariesInDB) 
+            throws IOException {
+        try(BufferedWriter bw = Files.newBufferedWriter(Paths.get(dictionaryDestination.getAbsolutePath()), 
+                                             StandardCharsets.UTF_8);) {
+            for (DatabaseDictionaryListElement dbdle : dictionariesInDB) {
+                bw.write("#" + dbdle.getDictionaryID() + "\t----" + dbdle.getName() + Globals.newline);
+                Dictionary dic = CanRegClientApp.getApplication().getDictionary().get(dbdle.getDictionaryID());
+                if (dic != null) {
+                    Map<String, DictionaryEntry> map = dic.getDictionaryEntries();
+                    Iterator<Map.Entry<String, DictionaryEntry>> iterator = map.entrySet().iterator();
+                    while (iterator.hasNext()) {
+                        DictionaryEntry entry = iterator.next().getValue();
+                        bw.write(entry.getCode() + "\t" + entry.getDescription() + Globals.newline);
+                    }
+                }
+                bw.write(Globals.newline);
+            }
+            bw.flush();
+        }
     }
 }

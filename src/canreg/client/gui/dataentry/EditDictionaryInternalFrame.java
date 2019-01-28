@@ -68,9 +68,8 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
     private LocalSettings localSettings;
     private String path;
 
-    /** Creates new form EditDictionaryInternalFrame
-     * @param dtp 
-     */
+
+    
     public EditDictionaryInternalFrame(JDesktopPane dtp) {
         this.desktopPane = dtp;
         localSettings = CanRegClientApp.getApplication().getLocalSettings();
@@ -263,7 +262,6 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
     public void exportCompleteDictionaryAction() {
         int returnVal = chooser.showSaveDialog(this);
         String fileName = null;
-        BufferedWriter bw;
         int selectedDbdle = chooseDictionaryComboBox.getSelectedIndex();
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
@@ -292,29 +290,8 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
 
                 localSettings.setProperty("dictionary_import_path", file.getParent());
                 localSettings.writeSettings();
-
-                bw = Files.newBufferedWriter(Paths.get(file.getAbsolutePath()), 
-                                             StandardCharsets.UTF_8);
-//                bw = new BufferedWriter(new FileWriter(file));
-
-                for (DatabaseDictionaryListElement dbdle : dictionariesInDB) {
-                    bw.write("#" + dbdle.getDictionaryID() + "\t----" + dbdle.getName() + Globals.newline);
-                    // chooseDictionaryComboBox.setSelectedItem(dbdle);
-                    // refreshSelectedDictionaryAction();
-                    Dictionary dic = CanRegClientApp.getApplication().getDictionary().get(dbdle.getDictionaryID());
-                    if (dic != null) {
-                        // Map sortedMap = new TreeMap(map);
-                        Map<String, DictionaryEntry> map = dic.getDictionaryEntries();
-                        Iterator<Entry<String, DictionaryEntry>> iterator = map.entrySet().iterator();
-                        while (iterator.hasNext()) {
-                            DictionaryEntry entry = iterator.next().getValue();
-                            bw.write(entry.getCode() + "\t" + entry.getDescription() + Globals.newline);
-                        }
-                    }
-                    bw.write(Globals.newline);
-                }
-                bw.flush();
-                bw.close();
+                
+                canreg.common.Tools.writeDictionaryToFileUTF8(file, dictionariesInDB);
             } catch (IOException ex) {
                 Logger.getLogger(EditDictionaryInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
@@ -324,9 +301,6 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
         chooseDictionaryComboBox.setSelectedIndex(selectedDbdle);
     }
 
-    /**
-     * 
-     */
     @Action
     public void importCompleteDictionaryAction() {
         JInternalFrame importFrame = new ImportCompleteDictionaryInternalFrame();

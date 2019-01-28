@@ -52,7 +52,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="tabbedPane" pref="395" max="32767" attributes="0"/>
+              <Component id="tabbedPane" max="32767" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="nextButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -197,7 +197,7 @@
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="jScrollPane1" alignment="0" pref="591" max="32767" attributes="0"/>
+                          <Component id="jScrollPane1" alignment="0" max="32767" attributes="0"/>
                           <Component id="jPanel2" alignment="0" max="32767" attributes="0"/>
                           <Group type="102" alignment="1" attributes="0">
                               <Component id="discrepanciesPanel" min="-2" max="-2" attributes="1"/>
@@ -227,7 +227,7 @@
                       <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jScrollPane1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="12" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -320,7 +320,7 @@
                               <Component id="personSearchCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="queryNewNameCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="143" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -438,7 +438,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="fileLabel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="reportFileNameTextField" pref="478" max="32767" attributes="0"/>
+                          <Component id="reportFileNameTextField" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="browseButton" min="-2" max="-2" attributes="1"/>
                       </Group>
@@ -506,7 +506,7 @@
                   <Layout>
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
+                          <Group type="102" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="1" attributes="0">
                                   <Component id="patientsLabel" alignment="1" min="-2" max="-2" attributes="0"/>
@@ -514,22 +514,30 @@
                                   <Component id="recordLabel" alignment="1" min="-2" max="-2" attributes="0"/>
                                   <Component id="sourcesLabel" alignment="1" min="-2" max="-2" attributes="0"/>
                                   <Component id="overallLabel" min="-2" max="-2" attributes="0"/>
+                                  <Component id="checksLabel" alignment="1" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="sourcesProgressBar" alignment="0" pref="504" max="32767" attributes="1"/>
+                                  <Component id="checksBar" max="32767" attributes="1"/>
+                                  <Component id="sourcesProgressBar" alignment="0" pref="524" max="32767" attributes="1"/>
                                   <Component id="tumoursProgressBar" alignment="1" pref="504" max="32767" attributes="1"/>
                                   <Component id="patientsProgressBar" alignment="0" pref="504" max="32767" attributes="0"/>
                                   <Component id="progressBar" alignment="0" pref="504" max="32767" attributes="1"/>
                                   <Component id="recordProgressBar" alignment="0" pref="504" max="32767" attributes="0"/>
                               </Group>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
+                          <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="checksLabel" alignment="0" min="-2" pref="14" max="-2" attributes="0"/>
+                                  <Component id="checksBar" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="recordLabel" min="-2" max="-2" attributes="0"/>
                                   <Component id="recordProgressBar" min="-2" max="-2" attributes="0"/>
@@ -554,6 +562,7 @@
                                   <Component id="overallLabel" min="-2" pref="14" max="-2" attributes="0"/>
                                   <Component id="progressBar" min="-2" max="-2" attributes="0"/>
                               </Group>
+                              <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -612,6 +621,17 @@
                       <Properties>
                         <Property name="text" type="java.lang.String" resourceKey="sourcesLabel.text"/>
                         <Property name="name" type="java.lang.String" value="sourcesLabel" noResource="true"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JProgressBar" name="checksBar">
+                      <Properties>
+                        <Property name="name" type="java.lang.String" value="checksBar" noResource="true"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="checksLabel">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" resourceKey="checksLabel.text"/>
+                        <Property name="name" type="java.lang.String" value="checksLabel" noResource="true"/>
                       </Properties>
                     </Component>
                   </SubComponents>

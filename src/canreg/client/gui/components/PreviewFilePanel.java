@@ -444,6 +444,10 @@ public class PreviewFilePanel extends javax.swing.JPanel {
         }
         return schar;
     }
+    
+    public String getSeparatorAsString() {
+        return separatingCharacterComboBox.getSelectedItem().toString();
+    }
 
     public File getInFile() {
         // changeFile();
