@@ -319,6 +319,7 @@
                               <Component id="doChecksCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="personSearchCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="queryNewNameCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="formatChecksCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
                       </Group>
@@ -328,11 +329,12 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="doChecksCheckBox" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
                           <Component id="personSearchCheckBox" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
                           <Component id="queryNewNameCheckBox" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
+                          <Component id="formatChecksCheckBox" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -362,6 +364,14 @@
                     <Property name="toolTipText" type="java.lang.String" resourceKey="queryNewNameCheckBox.toolTipText"/>
                     <Property name="enabled" type="boolean" value="false"/>
                     <Property name="name" type="java.lang.String" value="queryNewNameCheckBox" noResource="true"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="formatChecksCheckBox">
+                  <Properties>
+                    <Property name="selected" type="boolean" value="true"/>
+                    <Property name="text" type="java.lang.String" resourceKey="formatChecksCheckBox.text"/>
+                    <Property name="toolTipText" type="java.lang.String" resourceKey="formatChecksCheckBox.toolTipText"/>
+                    <Property name="name" type="java.lang.String" value="formatChecksCheckBox" noResource="true"/>
                   </Properties>
                 </Component>
               </SubComponents>

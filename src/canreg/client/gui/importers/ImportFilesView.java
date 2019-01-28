@@ -179,6 +179,7 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
         doChecksCheckBox = new javax.swing.JCheckBox();
         personSearchCheckBox = new javax.swing.JCheckBox();
         queryNewNameCheckBox = new javax.swing.JCheckBox();
+        formatChecksCheckBox = new javax.swing.JCheckBox();
         maxLinesPanel = new javax.swing.JPanel();
         maxLinesTextField = new javax.swing.JTextField();
         testOnlyCheckBox = new javax.swing.JCheckBox();
@@ -309,6 +310,11 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
         queryNewNameCheckBox.setEnabled(false);
         queryNewNameCheckBox.setName("queryNewNameCheckBox"); // NOI18N
 
+        formatChecksCheckBox.setSelected(true);
+        formatChecksCheckBox.setText(resourceMap.getString("formatChecksCheckBox.text")); // NOI18N
+        formatChecksCheckBox.setToolTipText(resourceMap.getString("formatChecksCheckBox.toolTipText")); // NOI18N
+        formatChecksCheckBox.setName("formatChecksCheckBox"); // NOI18N
+
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
@@ -318,18 +324,20 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(doChecksCheckBox)
                     .addComponent(personSearchCheckBox)
-                    .addComponent(queryNewNameCheckBox))
+                    .addComponent(queryNewNameCheckBox)
+                    .addComponent(formatChecksCheckBox))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addComponent(doChecksCheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(3, 3, 3)
                 .addComponent(personSearchCheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(3, 3, 3)
                 .addComponent(queryNewNameCheckBox)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(3, 3, 3)
+                .addComponent(formatChecksCheckBox))
         );
 
         maxLinesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Max Lines"));
@@ -734,18 +742,20 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
             setCursor(hourglassCursor);
             variablesMap = buildMap();
                         
-            rChecksParams = buildRChecksVars();
-            if(rChecksParams != null) {
-                try {
-                    rParamsFile = new File(new File(rChecksParams.getDictionaryFilePath()).getParentFile(), "rChecksParams.json");
-                    Tools.objectToJSON(rChecksParams, 
-                                       rParamsFile);
-                } catch(IOException ex) {
-                    Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
-                    rChecksParams = null;
+            if(formatChecksCheckBox.isSelected()) {
+                rChecksParams = buildRChecksVars();
+                if(rChecksParams != null) {
+                    try {
+                        rParamsFile = new File(new File(rChecksParams.getDictionaryFilePath()).getParentFile(), "rChecksParams.json");
+                        Tools.objectToJSON(rChecksParams, 
+                                           rParamsFile);
+                    } catch(IOException ex) {
+                        Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
+                        rChecksParams = null;
+                    }
                 }
-            }
-                
+            } 
+             
             files = new File[]{
                 patientPreviewFilePanel.getInFile(),
                 tumourPreviewFilePanel.getInFile(),
@@ -1105,6 +1115,7 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
     private javax.swing.JPanel discrepanciesPanel;
     private javax.swing.JCheckBox doChecksCheckBox;
     private javax.swing.JLabel fileLabel;
+    private javax.swing.JCheckBox formatChecksCheckBox;
     private javax.swing.JButton importButton;
     private javax.swing.JPanel importFilePanel;
     private javax.swing.JPanel jPanel1;
