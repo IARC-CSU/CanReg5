@@ -46,6 +46,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -113,6 +115,11 @@ public class PreviewFilePanel extends javax.swing.JPanel {
         chooseFilePanel.setName("chooseFilePanel"); // NOI18N
 
         fileNameTextField.setName("fileNameTextField"); // NOI18N
+        fileNameTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                fileNameTextFieldFocusLost(evt);
+            }
+        });
         fileNameTextField.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 fileNameTextFieldMousePressed(evt);
@@ -121,9 +128,15 @@ public class PreviewFilePanel extends javax.swing.JPanel {
                 fileNameTextFieldMouseReleased(evt);
             }
         });
-        fileNameTextField.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                fileNameTextFieldFocusLost(evt);
+        fileNameTextField.getDocument().addDocumentListener(new DocumentListener() {
+            public void changedUpdate(DocumentEvent e) {
+                changeFile();
+            }
+            public void removeUpdate(DocumentEvent e) {
+                changeFile();
+            }
+            public void insertUpdate(DocumentEvent e) {
+                changeFile();
             }
         });
 
@@ -250,7 +263,7 @@ public class PreviewFilePanel extends javax.swing.JPanel {
                                 .addComponent(browseButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(previewButton))
-                            .addComponent(separatingCharacterComboBox, 0, 0, Short.MAX_VALUE))))
+                            .addComponent(separatingCharacterComboBox, 0, 1, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         chooseFilePanelLayout.setVerticalGroup(
@@ -318,9 +331,7 @@ public class PreviewFilePanel extends javax.swing.JPanel {
         }
     }
 
-    /**
-     *
-     */
+
     @Action
     public void previewAction() {
         // show the contents of the file
@@ -419,9 +430,8 @@ public class PreviewFilePanel extends javax.swing.JPanel {
 
     private void changeFile() {
         if (fileNameTextField.getText().trim().length() > 0) {
-            inFile = new File(fileNameTextField.getText().trim());
             try {
-                // autoDetectAction();
+                inFile = new File(fileNameTextField.getText().trim());
                 listener.actionPerformed(new ActionEvent(this, 0, FILE_CHANGED_ACTION));
                 numberOfRecordsTextField.setText("" + (canreg.common.Tools.numberOfLinesInFile(inFile.getCanonicalPath()) - 1));
             } catch (IOException ex) {
