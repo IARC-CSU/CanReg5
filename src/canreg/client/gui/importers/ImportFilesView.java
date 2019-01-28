@@ -51,6 +51,7 @@ import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.file.Paths;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -699,13 +700,6 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
                 } else if (Import.SOURCES.equals(evt.getPropertyName())) {
                     sourcesProgressBar.setValue((Integer) evt.getNewValue());
                     sourcesProgressBar.setString(evt.getNewValue().toString() + "%");
-                } else if(Import.R_SCRIPTS.equals(evt.getPropertyName())) {
-                    checksBar.setIndeterminate(false);
-                    checksBar.setValue(100);
-                    if(evt.getNewValue().toString().equalsIgnoreCase("ok")) 
-                        checksBar.setString("100%");
-                    else 
-                        checksBar.setString("ERROR");
                 }
             }
         });
@@ -731,7 +725,8 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
         private final List<Relation> variablesMap;
         private File[] files;
         private final ImportOptions io;
-        private RCheksImportVariables rChecksVars;
+        private RCheksImportVariables rChecksParams;
+        private File rParamsFile;
 
         ImportActionTask(org.jdesktop.application.Application app) {
             super(app);
@@ -739,14 +734,15 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
             setCursor(hourglassCursor);
             variablesMap = buildMap();
                         
-            rChecksVars = buildRChecksVars();
-            if(rChecksVars != null) {
+            rChecksParams = buildRChecksVars();
+            if(rChecksParams != null) {
                 try {
-                    File folder = new File(rChecksVars.getDictionaryFilePath()).getParentFile();
-                    Tools.objectToJSON(rChecksVars, 
-                                       folder);
+                    rParamsFile = new File(new File(rChecksParams.getDictionaryFilePath()).getParentFile(), "rChecksParams.json");
+                    Tools.objectToJSON(rChecksParams, 
+                                       rParamsFile);
                 } catch(IOException ex) {
-                    rChecksVars = null;
+                    Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
+                    rChecksParams = null;
                 }
             }
                 
@@ -766,9 +762,22 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
             // the Swing GUI from here.
             boolean success = false;
             try {
-                //checksBar represents the R scripts running checks. We don't know how much they take, 
-                //so we just set the progress bar in indeterminate.
-                checksBar.setIndeterminate(true);
+                if(rChecksParams != null) {
+                    //checksBar represents the R scripts running checks. We don't know how much they take, 
+                    //so we just set the progress bar in indeterminate.
+                    checksBar.setIndeterminate(true);
+                    
+                    ArrayList<File> outputFiles = RTools.runRimportScript("CR5formatChecks.R", rParamsFile);
+                    for(int i = 0; i < outputFiles.size(); i++) {
+                        if(files[i] != null)
+                            files[i] = outputFiles.get(i);
+                    }
+                    
+                    checksBar.setIndeterminate(false);
+                    checksBar.setValue(100);
+                    checksBar.setString("100%");
+                }
+                
                 // Calls the client app import action with the file parameters provided,
                 success = CanRegClientApp.getApplication().importFiles(this, doc, variablesMap, files, io);
             } catch(Exception ex) {
@@ -824,7 +833,7 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
                 DatabaseDictionaryListElement[] dictionariesInDB = canreg.common.Tools.getDictionaryListElements(doc, Globals.NAMESPACE);
                 File tempDictionary = new File(folder, "dictionary.txt");
                 canreg.common.Tools.writeDictionaryToFileUTF8(tempDictionary, dictionariesInDB);
-                vars.setDictionaryFilePath(tempDictionary.getAbsolutePath());
+                vars.setDictionaryFilePath(RTools.fixPath(tempDictionary.getAbsolutePath()));
             } catch(IOException ex) {
                 Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
                 return null;

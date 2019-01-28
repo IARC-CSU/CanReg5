@@ -79,6 +79,7 @@ public class Import {
     public static String PATIENTS = "patients";
     public static String TUMOURS = "tumours";
     public static String SOURCES = "sources";
+    public static String R_SCRIPTS = "r_scripts";
 
     /**
      *
@@ -405,7 +406,10 @@ public class Import {
         return success;
     }
 
-    public static boolean importFiles(Task<Object, Void> task, Document doc, List<canreg.client.dataentry.Relation> map, File[] files, CanRegServerInterface server, ImportOptions io) throws SQLException, RemoteException, SecurityException, RecordLockedException {
+    public static boolean importFiles(Task<Object, Void> task, Document doc, 
+                                      List<canreg.client.dataentry.Relation> map, File[] files, 
+                                      CanRegServerInterface server, ImportOptions io) 
+            throws SQLException, RemoteException, SecurityException, RecordLockedException {
         int numberOfLinesRead = 0;
         Writer reportWriter = new BufferedWriter(new OutputStreamWriter(System.out));
         if (io.getReportFileName() != null && io.getReportFileName().trim().length() > 0) {

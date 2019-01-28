@@ -29,7 +29,7 @@ public class RCheksImportVariables implements Serializable {
     
     private String patientFilePath;
     private String tumourFilePath;
-    private String SourceFilePath;
+    private String sourceFilePath;
     private String patientFileSeparator;
     private String tumourFileSeparator;
     private String sourceFileSeparator;
@@ -60,11 +60,11 @@ public class RCheksImportVariables implements Serializable {
     }
 
     public String getSourceFilePath() {
-        return SourceFilePath;
+        return sourceFilePath;
     }
 
     public void setSourceFilePath(String SourceFilePath) {
-        this.SourceFilePath = SourceFilePath;
+        this.sourceFilePath = SourceFilePath;
     }
 
     public String getPatientFileSeparator() {

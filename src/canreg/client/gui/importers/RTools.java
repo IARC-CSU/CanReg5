@@ -38,20 +38,28 @@ import java.util.logging.Logger;
  */
 public class RTools {
     
-    private static String fixPath(String path) {
+    /**
+     * Converts file paths with system specific file separators (i.e. "\" for Windows)
+     * to universal file separator ("//"). This way R scripts can locate files in any
+     * file system.
+     * @param path
+     * @return 
+     */
+    public static String fixPath(String path) {
         if(path == null || path.isEmpty())
             throw new NullPointerException("File path is null. File must be missing.");
         return path.replace(File.separator, "//");
     }
     
-    private static File getScriptPath(String rScript) {
+    private static File getScriptPath(String rScript) 
+            throws IOException {
         File dir = new File(Globals.IMPORT_R_SCRIPTS_PATH);
         File userDir = new File(Globals.USER_IMPORT_R_SCRIPTS_PATH);
-        File scriptFile = new File(userDir.getAbsolutePath()
+        File scriptFile = new File(userDir.getCanonicalPath()
                         + Globals.FILE_SEPARATOR
                         + rScript);
         if (!scriptFile.exists()) {
-            scriptFile = new File(dir.getAbsolutePath()
+            scriptFile = new File(dir.getCanonicalPath()
                     + Globals.FILE_SEPARATOR
                     + rScript);
         }
@@ -67,8 +75,8 @@ public class RTools {
      * @return
      * @throws FileNotFoundException 
      */
-    public static LinkedList<File> runRimportScript(String rScript, File paramsFile) 
-            throws FileNotFoundException { 
+    public static ArrayList<File> runRimportScript(String rScript, File paramsFile) 
+            throws FileNotFoundException, IOException { 
         String rpath = CanRegClientApp.getApplication().getLocalSettings().getProperty(LocalSettings.R_PATH);
         // does R exist?
         if (rpath == null || rpath.isEmpty() || !new File(rpath).exists()) {
@@ -76,15 +84,15 @@ public class RTools {
         }
         
         File scriptFile = getScriptPath(rScript);
-        LinkedList<File> filesCreated = new LinkedList<>();
+        ArrayList<File> filesCreated = new ArrayList<>();
                 
         ArrayList<String> commandList = new ArrayList();
         commandList.add(rpath);
         commandList.add("--vanilla");
         commandList.add("--slave");
-        commandList.add("--file=" + scriptFile.getAbsolutePath() );
+        commandList.add("--file=" + scriptFile.getCanonicalPath() );
         commandList.add("--args");
-        commandList.add("-paramsFile=" + fixPath(paramsFile.getAbsolutePath()));
+        commandList.add("-paramsFile=" + fixPath(paramsFile.getCanonicalPath()));
         System.out.println(commandList);
                 
         Process proc = null;
@@ -97,13 +105,15 @@ public class RTools {
             // convert the output to a string
             String theString = canreg.client.analysis.Tools.convertStreamToString(is);
             Logger.getLogger(RTools.class.getName()).log(Level.INFO, "Messages from R: \n{0}", theString);
-            // and add all to the list of files to return
+            
+            int index = 0;
             for (String fileName : theString.split("\\r?\\n")) {
-                if (fileName.startsWith("-outFile:")) {
-                    fileName = fileName.replaceFirst("-outFile:", "");
-                    if (new File(fileName).exists()) 
-                        filesCreated.add(new File(fileName));
-                }
+                fileName = fileName.replaceFirst("-outFile:", "");
+                if (new File(fileName).exists()) 
+                    filesCreated.add(index, new File(fileName));
+                else
+                    filesCreated.add(index, null);
+                index++;
             }
         } catch (java.util.NoSuchElementException ex) {
             Logger.getLogger(RTools.class.getName()).log(Level.SEVERE, null, ex);

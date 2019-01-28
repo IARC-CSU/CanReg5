@@ -711,7 +711,8 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @throws java.rmi.RemoteException
      * @throws canreg.server.database.RecordLockedException
      */
-    public boolean importFiles(Task<Object, Void> task, Document doc, List<Relation> map, File[] files, ImportOptions io) throws SQLException, SecurityException, RecordLockedException, RemoteException {
+    public boolean importFiles(Task<Object, Void> task, Document doc, List<Relation> map, File[] files, ImportOptions io) 
+            throws SQLException, SecurityException, RecordLockedException, RemoteException {
         try {
             return canreg.client.gui.importers.Import.importFiles(task, doc, map, files, server, io);
         } catch (RemoteException ex) {

@@ -10,3 +10,7 @@ JSON.path <- "-paramsFile="
 paramsJSON <- fromJSON(sub(JSON.path, "", initial.options[grep(JSON.path, initial.options)]))
 #############################################################
 cat(paste("-outFile",paramsJSON$patientFilePath,sep=":"))
+cat("\n")
+cat(paste("-outFile",paramsJSON$tumourFilePath,sep=":"))
+cat("\n")
+cat(paste("-outFile",paramsJSON$sourceFilePath,sep=":"))
