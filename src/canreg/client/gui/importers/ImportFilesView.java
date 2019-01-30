@@ -49,6 +49,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -735,27 +736,14 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
         private final ImportOptions io;
         private RCheksImportVariables rChecksParams;
         private File rParamsFile;
+        private LinkedList<File> tempFiles;
 
         ImportActionTask(org.jdesktop.application.Application app) {
             super(app);
             Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
             setCursor(hourglassCursor);
             variablesMap = buildMap();
-                        
-            if(formatChecksCheckBox.isSelected()) {
-                rChecksParams = buildRChecksVars();
-                if(rChecksParams != null) {
-                    try {
-                        rParamsFile = new File(new File(rChecksParams.getDictionaryFilePath()).getParentFile(), "rChecksParams.json");
-                        Tools.objectToJSON(rChecksParams, 
-                                           rParamsFile);
-                    } catch(IOException ex) {
-                        Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
-                        rChecksParams = null;
-                    }
-                }
-            } 
-             
+                       
             files = new File[]{
                 patientPreviewFilePanel.getInFile(),
                 tumourPreviewFilePanel.getInFile(),
@@ -763,7 +751,8 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
             };
 
             io = buildImportOptions();
-        }
+            tempFiles = new LinkedList<>();
+        }        
 
         @Override
         protected Object doInBackground() {
@@ -772,27 +761,56 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
             // the Swing GUI from here.
             boolean success = false;
             try {
-                if(rChecksParams != null) {
+                if(io.getrChecksRun()) {
                     //checksBar represents the R scripts running checks. We don't know how much they take, 
                     //so we just set the progress bar in indeterminate.
                     checksBar.setIndeterminate(true);
-                    
-                    ArrayList<File> outputFiles = RTools.runRimportScript("CR5formatChecks.R", rParamsFile);
-                    for(int i = 0; i < outputFiles.size(); i++) {
-                        if(files[i] != null)
-                            files[i] = outputFiles.get(i);
+                    rChecksParams = buildRChecksVars();
+                    if(rChecksParams != null) {
+                        rParamsFile = new File(new File(rChecksParams.getDictionaryFilePath()).getParentFile(), "rChecksParams.json");
+                        Tools.objectToJSON(rChecksParams, 
+                                           rParamsFile);
+                        tempFiles.add(rParamsFile);
+
+                        ArrayList<File> outputFiles = RTools.runRimportScript("CR5formatChecks.R", rParamsFile);
+                        //As a result of the R format checks, all files have been re-created
+                        //with some changes. These are the files that we'll use to perform
+                        //the import.
+                        for(int i = 0; i < outputFiles.size(); i++) {
+                            if(files[i] != null)
+                                files[i] = outputFiles.get(i);
+                        }
+                        
+                        //The output files of the R format checks are all in UTF-8
+                        io.setFilesCharsets(new Charset[]{
+                            Charset.forName("UTF-8"),
+                            Charset.forName("UTF-8"),
+                            Charset.forName("UTF-8")
+                        });
+
+                        checksBar.setIndeterminate(false);
+                        checksBar.setValue(100);
+                        checksBar.setString("100%");
+                    } else {
+                        checksBar.setIndeterminate(false);
+                        checksBar.setValue(0);
+                        checksBar.setString("ERROR");
                     }
-                    
-                    checksBar.setIndeterminate(false);
-                    checksBar.setValue(100);
-                    checksBar.setString("100%");
                 }
-                
+
                 // Calls the client app import action with the file parameters provided,
                 success = CanRegClientApp.getApplication().importFiles(this, doc, variablesMap, files, io);
             } catch(Exception ex) {
                 Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
+                checksBar.setIndeterminate(false);
+                checksBar.setValue(0);
+                checksBar.setString("ERROR");
+                progressBar.setValue(0);
+                progressBar.setString("ERROR");
                 success = false;
+            } finally {
+                for(File file : tempFiles)
+                    file.delete();
             }
             return success;  // return your result
         }
@@ -822,27 +840,62 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
             RCheksImportVariables vars = new RCheksImportVariables();
             File folder = null;
             if(patientPreviewFilePanel.getInFile() != null) {
-                vars.setPatientFilePath(RTools.fixPath(patientPreviewFilePanel.getInFile().getAbsolutePath()));
+                File patientsFile = null; 
+                try {
+                    patientsFile = Tools.createTempFileInUTF8(patientPreviewFilePanel.getInFile(), io.getFileCharsets()[0].toString());
+                    if( ! patientsFile.equals(patientPreviewFilePanel.getInFile()))
+                        tempFiles.add(patientsFile);
+                } catch(IOException ex) {
+                    Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
+                    return null;
+                }
+                vars.setPatientFilePath(RTools.fixPath(patientsFile.getAbsolutePath()));
                 vars.setPatientFileSeparator(patientPreviewFilePanel.getSeparatorAsString());
-                folder = patientPreviewFilePanel.getInFile().getParentFile();
+                folder = patientsFile.getParentFile();
             }
             if(tumourPreviewFilePanel.getInFile() != null) {
-                vars.setTumourFilePath(RTools.fixPath(tumourPreviewFilePanel.getInFile().getAbsolutePath()));
+                File tumoursFile = null; 
+                try {
+                    tumoursFile = Tools.createTempFileInUTF8(tumourPreviewFilePanel.getInFile(), io.getFileCharsets()[1].toString());
+                    if( ! tumoursFile.equals(tumourPreviewFilePanel.getInFile()))
+                        tempFiles.add(tumoursFile);
+                } catch(IOException ex) {
+                    Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
+                    return null;
+                }
+                vars.setTumourFilePath(RTools.fixPath(tumoursFile.getAbsolutePath()));
                 vars.setTumourFileSeparator(tumourPreviewFilePanel.getSeparatorAsString());
                 if(folder == null)
-                    folder = tumourPreviewFilePanel.getInFile().getParentFile();
+                    folder = tumoursFile.getParentFile();
             }
             if(sourcePreviewFilePanel.getInFile() != null) {
-                vars.setSourceFilePath(RTools.fixPath(sourcePreviewFilePanel.getInFile().getAbsolutePath()));
+                File sourcesFile = null; 
+                try {
+                    sourcesFile = Tools.createTempFileInUTF8(sourcePreviewFilePanel.getInFile(), io.getFileCharsets()[2].toString());
+                    if( ! sourcesFile.equals(sourcePreviewFilePanel.getInFile()))
+                        tempFiles.add(sourcesFile);
+                } catch(IOException ex) {
+                    Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
+                    return null;
+                }
+                vars.setSourceFilePath(RTools.fixPath(sourcesFile.getAbsolutePath()));
                 vars.setSourceFileSeparator(sourcePreviewFilePanel.getSeparatorAsString());
                 if(folder == null)
-                    folder = sourcePreviewFilePanel.getInFile().getParentFile();
+                    folder = sourcesFile.getParentFile();
             }
             
             try {
                 DatabaseDictionaryListElement[] dictionariesInDB = canreg.common.Tools.getDictionaryListElements(doc, Globals.NAMESPACE);
-                File tempDictionary = new File(folder, "dictionary.txt");
+                File tempDictionary = null; 
+                try {
+                    tempDictionary = new File(folder, "TEMP_dictionary.txt");
+                    if( ! tempDictionary.createNewFile())
+                        throw new IOException();
+                } catch(IOException ex) {
+                    tempDictionary = File.createTempFile("TEMP_dictionary", ".txt");
+                }
                 canreg.common.Tools.writeDictionaryToFileUTF8(tempDictionary, dictionariesInDB);
+                tempFiles.add(tempDictionary);
                 vars.setDictionaryFilePath(RTools.fixPath(tempDictionary.getAbsolutePath()));
             } catch(IOException ex) {
                 Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
@@ -850,7 +903,18 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
             }
             
             try {
-                vars.setSystemDescriptionXMLPath(RTools.fixPath(Paths.get(new URI(doc.getDocumentURI())).toAbsolutePath().toString()));
+                File originalDescFile = new File(Paths.get(new URI(doc.getDocumentURI())).toAbsolutePath().toString());
+                File systemDescFile = null;
+                try {
+                    systemDescFile = Tools.createTempFileInUTF8(originalDescFile, 
+                                                                     Tools.detectCharacterCodingOfFile(originalDescFile.getAbsolutePath()));
+                    if( ! systemDescFile.equals(originalDescFile))
+                        tempFiles.add(systemDescFile);
+                } catch(IOException ex) {
+                    Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
+                    return null;
+                }
+                vars.setSystemDescriptionXMLPath(RTools.fixPath(systemDescFile.getAbsolutePath()));
             } catch (URISyntaxException ex) {
                 Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
                 return null;
@@ -1051,6 +1115,8 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
 
         // Set the report fileName
         io.setReportFileName(reportFileNameTextField.getText());
+        
+        io.setrChecksRun(formatChecksCheckBox.isSelected());
 
         return io;
     }

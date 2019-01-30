@@ -1138,7 +1138,7 @@ public class Tools {
     
     /**
      * Writes a database dictionary to a File encoded in UTF-8
-     * @param folderDestination
+     * @param dictionaryDestination
      * @param dictionariesInDB
      * @return 
      */
@@ -1162,5 +1162,73 @@ public class Tools {
             }
             bw.flush();
         }
+    }
+    
+    /**
+     * Creates a new file encoded in UTF-8 based on an already existing file with another
+     * encoding.
+     * @param source the file to be transformed
+     * @param srcEncoding the encoding of the file to be transformed
+     * @param target the new file in UTF-8
+     * @throws IOException 
+     */
+    public static void transformFileToUTF8(File source, String srcEncoding, File target) 
+            throws IOException {
+        try (
+          BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(source), srcEncoding));
+          BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(target), StandardCharsets.UTF_8)); ) {
+              char[] buffer = new char[16384];
+              int read;
+              while ((read = br.read(buffer)) != -1)
+                  bw.write(buffer, 0, read);
+        } 
+    }
+    
+    public static String getFileExtension(File file) {
+        String extension = "";
+
+        if (file != null) {
+            String name = file.getName();
+            extension = name.substring(name.lastIndexOf("."));
+        }
+ 
+        return extension;
+    }
+    
+    public static String getFileNameWithoutExtension(File file) {
+        String name = "";
+
+        if (file != null) {
+            name = file.getName();
+            name = name.substring(0, name.lastIndexOf("."));
+        }
+ 
+        return name;
+    }
+    
+    /**
+     * 
+     * @param source
+     * @param sourceEncoding
+     * @return
+     * @throws IOException 
+     */
+    public static File createTempFileInUTF8(File source, String sourceEncoding)
+                throws IOException {
+        if(sourceEncoding.toUpperCase().contains("UTF-8"))
+            return source;
+        
+        File newTemp = new File(source.getParentFile(), "TEMP_" + source.getName());            
+        try {
+            if( ! newTemp.createNewFile())
+                throw new IOException("Temp file could not be created in source directory.");
+        } catch(IOException ex) {
+            Logger.getLogger(Tools.class.getName()).log(Level.WARNING, null, ex);
+            newTemp = File.createTempFile(getFileNameWithoutExtension(newTemp), 
+                                          getFileExtension(newTemp));
+        }
+        
+        transformFileToUTF8(source, sourceEncoding, newTemp);
+        return newTemp;
     }
 }

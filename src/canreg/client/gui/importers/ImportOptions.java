@@ -74,6 +74,16 @@ public class ImportOptions {
     private String firstNameVariableName;
     private String sexVariableName;
     private String sourceIDVariablename;
+    private Boolean rChecksRun;
+
+    
+    public Boolean getrChecksRun() {
+        return rChecksRun;
+    }
+
+    public void setrChecksRun(Boolean rChecksRun) {
+        this.rChecksRun = rChecksRun;
+    }    
 
     /**
      * 
