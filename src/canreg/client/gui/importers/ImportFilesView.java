@@ -685,7 +685,12 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
         localSettings.writeSettings();
         progressBar.setStringPainted(true);
         importButton.setEnabled(false);
-        // this.dispose();
+        
+        if(this.formatChecksCheckBox.isSelected()) {
+            //checksBar represents the R scripts running checks. We don't know how much they take, 
+            //so we just set the progress bar in indeterminate.
+            checksBar.setIndeterminate(true);
+        }
 
         importTask = new ImportActionTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
         importTask.addPropertyChangeListener(new PropertyChangeListener() {
@@ -709,6 +714,14 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
                 } else if (Import.SOURCES.equals(evt.getPropertyName())) {
                     sourcesProgressBar.setValue((Integer) evt.getNewValue());
                     sourcesProgressBar.setString(evt.getNewValue().toString() + "%");
+                } else if(Import.R_SCRIPTS.equals(evt.getPropertyName())) {
+                    checksBar.setIndeterminate(false);
+                    int newValue = (Integer) evt.getNewValue();
+                    checksBar.setValue(newValue);
+                    if(newValue == 100)
+                        checksBar.setString("OK");
+                    else 
+                        checksBar.setString("ERROR");
                 }
             }
         });
@@ -763,50 +776,36 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
             try {
                 if(io.getrChecksRun()) {
                     //checksBar represents the R scripts running checks. We don't know how much they take, 
-                    //so we just set the progress bar in indeterminate.
-                    checksBar.setIndeterminate(true);
                     rChecksParams = buildRChecksVars();
-                    if(rChecksParams != null) {
-                        rParamsFile = new File(new File(rChecksParams.getDictionaryFilePath()).getParentFile(), "rChecksParams.json");
-                        Tools.objectToJSON(rChecksParams, 
-                                           rParamsFile);
-                        tempFiles.add(rParamsFile);
+                    rParamsFile = new File(new File(rChecksParams.getDictionaryFilePath()).getParentFile(), "rChecksParams.json");
+                    Tools.objectToJSON(rChecksParams, 
+                                       rParamsFile);
+                    tempFiles.add(rParamsFile);
 
-                        ArrayList<File> outputFiles = RTools.runRimportScript("CR5formatChecks.R", rParamsFile);
-                        //As a result of the R format checks, all files have been re-created
-                        //with some changes. These are the files that we'll use to perform
-                        //the import.
-                        for(int i = 0; i < outputFiles.size(); i++) {
-                            if(files[i] != null)
-                                files[i] = outputFiles.get(i);
-                        }
-                        
-                        //The output files of the R format checks are all in UTF-8
-                        io.setFilesCharsets(new Charset[]{
-                            Charset.forName("UTF-8"),
-                            Charset.forName("UTF-8"),
-                            Charset.forName("UTF-8")
-                        });
-
-                        checksBar.setIndeterminate(false);
-                        checksBar.setValue(100);
-                        checksBar.setString("100%");
-                    } else {
-                        checksBar.setIndeterminate(false);
-                        checksBar.setValue(0);
-                        checksBar.setString("ERROR");
+                    ArrayList<File> outputFiles = RTools.runRimportScript("CR5formatChecks.R", rParamsFile);
+                    //As a result of the R format checks, all files have been re-created
+                    //with some changes. These are the files that we'll use to perform
+                    //the import.
+                    for(int i = 0; i < outputFiles.size(); i++) {
+                        if(files[i] != null)
+                            files[i] = outputFiles.get(i);
                     }
+
+                    //The output files of the R format checks are all in UTF-8
+                    io.setFilesCharsets(new Charset[]{
+                        Charset.forName("UTF-8"),
+                        Charset.forName("UTF-8"),
+                        Charset.forName("UTF-8")
+                    }); 
+                    
+                    this.firePropertyChange(Import.R_SCRIPTS, 0, 100);
                 }
 
                 // Calls the client app import action with the file parameters provided,
                 success = CanRegClientApp.getApplication().importFiles(this, doc, variablesMap, files, io);
             } catch(Exception ex) {
                 Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
-                checksBar.setIndeterminate(false);
-                checksBar.setValue(0);
-                checksBar.setString("ERROR");
-                progressBar.setValue(0);
-                progressBar.setString("ERROR");
+                this.firePropertyChange(Import.R_SCRIPTS, 0, 10);
                 success = false;
             } finally {
                 for(File file : tempFiles)
@@ -836,89 +835,62 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
             dispose();
         }
 
-        private RCheksImportVariables buildRChecksVars() {
+        private RCheksImportVariables buildRChecksVars()
+                throws IOException, URISyntaxException {
             RCheksImportVariables vars = new RCheksImportVariables();
             File folder = null;
             if(patientPreviewFilePanel.getInFile() != null) {
-                File patientsFile = null; 
-                try {
-                    patientsFile = Tools.createTempFileInUTF8(patientPreviewFilePanel.getInFile(), io.getFileCharsets()[0].toString());
-                    if( ! patientsFile.equals(patientPreviewFilePanel.getInFile()))
-                        tempFiles.add(patientsFile);
-                } catch(IOException ex) {
-                    Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
-                    return null;
-                }
+                File patientsFile = Tools.createTempFileInUTF8(patientPreviewFilePanel.getInFile(), io.getFileCharsets()[0].toString());
+                if( ! patientsFile.equals(patientPreviewFilePanel.getInFile()))
+                    tempFiles.add(patientsFile);
+
                 vars.setPatientFilePath(RTools.fixPath(patientsFile.getAbsolutePath()));
                 vars.setPatientFileSeparator(patientPreviewFilePanel.getSeparatorAsString());
                 folder = patientsFile.getParentFile();
             }
             if(tumourPreviewFilePanel.getInFile() != null) {
-                File tumoursFile = null; 
-                try {
-                    tumoursFile = Tools.createTempFileInUTF8(tumourPreviewFilePanel.getInFile(), io.getFileCharsets()[1].toString());
-                    if( ! tumoursFile.equals(tumourPreviewFilePanel.getInFile()))
-                        tempFiles.add(tumoursFile);
-                } catch(IOException ex) {
-                    Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
-                    return null;
-                }
+                File tumoursFile = Tools.createTempFileInUTF8(tumourPreviewFilePanel.getInFile(), io.getFileCharsets()[1].toString());
+                if( ! tumoursFile.equals(tumourPreviewFilePanel.getInFile()))
+                    tempFiles.add(tumoursFile);
                 vars.setTumourFilePath(RTools.fixPath(tumoursFile.getAbsolutePath()));
                 vars.setTumourFileSeparator(tumourPreviewFilePanel.getSeparatorAsString());
                 if(folder == null)
                     folder = tumoursFile.getParentFile();
             }
             if(sourcePreviewFilePanel.getInFile() != null) {
-                File sourcesFile = null; 
-                try {
-                    sourcesFile = Tools.createTempFileInUTF8(sourcePreviewFilePanel.getInFile(), io.getFileCharsets()[2].toString());
-                    if( ! sourcesFile.equals(sourcePreviewFilePanel.getInFile()))
-                        tempFiles.add(sourcesFile);
-                } catch(IOException ex) {
-                    Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
-                    return null;
-                }
+                File sourcesFile = Tools.createTempFileInUTF8(sourcePreviewFilePanel.getInFile(), io.getFileCharsets()[2].toString());
+                if( ! sourcesFile.equals(sourcePreviewFilePanel.getInFile()))
+                    tempFiles.add(sourcesFile);
+
                 vars.setSourceFilePath(RTools.fixPath(sourcesFile.getAbsolutePath()));
                 vars.setSourceFileSeparator(sourcePreviewFilePanel.getSeparatorAsString());
                 if(folder == null)
                     folder = sourcesFile.getParentFile();
             }
             
-            try {
-                DatabaseDictionaryListElement[] dictionariesInDB = canreg.common.Tools.getDictionaryListElements(doc, Globals.NAMESPACE);
-                File tempDictionary = null; 
-                try {
-                    tempDictionary = new File(folder, "TEMP_dictionary.txt");
-                    if( ! tempDictionary.createNewFile())
-                        throw new IOException();
-                } catch(IOException ex) {
-                    tempDictionary = File.createTempFile("TEMP_dictionary", ".txt");
-                }
-                canreg.common.Tools.writeDictionaryToFileUTF8(tempDictionary, dictionariesInDB);
-                tempFiles.add(tempDictionary);
-                vars.setDictionaryFilePath(RTools.fixPath(tempDictionary.getAbsolutePath()));
-            } catch(IOException ex) {
-                Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
-                return null;
-            }
             
+            DatabaseDictionaryListElement[] dictionariesInDB = canreg.common.Tools.getDictionaryListElements(doc, Globals.NAMESPACE);
+            File tempDictionary = null; 
             try {
-                File originalDescFile = new File(Paths.get(new URI(doc.getDocumentURI())).toAbsolutePath().toString());
-                File systemDescFile = null;
-                try {
-                    systemDescFile = Tools.createTempFileInUTF8(originalDescFile, 
-                                                                     Tools.detectCharacterCodingOfFile(originalDescFile.getAbsolutePath()));
-                    if( ! systemDescFile.equals(originalDescFile))
-                        tempFiles.add(systemDescFile);
-                } catch(IOException ex) {
-                    Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
-                    return null;
-                }
-                vars.setSystemDescriptionXMLPath(RTools.fixPath(systemDescFile.getAbsolutePath()));
-            } catch (URISyntaxException ex) {
-                Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
-                return null;
+                tempDictionary = new File(folder, "TEMP_dictionary.txt");
+                if( ! tempDictionary.createNewFile())
+                    throw new IOException();
+            } catch(IOException ex) {
+                tempDictionary = File.createTempFile("TEMP_dictionary", ".txt");
             }
+            canreg.common.Tools.writeDictionaryToFileUTF8(tempDictionary, dictionariesInDB);
+            tempFiles.add(tempDictionary);
+            vars.setDictionaryFilePath(RTools.fixPath(tempDictionary.getAbsolutePath()));
+            
+            
+            File originalDescFile = new File(Paths.get(new URI(doc.getDocumentURI())).toAbsolutePath().toString());
+            File systemDescFile = Tools.createTempFileInUTF8(originalDescFile, 
+                                                             Tools.detectCharacterCodingOfFile(originalDescFile.getAbsolutePath()));
+            if( ! systemDescFile.equals(originalDescFile))
+                tempFiles.add(systemDescFile);
+
+            vars.setSystemDescriptionXMLPath(RTools.fixPath(systemDescFile.getAbsolutePath()));
+
                         
             LinkedList<String> shortNames = new LinkedList<>();
             LinkedList<String> varsInCSV = new LinkedList<>();
