@@ -52,8 +52,8 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="tabbedPane" max="32767" attributes="0"/>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="tabbedPane" max="-2" attributes="0"/>
+              <EmptySpace type="separate" pref="49" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="nextButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="cancelButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -197,17 +197,17 @@
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="jScrollPane1" alignment="0" max="32767" attributes="0"/>
                           <Component id="jPanel2" alignment="0" max="32767" attributes="0"/>
                           <Group type="102" alignment="1" attributes="0">
+                              <Component id="jPanel7" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="discrepanciesPanel" min="-2" max="-2" attributes="1"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="maxLinesPanel" min="-2" max="-2" attributes="1"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jPanel7" max="32767" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace pref="11" max="32767" attributes="0"/>
                               <Component id="importButton" min="-2" max="-2" attributes="0"/>
                           </Group>
+                          <Component id="jScrollPane1" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -218,16 +218,16 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="importButton" max="32767" attributes="1"/>
                           <Component id="maxLinesPanel" alignment="0" max="32767" attributes="1"/>
                           <Component id="discrepanciesPanel" alignment="0" max="32767" attributes="1"/>
-                          <Component id="jPanel7" alignment="0" max="32767" attributes="1"/>
+                          <Component id="importButton" alignment="0" max="32767" attributes="1"/>
+                          <Component id="jPanel7" alignment="0" min="-2" max="-2" attributes="1"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="12" max="32767" attributes="0"/>
+                      <Component id="jScrollPane1" min="-2" pref="173" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -274,6 +274,7 @@
                           <Component id="updateRadioButton" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="overwriteRadioButton" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -282,6 +283,7 @@
                 <Component class="javax.swing.JRadioButton" name="rejectRadioButton">
                   <Properties>
                     <Property name="text" type="java.lang.String" resourceKey="rejectRadioButton.text"/>
+                    <Property name="enabled" type="boolean" value="false"/>
                     <Property name="name" type="java.lang.String" value="rejectRadioButton" noResource="true"/>
                   </Properties>
                 </Component>
@@ -289,12 +291,14 @@
                   <Properties>
                     <Property name="selected" type="boolean" value="true"/>
                     <Property name="text" type="java.lang.String" resourceKey="updateRadioButton.text"/>
+                    <Property name="enabled" type="boolean" value="false"/>
                     <Property name="name" type="java.lang.String" value="updateRadioButton" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JRadioButton" name="overwriteRadioButton">
                   <Properties>
                     <Property name="text" type="java.lang.String" resourceKey="overwriteRadioButton.text"/>
+                    <Property name="enabled" type="boolean" value="false"/>
                     <Property name="name" type="java.lang.String" value="overwriteRadioButton" noResource="true"/>
                   </Properties>
                 </Component>
@@ -304,7 +308,9 @@
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="CanReg data"/>
+                    <TitledBorder title="Options">
+                      <Property name="titleX" resourceKey="jPanel7.border.title"/>
+                    </TitledBorder>
                   </Border>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jPanel7" noResource="true"/>
@@ -316,25 +322,28 @@
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="doChecksCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="personSearchCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="queryNewNameCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="formatChecksCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="holdingDBCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="doChecksCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace pref="137" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="doChecksCheckBox" min="-2" max="-2" attributes="0"/>
+                          <Component id="holdingDBCheckBox" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
                           <Component id="personSearchCheckBox" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
                           <Component id="queryNewNameCheckBox" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
                           <Component id="formatChecksCheckBox" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
+                          <Component id="doChecksCheckBox" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -373,6 +382,17 @@
                     <Property name="toolTipText" type="java.lang.String" resourceKey="formatChecksCheckBox.toolTipText"/>
                     <Property name="name" type="java.lang.String" value="formatChecksCheckBox" noResource="true"/>
                   </Properties>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="holdingDBCheckBox">
+                  <Properties>
+                    <Property name="selected" type="boolean" value="true"/>
+                    <Property name="text" type="java.lang.String" resourceKey="holdingDBCheckBox.text"/>
+                    <Property name="toolTipText" type="java.lang.String" resourceKey="holdingDBCheckBox.toolTipText"/>
+                    <Property name="name" type="java.lang.String" value="holdingDBCheckBox" noResource="true"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="holdingDBCheckBoxActionPerformed"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>
@@ -511,6 +531,9 @@
                       </Border>
                     </Property>
                     <Property name="name" type="java.lang.String" value="jPanel1" noResource="true"/>
+                    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                      <Dimension value="[625, 159]"/>
+                    </Property>
                   </Properties>
 
                   <Layout>
@@ -527,15 +550,15 @@
                                   <Component id="checksLabel" alignment="1" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="checksBar" max="32767" attributes="1"/>
-                                  <Component id="sourcesProgressBar" alignment="0" pref="524" max="32767" attributes="1"/>
-                                  <Component id="tumoursProgressBar" alignment="1" pref="504" max="32767" attributes="1"/>
-                                  <Component id="patientsProgressBar" alignment="0" pref="504" max="32767" attributes="0"/>
-                                  <Component id="progressBar" alignment="0" pref="504" max="32767" attributes="1"/>
-                                  <Component id="recordProgressBar" alignment="0" pref="504" max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                  <Component id="checksBar" alignment="0" pref="545" max="32767" attributes="1"/>
+                                  <Component id="recordProgressBar" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="patientsProgressBar" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="tumoursProgressBar" alignment="0" max="32767" attributes="1"/>
+                                  <Component id="sourcesProgressBar" alignment="0" max="32767" attributes="1"/>
+                                  <Component id="progressBar" max="32767" attributes="1"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace pref="11" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>

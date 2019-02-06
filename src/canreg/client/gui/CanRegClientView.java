@@ -1135,7 +1135,7 @@ public final class CanRegClientView extends FrameView {
         //}
 
         showAndPositionInternalFrame(desktopPane, importInternalFrame);
-        maximizeHeight(desktopPane, importInternalFrame);
+//        maximizeHeight(desktopPane, importInternalFrame);
     }
 
     /**

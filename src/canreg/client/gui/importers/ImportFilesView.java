@@ -181,6 +181,7 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
         personSearchCheckBox = new javax.swing.JCheckBox();
         queryNewNameCheckBox = new javax.swing.JCheckBox();
         formatChecksCheckBox = new javax.swing.JCheckBox();
+        holdingDBCheckBox = new javax.swing.JCheckBox();
         maxLinesPanel = new javax.swing.JPanel();
         maxLinesTextField = new javax.swing.JTextField();
         testOnlyCheckBox = new javax.swing.JCheckBox();
@@ -260,13 +261,16 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
         discrepanciesPanel.setName("discrepanciesPanel"); // NOI18N
 
         rejectRadioButton.setText(resourceMap.getString("rejectRadioButton.text")); // NOI18N
+        rejectRadioButton.setEnabled(false);
         rejectRadioButton.setName("rejectRadioButton"); // NOI18N
 
         updateRadioButton.setSelected(true);
         updateRadioButton.setText(resourceMap.getString("updateRadioButton.text")); // NOI18N
+        updateRadioButton.setEnabled(false);
         updateRadioButton.setName("updateRadioButton"); // NOI18N
 
         overwriteRadioButton.setText(resourceMap.getString("overwriteRadioButton.text")); // NOI18N
+        overwriteRadioButton.setEnabled(false);
         overwriteRadioButton.setName("overwriteRadioButton"); // NOI18N
 
         javax.swing.GroupLayout discrepanciesPanelLayout = new javax.swing.GroupLayout(discrepanciesPanel);
@@ -288,10 +292,11 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(updateRadioButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(overwriteRadioButton))
+                .addComponent(overwriteRadioButton)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder("CanReg data"));
+        jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel7.border.title"))); // NOI18N
         jPanel7.setName("jPanel7"); // NOI18N
 
         doChecksCheckBox.setSelected(true);
@@ -316,6 +321,16 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
         formatChecksCheckBox.setToolTipText(resourceMap.getString("formatChecksCheckBox.toolTipText")); // NOI18N
         formatChecksCheckBox.setName("formatChecksCheckBox"); // NOI18N
 
+        holdingDBCheckBox.setSelected(true);
+        holdingDBCheckBox.setText(resourceMap.getString("holdingDBCheckBox.text")); // NOI18N
+        holdingDBCheckBox.setToolTipText(resourceMap.getString("holdingDBCheckBox.toolTipText")); // NOI18N
+        holdingDBCheckBox.setName("holdingDBCheckBox"); // NOI18N
+        holdingDBCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                holdingDBCheckBoxActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
@@ -323,22 +338,25 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(doChecksCheckBox)
                     .addComponent(personSearchCheckBox)
                     .addComponent(queryNewNameCheckBox)
-                    .addComponent(formatChecksCheckBox))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(formatChecksCheckBox)
+                    .addComponent(holdingDBCheckBox)
+                    .addComponent(doChecksCheckBox))
+                .addContainerGap(137, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
-                .addComponent(doChecksCheckBox)
+                .addComponent(holdingDBCheckBox)
                 .addGap(3, 3, 3)
                 .addComponent(personSearchCheckBox)
                 .addGap(3, 3, 3)
                 .addComponent(queryNewNameCheckBox)
                 .addGap(3, 3, 3)
-                .addComponent(formatChecksCheckBox))
+                .addComponent(formatChecksCheckBox)
+                .addGap(3, 3, 3)
+                .addComponent(doChecksCheckBox))
         );
 
         maxLinesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Max Lines"));
@@ -428,6 +446,7 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel1.border.title"))); // NOI18N
         jPanel1.setName("jPanel1"); // NOI18N
+        jPanel1.setPreferredSize(new java.awt.Dimension(625, 159));
 
         progressBar.setName("progressBar"); // NOI18N
 
@@ -473,14 +492,14 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
                     .addComponent(overallLabel)
                     .addComponent(checksLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(checksBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(sourcesProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 524, Short.MAX_VALUE)
-                    .addComponent(tumoursProgressBar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE)
-                    .addComponent(patientsProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE)
-                    .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE)
-                    .addComponent(recordProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE))
-                .addContainerGap())
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(checksBar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 545, Short.MAX_VALUE)
+                    .addComponent(recordProgressBar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(patientsProgressBar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(tumoursProgressBar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(sourcesProgressBar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(11, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -521,16 +540,16 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, importFilePanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(importFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(importFilePanelLayout.createSequentialGroup()
+                        .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(discrepanciesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(maxLinesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(importButton)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                        .addComponent(importButton))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING))
                 .addContainerGap())
         );
         importFilePanelLayout.setVerticalGroup(
@@ -538,15 +557,15 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
             .addGroup(importFilePanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(importFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(importButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(maxLinesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(discrepanciesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(importButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(12, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         tabbedPane.addTab("Import File", importFilePanel);
@@ -580,8 +599,8 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tabbedPane)
-                .addGap(18, 18, 18)
+                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 49, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nextButton)
                     .addComponent(cancelButton)
@@ -614,6 +633,16 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
         MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(reportFileNameTextField, evt);
     }//GEN-LAST:event_reportFileNameTextFieldMouseReleased
 
+    private void holdingDBCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_holdingDBCheckBoxActionPerformed
+        setDiscrepanciesPanelEnabled( ! holdingDBCheckBox.isSelected());
+    }//GEN-LAST:event_holdingDBCheckBoxActionPerformed
+
+    private void setDiscrepanciesPanelEnabled(boolean enabled) {
+        rejectRadioButton.setEnabled(enabled);
+        updateRadioButton.setEnabled(enabled);
+        overwriteRadioButton.setEnabled(enabled);
+    }
+    
     @Action
     public void jumpToNextTabAction() {
         initializeVariableMappingTab();
@@ -800,9 +829,13 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
                     
                     this.firePropertyChange(Import.R_SCRIPTS, 0, 100);
                 }
-
-                // Calls the client app import action with the file parameters provided,
-                success = CanRegClientApp.getApplication().importFiles(this, doc, variablesMap, files, io);
+                
+                if(holdingDBCheckBox.isSelected())
+                    success = CanRegClientApp.getApplication().importFilesIntoHoldingDB(this, doc, variablesMap, files, io);
+                else {
+                    // Calls the client app import action with the file parameters provided,
+                    success = CanRegClientApp.getApplication().importFiles(this, doc, variablesMap, files, io);
+                }
             } catch(Exception ex) {
                 Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
                 this.firePropertyChange(Import.R_SCRIPTS, 0, 10);
@@ -1154,6 +1187,7 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
     private javax.swing.JCheckBox doChecksCheckBox;
     private javax.swing.JLabel fileLabel;
     private javax.swing.JCheckBox formatChecksCheckBox;
+    private javax.swing.JCheckBox holdingDBCheckBox;
     private javax.swing.JButton importButton;
     private javax.swing.JPanel importFilePanel;
     private javax.swing.JPanel jPanel1;
