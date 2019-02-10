@@ -1231,4 +1231,18 @@ public class Tools {
         transformFileToUTF8(source, sourceEncoding, newTemp);
         return newTemp;
     }
+    
+    public static int getLastHoldingDBnumber(String systemCode) {
+        File holdingDir = new File(Globals.CANREG_SERVER_HOLDING_DB_FOLDER + Globals.FILE_SEPARATOR + systemCode);
+        int highestNumber = 0;
+        for(String folder : holdingDir.list()) {
+            //if(folder.startsWith("HOLDING_")) {
+                folder = folder.substring(folder.indexOf("_") + 1);
+                folder = folder.substring(0, folder.indexOf("_"));
+                int holdingNumber = Integer.valueOf(folder);
+                if(holdingNumber > highestNumber) highestNumber = holdingNumber;
+            //}
+        }
+        return highestNumber;
+    }
 }

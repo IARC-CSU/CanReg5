@@ -491,7 +491,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     public String getSystemCode() throws RemoteException {
-        return server.getCanRegSystemCode();
+        return server.getCanRegRegistryCode();
     }
 
     public String getSystemRegion() throws RemoteException {
@@ -716,6 +716,19 @@ public class CanRegClientApp extends SingleFrameApplication {
         try {
             return canreg.client.gui.importers.Import.importFiles(task, doc, map, files, server, io);
         } catch (RemoteException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            if (!handlePotentialDisconnect(ex)) {
+                throw ex;
+            }
+        }
+        return false;
+    }
+    
+    public boolean importFilesIntoHoldingDB(Task<Object, Void> task, Document doc, List<Relation> map, File[] files, ImportOptions io) 
+            throws Exception {
+        try {
+            return canreg.client.gui.importers.Import.importFilesIntoHoldingDB(task, doc, map, files, server, io);
+        } catch (Exception ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
             if (!handlePotentialDisconnect(ex)) {
                 throw ex;

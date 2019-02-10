@@ -465,7 +465,7 @@ public interface CanRegServerInterface extends Remote {
 
     public boolean setDBPassword(char[] newPasswordArray, char[] oldPasswordArray, String encryptionAlgorithm, String encryptionKeyLength) throws RemoteException, SecurityException;
 
-    public String getCanRegSystemCode() throws RemoteException, SecurityException;
+    public String getCanRegRegistryCode() throws RemoteException, SecurityException;
 
     public String getCanRegSystemRegion()throws RemoteException, SecurityException;
 }

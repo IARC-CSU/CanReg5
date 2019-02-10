@@ -92,6 +92,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     private String patientRecordIDvariableName;
     private GlobalToolBox serverToolbox;
     private TrayIcon trayIcon;
+    
+//    private ServerOps operations;
 
     /**
      *
@@ -1027,7 +1029,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     @Override
-    public String getCanRegSystemCode() throws RemoteException, SecurityException {
+    public String getCanRegRegistryCode() throws RemoteException, SecurityException {
         return systemCode;
     }
 

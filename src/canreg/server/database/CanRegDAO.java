@@ -80,13 +80,13 @@ public class CanRegDAO {
 
     /**
      *
-     * @param systemCode
+     * @param registryCode
      * @param doc
      */
-    public CanRegDAO(String systemCode, Document doc) {
+    public CanRegDAO(String registryCode, Document doc) {
         this.doc = doc;
 
-        this.systemCode = systemCode;
+        this.registryCode = registryCode;
 
         globalToolBox = new GlobalToolBox(doc);
 
@@ -131,6 +131,7 @@ public class CanRegDAO {
          strGetHighestTumourRecordID = QueryGenerator.strGetHighestTumourRecordID(globalToolBox);
          */
         setDBSystemDir();
+        createHoldingDBDir();
         dbProperties = loadDBProperties();
         String driverName = dbProperties.getProperty("derby.driver");
         loadDatabaseDriver(driverName);
@@ -543,8 +544,8 @@ public class CanRegDAO {
     public synchronized String performBackup() {
         String path = null;
         try {
-            path = canreg.server.database.derby.Backup.backUpDatabase(dbConnection, Globals.CANREG_BACKUP_FOLDER + Globals.FILE_SEPARATOR + getSystemCode());
-            canreg.server.xml.Tools.writeXmlFile(doc, path + Globals.FILE_SEPARATOR + getSystemCode() + ".xml");
+            path = canreg.server.database.derby.Backup.backUpDatabase(dbConnection, Globals.CANREG_BACKUP_FOLDER + Globals.FILE_SEPARATOR + getRegistryCode());
+            canreg.server.xml.Tools.writeXmlFile(doc, path + Globals.FILE_SEPARATOR + getRegistryCode() + ".xml");
         } catch (SQLException ex) {
             Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -589,6 +590,11 @@ public class CanRegDAO {
         // create the db system directory
         File fileSystemDir = new File(systemDir);
         fileSystemDir.mkdir();
+    }
+    
+    private void createHoldingDBDir() {
+        File fileSystemDir = new File(Globals.CANREG_SERVER_HOLDING_DB_FOLDER + Globals.FILE_SEPARATOR + registryCode);
+        fileSystemDir.mkdirs();
     }
 
     private void loadDatabaseDriver(String driverName) {
@@ -670,7 +676,6 @@ public class CanRegDAO {
     }
 
     private boolean createDatabase() {
-
         boolean bCreated = false;
         dbConnection = null;
 
@@ -729,23 +734,23 @@ public class CanRegDAO {
             dbConnection.close(); // Close current connection.
 
             // check to see if there is a database already - rename it
-            File databaseFolder = new File(Globals.CANREG_SERVER_DATABASE_FOLDER + Globals.FILE_SEPARATOR + getSystemCode());
+            File databaseFolder = new File(Globals.CANREG_SERVER_DATABASE_FOLDER + Globals.FILE_SEPARATOR + getRegistryCode());
             if (databaseFolder.exists()) {
                 int i = 0;
                 File folder2 = databaseFolder;
                 while (folder2.exists()) {
                     i++;
-                    folder2 = new File(Globals.CANREG_SERVER_DATABASE_FOLDER + Globals.FILE_SEPARATOR + getSystemCode() + i);
+                    folder2 = new File(Globals.CANREG_SERVER_DATABASE_FOLDER + Globals.FILE_SEPARATOR + getRegistryCode() + i);
                 }
                 databaseFolder.renameTo(folder2);
                 try {
-                    canreg.common.Tools.fileCopy(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + getSystemCode() + ".xml",
-                            Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + getSystemCode() + i + ".xml");
+                    canreg.common.Tools.fileCopy(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + getRegistryCode() + ".xml",
+                            Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + getRegistryCode() + i + ".xml");
                 } catch (IOException ex1) {
                     Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex1);
                 }
             }
-            dbProperties.put("restoreFrom", path + "/" + getSystemCode());
+            dbProperties.put("restoreFrom", path + "/" + getRegistryCode());
             dbConnection = DriverManager.getConnection(dbUrl, dbProperties);
             bRestored = true;
         } catch (SQLException ex2) {
@@ -758,8 +763,8 @@ public class CanRegDAO {
         if (bRestored) {
             try {
                 // install the xml
-                canreg.common.Tools.fileCopy(path + Globals.FILE_SEPARATOR + getSystemCode() + ".xml",
-                        Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + getSystemCode() + ".xml");
+                canreg.common.Tools.fileCopy(path + Globals.FILE_SEPARATOR + getRegistryCode() + ".xml",
+                        Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + getRegistryCode() + ".xml");
             } catch (IOException ex1) {
                 Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex1);
             }
@@ -952,7 +957,7 @@ public class CanRegDAO {
      * @return String location of the database
      */
     public String getDatabaseLocation() {
-        String dbLocation = System.getProperty("derby.system.home") + "/" + getSystemCode();
+        String dbLocation = System.getProperty("derby.system.home") + "/" + getRegistryCode();
         return dbLocation;
     }
 
@@ -961,7 +966,7 @@ public class CanRegDAO {
      * @return
      */
     public String getDatabaseUrl() {
-        String dbUrl = dbProperties.getProperty("derby.url") + getSystemCode();
+        String dbUrl = dbProperties.getProperty("derby.url") + getRegistryCode();
         return dbUrl;
     }
 
@@ -2103,7 +2108,7 @@ public class CanRegDAO {
     private Connection dbConnection;
     private Properties dbProperties;
     private boolean isConnected;
-    private final String systemCode;
+    private final String registryCode;
     private final Document doc;
     private Map<Integer, Dictionary> dictionaryMap;
     private final Map<String, Set<Integer>> locksMap;
@@ -2694,10 +2699,10 @@ public class CanRegDAO {
     }
 
     /**
-     * @return the systemCode
+     * @return the registryCode
      */
-    public String getSystemCode() {
-        return systemCode;
+    public String getRegistryCode() {
+        return registryCode;
     }
 
     void upgrade() throws SQLException, RemoteException {

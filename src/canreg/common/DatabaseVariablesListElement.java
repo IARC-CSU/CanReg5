@@ -367,7 +367,10 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
      * @return
      */
     public String getSQLqueryFormat(String string) {
-        if (getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_DICTIONARY_NAME) || getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_ALPHA_NAME) || getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_DATE_NAME) || getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_TEXT_AREA_NAME)) {
+        if (getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_DICTIONARY_NAME) ||
+            getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_ALPHA_NAME) || 
+            getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_DATE_NAME) || 
+            getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_TEXT_AREA_NAME)) {
             string = "'" + string + "'";
         }
         return string;

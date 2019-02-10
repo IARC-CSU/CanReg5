@@ -28,6 +28,7 @@ import canreg.common.database.DatabaseRecord;
 import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.client.CanRegClientApp;
 import canreg.client.dataentry.Relation;
+import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
 import canreg.common.conversions.ConversionResult;
 import canreg.common.conversions.Converter;
@@ -35,6 +36,7 @@ import canreg.common.qualitycontrol.CheckResult;
 import canreg.common.qualitycontrol.CheckResult.ResultCode;
 import canreg.server.CanRegServerInterface;
 import canreg.server.database.*;
+import canreg.server.management.SystemDescription;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import java.io.BufferedWriter;
@@ -45,8 +47,15 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -405,6 +414,74 @@ public class Import {
 
         return success;
     }
+    
+    public static boolean importFilesIntoHoldingDB(Task<Object, Void> task, Document originalDBDescription, 
+                                      List<canreg.client.dataentry.Relation> map, File[] files, 
+                                      CanRegServerInterface server, ImportOptions io)
+            throws SQLException, RemoteException, SecurityException, URISyntaxException {
+        //Creation of XML of Holding DB 
+        String dateStr = new SimpleDateFormat("yyyy-MM-dd").format((Calendar.getInstance()).getTime());
+        String registryCode = server.getCanRegRegistryCode();
+        int newHoldingDBNumber = canreg.common.Tools.getLastHoldingDBnumber(registryCode) + 1;
+        File registryCodeHoldingFolder = new File(Globals.CANREG_SERVER_HOLDING_DB_FOLDER + Globals.FILE_SEPARATOR + registryCode);
+        
+        //Include the date AND a number in the HDB system code (the user COULD do more than 1 HDB of the same xml on the same date)
+        String dbName = "HOLDING_" + newHoldingDBNumber + "_" + server.getCanRegRegistryCode() + " " + dateStr;
+        File holdingXmlPath = new File(registryCodeHoldingFolder.getAbsolutePath() + Globals.FILE_SEPARATOR + dbName);
+        holdingXmlPath.mkdirs();
+        
+        SystemDescription systemDescription = new SystemDescription(Paths.get(new URI(originalDBDescription.getDocumentURI())).toFile().getAbsolutePath());
+        int lastVariableId = systemDescription.getDatabaseVariableListElements().length - 1;
+        
+        //Two new variables are added for the holding DB: "Format Errors" and "Raw Data"    
+        //First we add the "Fromat Errors". This is the penultimate column in the csv file. This columns
+        //indicates which are the columns that have format errors.
+        DatabaseVariablesListElement variableFormatErrors = new DatabaseVariablesListElement(Globals.PATIENT_TABLE_NAME, 1, "FORMAT_ERRORS", Globals.VARIABLE_TYPE_ALPHA_NAME);
+        //systemDescription.getDatabaseGroupsListElements()[1] is the default group
+        variableFormatErrors.setGroup(systemDescription.getDatabaseGroupsListElements()[1]);
+        variableFormatErrors.setVariableLength(4000);
+        variableFormatErrors.setVariableID(++lastVariableId);
+        variableFormatErrors.setFullName("Format errors from original CSV");
+        variableFormatErrors.setEnglishName("Format Errors");
+        variableFormatErrors.setFillInStatus("Optional");
+        variableFormatErrors.setMultiplePrimaryCopy("Othr");
+        variableFormatErrors.setStandardVariableName("");
+        variableFormatErrors.setXPos(0);
+        variableFormatErrors.setYPos(0);
+        
+        
+        //The "Raw Data" columns contains the full content for that record. Useful so the user can
+        //revise format errors but without the forced changes of the data entry GUI.
+        DatabaseVariablesListElement variableRawData = new DatabaseVariablesListElement(Globals.PATIENT_TABLE_NAME, 1, "RAW_DATA", Globals.VARIABLE_TYPE_ALPHA_NAME);
+        variableRawData.setGroup(systemDescription.getDatabaseGroupsListElements()[1]);
+        variableRawData.setVariableLength(32500);
+        variableRawData.setVariableID(++lastVariableId);
+        variableRawData.setFullName("Raw Data from original CSV");
+        variableRawData.setEnglishName("Raw Data");
+        variableRawData.setFillInStatus("Optional");
+        variableRawData.setMultiplePrimaryCopy("Othr");
+        variableRawData.setStandardVariableName("");
+        variableRawData.setXPos(0);
+        variableRawData.setYPos(0);
+        
+        ArrayList<DatabaseVariablesListElement> variables = new ArrayList<>(Arrays.asList(systemDescription.getDatabaseVariableListElements()));
+        variables.add(variableFormatErrors);
+        variables.add(variableRawData);
+        systemDescription.setVariables(variables.toArray(new DatabaseVariablesListElement[variables.size()]));
+        
+        systemDescription.setRegistryCode(dbName);
+        File holdingXml = new File(holdingXmlPath.getAbsolutePath() + Globals.FILE_SEPARATOR + dbName + ".xml");
+        boolean success = systemDescription.saveSystemDescriptionXML(holdingXml.getAbsolutePath());
+                       
+//        CanRegDAO hdbDAO = new CanRegDAO(hdbCanRegSystemCode, doc);
+
+        //SI EN ALGUN MOMENTO ESTO LANZA UNA EXCEPCION, ENTONCES HABRIA QUE BORRA ESA CARPETA DE HOLDING
+        
+        //TENE EN CUENTA QUE EL XML HOLDING LO TENES QUE GUARDAR EN EL SERVIDOR, NO EN EL CLIENTE!! ASI QUE SEGURAMENTE
+        //VAS A TENER QUE CREAR UN METODO EN EL PROXY Y EN SERVERIMPL
+
+        return true;
+    }
 
     public static boolean importFiles(Task<Object, Void> task, Document doc, 
                                       List<canreg.client.dataentry.Relation> map, File[] files, 
@@ -495,6 +572,12 @@ public class Import {
 
                     // debugOut(tumour.toString());
                     // add patient to the database
+                    
+//                    No va a haber un oldPatientRecord, ya que estamos metiendo todo a la Holding DB. 
+//                    De modo que deberia ir a parar directo a la DB, nada de verificar contra un old record.
+//                    PERO OJO!! todo este codigo seguro lo vas a tener que utilizar al mover el record desde
+//                    la holding hacia produccion, asi que NO TIRES ESTE CODIGO A LA BASURA, GUARDALO!
+
                     Object patientID = patient.getVariable(io.getPatientRecordIDVariableName());
                     Patient oldPatientRecord = null;
                     try {

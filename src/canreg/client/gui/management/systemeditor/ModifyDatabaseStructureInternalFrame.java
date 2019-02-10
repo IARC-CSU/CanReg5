@@ -535,7 +535,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         personSearchVariablesPanel.setDefaultButtonVisibility(false);
 
         registryNameTextField.setText(systemDescription.getSystemName());
-        registryCodeTextField.setText(systemDescription.getSystemCode());
+        registryCodeTextField.setText(systemDescription.getRegistryCode());
         regionComboBox.setSelectedItem(systemDescription.getRegion());
         databaseVariablePanel.setElements(systemDescription.getDatabaseVariableListElements());
         databaseVariablePanel.setDefaultGroup(systemDescription.getDatabaseGroupsListElements()[1]);

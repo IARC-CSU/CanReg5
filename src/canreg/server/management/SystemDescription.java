@@ -155,7 +155,7 @@ public final class SystemDescription {
      *
      * @return
      */
-    public String getSystemCode() {
+    public String getRegistryCode() {
         String name = null;
 
         if (doc != null) {
@@ -445,6 +445,7 @@ public final class SystemDescription {
             success = true;
         } catch (RuntimeException npe) {
             Logger.getLogger(SystemDescription.class.getName()).log(Level.SEVERE, "Error writing system description...");
+            throw npe;
         }
         return success;
     }
