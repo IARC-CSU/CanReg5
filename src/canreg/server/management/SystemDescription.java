@@ -30,6 +30,7 @@ import canreg.common.qualitycontrol.PersonSearcher;
 import canreg.server.database.QueryGenerator;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,7 +44,7 @@ import org.xml.sax.SAXException;
  *
  * @author ervikm
  */
-public final class SystemDescription {
+public final class SystemDescription implements Serializable {
 
     private static boolean debug = Globals.DEBUG;
     private Document doc;
@@ -54,6 +55,8 @@ public final class SystemDescription {
     private DatabaseGroupsListElement[] groupListElements;
     private DatabaseVariablesListElement[] variableListElements;
     private DatabaseIndexesListElement[] indexListElements;
+    private File systemDescriptionLocation;
+    
 
     /**
      *
@@ -105,6 +108,14 @@ public final class SystemDescription {
     public Document getSystemDescriptionDocument() {
         return doc;
     }
+
+    public File getSystemDescriptionLocation() {
+        return systemDescriptionLocation;
+    }
+
+    public void setSystemDescriptionLocation(File systemDescriptionLocation) {
+        this.systemDescriptionLocation = systemDescriptionLocation;
+    }    
 
     /**
      *
@@ -430,24 +441,18 @@ public final class SystemDescription {
         }
     }
 
-    /**
-     *
-     * @param path
-     */
-    public boolean saveSystemDescriptionXML(String path) {
-        boolean success = false;
+
+    public void saveSystemDescriptionXML(String path) {
         File file = new File(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER); // Check to see it the canreg system folder exists
         if (!file.exists()) {
             file.mkdirs(); // create it if necessary
         }
         try {
             canreg.server.xml.Tools.writeXmlFile(doc, path);
-            success = true;
         } catch (RuntimeException npe) {
             Logger.getLogger(SystemDescription.class.getName()).log(Level.SEVERE, "Error writing system description...");
             throw npe;
         }
-        return success;
     }
 
     private TreeMap<String, DatabaseDictionaryListElement> getDictionaryMap() {

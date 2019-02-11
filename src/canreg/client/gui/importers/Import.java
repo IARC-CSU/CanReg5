@@ -418,18 +418,8 @@ public class Import {
     public static boolean importFilesIntoHoldingDB(Task<Object, Void> task, Document originalDBDescription, 
                                       List<canreg.client.dataentry.Relation> map, File[] files, 
                                       CanRegServerInterface server, ImportOptions io)
-            throws SQLException, RemoteException, SecurityException, URISyntaxException {
-        //Creation of XML of Holding DB 
-        String dateStr = new SimpleDateFormat("yyyy-MM-dd").format((Calendar.getInstance()).getTime());
-        String registryCode = server.getCanRegRegistryCode();
-        int newHoldingDBNumber = canreg.common.Tools.getLastHoldingDBnumber(registryCode) + 1;
-        File registryCodeHoldingFolder = new File(Globals.CANREG_SERVER_HOLDING_DB_FOLDER + Globals.FILE_SEPARATOR + registryCode);
-        
-        //Include the date AND a number in the HDB system code (the user COULD do more than 1 HDB of the same xml on the same date)
-        String dbName = "HOLDING_" + newHoldingDBNumber + "_" + server.getCanRegRegistryCode() + " " + dateStr;
-        File holdingXmlPath = new File(registryCodeHoldingFolder.getAbsolutePath() + Globals.FILE_SEPARATOR + dbName);
-        holdingXmlPath.mkdirs();
-        
+            throws SQLException, RemoteException, SecurityException, URISyntaxException, 
+                   IOException {        
         SystemDescription systemDescription = new SystemDescription(Paths.get(new URI(originalDBDescription.getDocumentURI())).toFile().getAbsolutePath());
         int lastVariableId = systemDescription.getDatabaseVariableListElements().length - 1;
         
@@ -441,14 +431,14 @@ public class Import {
         variableFormatErrors.setGroup(systemDescription.getDatabaseGroupsListElements()[1]);
         variableFormatErrors.setVariableLength(4000);
         variableFormatErrors.setVariableID(++lastVariableId);
+        //The next sets() are mandatory, otherwise the saveXml() throws an exception
         variableFormatErrors.setFullName("Format errors from original CSV");
         variableFormatErrors.setEnglishName("Format Errors");
         variableFormatErrors.setFillInStatus("Optional");
         variableFormatErrors.setMultiplePrimaryCopy("Othr");
         variableFormatErrors.setStandardVariableName("");
         variableFormatErrors.setXPos(0);
-        variableFormatErrors.setYPos(0);
-        
+        variableFormatErrors.setYPos(0);        
         
         //The "Raw Data" columns contains the full content for that record. Useful so the user can
         //revise format errors but without the forced changes of the data entry GUI.
@@ -469,9 +459,13 @@ public class Import {
         variables.add(variableRawData);
         systemDescription.setVariables(variables.toArray(new DatabaseVariablesListElement[variables.size()]));
         
-        systemDescription.setRegistryCode(dbName);
-        File holdingXml = new File(holdingXmlPath.getAbsolutePath() + Globals.FILE_SEPARATOR + dbName + ".xml");
-        boolean success = systemDescription.saveSystemDescriptionXML(holdingXml.getAbsolutePath());
+        //Creation of XML of Holding DB        
+        String registryCode = server.getCanRegRegistryCode();
+        String dateStr = new SimpleDateFormat("yyyy-MM-dd").format((Calendar.getInstance()).getTime());
+        int newHoldingDBNumber = server.getLastHoldingDBnumber(registryCode) + 1;
+        String dbName = "HOLDING_" + newHoldingDBNumber + "_" + registryCode + " " + dateStr;
+        systemDescription = server.createNewHoldingDB(registryCode, dbName, systemDescription);
+
                        
 //        CanRegDAO hdbDAO = new CanRegDAO(hdbCanRegSystemCode, doc);
 

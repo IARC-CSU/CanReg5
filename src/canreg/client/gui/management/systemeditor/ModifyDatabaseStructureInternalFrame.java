@@ -611,16 +611,16 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
             }
             file.renameTo(oldFile.getAbsoluteFile());
         }
-        boolean success = systemDescription.saveSystemDescriptionXML(fileName);
-        if (success) {
+        
+        try {
+            systemDescription.saveSystemDescriptionXML(fileName);
             String message = java.util.ResourceBundle.getBundle("canreg/client/gui/management/systemeditor/resources/ModifyDatabaseStructureInternalFrame").getString("SYSTEM_DEFINITION_SAVED_AS_") + fileName + ".";
             if (oldFile != null) {
                 message += "\n" + java.util.ResourceBundle.getBundle("canreg/client/gui/management/systemeditor/resources/ModifyDatabaseStructureInternalFrame").getString("OLD_FILE_BACKED_UP_AS_") + oldFile.getAbsolutePath();
             }
             JOptionPane.showMessageDialog(this, message, "Saved", JOptionPane.INFORMATION_MESSAGE);
-            
-        } else {
-            // Rename XML to error...
+        } catch(Exception ex) {
+             // Rename XML to error...
             file = new File(fileName);
             file.renameTo(new File(fileName + "-error.xml"));
             // Restore old xml if possible...

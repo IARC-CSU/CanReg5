@@ -51,6 +51,7 @@ import java.awt.SystemTray;
 import java.awt.Toolkit;
 import java.awt.TrayIcon;
 import java.awt.TrayIcon.MessageType;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.UnknownHostException;
@@ -61,15 +62,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.derby.drda.NetworkServerControl;
 import java.net.InetAddress;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import org.w3c.dom.Document;
 
@@ -1036,5 +1037,32 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     @Override
     public String getCanRegSystemRegion() throws RemoteException, SecurityException {
         return systemDescription.getRegion();
+    }
+    
+    @Override
+    public int getLastHoldingDBnumber(String registryCode) {
+        File holdingDir = new File(Globals.CANREG_SERVER_HOLDING_DB_FOLDER + Globals.FILE_SEPARATOR + systemCode);
+        int highestNumber = 0;
+        for(String folder : holdingDir.list()) {
+            folder = folder.substring(folder.indexOf("_") + 1);
+            folder = folder.substring(0, folder.indexOf("_"));
+            int holdingNumber = Integer.valueOf(folder);
+            if(holdingNumber > highestNumber) highestNumber = holdingNumber;
+        }
+        return highestNumber;
+    }
+    
+    @Override
+    public SystemDescription createNewHoldingDB(String registryCode, String dbName, SystemDescription sysDesc)
+            throws RemoteException, IOException, SecurityException {
+        File registryCodeHoldingFolder = new File(Globals.CANREG_SERVER_HOLDING_DB_FOLDER + Globals.FILE_SEPARATOR + registryCode);
+        //Include the date AND a number in the HDB system code (the user COULD do more than 1 HDB of the same xml on the same date)
+        File holdingXmlPath = new File(registryCodeHoldingFolder.getAbsolutePath() + Globals.FILE_SEPARATOR + dbName);
+        holdingXmlPath.mkdirs();
+        File holdingXml = new File(holdingXmlPath.getAbsolutePath() + Globals.FILE_SEPARATOR + dbName + ".xml");
+        sysDesc.setRegistryCode(dbName);
+        sysDesc.setSystemDescriptionLocation(holdingXmlPath);
+        sysDesc.saveSystemDescriptionXML(holdingXml.getAbsolutePath());
+        return sysDesc;
     }
 }

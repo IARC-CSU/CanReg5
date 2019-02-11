@@ -36,6 +36,8 @@ import canreg.common.database.PopulationDataset;
 import canreg.server.database.RecordLockedException;
 import canreg.common.database.Tumour;
 import canreg.server.database.UnknownTableException;
+import canreg.server.management.SystemDescription;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -467,5 +469,10 @@ public interface CanRegServerInterface extends Remote {
 
     public String getCanRegRegistryCode() throws RemoteException, SecurityException;
 
-    public String getCanRegSystemRegion()throws RemoteException, SecurityException;
+    public String getCanRegSystemRegion() throws RemoteException, SecurityException;
+    
+    public int getLastHoldingDBnumber(String registryCode) throws RemoteException, SecurityException;
+    
+    public SystemDescription createNewHoldingDB(String registryCode, String dbName, SystemDescription sysDesc)
+            throws RemoteException, IOException, SecurityException;
 }

@@ -35,7 +35,9 @@ import canreg.common.database.PopulationDataset;
 import canreg.server.database.RecordLockedException;
 import canreg.common.database.Tumour;
 import canreg.server.database.UnknownTableException;
+import canreg.server.management.SystemDescription;
 import canreg.server.security.ValidateMethodCall;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -375,5 +377,19 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     public String getCanRegSystemRegion() throws RemoteException, SecurityException {
         checkPermission("getSystemRegion");
         return theServer.getCanRegSystemRegion();
+    }    
+    
+    @Override
+    public int getLastHoldingDBnumber(String registryCode) 
+            throws RemoteException, SecurityException {
+        checkPermission("getLastHoldingDBnumber");
+        return theServer.getLastHoldingDBnumber(registryCode);
+    }
+    
+    @Override
+    public SystemDescription createNewHoldingDB(String registryCode, String dbName, SystemDescription sysDesc)
+            throws RemoteException, IOException, SecurityException {
+        checkPermission("createNewHoldingDB");
+        return theServer.createNewHoldingDB(registryCode, dbName, sysDesc);
     }
 }
