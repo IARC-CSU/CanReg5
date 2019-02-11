@@ -814,11 +814,12 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
                     ArrayList<File> outputFiles = RTools.runRimportScript("CR5formatChecks.R", rParamsFile);
                     //As a result of the R format checks, all files have been re-created
                     //with some changes. These are the files that we'll use to perform
-                    //the import.
-                    for(int i = 0; i < outputFiles.size(); i++) {
-                        if(files[i] != null)
-                            files[i] = outputFiles.get(i);
+                    //the import. The Algorithms that perform the import ALWAYS expect an
+                    //array of 3 positions.
+                    while(outputFiles.size() < 3) {
+                        outputFiles.add(null);
                     }
+                    files = outputFiles.toArray(new File[outputFiles.size()]);
 
                     //The output files of the R format checks are all in UTF-8
                     io.setFilesCharsets(new Charset[]{
@@ -829,7 +830,7 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
                     
                     this.firePropertyChange(Import.R_SCRIPTS, 0, 100);
                 }
-                
+           
                 if(holdingDBCheckBox.isSelected())
                     success = CanRegClientApp.getApplication().importFilesIntoHoldingDB(this, doc, variablesMap, files, io);
                 else {
@@ -852,9 +853,9 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
             // Runs on the EDT.  Update the GUI based on
             // the result computed by doInBackground().
             String fileListString = "";
-            for (int i = 0; i < files.length; i++) {
-                if (files[i] != null) {
-                    fileListString += files[i].getName() + ", ";
+            for (File file : files) {
+                if (file != null) {
+                    fileListString += file.getName() + ", ";
                 }
             }
             Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);

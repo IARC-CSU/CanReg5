@@ -28,7 +28,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -84,47 +83,69 @@ public class RTools {
         }
         
         File scriptFile = getScriptPath(rScript);
-        ArrayList<File> filesCreated = new ArrayList<>();
+        ArrayList<File> filesCreated = null;
                 
         ArrayList<String> commandList = new ArrayList();
         commandList.add(rpath);
         commandList.add("--vanilla");
         commandList.add("--slave");
-        commandList.add("--file=" + scriptFile.getCanonicalPath() );
+        commandList.add("--file=" + fixPath(scriptFile.getCanonicalPath()));
         commandList.add("--args");
         commandList.add("-paramsFile=" + fixPath(paramsFile.getCanonicalPath()));
         System.out.println(commandList);
                 
         Process proc = null;
+        InputStream inputStr = null;
         try {
             Runtime rt = Runtime.getRuntime();
             proc = rt.exec(commandList.toArray(new String[]{}));
             // collect the output from the R script in a stream
-            InputStream is = new BufferedInputStream(proc.getInputStream());
+            inputStr = new BufferedInputStream(proc.getInputStream());
             proc.waitFor();
             // convert the output to a string
-            String theString = canreg.client.analysis.Tools.convertStreamToString(is);
-            Logger.getLogger(RTools.class.getName()).log(Level.INFO, "Messages from R: \n{0}", theString);
+            String theString = canreg.client.analysis.Tools.convertStreamToString(inputStr);
+//            Logger.getLogger(RTools.class.getName()).log(Level.INFO, "Messages from R: \n{0}", theString);            
             
-            int index = 0;
-            for (String fileName : theString.split("\\r?\\n")) {
-                fileName = fileName.replaceFirst("-outFile:", "");
-                if (new File(fileName).exists()) 
-                    filesCreated.add(index, new File(fileName));
-                else
-                    filesCreated.add(index, null);
-                index++;
+            if(theString.contains("-outFile")){
+                for (String fileName : theString.split("\\r?\\n")) {
+                    fileName = fileName.replaceFirst("-outFile:", "");
+                    if (new File(fileName).exists()) {
+                        filesCreated = new ArrayList<>(1);
+                        filesCreated.add(new File(fileName));
+                        break;
+                    }
+                }
+            } else {
+                filesCreated = new ArrayList<>(3);
+                for (String fileName : theString.split("\\r?\\n")) {
+                    fileName = fileName.replaceFirst("-outPatientFile:", "");
+                    if(new File(fileName).exists()) { 
+                        filesCreated.add(0, new File(fileName));
+                        continue;
+                    }
+                    fileName = fileName.replaceFirst("-outTumourFile:", "");
+                    if(new File(fileName).exists()) {
+                        filesCreated.add(1, new File(fileName));
+                        continue;
+                    }
+                    fileName = fileName.replaceFirst("-outSourceFile:", "");
+                    if(new File(fileName).exists()) 
+                        filesCreated.add(2, new File(fileName));
+                }
             }
-        } catch (java.util.NoSuchElementException ex) {
+            if(filesCreated == null || filesCreated.isEmpty())
+                throw new RuntimeException("No output files were found after running the " + scriptFile + " script.");
+        } catch (Exception ex) {
             Logger.getLogger(RTools.class.getName()).log(Level.SEVERE, null, ex);
             BufferedInputStream errorStream = new BufferedInputStream(proc.getErrorStream());
             String errorMessage = canreg.client.analysis.Tools.convertStreamToString(errorStream);
             System.out.println(errorMessage);
-            throw new RuntimeException("R says:\n \"" + errorMessage + "\"");
-        } catch(InterruptedException | IOException ex) {
-            Logger.getLogger(RTools.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException("************R SCRIPT ERROR:\n \"" + errorMessage + "\"");
         } finally {
-            System.out.println(proc.exitValue());
+            if(inputStr != null)
+                inputStr.close();
+            if(proc != null)
+                proc.destroyForcibly();
         }
         
         return filesCreated;
