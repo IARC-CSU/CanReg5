@@ -534,7 +534,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         personSearchVariablesPanel.toggleDefaultSettingsAction();
         personSearchVariablesPanel.setDefaultButtonVisibility(false);
 
-        registryNameTextField.setText(systemDescription.getSystemName());
+        registryNameTextField.setText(systemDescription.getRegistryName());
         registryCodeTextField.setText(systemDescription.getRegistryCode());
         regionComboBox.setSelectedItem(systemDescription.getRegion());
         databaseVariablePanel.setElements(systemDescription.getDatabaseVariableListElements());
@@ -590,7 +590,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         }
         // refresh the doc
         // set the system stuff
-        systemDescription.setSystemName(registryNameTextField.getText());
+        systemDescription.setRegistryName(registryNameTextField.getText());
         systemDescription.setRegistryCode(registryCodeTextField.getText());
         systemDescription.setRegionCode(Arrays.asList(Globals.REGIONS).indexOf(regionComboBox.getSelectedItem()));
         systemDescription.setDictionaries((DatabaseDictionaryListElement[]) databaseDictionaryPanel.getDatabaseElements());

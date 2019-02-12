@@ -168,7 +168,7 @@ public class InstallNewSystemInternalFrame extends javax.swing.JInternalFrame {
                 // load the document
                 loadDocument(document);
                 // Add this new server to the list of favourite servers
-                int i = localSettings.addServerToServerList(systemDescription.getSystemName(), Globals.DEFAULT_SERVER_ADDRESS, Globals.DEFAULT_PORT, systemDescription.getRegistryCode());
+                int i = localSettings.addServerToServerList(systemDescription.getRegistryName(), Globals.DEFAULT_SERVER_ADDRESS, Globals.DEFAULT_PORT, systemDescription.getRegistryCode());
                 // Set it as default start up server
                 localSettings.setProperty(LocalSettings.LAST_SERVER_ID_KEY, "" + i);
                 // Set it to autostart
@@ -201,7 +201,7 @@ public class InstallNewSystemInternalFrame extends javax.swing.JInternalFrame {
 
                 // and show confirmation
                 if (!backupTried) {
-                    JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), systemDescription.getSystemName() + java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/InstallNewSystemInternalFrame").getString(" IS NOW READY. PLEASE LOG IN."), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/InstallNewSystemInternalFrame").getString("MESSAGE."), JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), systemDescription.getRegistryName() + java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/InstallNewSystemInternalFrame").getString(" IS NOW READY. PLEASE LOG IN."), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/InstallNewSystemInternalFrame").getString("MESSAGE."), JOptionPane.INFORMATION_MESSAGE);
                     CanRegClientApp.getApplication().showLogginFrame();
                 }
                 // this.dispose();

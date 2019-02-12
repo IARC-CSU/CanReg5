@@ -57,7 +57,8 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     private final CanRegServerInterface theServer;
     private final Subject theUser;
 
-    public CanRegServerProxy(Subject user, CanRegServerInterface server) throws RemoteException {
+    CanRegServerProxy(Subject user, CanRegServerInterface server) 
+            throws RemoteException {
         // Prevent JAVA to use a random port.
         super(1099);
         
@@ -101,9 +102,9 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     }
 
     @Override
-    public String getCanRegSystemName() throws RemoteException, SecurityException {
+    public String getCanRegRegistryName() throws RemoteException, SecurityException {
         checkPermission("getCanRegSystemName");
-        return theServer.getCanRegSystemName();
+        return theServer.getCanRegRegistryName();
     }
 
     @Override
@@ -194,7 +195,8 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     @Override
     public Map<Integer, Dictionary> getDictionary() throws RemoteException, SecurityException {
         checkPermission("getDictionary");
-        return theServer.getDictionary();
+        Map<Integer, Dictionary> map = theServer.getDictionary();
+        return map;
     }
 
     @Override
@@ -391,5 +393,18 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
             throws RemoteException, IOException, SecurityException {
         checkPermission("createNewHoldingDB");
         return theServer.createNewHoldingDB(registryCode, dbName, sysDesc);
+    }
+    
+    @Override
+    public void changeRegistryDB(String registryCode) 
+            throws RemoteException, SecurityException {
+        checkPermission("changeRegistryDB");
+        theServer.changeRegistryDB(registryCode);
+    }
+    
+    @Override
+    public void resetRegistryDB() throws RemoteException, SecurityException {
+        checkPermission("changeRegistryDB");
+        theServer.resetRegistryDB();
     }
 }

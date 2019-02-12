@@ -89,7 +89,7 @@ public interface CanRegServerInterface extends Remote {
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
-    public String getCanRegSystemName()
+    public String getCanRegRegistryName()
             throws RemoteException, SecurityException;
 
     /**
@@ -475,4 +475,8 @@ public interface CanRegServerInterface extends Remote {
     
     public SystemDescription createNewHoldingDB(String registryCode, String dbName, SystemDescription sysDesc)
             throws RemoteException, IOException, SecurityException;
+    
+    public void changeRegistryDB(String registryCode) throws RemoteException, SecurityException;
+    
+    public void resetRegistryDB() throws RemoteException, SecurityException;
 }

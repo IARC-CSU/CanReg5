@@ -398,7 +398,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             loginServer = (CanRegLoginInterface) Naming.lookup(serverObjectString);
             //login object received
             // try to get system name
-            sysName = loginServer.getSystemName();
+            sysName = loginServer.getRegistryName();
         } catch (NotBoundException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
         } catch (RemoteException ex) {
@@ -426,7 +426,10 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @throws java.net.UnknownHostException
      * @throws canreg.exceptions.WrongCanRegVersionException
      */
-    public String loginRMI(String serverObjectString, String username, char[] password) throws LoginException, NullPointerException, NotBoundException, MalformedURLException, RemoteException, UnknownHostException, WrongCanRegVersionException {
+    public String loginRMI(String serverObjectString, String username, char[] password) 
+            throws LoginException, NullPointerException, NotBoundException, 
+                   MalformedURLException, RemoteException, UnknownHostException, 
+                   WrongCanRegVersionException {
         String returnString = null;
         debugOut("connecting to server=" + serverObjectString + " as " + username + ".");
         //authenticate credentials
@@ -460,7 +463,7 @@ public class CanRegClientApp extends SingleFrameApplication {
 
             debugOut("LOGIN SUCCESSFULL");
             // This should work...
-            systemName = server.getCanRegSystemName();
+            systemName = server.getCanRegRegistryName();
             loggedIn = true;
             doc = server.getDatabseDescription();
             dictionary = server.getDictionary();

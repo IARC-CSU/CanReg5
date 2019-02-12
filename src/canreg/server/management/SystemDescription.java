@@ -121,7 +121,7 @@ public final class SystemDescription implements Serializable {
      *
      * @return
      */
-    public String getSystemName() {
+    public String getRegistryName() {
         String name = null;
 
         if (doc != null) {
@@ -184,7 +184,7 @@ public final class SystemDescription implements Serializable {
      *
      * @param systemName
      */
-    public void setSystemName(String systemName) {
+    public void setRegistryName(String systemName) {
         if (doc != null) {
             NodeList nl = doc.getElementsByTagName(namespace + "registry_name");
 

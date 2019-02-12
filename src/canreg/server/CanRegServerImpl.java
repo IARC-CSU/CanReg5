@@ -62,9 +62,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.derby.drda.NetworkServerControl;
 import java.net.InetAddress;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,10 +80,10 @@ import org.w3c.dom.Document;
 public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServerInterface {
 
     private static boolean debug = true;
-    private CanRegDAO db;
+
     private NetworkServerControl dbServer;
     private SystemDescription systemDescription;
-    private String systemCode;
+    private String defaultRegistryCode;
     private SystemSettings systemSettings;
     private PersonSearcher personSearcher;
     private Properties appInfoProperties;
@@ -94,7 +93,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     private GlobalToolBox serverToolbox;
     private TrayIcon trayIcon;
     
-//    private ServerOps operations;
+    private CanRegDAO currentDAO;
+    private HashMap<String, CanRegDAO> registriesDAOs;
 
     /**
      *
@@ -105,9 +105,10 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         // Prevent JAVA to use a random port.
         super(1099);
 
+        registriesDAOs = new HashMap<>();
+        this.defaultRegistryCode = systemCode;
+        
         Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.INFO, "Java version: {0}", System.getProperty("java.version"));
-
-        this.systemCode = systemCode;
 
         // If we can we add a tray icon to show that the CanReg server is running.
         if (SystemTray.isSupported()) {
@@ -168,7 +169,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         // temp!
         // db.setSystemPropery("DATABASE_VERSION", "5.00.05");
         // migrate the database if necessary
-        Migrator migrator = new Migrator(getCanRegVersion(), db);
+        Migrator migrator = new Migrator(getCanRegVersion(), currentDAO);
         setTrayIconToolTip("Migrating CanReg5 " + systemCode + " database to newest version specification...");
         migrator.migrate();
 
@@ -185,14 +186,14 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         setTrayIconToolTip("CanReg5 " + systemCode + " server quality controllers initialized...");
 
         // Step five: start the user manager
-        userManager = new UserManagerNew(db);
+        userManager = new UserManagerNew(currentDAO);
         userManager.writePasswordsToFile();
 
         setTrayIconToolTip("CanReg5 " + systemCode + " server user manager started initialized...");
 
         // Update the tooltip now that everything is up and running...
-        setTrayIconToolTip("CanReg5 server " + systemDescription.getSystemName() + " (" + systemCode + ") running");
-        displayTrayIconPopUpMessage("Server running", "CanReg5 server " + systemDescription.getSystemName() + " (" + systemCode + ") running", MessageType.INFO);
+        setTrayIconToolTip("CanReg5 server " + systemDescription.getRegistryName() + " (" + systemCode + ") running");
+        displayTrayIconPopUpMessage("Server running", "CanReg5 server " + systemDescription.getRegistryName() + " (" + systemCode + ") running", MessageType.INFO);
     }
 
     // Initialize the database connection
@@ -201,9 +202,9 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         boolean connected = false;
 
         // Connect to the database
-        db = new CanRegDAO(systemCode, systemDescription.getSystemDescriptionDocument());
+        currentDAO = new CanRegDAO(defaultRegistryCode, systemDescription.getSystemDescriptionDocument());
         try {
-            connected = db.connect();
+            connected = currentDAO.connect();
         } catch (SQLException ex) {
             // System.out.println(ex.getCause());
             // System.out.println("Error-code: " + ex.getErrorCode());
@@ -222,14 +223,14 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
                     }
                 }
             }
-
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
             throw ex;
         }
 
-        if (connected && db != null) {
+        if (connected && currentDAO != null) {
             success = true;
+            registriesDAOs.put(defaultRegistryCode, currentDAO);
         }
 
         return success;
@@ -241,9 +242,9 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         boolean connected = false;
 
         // Connect to the database
-        db = new CanRegDAO(systemCode, systemDescription.getSystemDescriptionDocument());
+        currentDAO = new CanRegDAO(defaultRegistryCode, systemDescription.getSystemDescriptionDocument());
         try {
-            connected = db.connectWithBootPassword(password.toCharArray());
+            connected = currentDAO.connectWithBootPassword(password.toCharArray());
         } catch (SQLException ex) {
             Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
             success = false;
@@ -251,8 +252,9 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
             throw ex;
         }
-        if (connected && db != null) {
+        if (connected && currentDAO != null) {
             success = true;
+            registriesDAOs.put(defaultRegistryCode, currentDAO);
         }
         return success;
     }
@@ -262,7 +264,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         boolean success = false;
 
         // Load the system description object
-        systemDescription = new SystemDescription(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + systemCode + ".xml");
+        systemDescription = new SystemDescription(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + defaultRegistryCode + ".xml");
 
         if (systemDescription.getSystemDescriptionDocument() != null) {
             success = true;
@@ -366,11 +368,11 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      * @throws java.lang.SecurityException
      */
     @Override
-    public String getCanRegSystemName() throws RemoteException, SecurityException {
+    public String getCanRegRegistryName() throws RemoteException, SecurityException {
         String name = null;
 
         if (systemDescription != null) {
-            name = systemDescription.getSystemName();
+            name = systemDescription.getRegistryName();
         }
         return name;
     }
@@ -431,7 +433,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      */
     @Override
     public CanRegDAO getDatabseConnection() throws RemoteException, SecurityException {
-        return db;
+        return currentDAO;
     }
 
     private void debugOut(String msg) {
@@ -449,7 +451,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      */
     @Override
     public int savePatient(Patient patient) throws SQLException {
-        return db.savePatient(patient);
+        return currentDAO.savePatient(patient);
     }
 
     /**
@@ -461,7 +463,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      */
     @Override
     public int saveTumour(Tumour tumour) throws SQLException, RecordLockedException {
-        return db.saveTumour(tumour);
+        return currentDAO.saveTumour(tumour);
 
     }
 
@@ -472,7 +474,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      */
     @Override
     public int saveDictionaryEntry(DictionaryEntry dictionaryEntry) {
-        return db.saveDictionaryEntry(dictionaryEntry);
+        return currentDAO.saveDictionaryEntry(dictionaryEntry);
     }
 
     /**
@@ -484,7 +486,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     public String performBackup() throws RemoteException, SecurityException {
         systemSettings.setDateOfLastbackup(new Date());
         systemSettings.writeSettings();
-        return db.performBackup();
+        return currentDAO.performBackup();
     }
 
     /**
@@ -510,7 +512,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      */
     @Override
     public boolean deleteDictionaryEntries(int dictionaryID) throws RemoteException, SecurityException {
-        return db.deleteDictionaryEntries(dictionaryID);
+        return currentDAO.deleteDictionaryEntries(dictionaryID);
     }
 
     /**
@@ -520,7 +522,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      */
     @Override
     public Map<Integer, Dictionary> getDictionary() throws RemoteException, SecurityException {
-        return db.getDictionary();
+        return currentDAO.getDictionary();
     }
 
     /**
@@ -533,7 +535,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     @Override
     public String restoreFromBackup(String path) throws RemoteException, SecurityException {
         // TODO: Add functionality to log off automatically after successful restore...
-        return db.restoreFromBackup(path);
+        return currentDAO.restoreFromBackup(path);
     }
 
     /**
@@ -565,7 +567,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      */
     @Override
     public DistributedTableDescription getDistributedTableDescription(DatabaseFilter filter, String tableName) throws RemoteException, SecurityException, SQLException, UnknownTableException, DistributedTableDescriptionException {
-        return db.getDistributedTableDescriptionAndInitiateDatabaseQuery(filter, tableName, db.generateResultSetID());
+        return currentDAO.getDistributedTableDescriptionAndInitiateDatabaseQuery(filter, tableName, currentDAO.generateResultSetID());
     }
 
     /**
@@ -590,7 +592,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      */
     @Override
     public DatabaseRecord getRecord(int recordID, String tableName, boolean lock) throws RemoteException, SecurityException, RecordLockedException {
-        return db.getRecord(recordID, tableName, lock);
+        return currentDAO.getRecord(recordID, tableName, lock);
     }
 
     /**
@@ -602,7 +604,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      */
     @Override
     public void releaseRecord(int recordID, String tableName) throws RemoteException, SecurityException {
-        db.releaseRecord(recordID, tableName);
+        currentDAO.releaseRecord(recordID, tableName);
     }
 
     /**
@@ -614,7 +616,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      */
     @Override
     public synchronized void editPatient(Patient patient) throws RemoteException, SecurityException, RecordLockedException {
-        db.editPatient(patient);
+        currentDAO.editPatient(patient);
     }
 
     /**
@@ -626,7 +628,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      */
     @Override
     public void editTumour(Tumour tumour) throws RemoteException, SecurityException, RecordLockedException {
-        db.editTumour(tumour);
+        currentDAO.editTumour(tumour);
     }
 
     /**
@@ -642,7 +644,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     public Object[][] retrieveRows(String resultSetID, int from, int to) throws RemoteException, SecurityException {
         Object[][] rows = null;
         try {
-            rows = db.retrieveRows(resultSetID, from, to);
+            rows = currentDAO.retrieveRows(resultSetID, from, to);
         } catch (DistributedTableDescriptionException ex) {
             Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
             throw new RemoteException("Retrieve rows failed: " + ex.getMessage());
@@ -659,7 +661,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      */
     @Override
     public void releaseResultSet(String resultSetID) throws RemoteException, SecurityException, SQLException {
-        db.releaseResultSet(resultSetID);
+        currentDAO.releaseResultSet(resultSetID);
     }
 
     /**
@@ -669,7 +671,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      */
     @Override
     public Map<Integer, PopulationDataset> getPopulationDatasets() throws RemoteException, SecurityException {
-        return db.getPopulationDatasets();
+        return currentDAO.getPopulationDatasets();
     }
 
     /**
@@ -681,7 +683,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      */
     @Override
     public int saveNewPopulationDataset(PopulationDataset pds) throws RemoteException, SecurityException {
-        return db.saveNewPopulationDataset(pds);
+        return currentDAO.saveNewPopulationDataset(pds);
     }
 
     /**
@@ -701,7 +703,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      */
     @Override
     public Map<String, Integer> getNameSexTables() throws RemoteException, SecurityException {
-        return db.getNameSexTables();
+        return currentDAO.getNameSexTables();
     }
 
     /**
@@ -714,7 +716,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      */
     @Override
     public int saveNameSexRecord(NameSexRecord nameSexRecord, boolean replace) throws RemoteException, SecurityException {
-        return db.saveNameSexRecord(nameSexRecord, replace);
+        return currentDAO.saveNameSexRecord(nameSexRecord, replace);
     }
 
     /**
@@ -724,7 +726,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      */
     @Override
     public boolean clearNameSexTable() throws RemoteException, SecurityException {
-        return db.clearNameSexTable();
+        return currentDAO.clearNameSexTable();
     }
 
     /**
@@ -878,7 +880,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             searcher = personSearcher;
         }
         try {
-            dataDescription = db.getDistributedTableDescriptionAndInitiateDatabaseQuery(filter, Globals.PATIENT_TABLE_NAME, db.generateResultSetID());
+            dataDescription = currentDAO.getDistributedTableDescriptionAndInitiateDatabaseQuery(filter, Globals.PATIENT_TABLE_NAME, currentDAO.generateResultSetID());
             Object[][] rowData = retrieveRows(dataDescription.getResultSetID(), 0, dataDescription.getRowCount() - 1);
             patientIDScoreMap = performPersonSearch(patient, searcher, rowData);
             releaseResultSet(dataDescription.getResultSetID());
@@ -948,16 +950,16 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     public synchronized boolean deleteRecord(int id, String tableName) throws RemoteException, SecurityException, RecordLockedException, SQLException {
         boolean success = false;
         if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
-            success = db.deleteTumourRecord(id);
+            success = currentDAO.deleteTumourRecord(id);
         } else if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
-            success = db.deletePatientRecord(id);
+            success = currentDAO.deletePatientRecord(id);
         } else if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
-            success = db.deleteSourceRecord(id);
+            success = currentDAO.deleteSourceRecord(id);
         } else if (tableName.equalsIgnoreCase(Globals.USERS_TABLE_NAME)) {
-            success = db.deleteRecord(id, Globals.USERS_TABLE_NAME);
+            success = currentDAO.deleteRecord(id, Globals.USERS_TABLE_NAME);
             userManager.writePasswordsToFile();
         } else {
-            success = db.deleteRecord(id, tableName);
+            success = currentDAO.deleteRecord(id, tableName);
         }
         return success;
     }
@@ -971,7 +973,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      */
     @Override
     public synchronized boolean deletePopulationDataset(int populationDatasetID) throws RemoteException, SecurityException {
-        return db.deletePopulationDataSet(populationDatasetID);
+        return currentDAO.deletePopulationDataSet(populationDatasetID);
     }
 
     /**
@@ -983,7 +985,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      */
     @Override
     public synchronized int saveUser(User user) throws RemoteException, SecurityException {
-        int id = db.saveUser(user);
+        int id = currentDAO.saveUser(user);
         userManager.writePasswordsToFile();
         return id;
     }
@@ -995,7 +997,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      */
     @Override
     public DatabaseStats getDatabaseStats() throws RemoteException, SecurityException {
-        return db.getDatabaseStats();
+        return currentDAO.getDatabaseStats();
     }
 
     private void setTrayIconToolTip(String toolTip) {
@@ -1022,7 +1024,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     public boolean setDBPassword(char[] newPasswordArray, char[] oldPasswordArray, String encryptionAlgorithm, String encryptionKeyLength) throws RemoteException, SecurityException {
         boolean success = false;
         try {
-            success = db.encryptDatabase(newPasswordArray, oldPasswordArray, encryptionAlgorithm, encryptionKeyLength);
+            success = currentDAO.encryptDatabase(newPasswordArray, oldPasswordArray, encryptionAlgorithm, encryptionKeyLength);
         } catch (SQLException ex) {
             Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1031,7 +1033,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
 
     @Override
     public String getCanRegRegistryCode() throws RemoteException, SecurityException {
-        return systemCode;
+        return defaultRegistryCode;
     }
 
     @Override
@@ -1041,7 +1043,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     
     @Override
     public int getLastHoldingDBnumber(String registryCode) {
-        File holdingDir = new File(Globals.CANREG_SERVER_HOLDING_DB_FOLDER + Globals.FILE_SEPARATOR + systemCode);
+        File holdingDir = new File(Globals.CANREG_SERVER_HOLDING_DB_FOLDER + Globals.FILE_SEPARATOR + defaultRegistryCode);
         int highestNumber = 0;
         for(String folder : holdingDir.list()) {
             folder = folder.substring(folder.indexOf("_") + 1);
@@ -1064,5 +1066,19 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         sysDesc.setSystemDescriptionLocation(holdingXmlPath);
         sysDesc.saveSystemDescriptionXML(holdingXml.getAbsolutePath());
         return sysDesc;
+    }
+    
+    @Override
+    public void changeRegistryDB(String registryCode) 
+            throws RemoteException, SecurityException {
+        CanRegDAO dao = this.registriesDAOs.get(registryCode);
+        if(dao == null)
+//            INICIALIZAR
+        currentDAO = dao;
+    }
+    
+    @Override
+    public void resetRegistryDB() throws RemoteException, SecurityException {
+        currentDAO = this.registriesDAOs.get(this.defaultRegistryCode);
     }
 }
