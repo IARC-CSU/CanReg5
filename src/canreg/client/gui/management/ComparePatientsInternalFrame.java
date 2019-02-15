@@ -367,7 +367,7 @@ public class ComparePatientsInternalFrame extends javax.swing.JInternalFrame {
         DatabaseRecord[] tumourRecords;
 
         try {
-            distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.PATIENT_TABLE_NAME);
+            distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.PATIENT_TABLE_NAME, null);
             int numberOfRecords = distributedTableDescription.getRowCount();
 
             if (numberOfRecords == 0) {
@@ -379,7 +379,7 @@ public class ComparePatientsInternalFrame extends javax.swing.JInternalFrame {
                     record = new Patient();
                     record.setVariable(patientIDlookupVariable, idString);
                     CanRegClientApp.getApplication().saveRecord(record);
-                    distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.PATIENT_TABLE_NAME);
+                    distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.PATIENT_TABLE_NAME, null);
                     numberOfRecords = distributedTableDescription.getRowCount();
                 } else {
                     setCursor(normalCursor);
@@ -412,7 +412,7 @@ public class ComparePatientsInternalFrame extends javax.swing.JInternalFrame {
                     record = CanRegClientApp.getApplication().getRecord(ids[j], Globals.PATIENT_TABLE_NAME, true);
                     recordEditor.addRecord(record);
 
-                    tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(idString, true);
+                    tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(idString, true, null);
                     for (DatabaseRecord rec : tumourRecords) {
                         // store them in a set, so we don't show them several times
                         if (rec != null) {

@@ -1304,23 +1304,13 @@ public final class CanRegClientView extends FrameView {
             patientRecord = CanRegClientApp.getApplication().getRecord(patientID, "patient", true);
 
             internalFrame.addRecord(patientRecord);
-            tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(patientID + "", true);
+            tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(patientID + "", true, null);
             for (DatabaseRecord rec : tumourRecords) {
                 internalFrame.addRecord(rec);
             }
-        } catch (UnknownTableException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RemoteException ex) {
-            Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SecurityException ex) {
-            Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (DistributedTableDescriptionException ex) {
-            Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RecordLockedException ex) {
-            Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } 
 
         showAndPositionInternalFrame(desktopPane, (JInternalFrame) internalFrame);
         maximizeHeight(desktopPane, (JInternalFrame) internalFrame);

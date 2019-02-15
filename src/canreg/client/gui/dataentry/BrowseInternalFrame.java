@@ -510,7 +510,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
         protected Object doInBackground() {
             String result = "OK";
             try {
-                newTableDatadescription = canreg.client.CanRegClientApp.getApplication().getDistributedTableDescription(filter, tableName);
+                newTableDatadescription = canreg.client.CanRegClientApp.getApplication().getDistributedTableDescription(filter, tableName, null);
             } catch (UnknownTableException ex) {
                 Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 result = "Unknown table " + ex.getMessage();
@@ -697,8 +697,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
         DatabaseRecord[] tumourRecords;
 
         try {
-
-            patients = CanRegClientApp.getApplication().getPatientRecordsByID(idString, false);
+            patients = CanRegClientApp.getApplication().getPatientRecordsByID(idString, false, null);
 
             if (patients.length < 1) {
                 /*
@@ -709,7 +708,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                     patient = new Patient();
                     patient.setVariable(patientIDlookupVariable, idString);
                     CanRegClientApp.getApplication().saveRecord(patient);
-                    patients = CanRegClientApp.getApplication().getPatientRecordsByID(idString, false);
+                    patients = CanRegClientApp.getApplication().getPatientRecordsByID(idString, false, null);
                 } else {
                     setCursor(normalCursor);
                     return;
@@ -725,7 +724,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
             // Get all the tumour records for all the patient records...
             for (Patient p : patients) {
                 recordEditor.addRecord(p);
-                tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(idString, true);
+                tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(idString, true, null);
                 for (DatabaseRecord rec : tumourRecords) {
                     // store them in a set, so we don't show them several times
                     if (rec != null) {
@@ -752,7 +751,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                 recordEditor.addRecord(rec);
             }
             // make sure the records are locked...
-            CanRegClientApp.getApplication().getPatientRecordsByID(idString, true);
+            CanRegClientApp.getApplication().getPatientRecordsByID(idString, true, null);
             CanRegClientView.showAndPositionInternalFrame(dtp, (JInternalFrame)recordEditor);
             CanRegClientView.maximizeHeight(dtp, (JInternalFrame)recordEditor);
 
@@ -810,7 +809,8 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
         String patientIdString = null;
 
         try {
-            DistributedTableDescription distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.TUMOUR_TABLE_NAME);
+            DistributedTableDescription distributedTableDescription = 
+                    CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.TUMOUR_TABLE_NAME, null);
             int numberOfRecords = distributedTableDescription.getRowCount();
             if (numberOfRecords == 0) {
                 JOptionPane.showMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("TUMOUR_RECORD_NOT_FOUND..."), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);

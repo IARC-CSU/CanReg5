@@ -835,7 +835,7 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                                         JOptionPane.QUESTION_MESSAGE);
         if (requestedPatientID != null) {
             try {
-                Patient[] patientDatabaseRecord = CanRegClientApp.getApplication().getPatientRecordsByID(requestedPatientID, false);
+                Patient[] patientDatabaseRecord = CanRegClientApp.getApplication().getPatientRecordsByID(requestedPatientID, false, null);
                 if (patientDatabaseRecord != null && patientDatabaseRecord.length > 0) {
                     for (DatabaseRecord patient : patientRecords) {
                         patient = associatePatientRecordToPatientID(patient, requestedPatientID);
@@ -1269,7 +1269,7 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                 patientDatabaseRecord = (Patient) patientRecordEditorPanel.getDatabaseRecord();
             else {
                 try {
-                    patientDatabaseRecord = CanRegClientApp.getApplication().getPatientRecord(requestedPatientRecordID, false);
+                    patientDatabaseRecord = CanRegClientApp.getApplication().getPatientRecord(requestedPatientRecordID, false, null);
                 } catch(Exception ex) {
                     Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -1385,7 +1385,7 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                         // do nothing
                     } else {
                         try {
-                            Patient patient2 = canreg.client.CanRegClientApp.getApplication().getPatientRecord(prid, false);
+                            Patient patient2 = canreg.client.CanRegClientApp.getApplication().getPatientRecord(prid, false, null);
                             cpif.addRecordSet(patient2, null, map.get(prid));
                             records += java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorMainFrame")
                                                                .getString("PATIENT ID: ") + patient2.getVariable(patientIDVariableName) 

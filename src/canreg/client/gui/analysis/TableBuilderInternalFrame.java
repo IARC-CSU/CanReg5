@@ -1245,7 +1245,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                 DistributedTableDataSourceClient tableDataSource;
                 Object[][] incidenceData = null;
                 try {
-                    tableDatadescription = canreg.client.CanRegClientApp.getApplication().getDistributedTableDescription(filter, tableName);
+                    tableDatadescription = canreg.client.CanRegClientApp.getApplication().getDistributedTableDescription(filter, tableName, null);
                     tableDataSource = new DistributedTableDataSourceClient(tableDatadescription);
                     if (tableDatadescription.getRowCount() > 0) {
                         incidenceData = tableDataSource.retrieveRows(0, tableDatadescription.getRowCount());

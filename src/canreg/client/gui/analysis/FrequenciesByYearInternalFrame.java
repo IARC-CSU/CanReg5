@@ -279,7 +279,7 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
 
             String result = "OK";
             try {
-                newTableDatadescription = canreg.client.CanRegClientApp.getApplication().getDistributedTableDescription(filter, tableName);
+                newTableDatadescription = canreg.client.CanRegClientApp.getApplication().getDistributedTableDescription(filter, tableName, null);
                 Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
             } catch (SQLException ex) {
                 result = "Not valid";
@@ -444,7 +444,8 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
         filter.setFilterString(filterString);
         Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.INFO, "FilterString: {0}", filterString);
         try {
-            tableDatadescriptionPopUp = canreg.client.CanRegClientApp.getApplication().getDistributedTableDescription(filter, rangeFilterPanel.getSelectedTable());
+            tableDatadescriptionPopUp = 
+                    canreg.client.CanRegClientApp.getApplication().getDistributedTableDescription(filter, rangeFilterPanel.getSelectedTable(), null);
             Object[][] rows = canreg.client.CanRegClientApp.getApplication().retrieveRows(tableDatadescriptionPopUp.getResultSetID(), 0, MAX_ENTRIES_DISPLAYED_ON_RIGHT_CLICK);
             String[] variableNames = tableDatadescriptionPopUp.getColumnNames();
             for (Object[] row : rows) {
@@ -458,17 +459,9 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
                 }
                 jpm.add(line);
             }
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RemoteException ex) {
-            Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SecurityException ex) {
-            Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (DistributedTableDescriptionException ex) {
-            Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnknownTableException ex) {
-            Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } 
 
         int cases = (Integer) tableModel.getValueAt(rowNumber, tableColumnModel.getColumnIndex("CASES"));
         if (MAX_ENTRIES_DISPLAYED_ON_RIGHT_CLICK < cases) {

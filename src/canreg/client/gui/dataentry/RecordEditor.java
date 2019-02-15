@@ -796,7 +796,7 @@ public class RecordEditor extends javax.swing.JInternalFrame
         if (requestedPatientID != null) {
             Patient[] patientDatabaseRecord = null;
             try {
-                patientDatabaseRecord = CanRegClientApp.getApplication().getPatientRecordsByID(requestedPatientID, false);
+                patientDatabaseRecord = CanRegClientApp.getApplication().getPatientRecordsByID(requestedPatientID, false, null);
                 if (patientDatabaseRecord != null && patientDatabaseRecord.length > 0) {
                     for (DatabaseRecord patient : patientRecords) {
                         patient = associatePatientRecordToPatientID(patient, requestedPatientID);
@@ -814,17 +814,9 @@ public class RecordEditor extends javax.swing.JInternalFrame
             } catch (canreg.server.database.RecordLockedException ex) {
                 Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("RECORD_LOCKED"), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("RECORD_LOCKED"), JOptionPane.WARNING_MESSAGE);
-            } catch (SQLException ex) {
+            } catch (Exception ex) {
                 Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (RemoteException ex) {
-                Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SecurityException ex) {
-                Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (UnknownTableException ex) {
-                Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (DistributedTableDescriptionException ex) {
-                Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            } 
         } else {
             // do nothing - cancel operation...
         }
@@ -1131,18 +1123,8 @@ public class RecordEditor extends javax.swing.JInternalFrame
                 patientDatabaseRecord = (Patient) patientRecordEditorPanel.getDatabaseRecord();
             } else {
                 try {
-                    patientDatabaseRecord = CanRegClientApp.getApplication().getPatientRecord(requestedPatientRecordID, false);
-                } catch (SQLException ex) {
-                    Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (RemoteException ex) {
-                    Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (SecurityException ex) {
-                    Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (DistributedTableDescriptionException ex) {
-                    Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (RecordLockedException ex) {
-                    Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (UnknownTableException ex) {
+                    patientDatabaseRecord = CanRegClientApp.getApplication().getPatientRecord(requestedPatientRecordID, false, null);
+                } catch (Exception ex) {
                     Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -1154,15 +1136,9 @@ public class RecordEditor extends javax.swing.JInternalFrame
                         saveRecord(tumourDatabaseRecord);
                         tumourTabbedPane.remove(tumourRecordEditorPanel);
                         JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("RECORD MOVED."));
-                    } catch (RecordLockedException ex) {
+                    } catch (Exception ex) {
                         Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (SecurityException ex) {
-                        Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (RemoteException ex) {
-                        Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (SQLException ex) {
-                        Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    } 
                     tumourRecordEditorPanel.refreshDatabaseRecord(tumourDatabaseRecord);
                 } else {
                     JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("PLEASE SAVE PATIENT RECORD FIRST."), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("FAILED"), JOptionPane.WARNING_MESSAGE);
@@ -1228,18 +1204,12 @@ public class RecordEditor extends javax.swing.JInternalFrame
                         // do nothing
                     } else {
                         try {
-                            Patient patient2 = canreg.client.CanRegClientApp.getApplication().getPatientRecord(prid, false);
+                            Patient patient2 = canreg.client.CanRegClientApp.getApplication().getPatientRecord(prid, false, null);
                             cpif.addRecordSet(patient2, null, map.get(prid));
                             records += java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("PATIENT ID: ") + patient2.getVariable(patientIDVariableName) + java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString(", SCORE: ") + map.get(prid) + "%\n";
-                        } catch (SQLException ex) {
+                        } catch (Exception ex) {
                             Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (RecordLockedException ex) {
-                            Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (UnknownTableException ex) {
-                            Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (DistributedTableDescriptionException ex) {
-                            Logger.getLogger(RecordEditor.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+                        } 
                     }
                 }
                 setCursor(normalCursor);

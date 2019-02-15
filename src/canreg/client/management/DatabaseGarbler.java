@@ -96,7 +96,8 @@ public class DatabaseGarbler {
             Set<DatabaseVariablesListElement> set = new TreeSet<DatabaseVariablesListElement>();
             set.add(standardVariablesMap.get(Globals.StandardVariableNames.PatientRecordID));
             filter.setDatabaseVariables(null);
-            DistributedTableDescription distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.PATIENT_TABLE_NAME);
+            DistributedTableDescription distributedTableDescription = 
+                    CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.PATIENT_TABLE_NAME, null);
             rows = CanRegClientApp.getApplication().retrieveRows(distributedTableDescription.getResultSetID(), 0, distributedTableDescription.getRowCount());
 
             // first randomly shuffle all the patient IDs - not evenly distributed, but random enough: http://blog.ryanrampersad.com/2008/10/13/shuffle-an-array-in-java/ 
@@ -129,7 +130,8 @@ public class DatabaseGarbler {
                     patient1 = (Patient) CanRegClientApp.getApplication().getRecord(patientDatabaseRecordID, Globals.PATIENT_TABLE_NAME, false);
                     if (patient1 != null) {
                         try {
-                            patients1 = CanRegClientApp.getApplication().getPatientRecordsByID((String) patient1.getVariable(patientIDVariableListElement.getDatabaseVariableName()), true);
+                            patients1 = CanRegClientApp.getApplication().
+                                    getPatientRecordsByID((String) patient1.getVariable(patientIDVariableListElement.getDatabaseVariableName()), true, null);
                         } catch (DistributedTableDescriptionException ex) {
                             Logger.getLogger(DatabaseGarbler.class.getName()).log(Level.SEVERE, null, ex);
                         }
@@ -209,7 +211,8 @@ public class DatabaseGarbler {
 
                         try {
                             // get the tumours of this patient
-                            tumors = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID((String) patient1.getVariable(patientIDVariableListElement.getDatabaseVariableName()), false);
+                            tumors = CanRegClientApp.getApplication().
+                                    getTumourRecordsBasedOnPatientID((String) patient1.getVariable(patientIDVariableListElement.getDatabaseVariableName()), false, null);
                             for (Tumour tumor : tumors) {
                                 // change incidencedate
                                 String incidenceDateString = (String) tumor.getVariable(incidenceDateVariableListElement.getDatabaseVariableName());
@@ -234,13 +237,9 @@ public class DatabaseGarbler {
 
                             }
 
-                        } catch (ParseException ex) {
+                        } catch (Exception ex) {
                             Logger.getLogger(DatabaseGarbler.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (IllegalArgumentException ex) {
-                            Logger.getLogger(DatabaseGarbler.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (DistributedTableDescriptionException ex) {
-                            Logger.getLogger(DatabaseGarbler.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+                        } 
 
                         // release the records
                         for (Patient patient : patients1) {
@@ -270,17 +269,9 @@ public class DatabaseGarbler {
             // generate random source number
             //
             //
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(DatabaseGarbler.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnknownTableException ex) {
-            Logger.getLogger(DatabaseGarbler.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (DistributedTableDescriptionException ex) {
-            Logger.getLogger(DatabaseGarbler.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RemoteException ex) {
-            Logger.getLogger(DatabaseGarbler.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SecurityException ex) {
-            Logger.getLogger(DatabaseGarbler.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } 
     }
 
     private Set<String>[] getFirstNames() {

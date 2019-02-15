@@ -473,10 +473,10 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                         for (String patientRecordNumberA : result.keySet()) {
                             Map<String, Float> map = result.get(patientRecordNumberA);
                             matchesFound += map.size();
-                            Patient patientA = CanRegClientApp.getApplication().getPatientRecord(patientRecordNumberA, false);
+                            Patient patientA = CanRegClientApp.getApplication().getPatientRecord(patientRecordNumberA, false, null);
                             String patientNumberA = (String) patientA.getVariable(patientIDlookupVariable).toString();
                             for (String patientRecordNumberB : map.keySet()) {
-                                Patient patientB = CanRegClientApp.getApplication().getPatientRecord(patientRecordNumberB, false);
+                                Patient patientB = CanRegClientApp.getApplication().getPatientRecord(patientRecordNumberB, false, null);
                                 String patientNumberB = (String) patientB.getVariable(patientIDlookupVariable).toString();
                                 resultTableModel.addRow(new Object[]{patientNumberA, patientNumberB, map.get(patientRecordNumberB)});
                             }
@@ -491,19 +491,9 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                         recordsTested += Globals.GLOBAL_PERSON_SEARCH_STEP_SIZE;
                     }
                 }
-            } catch (SecurityException ex) {
+            } catch (Exception ex) {
                 Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (RemoteException ex) {
-                Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (DistributedTableDescriptionException ex) {
-                Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (RecordLockedException ex) {
-                Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SQLException ex) {
-                Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (UnknownTableException ex) {
-                Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            } 
             return null;  // return your result
         }
 
@@ -610,30 +600,20 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                 try {
 //                  patient = CanRegClientApp.getApplication().getPatientRecord("" + model.getValueAt(rowNumber, columnNumber), false);
                     String patient1ID = (String) target.getValueAt(rowNumber, 0);
-                    Patient patient1 = CanRegClientApp.getApplication().getPatientRecordsByID(patient1ID, false)[0];
+                    Patient patient1 = CanRegClientApp.getApplication().getPatientRecordsByID(patient1ID, false, null)[0];
                     cpif.addMainRecordSet(patient1, null);
                     // find all results with same as ID1
                     for (int row = 0; row < resultTableModel.getRowCount(); row++) {
                         if (patient1ID.equals(target.getValueAt(row, 0))) {
                             String patient2ID = (String) target.getValueAt(row, 1);
-                            Patient patient2 = CanRegClientApp.getApplication().getPatientRecordsByID(patient2ID, false)[0];
+                            Patient patient2 = CanRegClientApp.getApplication().getPatientRecordsByID(patient2ID, false, null)[0];
                             cpif.addRecordSet(patient2, null, (Float) target.getValueAt(row, 2));
                         }
                     }
                     CanRegClientView.showAndPositionInternalFrame(desktopPane, cpif);
-                } catch (SQLException ex) {
+                } catch (Exception ex) {
                     Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (RecordLockedException ex) {
-                    Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (UnknownTableException ex) {
-                    Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (DistributedTableDescriptionException ex) {
-                    Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (RemoteException ex) {
-                    Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (SecurityException ex) {
-                    Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                } 
             }
         }
     }
@@ -686,7 +666,8 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
         DatabaseRecord[] tumourRecords;
 
         try {
-            distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.PATIENT_TABLE_NAME);
+            distributedTableDescription =
+                    CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.PATIENT_TABLE_NAME, null);
             int numberOfRecords = distributedTableDescription.getRowCount();
 
             if (numberOfRecords == 0) {
@@ -698,7 +679,8 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                     record = new Patient();
                     record.setVariable(patientIDlookupVariable, idString);
                     CanRegClientApp.getApplication().saveRecord(record);
-                    distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.PATIENT_TABLE_NAME);
+                    distributedTableDescription = 
+                            CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.PATIENT_TABLE_NAME, null);
                     numberOfRecords = distributedTableDescription.getRowCount();
                 } else {
                     setCursor(normalCursor);
@@ -731,7 +713,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                     record = CanRegClientApp.getApplication().getRecord(ids[j], Globals.PATIENT_TABLE_NAME, true);
                     recordEditor.addRecord(record);
 
-                    tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(idString, true);
+                    tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(idString, true, null);
                     for (DatabaseRecord rec : tumourRecords) {
                         // store them in a set, so we don't show them several times
                         if (rec != null) {
@@ -754,19 +736,9 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
             } else {
                 JOptionPane.showMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("RECORD_NOT_FOUND"), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             }
-        } catch (RecordLockedException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (DistributedTableDescriptionException ex) {
-            Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnknownTableException ex) {
-            Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RemoteException ex) {
-            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SecurityException ex) {
-            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
+        }  finally {
             setCursor(normalCursor);
         }
     }
