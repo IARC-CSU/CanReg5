@@ -71,10 +71,11 @@ public class RTools {
      * and checks when perfoming records imports.
      * @param rScript name of the R script (including the .r suffix) to be run.
      * @param paramsFile file that contains all the parameters/arguments for the script.
+     * @param files
      * @return
      * @throws FileNotFoundException 
      */
-    public static ArrayList<File> runRimportScript(String rScript, File paramsFile) 
+    public static File[] runRimportScript(String rScript, File paramsFile, File[] files) 
             throws FileNotFoundException, IOException { 
         String rpath = CanRegClientApp.getApplication().getLocalSettings().getProperty(LocalSettings.R_PATH);
         // does R exist?
@@ -83,7 +84,6 @@ public class RTools {
         }
         
         File scriptFile = getScriptPath(rScript);
-        ArrayList<File> filesCreated = null;
                 
         ArrayList<String> commandList = new ArrayList();
         commandList.add(rpath);
@@ -110,30 +110,30 @@ public class RTools {
                 for (String fileName : theString.split("\\r?\\n")) {
                     fileName = fileName.replaceFirst("-outFile:", "");
                     if (new File(fileName).exists()) {
-                        filesCreated = new ArrayList<>(1);
-                        filesCreated.add(new File(fileName));
+                        files = new File[3];
+                        files[0] = files[1] = files[2] = new File(fileName);
                         break;
                     }
                 }
             } else {
-                filesCreated = new ArrayList<>(3);
+                files = new File[3];
                 for (String fileName : theString.split("\\r?\\n")) {
                     fileName = fileName.replaceFirst("-outPatientFile:", "");
                     if(new File(fileName).exists()) { 
-                        filesCreated.add(0, new File(fileName));
+                        files[0] = new File(fileName);
                         continue;
                     }
                     fileName = fileName.replaceFirst("-outTumourFile:", "");
                     if(new File(fileName).exists()) {
-                        filesCreated.add(1, new File(fileName));
+                        files[1] = new File(fileName);
                         continue;
                     }
                     fileName = fileName.replaceFirst("-outSourceFile:", "");
                     if(new File(fileName).exists()) 
-                        filesCreated.add(2, new File(fileName));
+                        files[2] = new File(fileName);
                 }
             }
-            if(filesCreated == null || filesCreated.isEmpty())
+            if(files == null || files[0] == null)
                 throw new RuntimeException("No output files were found after running the " + scriptFile + " script.");
         } catch (Exception ex) {
             Logger.getLogger(RTools.class.getName()).log(Level.SEVERE, null, ex);
@@ -148,6 +148,6 @@ public class RTools {
                 proc.destroyForcibly();
         }
         
-        return filesCreated;
+        return files;
     }
 }

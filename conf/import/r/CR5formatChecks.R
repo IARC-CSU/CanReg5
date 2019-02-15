@@ -31,24 +31,19 @@ initial.options <- commandArgs(trailingOnly = FALSE)
 #Parameters
 JSON.path <- "-paramsFile="
 paramsJSON <- fromJSON(sub(JSON.path, "", initial.options[grep(JSON.path, initial.options)]))
-cat(paste("JSON.path", sub(JSON.path, "", initial.options[grep(JSON.path, initial.options)]), " \n", sep = ":"))
-
 file.arg.name <- "--file="
 script.name <- sub(file.arg.name, "", initial.options[grep(file.arg.name, initial.options)])
-cat(paste("script.name", script.name, " \n", sep = ":"))
-
 
 #Set locale to UTF-8
 Sys.setlocale("LC_CTYPE", "UTF-8")
 
-# #Load all the scripts
+#Load all the scripts
   setwd(dirname(script.name))
   file.sources <- list.files(dirname(script.name),
                              pattern="*.R$",
                              full.names=FALSE,
                              ignore.case=TRUE)
   file.sources <- file.sources[!(file.sources == basename(script.name))]
-  cat(paste("file.sources:", file.sources, "\n", sep = ""))
   sapply(file.sources,source,.GlobalEnv)
 
 
@@ -113,95 +108,194 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
   
 #Import the data file
   #It is necessary to check if the file for Patient, Tumour and Source is the same
-  if (paramsJSON$patientFilePath == paramsJSON$tumourFilePath & paramsJSON$tumourFilePath == paramsJSON$sourceFilePath){
-    raw.data <- import.fn(paramsJSON$patientFilePath, paramsJSON$patientFileSeparator)
-    patient.raw.data <- raw.data
-    #It's necessary to match the variables names from the import file with the variables names
-    #in the DB
-    patient.import.data <- match.names.db(paramsJSON$patientVarNameInImportFile, 
-                                          paramsJSON$patientVarNameInDatabase, 
-                                          patient.raw.data)
-    
-    #To check the date formats
-    patient.checked.raw.data <- format.date.fn(doc.data, 
-                                               patient.import.data, 
-                                               paramsJSON$patientVarNameInImportFile,
-                                               "Patient")
-    #To replace the checked columns into the raw data
-    if(class(patient.checked.raw.data) == "data.frame"){
-      patient.raw.data[,colnames(patient.checked.raw.data)] <- patient.checked.raw.data
+  if (!is.null(paramsJSON$patientFilePath) & !is.null(paramsJSON$tumourFilePath) & !is.null(paramsJSON$sourceFilePath)){
+    if (paramsJSON$patientFilePath == paramsJSON$tumourFilePath & paramsJSON$tumourFilePath == paramsJSON$sourceFilePath){
+      raw.data <- import.fn(paramsJSON$patientFilePath, paramsJSON$patientFileSeparator)
+      patient.raw.data <- raw.data
+      #It's necessary to match the variables names from the import file with the variables names
+      #in the DB
+      patient.import.data <- match.names.db(paramsJSON$patientVarNameInImportFile, 
+                                            paramsJSON$patientVarNameInDatabase, 
+                                            patient.raw.data)
+      
+      #To check the date formats
+      patient.checked.raw.data <- format.date.fn(doc.data, 
+                                                 patient.import.data, 
+                                                 paramsJSON$patientVarNameInImportFile,
+                                                 "Patient")
+      #To replace the checked columns into the raw data
+      if(class(patient.checked.raw.data) == "data.frame"){
+        patient.raw.data[,colnames(patient.checked.raw.data)] <- patient.checked.raw.data
+      }else{
+        patient.raw.data$format.errors <- ""
+      }
+      
+      tumour.raw.data <- raw.data
+      #It's necessary to match the variables names from the import file with the variables names
+      #in the DB
+      tumour.import.data <- match.names.db(paramsJSON$tumourVarNameInImportFile, 
+                                           paramsJSON$tumourVarNameInDatabase, 
+                                           tumour.raw.data)
+      #To check the date formats
+      tumour.checked.raw.data <- format.date.fn(doc.data, 
+                                                tumour.import.data, 
+                                                paramsJSON$tumourVarNameInImportFile,
+                                                "Tumour")
+      #To replace the checked columns into the raw data
+      if(class(tumour.checked.raw.data) == "data.frame"){
+        tumour.raw.data[,colnames(tumour.checked.raw.data)] <- tumour.checked.raw.data
+      }else{
+        tumour.raw.data$format.errors <- ""
+      }
+      
+      source.raw.data <- raw.data
+      #It's necessary to match the variables names from the import file with the variables names
+      #in the DB
+      source.import.data <- match.names.db(paramsJSON$sourceVarNameInImportFile, 
+                                           paramsJSON$sourceVarNameInDatabase, 
+                                           source.raw.data)
+      #To check the date formats
+      source.checked.raw.data <- format.date.fn(doc.data, 
+                                                source.import.data, 
+                                                paramsJSON$sourceVarNameInImportFile,
+                                                "Source")
+      #To replace the checked columns into the raw data
+      if(class(source.checked.raw.data) == "data.frame"){
+        source.raw.data[,colnames(source.checked.raw.data)] <- source.checked.raw.data
+      }else{
+        source.raw.data$format.errors <- ""
+      }
+      
+      #===================
+      #To merge the checks
+      format.errors <- data.frame(cbind(patient.raw.data$format.errors,
+                                        tumour.raw.data$format.errors,
+                                        source.raw.data$format.errors),
+                                  stringsAsFactors = FALSE)
+      #To merge the column names with errors into one column
+      #Add this merged column to the raw.data dataframe
+      format.errors[format.errors == ""] <- NA
+      format.errors$format.errors <-  apply(format.errors, 1, paste, collapse = ", ")
+      format.errors$format.errors <- gsub("NA, |, NA|NA","", format.errors$format.errors)
+      format.errors$format.errors <- str_replace(format.errors$format.errors, 
+                                                 ", , ", "")
+      raw.data$format.errors <- format.errors$format.errors
+      #To replace the raw.data with the checked raw data
+      raw.data[,colnames((patient.raw.data)[-ncol(patient.raw.data)])] <- patient.raw.data[, -ncol(patient.raw.data)]
+      raw.data[,colnames((tumour.raw.data)[-ncol(tumour.raw.data)])] <- tumour.raw.data[, -ncol(tumour.raw.data)]
+      raw.data[,colnames((source.raw.data)[-ncol(patient.raw.data)])] <- source.raw.data[, -ncol(source.raw.data)]
+      #To paste the column name to the value it is necessary a auxiliar dataframe
+      aux.raw.data <- raw.data[-ncol(raw.data)]
+      aux.raw.data[] <- Map(paste, names(aux.raw.data), aux.raw.data, sep = ': ')
+      raw.data$all.raw.data <- apply(aux.raw.data, 1, paste, collapse = "\n")
+      file.write <- paste(dirname(paramsJSON$patientFilePath),
+                          "output.raw.data.csv",
+                          sep = "//")
+      write.csv(raw.data, file.write,
+                row.names = FALSE,
+                fileEncoding = "UTF-8")
+      try(if(!file.exists(file.write)) stop("The file was not written"))
+      
+      #Standard output
+      cat(paste("-outFile:", file.write, "\n", sep = ""))
     }else{
-      patient.raw.data$format.errors <- ""
+      #======Patient data
+      patient.raw.data <- import.fn(paramsJSON$patientFilePath, paramsJSON$patientFileSeparator)
+      #It's necessary to match the variables names from the import file with the variables names
+      #in the DB
+      patient.import.data <- match.names.db(paramsJSON$patientVarNameInImportFile, 
+                                            paramsJSON$patientVarNameInDatabase, 
+                                            patient.raw.data)
+      
+      #To check the date formats
+      patient.checked.raw.data <- format.date.fn(doc.data, 
+                                                 patient.import.data, 
+                                                 paramsJSON$patientVarNameInImportFile,
+                                                 "Patient")
+      #To replace the checked columns into the raw data
+      if(class(patient.checked.raw.data) == "data.frame"){
+        patient.raw.data[,colnames(patient.checked.raw.data)] <- patient.checked.raw.data
+      }else{
+        patient.raw.data$format.errors <- ""
+      }
+      #To write the raw.data file
+      patient.raw.data$all.raw.data <-  apply(patient.raw.data[,-ncol(patient.raw.data)], 1, paste, collapse = ", ")
+      file.patient.write <- paste(dirname(paramsJSON$patientFilePath),
+                                  "output.patient.raw.data.csv",
+                                  sep = "//")
+      write.csv(patient.raw.data, file.patient.write, 
+                row.names = FALSE,
+                fileEncoding = "UTF-8")
+      #Ask if the file exists
+      try(if(!file.exists(file.patient.write)) stop("The patient file was not written"))
+      #Standard output
+      cat(paste("-outPatientFile:", file.patient.write,  "\n", sep = ""))
+      #===================
+      
+      #======Tumour data
+      tumour.raw.data <- import.fn(paramsJSON$tumourFilePath, paramsJSON$tumourFileSeparator)
+      #It's necessary to match the variables names from the import file with the variables names
+      #in the DB
+      tumour.import.data <- match.names.db(paramsJSON$tumourVarNameInImportFile, 
+                                           paramsJSON$tumourVarNameInDatabase, 
+                                           tumour.raw.data)
+      #To check the date formats
+      tumour.checked.raw.data <- format.date.fn(doc.data, 
+                                                tumour.import.data, 
+                                                paramsJSON$tumourVarNameInImportFile,
+                                                "Tumour")
+      #To replace the checked columns into the raw data
+      if(class(tumour.checked.raw.data) == "data.frame"){
+        tumour.raw.data[,colnames(tumour.checked.raw.data)] <- tumour.checked.raw.data
+      }else{
+        tumour.raw.data$format.errors <- ""
+      }
+      #To write the raw.data file
+      tumour.raw.data$all.raw.data <-  apply(tumour.raw.data[,-ncol(tumour.raw.data)], 1, paste, collapse = ", ")
+      file.tumour.write <- paste(dirname(paramsJSON$tumourFilePath),
+                                 "output.tumour.raw.data.csv",
+                                 sep = "//")
+      write.csv(tumour.raw.data, file.tumour.write, 
+                row.names = FALSE,
+                fileEncoding = "UTF-8")
+      #Ask if the file exists
+      try(if(!file.exists(file.tumour.write)) stop("The tumour file was not written"))
+      #Standard output
+      cat(paste("-outTumourFile:", file.tumour.write,  "\n", sep = ""))
+      #==================
+      
+      #=====Source data
+      source.raw.data <- import.fn(paramsJSON$sourceFilePath, paramsJSON$sourceFileSeparator)
+      #It's necessary to match the variables names from the import file with the variables names
+      #in the DB
+      source.import.data <- match.names.db(paramsJSON$sourceVarNameInImportFile, 
+                                           paramsJSON$sourceVarNameInDatabase, 
+                                           source.raw.data)
+      #To check the date formats
+      source.checked.raw.data <- format.date.fn(doc.data, 
+                                                source.import.data, 
+                                                paramsJSON$sourceVarNameInImportFile,
+                                                "Source")
+      #To replace the checked columns into the raw data
+      if(class(source.checked.raw.data) == "data.frame"){
+        source.raw.data[,colnames(source.checked.raw.data)] <- source.checked.raw.data
+      }else{
+        source.raw.data$format.errors <- ""
+      }
+      #To write the raw.data file
+      source.raw.data$all.raw.data <-  apply(source.raw.data[,-ncol(source.raw.data)], 1, paste, collapse = ", ")
+      file.source.write <- paste(dirname(paramsJSON$sourceFilePath),
+                                 "output.source.raw.data.csv",
+                                 sep = "//")
+      write.csv(source.raw.data, file.source.write, 
+                row.names = FALSE,
+                fileEncoding = "UTF-8")
+      #Ask if the file exists
+      try(if(!file.exists(file.source.write)) stop("The source file was not written"))
+      #Standard output
+      cat(paste("-outSourceFile:", file.source.write, "\n", sep = ""))
+      #==================
     }
-    
-    tumour.raw.data <- raw.data
-    #It's necessary to match the variables names from the import file with the variables names
-    #in the DB
-    tumour.import.data <- match.names.db(paramsJSON$tumourVarNameInImportFile, 
-                                         paramsJSON$tumourVarNameInDatabase, 
-                                         tumour.raw.data)
-    #To check the date formats
-    tumour.checked.raw.data <- format.date.fn(doc.data, 
-                                              tumour.import.data, 
-                                              paramsJSON$tumourVarNameInImportFile,
-                                              "Tumour")
-    #To replace the checked columns into the raw data
-    if(class(tumour.checked.raw.data) == "data.frame"){
-      tumour.raw.data[,colnames(tumour.checked.raw.data)] <- tumour.checked.raw.data
-    }else{
-      tumour.raw.data$format.errors <- ""
-    }
-    
-    source.raw.data <- raw.data
-    #It's necessary to match the variables names from the import file with the variables names
-    #in the DB
-    source.import.data <- match.names.db(paramsJSON$sourceVarNameInImportFile, 
-                                         paramsJSON$sourceVarNameInDatabase, 
-                                         source.raw.data)
-    #To check the date formats
-    source.checked.raw.data <- format.date.fn(doc.data, 
-                                              source.import.data, 
-                                              paramsJSON$sourceVarNameInImportFile,
-                                              "Source")
-    #To replace the checked columns into the raw data
-    if(class(source.checked.raw.data) == "data.frame"){
-      source.raw.data[,colnames(source.checked.raw.data)] <- source.checked.raw.data
-    }else{
-      source.raw.data$format.errors <- ""
-    }
-    
-    #===================
-    #To merge the checks
-    format.errors <- data.frame(cbind(patient.raw.data$format.errors,
-                                      tumour.raw.data$format.errors,
-                                      source.raw.data$format.errors),
-                                stringsAsFactors = FALSE)
-    #To merge the column names with errors into one column
-    #Add this merged column to the raw.data dataframe
-    format.errors[format.errors == ""] <- NA
-    format.errors$format.errors <-  apply(format.errors, 1, paste, collapse = ", ")
-    format.errors$format.errors <- gsub("NA, |, NA|NA","", format.errors$format.errors)
-    format.errors$format.errors <- str_replace(format.errors$format.errors, 
-                                               ", , ", "")
-    raw.data$format.errors <- format.errors$format.errors
-    #To replace the raw.data with the checked raw data
-    raw.data[,colnames((patient.raw.data)[-ncol(patient.raw.data)])] <- patient.raw.data[, -ncol(patient.raw.data)]
-    raw.data[,colnames((tumour.raw.data)[-ncol(tumour.raw.data)])] <- tumour.raw.data[, -ncol(tumour.raw.data)]
-    raw.data[,colnames((source.raw.data)[-ncol(patient.raw.data)])] <- source.raw.data[, -ncol(source.raw.data)]
-    #To paste the column name to the value it is necessary a auxiliar dataframe
-    aux.raw.data <- raw.data[-ncol(raw.data)]
-    aux.raw.data[] <- Map(paste, names(aux.raw.data), aux.raw.data, sep = ': ')
-    raw.data$all.raw.data <- apply(aux.raw.data, 1, paste, collapse = "\n")
-    file.write <- paste(dirname(paramsJSON$patientFilePath),
-                        "output.raw.data.csv",
-                        sep = "//")
-    write.csv(raw.data, file.write,
-              row.names = FALSE,
-              fileEncoding = "UTF-8")
-    try(if(!file.exists(file.write)) stop("The file was not written"))
-    
-    #Standard output
-    cat(paste("-outFile", file.write, sep = ":"))
   }else{
     if (!is.null(paramsJSON$patientFilePath)){
       patient.raw.data <- import.fn(paramsJSON$patientFilePath, paramsJSON$patientFileSeparator)

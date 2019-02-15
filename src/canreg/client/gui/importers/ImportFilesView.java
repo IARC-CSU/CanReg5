@@ -803,40 +803,39 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
             // the Swing GUI from here.
             boolean success = false;
             try {
-//                if(io.getrChecksRun()) {
-//                    //checksBar represents the R scripts running checks. We don't know how much they take, 
-//                    rChecksParams = buildRChecksVars();
-//                    rParamsFile = new File(new File(rChecksParams.getDictionaryFilePath()).getParentFile(), "rChecksParams.json");
-//                    Tools.objectToJSON(rChecksParams, 
-//                                       rParamsFile);
-//                    tempFiles.add(rParamsFile);
-//
-//                    ArrayList<File> outputFiles = RTools.runRimportScript("CR5formatChecks.R", rParamsFile);
-//                    //As a result of the R format checks, all files have been re-created
-//                    //with some changes. These are the files that we'll use to perform
-//                    //the import. The Algorithms that perform the import ALWAYS expect an
-//                    //array of 3 positions.
+                if(io.getrChecksRun()) {
+                    //checksBar represents the R scripts running checks. We don't know how much they take, 
+                    rChecksParams = buildRChecksVars();
+                    rParamsFile = new File(new File(rChecksParams.getDictionaryFilePath()).getParentFile(), "rChecksParams.json");
+                    Tools.objectToJSON(rChecksParams, 
+                                       rParamsFile);
+                    tempFiles.add(rParamsFile);
+
+                    files = RTools.runRimportScript("CR5formatChecks.R", rParamsFile, files);
+                    //As a result of the R format checks, all files have been re-created
+                    //with some changes. These are the files that we'll use to perform
+                    //the import. The Algorithms that perform the import ALWAYS expect an
+                    //array of 3 positions.
 //                    while(outputFiles.size() < 3) {
 //                        outputFiles.add(null);
 //                    }
 //                    files = outputFiles.toArray(new File[outputFiles.size()]);
-//
-//                    //The output files of the R format checks are all in UTF-8
-//                    io.setFilesCharsets(new Charset[]{
-//                        Charset.forName("UTF-8"),
-//                        Charset.forName("UTF-8"),
-//                        Charset.forName("UTF-8")
-//                    }); 
-//                    
-//                    this.firePropertyChange(Import.R_SCRIPTS, 0, 100);
-//                }
-//           
-//                if(holdingDBCheckBox.isSelected())
+
+                    //The output files of the R format checks are all in UTF-8
+                    io.setFilesCharsets(new Charset[]{
+                        Charset.forName("UTF-8"),
+                        Charset.forName("UTF-8"),
+                        Charset.forName("UTF-8")
+                    }); 
+                    
+                    this.firePropertyChange(Import.R_SCRIPTS, 0, 100);
+                }
+           
+                if(holdingDBCheckBox.isSelected())
                     success = CanRegClientApp.getApplication().importFilesIntoHoldingDB(this, doc, variablesMap, files, io);
-//                else {
-//                    // Calls the client app import action with the file parameters provided,
-//                    success = CanRegClientApp.getApplication().importFiles(this, doc, variablesMap, files, io);
-//                }
+                else {
+                    success = CanRegClientApp.getApplication().importFiles(this, doc, variablesMap, files, io);
+                }
             } catch(Exception ex) {
                 Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
                 this.firePropertyChange(Import.R_SCRIPTS, 0, 10);
@@ -1069,12 +1068,14 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
         ImportOptions io = new ImportOptions();
 
         // Discrepencies
-        if (updateRadioButton.isSelected()) {
-            io.setDiscrepancies(ImportOptions.UPDATE);
-        } else if (rejectRadioButton.isSelected()) {
-            io.setDiscrepancies(ImportOptions.REJECT);
-        } else if (overwriteRadioButton.isSelected()) {
-            io.setDiscrepancies(ImportOptions.OVERWRITE);
+        if( ! holdingDBCheckBox.isSelected()) {
+            if (updateRadioButton.isSelected()) {
+                io.setDiscrepancies(ImportOptions.UPDATE);
+            } else if (rejectRadioButton.isSelected()) {
+                io.setDiscrepancies(ImportOptions.REJECT);
+            } else if (overwriteRadioButton.isSelected()) {
+                io.setDiscrepancies(ImportOptions.OVERWRITE);
+            }
         }
         // Max Lines
         if (maxLinesTextField.getText().trim().length() > 0) {
