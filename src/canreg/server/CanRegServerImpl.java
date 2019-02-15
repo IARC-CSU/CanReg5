@@ -1020,11 +1020,14 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     
     @Override
     public int getLastHoldingDBnumber(String registryCode) {
-        File holdingDir = new File(Globals.CANREG_SERVER_HOLDING_DB_FOLDER + Globals.FILE_SEPARATOR + defaultRegistryCode);
+        File holdingDir = new File(Globals.CANREG_SERVER_HOLDING_DB_FOLDER + Globals.FILE_SEPARATOR + registryCode);
+        
         int highestNumber = 0;
         for(String folder : holdingDir.list()) {
-            folder = folder.substring(folder.indexOf("_") + 1);
-            folder = folder.substring(0, folder.indexOf("_"));
+            //registryCode = ENR0
+            //folder = HOLDING_ENR0_2_2019-01-21
+            folder = folder.substring(folder.indexOf("_") + 1 + registryCode.length() + 1); // before substring = ENR0_2_2019-01-21
+            folder = folder.substring(0, folder.indexOf("_"));//before substring = 2_2019-01-21
             int holdingNumber = Integer.valueOf(folder);
             if(holdingNumber > highestNumber) highestNumber = holdingNumber;
         }
