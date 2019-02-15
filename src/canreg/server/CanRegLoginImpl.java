@@ -70,7 +70,7 @@ public class CanRegLoginImpl extends UnicastRemoteObject
 
         // Return a reference to a proxy object that encapsulates the access
         // to the theServer, for this client
-        return new CanRegRegistryProxy(theServer, theServer.getCanRegRegistryCode(), user);
+        return CanRegRegistryProxy.getInstance(theServer, theServer.getCanRegRegistryCode(), user);
     }
 
     /**

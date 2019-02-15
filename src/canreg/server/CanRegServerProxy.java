@@ -407,4 +407,18 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
         checkPermission("changeRegistryDB");
         theServer.resetRegistryDB();
     }
+
+    @Override
+    public SystemDescription initSystemDescription(String originalRegistryCode, String holdingRegistryCode, boolean holding) 
+            throws RemoteException, SecurityException {
+        checkPermission("initSystemDefinition");
+        return theServer.initSystemDescription(originalRegistryCode, holdingRegistryCode, holding);
+    }
+
+    @Override
+    public void initDataBase(SystemDescription systemDescription, boolean holding) 
+            throws RemoteException, SecurityException {
+        checkPermission("initDataBase");
+        theServer.initDataBase(systemDescription, holding);
+    }
 }

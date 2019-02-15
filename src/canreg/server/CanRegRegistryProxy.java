@@ -53,7 +53,7 @@ import org.w3c.dom.Document;
 /**
  * This class intercepts every method that needs to be executed on the server. In
  * every interception it indicates to the server in which registry has to perform
- * the method. ALWAYS use this class for every operation, and NEVER use directy an
+ * the method. ALWAYS use this class for every operation, and NEVER use directly an
  * instance of any other CanRegServerInterface. 
  *  
  * @author Patricio Carranza, patocarranza@gmail.com
@@ -61,22 +61,40 @@ import org.w3c.dom.Document;
 public class CanRegRegistryProxy implements CanRegServerInterface, Serializable {
     
     private final CanRegServerInterface serverProxy;
+    private static CanRegServerInterface realServer;
     private final String registryCode;
+    private static CanRegRegistryProxy singleton;
+    
     
     /**
-     * 
-     * @param realServer MUST be an instance of CanRegServerImpl
+     * When creating the first CanRegRegistryProxy it also creates the client RMI connection, 
+     * and more than 1 RMI connection against the same server is not desired. That;s why
+     * this is a singleton-ish.
+     * @param realServerParam MUST be an instance of CanRegServerImpl
      * @param registryCode
      * @param user
+     * @return
      * @throws RemoteException 
      */
-    public CanRegRegistryProxy(CanRegServerInterface realServer, String registryCode, Subject user) 
+    public static CanRegRegistryProxy getInstance(CanRegServerInterface realServerParam, String registryCode, Subject user)
+            throws RemoteException{
+        if(singleton == null)
+            singleton = new CanRegRegistryProxy(realServerParam, registryCode, user);
+        else {
+            if( ! realServerParam.equals(realServer))
+                singleton = new CanRegRegistryProxy(realServerParam, registryCode, user);
+        }
+        return singleton;
+    }
+    
+    private CanRegRegistryProxy(CanRegServerInterface realServerParam, String registryCode, Subject user) 
             throws RemoteException {
-        this.serverProxy = new CanRegServerProxy(user, realServer);
+        this.serverProxy = new CanRegServerProxy(user, realServerParam);
+        realServer = realServerParam;
         if(registryCode == null)
             throw new NullPointerException("registryCode cannot be null.");
         this.registryCode = registryCode;
-    }
+    }    
     
     private CanRegRegistryProxy(CanRegServerInterface serverProxy, String registryCode) {
         this.serverProxy = serverProxy;
@@ -85,20 +103,27 @@ public class CanRegRegistryProxy implements CanRegServerInterface, Serializable 
     
     /**
      * Use this method to obtain a new instance of CanRegRegistryProxy that 
-     * connects to a different registry.
+     * connects to holding database.
+     * This new instance will have the same RMI client connection as the singleton-ish
+     * instance that you have acquired through getInstance().
+     * @param originalRegistryCode
+     * @param holdingRegistryCode
      * @param registryCode
      * @return 
      */
-    public CanRegRegistryProxy getNewInstance(String registryCode) {
-        return new CanRegRegistryProxy(serverProxy, registryCode);
+    public CanRegRegistryProxy getInstanceForHoldingDB(String originalRegistryCode, String holdingRegistryCode)
+            throws RemoteException {
+        SystemDescription sysDesc = serverProxy.initSystemDescription(originalRegistryCode, holdingRegistryCode, true);
+        initDataBase(sysDesc, true);
+        return new CanRegRegistryProxy(serverProxy, holdingRegistryCode);
     }
     
     private Object invokeMethodOnSpecificRegistry(String methodName, Class<?>[] parameterTypes, Object... parameters) {
         try {
-            serverProxy.changeRegistryDB(registryCode);
+            changeRegistryDB(registryCode);
             Method method = serverProxy.getClass().getMethod(methodName, parameterTypes);
             Object toReturn = method.invoke(serverProxy, parameters);
-            serverProxy.resetRegistryDB();
+            resetRegistryDB();
             return toReturn;
         } catch (Exception ex) {
             Logger.getLogger(CanRegRegistryProxy.class.getName()).log(Level.SEVERE, null, ex);
@@ -106,394 +131,392 @@ public class CanRegRegistryProxy implements CanRegServerInterface, Serializable 
         } 
     }
     
-    public String testMethod(String str ) {
-        return (String) invokeMethodOnSpecificRegistry("testMethod", new Class[] {String.class}, new String[]{str});
-    }
-    
     @Override
     public void addUser(User user) throws RemoteException, SecurityException {
-        invokeMethodOnSpecificRegistry("addUser", new Class[] {User.class}, new User[]{user});
+//        invokeMethodOnSpecificRegistry("addUser", new Class[] {User.class}, new User[]{user});
+        changeRegistryDB(registryCode);
+        serverProxy.addUser(user);
+        resetRegistryDB();
     }
 
     @Override
     public void removeUser(User user) throws RemoteException, SecurityException {
-        invokeMethodOnSpecificRegistry("removeUser", new Class[] {User.class}, new User[]{user});
-//        serverProxy.removeUser(user);
+//        invokeMethodOnSpecificRegistry("removeUser", new Class[] {User.class}, new User[]{user});
+        changeRegistryDB(registryCode);
+        serverProxy.removeUser(user);
+        resetRegistryDB();
     }
 
     @Override
     public void setUserPassword(String username, String password) throws RemoteException, SecurityException {
-        invokeMethodOnSpecificRegistry("setUserPassword", new Class[] {String.class, String.class}, new String[]{username, password});
-//        serverProxy.setUserPassword(username, password);
+//        invokeMethodOnSpecificRegistry("setUserPassword", new Class[] {String.class, String.class}, new String[]{username, password});
+        changeRegistryDB(registryCode);
+        serverProxy.setUserPassword(username, password);
+        resetRegistryDB();
     }
 
     @Override
     public String getCanRegRegistryName() throws RemoteException, SecurityException {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         String str = serverProxy.getCanRegRegistryName();
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
         return str;
     }
 
     @Override
     public void startNetworkDBServer() throws RemoteException, SecurityException {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         serverProxy.startNetworkDBServer();
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
     }
 
     @Override
     public void stopNetworkDBServer() throws RemoteException, SecurityException {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         serverProxy.stopNetworkDBServer();
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
     }
 
     @Override
     public Document getDatabseDescription() throws RemoteException, SecurityException {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         Document doc = serverProxy.getDatabseDescription();
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
         return doc;
     }
 
     @Override
     public String[] listCurrentUsers() throws RemoteException, SecurityException {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         String[] list = serverProxy.listCurrentUsers();
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
         return list;
     }
 
     @Override
     public void userLoggedIn(String username) throws RemoteException, SecurityException {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         serverProxy.userLoggedIn(username);
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
     }
 
     @Override
     public void userLoggedOut(String username) throws RemoteException, SecurityException {        
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         serverProxy.userLoggedOut(username);
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
     }
 
     @Override
     public CanRegDAO getDatabseConnection() throws RemoteException, SecurityException {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         CanRegDAO dao = serverProxy.getDatabseConnection();
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
         return dao;
     }
 
     @Override
     public int savePatient(Patient patient) throws RemoteException, SecurityException, SQLException, RecordLockedException {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         int toReturn = serverProxy.savePatient(patient);
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
         return toReturn;
     }
 
     @Override
     public int saveTumour(Tumour tumour) throws RemoteException, SecurityException, SQLException, RecordLockedException {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         int toReturn = serverProxy.saveTumour(tumour);
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
         return toReturn;
     }
 
     @Override
     public int saveDictionaryEntry(DictionaryEntry dictionaryEntry) throws RemoteException, SecurityException {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         int toReturn = serverProxy.saveDictionaryEntry(dictionaryEntry);
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
         return toReturn;
     }
 
     @Override
     public String performBackup() throws RemoteException, SecurityException {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         String toReturn = serverProxy.performBackup();
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
         return toReturn;
     }
 
     @Override
     public String restoreFromBackup(String path) throws RemoteException, SecurityException {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         String toReturn = serverProxy.restoreFromBackup(path);
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
         return toReturn;
     }
 
     @Override
     public String getCanRegVersion() throws RemoteException, SecurityException {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         String toReturn = serverProxy.getCanRegVersion();
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
         return toReturn;
     }
 
     @Override
     public boolean deleteDictionaryEntries(int dictionaryID) throws RemoteException, SecurityException {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         boolean toReturn = serverProxy.deleteDictionaryEntries(dictionaryID);
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
         return toReturn;
     }
 
     @Override
     public Map<Integer, Dictionary> getDictionary() throws RemoteException, SecurityException {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         Map<Integer, Dictionary> toReturn = serverProxy.getDictionary();
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
         return toReturn;
     }
 
     @Override
     public InetAddress getIPAddress() throws RemoteException, SecurityException {        
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         InetAddress toReturn = serverProxy.getIPAddress();
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
         return toReturn;
     }
 
     @Override
     public DistributedTableDescription getDistributedTableDescription(DatabaseFilter filter, String tableName) 
             throws RemoteException, SecurityException, SQLException, UnknownTableException, DistributedTableDescriptionException {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         DistributedTableDescription toReturn = serverProxy.getDistributedTableDescription(filter, tableName);
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
         return toReturn;
-    }
-
-    public Object[][] retrieveRows(Subject theUser, int from, int to) 
-            throws RemoteException, SecurityException, Exception {
-        throw new UnsupportedOperationException("Not supported."); // This should not be implemented!
     }
 
     @Override
     public DatabaseRecord getRecord(int recordID, String tableName, boolean lock) 
             throws RemoteException, SecurityException, RecordLockedException {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         DatabaseRecord toReturn = serverProxy.getRecord(recordID, tableName, lock);
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
         return toReturn;
     }
 
     @Override
     public void editPatient(Patient patient) throws RemoteException, SecurityException, RecordLockedException {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         serverProxy.editPatient(patient);
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
     }
 
     @Override
     public void editTumour(Tumour tumour) throws RemoteException, SecurityException, RecordLockedException {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         serverProxy.editTumour(tumour);
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
     }
 
     @Override
     public Object[][] retrieveRows(String resultSetID, int from, int to) throws RemoteException, SecurityException {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         Object[][] toReturn = serverProxy.retrieveRows(resultSetID, from, to);
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
         return toReturn;
     }
 
     @Override
     public void releaseResultSet(String resultSetID) throws RemoteException, SecurityException, SQLException {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         serverProxy.releaseResultSet(resultSetID);
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
     }
 
     @Override
     public Map<Integer, PopulationDataset> getPopulationDatasets() throws RemoteException, SecurityException {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         Map<Integer, PopulationDataset> toReturn = serverProxy.getPopulationDatasets();
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
         return toReturn;
     }
 
     @Override
     public int saveNewPopulationDataset(PopulationDataset pds) throws RemoteException, SecurityException {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         int toReturn = serverProxy.saveNewPopulationDataset(pds);
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
         return toReturn;
     }
 
     @Override
     public Date getDateOfLastBackUp() throws RemoteException, SecurityException {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         Date toReturn = serverProxy.getDateOfLastBackUp();
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
         return toReturn;
     }    
 
     @Override
     public Map<String, Integer> getNameSexTables() throws RemoteException, SecurityException {                
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         Map<String, Integer> toReturn = serverProxy.getNameSexTables();
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
         return toReturn;
     }
 
     @Override
     public int saveNameSexRecord(NameSexRecord nameSexRecord, boolean replace)
             throws RemoteException, SecurityException {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         int toReturn = serverProxy.saveNameSexRecord(nameSexRecord, replace);
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
         return toReturn;
     }    
 
     @Override
     public boolean clearNameSexTable() throws RemoteException, SecurityException {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         boolean toReturn = serverProxy.clearNameSexTable();
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
         return toReturn;
     }
 
     @Override
     public Globals.UserRightLevels getUserRightLevel() throws RemoteException, SecurityException {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         Globals.UserRightLevels toReturn = serverProxy.getUserRightLevel();
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
         return toReturn;
     }
 
     @Override
     public Map<String, Float> performPersonSearch(Patient patient, PersonSearcher searcher) 
             throws RemoteException, SecurityException {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         Map<String, Float> toReturn = serverProxy.performPersonSearch(patient, searcher);
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
         return toReturn;
     }
 
     @Override
     public String initiateGlobalPersonSearch(PersonSearcher searcher, String rangeStart, String rangeEnd) throws RemoteException, SecurityException {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         String toReturn = serverProxy.initiateGlobalPersonSearch(searcher, rangeStart, rangeEnd);
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
         return toReturn;
     }
 
     @Override
     public boolean deleteRecord(int id, String tableName) throws RemoteException, SecurityException, RecordLockedException, SQLException {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         boolean toReturn = serverProxy.deleteRecord(id, tableName);
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
         return toReturn;
     }
 
     @Override
     public boolean deletePopulationDataset(int populationDatasetID) throws RemoteException, SecurityException {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         boolean toReturn = serverProxy.deletePopulationDataset(populationDatasetID);
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
         return toReturn;
     }
 
     @Override
     public List<User> listUsers() throws RemoteException, SecurityException {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         List<User> toReturn = serverProxy.listUsers();
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
         return toReturn;
     }
 
     @Override
     public int saveUser(User user) throws RemoteException, SecurityException {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         int toReturn = serverProxy.saveUser(user);
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
         return toReturn;
     }
 
     @Override
     public Map<String, Map<String, Float>> nextStepGlobalPersonSearch(String idString) throws SecurityException, RemoteException, Exception {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         Map<String, Map<String, Float>> toReturn = serverProxy.nextStepGlobalPersonSearch(idString);
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
         return toReturn;
     }
 
     @Override
     public void interuptGlobalPersonSearch(String idString) throws RemoteException, SecurityException {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         serverProxy.interuptGlobalPersonSearch(idString);
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
     }
 
     @Override
     public void releaseRecord(int recordID, String tableName) throws RemoteException, SecurityException {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         serverProxy.releaseRecord(recordID, tableName);
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
     }
 
     @Override
     public DatabaseStats getDatabaseStats() throws RemoteException, SecurityException {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         DatabaseStats toReturn = serverProxy.getDatabaseStats();
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
         return toReturn;
     }
 
     @Override
     public void shutDownServer() throws RemoteException, SecurityException {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         serverProxy.shutDownServer();
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
     }
 
     @Override
     public boolean setDBPassword(char[] newPasswordArray, char[] oldPasswordArray, String encryptionAlgorithm, String encryptionKeyLength) 
             throws RemoteException, SecurityException {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         boolean toReturn = serverProxy.setDBPassword(newPasswordArray, oldPasswordArray, encryptionAlgorithm, encryptionKeyLength);
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
         return toReturn;
     }
 
     @Override
     public String getCanRegRegistryCode() throws RemoteException, SecurityException {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         String toReturn = serverProxy.getCanRegRegistryCode();
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
         return toReturn;
     }
     
     @Override
     public String getCanRegSystemRegion() throws RemoteException, SecurityException {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         String toReturn = serverProxy.getCanRegSystemRegion();
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
         return toReturn;
     }    
     
     @Override
     public int getLastHoldingDBnumber(String registryCode) 
             throws RemoteException, SecurityException {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         int toReturn = serverProxy.getLastHoldingDBnumber(registryCode);
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
         return toReturn;
     }
     
     @Override
     public SystemDescription createNewHoldingDB(String registryCode, String dbName, SystemDescription sysDesc)
             throws RemoteException, IOException, SecurityException {
-        serverProxy.changeRegistryDB(registryCode);
+        changeRegistryDB(registryCode);
         SystemDescription toReturn = serverProxy.createNewHoldingDB(registryCode, dbName, sysDesc);
-        serverProxy.resetRegistryDB();
+        resetRegistryDB();
         return toReturn;
     }
     
@@ -506,5 +529,24 @@ public class CanRegRegistryProxy implements CanRegServerInterface, Serializable 
     @Override
     public void resetRegistryDB() throws RemoteException, SecurityException {
         serverProxy.resetRegistryDB();
+    }
+
+    @Override
+    public SystemDescription initSystemDescription(String originalRegistryCode, 
+                                                  String holdingRegistryCode, 
+                                                  boolean holding) 
+            throws RemoteException, SecurityException {
+        changeRegistryDB(registryCode);
+        SystemDescription toReturn = serverProxy.initSystemDescription(originalRegistryCode, holdingRegistryCode, holding);
+        resetRegistryDB();
+        return toReturn;
+    }
+
+    @Override
+    public void initDataBase(SystemDescription systemDescription, boolean holding) 
+            throws RemoteException, SecurityException {
+        changeRegistryDB(registryCode);
+        serverProxy.initDataBase(systemDescription, holding);
+        resetRegistryDB();
     }
 }

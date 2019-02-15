@@ -98,15 +98,15 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
 
     /**
      *
-     * @param systemCode
+     * @param registryCode
      * @throws java.rmi.RemoteException
      */
-    public CanRegServerImpl(String systemCode) throws RemoteException {
+    public CanRegServerImpl(String registryCode) throws RemoteException {
         // Prevent JAVA to use a random port.
         super(1099);
 
         registriesDAOs = new HashMap<>();
-        this.defaultRegistryCode = systemCode;
+        defaultRegistryCode = registryCode;
         
         Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.INFO, "Java version: {0}", System.getProperty("java.version"));
 
@@ -143,24 +143,21 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        // end-try-catch
         // Step one load the system definition...
-        if (!initSystemDefinition()) {
-            throw new RemoteException("Faulty system definitions...");
-        }
-        setTrayIconToolTip("CanReg5 server " + systemCode + " definitions read and initialized...");
+        systemDescription = initSystemDescription(defaultRegistryCode, null, false);
+        setTrayIconToolTip("CanReg5 server " + registryCode + " definitions read and initialized...");
+        
         // Step two: start the database...
-        if (!initDataBase()) {
-            throw new RemoteException("Cannot initialize database...");
-        }
+        initDataBase(systemDescription, false);        
+        currentDAO = registriesDAOs.get(defaultRegistryCode);
 
-        setTrayIconToolTip("CanReg5 server " + systemCode + " database initialized...");
+        setTrayIconToolTip("CanReg5 server " + registryCode + " database initialized...");
         try {
-            systemSettings = new SystemSettings(systemCode + "settings.xml");
+            systemSettings = new SystemSettings(registryCode + "settings.xml");
         } catch (IOException ex) {
             Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        setTrayIconToolTip("CanReg5 server " + systemCode + " database initialized...");
+        setTrayIconToolTip("CanReg5 server " + registryCode + " database initialized...");
 
         // Step three: set up some variables
         serverToolbox = new GlobalToolBox(getDatabseDescription());
@@ -170,7 +167,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         // db.setSystemPropery("DATABASE_VERSION", "5.00.05");
         // migrate the database if necessary
         Migrator migrator = new Migrator(getCanRegVersion(), currentDAO);
-        setTrayIconToolTip("Migrating CanReg5 " + systemCode + " database to newest version specification...");
+        setTrayIconToolTip("Migrating CanReg5 " + registryCode + " database to newest version specification...");
         migrator.migrate();
 
         // Step four: initiate the quality controllers
@@ -183,93 +180,73 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
 
         activePersonSearchers = new LinkedHashMap<String, GlobalPersonSearchHandler>();
 
-        setTrayIconToolTip("CanReg5 " + systemCode + " server quality controllers initialized...");
+        setTrayIconToolTip("CanReg5 " + registryCode + " server quality controllers initialized...");
 
         // Step five: start the user manager
         userManager = new UserManagerNew(currentDAO);
         userManager.writePasswordsToFile();
 
-        setTrayIconToolTip("CanReg5 " + systemCode + " server user manager started initialized...");
+        setTrayIconToolTip("CanReg5 " + registryCode + " server user manager started initialized...");
 
         // Update the tooltip now that everything is up and running...
-        setTrayIconToolTip("CanReg5 server " + systemDescription.getRegistryName() + " (" + systemCode + ") running");
-        displayTrayIconPopUpMessage("Server running", "CanReg5 server " + systemDescription.getRegistryName() + " (" + systemCode + ") running", MessageType.INFO);
+        setTrayIconToolTip("CanReg5 server " + systemDescription.getRegistryName() + " (" + registryCode + ") running");
+        displayTrayIconPopUpMessage("Server running", "CanReg5 server " + systemDescription.getRegistryName() + " (" + registryCode + ") running", MessageType.INFO);
     }
-
-    // Initialize the database connection
-    private boolean initDataBase() throws RemoteException {
-        boolean success = false;
+    
+    @Override
+    public void initDataBase(SystemDescription sysDesc, boolean holding) 
+            throws RemoteException {
         boolean connected = false;
 
         // Connect to the database
-        currentDAO = new CanRegDAO(defaultRegistryCode, systemDescription.getSystemDescriptionDocument());
+        CanRegDAO dao = null;
         try {
-            connected = currentDAO.connect();
+            dao = new CanRegDAO(sysDesc.getRegistryCode(), sysDesc.getSystemDescriptionDocument(), holding);
+            connected = dao.connect();
         } catch (SQLException ex) {
             // System.out.println(ex.getCause());
             // System.out.println("Error-code: " + ex.getErrorCode());
             //  System.out.println("SQL-state:" + ex.getSQLState());
-            // If we reach this step and get a SQLexception - try with passord
-
+            // If we reach this step and get a SQLexception - try with password
             JPasswordField pf = new JPasswordField();                   
-            int okCxl = JOptionPane.showConfirmDialog(null, pf, "Please enter the database boot password", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-
+            int okCxl = JOptionPane.showConfirmDialog(null, pf, "Please enter the database boot password",
+                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
             if (okCxl == JOptionPane.OK_OPTION) {
                 String password = new String(pf.getPassword());
-                if (password.length()>0) {
-                    connected = initDataBase(password);
-                    if (!connected) {
-                        Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+                if (password.length() > 0) {
+                    try {
+                        dao = new CanRegDAO(sysDesc.getRegistryCode(), sysDesc.getSystemDescriptionDocument(), holding);
+                        connected = dao.connectWithBootPassword(password.toCharArray());
+                    } catch(Exception ex1) {
+                        Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex1);
+                        throw new RuntimeException(ex1);
                     }
                 }
-            }
-        } catch (RemoteException ex) {
+            } else
+                throw new RuntimeException(ex);
+        } catch (Exception ex) {
             Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
             throw ex;
         }
 
-        if (connected && currentDAO != null) {
-            success = true;
-            registriesDAOs.put(defaultRegistryCode, currentDAO);
-        }
-
-        return success;
+        if (connected && dao != null) 
+            registriesDAOs.put(sysDesc.getRegistryCode(), dao);
+        else
+            throw new RuntimeException("Connection to Database not possible.");
     }
+    
+    public SystemDescription initSystemDescription(String originalRegistryCode, String holdingRegistryCode, boolean holding) {
+        SystemDescription sysDesc = null;
+        if(holding)
+            sysDesc = new SystemDescription(Globals.CANREG_SERVER_HOLDING_DB_FOLDER + Globals.FILE_SEPARATOR + originalRegistryCode +
+                                            Globals.FILE_SEPARATOR + holdingRegistryCode + Globals.FILE_SEPARATOR + holdingRegistryCode + ".xml");
+        else
+            sysDesc = new SystemDescription(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + originalRegistryCode + ".xml");
 
-    // Initialize the database connection with password
-    private boolean initDataBase(String password) throws RemoteException {
-        boolean success = false;
-        boolean connected = false;
-
-        // Connect to the database
-        currentDAO = new CanRegDAO(defaultRegistryCode, systemDescription.getSystemDescriptionDocument());
-        try {
-            connected = currentDAO.connectWithBootPassword(password.toCharArray());
-        } catch (SQLException ex) {
-            Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
-            success = false;
-        } catch (RemoteException ex) {
-            Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
-            throw ex;
-        }
-        if (connected && currentDAO != null) {
-            success = true;
-            registriesDAOs.put(defaultRegistryCode, currentDAO);
-        }
-        return success;
-    }
-
-    // Initialize the system description object
-    private boolean initSystemDefinition() {
-        boolean success = false;
-
-        // Load the system description object
-        systemDescription = new SystemDescription(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + defaultRegistryCode + ".xml");
-
-        if (systemDescription.getSystemDescriptionDocument() != null) {
-            success = true;
-        }
-        return success;
+        if (sysDesc.getSystemDescriptionDocument() == null) 
+            throw new RuntimeException("Failed to initiate System Definition");
+        
+        return sysDesc;
     }
 
     // This lets one connect to the CanReg database from other programs
@@ -1073,7 +1050,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             throws RemoteException, SecurityException {
         CanRegDAO dao = this.registriesDAOs.get(registryCode);
         if(dao == null)
-//            INICIALIZAR
+            throw new NullPointerException("Database with registry code " + registryCode + " has not been succesfully initialized.");
         currentDAO = dao;
     }
     

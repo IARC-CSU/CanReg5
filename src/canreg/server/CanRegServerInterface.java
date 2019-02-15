@@ -55,6 +55,24 @@ import org.w3c.dom.Document;
 public interface CanRegServerInterface extends Remote {
 
     /**
+     * Instantiates a SystemDescription object. If it's a regular database and NOT a holding
+     * then the parameter holdingRegistryCode must be NULL and holding must be FALSE.
+     * @param originalRegistryCode
+     * @param holdingRegistryCode
+     * @param holding
+     * @return
+     * @throws RemoteException
+     * @throws SecurityException 
+     */
+    public SystemDescription initSystemDescription(String originalRegistryCode, String holdingRegistryCode, boolean holding) 
+            throws RemoteException, SecurityException;
+    
+    
+    public void initDataBase(SystemDescription systemDescription, boolean holding) 
+            throws RemoteException, SecurityException;
+    
+    
+    /**
      *
      * @param populationDatasetID
      * @return

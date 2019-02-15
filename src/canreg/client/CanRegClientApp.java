@@ -441,13 +441,16 @@ public class CanRegClientApp extends SingleFrameApplication {
         return returnString;
     }
 
-    public String loginDirect(String serverCode, String username, char[] password) throws LoginException, NullPointerException, NotBoundException, MalformedURLException, RemoteException, UnknownHostException, WrongCanRegVersionException {
+    public String loginDirect(String serverCode, String username, char[] password)
+            throws LoginException, NullPointerException, NotBoundException, MalformedURLException,
+                   RemoteException, UnknownHostException, WrongCanRegVersionException {
         // should this be moved to the loginserver?
         CanRegLoginInterface loginServer = new CanRegLoginImpl(serverCode);
         return login(loginServer, username, password);
     }
 
-    private CanRegLoginInterface getCanRegLoginServer(String serverObjectString) throws NotBoundException, MalformedURLException, RemoteException {
+    private CanRegLoginInterface getCanRegLoginServer(String serverObjectString) 
+            throws NotBoundException, MalformedURLException, RemoteException {
         return (CanRegLoginInterface) Naming.lookup(serverObjectString);
     }
 
