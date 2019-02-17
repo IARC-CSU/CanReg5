@@ -34,6 +34,7 @@ import canreg.common.conversions.ConversionResult;
 import canreg.common.conversions.Converter;
 import canreg.common.qualitycontrol.CheckResult;
 import canreg.common.qualitycontrol.CheckResult.ResultCode;
+import canreg.server.CanRegRegistryProxy;
 import canreg.server.CanRegServerInterface;
 import canreg.server.database.*;
 import canreg.server.management.SystemDescription;
@@ -264,7 +265,7 @@ public class Import {
                         // rebuild sequenceNumber
                         Tumour[] tumours = new Tumour[0];
                         try {
-                            tumours = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(patientID + "", false);
+                            tumours = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(patientID + "", false, server);
                         } catch (DistributedTableDescriptionException ex) {
                             Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
                         } catch (UnknownTableException ex) {
@@ -279,7 +280,7 @@ public class Import {
                         patientRecordID = patientID + "" + tumourSequenceString;
                         Patient[] oldPatients = null;
                         try {
-                            oldPatients = CanRegClientApp.getApplication().getPatientRecordsByID((String) patientID, false);
+                            oldPatients = CanRegClientApp.getApplication().getPatientRecordsByID((String) patientID, false, server);
                         } catch (RemoteException ex) {
                             Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
                         } catch (SecurityException ex) {
@@ -419,7 +420,7 @@ public class Import {
                                       List<canreg.client.dataentry.Relation> map, File[] files, 
                                       CanRegServerInterface server, ImportOptions io)
             throws SQLException, RemoteException, SecurityException, URISyntaxException, 
-                   IOException {        
+                   IOException, RecordLockedException {        
         SystemDescription systemDescription = new SystemDescription(Paths.get(new URI(originalDBDescription.getDocumentURI())).toFile().getAbsolutePath());
         int lastVariableId = systemDescription.getDatabaseVariableListElements().length - 1;
         
@@ -463,23 +464,21 @@ public class Import {
         String registryCode = server.getCanRegRegistryCode();
         String dateStr = new SimpleDateFormat("yyyy-MM-dd").format((Calendar.getInstance()).getTime());
         int newHoldingDBNumber = server.getLastHoldingDBnumber(registryCode) + 1;
-        String dbName = "HOLDING_" + newHoldingDBNumber + "_" + registryCode + " " + dateStr;
+        String dbName = "HOLDING_" + registryCode + "_" +  + newHoldingDBNumber + "_" + dateStr;
         systemDescription = server.createNewHoldingDB(registryCode, dbName, systemDescription);
 
-                       
-//        CanRegDAO hdbDAO = new CanRegDAO(hdbCanRegSystemCode, doc);
+        CanRegServerInterface holdingProxy = ((CanRegRegistryProxy) server).getInstanceForHoldingDB(registryCode, dbName);
 
-        //SI EN ALGUN MOMENTO ESTO LANZA UNA EXCEPCION, ENTONCES HABRIA QUE BORRA ESA CARPETA DE HOLDING
         
-        //TENE EN CUENTA QUE EL XML HOLDING LO TENES QUE GUARDAR EN EL SERVIDOR, NO EN EL CLIENTE!! ASI QUE SEGURAMENTE
-        //VAS A TENER QUE CREAR UN METODO EN EL PROXY Y EN SERVERIMPL
-
-        return true;
-    }
+//        TE FALTA PROBAR SI ESTO IMPORTA TODOS LOS CASOS EN LA HOLDING (TENES QUE ABRIR LA HOLDING CON EL RAZOR SQL)
+//        TAMBIEN COMPARA CUANTOS REGISTROS IMPORTA EN CADA CASO (o sea, usando el output de la betty y sin usar el output de la betty)
+        return importFiles(task, systemDescription.getSystemDescriptionDocument(), map, files, holdingProxy, io, true);
+    }    
 
     public static boolean importFiles(Task<Object, Void> task, Document doc, 
                                       List<canreg.client.dataentry.Relation> map, File[] files, 
-                                      CanRegServerInterface server, ImportOptions io) 
+                                      CanRegServerInterface server, ImportOptions io, 
+                                      boolean intoHoldingDB) 
             throws SQLException, RemoteException, SecurityException, RecordLockedException {
         int numberOfLinesRead = 0;
         Writer reportWriter = new BufferedWriter(new OutputStreamWriter(System.out));
@@ -495,9 +494,7 @@ public class Import {
         noNeedToLookAtPatientVariables.add(canreg.common.Tools.toLowerCaseStandardized(io.getPatientIDVariableName()));
         noNeedToLookAtPatientVariables.add(canreg.common.Tools.toLowerCaseStandardized(io.getPatientRecordIDVariableName()));
 
-        String[] lineElements;
         ResultCode worstResultCodeFound;
-//         CSVReader reader = null;
         CSVParser parser = null;
         CSVFormat format = CSVFormat.DEFAULT
                 .withFirstRecordAsHeader()
@@ -530,10 +527,13 @@ public class Import {
                 parser = CSVParser.parse(files[0], io.getFileCharsets()[0], format);
 
                 for (CSVRecord csvRecord : parser) {
+                    if(numberOfLinesRead > 200)
+                        break;
+                    
                     // We allow for null tasks...
                     boolean savePatient = true;
-                    boolean deletePatient = false;
-                    int oldPatientDatabaseRecordID = -1;
+//                    boolean deletePatient = false;
+//                    int oldPatientDatabaseRecordID = -1;
 
                     if (task != null) {
                         task.firePropertyChange(PROGRESS, ((numberOfLinesRead - 1) * 100 / linesToRead) / 3, ((numberOfLinesRead) * 100 / linesToRead) / 3);
@@ -564,80 +564,79 @@ public class Import {
                     }
                     // debugOut(patient.toString());
 
-                    // debugOut(tumour.toString());
-                    // add patient to the database
+                    //Records are being imported into the production DB
                     
-//                    No va a haber un oldPatientRecord, ya que estamos metiendo todo a la Holding DB. 
-//                    De modo que deberia ir a parar directo a la DB, nada de verificar contra un old record.
-//                    PERO OJO!! todo este codigo seguro lo vas a tener que utilizar al mover el record desde
-//                    la holding hacia produccion, asi que NO TIRES ESTE CODIGO A LA BASURA, GUARDALO!
-
                     Object patientID = patient.getVariable(io.getPatientRecordIDVariableName());
                     Patient oldPatientRecord = null;
                     try {
                         oldPatientRecord = CanRegClientApp.getApplication().getPatientRecord(
-                                (String) patientID, false);
-                    } catch (DistributedTableDescriptionException ex) {
-                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (RecordLockedException ex) {
-                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (RemoteException ex) {
-                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (SQLException ex) {
-                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (SecurityException ex) {
-                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (UnknownTableException ex) {
-                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                                (String) patientID, false, server);
+                    } catch(NullPointerException ex1) {
+                        //Patient not found in DB.
                     }
+                    catch (Exception ex) {
+                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                    } 
 
                     if (oldPatientRecord != null) {
-                        // deal with discrepancies                        
-                        switch (io.getDiscrepancies()) {
-                            case ImportOptions.REJECT:
-                                savePatient = false;
-                                break;
-                            case ImportOptions.UPDATE:
-                                String updateReport = updateRecord(oldPatientRecord, patient);
-                                if (updateReport.length() > 0) {
-                                    reportWriter.write(patient.getVariable(
-                                            io.getTumourIDVariablename()) + Globals.newline + updateReport);
-                                }
-                                oldPatientDatabaseRecordID = (Integer) oldPatientRecord.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
-                                patient = oldPatientRecord;
-                                savePatient = true;
-                                break;
-                            case ImportOptions.OVERWRITE:
-                                // deleteTumour;
-                                oldPatientDatabaseRecordID = (Integer) oldPatientRecord.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
-                                String overWriteReport = overwriteRecord(oldPatientRecord, patient);
-                                if (overWriteReport.length() > 0) {
-                                    reportWriter.write(patient.getVariable(
-                                            io.getTumourIDVariablename()) + Globals.newline + overWriteReport);
-                                }
-                                patient = oldPatientRecord;
-                                savePatient = true;
-                                break;
-                        }
-                        // reportWriter.write(tumour.getVariable(io.getTumourIDVariablename()) + "Tumour already exists.\n");
-                    }
-
-                    if (task != null) {
-                        task.firePropertyChange(RECORD, 50, 75);
-                    }
-
-                    if ((!io.isTestOnly())) {
-                        if (deletePatient) {
-                            server.deleteRecord(oldPatientDatabaseRecordID, Globals.PATIENT_TABLE_NAME);
-                        }
-                        if (savePatient) {
-                            if (patient.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME) != null) {
-                                server.editPatient(patient);
-                            } else {
-                                server.savePatient(patient);
+                        if(intoHoldingDB) {
+                            savePatient = false;
+                        } else {
+                            // deal with discrepancies                        
+                            switch (io.getDiscrepancies()) {
+                                case ImportOptions.REJECT:
+                                    savePatient = false;
+                                    break;
+                                case ImportOptions.UPDATE:
+                                    String updateReport = updateRecord(oldPatientRecord, patient);
+                                    if (updateReport.length() > 0) {
+                                        reportWriter.write(patient.getVariable(
+                                                io.getTumourIDVariablename()) + Globals.newline + updateReport);
+                                    }
+    //                                oldPatientDatabaseRecordID = (Integer) oldPatientRecord.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
+                                    patient = oldPatientRecord;
+                                    savePatient = true;
+                                    break;
+                                case ImportOptions.OVERWRITE:
+    //                                oldPatientDatabaseRecordID = (Integer) oldPatientRecord.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
+                                    String overWriteReport = overwriteRecord(oldPatientRecord, patient);
+                                    if (overWriteReport.length() > 0) {
+                                        reportWriter.write(patient.getVariable(
+                                                io.getTumourIDVariablename()) + Globals.newline + overWriteReport);
+                                    }
+                                    patient = oldPatientRecord;
+                                    savePatient = true;
+                                    break;
                             }
                         }
-                    }
+                        
+                        if (task != null) {
+                            task.firePropertyChange(RECORD, 50, 75);
+                        }
+                    } 
+                    
+                    if ((!io.isTestOnly())) {
+//                        if (deletePatient) {
+//                            server.deleteRecord(oldPatientDatabaseRecordID, Globals.PATIENT_TABLE_NAME);
+//                        }
+                        Object crap = null;
+                        if (savePatient) {
+                            patientID = patient.getVariable(io.getPatientRecordIDVariableName());
+                            if (patient.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME) != null) {
+                                try {
+                                    server.editPatient(patient);
+                                } catch(Exception ex) {
+                                    Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "ERROR EDITING PATIENT " + patientID, ex);
+                                }
+                            } else {
+                                try {
+                                    server.savePatient(patient);
+                                } catch(Exception ex) {
+                                    Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "ERROR SAVING PATIENT " + patientID, ex);
+                                }
+                            }
+                        }
+                    } 
 
                     if (task != null) {
                         task.firePropertyChange(RECORD, 100, 75);
@@ -686,10 +685,12 @@ public class Import {
                 format = CSVFormat.DEFAULT
                         .withFirstRecordAsHeader()
                         .withDelimiter(io.getSeparators()[1]);
-
                 parser = CSVParser.parse(files[1], io.getFileCharsets()[1], format);
 
                 for (CSVRecord csvRecord : parser) {
+                    if(numberOfLinesRead > 200)
+                        break;
+                    
                     // We allow for null tasks...
                     boolean saveTumour = true;
                     boolean deleteTumour = false;
@@ -720,69 +721,55 @@ public class Import {
                         if (task != null) {
                             task.firePropertyChange(RECORD, i - 1 / map.size() * 50, i / map.size() * 50);
                         }
-                    }
+                    } 
 
+                    Tumour tumour2 = null;
+                    Object tumourID = tumour.getVariable(io.getTumourIDVariablename());
                     // see if this tumour exists in the database already
                     // TODO: Implement this using arrays and getTumourRexords instead
-                    Tumour tumour2 = null;
                     try {
                         tumour2 = CanRegClientApp.getApplication().getTumourRecordBasedOnTumourID(
-                                (String) tumour.getVariable(io.getTumourIDVariablename()), false);
-                    } catch (DistributedTableDescriptionException ex) {
+                                (String) tumourID, false, server);
+                    } catch (Exception ex) {
                         Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (RecordLockedException ex) {
-                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (RemoteException ex) {
-                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (SQLException ex) {
-                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (SecurityException ex) {
-                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (UnknownTableException ex) {
-                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-
+                    } 
                     if (tumour2 != null) {
-                        // deal with discrepancies
-                        switch (io.getDiscrepancies()) {
-                            case ImportOptions.REJECT:
-                                saveTumour = false;
-                                break;
-                            case ImportOptions.UPDATE:
-                                String updateReport = updateRecord(tumour2, tumour);
-                                if (updateReport.length() > 0) {
-                                    reportWriter.write(tumour.getVariable(io.getTumourIDVariablename()) + Globals.newline + updateReport);
-                                }
-                                tumour = tumour2;
-                                saveTumour = true;
-                                break;
-                            case ImportOptions.OVERWRITE:
-                                // deleteTumour;
-                                deleteTumour = true;
-                                saveTumour = true;
-                                break;
+                        if(intoHoldingDB) {
+                            //Tumour is already present in holding DB, if we try to save an exception will rise
+                            saveTumour = false;
+                        } else {
+                            // deal with discrepancies
+                            switch (io.getDiscrepancies()) {
+                                case ImportOptions.REJECT:
+                                    saveTumour = false;
+                                    break;
+                                case ImportOptions.UPDATE:
+                                    String updateReport = updateRecord(tumour2, tumour);
+                                    if (updateReport.length() > 0) {
+                                        reportWriter.write(tumour.getVariable(io.getTumourIDVariablename()) + Globals.newline + updateReport);
+                                    }
+                                    tumour = tumour2;
+                                    saveTumour = true;
+                                    break;
+                                case ImportOptions.OVERWRITE:
+                                    // deleteTumour;
+                                    deleteTumour = true;
+                                    saveTumour = true;
+                                    break;
+                            }
+                            // reportWriter.write(tumour.getVariable(io.getTumourIDVariablename()) + "Tumour already exists.\n");
                         }
-                        // reportWriter.write(tumour.getVariable(io.getTumourIDVariablename()) + "Tumour already exists.\n");
-
                     }
 
                     Patient patient = null;
                     try {
                         patient = CanRegClientApp.getApplication().getPatientRecord(
-                                (String) tumour.getVariable(io.getPatientRecordIDTumourTableVariableName()), false);
-                    } catch (DistributedTableDescriptionException ex) {
+                                (String) tumour.getVariable(io.getPatientRecordIDTumourTableVariableName()), false, server);
+                    } catch (NullPointerException ex) {
+                        //Patient not found in DB
+                    } catch (Exception ex) {
                         Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (RecordLockedException ex) {
-                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (RemoteException ex) {
-                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (SQLException ex) {
-                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (SecurityException ex) {
-                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (UnknownTableException ex) {
-                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    } 
 
                     if (patient != null) {
                         if (io.isDoChecks() && saveTumour) {
@@ -790,7 +777,8 @@ public class Import {
                             String message = "";
                             LinkedList<CheckResult> checkResults = canreg.client.CanRegClientApp.getApplication().performChecks(patient, tumour);
 
-                            Map<Globals.StandardVariableNames, CheckResult.ResultCode> mapOfVariablesAndWorstResultCodes = new EnumMap<Globals.StandardVariableNames, CheckResult.ResultCode>(Globals.StandardVariableNames.class);
+                            Map<Globals.StandardVariableNames, CheckResult.ResultCode> mapOfVariablesAndWorstResultCodes 
+                                    = new EnumMap<Globals.StandardVariableNames, CheckResult.ResultCode>(Globals.StandardVariableNames.class);
                             worstResultCodeFound = CheckResult.ResultCode.OK;
                             for (CheckResult result : checkResults) {
                                 if (result.getResultCode() != CheckResult.ResultCode.OK && result.getResultCode() != CheckResult.ResultCode.NotDone) {
@@ -815,13 +803,15 @@ public class Import {
 
                             if (worstResultCodeFound != CheckResult.ResultCode.Invalid && worstResultCodeFound != CheckResult.ResultCode.Missing) {
                                 // generate ICD10 codes
-                                ConversionResult[] conversionResult = canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICD10, patient, tumour);
+                                ConversionResult[] conversionResult = 
+                                        canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICD10, patient, tumour);
                                 tumour.setVariable(io.getICD10VariableName(), conversionResult[0].getValue());
                                 // generate ICCC codes
                                 if (io.getICCCVariableName() != null) {
                                     String iccc = (String) tumour.getVariable(io.getICCCVariableName());
                                     if (iccc == null || iccc.trim().length() == 0) {
-                                        ConversionResult[] conversionResultICCC = canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICCC3, patient, tumour);
+                                        ConversionResult[] conversionResultICCC = 
+                                                canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICCC3, patient, tumour);
                                         tumour.setVariable(io.getICCCVariableName(), conversionResultICCC[0].getValue());
                                     }
                                 }
@@ -841,13 +831,15 @@ public class Import {
                             // try to generate ICD10, if missing, anyway
                             String icd10 = (String) tumour.getVariable(io.getICD10VariableName());
                             if (icd10 == null || icd10.trim().length() == 0) {
-                                ConversionResult[] conversionResult = canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICD10, patient, tumour);
+                                ConversionResult[] conversionResult = 
+                                        canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICD10, patient, tumour);
                                 tumour.setVariable(io.getICD10VariableName(), conversionResult[0].getValue());
                             }
                             // try to generate ICCC3, if missing, anyway
                             String iccc = (String) tumour.getVariable(io.getICCCVariableName());
                             if (iccc == null || iccc.trim().length() == 0) {
-                                ConversionResult[] conversionResult = canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICCC3, patient, tumour);
+                                ConversionResult[] conversionResult = 
+                                        canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICCC3, patient, tumour);
                                 tumour.setVariable(io.getICCCVariableName(), conversionResult[0].getValue());
                             }
                         }
@@ -860,19 +852,28 @@ public class Import {
                         task.firePropertyChange(RECORD, 50, 75);
                     }
                     if (!io.isTestOnly()) {
-                        if (deleteTumour) {
+                        if (deleteTumour && tumour2 != null) {
                             server.deleteRecord((Integer) tumour2.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME), Globals.TUMOUR_TABLE_NAME);
                         }
                         if (saveTumour) {
-                            // if tumour has no record ID we save it
-                            if (tumour.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME) == null) {
-                                server.saveTumour(tumour);
-                            } // if not we edit it
+                            // if tumour has record ID we edit it
+                            if (tumour.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME) != null) {
+                                try {
+                                    server.editTumour(tumour);
+                                } catch(Exception ex) {
+                                    Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "ERROR EDITING TUMOUR " + tumourID, ex);
+                                }
+                                
+                            } // if not we save it
                             else {
-                                server.editTumour(tumour);
+                                try {
+                                    server.saveTumour(tumour);
+                                } catch(Exception ex) {
+                                    Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "ERROR SAVING TUMOUR " + tumourID, ex);
+                                }
                             }
                         }
-                    }
+                    } 
                     if (task != null) {
                         task.firePropertyChange(RECORD, 75, 100);
                     }
@@ -923,6 +924,9 @@ public class Import {
                 parser = CSVParser.parse(files[2], io.getFileCharsets()[2], format);
 
                 for (CSVRecord csvRecord : parser) {
+                    if(numberOfLinesRead > 300)
+                        break;
+                    
                     // We allow for null tasks...
                     if (task != null) {
                         task.firePropertyChange(PROGRESS, 67 + ((numberOfLinesRead - 1) * 100 / linesToRead) / 3, 67 + ((numberOfLinesRead) * 100 / linesToRead) / 3);
@@ -955,20 +959,10 @@ public class Import {
                     Tumour tumour = null;
                     try {
                         tumour = CanRegClientApp.getApplication().getTumourRecordBasedOnTumourID(
-                                (String) source.getVariable(io.getTumourIDSourceTableVariableName()), false);
-                    } catch (DistributedTableDescriptionException ex) {
+                                (String) source.getVariable(io.getTumourIDSourceTableVariableName()), false, server);
+                    } catch (Exception ex) {
                         Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (RecordLockedException ex) {
-                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (RemoteException ex) {
-                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (SQLException ex) {
-                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (SecurityException ex) {
-                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (UnknownTableException ex) {
-                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    } 
                     if (task != null) {
                         task.firePropertyChange(RECORD, 50, 75);
                     }
@@ -980,24 +974,28 @@ public class Import {
                         // look for source in sources
                         for (Source oldSource : sources) {
                             if (oldSource.getVariable(io.getSourceIDVariablename()).equals(sourceRecordID)) {
-                                // deal with discrepancies
-                                switch (io.getDiscrepancies()) {
-                                    case ImportOptions.REJECT:
-                                        addSource = false;
-                                        break;
-                                    case ImportOptions.UPDATE:
-                                        String updateReport = updateRecord(oldSource, source);
-                                        if (updateReport.length() > 0) {
-                                            reportWriter.write(tumour.getVariable(io.getTumourIDVariablename()) + Globals.newline + updateReport);
-                                        }
-                                        source = oldSource;
-                                        addSource = false;
-                                        break;
-                                    case ImportOptions.OVERWRITE:
-                                        // deleteTumour;
-                                        sources.remove(oldSource);
-                                        addSource = true;
-                                        break;
+                                if( ! intoHoldingDB) {
+                                    // deal with discrepancies
+                                    switch (io.getDiscrepancies()) {
+                                        case ImportOptions.REJECT:
+                                            addSource = false;
+                                            break;
+                                        case ImportOptions.UPDATE:
+                                            String updateReport = updateRecord(oldSource, source);
+                                            if (updateReport.length() > 0) {
+                                                reportWriter.write(tumour.getVariable(io.getTumourIDVariablename()) + Globals.newline + updateReport);
+                                            }
+                                            source = oldSource;
+                                            addSource = false;
+                                            break;
+                                        case ImportOptions.OVERWRITE:
+                                            // deleteTumour;
+                                            sources.remove(oldSource);
+                                            addSource = true;
+                                            break;
+                                    }
+                                } else {
+                                    addSource = false;
                                 }
                             }
                         }
@@ -1006,7 +1004,14 @@ public class Import {
                         }
                         tumour.setSources(sources);
                         if (!io.isTestOnly()) {
-                            server.editTumour(tumour);
+                            try {
+                                server.editTumour(tumour);
+                            } catch(Exception ex) {
+                                Logger.getLogger(Import.class.getName()).log(Level.SEVERE, 
+                                        "ERROR SAVING SOURCE " + sourceRecordID + 
+                                        " ON TUMOUR " + tumour.getVariable(io.getTumourIDVariablename()),
+                                        ex);
+                            }
                         }
                     } else {
                         Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, "No tumour for source record.");
