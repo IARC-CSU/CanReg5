@@ -83,7 +83,7 @@ public class CanRegDAO {
      * @param registryCode
      * @param doc
      */
-    public CanRegDAO(String registryCode, Document doc) {
+    public CanRegDAO(String registryCode, Document doc, boolean holding) {
         this.doc = doc;
 
         this.registryCode = registryCode;
@@ -131,7 +131,10 @@ public class CanRegDAO {
          strGetHighestTumourRecordID = QueryGenerator.strGetHighestTumourRecordID(globalToolBox);
          */
         setDBSystemDir();
-        createHoldingDBDir();
+        
+        if(! holding)
+            createHoldingDBDir();
+        
         dbProperties = loadDBProperties();
         String driverName = dbProperties.getProperty("derby.driver");
         loadDatabaseDriver(driverName);
@@ -582,7 +585,7 @@ public class CanRegDAO {
         return bExists;
     }
 
-    private void setDBSystemDir() {
+    private void setDBSystemDir() {     
         // decide on the db system directory
         String systemDir = Globals.CANREG_SERVER_DATABASE_FOLDER;
         System.setProperty("derby.system.home", systemDir);
@@ -1497,7 +1500,7 @@ public class CanRegDAO {
      * @return
      * @throws RecordLockedException
      */
-    public synchronized boolean editPatient(Patient patient) throws RecordLockedException {
+    public synchronized boolean editPatient(Patient patient) throws RecordLockedException, SQLException {
         return editRecord("Patient", patient, stmtEditPatient);
     }
 
@@ -1507,7 +1510,7 @@ public class CanRegDAO {
      * @return
      * @throws RecordLockedException
      */
-    public synchronized boolean editTumour(Tumour tumour) throws RecordLockedException {
+    public synchronized boolean editTumour(Tumour tumour) throws RecordLockedException, SQLException {
         return editRecord("Tumour", tumour, stmtEditTumour);
     }
 
@@ -1517,7 +1520,7 @@ public class CanRegDAO {
      * @return
      * @throws RecordLockedException
      */
-    public synchronized boolean editSource(Source source) throws RecordLockedException {
+    public synchronized boolean editSource(Source source) throws RecordLockedException, SQLException {
         return editRecord("Source", source, stmtEditSource);
     }
 
@@ -1529,7 +1532,8 @@ public class CanRegDAO {
      * @return
      * @throws RecordLockedException
      */
-    private synchronized boolean editRecord(String tableName, DatabaseRecord record, PreparedStatement stmtEditRecord) throws RecordLockedException {
+    private synchronized boolean editRecord(String tableName, DatabaseRecord record, PreparedStatement stmtEditRecord) 
+            throws RecordLockedException, SQLException {
         boolean bEdited = false;
         int id = -1;
         try {
@@ -1542,12 +1546,16 @@ public class CanRegDAO {
                 if (tableNameDB.equalsIgnoreCase(tableName)) {
                     variableNumber++;
                     String variableType = variable.getVariableType();
+                    int variableLength = variable.getVariableLength();
                     Object obj = record.getVariable(variable.getDatabaseVariableName());
                     if (variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_ALPHA_NAME) || variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_ASIAN_TEXT_NAME) || variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_DICTIONARY_NAME) || variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_DATE_NAME) || variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_TEXT_AREA_NAME)) {
                         if (obj != null) {
                             try {
                                 String strObj = obj.toString();
                                 if (strObj.length() > 0) {
+                                    if (variableLength > 0 && strObj.length() > variableLength) {
+                                        strObj = strObj.substring(0, variableLength);
+                                    }
                                     stmtEditRecord.setString(variableNumber, strObj);
                                 } else {
                                     stmtEditRecord.setString(variableNumber, "");
@@ -1558,7 +1566,7 @@ public class CanRegDAO {
                             } catch (java.lang.ClassCastException cce) {
                                 debugOut("Cast to String Error. Type:" + variableType + ", Value: " + obj + ", Variable Number: " + variableNumber);
                                 throw cce;
-                            }
+                            } 
                         } else {
                             stmtEditRecord.setString(variableNumber, "");
                         }
@@ -1594,7 +1602,13 @@ public class CanRegDAO {
             if (isRecordLocked(idInt, tableName)) {
                 throw new RecordLockedException();
             }
-            int rowCount = stmtEditRecord.executeUpdate();
+            
+//            try {
+                int rowCount = stmtEditRecord.executeUpdate();  
+//            } catch(SQLException ex) {
+//                Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+//                throw new SQLException(ex);
+//            }
 
             // If this is a tumour we save the sources...
             if (record instanceof Tumour) {
@@ -1618,6 +1632,7 @@ public class CanRegDAO {
 
         } catch (SQLException sqle) {
             Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
+            throw sqle;
         }
 
         return bEdited;
@@ -2530,11 +2545,11 @@ public class CanRegDAO {
             filterStringBuilder.append(")");
         }
 
-        /* debug stuff */
-        System.out.println("filterString: " + filterStringBuilder);
-        System.out.println("getterString: " + getterStringBuilder);
-        System.out.println("counterString: " + counterStringBuilder);
-        /* */
+        if(debug) {
+            System.out.println("filterString: " + filterStringBuilder);
+            System.out.println("getterString: " + getterStringBuilder);
+            System.out.println("counterString: " + counterStringBuilder);
+        }
 
         ResultSet countRowSet;
         try {
