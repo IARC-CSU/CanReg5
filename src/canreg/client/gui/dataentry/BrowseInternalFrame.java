@@ -445,7 +445,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
         rangeFilterPanel.close();
         if (tableDatadescription != null) {
             try {
-                CanRegClientApp.getApplication().releaseResultSet(tableDatadescription.getResultSetID());
+                CanRegClientApp.getApplication().releaseResultSet(tableDatadescription.getResultSetID(), null);
             } catch (SQLException ex) {
                 Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SecurityException ex) {
@@ -543,7 +543,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                 // release old resultSet
                 if (tableDatadescription != null) {
                     try {
-                        CanRegClientApp.getApplication().releaseResultSet(tableDatadescription.getResultSetID());
+                        CanRegClientApp.getApplication().releaseResultSet(tableDatadescription.getResultSetID(), null);
                     } catch (SecurityException ex) {
                         Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (RemoteException ex) {
@@ -707,7 +707,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                 if (answer == JOptionPane.YES_OPTION) {
                     patient = new Patient();
                     patient.setVariable(patientIDlookupVariable, idString);
-                    CanRegClientApp.getApplication().saveRecord(patient);
+                    CanRegClientApp.getApplication().saveRecord(patient, null);
                     patients = CanRegClientApp.getApplication().getPatientRecordsByID(idString, false, null);
                 } else {
                     setCursor(normalCursor);
@@ -739,7 +739,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                     Tumour tumour = new Tumour();
                     tumour.setVariable(patientIDTumourTablelookupVariable, idString);
                     tumour.setVariable(patientRecordIDTumourTablelookupVariable, patients[0].getVariable(patientRecordIDVariable));
-                    CanRegClientApp.getApplication().saveRecord(tumour);
+                    CanRegClientApp.getApplication().saveRecord(tumour, null);
                     set.add(tumour);
                 } else {
                     Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, "Patient record not save properly?");
@@ -815,8 +815,9 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
             if (numberOfRecords == 0) {
                 JOptionPane.showMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("TUMOUR_RECORD_NOT_FOUND..."), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             } else {
-                rows = CanRegClientApp.getApplication().retrieveRows(distributedTableDescription.getResultSetID(), 0, numberOfRecords);
-                CanRegClientApp.getApplication().releaseResultSet(distributedTableDescription.getResultSetID());
+                rows = CanRegClientApp.getApplication()
+                        .retrieveRows(distributedTableDescription.getResultSetID(), 0, numberOfRecords, null);
+                CanRegClientApp.getApplication().releaseResultSet(distributedTableDescription.getResultSetID(), null);
                 String[] columnNames = distributedTableDescription.getColumnNames();
                 int ids[] = new int[numberOfRecords];
                 boolean found = false;
@@ -828,7 +829,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                     idColumnNumber--;
                     for (int j = 0; j < numberOfRecords; j++) {
                         ids[j] = (Integer) rows[j][idColumnNumber];
-                        record = CanRegClientApp.getApplication().getRecord(ids[j], Globals.TUMOUR_TABLE_NAME, false);
+                        record = CanRegClientApp.getApplication().getRecord(ids[j], Globals.TUMOUR_TABLE_NAME, false, null);
                         editPatientID((String) record.getVariable(patientIDTumourTablelookupVariable));
                     }
                 } else {

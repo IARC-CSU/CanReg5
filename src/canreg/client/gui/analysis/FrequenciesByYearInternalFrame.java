@@ -312,7 +312,7 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
                 // release old resultSet
                 if (tableDatadescription != null) {
                     try {
-                        CanRegClientApp.getApplication().releaseResultSet(tableDatadescription.getResultSetID());
+                        CanRegClientApp.getApplication().releaseResultSet(tableDatadescription.getResultSetID(), null);
                     } catch (SQLException ex) {
                         Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (SecurityException securityException) {
@@ -322,7 +322,6 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
                     }
                 }
                 tableDataSource = null;
-
                 tableDatadescription = newTableDatadescription;
 
                 Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
@@ -446,7 +445,8 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
         try {
             tableDatadescriptionPopUp = 
                     canreg.client.CanRegClientApp.getApplication().getDistributedTableDescription(filter, rangeFilterPanel.getSelectedTable(), null);
-            Object[][] rows = canreg.client.CanRegClientApp.getApplication().retrieveRows(tableDatadescriptionPopUp.getResultSetID(), 0, MAX_ENTRIES_DISPLAYED_ON_RIGHT_CLICK);
+            Object[][] rows = canreg.client.CanRegClientApp.getApplication()
+                    .retrieveRows(tableDatadescriptionPopUp.getResultSetID(), 0, MAX_ENTRIES_DISPLAYED_ON_RIGHT_CLICK, null);
             String[] variableNames = tableDatadescriptionPopUp.getColumnNames();
             for (Object[] row : rows) {
                 String line = "";

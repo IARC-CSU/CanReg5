@@ -528,7 +528,7 @@ public class CanRegRegistryProxy implements CanRegServerInterface, Serializable 
     
     @Override
     public void resetRegistryDB() throws RemoteException, SecurityException {
-        serverProxy.resetRegistryDB();
+        //serverProxy.resetRegistryDB();
     }
 
     @Override

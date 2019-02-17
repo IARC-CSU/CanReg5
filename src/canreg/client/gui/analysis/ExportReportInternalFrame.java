@@ -557,7 +557,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                 // release old resultSet
                 if (tableDatadescription != null) {
                     try {
-                        CanRegClientApp.getApplication().releaseResultSet(tableDatadescription.getResultSetID());
+                        CanRegClientApp.getApplication().releaseResultSet(tableDatadescription.getResultSetID(), null);
                         tableDataSource = null;
                     } catch (SQLException ex) {
                         Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -779,7 +779,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
             if (exportSourceInformationCheckBox.isSelected()) {
                 try {
                     exportSources = true;
-                    maxNumberOfSourcesPerTumour = CanRegClientApp.getApplication().getDatabaseStats().getMaxNumberOfSourcesPerTumourRecord();
+                    maxNumberOfSourcesPerTumour = CanRegClientApp.getApplication().getDatabaseStats(null).getMaxNumberOfSourcesPerTumourRecord();
                     Enumeration<TableColumn> columns = tableColumnModel.getColumns(false);
                     boolean found = false;
 

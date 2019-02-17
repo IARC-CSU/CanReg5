@@ -155,7 +155,7 @@ public class DictionaryHelper {
      * @throws java.rmi.RemoteException
      */
     private static boolean clearDictionary(int dictionaryID, CanRegClientApp app) throws RemoteException {
-        return app.deleteDictionaryEntries(dictionaryID);
+        return app.deleteDictionaryEntries(dictionaryID, null);
     }
 
     /**
@@ -250,7 +250,7 @@ public class DictionaryHelper {
         boolean removed = clearDictionary(dictionaryID, app);
 
         for (DictionaryEntry entry : dictionaryEntries) {
-            app.saveDictionaryEntry(entry);
+            app.saveDictionaryEntry(entry, null);
             // dictionaryEntriesMap.put(entry.getCode(), entry.getDescription());
         }
     }

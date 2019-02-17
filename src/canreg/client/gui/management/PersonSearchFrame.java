@@ -434,7 +434,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                 rangeEnd = ("'" + rangeEnd + "'");
             }
             personSearchHandlerID = CanRegClientApp.getApplication().initiateGlobalDuplicateSearch(
-                    searcher, rangeStart, rangeEnd);
+                    searcher, rangeStart, rangeEnd, null);
         } catch (SecurityException ex) {
             Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
         } catch (RemoteException ex) {
@@ -463,7 +463,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
             recordsTestedTextField.setText(recordsTested + "");
             matchesFoundTextField.setText(matchesFound + "");
             try {
-                result = CanRegClientApp.getApplication().nextStepGlobalPersonSearch(personSearchHandlerID);
+                result = CanRegClientApp.getApplication().nextStepGlobalPersonSearch(personSearchHandlerID, null);
                 if (result != null) {
                     recordsTested += Globals.GLOBAL_PERSON_SEARCH_STEP_SIZE;
                 }
@@ -486,7 +486,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                         // TODO: Write to file
 
                     }
-                    result = CanRegClientApp.getApplication().nextStepGlobalPersonSearch(personSearchHandlerID);
+                    result = CanRegClientApp.getApplication().nextStepGlobalPersonSearch(personSearchHandlerID, null);
                     if (result != null) {
                         recordsTested += Globals.GLOBAL_PERSON_SEARCH_STEP_SIZE;
                     }
@@ -549,7 +549,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
     public void interruptDuplicateSearchAction() {
         if (duplicateSearchTask != null) {
             try {
-                CanRegClientApp.getApplication().interuptGlobalPersonSearch(personSearchHandlerID);
+                CanRegClientApp.getApplication().interuptGlobalPersonSearch(personSearchHandlerID, null);
                 // boolean cancelled = duplicateSearchTask.cancel(true);
                 // if (!cancelled) {
                 //     JOptionPane.showConfirmDialog(this, "Task can not be interupted...");
@@ -678,7 +678,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                 if (answer == JOptionPane.YES_OPTION) {
                     record = new Patient();
                     record.setVariable(patientIDlookupVariable, idString);
-                    CanRegClientApp.getApplication().saveRecord(record);
+                    CanRegClientApp.getApplication().saveRecord(record, null);
                     distributedTableDescription = 
                             CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.PATIENT_TABLE_NAME, null);
                     numberOfRecords = distributedTableDescription.getRowCount();
@@ -688,8 +688,8 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                 }
             }
 
-            rows = CanRegClientApp.getApplication().retrieveRows(distributedTableDescription.getResultSetID(), 0, numberOfRecords);
-            CanRegClientApp.getApplication().releaseResultSet(distributedTableDescription.getResultSetID());
+            rows = CanRegClientApp.getApplication().retrieveRows(distributedTableDescription.getResultSetID(), 0, numberOfRecords, null);
+            CanRegClientApp.getApplication().releaseResultSet(distributedTableDescription.getResultSetID(), null);
             String[] columnNames = distributedTableDescription.getColumnNames();
             int ids[] = new int[numberOfRecords];
             boolean found = false;
@@ -710,7 +710,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                 // Get all the tumour records for all the patient records...
                 for (int j = 0; j < numberOfRecords; j++) {
                     ids[j] = (Integer) rows[j][idColumnNumber];
-                    record = CanRegClientApp.getApplication().getRecord(ids[j], Globals.PATIENT_TABLE_NAME, true);
+                    record = CanRegClientApp.getApplication().getRecord(ids[j], Globals.PATIENT_TABLE_NAME, true, null);
                     recordEditor.addRecord(record);
 
                     tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(idString, true, null);

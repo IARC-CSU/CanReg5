@@ -615,7 +615,7 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
 
     private void refreshUsersList() {
         try {
-            users = canreg.client.CanRegClientApp.getApplication().listUsers();
+            users = canreg.client.CanRegClientApp.getApplication().listUsers(null);
             usersListModel = new DefaultListModel();
             for (User user : users) {
                 usersListModel.addElement(user);
@@ -719,7 +719,7 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
         int id = user.getID();
         if (okToDelete && id > 0) {
             try {
-                canreg.client.CanRegClientApp.getApplication().deleteRecord(id, Globals.USERS_TABLE_NAME);
+                canreg.client.CanRegClientApp.getApplication().deleteRecord(id, Globals.USERS_TABLE_NAME, null);
             } catch (SQLException | RecordLockedException | SecurityException | RemoteException ex) {
                 Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             }

@@ -1026,7 +1026,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
 
         // get population datasets
         try {
-            populationDatasetsMap = canreg.client.CanRegClientApp.getApplication().getPopulationDatasets();
+            populationDatasetsMap = canreg.client.CanRegClientApp.getApplication().getPopulationDatasets(null);
             Collection<PopulationDataset> populationDatasetsCollection;
             Collection<PopulationDataset> populationDatasetsCollection2 = new LinkedList<>();
             populationDatasetsCollection = populationDatasetsMap.values();

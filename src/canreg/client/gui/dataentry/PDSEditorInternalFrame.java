@@ -1576,15 +1576,15 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
         buildPDSfromTable();
         try {
             if (pds.getPopulationDatasetID() < 0) {
-                CanRegClientApp.getApplication().saveNewPopulationDataset(pds);
+                CanRegClientApp.getApplication().saveNewPopulationDataset(pds, null);
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("SUCCESSFULLY_SAVED_PDS:_") + pds.getPopulationDatasetName() + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("PDS_SAVED."), JOptionPane.INFORMATION_MESSAGE);
             } else {
                 try {
-                    CanRegClientApp.getApplication().deletePopulationDataset(pds.getPopulationDatasetID());
+                    CanRegClientApp.getApplication().deletePopulationDataset(pds.getPopulationDatasetID(), null);
                 } catch (SQLException ex) {
                     Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                CanRegClientApp.getApplication().saveNewPopulationDataset(pds);
+                CanRegClientApp.getApplication().saveNewPopulationDataset(pds, null);
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("SUCCESSFULLY_UPDATED_PDS:_") + pds.getPopulationDatasetName() + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("PDS_SAVED."), JOptionPane.INFORMATION_MESSAGE);
             }
         } catch (SecurityException | RemoteException ex) {
@@ -1700,7 +1700,7 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
         int result = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("REALLY_DELETE:_") + pds.getPopulationDatasetName() + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("REALLY_DELETE?"), JOptionPane.YES_NO_OPTION);
         if (result == JOptionPane.YES_OPTION) {
             try {
-                CanRegClientApp.getApplication().deletePopulationDataset(pds.getPopulationDatasetID());
+                CanRegClientApp.getApplication().deletePopulationDataset(pds.getPopulationDatasetID(), null);
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("SUCCESSFULLY_DELETED_PDS:_") + pds.getPopulationDatasetName() + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("PDS_SAVED."), JOptionPane.INFORMATION_MESSAGE);
                 if (listener != null) {
                     listener.actionPerformed(new ActionEvent(this, 1, "refresh"));

@@ -378,7 +378,7 @@ public class ComparePatientsInternalFrame extends javax.swing.JInternalFrame {
                 if (answer == JOptionPane.YES_OPTION) {
                     record = new Patient();
                     record.setVariable(patientIDlookupVariable, idString);
-                    CanRegClientApp.getApplication().saveRecord(record);
+                    CanRegClientApp.getApplication().saveRecord(record, null);
                     distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.PATIENT_TABLE_NAME, null);
                     numberOfRecords = distributedTableDescription.getRowCount();
                 } else {
@@ -387,8 +387,8 @@ public class ComparePatientsInternalFrame extends javax.swing.JInternalFrame {
                 }
             }
 
-            rows = CanRegClientApp.getApplication().retrieveRows(distributedTableDescription.getResultSetID(), 0, numberOfRecords);
-            CanRegClientApp.getApplication().releaseResultSet(distributedTableDescription.getResultSetID());
+            rows = CanRegClientApp.getApplication().retrieveRows(distributedTableDescription.getResultSetID(), 0, numberOfRecords, null);
+            CanRegClientApp.getApplication().releaseResultSet(distributedTableDescription.getResultSetID(), null);
             String[] columnNames = distributedTableDescription.getColumnNames();
             int ids[] = new int[numberOfRecords];
             boolean found = false;
@@ -409,7 +409,7 @@ public class ComparePatientsInternalFrame extends javax.swing.JInternalFrame {
                 // Get all the tumour records for all the patient records...
                 for (int j = 0; j < numberOfRecords; j++) {
                     ids[j] = (Integer) rows[j][idColumnNumber];
-                    record = CanRegClientApp.getApplication().getRecord(ids[j], Globals.PATIENT_TABLE_NAME, true);
+                    record = CanRegClientApp.getApplication().getRecord(ids[j], Globals.PATIENT_TABLE_NAME, true, null);
                     recordEditor.addRecord(record);
 
                     tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(idString, true, null);

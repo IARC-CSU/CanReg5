@@ -1301,7 +1301,7 @@ public final class CanRegClientView extends FrameView {
         DatabaseRecord[] tumourRecords;
         try {
             int patientID = 1;
-            patientRecord = CanRegClientApp.getApplication().getRecord(patientID, "patient", true);
+            patientRecord = CanRegClientApp.getApplication().getRecord(patientID, "patient", true, null);
 
             internalFrame.addRecord(patientRecord);
             tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(patientID + "", true, null);
@@ -1413,7 +1413,7 @@ public final class CanRegClientView extends FrameView {
     public void loadCanReg4PDS() {
         CanReg4PDSImporterInternalFrame internalFrame;
         try {
-            internalFrame = new CanReg4PDSImporterInternalFrame(desktopPane, CanRegClientApp.getApplication().getPopulationDatasets());
+            internalFrame = new CanReg4PDSImporterInternalFrame(desktopPane, CanRegClientApp.getApplication().getPopulationDatasets(null));
             internalFrame.setDesktopPane(desktopPane);
             showAndPositionInternalFrame(desktopPane, internalFrame);
         } catch (SecurityException ex) {
@@ -1735,7 +1735,7 @@ public final class CanRegClientView extends FrameView {
                 String path = chooser.getSelectedFile().getCanonicalPath();
                 // changeFile();
                 try {
-                    Map<Integer, PopulationDataset> populationDatasetsMap = CanRegClientApp.getApplication().getPopulationDatasets();
+                    Map<Integer, PopulationDataset> populationDatasetsMap = CanRegClientApp.getApplication().getPopulationDatasets(null);
                     for (PopulationDataset pds : populationDatasetsMap.values()) {
                         canreg.common.database.Tools.writePopulationDatasetToJSON(pds, path + "/" + pds.getPopulationDatasetID() + "-" + pds.getPopulationDatasetName() + ".json");
                     }
@@ -1771,8 +1771,8 @@ public final class CanRegClientView extends FrameView {
                 for (File file : listOfFiles) {
                     PopulationDataset pds = canreg.common.database.Tools.loadPopulationDatasetFromJSON(file.getCanonicalPath());
                     try {
-                        CanRegClientApp.getApplication().deletePopulationDataset(pds.getPopulationDatasetID());
-                        CanRegClientApp.getApplication().saveNewPopulationDataset(pds);
+                        CanRegClientApp.getApplication().deletePopulationDataset(pds.getPopulationDatasetID(), null);
+                        CanRegClientApp.getApplication().saveNewPopulationDataset(pds, null);
                         saved++;
                     } catch (SQLException | SecurityException | RemoteException ex) {
                         Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);

@@ -59,7 +59,7 @@ public class PDSChooserInternalFrame extends javax.swing.JInternalFrame implemen
      */
     public PDSChooserInternalFrame(JDesktopPane dtp) throws SecurityException, RemoteException {
         this.dtp = dtp;
-        populationDatasetsMap = CanRegClientApp.getApplication().getPopulationDatasets();
+        populationDatasetsMap = CanRegClientApp.getApplication().getPopulationDatasets(null);
         initComponents();
         initValues();
     }
@@ -308,7 +308,7 @@ public class PDSChooserInternalFrame extends javax.swing.JInternalFrame implemen
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("refresh")) {
             try {
-                populationDatasetsMap = CanRegClientApp.getApplication().getPopulationDatasets();
+                populationDatasetsMap = CanRegClientApp.getApplication().getPopulationDatasets(null);
                 initValues();
             } catch (SecurityException | RemoteException ex) {
                 Logger.getLogger(PDSChooserInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -356,8 +356,9 @@ public class PDSChooserInternalFrame extends javax.swing.JInternalFrame implemen
                     int choice = JOptionPane.showInternalConfirmDialog(dtp, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSChooserInternalFrame").getString("POPULATION_ID_EXIST"));
                     switch (choice) {
                         case JOptionPane.YES_OPTION:
-                            CanRegClientApp.getApplication().saveNewPopulationDataset(tempPDS);
-                            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("SUCCESSFULLY_SAVED_PDS:_") + tempPDS.getPopulationDatasetName() + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("PDS_SAVED."), JOptionPane.INFORMATION_MESSAGE);
+                            CanRegClientApp.getApplication().saveNewPopulationDataset(tempPDS, null);
+                            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(),
+                                    java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("SUCCESSFULLY_SAVED_PDS:_") + tempPDS.getPopulationDatasetName() + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("PDS_SAVED."), JOptionPane.INFORMATION_MESSAGE);
                             break;
                         case JOptionPane.NO_OPTION:
                             tempPDS.setPopulationDatasetID(-1);
