@@ -527,6 +527,7 @@ public class Import {
                 parser = CSVParser.parse(files[0], io.getFileCharsets()[0], format);
 
                 for (CSVRecord csvRecord : parser) {
+//                    ACORDATE DE QUITAR ESTO
                     if(numberOfLinesRead > 200)
                         break;
                     
@@ -688,6 +689,7 @@ public class Import {
                 parser = CSVParser.parse(files[1], io.getFileCharsets()[1], format);
 
                 for (CSVRecord csvRecord : parser) {
+//                    ACORDATE DE QUITAR ESTO
                     if(numberOfLinesRead > 200)
                         break;
                     
@@ -924,6 +926,7 @@ public class Import {
                 parser = CSVParser.parse(files[2], io.getFileCharsets()[2], format);
 
                 for (CSVRecord csvRecord : parser) {
+//                    ACORDATE DE QUITAR ESTO
                     if(numberOfLinesRead > 300)
                         break;
                     
@@ -957,9 +960,10 @@ public class Import {
                     }
 
                     Tumour tumour = null;
+                    Object tumourID = source.getVariable(io.getTumourIDSourceTableVariableName());
                     try {
                         tumour = CanRegClientApp.getApplication().getTumourRecordBasedOnTumourID(
-                                (String) source.getVariable(io.getTumourIDSourceTableVariableName()), false, server);
+                                (String) tumourID, false, server);
                     } catch (Exception ex) {
                         Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
                     } 
@@ -968,9 +972,9 @@ public class Import {
                     }
                     boolean addSource = true;
 
+                    Object sourceRecordID = source.getVariable(io.getSourceIDVariablename());
                     if (tumour != null) {
                         Set<Source> sources = tumour.getSources();
-                        Object sourceRecordID = source.getVariable(io.getSourceIDVariablename());
                         // look for source in sources
                         for (Source oldSource : sources) {
                             if (oldSource.getVariable(io.getSourceIDVariablename()).equals(sourceRecordID)) {
@@ -995,6 +999,7 @@ public class Import {
                                             break;
                                     }
                                 } else {
+//                                    Puse esto en false porque creo que la source ya esta presente, pero tenes que testearlo
                                     addSource = false;
                                 }
                             }
@@ -1005,6 +1010,7 @@ public class Import {
                         tumour.setSources(sources);
                         if (!io.isTestOnly()) {
                             try {
+//                                Esto esta fallando, asi que tenes que testearlo chango
                                 server.editTumour(tumour);
                             } catch(Exception ex) {
                                 Logger.getLogger(Import.class.getName()).log(Level.SEVERE, 
@@ -1014,12 +1020,11 @@ public class Import {
                             }
                         }
                     } else {
-                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, "No tumour for source record.");
+                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "No tumour with ID " +  tumourID + " was found for source ID " + sourceRecordID);
                     }
                     if (task != null) {
                         task.firePropertyChange(RECORD, 75, 100);
                     }
-                    //Read next line of data
 
                     numberOfLinesRead++;
 

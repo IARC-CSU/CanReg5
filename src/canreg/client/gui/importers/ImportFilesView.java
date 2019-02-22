@@ -811,15 +811,11 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
                                        rParamsFile);
                     tempFiles.add(rParamsFile);
 
-                    files = RTools.runRimportScript("CR5formatChecks.R", rParamsFile, files);
                     //As a result of the R format checks, all files have been re-created
                     //with some changes. These are the files that we'll use to perform
                     //the import. The Algorithms that perform the import ALWAYS expect an
                     //array of 3 positions.
-//                    while(outputFiles.size() < 3) {
-//                        outputFiles.add(null);
-//                    }
-//                    files = outputFiles.toArray(new File[outputFiles.size()]);
+                    files = RTools.runRimportScript("CR5formatChecks.R", rParamsFile, files);
 
                     //The output files of the R format checks are all in UTF-8
                     io.setFilesCharsets(new Charset[]{
