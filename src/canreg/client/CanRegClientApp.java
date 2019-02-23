@@ -1068,7 +1068,7 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @throws java.rmi.RemoteException
      */
     public void editRecord(DatabaseRecord databaseRecord, CanRegServerInterface server) 
-            throws SecurityException, RecordLockedException, RemoteException {
+            throws SQLException, SecurityException, RecordLockedException, RemoteException {
         if(server == null)
             server = this.mainServer;
         try {
@@ -1315,6 +1315,8 @@ public class CanRegClientApp extends SingleFrameApplication {
                     Logger.getLogger(CanRegClientApp.class.getName()).log(Level.WARNING, "Tumour record " + id + " already locked?", aiobe);
                 }
             }
+        } else {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.WARNING, "Tumour record {0} not found", idString);
         }
         releaseResultSet(distributedTableDescription.getResultSetID(), server);
         return tumourToReturn;

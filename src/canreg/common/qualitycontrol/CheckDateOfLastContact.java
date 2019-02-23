@@ -119,7 +119,7 @@ public class CheckDateOfLastContact extends CheckInterface {
             }
             long calculatedDifference = DateHelper.daysBetween(incidenceDate, dlc);
 
-            System.out.println("Calculated differnce:"+ calculatedDifference);
+//            System.out.println("Calculated differnce:"+ calculatedDifference);
                         
             if (calculatedDifference < 0) {
                 result.setMessage("Date of last contact before incidence date.");

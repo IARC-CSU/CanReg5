@@ -57,6 +57,9 @@ import java.util.logging.Logger;
 import org.mozilla.universalchardet.UniversalDetector;
 import static java.nio.file.StandardCopyOption.*;
 import java.util.Iterator;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 
 /**
  *
@@ -1230,5 +1233,23 @@ public class Tools {
         
         transformFileToUTF8(source, sourceEncoding, newTemp);
         return newTemp;
+    }
+    
+    public static int getAmountOfColumnsInCSV(File csvFile, char separator, Charset fileCharset)
+            throws IOException {
+        CSVFormat format = CSVFormat.DEFAULT
+                .withFirstRecordAsHeader()
+                .withDelimiter(separator);
+        CSVParser parser = CSVParser.parse(csvFile, fileCharset, format);
+        int amountOfColumns = 0;
+        for(CSVRecord record : parser) {
+            try {
+                record.get(amountOfColumns);
+                amountOfColumns++;
+            } catch(Exception ex) {
+                break;
+            }
+        }
+        return amountOfColumns;
     }
 }

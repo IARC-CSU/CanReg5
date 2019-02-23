@@ -89,7 +89,7 @@ public interface CanRegServerInterface extends Remote {
      * @throws RecordLockedException
      */
     public void editPatient(Patient patient)
-            throws RemoteException, SecurityException, RecordLockedException;
+            throws RemoteException, SecurityException, RecordLockedException, SQLException;
 
     /**
      * 
@@ -99,7 +99,7 @@ public interface CanRegServerInterface extends Remote {
      * @throws RecordLockedException
      */
     public void editTumour(Tumour tumour)
-            throws RemoteException, SecurityException, RecordLockedException;
+            throws SQLException, RemoteException, SecurityException, RecordLockedException;
 
     /**
      * 

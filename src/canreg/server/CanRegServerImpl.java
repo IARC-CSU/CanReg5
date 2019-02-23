@@ -592,7 +592,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      * @throws RecordLockedException
      */
     @Override
-    public synchronized void editPatient(Patient patient) throws RemoteException, SecurityException, RecordLockedException {
+    public synchronized void editPatient(Patient patient) 
+            throws SQLException, RemoteException, SecurityException, RecordLockedException {
         currentDAO.editPatient(patient);
     }
 
@@ -604,7 +605,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      * @throws RecordLockedException
      */
     @Override
-    public void editTumour(Tumour tumour) throws RemoteException, SecurityException, RecordLockedException {
+    public void editTumour(Tumour tumour) 
+            throws SQLException, RemoteException, SecurityException, RecordLockedException {
         currentDAO.editTumour(tumour);
     }
 

@@ -28,6 +28,7 @@ import canreg.common.database.DatabaseRecord;
 import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.client.CanRegClientApp;
 import canreg.client.dataentry.Relation;
+import canreg.common.DatabaseGroupsListElement;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
 import canreg.common.conversions.ConversionResult;
@@ -90,6 +91,8 @@ public class Import {
     public static String TUMOURS = "tumours";
     public static String SOURCES = "sources";
     public static String R_SCRIPTS = "r_scripts";
+    private static final String RAW_DATA_COLUMN = "RAW_DATA";
+    private static final String FORMAT_ERRORS_COLUMN = "FORMAT_ERRORS";
 
     /**
      *
@@ -416,22 +419,16 @@ public class Import {
         return success;
     }
     
-    public static boolean importFilesIntoHoldingDB(Task<Object, Void> task, Document originalDBDescription, 
-                                      List<canreg.client.dataentry.Relation> map, File[] files, 
-                                      CanRegServerInterface server, ImportOptions io)
-            throws SQLException, RemoteException, SecurityException, URISyntaxException, 
-                   IOException, RecordLockedException {        
-        SystemDescription systemDescription = new SystemDescription(Paths.get(new URI(originalDBDescription.getDocumentURI())).toFile().getAbsolutePath());
-        int lastVariableId = systemDescription.getDatabaseVariableListElements().length - 1;
-        
-        //Two new variables are added for the holding DB: "Format Errors" and "Raw Data"    
-        //First we add the "Fromat Errors". This is the penultimate column in the csv file. This columns
-        //indicates which are the columns that have format errors.
-        DatabaseVariablesListElement variableFormatErrors = new DatabaseVariablesListElement(Globals.PATIENT_TABLE_NAME, 1, "FORMAT_ERRORS", Globals.VARIABLE_TYPE_ALPHA_NAME);
-        //systemDescription.getDatabaseGroupsListElements()[1] is the default group
-        variableFormatErrors.setGroup(systemDescription.getDatabaseGroupsListElements()[1]);
+    private static DatabaseVariablesListElement createFormatErrorsVariable(String databaseTableName, 
+                                                                           DatabaseGroupsListElement group, 
+                                                                           int variableID) {
+        DatabaseVariablesListElement variableFormatErrors = new DatabaseVariablesListElement(databaseTableName, 
+                                                                                             1, 
+                                                                                             FORMAT_ERRORS_COLUMN, 
+                                                                                             Globals.VARIABLE_TYPE_ALPHA_NAME);
+        variableFormatErrors.setGroup(group);
         variableFormatErrors.setVariableLength(4000);
-        variableFormatErrors.setVariableID(++lastVariableId);
+        variableFormatErrors.setVariableID(variableID);
         //The next sets() are mandatory, otherwise the saveXml() throws an exception
         variableFormatErrors.setFullName("Format errors from original CSV");
         variableFormatErrors.setEnglishName("Format Errors");
@@ -439,14 +436,21 @@ public class Import {
         variableFormatErrors.setMultiplePrimaryCopy("Othr");
         variableFormatErrors.setStandardVariableName("");
         variableFormatErrors.setXPos(0);
-        variableFormatErrors.setYPos(0);        
-        
-        //The "Raw Data" columns contains the full content for that record. Useful so the user can
-        //revise format errors but without the forced changes of the data entry GUI.
-        DatabaseVariablesListElement variableRawData = new DatabaseVariablesListElement(Globals.PATIENT_TABLE_NAME, 1, "RAW_DATA", Globals.VARIABLE_TYPE_ALPHA_NAME);
-        variableRawData.setGroup(systemDescription.getDatabaseGroupsListElements()[1]);
-        variableRawData.setVariableLength(32500);
-        variableRawData.setVariableID(++lastVariableId);
+        variableFormatErrors.setYPos(0);
+        return variableFormatErrors;
+    }
+    
+    private static DatabaseVariablesListElement createRawDataVariable(String databaseTableName, 
+                                                                      DatabaseGroupsListElement group, 
+                                                                      int variableID) {
+        DatabaseVariablesListElement variableRawData = new DatabaseVariablesListElement(databaseTableName, 
+                                                                                        1, 
+                                                                                        RAW_DATA_COLUMN, 
+                                                                                        Globals.VARIABLE_TYPE_ALPHA_NAME);
+        variableRawData.setGroup(group);
+        variableRawData.setVariableLength(32000);
+        variableRawData.setVariableID(variableID);
+        //The next sets() are mandatory, otherwise the saveXml() throws an exception
         variableRawData.setFullName("Raw Data from original CSV");
         variableRawData.setEnglishName("Raw Data");
         variableRawData.setFillInStatus("Optional");
@@ -454,10 +458,95 @@ public class Import {
         variableRawData.setStandardVariableName("");
         variableRawData.setXPos(0);
         variableRawData.setYPos(0);
+        return variableRawData;
+    }
+    
+    private static Relation createRelation(DatabaseVariablesListElement variable, 
+                                           int variableID, 
+                                           int columnIndexInFile, 
+                                           String variableNameInFile) {
+        Relation relation = new Relation();
+        relation.setDatabaseTableName(variable.getDatabaseTableName());
+        relation.setDatabaseTableVariableID(variableID);
+        relation.setDatabaseVariableName(variable.getDatabaseVariableName());
+        relation.setFileColumnNumber(columnIndexInFile);
+        relation.setFileVariableName(variableNameInFile);
+        relation.setVariableType(variable.getVariableType());
+        return relation;
+    }
+    
+    private static int getAmountOfColumns(File[] files, ImportOptions io, int index) throws IOException {
+        if(files[index] != null)
+            return canreg.common.Tools.getAmountOfColumnsInCSV(files[index], 
+                                                               io.getSeparators()[index],
+                                                               io.getFileCharsets()[index]);
+        return 0;
+    }
+    
+    public static boolean importFilesIntoHoldingDB(Task<Object, Void> task, Document originalDBDescription, 
+                                      List<canreg.client.dataentry.Relation> map, File[] files, 
+                                      CanRegServerInterface server, ImportOptions io)
+            throws SQLException, RemoteException, SecurityException, URISyntaxException, 
+                   IOException, RecordLockedException {        
+        int patientAmountOfColumns = getAmountOfColumns(files, io, 0);
+        int tumourAmountOfColumns = getAmountOfColumns(files, io, 1);
+        int sourceAmountOfColumns = getAmountOfColumns(files, io, 2);
+        
+        SystemDescription systemDescription = new SystemDescription(Paths.get(new URI(originalDBDescription.getDocumentURI())).toFile().getAbsolutePath());
+        DatabaseGroupsListElement defaultGroup = systemDescription.getDatabaseGroupsListElements()[1];
+        int lastVariableId = systemDescription.getDatabaseVariableListElements().length - 1;
+        
+        //Two new variables are added for the holding DB: "Format Errors" and "Raw Data"    
+        //First we add the "Fromat Errors". This is the penultimate column in the csv file. This columns
+        //indicates which are the columns that have format errors.
+        DatabaseVariablesListElement patientFormatErrorsVar = createFormatErrorsVariable(Globals.PATIENT_TABLE_NAME, 
+                                                                                       defaultGroup, 
+                                                                                       ++lastVariableId);
+        Relation patientFormatErrorsRel = createRelation(patientFormatErrorsVar, lastVariableId, (patientAmountOfColumns - 2), "format.errors");
+        map.add(patientFormatErrorsRel);
+        
+        //The "Raw Data" columns contains the full content for that record. Useful so the user can
+        //revise format errors but without the forced changes of the data entry GUI.
+        DatabaseVariablesListElement patientRawDataVar = createRawDataVariable(Globals.PATIENT_TABLE_NAME, 
+                                                                             defaultGroup, 
+                                                                             ++lastVariableId);
+        Relation patientRawDataRel = createRelation(patientRawDataVar, lastVariableId, (patientAmountOfColumns - 1), "all.raw.data");
+        map.add(patientRawDataRel);
+        
+        
+        //"Format Errors" and "Raw Data" are also added to the tumour and source tables in case
+        //the user input 3 files that don't share data.
+        DatabaseVariablesListElement tumourFormatErrorsVar = createFormatErrorsVariable(Globals.TUMOUR_TABLE_NAME, 
+                                                                                       defaultGroup, 
+                                                                                       ++lastVariableId);
+        Relation tumourFormatErrorsRel = createRelation(tumourFormatErrorsVar, lastVariableId, (tumourAmountOfColumns - 2), "format.errors");
+        map.add(tumourFormatErrorsRel);
+        
+        DatabaseVariablesListElement tumourRawDataVar = createRawDataVariable(Globals.TUMOUR_TABLE_NAME, 
+                                                                             defaultGroup, 
+                                                                             ++lastVariableId);
+        Relation tumourRawDataRel = createRelation(tumourRawDataVar, lastVariableId, (tumourAmountOfColumns - 1), "all.raw.data");
+        map.add(tumourRawDataRel);
+        
+        DatabaseVariablesListElement sourceFormatErrorsVar = createFormatErrorsVariable(Globals.SOURCE_TABLE_NAME, 
+                                                                                       defaultGroup, 
+                                                                                       ++lastVariableId);
+        Relation sourceFormatErrorsRel = createRelation(sourceFormatErrorsVar, lastVariableId, (sourceAmountOfColumns - 2), "format.errors");
+        map.add(sourceFormatErrorsRel);
+        
+        DatabaseVariablesListElement sourceRawDataVar = createRawDataVariable(Globals.SOURCE_TABLE_NAME, 
+                                                                             defaultGroup, 
+                                                                             ++lastVariableId);
+        Relation sourceRawDataRel = createRelation(sourceRawDataVar, lastVariableId, (sourceAmountOfColumns - 1), "all.raw.data");
+        map.add(sourceRawDataRel);
         
         ArrayList<DatabaseVariablesListElement> variables = new ArrayList<>(Arrays.asList(systemDescription.getDatabaseVariableListElements()));
-        variables.add(variableFormatErrors);
-        variables.add(variableRawData);
+        variables.add(patientFormatErrorsVar);
+        variables.add(patientRawDataVar);
+        variables.add(tumourFormatErrorsVar);
+        variables.add(tumourRawDataVar);
+        variables.add(sourceFormatErrorsVar);
+        variables.add(sourceRawDataVar);
         systemDescription.setVariables(variables.toArray(new DatabaseVariablesListElement[variables.size()]));
         
         //Creation of XML of Holding DB        
@@ -469,9 +558,6 @@ public class Import {
 
         CanRegServerInterface holdingProxy = ((CanRegRegistryProxy) server).getInstanceForHoldingDB(registryCode, dbName);
 
-        
-//        TE FALTA PROBAR SI ESTO IMPORTA TODOS LOS CASOS EN LA HOLDING (TENES QUE ABRIR LA HOLDING CON EL RAZOR SQL)
-//        TAMBIEN COMPARA CUANTOS REGISTROS IMPORTA EN CADA CASO (o sea, usando el output de la betty y sin usar el output de la betty)
         return importFiles(task, systemDescription.getSystemDescriptionDocument(), map, files, holdingProxy, io, true);
     }    
 
@@ -527,10 +613,6 @@ public class Import {
                 parser = CSVParser.parse(files[0], io.getFileCharsets()[0], format);
 
                 for (CSVRecord csvRecord : parser) {
-//                    ACORDATE DE QUITAR ESTO
-                    if(numberOfLinesRead > 200)
-                        break;
-                    
                     // We allow for null tasks...
                     boolean savePatient = true;
 //                    boolean deletePatient = false;
@@ -556,7 +638,10 @@ public class Import {
                                     }
                                 }
                             } else {
-                                patient.setVariable(rel.getDatabaseVariableName(), csvRecord.get(rel.getFileColumnNumber()));
+                                String value = csvRecord.get(rel.getFileColumnNumber());
+                                if(rel.getDatabaseVariableName().equalsIgnoreCase(RAW_DATA_COLUMN))
+                                    value = value.replace("@#$", " \n");
+                                patient.setVariable(rel.getDatabaseVariableName(), value);
                             }
                         }
                         if (task != null) {
@@ -565,8 +650,6 @@ public class Import {
                     }
                     // debugOut(patient.toString());
 
-                    //Records are being imported into the production DB
-                    
                     Object patientID = patient.getVariable(io.getPatientRecordIDVariableName());
                     Patient oldPatientRecord = null;
                     try {
@@ -620,7 +703,6 @@ public class Import {
 //                        if (deletePatient) {
 //                            server.deleteRecord(oldPatientDatabaseRecordID, Globals.PATIENT_TABLE_NAME);
 //                        }
-                        Object crap = null;
                         if (savePatient) {
                             patientID = patient.getVariable(io.getPatientRecordIDVariableName());
                             if (patient.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME) != null) {
@@ -689,10 +771,6 @@ public class Import {
                 parser = CSVParser.parse(files[1], io.getFileCharsets()[1], format);
 
                 for (CSVRecord csvRecord : parser) {
-//                    ACORDATE DE QUITAR ESTO
-                    if(numberOfLinesRead > 200)
-                        break;
-                    
                     // We allow for null tasks...
                     boolean saveTumour = true;
                     boolean deleteTumour = false;
@@ -716,8 +794,10 @@ public class Import {
                                     }
                                 }
                             } else {
-                                tumour.setVariable(rel.getDatabaseVariableName(),
-                                        csvRecord.get(rel.getFileColumnNumber()));
+                                String value = csvRecord.get(rel.getFileColumnNumber());
+                                if(rel.getDatabaseVariableName().equalsIgnoreCase(RAW_DATA_COLUMN))
+                                    value = value.replace("@#$", " \n");
+                                tumour.setVariable(rel.getDatabaseVariableName(), value);
                             }
                         }
                         if (task != null) {
@@ -922,14 +1002,9 @@ public class Import {
                 format = CSVFormat.DEFAULT
                         .withFirstRecordAsHeader()
                         .withDelimiter(io.getSeparators()[2]);
-
                 parser = CSVParser.parse(files[2], io.getFileCharsets()[2], format);
 
                 for (CSVRecord csvRecord : parser) {
-//                    ACORDATE DE QUITAR ESTO
-                    if(numberOfLinesRead > 300)
-                        break;
-                    
                     // We allow for null tasks...
                     if (task != null) {
                         task.firePropertyChange(PROGRESS, 67 + ((numberOfLinesRead - 1) * 100 / linesToRead) / 3, 67 + ((numberOfLinesRead) * 100 / linesToRead) / 3);
@@ -951,7 +1026,10 @@ public class Import {
                                     }
                                 }
                             } else {
-                                source.setVariable(rel.getDatabaseVariableName(), csvRecord.get(rel.getFileColumnNumber()));
+                                String value = csvRecord.get(rel.getFileColumnNumber());
+                                if(rel.getDatabaseVariableName().equalsIgnoreCase(RAW_DATA_COLUMN))
+                                    value = value.replace("@#$", " \n");
+                                source.setVariable(rel.getDatabaseVariableName(), value);
                             }
                         }
                         if (task != null) {

@@ -216,31 +216,36 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     }
 
     @Override
-    public DatabaseRecord getRecord(int recordID, String tableName, boolean lock) throws RemoteException, SecurityException, RecordLockedException {
+    public DatabaseRecord getRecord(int recordID, String tableName, boolean lock) 
+            throws RemoteException, SecurityException, RecordLockedException {
         checkPermission("get:" + tableName);
         return theServer.getRecord(recordID, tableName, lock);
     }
 
     @Override
-    public void editPatient(Patient patient) throws RemoteException, SecurityException, RecordLockedException {
+    public void editPatient(Patient patient) 
+            throws SQLException, RemoteException, SecurityException, RecordLockedException {
         checkPermission("editPatient");
         theServer.editPatient(patient);
     }
 
     @Override
-    public void editTumour(Tumour tumour) throws RemoteException, SecurityException, RecordLockedException {
+    public void editTumour(Tumour tumour) 
+            throws SQLException, RemoteException, SecurityException, RecordLockedException {
         checkPermission("editTumour");
         theServer.editTumour(tumour);
     }
 
     @Override
-    public Object[][] retrieveRows(String resultSetID, int from, int to) throws RemoteException, SecurityException {
+    public Object[][] retrieveRows(String resultSetID, int from, int to)
+            throws RemoteException, SecurityException {
         checkPermission("retrieveRows:" + resultSetID);
         return theServer.retrieveRows(resultSetID, from, to);
     }
 
     @Override
-    public void releaseResultSet(String resultSetID) throws RemoteException, SecurityException, SQLException {
+    public void releaseResultSet(String resultSetID) 
+            throws RemoteException, SecurityException, SQLException {
         checkPermission("retrieveRows:" + resultSetID);
         theServer.releaseResultSet(resultSetID);
     }
