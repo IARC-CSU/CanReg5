@@ -68,26 +68,7 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
 
   #It's essencial a dataframe that has the dictionary id and the codes for future checkings
   #The exported dictionary from CanReg5 has the dictionary id and the codes in the same column
-  df.codes <- grep("(^[[:punct:]][[:digit:]])", dic.codes$V1, perl = TRUE, value = TRUE)
-  df.dic.names <- grep("(^[[:punct:]]{4}[[:alpha:]])", dic.codes$V2, perl = TRUE, value = TRUE)
-  dic_idx <- which(dic.codes$V1 %in% df.codes)
-  dic_idx <- c(dic_idx, nrow(dic.codes))
-  dic.codes.tidy <- data.frame(matrix(ncol = 4, nrow = 0))
-  for (i in 1:(length(dic_idx)-1)){
-    idx_ini <- dic_idx[i]
-    idx_end <- dic_idx[i+1]
-    codes.df <- rep(df.codes[i],(idx_end - idx_ini -1))
-    dic.names.df <- rep(df.dic.names[i],(idx_end - idx_ini -1))
-    aux.df <- cbind(dic.codes[(idx_ini + 1):(idx_end - 1),],codes.df, dic.names.df)
-    dic.codes.tidy <- rbind(dic.codes.tidy, aux.df)
-  }
-  colnames(dic.codes.tidy) <- c("code", "description", "dictionary_id","name_dictionary")
-
-  dic.codes.tidy$dictionary_id <- str_replace(dic.codes.tidy$dictionary_id, "\\#", "")
-  dic.codes.tidy$name_dictionary <- str_replace(dic.codes.tidy$name_dictionary, "\\----", "")
-  dic.codes.tidy <- merge(dic.codes.tidy,dic.data,by = c("dictionary_id"))
-  dic.codes.tidy <- dic.codes.tidy[, c("code", "description", "dictionary_id", "name_dictionary", "full_dictionary_code_length")]
-
+  dic.codes.tidy <- dict.codes.fn(dic.codes)
   
 #Variables with Dictionaries
   patient.dic <- doc.data[doc.data$variable_type == "Dict" & doc.data$table == "Patient", c("full_name", "short_name")]
@@ -106,6 +87,9 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
 #It is necessary to ommit the dictionary groups
   dic.codes.tidy <- dic.codes.tidy %>% filter(lengthMatched_fullLength == full_dictionary_code_length)
   
+#Which variables use dictionaries
+  var.dic.data <- doc.data[doc.data$variable_type == "Dict", c("short_name", "use_dictionary", "table", "fill_in_status")]
+  
 #Import the data file
   #It is necessary to check if the file for Patient, Tumour and Source is the same
   if (!is.null(paramsJSON$patientFilePath) & !is.null(paramsJSON$tumourFilePath) & !is.null(paramsJSON$sourceFilePath)){
@@ -118,6 +102,35 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
                                             paramsJSON$patientVarNameInDatabase, 
                                             patient.raw.data)
       
+      #To generate ids
+      if (paramsJSON$patientVarNameInImportFile[which(paramsJSON$patientVarNameInDatabase == "PatientID")] == ""){
+        patient.import.data <- generate.id("patient", patient.import.data)
+        patient.raw.data$PatientID <- patient.import.data$PatientID
+        patient.raw.data$PatientRecordID <- patient.import.data$PatientRecordID
+      }else{
+        if (all(patient.import.data$PatientID == "")){
+          patient.import.data <- generate.id("patient", patient.import.data)
+          patient.raw.data$PatientID <- patient.import.data$PatientID
+          patient.raw.data$PatientRecordID <- patient.import.data$PatientRecordID
+        }else{NULL}
+      }
+      
+      
+      #To check dictionary codes
+      patient.dict.checked.data <- check.code.dic(dic.codes.tidy, 
+                                                  var.dic.data, 
+                                                  patient.import.data, 
+                                                  "Patient", 
+                                                  paramsJSON$patientVarNameInImportFile)
+      
+      #To replace the dictionary checked columns into the raw data
+      if(class(patient.dict.checked.data) == "data.frame"){
+        patient.raw.data[,colnames(patient.dict.checked.data)] <- patient.dict.checked.data
+        colnames(patient.raw.data)[which(names(patient.raw.data) == "code.errors")] <- "patient.code.errors"
+      }else{
+        patient.raw.data$patient.code.errors <- ""
+      }
+      
       #To check the date formats
       patient.checked.raw.data <- format.date.fn(doc.data, 
                                                  patient.import.data, 
@@ -126,16 +139,51 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
       #To replace the checked columns into the raw data
       if(class(patient.checked.raw.data) == "data.frame"){
         patient.raw.data[,colnames(patient.checked.raw.data)] <- patient.checked.raw.data
+        colnames(patient.raw.data)[which(names(patient.raw.data) == "format.errors")] <- "patient.format.errors"
       }else{
-        patient.raw.data$format.errors <- ""
+        patient.raw.data$patient.format.errors <- ""
       }
       
-      tumour.raw.data <- raw.data
+      
+      #===Tumour data
+      tumour.raw.data <- patient.raw.data
       #It's necessary to match the variables names from the import file with the variables names
       #in the DB
       tumour.import.data <- match.names.db(paramsJSON$tumourVarNameInImportFile, 
                                            paramsJSON$tumourVarNameInDatabase, 
                                            tumour.raw.data)
+
+      
+      #To generate ids
+      if (paramsJSON$tumourVarNameInImportFile[which(paramsJSON$tumourVarNameInDatabase == "TumourID")] == ""){
+        tumour.import.data <- generate.id("tumour", tumour.import.data)
+        tumour.raw.data$TumourID <- tumour.import.data$TumourID
+        tumour.raw.data$PatientIDTumourTable <- tumour.import.data$PatientIDTumourTable
+        tumour.raw.data$PatientRecordIDTumourTable <- tumour.import.data$PatientRecordIDTumourTable
+      }else{
+        if (all(tumour.import.data$TumourID == "")){
+          tumour.import.data <- generate.id("tumour", tumour.import.data)
+          tumour.raw.data$TumourID <- tumour.import.data$TumourID
+          tumour.raw.data$PatientIDTumourTable <- tumour.import.data$PatientIDTumourTable
+          tumour.raw.data$PatientRecordIDTumourTable <- tumour.import.data$PatientRecordIDTumourTable
+        }else{NULL}
+      }
+      
+      #To check dictionary codes
+      tumour.dict.checked.data <- check.code.dic(dic.codes.tidy, 
+                                                  var.dic.data, 
+                                                  tumour.import.data, 
+                                                  "tumour", 
+                                                  paramsJSON$tumourVarNameInImportFile)
+      
+      #To replace the dictionary checked columns into the raw data
+      if(class(tumour.dict.checked.data) == "data.frame"){
+        tumour.raw.data[,colnames(tumour.dict.checked.data)] <- tumour.dict.checked.data
+        colnames(tumour.raw.data)[which(names(tumour.raw.data) == "code.errors")] <- "tumour.code.errors"
+      }else{
+        tumour.raw.data$tumour.code.errors <- ""
+      }
+      
       #To check the date formats
       tumour.checked.raw.data <- format.date.fn(doc.data, 
                                                 tumour.import.data, 
@@ -144,16 +192,45 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
       #To replace the checked columns into the raw data
       if(class(tumour.checked.raw.data) == "data.frame"){
         tumour.raw.data[,colnames(tumour.checked.raw.data)] <- tumour.checked.raw.data
+        colnames(tumour.raw.data)[which(names(tumour.raw.data) == "format.errors")] <- "tumour.format.errors"
       }else{
-        tumour.raw.data$format.errors <- ""
+        tumour.raw.data$tumour.format.errors <- ""
       }
-      
-      source.raw.data <- raw.data
+      #===Source data
+      source.raw.data <- tumour.raw.data
       #It's necessary to match the variables names from the import file with the variables names
       #in the DB
       source.import.data <- match.names.db(paramsJSON$sourceVarNameInImportFile, 
                                            paramsJSON$sourceVarNameInDatabase, 
                                            source.raw.data)
+      #To generate ids
+      if (paramsJSON$sourceVarNameInImportFile[which(paramsJSON$sourceVarNameInDatabase == "SourceRecordID")] == ""){
+        source.import.data <- generate.id("source", source.import.data)
+        source.raw.data$SourceRecordID <- source.import.data$SourceRecordID
+        source.raw.data$TumourIDSourceTable <- source.import.data$TumourIDSourceTable
+      }else{
+        if (all(source.import.data$SourceRecordID == "")){
+          source.import.data <- generate.id("source", source.import.data)
+          source.raw.data$SourceRecordID <- source.import.data$SourceRecordID
+          source.raw.data$TumourIDSourceTable <- source.import.data$TumourIDSourceTable
+        }else{NULL}
+      }
+      
+      #To check dictionary codes
+      source.dict.checked.data <- check.code.dic(dic.codes.tidy, 
+                                                  var.dic.data, 
+                                                  source.import.data, 
+                                                  "source", 
+                                                  paramsJSON$sourceVarNameInImportFile)
+      
+      #To replace the dictionary checked columns into the raw data
+      if(class(source.dict.checked.data) == "data.frame"){
+        source.raw.data[,colnames(source.dict.checked.data)] <- source.dict.checked.data
+        colnames(source.raw.data)[which(names(source.raw.data) == "code.errors")] <- "source.code.errors"
+      }else{
+        source.raw.data$source.code.errors <- ""
+      }
+      
       #To check the date formats
       source.checked.raw.data <- format.date.fn(doc.data, 
                                                 source.import.data, 
@@ -162,15 +239,19 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
       #To replace the checked columns into the raw data
       if(class(source.checked.raw.data) == "data.frame"){
         source.raw.data[,colnames(source.checked.raw.data)] <- source.checked.raw.data
+        colnames(source.raw.data)[which(names(source.raw.data) == "format.errors")] <- "source.format.errors"
       }else{
-        source.raw.data$format.errors <- ""
+        source.raw.data$sourceformat.errors <- ""
       }
       
       #===================
       #To merge the checks
-      format.errors <- data.frame(cbind(patient.raw.data$format.errors,
-                                        tumour.raw.data$format.errors,
-                                        source.raw.data$format.errors),
+      format.errors <- data.frame(cbind(patient.raw.data$patient.format.errors,
+                                        tumour.raw.data$tumour.format.errors,
+                                        source.raw.data$source.format.errors,
+                                        patient.raw.data$patient.code.errors,
+                                        tumour.raw.data$tumour.code.errors,
+                                        source.raw.data$source.code.errors),
                                   stringsAsFactors = FALSE)
       #To merge the column names with errors into one column
       #Add this merged column to the raw.data dataframe
@@ -181,13 +262,14 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
                                                  ", , ", "")
       raw.data$format.errors <- format.errors$format.errors
       #To replace the raw.data with the checked raw data
-      raw.data[,colnames((patient.raw.data)[-ncol(patient.raw.data)])] <- patient.raw.data[, -ncol(patient.raw.data)]
-      raw.data[,colnames((tumour.raw.data)[-ncol(tumour.raw.data)])] <- tumour.raw.data[, -ncol(tumour.raw.data)]
-      raw.data[,colnames((source.raw.data)[-ncol(patient.raw.data)])] <- source.raw.data[, -ncol(source.raw.data)]
+      raw.data[,names(raw.data) %in% names(patient.raw.data[, !(names(patient.raw.data) %in% c("patient.code.errors", "patient.format.errors"))])] <- patient.raw.data[, !(names(patient.raw.data) %in% c("patient.code.errors", "patient.format.errors"))]
+      raw.data[,names(raw.data) %in% names(tumour.raw.data[, !(names(tumour.raw.data) %in% c("tumour.code.errors", "tumour.format.errors"))])] <- tumour.raw.data[, !(names(tumour.raw.data) %in% c("tumour.code.errors", "tumour.format.errors"))]
+      raw.data[,names(raw.data) %in% names(source.raw.data[, !(names(source.raw.data) %in% c("source.code.errors", "source.format.errors"))])] <- source.raw.data[, !(names(source.raw.data) %in% c("source.code.errors", "source.format.errors"))]
+      
       #To paste the column name to the value it is necessary a auxiliar dataframe
       aux.raw.data <- raw.data[-ncol(raw.data)]
       aux.raw.data[] <- Map(paste, names(aux.raw.data), aux.raw.data, sep = ': ')
-      raw.data$all.raw.data <- apply(aux.raw.data, 1, paste, collapse = "\n")
+      raw.data$all.raw.data <- apply(aux.raw.data, 1, paste, collapse = "@#$")
       file.write <- paste(dirname(paramsJSON$patientFilePath),
                           "output.raw.data.csv",
                           sep = "//")
@@ -206,20 +288,61 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
       patient.import.data <- match.names.db(paramsJSON$patientVarNameInImportFile, 
                                             paramsJSON$patientVarNameInDatabase, 
                                             patient.raw.data)
+      #To generate ids
+      if (paramsJSON$patientVarNameInImportFile[which(paramsJSON$patientVarNameInDatabase == "PatientID")] == ""){
+        patient.import.data <- generate.id("patient", patient.import.data)
+        patient.raw.data$PatientID <- patient.import.data$PatientID
+        patient.raw.data$PatientRecordID <- patient.import.data$PatientRecordID
+      }else{
+        if (all(patient.import.data$PatientID == "")){
+          patient.import.data <- generate.id("patient", patient.import.data)
+          patient.raw.data$PatientID <- patient.import.data$PatientID
+          patient.raw.data$PatientRecordID <- patient.import.data$PatientRecordID
+        }else{NULL}
+      }
+      
+      #To check dictionary codes
+      patient.dict.checked.data <- check.code.dic(dic.codes.tidy, 
+                                                  var.dic.data, 
+                                                  patient.import.data, 
+                                                  "Patient", 
+                                                  paramsJSON$patientVarNameInImportFile)
+      
+      #To replace the dictionary checked columns into the raw data
+      if(class(patient.dict.checked.data) == "data.frame"){
+        patient.raw.data[,colnames(patient.dict.checked.data)] <- patient.dict.checked.data
+      }else{
+        patient.raw.data$code.errors <- ""
+      }
       
       #To check the date formats
       patient.checked.raw.data <- format.date.fn(doc.data, 
                                                  patient.import.data, 
                                                  paramsJSON$patientVarNameInImportFile,
                                                  "Patient")
+      
       #To replace the checked columns into the raw data
       if(class(patient.checked.raw.data) == "data.frame"){
         patient.raw.data[,colnames(patient.checked.raw.data)] <- patient.checked.raw.data
       }else{
         patient.raw.data$format.errors <- ""
       }
+      #===================
+      #To merge the checks
+      format.errors <- data.frame(cbind(patient.raw.data$format.errors,
+                                        patient.raw.data$code.errors),
+                                  stringsAsFactors = FALSE)
+      #To merge the column names with errors into one column
+      #Add this merged column to the raw.data dataframe
+      format.errors[format.errors == ""] <- NA
+      format.errors$format.errors <-  apply(format.errors, 1, paste, collapse = ", ")
+      format.errors$format.errors <- gsub("NA, |, NA|NA","", format.errors$format.errors)
+      format.errors$format.errors <- str_replace(format.errors$format.errors, 
+                                                 ", , ", "")
+      patient.raw.data$format.errors <- format.errors$format.errors
+      
       #To write the raw.data file
-      patient.raw.data$all.raw.data <-  apply(patient.raw.data[,-ncol(patient.raw.data)], 1, paste, collapse = ", ")
+      patient.raw.data$all.raw.data <-  apply(patient.raw.data[,-ncol(patient.raw.data)], 1, paste, collapse = " @#$ ")
       file.patient.write <- paste(dirname(paramsJSON$patientFilePath),
                                   "output.patient.raw.data.csv",
                                   sep = "//")
@@ -239,6 +362,36 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
       tumour.import.data <- match.names.db(paramsJSON$tumourVarNameInImportFile, 
                                            paramsJSON$tumourVarNameInDatabase, 
                                            tumour.raw.data)
+      
+      #To generate ids
+      if (paramsJSON$tumourVarNameInImportFile[which(paramsJSON$tumourVarNameInDatabase == "TumourID")] == ""){
+        tumour.import.data <- generate.id("tumour", tumour.import.data)
+        tumour.raw.data$TumourID <- tumour.import.data$TumourID
+        tumour.raw.data$PatientIDTumourTable <- tumour.import.data$PatientIDTumourTable
+        tumour.raw.data$PatientRecordIDTumourTable <- tumour.import.data$PatientRecordIDTumourTable
+      }else{
+        if (all(tumour.import.data$TumourID == "")){
+          tumour.import.data <- generate.id("tumour", tumour.import.data)
+          tumour.raw.data$TumourID <- tumour.import.data$TumourID
+          tumour.raw.data$PatientIDTumourTable <- tumour.import.data$PatientIDTumourTable
+          tumour.raw.data$PatientRecordIDTumourTable <- tumour.import.data$PatientRecordIDTumourTable
+        }else{NULL}
+      }
+      
+      #To check dictionary codes
+      tumour.dict.checked.data <- check.code.dic(dic.codes.tidy, 
+                                                  var.dic.data, 
+                                                  tumour.import.data, 
+                                                  "tumour", 
+                                                  paramsJSON$tumourVarNameInImportFile)
+      
+      #To replace the dictionary checked columns into the raw data
+      if(class(tumour.dict.checked.data) == "data.frame"){
+        tumour.raw.data[,colnames(tumour.dict.checked.data)] <- tumour.dict.checked.data
+      }else{
+        tumour.raw.data$code.errors <- ""
+      }
+      
       #To check the date formats
       tumour.checked.raw.data <- format.date.fn(doc.data, 
                                                 tumour.import.data, 
@@ -250,8 +403,22 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
       }else{
         tumour.raw.data$format.errors <- ""
       }
+      #===================
+      #To merge the checks
+      format.errors <- data.frame(cbind(tumour.raw.data$format.errors,
+                                        tumour.raw.data$code.errors),
+                                  stringsAsFactors = FALSE)
+      #To merge the column names with errors into one column
+      #Add this merged column to the raw.data dataframe
+      format.errors[format.errors == ""] <- NA
+      format.errors$format.errors <-  apply(format.errors, 1, paste, collapse = ", ")
+      format.errors$format.errors <- gsub("NA, |, NA|NA","", format.errors$format.errors)
+      format.errors$format.errors <- str_replace(format.errors$format.errors, 
+                                                 ", , ", "")
+      tumour.raw.data$format.errors <- format.errors$format.errors
+      
       #To write the raw.data file
-      tumour.raw.data$all.raw.data <-  apply(tumour.raw.data[,-ncol(tumour.raw.data)], 1, paste, collapse = ", ")
+      tumour.raw.data$all.raw.data <-  apply(tumour.raw.data[,-ncol(tumour.raw.data)], 1, paste, collapse = " @#$ ")
       file.tumour.write <- paste(dirname(paramsJSON$tumourFilePath),
                                  "output.tumour.raw.data.csv",
                                  sep = "//")
@@ -271,6 +438,34 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
       source.import.data <- match.names.db(paramsJSON$sourceVarNameInImportFile, 
                                            paramsJSON$sourceVarNameInDatabase, 
                                            source.raw.data)
+      
+      #To generate ids
+      if (paramsJSON$sourceVarNameInImportFile[which(paramsJSON$sourceVarNameInDatabase == "SourceRecordID")] == ""){
+        source.import.data <- generate.id("source", source.import.data)
+        source.raw.data$SourceRecordID <- source.import.data$SourceRecordID
+        source.raw.data$TumourIDSourceTable <- source.import.data$TumourIDSourceTable
+      }else{
+        if (all(source.import.data$SourceRecordID == "")){
+          source.import.data <- generate.id("source", source.import.data)
+          source.raw.data$SourceRecordID <- source.import.data$SourceRecordID
+          source.raw.data$TumourIDSourceTable <- source.import.data$TumourIDSourceTable
+        }else{NULL}
+      }
+      
+      #To check dictionary codes
+      source.dict.checked.data <- check.code.dic(dic.codes.tidy, 
+                                                  var.dic.data, 
+                                                  source.import.data, 
+                                                  "source", 
+                                                  paramsJSON$sourceVarNameInImportFile)
+      
+      #To replace the dictionary checked columns into the raw data
+      if(class(source.dict.checked.data) == "data.frame"){
+        source.raw.data[,colnames(source.dict.checked.data)] <- source.dict.checked.data
+      }else{
+        source.raw.data$code.errors <- ""
+      }
+      
       #To check the date formats
       source.checked.raw.data <- format.date.fn(doc.data, 
                                                 source.import.data, 
@@ -282,8 +477,22 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
       }else{
         source.raw.data$format.errors <- ""
       }
+      #===================
+      #To merge the checks
+      format.errors <- data.frame(cbind(source.raw.data$format.errors,
+                                        source.raw.data$code.errors),
+                                  stringsAsFactors = FALSE)
+      #To merge the column names with errors into one column
+      #Add this merged column to the raw.data dataframe
+      format.errors[format.errors == ""] <- NA
+      format.errors$format.errors <-  apply(format.errors, 1, paste, collapse = ", ")
+      format.errors$format.errors <- gsub("NA, |, NA|NA","", format.errors$format.errors)
+      format.errors$format.errors <- str_replace(format.errors$format.errors, 
+                                                 ", , ", "")
+      source.raw.data$format.errors <- format.errors$format.errors
+      
       #To write the raw.data file
-      source.raw.data$all.raw.data <-  apply(source.raw.data[,-ncol(source.raw.data)], 1, paste, collapse = ", ")
+      source.raw.data$all.raw.data <-  apply(source.raw.data[,-ncol(source.raw.data)], 1, paste, collapse = " @#$ ")
       file.source.write <- paste(dirname(paramsJSON$sourceFilePath),
                                  "output.source.raw.data.csv",
                                  sep = "//")
@@ -305,6 +514,32 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
                                             paramsJSON$patientVarNameInDatabase, 
                                             patient.raw.data)
       
+      #To generate ids
+      if (paramsJSON$patientVarNameInImportFile[which(paramsJSON$patientVarNameInDatabase == "PatientID")] == ""){
+        patient.import.data <- generate.id("patient", patient.import.data)
+        patient.raw.data$PatientID <- patient.import.data$PatientID
+        patient.raw.data$PatientRecordID <- patient.import.data$PatientRecordID
+      }else{
+        if (all(patient.import.data$PatientID == "")){
+          patient.import.data <- generate.id("patient", patient.import.data)
+          patient.raw.data$PatientID <- patient.import.data$PatientID
+          patient.raw.data$PatientRecordID <- patient.import.data$PatientRecordID
+        }else{NULL}
+      }
+      
+      #To check dictionary codes
+      patient.dict.checked.data <- check.code.dic(dic.codes.tidy, 
+                                                  var.dic.data, 
+                                                  patient.import.data, 
+                                                  "Patient", 
+                                                  paramsJSON$patientVarNameInImportFile)
+      
+      #To replace the dictionary checked columns into the raw data
+      if(class(patient.dict.checked.data) == "data.frame"){
+        patient.raw.data[,colnames(patient.dict.checked.data)] <- patient.dict.checked.data
+      }else{
+        patient.raw.data$code.errors <- ""
+      }
       #To check the date formats
       patient.checked.raw.data <- format.date.fn(doc.data, 
                                                  patient.import.data, 
@@ -316,8 +551,21 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
       }else{
         patient.raw.data$format.errors <- ""
       }
+      #===================
+      #To merge the checks
+      format.errors <- data.frame(cbind(patient.raw.data$format.errors,
+                                        patient.raw.data$code.errors),
+                                  stringsAsFactors = FALSE)
+      #To merge the column names with errors into one column
+      #Add this merged column to the raw.data dataframe
+      format.errors[format.errors == ""] <- NA
+      format.errors$format.errors <-  apply(format.errors, 1, paste, collapse = ", ")
+      format.errors$format.errors <- gsub("NA, |, NA|NA","", format.errors$format.errors)
+      format.errors$format.errors <- str_replace(format.errors$format.errors, 
+                                                 ", , ", "")
+      patient.raw.data$format.errors <- format.errors$format.errors
       #To write the raw.data file
-      patient.raw.data$all.raw.data <-  apply(patient.raw.data[,-ncol(patient.raw.data)], 1, paste, collapse = ", ")
+      patient.raw.data$all.raw.data <-  apply(patient.raw.data[,-ncol(patient.raw.data)], 1, paste, collapse = " @#$ ")
       file.patient.write <- paste(dirname(paramsJSON$patientFilePath),
                                   "output.patient.raw.data.csv",
                                   sep = "//")
@@ -341,6 +589,35 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
       tumour.import.data <- match.names.db(paramsJSON$tumourVarNameInImportFile, 
                                            paramsJSON$tumourVarNameInDatabase, 
                                            tumour.raw.data)
+      #To generate ids
+      if (paramsJSON$tumourVarNameInImportFile[which(paramsJSON$tumourVarNameInDatabase == "TumourID")] == ""){
+        tumour.import.data <- generate.id("tumour", tumour.import.data)
+        tumour.raw.data$TumourID <- tumour.import.data$TumourID
+        tumour.raw.data$PatientIDTumourTable <- tumour.import.data$PatientIDTumourTable
+        tumour.raw.data$PatientRecordIDTumourTable <- tumour.import.data$PatientRecordIDTumourTable
+      }else{
+        if (all(tumour.import.data$TumourID == "")){
+          tumour.import.data <- generate.id("tumour", tumour.import.data)
+          tumour.raw.data$TumourID <- tumour.import.data$TumourID
+          tumour.raw.data$PatientIDTumourTable <- tumour.import.data$PatientIDTumourTable
+          tumour.raw.data$PatientRecordIDTumourTable <- tumour.import.data$PatientRecordIDTumourTable
+        }else{NULL}
+      }
+      
+      #To check dictionary codes
+      tumour.dict.checked.data <- check.code.dic(dic.codes.tidy, 
+                                                  var.dic.data, 
+                                                  tumour.import.data, 
+                                                  "tumour", 
+                                                  paramsJSON$tumourVarNameInImportFile)
+      
+      #To replace the dictionary checked columns into the raw data
+      if(class(tumour.dict.checked.data) == "data.frame"){
+        tumour.raw.data[,colnames(tumour.dict.checked.data)] <- tumour.dict.checked.data
+      }else{
+        tumour.raw.data$code.errors <- ""
+      }
+      
       #To check the date formats
       tumour.checked.raw.data <- format.date.fn(doc.data, 
                                                 tumour.import.data, 
@@ -352,8 +629,22 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
       }else{
         tumour.raw.data$format.errors <- ""
       }
+      #===================
+      #To merge the checks
+      format.errors <- data.frame(cbind(tumour.raw.data$format.errors,
+                                        tumour.raw.data$code.errors),
+                                  stringsAsFactors = FALSE)
+      #To merge the column names with errors into one column
+      #Add this merged column to the raw.data dataframe
+      format.errors[format.errors == ""] <- NA
+      format.errors$format.errors <-  apply(format.errors, 1, paste, collapse = ", ")
+      format.errors$format.errors <- gsub("NA, |, NA|NA","", format.errors$format.errors)
+      format.errors$format.errors <- str_replace(format.errors$format.errors, 
+                                                 ", , ", "")
+      tumour.raw.data$format.errors <- format.errors$format.errors
+      
       #To write the raw.data file
-      tumour.raw.data$all.raw.data <-  apply(tumour.raw.data[,-ncol(tumour.raw.data)], 1, paste, collapse = ", ")
+      tumour.raw.data$all.raw.data <-  apply(tumour.raw.data[,-ncol(tumour.raw.data)], 1, paste, collapse = " @#$ ")
       file.tumour.write <- paste(dirname(paramsJSON$tumourFilePath),
                                  "output.tumour.raw.data.csv",
                                  sep = "//")
@@ -377,6 +668,35 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
       source.import.data <- match.names.db(paramsJSON$sourceVarNameInImportFile, 
                                            paramsJSON$sourceVarNameInDatabase, 
                                            source.raw.data)
+      
+      #To generate ids
+      source.import.data <- generate.id("source", source.import.data)#To generate ids
+      if (paramsJSON$sourceVarNameInImportFile[which(paramsJSON$sourceVarNameInDatabase == "SourceRecordID")] == ""){
+        source.import.data <- generate.id("source", source.import.data)
+        source.raw.data$SourceRecordID <- source.import.data$SourceRecordID
+        source.raw.data$TumourIDSourceTable <- source.import.data$TumourIDSourceTable
+      }else{
+        if (all(source.import.data$SourceRecordID == "")){
+          source.import.data <- generate.id("source", source.import.data)
+          source.raw.data$SourceRecordID <- source.import.data$SourceRecordID
+          source.raw.data$TumourIDSourceTable <- source.import.data$TumourIDSourceTable
+        }else{NULL}
+      }
+      
+      #To check dictionary codes
+      source.dict.checked.data <- check.code.dic(dic.codes.tidy, 
+                                                  var.dic.data, 
+                                                  source.import.data, 
+                                                  "source", 
+                                                  paramsJSON$sourceVarNameInImportFile)
+      
+      #To replace the dictionary checked columns into the raw data
+      if(class(source.dict.checked.data) == "data.frame"){
+        source.raw.data[,colnames(source.dict.checked.data)] <- source.dict.checked.data
+      }else{
+        source.raw.data$code.errors <- ""
+      }
+      
       #To check the date formats
       source.checked.raw.data <- format.date.fn(doc.data, 
                                                 source.import.data, 
@@ -388,8 +708,23 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
       }else{
         source.raw.data$format.errors <- ""
       }
+      
+      #===================
+      #To merge the checks
+      format.errors <- data.frame(cbind(source.raw.data$format.errors,
+                                        source.raw.data$code.errors),
+                                  stringsAsFactors = FALSE)
+      #To merge the column names with errors into one column
+      #Add this merged column to the raw.data dataframe
+      format.errors[format.errors == ""] <- NA
+      format.errors$format.errors <-  apply(format.errors, 1, paste, collapse = ", ")
+      format.errors$format.errors <- gsub("NA, |, NA|NA","", format.errors$format.errors)
+      format.errors$format.errors <- str_replace(format.errors$format.errors, 
+                                                 ", , ", "")
+      source.raw.data$format.errors <- format.errors$format.errors
+      
       #To write the raw.data file
-      source.raw.data$all.raw.data <-  apply(source.raw.data[,-ncol(source.raw.data)], 1, paste, collapse = ", ")
+      source.raw.data$all.raw.data <-  apply(source.raw.data[,-ncol(source.raw.data)], 1, paste, collapse = " @#$ ")
       file.source.write <- paste(dirname(paramsJSON$sourceFilePath),
                                  "output.source.raw.data.csv",
                                  sep = "//")
@@ -406,12 +741,6 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
       source.checked.raw.data <- "No source data to check"
     }
   }
-
-#PatientID is the standard variable name for record number, length = 8
-  #If the file does not contain the case number, the last record number will be needed
-  #patient.id <- as.character(filter(doc.data, standard_variable_name == 'PatientID') %>% select(short_name))
-
- 
   
 
 

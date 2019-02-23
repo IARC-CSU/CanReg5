@@ -1083,10 +1083,10 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
 
         // separators
         io.setSeparators(new char[]{
-                    patientPreviewFilePanel.getSeparator(),
-                    tumourPreviewFilePanel.getSeparator(),
-                    sourcePreviewFilePanel.getSeparator()
-                });
+            patientPreviewFilePanel.getSeparator(),
+            tumourPreviewFilePanel.getSeparator(),
+            sourcePreviewFilePanel.getSeparator()
+        });
 
         // CanReg data
         io.setDoChecks(doChecksCheckBox.isSelected());
@@ -1127,10 +1127,10 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
     private Charset[] getCharsets() {
         // get one from each table
         return new Charset[]{
-                    patientPreviewFilePanel.getCharacterSet(),
-                    tumourPreviewFilePanel.getCharacterSet(),
-                    sourcePreviewFilePanel.getCharacterSet()
-                };
+            patientPreviewFilePanel.getCharacterSet(),
+            tumourPreviewFilePanel.getCharacterSet(),
+            sourcePreviewFilePanel.getCharacterSet()
+        };
     }
 
     /**

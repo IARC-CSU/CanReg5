@@ -9,10 +9,6 @@ pasteDateError <- function(aux.data,
     
     #Replace the error value for the name of the column value
     for (i in 1:length(col.error)){
-      #aux.data <- replace.value(aux.data, 
-      #                          names(aux.data)[col.error][i],
-      #                          "error",
-      #                          names(aux.data)[col.error][i])
       aux.data[errors.data$row[errors.data$col == col.error[i]], col.error[i]] <- paste(aux.data[errors.data$row[errors.data$col == col.error[i]], col.error[i] - length(date.columns)], 
                                                                                                                   type.error, 
                                                                                                                   sep = " ")
@@ -20,10 +16,6 @@ pasteDateError <- function(aux.data,
   }else{
     col.error <- unique(errors.data$col)
     if (nrow(errors.data) == 1){
-      #aux.data <- replace.value(aux.data, 
-      #                          names(aux.data)[col.error],
-      #                          "error",
-      #                          names.rdt[col.error - length(date.columns)])
       aux.data[errors.data$row[errors.data$col == col.error], col.error] <- paste(aux.data[errors.data$row[errors.data$col == col.error], col.error - length(date.columns)], 
                                                                                                             type.error, 
                                                                                                             sep = " ")
