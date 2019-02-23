@@ -960,7 +960,6 @@ public class Import {
                         task.firePropertyChange(RECORD, 75, 100);
                     }
                     //Read next line of data
-
                     numberOfLinesRead++;
 
                     if (Thread.interrupted()) {
@@ -1077,7 +1076,6 @@ public class Import {
                                             break;
                                     }
                                 } else {
-//                                    Puse esto en false porque creo que la source ya esta presente, pero tenes que testearlo
                                     addSource = false;
                                 }
                             }
@@ -1088,7 +1086,6 @@ public class Import {
                         tumour.setSources(sources);
                         if (!io.isTestOnly()) {
                             try {
-//                                Esto esta fallando, asi que tenes que testearlo chango
                                 server.editTumour(tumour);
                             } catch(Exception ex) {
                                 Logger.getLogger(Import.class.getName()).log(Level.SEVERE, 
