@@ -472,7 +472,9 @@ public class CanRegClientApp extends SingleFrameApplication {
         return (CanRegLoginInterface) Naming.lookup(serverObjectString);
     }
 
-    private String login(CanRegLoginInterface loginServer, String username, char[] password) throws LoginException, NullPointerException, NotBoundException, MalformedURLException, RemoteException, UnknownHostException, WrongCanRegVersionException {
+    private String login(CanRegLoginInterface loginServer, String username, char[] password) 
+            throws LoginException, NullPointerException, NotBoundException, MalformedURLException,
+            RemoteException, UnknownHostException, WrongCanRegVersionException {
         if (!canRegSystemVersionString.trim().equalsIgnoreCase(loginServer.getSystemVersion().trim())) {
             throw (new WrongCanRegVersionException("Server: " + loginServer.getSystemVersion() + ", Client: " + canRegSystemVersionString));
         }
@@ -494,6 +496,15 @@ public class CanRegClientApp extends SingleFrameApplication {
                     equals(mainServer.getIPAddress());
             Globals.UserRightLevels i = getUserRightLevel();
             canRegClientView.setUserRightsLevel(i);
+            
+            try {
+                canRegClientView.setHoldingDBsList(mainServer.getHoldingDBsList());
+            } catch(IOException ex) {
+                List<String> strs = new LinkedList<>();
+                strs.add(java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("ERROR HOLDING DB"));
+                canRegClientView.setHoldingDBsList(strs);
+                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, "Error while trying to list holding DBs", ex);
+            }
 
             checker = new Checker(globalToolBox.getStandardVariables());
             converter = new Converter(globalToolBox.getStandardVariables());
@@ -744,7 +755,8 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @throws canreg.server.database.RecordLockedException
      */
     public boolean importFiles(Task<Object, Void> task, Document doc, List<Relation> map, File[] files, ImportOptions io) 
-            throws SQLException, SecurityException, RecordLockedException, RemoteException {
+            throws SQLException, SecurityException, RecordLockedException, RemoteException, 
+                   UnknownTableException, DistributedTableDescriptionException {
         try {
             return canreg.client.gui.importers.Import.importFiles(task, doc, map, files, mainServer, io, false);
         } catch (RemoteException ex) {

@@ -551,4 +551,12 @@ public class CanRegRegistryProxy implements CanRegServerInterface, Serializable 
         serverProxy.initDataBase(systemDescription, holding);
         resetRegistryDB();
     }
+
+    @Override
+    public List<String> getHoldingDBsList() throws IOException, RemoteException, SecurityException {
+        changeRegistryDB(registryCode);
+        List<String> strs = serverProxy.getHoldingDBsList();
+        resetRegistryDB();
+        return strs;
+    }
 }

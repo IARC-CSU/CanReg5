@@ -497,4 +497,6 @@ public interface CanRegServerInterface extends Remote {
     public void changeRegistryDB(String registryCode) throws RemoteException, SecurityException;
     
     public void resetRegistryDB() throws RemoteException, SecurityException;
+    
+    public List<String> getHoldingDBsList() throws IOException, RemoteException, SecurityException;
 }

@@ -62,9 +62,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.derby.drda.NetworkServerControl;
 import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -1062,5 +1065,16 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     @Override
     public void resetRegistryDB() throws RemoteException, SecurityException {
         currentDAO = this.registriesDAOs.get(this.defaultRegistryCode);
+    }
+
+    @Override
+    public List<String> getHoldingDBsList() 
+            throws IOException, RemoteException, SecurityException {
+        File registryCodeHoldingFolder = new File(Globals.CANREG_SERVER_HOLDING_DB_FOLDER + Globals.FILE_SEPARATOR + this.defaultRegistryCode);
+        List<String> holdingList = new LinkedList<>();
+        if(registryCodeHoldingFolder.exists()) 
+            holdingList = Arrays.asList(registryCodeHoldingFolder.list());
+        
+        return holdingList;   
     }
 }

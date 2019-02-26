@@ -44,15 +44,15 @@ import canreg.client.gui.tools.StandardDialog;
 import canreg.client.gui.tools.WaitFrame;
 import canreg.client.management.DatabaseGarbler;
 import canreg.common.Globals;
-import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.common.database.DatabaseRecord;
 import canreg.common.database.Patient;
 import canreg.common.database.PopulationDataset;
 import canreg.common.database.Tumour;
-import canreg.server.database.RecordLockedException;
-import canreg.server.database.UnknownTableException;
+import canreg.server.CanRegServerInterface;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FilenameFilter;
@@ -61,6 +61,7 @@ import java.io.InputStream;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -72,9 +73,10 @@ import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 import javax.swing.Timer;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.FrameView;
 import org.jdesktop.application.ResourceMap;
@@ -86,6 +88,7 @@ import org.jdesktop.application.TaskMonitor;
  * The application's main frame.
  */
 public final class CanRegClientView extends FrameView {
+    
 
     /**
      *
@@ -171,6 +174,9 @@ public final class CanRegClientView extends FrameView {
         if (!CanRegClientApp.getApplication().isLoggedIn()) {
             showWelcomeFrame();
         }
+        
+        this.holdingPopup = new JPopupMenu();
+        this.holdingDBsButton.addMouseListener(new PopupListener());
     }
 
     /**
@@ -216,6 +222,8 @@ public final class CanRegClientView extends FrameView {
         browseEditButton = new javax.swing.JButton();
         createNewRecordButton = new javax.swing.JButton();
         jSeparator14 = new javax.swing.JToolBar.Separator();
+        holdingDBsButton = new javax.swing.JButton();
+        jSeparator16 = new javax.swing.JToolBar.Separator();
         tableBuilderButton = new javax.swing.JButton();
         jSeparator13 = new javax.swing.JToolBar.Separator();
         optionsButton = new javax.swing.JButton();
@@ -327,6 +335,19 @@ public final class CanRegClientView extends FrameView {
         jSeparator14.setName("jSeparator14"); // NOI18N
         toolBar.add(jSeparator14);
 
+        holdingDBsButton.setAction(actionMap.get("holdingDatabaseAction")); // NOI18N
+        holdingDBsButton.setIcon(resourceMap.getIcon("holdingDBsButton.icon")); // NOI18N
+        holdingDBsButton.setText(resourceMap.getString("holdingDBsButton.text")); // NOI18N
+        holdingDBsButton.setToolTipText(resourceMap.getString("holdingDBsButton.toolTipText")); // NOI18N
+        holdingDBsButton.setFocusable(false);
+        holdingDBsButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        holdingDBsButton.setName("holdingDBsButton"); // NOI18N
+        holdingDBsButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        toolBar.add(holdingDBsButton);
+
+        jSeparator16.setName("jSeparator16"); // NOI18N
+        toolBar.add(jSeparator16);
+
         tableBuilderButton.setAction(actionMap.get("showTableBuilder")); // NOI18N
         tableBuilderButton.setToolTipText(resourceMap.getString("tableBuilderButton.toolTipText")); // NOI18N
         tableBuilderButton.setFocusable(false);
@@ -357,7 +378,7 @@ public final class CanRegClientView extends FrameView {
         toolBar.add(handbookButton);
 
         desktopPane.add(toolBar);
-        toolBar.setBounds(0, 0, 800, 43);
+        toolBar.setBounds(0, 0, 800, 52);
 
         jScrollPane1.setViewportView(desktopPane);
 
@@ -759,6 +780,65 @@ public final class CanRegClientView extends FrameView {
         task.run();
     }
 
+    public void setHoldingDBsList(List<String> holdingDBsList) {
+        this.holdingDBsSystemCodes = holdingDBsList;
+        this.reloadHoldingDBsList();
+    }
+    
+    public void reloadHoldingDBsList() {
+        holdingPopup.removeAll();
+        if(this.holdingDBsSystemCodes.isEmpty()) {
+            JMenuItem menuItem = 
+                    new JMenuItem(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("NO HOLDING DB"));
+            holdingPopup.add(menuItem);
+        } else {
+            for(String dbCode : this.holdingDBsSystemCodes) {
+                JMenuItem menuItem = new JMenuItem(dbCode);
+                menuItem.addActionListener(new HoldingDBMenuItem(dbCode));
+                holdingPopup.add(menuItem);
+            }     
+        }
+    }
+    
+    
+    
+    private class HoldingDBMenuItem implements ActionListener {
+        
+        private String dbCode;
+        
+        HoldingDBMenuItem(String dbCode) {
+            this.dbCode = dbCode;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if(dbCode.equalsIgnoreCase(dbCode))
+            JOptionPane.showMessageDialog(null, "Hello!" + dbCode);
+        }
+    }
+    
+    
+    
+    private class PopupListener extends MouseAdapter {
+     
+        @Override
+        public void mousePressed(MouseEvent e) {
+            maybeShowPopup(e);
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            maybeShowPopup(e);
+        }
+
+        private void maybeShowPopup(MouseEvent e) {
+            holdingPopup.show(e.getComponent(),
+                       e.getX(), e.getY());
+        }
+    }
+
+
+
     private class OpenICDO3ManualTask extends org.jdesktop.application.Task<Object, Void> {
 
         OpenICDO3ManualTask(org.jdesktop.application.Application app) {
@@ -989,6 +1069,7 @@ public final class CanRegClientView extends FrameView {
         browseEditButton.setEnabled(dataEntry);
         createNewRecordButton.setEnabled(dataEntry);
         tableBuilderButton.setEnabled(analysis);
+        holdingDBsButton.setEnabled(dataEntry);
 
         // startDatabaseServerButton.setEnabled(management);
         //Menus
@@ -1722,7 +1803,6 @@ public final class CanRegClientView extends FrameView {
 
     @Action
     public void writeAllPDSAction() {
-
         JFileChooser chooser = new JFileChooser(".");
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         chooser.setAcceptAllFileFilterUsed(false);
@@ -1785,6 +1865,11 @@ public final class CanRegClientView extends FrameView {
         }
     }
 
+    @Action
+    public void holdingDatabaseAction() {
+        //Nothing here. Action is taken care by each of the menuitem's ActionPerformed
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu advancedMenu;
     private javax.swing.JMenu analysisMenu;
@@ -1807,6 +1892,7 @@ public final class CanRegClientView extends FrameView {
     private javax.swing.JMenuItem frequenciesMenuItem;
     private javax.swing.JMenuItem garbleDatabaseMenuItem;
     private javax.swing.JButton handbookButton;
+    private javax.swing.JButton holdingDBsButton;
     private javax.swing.JMenuItem iacrWebsiteMenuItem;
     private javax.swing.JMenuItem icdo3DocumentationWebsiteMenuItem;
     private javax.swing.JMenuItem importDataMenuItem;
@@ -1828,6 +1914,7 @@ public final class CanRegClientView extends FrameView {
     private javax.swing.JToolBar.Separator jSeparator13;
     private javax.swing.JToolBar.Separator jSeparator14;
     private javax.swing.JToolBar.Separator jSeparator15;
+    private javax.swing.JToolBar.Separator jSeparator16;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JPopupMenu.Separator jSeparator4;
@@ -1877,4 +1964,6 @@ public final class CanRegClientView extends FrameView {
     private static final int X_OFFSET = 30, Y_OFFSET = 30;
     private static final int TOOLBARHEIGTH = 80;
     private BrowseInternalFrame browseInternalFrame;
+    private List<String> holdingDBsSystemCodes;
+    private JPopupMenu holdingPopup;
 }

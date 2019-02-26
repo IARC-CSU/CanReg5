@@ -426,4 +426,10 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
         checkPermission("initDataBase");
         theServer.initDataBase(systemDescription, holding);
     }
+
+    @Override
+    public List<String> getHoldingDBsList() throws IOException, RemoteException, SecurityException {
+        checkPermission("initDataBase");
+        return theServer.getHoldingDBsList();
+    }
 }
