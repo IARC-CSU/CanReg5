@@ -771,7 +771,9 @@ public class CanRegClientApp extends SingleFrameApplication {
     public boolean importFilesIntoHoldingDB(Task<Object, Void> task, Document doc, List<Relation> map, File[] files, ImportOptions io) 
             throws Exception {
         try {
-            return canreg.client.gui.importers.Import.importFilesIntoHoldingDB(task, doc, map, files, mainServer, io);
+            boolean toReturn = canreg.client.gui.importers.Import.importFilesIntoHoldingDB(task, doc, map, files, mainServer, io);
+            canRegClientView.setHoldingDBsList(mainServer.getHoldingDBsList());
+            return toReturn;
         } catch (Exception ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
             if (!handlePotentialDisconnect(ex)) {
