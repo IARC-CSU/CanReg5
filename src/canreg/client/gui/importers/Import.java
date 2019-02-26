@@ -487,7 +487,7 @@ public class Import {
                                       List<canreg.client.dataentry.Relation> map, File[] files, 
                                       CanRegServerInterface server, ImportOptions io)
             throws SQLException, RemoteException, SecurityException, URISyntaxException, 
-                   IOException, RecordLockedException {        
+                   IOException, RecordLockedException, UnknownTableException, DistributedTableDescriptionException {        
         int patientAmountOfColumns = getAmountOfColumns(files, io, 0);
         int tumourAmountOfColumns = getAmountOfColumns(files, io, 1);
         int sourceAmountOfColumns = getAmountOfColumns(files, io, 2);
@@ -565,7 +565,7 @@ public class Import {
                                       List<canreg.client.dataentry.Relation> map, File[] files, 
                                       CanRegServerInterface server, ImportOptions io, 
                                       boolean intoHoldingDB) 
-            throws SQLException, RemoteException, SecurityException, RecordLockedException {
+            throws SQLException, RemoteException, SecurityException, RecordLockedException, UnknownTableException, DistributedTableDescriptionException {
         int numberOfLinesRead = 0;
         Writer reportWriter = new BufferedWriter(new OutputStreamWriter(System.out));
         if (io.getReportFileName() != null && io.getReportFileName().trim().length() > 0) {
@@ -658,9 +658,9 @@ public class Import {
                     } catch(NullPointerException ex1) {
                         //Patient not found in DB.
                     }
-                    catch (Exception ex) {
+                    /*catch (Exception ex) {
                         Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                    } 
+                    } */
 
                     if (oldPatientRecord != null) {
                         if(intoHoldingDB) {
@@ -706,17 +706,17 @@ public class Import {
                         if (savePatient) {
                             patientID = patient.getVariable(io.getPatientRecordIDVariableName());
                             if (patient.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME) != null) {
-                                try {
+//                                try {
                                     server.editPatient(patient);
-                                } catch(Exception ex) {
-                                    Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "ERROR EDITING PATIENT " + patientID, ex);
-                                }
+//                                } catch(Exception ex) {
+//                                    Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "ERROR EDITING PATIENT " + patientID, ex);
+//                                }
                             } else {
-                                try {
+//                                try {
                                     server.savePatient(patient);
-                                } catch(Exception ex) {
-                                    Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "ERROR SAVING PATIENT " + patientID, ex);
-                                }
+//                                } catch(Exception ex) {
+//                                    Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "ERROR SAVING PATIENT " + patientID, ex);
+//                                }
                             }
                         }
                     } 
@@ -812,9 +812,13 @@ public class Import {
                     try {
                         tumour2 = CanRegClientApp.getApplication().getTumourRecordBasedOnTumourID(
                                 (String) tumourID, false, server);
-                    } catch (Exception ex) {
+                    } catch(NullPointerException ex1) {
+                        //Patient not found in DB.
+                    }
+                    /*catch (Exception ex) {
                         Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                    } 
+                    } */
+                    
                     if (tumour2 != null) {
                         if(intoHoldingDB) {
                             //Tumour is already present in holding DB, if we try to save an exception will rise
@@ -847,11 +851,12 @@ public class Import {
                     try {
                         patient = CanRegClientApp.getApplication().getPatientRecord(
                                 (String) tumour.getVariable(io.getPatientRecordIDTumourTableVariableName()), false, server);
-                    } catch (NullPointerException ex) {
-                        //Patient not found in DB
-                    } catch (Exception ex) {
+                    } catch(NullPointerException ex1) {
+                        //Patient not found in DB.
+                    }
+                    /*catch (Exception ex) {
                         Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                    } 
+                    } */
 
                     if (patient != null) {
                         if (io.isDoChecks() && saveTumour) {
@@ -940,19 +945,19 @@ public class Import {
                         if (saveTumour) {
                             // if tumour has record ID we edit it
                             if (tumour.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME) != null) {
-                                try {
+//                                try {
                                     server.editTumour(tumour);
-                                } catch(Exception ex) {
-                                    Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "ERROR EDITING TUMOUR " + tumourID, ex);
-                                }
+//                                } catch(Exception ex) {
+//                                    Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "ERROR EDITING TUMOUR " + tumourID, ex);
+//                                }
                                 
                             } // if not we save it
                             else {
-                                try {
+//                                try {
                                     server.saveTumour(tumour);
-                                } catch(Exception ex) {
-                                    Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "ERROR SAVING TUMOUR " + tumourID, ex);
-                                }
+//                                } catch(Exception ex) {
+//                                    Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "ERROR SAVING TUMOUR " + tumourID, ex);
+//                                }
                             }
                         }
                     } 
@@ -1041,9 +1046,13 @@ public class Import {
                     try {
                         tumour = CanRegClientApp.getApplication().getTumourRecordBasedOnTumourID(
                                 (String) tumourID, false, server);
-                    } catch (Exception ex) {
+                    } catch (NullPointerException ex1) {
+                        //Patient not found in DB.
+                    }
+                    /*catch (Exception ex) {
                         Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                    } 
+                    } */
+                    
                     if (task != null) {
                         task.firePropertyChange(RECORD, 50, 75);
                     }
@@ -1085,14 +1094,14 @@ public class Import {
                         }
                         tumour.setSources(sources);
                         if (!io.isTestOnly()) {
-                            try {
+//                            try {
                                 server.editTumour(tumour);
-                            } catch(Exception ex) {
-                                Logger.getLogger(Import.class.getName()).log(Level.SEVERE, 
-                                        "ERROR SAVING SOURCE " + sourceRecordID + 
-                                        " ON TUMOUR " + tumour.getVariable(io.getTumourIDVariablename()),
-                                        ex);
-                            }
+//                            } catch(Exception ex) {
+//                                Logger.getLogger(Import.class.getName()).log(Level.SEVERE, 
+//                                        "ERROR SAVING SOURCE " + sourceRecordID + 
+//                                        " ON TUMOUR " + tumour.getVariable(io.getTumourIDVariablename()),
+//                                        ex);
+//                            }
                         }
                     } else {
                         Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "No tumour with ID " +  tumourID + " was found for source ID " + sourceRecordID);
