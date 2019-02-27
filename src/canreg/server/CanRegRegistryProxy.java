@@ -111,8 +111,10 @@ public class CanRegRegistryProxy implements CanRegServerInterface, Serializable 
      * @param registryCode
      * @return 
      */
-    public CanRegRegistryProxy getInstanceForHoldingDB(String originalRegistryCode, String holdingRegistryCode)
+    public CanRegRegistryProxy getInstanceForHoldingDB(String holdingRegistryCode)
             throws RemoteException {
+        String originalRegistryCode = holdingRegistryCode.substring(holdingRegistryCode.indexOf("_") + 1);
+        originalRegistryCode = originalRegistryCode.substring(0, originalRegistryCode.indexOf("_"));
         SystemDescription sysDesc = serverProxy.initSystemDescription(originalRegistryCode, holdingRegistryCode, true);
         initDataBase(sysDesc, true);
         return new CanRegRegistryProxy(serverProxy, holdingRegistryCode);

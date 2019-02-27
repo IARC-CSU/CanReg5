@@ -553,10 +553,10 @@ public class Import {
         String registryCode = server.getCanRegRegistryCode();
         String dateStr = new SimpleDateFormat("yyyy-MM-dd").format((Calendar.getInstance()).getTime());
         int newHoldingDBNumber = server.getLastHoldingDBnumber(registryCode) + 1;
-        String dbName = "HOLDING_" + registryCode + "_" +  + newHoldingDBNumber + "_" + dateStr;
-        systemDescription = server.createNewHoldingDB(registryCode, dbName, systemDescription);
+        String holdingRegistryCode = "HOLDING_" + registryCode + "_" +  + newHoldingDBNumber + "_" + dateStr;
+        systemDescription = server.createNewHoldingDB(registryCode, holdingRegistryCode, systemDescription);
 
-        CanRegServerInterface holdingProxy = ((CanRegRegistryProxy) server).getInstanceForHoldingDB(registryCode, dbName);
+        CanRegServerInterface holdingProxy = ((CanRegRegistryProxy) server).getInstanceForHoldingDB(holdingRegistryCode);
 
         return importFiles(task, systemDescription.getSystemDescriptionDocument(), map, files, holdingProxy, io, true);
     }    
