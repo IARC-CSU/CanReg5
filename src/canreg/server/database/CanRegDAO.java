@@ -467,7 +467,9 @@ public class CanRegDAO {
      * @throws UnknownTableException
      * @throws DistributedTableDescriptionException
      */
-    public synchronized DistributedTableDescription getDistributedTableDescriptionAndInitiateDatabaseQuery(DatabaseFilter filter, String tableName, String resultSetID)
+    public synchronized DistributedTableDescription getDistributedTableDescriptionAndInitiateDatabaseQuery(DatabaseFilter filter, 
+                                                                                                           String tableName, 
+                                                                                                           String resultSetID)
             throws SQLException, UnknownTableException, DistributedTableDescriptionException {
         // distributedDataSources.remove(theUser);
         // ResultSet result;
@@ -563,7 +565,8 @@ public class CanRegDAO {
      * @return
      * @throws DistributedTableDescriptionException
      */
-    public Object[][] retrieveRows(String resultSetID, int from, int to) throws DistributedTableDescriptionException {
+    public Object[][] retrieveRows(String resultSetID, int from, int to) 
+            throws DistributedTableDescriptionException {
         DistributedTableDataSource ts = distributedDataSources.get(resultSetID);
         if (ts != null) {
             return ts.retrieveRows(from, to);

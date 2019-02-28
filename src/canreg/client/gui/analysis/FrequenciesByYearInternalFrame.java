@@ -328,7 +328,7 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
 
                 if (tableDatadescription != null) {
                     try {
-                        tableDataSource = new DistributedTableDataSourceClient(tableDatadescription);
+                        tableDataSource = new DistributedTableDataSourceClient(tableDatadescription, null);
                     } catch (DistributedTableDescriptionException ex) {
                         Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                     }

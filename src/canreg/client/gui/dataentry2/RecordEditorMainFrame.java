@@ -46,6 +46,7 @@ import canreg.server.database.RecordLockedException;
 import canreg.common.database.Source;
 import canreg.common.database.Tumour;
 import canreg.common.qualitycontrol.CheckResult.ResultCode;
+import canreg.server.CanRegServerInterface;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
@@ -58,7 +59,6 @@ import java.beans.PropertyVetoException;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -119,10 +119,12 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
     private volatile boolean mouseInsideSave = false;    
     private final HashMap<RecordEditorTumour, Boolean> obsoleteToggles;
     private final LocalSettings localSettings;
+    private final CanRegServerInterface server;
         
     
-    public RecordEditorMainFrame(JDesktopPane desktopPane) {        
+    public RecordEditorMainFrame(JDesktopPane desktopPane, CanRegServerInterface server) {        
         this.desktopPane = desktopPane;
+        this.server = server;
         this.localSettings = CanRegClientApp.getApplication().getLocalSettings();
         initComponents();
         patientRecords = new LinkedHashSet<DatabaseRecord>();
@@ -713,15 +715,15 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
         if (databaseRecord.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME) == null &&
             databaseRecord.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME) == null) {            
             // id is the internal database id
-            int id = canreg.client.CanRegClientApp.getApplication().saveRecord(databaseRecord, null);
+            int id = canreg.client.CanRegClientApp.getApplication().saveRecord(databaseRecord, server);
             if (databaseRecord instanceof Patient) {
                 // databaseRecord.setVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME, id);
-                newDatabaseRecord = canreg.client.CanRegClientApp.getApplication().getRecord(id, Globals.PATIENT_TABLE_NAME, true, null);
+                newDatabaseRecord = canreg.client.CanRegClientApp.getApplication().getRecord(id, Globals.PATIENT_TABLE_NAME, true, server);
                 patientRecords.remove(databaseRecord);
                 patientRecords.add(newDatabaseRecord);
             } else if (databaseRecord instanceof Tumour) {
                 // databaseRecord.setVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME, id);
-                newDatabaseRecord = canreg.client.CanRegClientApp.getApplication().getRecord(id, Globals.TUMOUR_TABLE_NAME, true, null);
+                newDatabaseRecord = canreg.client.CanRegClientApp.getApplication().getRecord(id, Globals.TUMOUR_TABLE_NAME, true, server);
                 tumourRecords.remove(databaseRecord);
                 tumourRecords.add(newDatabaseRecord);
             }                                    
@@ -729,18 +731,18 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
             int id;
             if (databaseRecord instanceof Patient) {
                 id = (Integer) databaseRecord.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
-                canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.PATIENT_TABLE_NAME, null);
-                canreg.client.CanRegClientApp.getApplication().editRecord(databaseRecord, null);
+                canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.PATIENT_TABLE_NAME, server);
+                canreg.client.CanRegClientApp.getApplication().editRecord(databaseRecord, server);
                 id = (Integer) databaseRecord.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
-                newDatabaseRecord = canreg.client.CanRegClientApp.getApplication().getRecord(id, Globals.PATIENT_TABLE_NAME, true, null);
+                newDatabaseRecord = canreg.client.CanRegClientApp.getApplication().getRecord(id, Globals.PATIENT_TABLE_NAME, true, server);
                 patientRecords.remove(databaseRecord);
                 patientRecords.add(newDatabaseRecord);
             } else if (databaseRecord instanceof Tumour) {
                 id = (Integer) databaseRecord.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME);
-                canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.TUMOUR_TABLE_NAME, null);
-                canreg.client.CanRegClientApp.getApplication().editRecord(databaseRecord, null);
+                canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.TUMOUR_TABLE_NAME, server);
+                canreg.client.CanRegClientApp.getApplication().editRecord(databaseRecord, server);
                 id = (Integer) databaseRecord.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME);
-                newDatabaseRecord = canreg.client.CanRegClientApp.getApplication().getRecord(id, Globals.TUMOUR_TABLE_NAME, true, null);
+                newDatabaseRecord = canreg.client.CanRegClientApp.getApplication().getRecord(id, Globals.TUMOUR_TABLE_NAME, true, server);
                 tumourRecords.remove(databaseRecord);
                 tumourRecords.add(newDatabaseRecord);
             }            
@@ -835,7 +837,7 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                                         JOptionPane.QUESTION_MESSAGE);
         if (requestedPatientID != null) {
             try {
-                Patient[] patientDatabaseRecord = CanRegClientApp.getApplication().getPatientRecordsByID(requestedPatientID, false, null);
+                Patient[] patientDatabaseRecord = CanRegClientApp.getApplication().getPatientRecordsByID(requestedPatientID, false, server);
                 if (patientDatabaseRecord != null && patientDatabaseRecord.length > 0) {
                     for (DatabaseRecord patient : patientRecords) {
                         patient = associatePatientRecordToPatientID(patient, requestedPatientID);
@@ -875,7 +877,7 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                 Object idObj = record.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
                 if (idObj != null) {
                     int id = (Integer) idObj;
-                    canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.PATIENT_TABLE_NAME, null);
+                    canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.PATIENT_TABLE_NAME, server);
                 }
             } catch (RemoteException ex) {
                 Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -894,7 +896,7 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                     Object idObj = source.getVariable(Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME);
                     if (idObj != null) {
                         int id = (Integer) idObj;
-                        canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.SOURCE_TABLE_NAME, null);
+                        canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.SOURCE_TABLE_NAME, server);
                     }
                 } catch (RemoteException ex) {
                     Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -906,7 +908,7 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                 Object idObj = tumour.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME);
                 if (idObj != null) {
                     int id = (Integer) idObj;
-                    canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.TUMOUR_TABLE_NAME, null);
+                    canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.TUMOUR_TABLE_NAME, server);
                 }
             } catch (RemoteException ex) {
                 Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -1269,7 +1271,7 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                 patientDatabaseRecord = (Patient) patientRecordEditorPanel.getDatabaseRecord();
             else {
                 try {
-                    patientDatabaseRecord = CanRegClientApp.getApplication().getPatientRecord(requestedPatientRecordID, false, null);
+                    patientDatabaseRecord = CanRegClientApp.getApplication().getPatientRecord(requestedPatientRecordID, false, server);
                 } catch(Exception ex) {
                     Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -1370,7 +1372,7 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
         try {
             DatabaseRecord sourceOfActionDatabaseRecord = recordEditorPanel.getDatabaseRecord();
             // buildDatabaseRecord();
-            map = canreg.client.CanRegClientApp.getApplication().performDuplicateSearch((Patient) sourceOfActionDatabaseRecord, null, null);
+            map = canreg.client.CanRegClientApp.getApplication().performDuplicateSearch((Patient) sourceOfActionDatabaseRecord, null, server);
             //remove patients with the same patientID -- already mapped
             String patientRecordID = (String) sourceOfActionDatabaseRecord.getVariable(patientIDVariableName);
             String records = "";
@@ -1385,7 +1387,7 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                         // do nothing
                     } else {
                         try {
-                            Patient patient2 = canreg.client.CanRegClientApp.getApplication().getPatientRecord(prid, false, null);
+                            Patient patient2 = canreg.client.CanRegClientApp.getApplication().getPatientRecord(prid, false, server);
                             cpif.addRecordSet(patient2, null, map.get(prid));
                             records += java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorMainFrame")
                                                                .getString("PATIENT ID: ") + patient2.getVariable(patientIDVariableName) 
@@ -1443,8 +1445,8 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
         }
         if (id >= 0) {
             try {
-                canreg.client.CanRegClientApp.getApplication().releaseRecord(id, tableName, null);
-                success = canreg.client.CanRegClientApp.getApplication().deleteRecord(id, tableName, null);
+                canreg.client.CanRegClientApp.getApplication().releaseRecord(id, tableName, server);
+                success = canreg.client.CanRegClientApp.getApplication().deleteRecord(id, tableName, server);
             } catch (SQLException ex) {
                 JOptionPane.showInternalMessageDialog(this,
                                 java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorMainFrame")
@@ -1537,12 +1539,12 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                     "Please enter some data first.");
         } else {
             if (browseInternalFrame == null) 
-                browseInternalFrame = new BrowseInternalFrame(desktopPane);
+                browseInternalFrame = new BrowseInternalFrame(desktopPane, server);
             else {
                 browseInternalFrame.close();
                 desktopPane.remove(browseInternalFrame);
                 desktopPane.validate();
-                browseInternalFrame = new BrowseInternalFrame(desktopPane);
+                browseInternalFrame = new BrowseInternalFrame(desktopPane, server);
             }
             CanRegClientView.showAndPositionInternalFrame(desktopPane, browseInternalFrame);
             maximizeHeight(desktopPane, browseInternalFrame);

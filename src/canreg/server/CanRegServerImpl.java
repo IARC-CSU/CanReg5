@@ -623,7 +623,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      * @throws java.lang.SecurityException
      */
     @Override
-    public Object[][] retrieveRows(String resultSetID, int from, int to) throws RemoteException, SecurityException {
+    public Object[][] retrieveRows(String resultSetID, int from, int to) 
+            throws RemoteException, SecurityException {
         Object[][] rows = null;
         try {
             rows = currentDAO.retrieveRows(resultSetID, from, to);

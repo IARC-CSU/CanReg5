@@ -524,6 +524,10 @@ public class CanRegClientApp extends SingleFrameApplication {
     public String getSystemName() {
         return systemName;
     }
+    
+    public CanRegServerInterface getServer() {
+        return mainServer;
+    }
 
     public String getSystemCode(CanRegServerInterface server) throws RemoteException {
         if(server == null)

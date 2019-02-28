@@ -574,7 +574,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
 
                 if (tableDatadescription != null) {
                     try {
-                        tableDataSource = new DistributedTableDataSourceClient(tableDatadescription);
+                        tableDataSource = new DistributedTableDataSourceClient(tableDatadescription, null);
                     } catch (DistributedTableDescriptionException ex) {
                         Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                     }

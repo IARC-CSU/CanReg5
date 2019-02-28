@@ -23,6 +23,7 @@ package canreg.client;
 import canreg.common.cachingtableapi.DistributedTableDataSource;
 import canreg.common.cachingtableapi.DistributedTableDescription;
 import canreg.common.cachingtableapi.DistributedTableDescriptionException;
+import canreg.server.CanRegServerInterface;
 import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,15 +32,20 @@ public class DistributedTableDataSourceClient implements DistributedTableDataSou
     
     DistributedTableDescription distributedTableDescription;
     String resultSetID;
+    CanRegServerInterface server;
+    
 
     /**
      * 
      * @param distributedTableDescription
      * @throws canreg.common.cachingtableapi.DistributedTableDescriptionException
      */
-    public DistributedTableDataSourceClient(DistributedTableDescription distributedTableDescription) throws DistributedTableDescriptionException {
+    public DistributedTableDataSourceClient(DistributedTableDescription distributedTableDescription, 
+                                            CanRegServerInterface server) 
+            throws DistributedTableDescriptionException {
             super();
             this.distributedTableDescription = distributedTableDescription;
+            this.server = server;
     }
     
     
@@ -61,7 +67,7 @@ public class DistributedTableDataSourceClient implements DistributedTableDataSou
             throws DistributedTableDescriptionException {
         Object[][] rows;
         try {
-            rows = CanRegClientApp.getApplication().retrieveRows(distributedTableDescription.getResultSetID(), from, to, null);
+            rows = CanRegClientApp.getApplication().retrieveRows(distributedTableDescription.getResultSetID(), from, to, server);
         } catch (RemoteException ex) {
             Logger.getLogger(DistributedTableDataSourceClient.class.getName()).log(Level.SEVERE, null, ex);
             throw new DistributedTableDescriptionException(ex.getMessage());
