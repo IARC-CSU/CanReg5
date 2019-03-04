@@ -12,6 +12,9 @@
 # each DB array has to be ordered on the same way of the file array
 # separated arrays for each table: patient, tumour and source will be necessary
 
+# Set the R library path to the CanReg5 libraries
+.libPaths(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5"))
+
 #Libraries nedeed
 library("XML")
 library("plyr")
