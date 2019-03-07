@@ -32,6 +32,7 @@ import canreg.client.CanRegClientApp;
 import canreg.client.DistributedTableDataSourceClient;
 import canreg.client.LocalSettings;
 import canreg.client.gui.CanRegClientView;
+import canreg.client.gui.importers.ImportOptions;
 import canreg.client.gui.tools.TableColumnAdjuster;
 import canreg.client.gui.tools.XTableColumnModel;
 import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
@@ -54,6 +55,7 @@ import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.LinkedList;
+import java.util.ResourceBundle;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -115,7 +117,8 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
 
     public BrowseInternalFrame(JDesktopPane dtp, CanRegServerInterface server) {
         this.dtp = dtp;
-        this.server = server;
+        this.server = server;        
+        
         globalToolBox = CanRegClientApp.getApplication().getGlobalToolBox();
         patientIDlookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName();
         patientIDTumourTablelookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientIDTumourTable.toString()).getDatabaseVariableName();
@@ -129,6 +132,10 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
         initComponents();
         initOtherComponents();
         initValues();
+        
+        if(this.server == null)
+            this.holdingOptions.setVisible(false);
+        
         pack();
     }
     ///
@@ -154,6 +161,9 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
         navigationPanel = new canreg.client.gui.components.NavigationPanel();
         variablesPanel = new canreg.client.gui.components.DisplayVariablesPanel();
         resultPanel = new javax.swing.JPanel();
+        holdingOptions = new javax.swing.JPanel();
+        selectAllChkBox = new javax.swing.JCheckBox();
+        productionBtn = new javax.swing.JButton();
 
         setClosable(true);
         setMaximizable(true);
@@ -235,11 +245,11 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
         buttonsPanelLayout.setHorizontalGroup(
             buttonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(editPatientNumberButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(editTableRecordButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
-            .addComponent(createNextButton, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
-            .addComponent(patientNumberTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
-            .addComponent(editTumourNumberButton, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
-            .addComponent(tumourNumberTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
+            .addComponent(editTableRecordButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(createNextButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(patientNumberTextField, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(editTumourNumberButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(tumourNumberTextField)
         );
         buttonsPanelLayout.setVerticalGroup(
             buttonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -274,25 +284,61 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
         );
         resultPanelLayout.setVerticalGroup(
             resultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 68, Short.MAX_VALUE)
+            .addGap(0, 169, Short.MAX_VALUE)
+        );
+
+        holdingOptions.setName("holdingOptions"); // NOI18N
+
+        selectAllChkBox.setText(resourceMap.getString("selectAllChkBox.text")); // NOI18N
+        selectAllChkBox.setName("selectAllChkBox"); // NOI18N
+        selectAllChkBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selectAllChkBoxActionPerformed(evt);
+            }
+        });
+
+        productionBtn.setAction(actionMap.get("productionButtonAction")); // NOI18N
+        productionBtn.setText(resourceMap.getString("productionBtn.text")); // NOI18N
+        productionBtn.setName("productionBtn"); // NOI18N
+
+        javax.swing.GroupLayout holdingOptionsLayout = new javax.swing.GroupLayout(holdingOptions);
+        holdingOptions.setLayout(holdingOptionsLayout);
+        holdingOptionsLayout.setHorizontalGroup(
+            holdingOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(holdingOptionsLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(selectAllChkBox)
+                .addGap(75, 75, 75)
+                .addComponent(productionBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        holdingOptionsLayout.setVerticalGroup(
+            holdingOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, holdingOptionsLayout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addGroup(holdingOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(selectAllChkBox)
+                    .addComponent(productionBtn))
+                .addGap(0, 0, 0))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(resultPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(rangeFilterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 457, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(resultPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(rangeFilterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 461, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(variablesPanel, 0, 0, Short.MAX_VALUE)
                             .addComponent(navigationPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(buttonsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(buttonsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(holdingOptions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -306,6 +352,8 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
                         .addComponent(navigationPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(rangeFilterPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(buttonsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(5, 5, 5)
+                .addComponent(holdingOptions, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(resultPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -414,13 +462,23 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
     MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(tumourNumberTextField, evt);
 }//GEN-LAST:event_tumourNumberTextFieldMousePressed
 
+    private void selectAllChkBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectAllChkBoxActionPerformed
+        if(this.selectAllChkBox.isSelected())
+            resultTable.setRowSelectionInterval(0, resultTable.getRowCount() - 1);
+        else 
+            resultTable.clearSelection();
+    }//GEN-LAST:event_selectAllChkBoxActionPerformed
+
     private void rowClicked(java.awt.event.MouseEvent evt) {
         String referenceTable;
-
-        if (evt.getClickCount() == 2) {
+        
+        if(evt.getClickCount() == 1) {
+            if(resultTable.getSelectedRowCount() != resultTable.getRowCount())
+                this.selectAllChkBox.setSelected(false);
+        } 
+        else if(evt.getClickCount() == 2) {
             JTable target = (JTable) evt.getSource();
             int rowNumber = target.getSelectedRow();
-            TableModel model = target.getModel();
             int columnNumber = 0;
             String lookUpVariable;
             if (rangeFilterPanel.getSelectedTable().equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)
@@ -434,10 +492,8 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                 lookUpVariable = patientIDlookupVariable;
                 referenceTable = Globals.PATIENT_TABLE_NAME;
             }
-            columnNumber = tableColumnModel.getColumnIndex(
-                    canreg.common.Tools.toUpperCaseStandardized(lookUpVariable), false);
-            editRecord("" + tableDataModel.getValueAt(rowNumber,
-                    columnNumber), referenceTable);
+            columnNumber = tableColumnModel.getColumnIndex(canreg.common.Tools.toUpperCaseStandardized(lookUpVariable), false);
+            editRecord((String) tableDataModel.getValueAt(rowNumber, columnNumber), referenceTable);
         }
     }
 
@@ -540,7 +596,6 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
 
             // boolean theResult = ;
             if (result.equals("OK")) {
-
                 // release old resultSet
                 if (tableDatadescription != null) {
                     try {
@@ -873,10 +928,13 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
     private javax.swing.JButton editPatientNumberButton;
     private javax.swing.JButton editTableRecordButton;
     private javax.swing.JButton editTumourNumberButton;
+    private javax.swing.JPanel holdingOptions;
     private canreg.client.gui.components.NavigationPanel navigationPanel;
     private javax.swing.JTextField patientNumberTextField;
+    private javax.swing.JButton productionBtn;
     private canreg.client.gui.components.RangeFilterPanel rangeFilterPanel;
     private javax.swing.JPanel resultPanel;
+    private javax.swing.JCheckBox selectAllChkBox;
     private javax.swing.JTextField tumourNumberTextField;
     private canreg.client.gui.components.DisplayVariablesPanel variablesPanel;
     // End of variables declaration//GEN-END:variables
@@ -896,5 +954,32 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
     
     public void setTable(String tableName) {
         rangeFilterPanel.setTable(tableName);
+    }
+
+    @Action
+    public void productionButtonAction() {
+        int numberOfRecords = resultTable.getSelectedRowCount();
+        ResourceBundle importerResourceMap = java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportFilesView");
+        String[] options = {importerResourceMap.getString("rejectRadioButton.text"), 
+                            importerResourceMap.getString("updateRadioButton.text"), 
+                            importerResourceMap.getString("overwriteRadioButton.text")};
+        ResourceBundle browseResourceMap = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame");
+        if(numberOfRecords > 0) {
+            int result = JOptionPane.showOptionDialog(null, 
+                                         browseResourceMap.getString("YOU ARE IMPORTING ") + " " + numberOfRecords + 
+                                                 " " + browseResourceMap.getString("RECORD") + ". " + 
+                                                 browseResourceMap.getString("DISCREPANCIES"),
+                                         browseResourceMap.getString("IMPORTING RECORDS INTO PRODUCTION "),
+                                         JOptionPane.DEFAULT_OPTION, 
+                                         JOptionPane.INFORMATION_MESSAGE, null, 
+                                         options, options[1]);
+            if(result == ImportOptions.REJECT) {
+                
+            } else if(result == ImportOptions.UPDATE) {
+                
+            } else if(result == ImportOptions.OVERWRITE) {
+                
+            }
+        }
     }
 }

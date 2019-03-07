@@ -32,15 +32,16 @@ public class ImportOptions {
     /**
      * 
      */
-    public final static int UPDATE = 0;
+    public final static int REJECT = 0;
     /**
      * 
      */
-    public final static int OVERWRITE = 1;
+    public final static int UPDATE = 1;
     /**
      * 
      */
-    public final static int REJECT = 2;
+    public final static int OVERWRITE = 2;
+    
     // maxlines = -1 to read whole file...
     private int maxLines;
     private boolean testOnly;
