@@ -12,7 +12,6 @@
 # each DB array has to be ordered on the same way of the file array
 # separated arrays for each table: patient, tumour and source will be necessary
 
-# Set the R library path to the CanReg5 libraries
 .libPaths(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5"))
 
 #Libraries nedeed
@@ -33,9 +32,12 @@ Args <- commandArgs(TRUE)
 initial.options <- commandArgs(trailingOnly = FALSE)
 #Parameters
 JSON.path <- "-paramsFile="
-paramsJSON <- fromJSON(sub(JSON.path, "", initial.options[grep(JSON.path, initial.options)]))
+# paramsJSON <- fromJSON(sub(JSON.path, "", initial.options[grep(JSON.path, initial.options)]))
+paramsJSON <- fromJSON("C://Users//Patricio//AppData//Local//Temp//rChecksParams.json")
+
 file.arg.name <- "--file="
-script.name <- sub(file.arg.name, "", initial.options[grep(file.arg.name, initial.options)])
+# script.name <- sub(file.arg.name, "", initial.options[grep(file.arg.name, initial.options)])
+script.name <- "C://Work//CanReg5//conf//import//r//CR5formatChecks.R"
 
 #Set locale to UTF-8
 Sys.setlocale("LC_CTYPE", "UTF-8")
@@ -105,6 +107,9 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
                                             paramsJSON$patientVarNameInDatabase, 
                                             patient.raw.data)
       
+      #Add leading zeros
+      patient.import.data <- leading.zeros(patient.import.data, doc.data, "Patient")
+      
       #To generate ids
       if (paramsJSON$patientVarNameInImportFile[which(paramsJSON$patientVarNameInDatabase == "PatientID")] == ""){
         patient.import.data <- generate.id("patient", patient.import.data)
@@ -139,6 +144,9 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
                                                  patient.import.data, 
                                                  paramsJSON$patientVarNameInImportFile,
                                                  "Patient")
+      
+      
+      
       #To replace the checked columns into the raw data
       if(class(patient.checked.raw.data) == "data.frame"){
         patient.raw.data[,colnames(patient.checked.raw.data)] <- patient.checked.raw.data
@@ -155,7 +163,8 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
       tumour.import.data <- match.names.db(paramsJSON$tumourVarNameInImportFile, 
                                            paramsJSON$tumourVarNameInDatabase, 
                                            tumour.raw.data)
-
+      #Add leading zeros
+      tumour.import.data <- leading.zeros(tumour.import.data, doc.data, "Tumour")
       
       #To generate ids
       if (paramsJSON$tumourVarNameInImportFile[which(paramsJSON$tumourVarNameInDatabase == "TumourID")] == ""){
@@ -176,7 +185,7 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
       tumour.dict.checked.data <- check.code.dic(dic.codes.tidy, 
                                                   var.dic.data, 
                                                   tumour.import.data, 
-                                                  "tumour", 
+                                                  "Tumour", 
                                                   paramsJSON$tumourVarNameInImportFile)
       
       #To replace the dictionary checked columns into the raw data
@@ -206,6 +215,9 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
       source.import.data <- match.names.db(paramsJSON$sourceVarNameInImportFile, 
                                            paramsJSON$sourceVarNameInDatabase, 
                                            source.raw.data)
+      #Add leading zeros
+      source.import.data <- leading.zeros(source.import.data, doc.data, "Source")
+      
       #To generate ids
       if (paramsJSON$sourceVarNameInImportFile[which(paramsJSON$sourceVarNameInDatabase == "SourceRecordID")] == ""){
         source.import.data <- generate.id("source", source.import.data)
@@ -223,7 +235,7 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
       source.dict.checked.data <- check.code.dic(dic.codes.tidy, 
                                                   var.dic.data, 
                                                   source.import.data, 
-                                                  "source", 
+                                                  "Source", 
                                                   paramsJSON$sourceVarNameInImportFile)
       
       #To replace the dictionary checked columns into the raw data
@@ -291,6 +303,10 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
       patient.import.data <- match.names.db(paramsJSON$patientVarNameInImportFile, 
                                             paramsJSON$patientVarNameInDatabase, 
                                             patient.raw.data)
+      
+      #Add leading zeros
+      patient.import.data <- leading.zeros(patient.import.data, doc.data, "Patient")
+      
       #To generate ids
       if (paramsJSON$patientVarNameInImportFile[which(paramsJSON$patientVarNameInDatabase == "PatientID")] == ""){
         patient.import.data <- generate.id("patient", patient.import.data)
@@ -366,6 +382,9 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
                                            paramsJSON$tumourVarNameInDatabase, 
                                            tumour.raw.data)
       
+      #Add leading zeros
+      tumour.import.data <- leading.zeros(tumour.import.data, doc.data, "Tumour")
+      
       #To generate ids
       if (paramsJSON$tumourVarNameInImportFile[which(paramsJSON$tumourVarNameInDatabase == "TumourID")] == ""){
         tumour.import.data <- generate.id("tumour", tumour.import.data)
@@ -385,7 +404,7 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
       tumour.dict.checked.data <- check.code.dic(dic.codes.tidy, 
                                                   var.dic.data, 
                                                   tumour.import.data, 
-                                                  "tumour", 
+                                                  "Tumour", 
                                                   paramsJSON$tumourVarNameInImportFile)
       
       #To replace the dictionary checked columns into the raw data
@@ -442,6 +461,9 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
                                            paramsJSON$sourceVarNameInDatabase, 
                                            source.raw.data)
       
+      #Add leading zeros
+      source.import.data <- leading.zeros(source.import.data, doc.data, "Source")
+      
       #To generate ids
       if (paramsJSON$sourceVarNameInImportFile[which(paramsJSON$sourceVarNameInDatabase == "SourceRecordID")] == ""){
         source.import.data <- generate.id("source", source.import.data)
@@ -459,7 +481,7 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
       source.dict.checked.data <- check.code.dic(dic.codes.tidy, 
                                                   var.dic.data, 
                                                   source.import.data, 
-                                                  "source", 
+                                                  "Source", 
                                                   paramsJSON$sourceVarNameInImportFile)
       
       #To replace the dictionary checked columns into the raw data
@@ -516,6 +538,9 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
       patient.import.data <- match.names.db(paramsJSON$patientVarNameInImportFile, 
                                             paramsJSON$patientVarNameInDatabase, 
                                             patient.raw.data)
+      
+      #Add leading zeros
+      patient.import.data <- leading.zeros(patient.import.data, doc.data, "Patient")
       
       #To generate ids
       if (paramsJSON$patientVarNameInImportFile[which(paramsJSON$patientVarNameInDatabase == "PatientID")] == ""){
@@ -592,6 +617,9 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
       tumour.import.data <- match.names.db(paramsJSON$tumourVarNameInImportFile, 
                                            paramsJSON$tumourVarNameInDatabase, 
                                            tumour.raw.data)
+      #Add leading zeros
+      tumour.import.data <- leading.zeros(tumour.import.data, doc.data, "Tumour")
+      
       #To generate ids
       if (paramsJSON$tumourVarNameInImportFile[which(paramsJSON$tumourVarNameInDatabase == "TumourID")] == ""){
         tumour.import.data <- generate.id("tumour", tumour.import.data)
@@ -611,7 +639,7 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
       tumour.dict.checked.data <- check.code.dic(dic.codes.tidy, 
                                                   var.dic.data, 
                                                   tumour.import.data, 
-                                                  "tumour", 
+                                                  "Tumour", 
                                                   paramsJSON$tumourVarNameInImportFile)
       
       #To replace the dictionary checked columns into the raw data
@@ -671,6 +699,8 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
       source.import.data <- match.names.db(paramsJSON$sourceVarNameInImportFile, 
                                            paramsJSON$sourceVarNameInDatabase, 
                                            source.raw.data)
+      #Add leading zeros
+      source.import.data <- leading.zeros(source.import.data, doc.data, "Source")
       
       #To generate ids
       source.import.data <- generate.id("source", source.import.data)#To generate ids
@@ -690,7 +720,7 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
       source.dict.checked.data <- check.code.dic(dic.codes.tidy, 
                                                   var.dic.data, 
                                                   source.import.data, 
-                                                  "source", 
+                                                  "Source", 
                                                   paramsJSON$sourceVarNameInImportFile)
       
       #To replace the dictionary checked columns into the raw data

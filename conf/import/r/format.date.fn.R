@@ -49,6 +49,9 @@ format.date.fn <- function(doc.data = data.frame,
     #Check if all values are dates
     aux.data.yyyymmdd <- aux.data.yyyymmdd2 %>%
       mutate_all(funs(date.yyyymmdd = IsDate))
+    aux.data.yyyymmdd <- unknown.date.fn(aux.data,
+                                         aux.data.yyyymmdd[str_detect(names(aux.data.yyyymmdd),"_date.yyyymmdd")],
+                                         date.columns)
     aux.data <- data.frame(cbind(aux.data.yyyymmdd,
                                  aux.data[str_detect(names(aux.data),"_len")]),
                            stringsAsFactors = FALSE)
@@ -63,6 +66,7 @@ format.date.fn <- function(doc.data = data.frame,
                                                                                          "error"))
     
     #Concatenate the error type to the record value
+    
     aux.data <- pasteDateError(aux.data,
                                date.columns,
                                "(incorrect date format)")
@@ -73,18 +77,21 @@ format.date.fn <- function(doc.data = data.frame,
                                          aux.data[str_detect(names(aux.data),"_date.yyyymmdd")], 
                                          date.columns)
     aux.data[,date.columns] <- mergeDataErrors(aux.errors.merged,
-                                               aux.data[,date.columns], 
+                                               aux.data.yyyymmdd2, 
                                                date.columns)
     
     aux.errors.merged[aux.errors.merged != "no error"] <- "error"
     #We need to change the column names in the dataset for the column names in the raw data,
     #so the format.error columns is going to help the user to identify which columns have errors
     names.rdt <- names.raw.data[names(import.data) %>% 
-                                  match(x = names(aux.data)[1:length(date.columns)])]
+                                  match(x = names(aux.errors.merged)[1:length(date.columns)])]
     names(aux.errors.merged) <- names.rdt
     aux.errors.merged[aux.errors.merged == "no error"] <- NA
     #To replace the "errors" for the column name
-    aux.errors.merged <- replaceColNameError(aux.errors.merged)
+    aux.errors.merged <- replaceColNameError(aux.errors.merged, 
+                                             names.rdt, 
+                                             date.columns)
+    
     
     #To merge the column names with errors into one column
     aux.data$format.errors <- apply(aux.errors.merged, 1, paste, collapse=", ")

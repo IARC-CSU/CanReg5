@@ -1,4 +1,6 @@
-replaceColNameError <- function(aux.data){
+replaceColNameError <- function(aux.data,
+                                names.rdt,
+                                date.columns){
   #This function will replace the "errors" for the column name
   errors.data <- data.frame(which(aux.data == "error", arr.ind=T))
   if (nrow(errors.data) > 1){
@@ -17,7 +19,7 @@ replaceColNameError <- function(aux.data){
       aux.data <- replace.value(aux.data, 
                                 names(aux.data)[col.error],
                                 "error",
-                                names.rdt[col.error - length(date.columns)])
+                                names.rdt[col.error])
       
     }else{NULL}
   }

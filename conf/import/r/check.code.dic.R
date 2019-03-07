@@ -28,7 +28,7 @@ check.code.dic <- function(dic.codes.tidy = data.frame,
     names(aux.dt) <- str_replace(names(aux.dt),"_error", "")
     #We need to change the column names in the dataset for the column names in the raw data,
     #so the format.error columns is going to help the user to identify which columns have errors
-    names.rdt <- names.raw.data[names(patient.import.data) %>% 
+    names.rdt <- names.raw.data[names(dt) %>% 
                                   match(x = names(aux.dt)[1:length(aux.vars$short_name)])]
     names(aux.dt) <- names.rdt
     aux.dt[aux.dt == "no error"] <- NA
