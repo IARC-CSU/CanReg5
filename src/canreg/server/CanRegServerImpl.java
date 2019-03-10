@@ -583,7 +583,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      * @throws SecurityException
      */
     @Override
-    public void releaseRecord(int recordID, String tableName) throws RemoteException, SecurityException {
+    public void releaseRecord(int recordID, String tableName)
+            throws RemoteException, SecurityException {
         currentDAO.releaseRecord(recordID, tableName);
     }
 
@@ -597,7 +598,12 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     @Override
     public synchronized void editPatient(Patient patient) 
             throws SQLException, RemoteException, SecurityException, RecordLockedException {
-        currentDAO.editPatient(patient);
+        currentDAO.editPatient(patient, false);
+    }
+    
+    public void editPatientFromHoldingToProduction(Patient patient)
+            throws RemoteException, SecurityException, RecordLockedException, SQLException {
+        currentDAO.editPatient(patient, true);
     }
 
     /**
@@ -610,7 +616,12 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     @Override
     public void editTumour(Tumour tumour) 
             throws SQLException, RemoteException, SecurityException, RecordLockedException {
-        currentDAO.editTumour(tumour);
+        currentDAO.editTumour(tumour, false);
+    }
+    
+    public void editTumourFromHoldingToProduction(Tumour tumour)
+            throws SQLException, RemoteException, SecurityException, RecordLockedException {
+        currentDAO.editTumour(tumour, true);
     }
 
     /**
@@ -930,7 +941,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      * @throws SQLException
      */
     @Override
-    public synchronized boolean deleteRecord(int id, String tableName) throws RemoteException, SecurityException, RecordLockedException, SQLException {
+    public synchronized boolean deleteRecord(int id, String tableName)
+            throws RemoteException, SecurityException, RecordLockedException, SQLException {
         boolean success = false;
         if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
             success = currentDAO.deleteTumourRecord(id);

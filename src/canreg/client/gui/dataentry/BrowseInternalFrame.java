@@ -32,6 +32,7 @@ import canreg.client.CanRegClientApp;
 import canreg.client.DistributedTableDataSourceClient;
 import canreg.client.LocalSettings;
 import canreg.client.gui.CanRegClientView;
+import canreg.client.gui.importers.Import;
 import canreg.client.gui.importers.ImportOptions;
 import canreg.client.gui.tools.TableColumnAdjuster;
 import canreg.client.gui.tools.XTableColumnModel;
@@ -41,6 +42,7 @@ import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
 import canreg.common.database.DatabaseRecord;
 import canreg.common.database.Patient;
+import canreg.common.database.Source;
 import canreg.server.database.RecordLockedException;
 import canreg.common.database.Tumour;
 import canreg.server.CanRegServerInterface;
@@ -50,6 +52,9 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.Comparator;
@@ -107,6 +112,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
     private final String patientRecordIDTumourTablelookupVariable;
     private final String tumourIDlookupVariable;
     private final String tumourIDSourceTableLookupVariable;
+    private final String sourceIDlookupVariable;
     int patientIDLength;
     int tumourIDLength;
     // private int highlightedColumnNumber = 0;
@@ -126,6 +132,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
         patientRecordIDVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
         tumourIDlookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
         tumourIDSourceTableLookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourIDSourceTable.toString()).getDatabaseVariableName();
+        sourceIDlookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.SourceRecordID.toString()).getDatabaseVariableName();
         patientIDLength = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getVariableLength();
         tumourIDLength = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getVariableLength();
         localSettings = CanRegClientApp.getApplication().getLocalSettings();
@@ -730,7 +737,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
      *
      * @param idString
      */
-    public void editPatientID(String idString) {
+    public void editPatientID(String idString) {  
         Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
         Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
         setCursor(hourglassCursor);
@@ -770,7 +777,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                     return;
                 }
             }
-
+            
             TreeSet<DatabaseRecord> set = new TreeSet<DatabaseRecord>(new Comparator<DatabaseRecord>() {
                 @Override
                 public int compare(DatabaseRecord o1, DatabaseRecord o2) {
@@ -798,7 +805,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                     CanRegClientApp.getApplication().saveRecord(tumour, server);
                     set.add(tumour);
                 } else {
-                    Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, "Patient record not save properly?");
+                    Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, "Patient record not saved properly?");
                 }
             }
 
@@ -810,19 +817,10 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
             CanRegClientApp.getApplication().getPatientRecordsByID(idString, true, server);
             CanRegClientView.showAndPositionInternalFrame(dtp, (JInternalFrame)recordEditor);
             CanRegClientView.maximizeHeight(dtp, (JInternalFrame)recordEditor);
-
-        } catch (DistributedTableDescriptionException ex) {
-            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnknownTableException ex) {
-            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         } catch (RecordLockedException ex) {
             JOptionPane.showMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("RECORD IS ALREADY BEING EDITED..."), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.INFO, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RemoteException ex) {
-            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SecurityException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             setCursor(normalCursor);
@@ -893,20 +891,12 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                     JOptionPane.showMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("VARIABLE_NOT_FOUND..."), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
                 }
             }
-        } catch (UnknownTableException ex) {
-            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (DistributedTableDescriptionException ex) {
-            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         } catch (RecordLockedException ex) {
             JOptionPane.showMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("RECORD IS ALREADY BEING EDITED..."), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RemoteException ex) {
-            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SecurityException ex) {
-            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } 
     }
 
     /**
@@ -973,13 +963,47 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                                          JOptionPane.DEFAULT_OPTION, 
                                          JOptionPane.INFORMATION_MESSAGE, null, 
                                          options, options[1]);
-            if(result == ImportOptions.REJECT) {
+            
+            if(result > -1) {
+                Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
+                Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
                 
-            } else if(result == ImportOptions.UPDATE) {
+                try {
+                    setCursor(hourglassCursor);
+                    Writer reportWriter = new BufferedWriter(new OutputStreamWriter(System.out));
                 
-            } else if(result == ImportOptions.OVERWRITE) {
-                
+                    if(numberOfRecords == 1) {
+                        int rowNumber = resultTable.getSelectedRow();
+                        int columnNumber = tableColumnModel.getColumnIndex(canreg.common.Tools.toUpperCaseStandardized(patientIDlookupVariable), false);
+                        String patientID = (String) tableDataModel.getValueAt(rowNumber, columnNumber);
+                        Patient patientToImport = CanRegClientApp.getApplication().getPatientRecordsByID(patientID, false, server)[0];
+                        Import.importPatient(CanRegClientApp.getApplication().getServer(), result, 
+                                patientID, patientToImport, reportWriter, false, false, true);
+
+                        Tumour[] tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(patientID, true, server);
+                        for(Tumour tumourToImport : tumourRecords) {
+                            String tumourID = tumourToImport.getVariableAsString(tumourIDlookupVariable);
+                            Import.importTumour(CanRegClientApp.getApplication().getServer(), result, tumourID, 
+                                    patientID, tumourToImport, null, reportWriter, false, false, true);
+                            
+                            //NOT NECESSARY, sources are already taken care of in CanRegDAO.editRecord() when
+                            //the record being updated is a Tumour (near the end of the method it deletes the sources
+                            //and saves them all from scratch).
+    //                            for(Source sourceToImport : tumourToImport.getSources()) {
+    //                                Import.importSource(CanRegClientApp.getApplication().getServer(), result, 
+    //                                        sourceToImport.getVariableAsString(sourceIDlookupVariable),
+    //                                        sourceIDlookupVariable, sourceToImport, tumourID, reportWriter, false, false, true);
+    //                            }
+                        }
+                    }
+                } catch(Exception ex) {
+                    Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(null, browseResourceMap.getString("ERROR IMPORTING "), "ERROR", JOptionPane.ERROR_MESSAGE);
+                } finally {
+                    setCursor(normalCursor);
+                }
             }
+
         }
     }
 }

@@ -314,12 +314,28 @@ public class CanRegRegistryProxy implements CanRegServerInterface, Serializable 
         serverProxy.editPatient(patient);
         resetRegistryDB();
     }
+    
+    @Override
+    public void editPatientFromHoldingToProduction(Patient patient)
+            throws RemoteException, SecurityException, RecordLockedException, SQLException {
+        changeRegistryDB(registryCode);
+        serverProxy.editPatientFromHoldingToProduction(patient);
+        resetRegistryDB();
+    }
 
     @Override
     public void editTumour(Tumour tumour) 
             throws SQLException, RemoteException, SecurityException, RecordLockedException {
         changeRegistryDB(registryCode);
         serverProxy.editTumour(tumour);
+        resetRegistryDB();
+    }
+    
+    @Override
+    public void editTumourFromHoldingToProduction(Tumour tumour)
+            throws SQLException, RemoteException, SecurityException, RecordLockedException {
+        changeRegistryDB(registryCode);
+        serverProxy.editTumourFromHoldingToProduction(tumour);
         resetRegistryDB();
     }
 

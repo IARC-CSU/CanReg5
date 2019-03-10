@@ -287,14 +287,17 @@ public class Globals {
      *
      */
     static public String PATIENT_TABLE_RECORD_ID_VARIABLE_NAME = "PRID";
+    static public String PATIENT_TABLE_RECORD_ID_VARIABLE_NAME_FOR_HOLDING = "PATIENTRECORDID";
     /**
      *
      */
     static public String TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME = "TRID";
+    static public String TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME_FOR_HOLDING = "TUMOURID";
     /**
      *
      */
     static public String SOURCE_TABLE_RECORD_ID_VARIABLE_NAME = "SRID";
+    static public String SOURCE_TABLE_RECORD_ID_VARIABLE_NAME_FOR_HOLDING = "SOURCERECORDID";
     /**
      *
      */

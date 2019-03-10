@@ -228,12 +228,26 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
         checkPermission("editPatient");
         theServer.editPatient(patient);
     }
+    
+    @Override
+    public void editPatientFromHoldingToProduction(Patient patient)
+            throws RemoteException, SecurityException, RecordLockedException, SQLException {
+        checkPermission("editPatient");
+        theServer.editPatientFromHoldingToProduction(patient);
+    }
 
     @Override
     public void editTumour(Tumour tumour) 
             throws SQLException, RemoteException, SecurityException, RecordLockedException {
         checkPermission("editTumour");
         theServer.editTumour(tumour);
+    }
+    
+    @Override
+    public void editTumourFromHoldingToProduction(Tumour tumour)
+            throws SQLException, RemoteException, SecurityException, RecordLockedException {
+        checkPermission("editTumour");
+        theServer.editTumourFromHoldingToProduction(tumour);
     }
 
     @Override

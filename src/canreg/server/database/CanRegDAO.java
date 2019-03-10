@@ -105,9 +105,12 @@ public class CanRegDAO {
         strSavePatient = QueryGenerator.strSavePatient(doc);
         strSaveTumour = QueryGenerator.strSaveTumour(doc);
         strSaveSource = QueryGenerator.strSaveSource(doc);
-        strEditPatient = QueryGenerator.strEditPatient(doc);
-        strEditTumour = QueryGenerator.strEditTumour(doc);
-        strEditSource = QueryGenerator.strEditSource(doc);
+        strEditPatient = QueryGenerator.strEditPatient(doc, false);
+        strEditPatientFromHolding = QueryGenerator.strEditPatient(doc, true);
+        strEditTumour = QueryGenerator.strEditTumour(doc, false);
+        strEditTumourFromHolding = QueryGenerator.strEditTumour(doc, true);
+        strEditSource = QueryGenerator.strEditSource(doc, false);
+        strEditSourceFromHolding = QueryGenerator.strEditSource(doc, true);
         strSaveDictionary = QueryGenerator.strSaveDictionary();
         strSaveDictionaryEntry = QueryGenerator.strSaveDictionaryEntry();
         strSavePopoulationDataset = QueryGenerator.strSavePopoulationDataset();
@@ -799,8 +802,11 @@ public class CanRegDAO {
             stmtSaveNewTumour = dbConnection.prepareStatement(strSaveTumour, Statement.RETURN_GENERATED_KEYS);
             stmtSaveNewSource = dbConnection.prepareStatement(strSaveSource, Statement.RETURN_GENERATED_KEYS);
             stmtEditPatient = dbConnection.prepareStatement(strEditPatient, Statement.RETURN_GENERATED_KEYS);
+            stmtEditPatientFromHoldingToProduction = dbConnection.prepareStatement(strEditPatientFromHolding, Statement.RETURN_GENERATED_KEYS);
             stmtEditTumour = dbConnection.prepareStatement(strEditTumour, Statement.RETURN_GENERATED_KEYS);
+            stmtEditTumourFromHoldingToProduction = dbConnection.prepareStatement(strEditTumourFromHolding, Statement.RETURN_GENERATED_KEYS);
             stmtEditSource = dbConnection.prepareStatement(strEditSource, Statement.RETURN_GENERATED_KEYS);
+            stmtEditSourceFromHoldingToProduction = dbConnection.prepareStatement(strEditSourceFromHolding, Statement.RETURN_GENERATED_KEYS);
             stmtSaveNewDictionary = dbConnection.prepareStatement(strSaveDictionary, Statement.RETURN_GENERATED_KEYS);
             stmtSaveNewDictionaryEntry = dbConnection.prepareStatement(strSaveDictionaryEntry, Statement.RETURN_GENERATED_KEYS);
             stmtSaveNewPopoulationDataset = dbConnection.prepareStatement(strSavePopoulationDataset, Statement.RETURN_GENERATED_KEYS);
@@ -1503,8 +1509,14 @@ public class CanRegDAO {
      * @return
      * @throws RecordLockedException
      */
-    public synchronized boolean editPatient(Patient patient) throws RecordLockedException, SQLException {
-        return editRecord("Patient", patient, stmtEditPatient);
+    public synchronized boolean editPatient(Patient patient, boolean fromHoldingToProduction) 
+            throws RecordLockedException, SQLException {
+        if(fromHoldingToProduction)
+            return editRecord("Patient", patient, stmtEditPatientFromHoldingToProduction, 
+                    Globals.StandardVariableNames.PatientRecordID.toString());
+        else
+            return editRecord("Patient", patient, stmtEditPatient, 
+                    Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
     }
 
     /**
@@ -1513,8 +1525,14 @@ public class CanRegDAO {
      * @return
      * @throws RecordLockedException
      */
-    public synchronized boolean editTumour(Tumour tumour) throws RecordLockedException, SQLException {
-        return editRecord("Tumour", tumour, stmtEditTumour);
+    public synchronized boolean editTumour(Tumour tumour, boolean fromHoldingToProduction)
+            throws RecordLockedException, SQLException {
+        if(fromHoldingToProduction)
+            return editRecord("Tumour", tumour, stmtEditTumourFromHoldingToProduction, 
+                    Globals.StandardVariableNames.TumourID.toString());
+        else
+            return editRecord("Tumour", tumour, stmtEditTumour, 
+                    Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME);
     }
 
     /**
@@ -1523,8 +1541,14 @@ public class CanRegDAO {
      * @return
      * @throws RecordLockedException
      */
-    public synchronized boolean editSource(Source source) throws RecordLockedException, SQLException {
-        return editRecord("Source", source, stmtEditSource);
+    public synchronized boolean editSource(Source source, boolean fromHoldingToProduction)
+            throws RecordLockedException, SQLException {
+        if(fromHoldingToProduction)
+            return editRecord("Source", source, stmtEditSourceFromHoldingToProduction,
+                    Globals.StandardVariableNames.SourceRecordID.toString());
+        else
+            return editRecord("Source", source, stmtEditSource, 
+                    Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME);
     }
 
     /**
@@ -1535,7 +1559,8 @@ public class CanRegDAO {
      * @return
      * @throws RecordLockedException
      */
-    private synchronized boolean editRecord(String tableName, DatabaseRecord record, PreparedStatement stmtEditRecord) 
+    private synchronized boolean editRecord(String tableName, DatabaseRecord record, 
+                                            PreparedStatement stmtEditRecord, String idRecordVariable) 
             throws RecordLockedException, SQLException {
         boolean bEdited = false;
         int id = -1;
@@ -1545,13 +1570,20 @@ public class CanRegDAO {
             int variableNumber = 0;
 
             for (DatabaseVariablesListElement variable : variables) {
+                if(variable.getDatabaseVariableName().equalsIgnoreCase(idRecordVariable))
+                    continue;
+                
                 String tableNameDB = variable.getDatabaseTableName();
                 if (tableNameDB.equalsIgnoreCase(tableName)) {
                     variableNumber++;
                     String variableType = variable.getVariableType();
                     int variableLength = variable.getVariableLength();
                     Object obj = record.getVariable(variable.getDatabaseVariableName());
-                    if (variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_ALPHA_NAME) || variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_ASIAN_TEXT_NAME) || variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_DICTIONARY_NAME) || variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_DATE_NAME) || variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_TEXT_AREA_NAME)) {
+                    if (variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_ALPHA_NAME) ||
+                        variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_ASIAN_TEXT_NAME) ||
+                        variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_DICTIONARY_NAME) ||
+                        variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_DATE_NAME) ||
+                        variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_TEXT_AREA_NAME)) {
                         if (obj != null) {
                             try {
                                 String strObj = obj.toString();
@@ -1592,15 +1624,20 @@ public class CanRegDAO {
                 }
             }
             // add the ID
-            String idString = "id";
-            if (record instanceof Patient) {
-                idString = Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME;
-            } else if (record instanceof Tumour) {
-                idString = Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME;
-            } else if (record instanceof Source) {
-                idString = Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME;
-            }
-            int idInt = (Integer) record.getVariable(idString);
+//            String idString = "id";
+//            if (record instanceof Patient) {
+//                idString = Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME;
+//            } else if (record instanceof Tumour) {
+//                idString = Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME;
+//            } else if (record instanceof Source) {
+//                idString = Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME;
+//            }
+            Object obj = record.getVariable(idRecordVariable);
+            Integer idInt = null;
+            if(obj instanceof String)
+                idInt = Integer.parseInt((String) obj);
+            else
+                idInt = (Integer) obj;            
             stmtEditRecord.setInt(variableNumber + 1, idInt);
             if (isRecordLocked(idInt, tableName)) {
                 throw new RecordLockedException();
@@ -2138,8 +2175,11 @@ public class CanRegDAO {
     private PreparedStatement stmtSaveNewTumour;
     private PreparedStatement stmtSaveNewSource;
     private PreparedStatement stmtEditPatient;
+    private PreparedStatement stmtEditPatientFromHoldingToProduction;
     private PreparedStatement stmtEditTumour;
+    private PreparedStatement stmtEditTumourFromHoldingToProduction;
     private PreparedStatement stmtEditSource;
+    private PreparedStatement stmtEditSourceFromHoldingToProduction;
     private PreparedStatement stmtSaveNewDictionary;
     private PreparedStatement stmtSaveNewDictionaryEntry;
     private PreparedStatement stmtSaveNewPopoulationDatasetsEntry;
@@ -2248,8 +2288,11 @@ public class CanRegDAO {
     private final String strSaveTumour;
     private final String strSaveSource;
     private final String strEditPatient;
+    private final String strEditPatientFromHolding;
     private final String strEditTumour;
+    private final String strEditTumourFromHolding;
     private final String strEditSource;
+    private final String strEditSourceFromHolding;
     private final String strSaveDictionary;
     private final String strSaveDictionaryEntry;
     private final String strSavePopoulationDataset;
