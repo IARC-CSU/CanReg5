@@ -482,6 +482,8 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
         if(evt.getClickCount() == 1) {
             if(resultTable.getSelectedRowCount() != resultTable.getRowCount())
                 this.selectAllChkBox.setSelected(false);
+            else
+                this.selectAllChkBox.setSelected(true);
         } 
         else if(evt.getClickCount() == 2) {
             JTable target = (JTable) evt.getSource();
@@ -745,9 +747,9 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
         canreg.client.gui.dataentry2.RecordEditor recordEditor = null;
         String dataEntryVersion = localSettings.getProperty(LocalSettings.DATA_ENTRY_VERSION_KEY);
         if (dataEntryVersion.equalsIgnoreCase(LocalSettings.DATA_ENTRY_VERSION_NEW))
-            recordEditor = new canreg.client.gui.dataentry2.RecordEditorMainFrame(dtp, this.server);
+            recordEditor = new canreg.client.gui.dataentry2.RecordEditorMainFrame(dtp, this.server, this);
         else 
-            recordEditor = new RecordEditor(dtp, this.server);
+            recordEditor = new RecordEditor(dtp, this.server, this);
         
         recordEditor.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
         recordEditor.setDictionary(CanRegClientApp.getApplication().getDictionary());
@@ -827,9 +829,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
         }
     }
 
-    /**
-     *
-     */
+
     @Action
     public void editTumourID() {
         String idString = tumourNumberTextField.getText().trim();
@@ -840,17 +840,13 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
         editTumourID(idString);
     }
 
-    /**
-     *
-     * @param idString
-     */
     public void editTumourID(String idString) {
         canreg.client.gui.dataentry2.RecordEditor recordEditor = null;
         String dataEntryVersion = localSettings.getProperty(LocalSettings.DATA_ENTRY_VERSION_KEY);
         if (dataEntryVersion.equalsIgnoreCase(LocalSettings.DATA_ENTRY_VERSION_NEW))
-            recordEditor = new canreg.client.gui.dataentry2.RecordEditorMainFrame(dtp, server);
+            recordEditor = new canreg.client.gui.dataentry2.RecordEditorMainFrame(dtp, server, this);
         else 
-            recordEditor = new RecordEditor(dtp, server);
+            recordEditor = new RecordEditor(dtp, server, this);
         
         recordEditor.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
         recordEditor.setDictionary(CanRegClientApp.getApplication().getDictionary());
@@ -859,8 +855,6 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
 
         filter.setFilterString(tumourIDlookupVariable + " ='" + idString + "'");
         Object[][] rows;
-        DatabaseRecord[] tumourRecords;
-        String patientIdString = null;
 
         try {
             DistributedTableDescription distributedTableDescription = 
@@ -899,11 +893,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
         } 
     }
 
-    /**
-     *
-     * @param idString
-     * @param tableName
-     */
+
     public void editRecord(String idString, String tableName) {
         if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
             editTumourID(idString);
@@ -947,7 +937,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
     }
 
     @Action
-    public void productionButtonAction() {
+    public boolean productionButtonAction() {
         int numberOfRecords = resultTable.getSelectedRowCount();
         ResourceBundle importerResourceMap = java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportFilesView");
         String[] options = {importerResourceMap.getString("rejectRadioButton.text"), 
@@ -979,7 +969,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                         Import.importPatient(CanRegClientApp.getApplication().getServer(), result, 
                                 patientID, patientToImport, reportWriter, false, false, true);
 
-                        Tumour[] tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(patientID, true, server);
+                        Tumour[] tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(patientID, false, server);
                         for(Tumour tumourToImport : tumourRecords) {
                             String tumourID = tumourToImport.getVariableAsString(tumourIDlookupVariable);
                             Import.importTumour(CanRegClientApp.getApplication().getServer(), result, tumourID, 
@@ -995,6 +985,10 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
     //                            }
                         }
                     }
+                    
+                    JOptionPane.showMessageDialog(null, browseResourceMap.getString("SUCCESS"), 
+                            numberOfRecords + " " + browseResourceMap.getString("SUCCESS MESSAGE "), JOptionPane.INFORMATION_MESSAGE);
+                    return true;
                 } catch(Exception ex) {
                     Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                     JOptionPane.showMessageDialog(null, browseResourceMap.getString("ERROR IMPORTING "), "ERROR", JOptionPane.ERROR_MESSAGE);
@@ -1002,7 +996,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                     setCursor(normalCursor);
                 }
             }
-
         }
+        return false;
     }
 }

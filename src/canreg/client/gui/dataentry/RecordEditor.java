@@ -113,14 +113,14 @@ public class RecordEditor extends javax.swing.JInternalFrame
     private String patientIDVariableName = null;
     private String patientRecordIDVariableName = null;
     private final String patientRecordIDTumourTableVariableName = null;
-    private BrowseInternalFrame browseInternalFrame;
     private final CanRegServerInterface server;
-    
+    private BrowseInternalFrame browser;
 
     
-    public RecordEditor(JDesktopPane desktopPane, CanRegServerInterface server) {
+    public RecordEditor(JDesktopPane desktopPane, CanRegServerInterface server, BrowseInternalFrame browser) {
         this.desktopPane = desktopPane;
         this.server = server;
+        this.browser = browser;
 
         initComponents();
         patientRecords = new LinkedHashSet<DatabaseRecord>();
@@ -178,6 +178,9 @@ public class RecordEditor extends javax.swing.JInternalFrame
 
         //remove the add patient record button for now
         addpatientRecordButton.setVisible(false);
+        
+        if(this.server == null)
+            this.productionBtn.setVisible(false);
 
     }
 
@@ -325,6 +328,7 @@ public class RecordEditor extends javax.swing.JInternalFrame
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        productionBtn = new javax.swing.JButton();
 
         setClosable(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -335,7 +339,6 @@ public class RecordEditor extends javax.swing.JInternalFrame
         setFrameIcon(resourceMap.getIcon("Form.frameIcon")); // NOI18N
         setName("Form"); // NOI18N
 
-        recordSplitPane.setDividerSize(10);
         recordSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         recordSplitPane.setResizeWeight(0.5);
         recordSplitPane.setContinuousLayout(true);
@@ -385,6 +388,10 @@ public class RecordEditor extends javax.swing.JInternalFrame
         jButton3.setText(resourceMap.getString("jButton3.text")); // NOI18N
         jButton3.setName("jButton3"); // NOI18N
 
+        productionBtn.setAction(actionMap.get("productionButtonAction")); // NOI18N
+        productionBtn.setText(resourceMap.getString("productionBtn.text")); // NOI18N
+        productionBtn.setName("productionBtn"); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -398,7 +405,9 @@ public class RecordEditor extends javax.swing.JInternalFrame
                 .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(showObsoleteRecordsCheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 85, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(productionBtn)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(printButton)
@@ -418,7 +427,8 @@ public class RecordEditor extends javax.swing.JInternalFrame
                 .addComponent(saveAllButton)
                 .addComponent(jButton2)
                 .addComponent(printButton)
-                .addComponent(jButton3))
+                .addComponent(jButton3)
+                .addComponent(productionBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -428,7 +438,7 @@ public class RecordEditor extends javax.swing.JInternalFrame
             .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addGap(10, 10, 10)
-                .addComponent(recordSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 953, Short.MAX_VALUE)
+                .addComponent(recordSplitPane)
                 .addGap(10, 10, 10))
         );
         layout.setVerticalGroup(
@@ -611,6 +621,7 @@ public class RecordEditor extends javax.swing.JInternalFrame
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTabbedPane patientTabbedPane;
     private javax.swing.JButton printButton;
+    private javax.swing.JButton productionBtn;
     private javax.swing.JSplitPane recordSplitPane;
     private javax.swing.JButton saveAllButton;
     private javax.swing.JCheckBox showObsoleteRecordsCheckBox;
@@ -1361,19 +1372,28 @@ public class RecordEditor extends javax.swing.JInternalFrame
                     "Please enter some data first."
             );
         } else {
-            if (browseInternalFrame == null) {
-                browseInternalFrame = new BrowseInternalFrame(desktopPane, server);
+            if (browser == null) {
+                browser = new BrowseInternalFrame(desktopPane, server);
             } else {
-                browseInternalFrame.close();
-                desktopPane.remove(browseInternalFrame);
+                browser.close();
+                desktopPane.remove(browser);
                 desktopPane.validate();
-                browseInternalFrame = new BrowseInternalFrame(desktopPane, server);
+                browser = new BrowseInternalFrame(desktopPane, server);
             }
-            CanRegClientView.showAndPositionInternalFrame(desktopPane, browseInternalFrame);
-            maximizeHeight(desktopPane, browseInternalFrame);
-            browseInternalFrame.setFilterField(searchString);
-            browseInternalFrame.setTable(Globals.PATIENT_TABLE_NAME);
-            browseInternalFrame.actionPerformed(new ActionEvent(this,1,"refresh"));
+            CanRegClientView.showAndPositionInternalFrame(desktopPane, browser);
+            maximizeHeight(desktopPane, browser);
+            browser.setFilterField(searchString);
+            browser.setTable(Globals.PATIENT_TABLE_NAME);
+            browser.actionPerformed(new ActionEvent(this,1,"refresh"));
+        }
+    }
+
+    @Action
+    public void productionButtonAction() {
+        boolean result = this.browser.productionButtonAction();
+        if(result) {
+            releaseRecords();
+            dispose();
         }
     }
 }

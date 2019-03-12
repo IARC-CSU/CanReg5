@@ -31,7 +31,7 @@
           <Component id="jPanel1" alignment="1" max="32767" attributes="0"/>
           <Group type="102" attributes="0">
               <EmptySpace min="10" pref="10" max="10" attributes="0"/>
-              <Component id="recordSplitPane" pref="953" max="32767" attributes="0"/>
+              <Component id="recordSplitPane" max="32767" attributes="0"/>
               <EmptySpace min="10" pref="10" max="10" attributes="0"/>
           </Group>
       </Group>
@@ -102,7 +102,9 @@
                   <Component id="jButton1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="showObsoleteRecordsCheckBox" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="85" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
+                  <Component id="productionBtn" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="jButton3" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="printButton" min="-2" max="-2" attributes="0"/>
@@ -125,6 +127,7 @@
                   <Component id="jButton2" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="printButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jButton3" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="productionBtn" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -200,6 +203,15 @@
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="jButton3.text"/>
             <Property name="name" type="java.lang.String" value="jButton3" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="productionBtn">
+          <Properties>
+            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+              <action class="canreg.client.gui.dataentry.RecordEditor" id="productionButtonAction" methodName="productionButtonAction"/>
+            </Property>
+            <Property name="text" type="java.lang.String" resourceKey="productionBtn.text"/>
+            <Property name="name" type="java.lang.String" value="productionBtn" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>

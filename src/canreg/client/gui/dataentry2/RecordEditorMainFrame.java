@@ -115,16 +115,17 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
     AutoFillHelper autoFillHelper;
     private String patientIDVariableName = null;
     private String patientRecordIDVariableName = null;
-    private BrowseInternalFrame browseInternalFrame;    
     private volatile boolean mouseInsideSave = false;    
     private final HashMap<RecordEditorTumour, Boolean> obsoleteToggles;
     private final LocalSettings localSettings;
     private final CanRegServerInterface server;
+    private BrowseInternalFrame browser;
         
     
-    public RecordEditorMainFrame(JDesktopPane desktopPane, CanRegServerInterface server) {        
+    public RecordEditorMainFrame(JDesktopPane desktopPane, CanRegServerInterface server, BrowseInternalFrame browser) {        
         this.desktopPane = desktopPane;
-        this.server = server;
+        this.server = server;           
+        this.browser = browser;
         this.localSettings = CanRegClientApp.getApplication().getLocalSettings();
         initComponents();
         patientRecords = new LinkedHashSet<DatabaseRecord>();
@@ -176,6 +177,9 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
         // And add the listener to the tabbedPane
         patientTabbedPane.addChangeListener(tabbedPaneChangeListener);
         tumourTabbedPane.addChangeListener(tabbedPaneChangeListener);
+        
+        if(this.server == null)
+            this.productionBtn.setVisible(false);
     }
 
     private void addToPatientMap(RecordEditorPatient recordEditorPanel, DatabaseRecord dbr) {
@@ -1538,19 +1542,19 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
 //                    java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditor").getString("THIS RECORD HAS OTHER RECORDS ASSIGNED TO IT.PLEASE DELETE OR MOVE THOSE FIRST.")
                     "Please enter some data first.");
         } else {
-            if (browseInternalFrame == null) 
-                browseInternalFrame = new BrowseInternalFrame(desktopPane, server);
+            if (browser == null) 
+                browser = new BrowseInternalFrame(desktopPane, server);
             else {
-                browseInternalFrame.close();
-                desktopPane.remove(browseInternalFrame);
+                browser.close();
+                desktopPane.remove(browser);
                 desktopPane.validate();
-                browseInternalFrame = new BrowseInternalFrame(desktopPane, server);
+                browser = new BrowseInternalFrame(desktopPane, server);
             }
-            CanRegClientView.showAndPositionInternalFrame(desktopPane, browseInternalFrame);
-            maximizeHeight(desktopPane, browseInternalFrame);
-            browseInternalFrame.setFilterField(searchString);
-            browseInternalFrame.setTable(Globals.PATIENT_TABLE_NAME);
-            browseInternalFrame.actionPerformed(new ActionEvent(this,1,"refresh"));
+            CanRegClientView.showAndPositionInternalFrame(desktopPane, browser);
+            maximizeHeight(desktopPane, browser);
+            browser.setFilterField(searchString);
+            browser.setTable(Globals.PATIENT_TABLE_NAME);
+            browser.actionPerformed(new ActionEvent(this,1,"refresh"));
         }
     }
     
@@ -1581,14 +1585,14 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
         showObsoleteRecordsCheckBox = new javax.swing.JCheckBox();
         filler13 = new javax.swing.Box.Filler(new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 32767));
         saveAllButton = new javax.swing.JButton();
+        filler22 = new javax.swing.Box.Filler(new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 32767));
+        productionBtn = new javax.swing.JButton();
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
         filler4 = new javax.swing.Box.Filler(new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 32767));
         jButton3 = new javax.swing.JButton();
         filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 32767));
         printButton = new javax.swing.JButton();
-        filler3 = new javax.swing.Box.Filler(new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 32767));
-        filler7 = new javax.swing.Box.Filler(new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 32767));
-        filler8 = new javax.swing.Box.Filler(new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 32767));
+        filler3 = new javax.swing.Box.Filler(new java.awt.Dimension(15, 0), new java.awt.Dimension(15, 0), new java.awt.Dimension(15, 32767));
         filler18 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 3), new java.awt.Dimension(0, 3), new java.awt.Dimension(32767, 3));
         filler19 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 3), new java.awt.Dimension(0, 3), new java.awt.Dimension(32767, 3));
         jPanel1 = new javax.swing.JPanel();
@@ -1720,6 +1724,11 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
             }
         });
         jPanel2.add(saveAllButton);
+        jPanel2.add(filler22);
+
+        productionBtn.setAction(actionMap.get("productionButtonAction")); // NOI18N
+        productionBtn.setText(resourceMap.getString("productionBtn.text")); // NOI18N
+        jPanel2.add(productionBtn);
         jPanel2.add(filler1);
         jPanel2.add(filler4);
 
@@ -1734,8 +1743,6 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
         printButton.setFocusable(false);
         jPanel2.add(printButton);
         jPanel2.add(filler3);
-        jPanel2.add(filler7);
-        jPanel2.add(filler8);
 
         getContentPane().add(jPanel2);
         getContentPane().add(filler18);
@@ -1913,6 +1920,15 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
         jPanel7.add(jPanel8);
     }//GEN-LAST:event_addTumourRecordButtonFocusGained
 
+    @Action
+    public void productionButtonAction() {
+        boolean result = this.browser.productionButtonAction();
+        if(result) {
+            releaseRecords();
+            dispose();
+        }
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addTumourRecordButton;
     private javax.swing.Box.Filler filler1;
@@ -1929,12 +1945,11 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
     private javax.swing.Box.Filler filler2;
     private javax.swing.Box.Filler filler20;
     private javax.swing.Box.Filler filler21;
+    private javax.swing.Box.Filler filler22;
     private javax.swing.Box.Filler filler3;
     private javax.swing.Box.Filler filler4;
     private javax.swing.Box.Filler filler5;
     private javax.swing.Box.Filler filler6;
-    private javax.swing.Box.Filler filler7;
-    private javax.swing.Box.Filler filler8;
     private javax.swing.Box.Filler filler9;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton3;
@@ -1954,6 +1969,7 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
     private javax.swing.JPopupMenu patientPopupMenu;
     private javax.swing.JTabbedPane patientTabbedPane;
     private javax.swing.JButton printButton;
+    private javax.swing.JButton productionBtn;
     private javax.swing.JButton saveAllButton;
     private javax.swing.JCheckBox showObsoleteRecordsCheckBox;
     private javax.swing.JMenuItem tumourChangePatientRecordMenuItem;

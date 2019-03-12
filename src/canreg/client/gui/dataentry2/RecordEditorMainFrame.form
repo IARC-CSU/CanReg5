@@ -250,6 +250,30 @@
             <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="saveAllButton.addMouseListener(new MouseAdapter() {            &#xa;    //background and foreground colors change when the button is being pressed&#xa;    @Override&#xa;    public void mousePressed(MouseEvent e) {&#xa;        saveAllButton.setBackground(Color.WHITE);&#xa;        saveAllButton.setForeground(Color.BLACK);                            &#xa;    }&#xa;&#xa;    //background and foreground colors return to original color when &#xa;    //the button is not being pressed (or focus color if the mouse is&#xa;    //still inside the button, which is usually the case)&#xa;    @Override&#xa;    public void mouseReleased(MouseEvent e) {              &#xa;        if(mouseInsideSave) {&#xa;            saveAllButton.setBackground(Color.GRAY);&#xa;            saveAllButton.setForeground(Color.WHITE);&#xa;        }&#xa;        else {&#xa;            saveAllButton.setBackground(Color.BLACK);&#xa;            saveAllButton.setForeground(Color.WHITE);&#xa;        }                                               &#xa;    }&#xa;&#xa;    //background and foreground colors change when the mouse is on top&#xa;    //of the button.&#xa;    @Override&#xa;    public void mouseEntered(MouseEvent e) {              &#xa;        mouseInsideSave = true;&#xa;        saveAllButton.setBackground(Color.GRAY);&#xa;        saveAllButton.setForeground(Color.WHITE);        &#xa;    }&#xa;&#xa;    @Override&#xa;    public void mouseExited(MouseEvent e) {              &#xa;        mouseInsideSave = false;&#xa;        saveAllButton.setBackground(Color.BLACK);&#xa;        saveAllButton.setForeground(Color.WHITE);                      &#xa;    }&#xa;});"/>
           </AuxValues>
         </Component>
+        <Component class="javax.swing.Box$Filler" name="filler22">
+          <Properties>
+            <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[4, 32767]"/>
+            </Property>
+            <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[4, 0]"/>
+            </Property>
+            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[4, 0]"/>
+            </Property>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="classDetails" type="java.lang.String" value="Box.Filler.HorizontalStrut"/>
+          </AuxValues>
+        </Component>
+        <Component class="javax.swing.JButton" name="productionBtn">
+          <Properties>
+            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+              <action class="canreg.client.gui.dataentry2.RecordEditorMainFrame" id="productionButtonAction" methodName="productionButtonAction"/>
+            </Property>
+            <Property name="text" type="java.lang.String" resourceKey="productionBtn.text"/>
+          </Properties>
+        </Component>
         <Component class="javax.swing.Box$Filler" name="filler1">
           <Properties>
             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
@@ -313,45 +337,13 @@
         <Component class="javax.swing.Box$Filler" name="filler3">
           <Properties>
             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[4, 32767]"/>
+              <Dimension value="[15, 32767]"/>
             </Property>
             <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[4, 0]"/>
+              <Dimension value="[15, 0]"/>
             </Property>
             <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[4, 0]"/>
-            </Property>
-          </Properties>
-          <AuxValues>
-            <AuxValue name="classDetails" type="java.lang.String" value="Box.Filler.HorizontalStrut"/>
-          </AuxValues>
-        </Component>
-        <Component class="javax.swing.Box$Filler" name="filler7">
-          <Properties>
-            <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[4, 32767]"/>
-            </Property>
-            <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[4, 0]"/>
-            </Property>
-            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[4, 0]"/>
-            </Property>
-          </Properties>
-          <AuxValues>
-            <AuxValue name="classDetails" type="java.lang.String" value="Box.Filler.HorizontalStrut"/>
-          </AuxValues>
-        </Component>
-        <Component class="javax.swing.Box$Filler" name="filler8">
-          <Properties>
-            <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[4, 32767]"/>
-            </Property>
-            <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[4, 0]"/>
-            </Property>
-            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[4, 0]"/>
+              <Dimension value="[15, 0]"/>
             </Property>
           </Properties>
           <AuxValues>

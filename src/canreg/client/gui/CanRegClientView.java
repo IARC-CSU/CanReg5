@@ -1322,9 +1322,9 @@ public final class CanRegClientView extends FrameView {
         canreg.client.gui.dataentry2.RecordEditor internalFrame = null;
         String dataEntryVersion = localSettings.getProperty(LocalSettings.DATA_ENTRY_VERSION_KEY);
         if (dataEntryVersion.equalsIgnoreCase(LocalSettings.DATA_ENTRY_VERSION_NEW)) {
-            internalFrame = new canreg.client.gui.dataentry2.RecordEditorMainFrame(desktopPane, null);
+            internalFrame = new canreg.client.gui.dataentry2.RecordEditorMainFrame(desktopPane, null, null);
         } else {
-            internalFrame = new RecordEditor(desktopPane, null);
+            internalFrame = new RecordEditor(desktopPane, null, null);
         }
 
         internalFrame.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
@@ -1361,9 +1361,9 @@ public final class CanRegClientView extends FrameView {
         canreg.client.gui.dataentry2.RecordEditor internalFrame = null;
         String dataEntryVersion = localSettings.getProperty(LocalSettings.DATA_ENTRY_VERSION_KEY);
         if (dataEntryVersion.equalsIgnoreCase(LocalSettings.DATA_ENTRY_VERSION_NEW)) {
-            internalFrame = new canreg.client.gui.dataentry2.RecordEditorMainFrame(desktopPane, null);
+            internalFrame = new canreg.client.gui.dataentry2.RecordEditorMainFrame(desktopPane, null, null);
         } else {
-            internalFrame = new RecordEditor(desktopPane, null);
+            internalFrame = new RecordEditor(desktopPane, null, null);
         }
 
         internalFrame.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
