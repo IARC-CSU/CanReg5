@@ -353,9 +353,9 @@ public class ComparePatientsInternalFrame extends javax.swing.JInternalFrame {
         canreg.client.gui.dataentry2.RecordEditor recordEditor = null;
         String dataEntryVersion = localSettings.getProperty(LocalSettings.DATA_ENTRY_VERSION_KEY);
         if (dataEntryVersion.equalsIgnoreCase(LocalSettings.DATA_ENTRY_VERSION_NEW))
-            recordEditor = new canreg.client.gui.dataentry2.RecordEditorMainFrame(desktopPane, null);
+            recordEditor = new canreg.client.gui.dataentry2.RecordEditorMainFrame(desktopPane, null, null);
         else 
-            recordEditor = new RecordEditor(desktopPane, null);
+            recordEditor = new RecordEditor(desktopPane, null, null);
         
         recordEditor.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
         recordEditor.setDictionary(CanRegClientApp.getApplication().getDictionary());
