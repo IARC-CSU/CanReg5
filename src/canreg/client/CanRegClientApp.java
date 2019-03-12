@@ -733,7 +733,8 @@ public class CanRegClientApp extends SingleFrameApplication {
         return false;
     }
 
-    public boolean importCRFile(canreg.client.gui.management.CanReg4MigrationInternalFrame.MigrationTask task, Document doc, List<Relation> map, File file, ImportOptions io)
+    public boolean importCRFile(canreg.client.gui.management.CanReg4MigrationInternalFrame.MigrationTask task, 
+                                Document doc, List<Relation> map, File file, ImportOptions io)
             throws SQLException, SecurityException, RecordLockedException, RemoteException {
         try {
             return canreg.client.dataentry.Convert.importFile(task, doc, map, file, mainServer, io);
@@ -760,7 +761,7 @@ public class CanRegClientApp extends SingleFrameApplication {
      */
     public boolean importFiles(Task<Object, Void> task, Document doc, List<Relation> map, File[] files, ImportOptions io) 
             throws SQLException, SecurityException, RecordLockedException, RemoteException, 
-                   UnknownTableException, DistributedTableDescriptionException {
+                   UnknownTableException, DistributedTableDescriptionException, Exception {
         try {
             return canreg.client.gui.importers.Import.importFiles(task, doc, map, files, mainServer, io, false);
         } catch (RemoteException ex) {
@@ -1696,7 +1697,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         lockFile.writeMap();
     }
 
-    public Patient[] getPatientRecordsByID(String recordID, boolean lock, CanRegServerInterface server) 
+    public Patient[] getPatientsByPatientID(String patientID, boolean lock, CanRegServerInterface server) 
             throws SQLException, SecurityException, RecordLockedException, 
                    UnknownTableException, DistributedTableDescriptionException, RemoteException {
         if(server == null)
@@ -1710,7 +1711,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             databaseRecordIDVariableName = Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME;
 
             DatabaseFilter filter = new DatabaseFilter();
-            filter.setFilterString(patientIDVariableName + " = '" + recordID + "' ");
+            filter.setFilterString(patientIDVariableName + " = '" + patientID + "' ");
             DistributedTableDescription distributedTableDescription;
             Object[][] rows;
             DatabaseRecord record = null;

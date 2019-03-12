@@ -793,7 +793,7 @@ public class ImportView extends javax.swing.JInternalFrame {
         protected Object doInBackground() {
             // Your Task's code here.  This method runs
             // on a background thread, so don't reference
-            // the Swing GUI from here.
+            // the Swing GUI from here. 
             boolean success = false;
             try {
                 // Calls the client app import action with the file parameters provided,

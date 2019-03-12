@@ -798,7 +798,7 @@ public class RecordEditor extends javax.swing.JInternalFrame
         if (requestedPatientID != null) {
             Patient[] patientDatabaseRecord = null;
             try {
-                patientDatabaseRecord = CanRegClientApp.getApplication().getPatientRecordsByID(requestedPatientID, false, server);
+                patientDatabaseRecord = CanRegClientApp.getApplication().getPatientsByPatientID(requestedPatientID, false, server);
                 if (patientDatabaseRecord != null && patientDatabaseRecord.length > 0) {
                     for (DatabaseRecord patient : patientRecords) {
                         patient = associatePatientRecordToPatientID(patient, requestedPatientID);

@@ -546,7 +546,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      * @throws DistributedTableDescriptionException
      */
     @Override
-    public DistributedTableDescription getDistributedTableDescription(DatabaseFilter filter, String tableName) throws RemoteException, SecurityException, SQLException, UnknownTableException, DistributedTableDescriptionException {
+    public DistributedTableDescription getDistributedTableDescription(DatabaseFilter filter, String tableName) 
+            throws RemoteException, SecurityException, SQLException, UnknownTableException, DistributedTableDescriptionException {
         return currentDAO.getDistributedTableDescriptionAndInitiateDatabaseQuery(filter, tableName, currentDAO.generateResultSetID());
     }
 

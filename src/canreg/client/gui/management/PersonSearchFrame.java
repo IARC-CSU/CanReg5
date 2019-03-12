@@ -600,13 +600,13 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                 try {
 //                  patient = CanRegClientApp.getApplication().getPatientRecord("" + model.getValueAt(rowNumber, columnNumber), false);
                     String patient1ID = (String) target.getValueAt(rowNumber, 0);
-                    Patient patient1 = CanRegClientApp.getApplication().getPatientRecordsByID(patient1ID, false, null)[0];
+                    Patient patient1 = CanRegClientApp.getApplication().getPatientsByPatientID(patient1ID, false, null)[0];
                     cpif.addMainRecordSet(patient1, null);
                     // find all results with same as ID1
                     for (int row = 0; row < resultTableModel.getRowCount(); row++) {
                         if (patient1ID.equals(target.getValueAt(row, 0))) {
                             String patient2ID = (String) target.getValueAt(row, 1);
-                            Patient patient2 = CanRegClientApp.getApplication().getPatientRecordsByID(patient2ID, false, null)[0];
+                            Patient patient2 = CanRegClientApp.getApplication().getPatientsByPatientID(patient2ID, false, null)[0];
                             cpif.addRecordSet(patient2, null, (Float) target.getValueAt(row, 2));
                         }
                     }

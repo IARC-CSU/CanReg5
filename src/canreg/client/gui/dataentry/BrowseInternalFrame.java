@@ -760,7 +760,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
         DatabaseRecord[] tumourRecords;
 
         try {
-            patients = CanRegClientApp.getApplication().getPatientRecordsByID(idString, false, server);
+            patients = CanRegClientApp.getApplication().getPatientsByPatientID(idString, false, server);
 
             if (patients.length < 1) {
                 /*
@@ -771,7 +771,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                     patient = new Patient();
                     patient.setVariable(patientIDlookupVariable, idString);
                     CanRegClientApp.getApplication().saveRecord(patient, server);
-                    patients = CanRegClientApp.getApplication().getPatientRecordsByID(idString, false, server);
+                    patients = CanRegClientApp.getApplication().getPatientsByPatientID(idString, false, server);
                 } else {
                     setCursor(normalCursor);
                     return;
@@ -814,7 +814,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                 recordEditor.addRecord(rec);
             }
             // make sure the records are locked...
-            CanRegClientApp.getApplication().getPatientRecordsByID(idString, true, server);
+            CanRegClientApp.getApplication().getPatientsByPatientID(idString, true, server);
             CanRegClientView.showAndPositionInternalFrame(dtp, (JInternalFrame)recordEditor);
             CanRegClientView.maximizeHeight(dtp, (JInternalFrame)recordEditor);
         } catch (RecordLockedException ex) {
@@ -971,12 +971,11 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                 try {
                     setCursor(hourglassCursor);
                     Writer reportWriter = new BufferedWriter(new OutputStreamWriter(System.out));
-                
-                    if(numberOfRecords == 1) {
-                        int rowNumber = resultTable.getSelectedRow();
+                    
+                    for(Integer rowNumber : resultTable.getSelectedRows()) {
                         int columnNumber = tableColumnModel.getColumnIndex(canreg.common.Tools.toUpperCaseStandardized(patientIDlookupVariable), false);
                         String patientID = (String) tableDataModel.getValueAt(rowNumber, columnNumber);
-                        Patient patientToImport = CanRegClientApp.getApplication().getPatientRecordsByID(patientID, false, server)[0];
+                        Patient patientToImport = CanRegClientApp.getApplication().getPatientsByPatientID(patientID, false, server)[0];
                         Import.importPatient(CanRegClientApp.getApplication().getServer(), result, 
                                 patientID, patientToImport, reportWriter, false, false, true);
 

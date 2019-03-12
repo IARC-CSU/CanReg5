@@ -396,7 +396,10 @@ public class Convert {
         return allErrors;  // return your result
     }
 
-    public static boolean importFile(canreg.client.gui.management.CanReg4MigrationInternalFrame.MigrationTask task, Document doc, List<canreg.client.dataentry.Relation> map, File file, CanRegServerInterface server, ImportOptions io) throws SQLException, RemoteException, SecurityException, RecordLockedException {
+    public static boolean importFile(canreg.client.gui.management.CanReg4MigrationInternalFrame.MigrationTask task,
+                                     Document doc, List<canreg.client.dataentry.Relation> map, File file, 
+                                     CanRegServerInterface server, ImportOptions io) 
+            throws SQLException, RemoteException, SecurityException, RecordLockedException {
         boolean success = false;
 
         Set<String> noNeedToLookAtPatientVariables = new TreeSet<String>();
@@ -579,7 +582,7 @@ public class Convert {
                         patientRecordID = patientID + "" + tumourSequenceString;
                         Patient[] oldPatients = null;
                         try {
-                            oldPatients = CanRegClientApp.getApplication().getPatientRecordsByID((String) patientID, false, null);
+                            oldPatients = CanRegClientApp.getApplication().getPatientsByPatientID((String) patientID, false, null);
                         } catch (Exception ex) {
                             Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
                         } 

@@ -131,8 +131,7 @@ public class DatabaseGarbler {
                     patient1 = (Patient) CanRegClientApp.getApplication().getRecord(patientDatabaseRecordID, Globals.PATIENT_TABLE_NAME, false, null);
                     if (patient1 != null) {
                         try {
-                            patients1 = CanRegClientApp.getApplication().
-                                    getPatientRecordsByID((String) patient1.getVariable(patientIDVariableListElement.getDatabaseVariableName()), true, null);
+                            patients1 = CanRegClientApp.getApplication().getPatientsByPatientID((String) patient1.getVariable(patientIDVariableListElement.getDatabaseVariableName()), true, null);
                         } catch (DistributedTableDescriptionException ex) {
                             Logger.getLogger(DatabaseGarbler.class.getName()).log(Level.SEVERE, null, ex);
                         }

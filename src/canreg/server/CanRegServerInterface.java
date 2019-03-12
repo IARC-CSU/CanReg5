@@ -373,7 +373,8 @@ public interface CanRegServerInterface extends Remote {
      * @throws UnknownTableException
      * @throws DistributedTableDescriptionException
      */
-    public DistributedTableDescription getDistributedTableDescription(DatabaseFilter filter, String tableName) throws SQLException, RemoteException, SecurityException, UnknownTableException, DistributedTableDescriptionException ;
+    public DistributedTableDescription getDistributedTableDescription(DatabaseFilter filter, String tableName)
+            throws SQLException, RemoteException, SecurityException, UnknownTableException, DistributedTableDescriptionException ;
 
     /**
      * Retrieve rows from a resultset

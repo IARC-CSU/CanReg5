@@ -108,7 +108,9 @@ public class Import {
      * @throws java.rmi.RemoteException
      * @throws canreg.server.database.RecordLockedException
      */
-    public static boolean importFile(Task<Object, String> task, Document doc, List<canreg.client.dataentry.Relation> map, File file, CanRegServerInterface server, ImportOptions io) throws SQLException, RemoteException, SecurityException, RecordLockedException {
+    public static boolean importFile(Task<Object, String> task, Document doc, List<canreg.client.dataentry.Relation> map, 
+                                     File file, CanRegServerInterface server, ImportOptions io) 
+            throws SQLException, RemoteException, SecurityException, RecordLockedException {
         //public static boolean importFile(canreg.client.gui.management.CanReg4MigrationInternalFrame.MigrationTask task, Document doc, List<canreg.client.dataentry.Relation> map, File file, CanRegServerInterface server, ImportOptions io) throws SQLException, RemoteException, SecurityException, RecordLockedException {
         boolean success = false;
 
@@ -284,7 +286,7 @@ public class Import {
                         patientRecordID = patientID + "" + tumourSequenceString;
                         Patient[] oldPatients = null;
                         try {
-                            oldPatients = CanRegClientApp.getApplication().getPatientRecordsByID((String) patientID, false, server);
+                            oldPatients = CanRegClientApp.getApplication().getPatientsByPatientID((String) patientID, false, server);
                         } catch (RemoteException ex) {
                             Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
                         } catch (SecurityException ex) {
@@ -488,7 +490,8 @@ public class Import {
                                       List<canreg.client.dataentry.Relation> map, File[] files, 
                                       CanRegServerInterface server, ImportOptions io)
             throws SQLException, RemoteException, SecurityException, URISyntaxException, 
-                   IOException, RecordLockedException, UnknownTableException, DistributedTableDescriptionException {        
+                   IOException, RecordLockedException, UnknownTableException, 
+                   DistributedTableDescriptionException, Exception {        
         int patientAmountOfColumns = getAmountOfColumns(files, io, 0);
         int tumourAmountOfColumns = getAmountOfColumns(files, io, 1);
         int sourceAmountOfColumns = getAmountOfColumns(files, io, 2);
@@ -566,7 +569,8 @@ public class Import {
                                       List<canreg.client.dataentry.Relation> map, File[] files, 
                                       CanRegServerInterface server, ImportOptions io, 
                                       boolean intoHoldingDB) 
-            throws SQLException, RemoteException, SecurityException, RecordLockedException, UnknownTableException, DistributedTableDescriptionException {
+            throws SQLException, RemoteException, SecurityException, RecordLockedException, 
+                   UnknownTableException, DistributedTableDescriptionException, Exception {
         int numberOfLinesRead = 0;
         Writer reportWriter = new BufferedWriter(new OutputStreamWriter(System.out));
         if (io.getReportFileName() != null && io.getReportFileName().trim().length() > 0) {
@@ -664,9 +668,9 @@ public class Import {
                     }
                     // debugOut(patient.toString());
 
-                    Object patientID = patient.getVariable(io.getPatientRecordIDVariableName());
+                    Object patientRecordID = patient.getVariable(io.getPatientRecordIDVariableName());
                     
-                    importPatient(server, io.getDiscrepancies(), (String) patientID, 
+                    importPatient(server, io.getDiscrepancies(), (String) patientRecordID, 
                                   patient, reportWriter, 
                                   intoHoldingDB, io.isTestOnly(), false);                                       
 
@@ -932,14 +936,15 @@ public class Import {
     }
 
     public static void importPatient(CanRegServerInterface server, int discrepancyOption,
-                                     String patientID, Patient patientToImport, Writer reportWriter, 
+                                     String patientRecordID, Patient patientToImport, Writer reportWriter, 
                                      boolean intoHoldingDB, boolean isTestOnly, 
                                      boolean fromHoldingToProduction)
             throws SQLException, SecurityException, RecordLockedException, 
-                   UnknownTableException, DistributedTableDescriptionException, RemoteException, IOException {
+                   UnknownTableException, DistributedTableDescriptionException, RemoteException,
+                   IOException, Exception {
         Patient oldPatientRecord = null;
         try {
-            oldPatientRecord = CanRegClientApp.getApplication().getPatientRecord(patientID, false, server);
+            oldPatientRecord = CanRegClientApp.getApplication().getPatientRecord(patientRecordID, false, server);
         } catch(NullPointerException ex1) {
             //Patient not found in DB.
         }
@@ -960,7 +965,7 @@ public class Import {
                     case ImportOptions.UPDATE:
                         String updateReport = updateRecord(oldPatientRecord, patientToImport);
                         if (updateReport.length() > 0) {
-                            reportWriter.write("Patient " + patientID + Globals.newline + updateReport);
+                            reportWriter.write("Patient " + patientRecordID + Globals.newline + updateReport);
                         }
     //                                oldPatientDatabaseRecordID = (Integer) oldPatientRecord.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
                         patientToImport = oldPatientRecord;
@@ -970,7 +975,7 @@ public class Import {
     //                                oldPatientDatabaseRecordID = (Integer) oldPatientRecord.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
                         String overWriteReport = overwriteRecord(oldPatientRecord, patientToImport);
                         if (overWriteReport.length() > 0) {
-                            reportWriter.write("Patient " + patientID + Globals.newline + overWriteReport);
+                            reportWriter.write("Patient " + patientRecordID + Globals.newline + overWriteReport);
                         }
                         patientToImport = oldPatientRecord;
                         savePatient = true;
@@ -1012,7 +1017,8 @@ public class Import {
                                     boolean intoHoldingDB, boolean isTestOnly,
                                     boolean fromHoldingToProduction)
             throws SQLException, SecurityException, RecordLockedException, 
-                   UnknownTableException, DistributedTableDescriptionException, RemoteException, IOException {
+                   UnknownTableException, DistributedTableDescriptionException, RemoteException, 
+                   IOException, Exception {
         // see if this tumour exists in the database already
         // TODO: Implement this using arrays and getTumourRexords instead
         boolean saveTumour = true;
@@ -1150,6 +1156,9 @@ public class Import {
 
         if ( ! isTestOnly) {
             if (deleteTumour && oldTumourRecord != null) {
+//                THIS FAILS because the implementation of deleteRecord() is trying to delete
+//                a tumour without deleting sources, so a DerbySQLIntegrityConstraintViolationException arises.
+//                Nevertheless the execution continues after this exception =)
                 server.deleteRecord((Integer) oldTumourRecord.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME), Globals.TUMOUR_TABLE_NAME);
             }
             if (saveTumour) {
@@ -1178,13 +1187,14 @@ public class Import {
     
     
     public static void importSource(CanRegServerInterface server, int discrepancyOption,
-                                    String sourceID, String sourceIDVariablename, 
+                                    String sourceRecordID, String sourceIDVariablename, 
                                     Source sourceToImport, String tumourID,  
                                     Writer reportWriter, 
                                     boolean intoHoldingDB, boolean isTestOnly, 
                                     boolean fromHoldingToProduction) 
             throws SecurityException, SQLException, RecordLockedException, 
-                   DistributedTableDescriptionException, UnknownTableException, RemoteException, IOException {
+                   DistributedTableDescriptionException, UnknownTableException, RemoteException,
+                   IOException, Exception {
         Tumour tumour = null;
         try {
             tumour = CanRegClientApp.getApplication().getTumourRecordBasedOnTumourID(tumourID, false, server);
@@ -1203,7 +1213,7 @@ public class Import {
             Iterator<Source> iter = sources.iterator();
             while(iter.hasNext()) {
                 Source oldSource = iter.next();
-                if (oldSource.getVariable(sourceIDVariablename).equals(sourceID)) {
+                if (oldSource.getVariable(sourceIDVariablename).equals(sourceRecordID)) {
                     if( ! intoHoldingDB) {
                         // deal with discrepancies
                         switch (discrepancyOption) {
@@ -1248,7 +1258,7 @@ public class Import {
 //              }
             }
         } else {
-            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "No tumour with ID " +  tumourID + " was found for source ID " + sourceID);
+            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "No tumour with ID " +  tumourID + " was found for source ID " + sourceRecordID);
         }
     }
     
