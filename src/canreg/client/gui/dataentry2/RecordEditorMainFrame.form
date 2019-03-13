@@ -284,6 +284,14 @@
             <AuxValue name="classDetails" type="java.lang.String" value="Box.Filler.HorizontalGlue"/>
           </AuxValues>
         </Component>
+        <Component class="javax.swing.JButton" name="viewFullDataBtn">
+          <Properties>
+            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+              <action class="canreg.client.gui.dataentry2.RecordEditorMainFrame" id="viewFullDataAction" methodName="viewFullDataAction"/>
+            </Property>
+            <Property name="text" type="java.lang.String" resourceKey="allCaseDataBtn.text"/>
+          </Properties>
+        </Component>
         <Component class="javax.swing.Box$Filler" name="filler4">
           <Properties>
             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">

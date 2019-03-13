@@ -658,7 +658,7 @@ public class Import {
                             } else {
                                 String value = csvRecord.get(rel.getFileColumnNumber());
                                 if(rel.getDatabaseVariableName().equalsIgnoreCase(RAW_DATA_COLUMN))
-                                    value = value.replace("@#$", " \n");
+                                    value = value.replace("@#$", "  <br>");
                                 patient.setVariable(rel.getDatabaseVariableName(), value);
                             }
                         }
@@ -763,7 +763,7 @@ public class Import {
                             } else {
                                 String value = csvRecord.get(rel.getFileColumnNumber());
                                 if(rel.getDatabaseVariableName().equalsIgnoreCase(RAW_DATA_COLUMN))
-                                    value = value.replace("@#$", " \n");
+                                    value = value.replace("@#$", " <br>");
                                 tumour.setVariable(rel.getDatabaseVariableName(), value);
                             }
                         }
@@ -861,7 +861,7 @@ public class Import {
                             } else {
                                 String value = csvRecord.get(rel.getFileColumnNumber());
                                 if(rel.getDatabaseVariableName().equalsIgnoreCase(RAW_DATA_COLUMN))
-                                    value = value.replace("@#$", " \n");
+                                    value = value.replace("@#$", "  <br>");
                                 source.setVariable(rel.getDatabaseVariableName(), value);
                             }
                         }

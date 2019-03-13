@@ -26,6 +26,7 @@ import canreg.client.gui.CanRegClientView;
 import static canreg.client.gui.CanRegClientView.maximizeHeight;
 import canreg.client.gui.dataentry.BrowseInternalFrame;
 import canreg.client.gui.dataentry.EditChecksInternalFrame;
+import canreg.client.gui.dataentry.HoldingRawDataInternalFrame;
 import canreg.client.gui.dataentry2.components.DottedDividerSplitPane;
 import canreg.client.gui.management.ComparePatientsInternalFrame;
 import canreg.client.gui.tools.PrintUtilities;
@@ -64,6 +65,7 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -120,6 +122,7 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
     private final LocalSettings localSettings;
     private final CanRegServerInterface server;
     private BrowseInternalFrame browser;
+    private final List<HoldingRawDataInternalFrame> rawDataFrames;
         
     
     public RecordEditorMainFrame(JDesktopPane desktopPane, CanRegServerInterface server, BrowseInternalFrame browser) {        
@@ -133,6 +136,7 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
         patientRecordsMap = new TreeMap<Object, RecordEditorPatient>();
         autoFillHelper = new AutoFillHelper();
         obsoleteToggles = new HashMap<RecordEditorTumour, Boolean>();
+        rawDataFrames = new LinkedList<>();
 
         addInternalFrameListener(new InternalFrameAdapter() {
             @Override
@@ -155,12 +159,10 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                                         .getString("REALLY CLOSE?CHANGES MADE WILL BE LOST."), 
                                 "Warning!", JOptionPane.YES_NO_OPTION);
                     if (option == JOptionPane.YES_OPTION) {
-                        releaseRecords();
-                        dispose();
+                        close();
                     }
                 } else {
-                    releaseRecords();
-                    dispose(); 
+                    close();
                 }
             }
         });        
@@ -178,8 +180,17 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
         patientTabbedPane.addChangeListener(tabbedPaneChangeListener);
         tumourTabbedPane.addChangeListener(tabbedPaneChangeListener);
         
-        if(this.server == null)
+        if(this.server == null) {
             this.productionBtn.setVisible(false);
+            this.viewFullDataBtn.setVisible(false); 
+        }
+    }
+    
+    private void close() {
+        for(HoldingRawDataInternalFrame frame : rawDataFrames)
+            frame.dispose();
+        releaseRecords();
+        dispose();
     }
 
     private void addToPatientMap(RecordEditorPatient recordEditorPanel, DatabaseRecord dbr) {
@@ -1588,6 +1599,7 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
         filler22 = new javax.swing.Box.Filler(new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 32767));
         productionBtn = new javax.swing.JButton();
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
+        viewFullDataBtn = new javax.swing.JButton();
         filler4 = new javax.swing.Box.Filler(new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 32767));
         jButton3 = new javax.swing.JButton();
         filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 32767));
@@ -1730,6 +1742,10 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
         productionBtn.setText(resourceMap.getString("productionBtn.text")); // NOI18N
         jPanel2.add(productionBtn);
         jPanel2.add(filler1);
+
+        viewFullDataBtn.setAction(actionMap.get("viewFullDataAction")); // NOI18N
+        viewFullDataBtn.setText(resourceMap.getString("allCaseDataBtn.text")); // NOI18N
+        jPanel2.add(viewFullDataBtn);
         jPanel2.add(filler4);
 
         jButton3.setAction(actionMap.get("writePDF")); // NOI18N
@@ -1924,8 +1940,53 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
     public void productionButtonAction() {
         boolean result = this.browser.productionButtonAction();
         if(result) {
-            releaseRecords();
-            dispose();
+            close();
+        }
+    }
+
+    @Action
+    public void viewFullDataAction() {
+        for(DatabaseRecord patient : this.patientRecords) {
+            HoldingRawDataInternalFrame frame = new HoldingRawDataInternalFrame();
+            rawDataFrames.add(frame);
+            StringBuilder formatErrors = new StringBuilder(patient.getVariableAsString("format_errors"));
+            StringBuilder rawData =  new StringBuilder("<html>" + patient.getVariableAsString("raw_data"));
+            
+            for(DatabaseRecord tumour : this.tumourRecords) {
+                
+                String tumourID = tumour.getVariableAsString("tumourid");
+                
+                //we check if the tumour belongs to this patient
+                if(tumour.getVariableAsString("patientrecordidtumourtable")
+                        .equalsIgnoreCase(patient.getVariableAsString("patientrecordid"))) {
+                    
+                    String tumourFormatErrors = tumour.getVariableAsString("format_errors");
+                    if( ! patient.getVariableAsString("format_errors").equalsIgnoreCase(tumourFormatErrors)) 
+                        formatErrors.append("\nTumour " + tumourID + ": ").append(tumourFormatErrors);
+                    
+                    String tumourRawData = tumour.getVariableAsString("raw_data");
+                    if( ! patient.getVariableAsString("raw_data").equalsIgnoreCase(tumourRawData)) 
+                        rawData.append("<br><br><strong>TUMOUR " + tumourID + ":</strong><br>").append(tumourRawData);
+                                        
+                    for(Source source : ((Tumour)tumour).getSources()) {
+                        String sourceRecordId = source.getVariableAsString("sourcerecordid");
+                        
+                        if(tumourID.equalsIgnoreCase(source.getVariableAsString("tumouridsourcetable"))) {
+                            
+                            String sourceFormatErrors = source.getVariableAsString("format_errors");
+                            if( ! tumourFormatErrors.equalsIgnoreCase(sourceFormatErrors)) 
+                                formatErrors.append("\nSource " + sourceRecordId + ": ").append(sourceFormatErrors);
+                            
+                            String sourceRawData = source.getVariableAsString("raw_data");
+                            if( ! tumourRawData.equalsIgnoreCase(sourceRawData))
+                                rawData.append("<br><br><strong>SOURCE " + sourceRecordId + ":</strong><br>").append(sourceRawData);
+                        }
+                    }
+                }
+            }
+            rawData.append("</html>");
+            frame.setData(formatErrors.toString(), rawData.toString());
+            CanRegClientView.showAndPositionInternalFrame(desktopPane, frame);
         }
     }
 
@@ -1978,6 +2039,7 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
     private javax.swing.JRadioButtonMenuItem tumourObsoleteToggleButton;
     private javax.swing.JPopupMenu tumourPopupMenu;
     private javax.swing.JTabbedPane tumourTabbedPane;
+    private javax.swing.JButton viewFullDataBtn;
     // End of variables declaration//GEN-END:variables
     
 }
