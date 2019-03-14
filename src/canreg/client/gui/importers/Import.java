@@ -618,19 +618,6 @@ public class Import {
                 parser = CSVParser.parse(files[0], io.getFileCharsets()[0], format);
 
                 for (CSVRecord csvRecord : parser) {
-                    
-                    
-                    
-                    
-                    
-                    //ACORDATE DE SACAR ESTO!!!
-                    if(numberOfLinesRead > 200)
-                        break;
-                    
-                    
-                    
-                    
-                    
                     // We allow for null tasks...
                     boolean savePatient = true;
 //                    boolean deletePatient = false;
@@ -724,24 +711,6 @@ public class Import {
                 parser = CSVParser.parse(files[1], io.getFileCharsets()[1], format);
 
                 for (CSVRecord csvRecord : parser) {
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    //ACORDATE DE SACAR ESTO!!!
-                    if(numberOfLinesRead > 200)
-                        break;                    
-
-                    
-                    
-                    
-                    
-                    
-                    
-
                     if (task != null) {
                         task.firePropertyChange(PROGRESS, 33 + ((numberOfLinesRead - 1) * 100 / linesToRead) / 3, 33 + ((numberOfLinesRead) * 100 / linesToRead) / 3);
                         task.firePropertyChange(TUMOURS, ((numberOfLinesRead - 1) * 100 / linesToRead), ((numberOfLinesRead) * 100 / linesToRead));
@@ -826,18 +795,6 @@ public class Import {
                 parser = CSVParser.parse(files[2], io.getFileCharsets()[2], format);
 
                 for (CSVRecord csvRecord : parser) {
-                    
-                    
-                    
-                    //ACORDATE DE SACAR ESTO!!!
-                    if(numberOfLinesRead > 200)
-                        break;
-                    
-                    
-                    
-                    
-                    
-                    
                     // We allow for null tasks...
                     if (task != null) {
                         task.firePropertyChange(PROGRESS, 67 + ((numberOfLinesRead - 1) * 100 / linesToRead) / 3, 67 + ((numberOfLinesRead) * 100 / linesToRead) / 3);
@@ -1012,7 +969,7 @@ public class Import {
     
     
     public static void importTumour(CanRegServerInterface server, int discrepancyOption,
-                                    String tumourID, String patientID, Tumour tumourToImport, 
+                                    String tumourID, String patientRecordID, Tumour tumourToImport, 
                                     ImportOptions io, Writer reportWriter, 
                                     boolean intoHoldingDB, boolean isTestOnly,
                                     boolean fromHoldingToProduction)
@@ -1065,7 +1022,7 @@ public class Import {
 
         Patient patient = null;
         try {
-            patient = CanRegClientApp.getApplication().getPatientRecord(patientID, false, server);
+            patient = CanRegClientApp.getApplication().getPatientRecord(patientRecordID, false, server);
         } catch(NullPointerException ex1) {
             //Patient not found in DB.
         }
@@ -1159,7 +1116,7 @@ public class Import {
 //                THIS FAILS because the implementation of deleteRecord() is trying to delete
 //                a tumour without deleting sources, so a DerbySQLIntegrityConstraintViolationException arises.
 //                Nevertheless the execution continues after this exception =)
-                server.deleteRecord((Integer) oldTumourRecord.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME), Globals.TUMOUR_TABLE_NAME);
+//                server.deleteRecord((Integer) oldTumourRecord.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME), Globals.TUMOUR_TABLE_NAME);
             }
             if (saveTumour) {
                 // if tumour has record ID we edit it

@@ -1213,21 +1213,24 @@ public class CanRegClientApp extends SingleFrameApplication {
             }
         }
     }
-
-    /**
-     *
-     * @param idString
-     * @param lock
-     * @return
-     * @throws java.rmi.RemoteException
-     * @throws java.lang.SecurityException
-     * @throws canreg.server.database.RecordLockedException
-     * @throws
-     * canreg.common.cachingtableapi.DistributedTableDescriptionException
-     * @throws canreg.server.database.UnknownTableException
-     * @throws java.sql.SQLException
-     */
-    public Tumour[] getTumourRecordsBasedOnPatientID(String idString, boolean lock, CanRegServerInterface server)
+    
+    public Tumour[] getTumourRecordsBasedOnPatientRecordID(String patientRecordID, boolean lock, CanRegServerInterface server)
+            throws SecurityException, SQLException, RecordLockedException, 
+                   DistributedTableDescriptionException, UnknownTableException, RemoteException {
+        return getTumourRecordsBasedOnVariable(globalToolBox
+                .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString())
+                .getDatabaseVariableName(), patientRecordID, lock, server);
+    }
+    
+    public Tumour[] getTumourRecordsBasedOnPatientID(String patientID, boolean lock, CanRegServerInterface server)
+            throws SecurityException, SQLException, RecordLockedException, 
+                   DistributedTableDescriptionException, UnknownTableException, RemoteException {
+        return getTumourRecordsBasedOnVariable(globalToolBox
+                .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientIDTumourTable.toString())
+                .getDatabaseVariableName(), patientID, lock, server);
+    }
+    
+    public Tumour[] getTumourRecordsBasedOnVariable(String variableName, String varID, boolean lock, CanRegServerInterface server)
             throws SecurityException, SQLException, RecordLockedException, 
                    DistributedTableDescriptionException, UnknownTableException, RemoteException {
         if(server == null)
@@ -1238,7 +1241,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         String lookUpColumnName;
 
         lookUpTableName = Globals.TUMOUR_TABLE_NAME;
-        filter.setFilterString(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientIDTumourTable.toString()).getDatabaseVariableName() + " = '" + idString + "'");
+        filter.setFilterString(variableName + " = '" + varID + "'");
 
         lookUpColumnName = Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME;
         Object[][] rows;
@@ -1279,6 +1282,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         releaseResultSet(distributedTableDescription.getResultSetID(), server);
         return records;
     }
+        
 
     public Tumour getTumourRecordBasedOnTumourID(String idString, boolean lock, CanRegServerInterface server) 
             throws SecurityException, SQLException, RecordLockedException, 

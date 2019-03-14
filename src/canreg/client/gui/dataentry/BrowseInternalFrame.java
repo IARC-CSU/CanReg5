@@ -963,17 +963,20 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                     Writer reportWriter = new BufferedWriter(new OutputStreamWriter(System.out));
                     
                     for(Integer rowNumber : resultTable.getSelectedRows()) {
-                        int columnNumber = tableColumnModel.getColumnIndex(canreg.common.Tools.toUpperCaseStandardized(patientIDlookupVariable), false);
-                        String patientID = (String) tableDataModel.getValueAt(rowNumber, columnNumber);
-                        Patient patientToImport = CanRegClientApp.getApplication().getPatientsByPatientID(patientID, false, server)[0];
+                        String patientRecordIDVariable = globalToolBox
+                                .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString())
+                                .getDatabaseVariableName();
+                        int columnNumber = tableColumnModel.getColumnIndex(canreg.common.Tools.toUpperCaseStandardized(patientRecordIDVariable), false);
+                        String patientRecordID = (String) tableDataModel.getValueAt(rowNumber, columnNumber);
+                        Patient patientToImport = CanRegClientApp.getApplication().getPatientRecord(patientRecordID, false, server);
                         Import.importPatient(CanRegClientApp.getApplication().getServer(), result, 
-                                patientID, patientToImport, reportWriter, false, false, true);
+                                patientRecordID, patientToImport, reportWriter, false, false, true);
 
-                        Tumour[] tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(patientID, false, server);
+                        Tumour[] tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientRecordID(patientRecordID, false, server);
                         for(Tumour tumourToImport : tumourRecords) {
                             String tumourID = tumourToImport.getVariableAsString(tumourIDlookupVariable);
                             Import.importTumour(CanRegClientApp.getApplication().getServer(), result, tumourID, 
-                                    patientID, tumourToImport, null, reportWriter, false, false, true);
+                                    patientRecordID, tumourToImport, null, reportWriter, false, false, true);
                             
                             //NOT NECESSARY, sources are already taken care of in CanRegDAO.editRecord() when
                             //the record being updated is a Tumour (near the end of the method it deletes the sources

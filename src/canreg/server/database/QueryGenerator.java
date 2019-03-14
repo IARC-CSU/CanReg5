@@ -531,16 +531,16 @@ public class QueryGenerator {
         return variableNamesPart + valuesPart;
     }
 
-    static String strEditPatient(Document doc, boolean fromHolding) {
-        return strEditRecord(doc, "patient", fromHolding);
+    static String strEditPatient(Document doc) {
+        return strEditRecord(doc, "patient");
     }
 
-    static String strEditTumour(Document doc, boolean fromHolding) {
-        return strEditRecord(doc, "tumour", fromHolding);
+    static String strEditTumour(Document doc) {
+        return strEditRecord(doc, "tumour");
     }
 
-    static String strEditSource(Document doc, boolean fromHolding) {
-        return strEditRecord(doc, "source", fromHolding);
+    static String strEditSource(Document doc) {
+        return strEditRecord(doc, "source");
     }
 
     static String strGetHighestPatientID(GlobalToolBox globalToolBox) {
@@ -577,25 +577,16 @@ public class QueryGenerator {
     return "SELECT max(\""+canreg.common.Tools.toUpperCaseStandardized(tumourRecordIDVariableNamePatientTable)+"\") FROM APP.TUMOUR";
     }
      */
-    private static String strEditRecord(Document doc, String tableName, boolean fromHolding) {
+    private static String strEditRecord(Document doc, String tableName) {
 
         String recordIDVariableName = "ID";
-        if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
-            if(fromHolding)
-                recordIDVariableName = Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME_FOR_HOLDING;
-            else
-                recordIDVariableName = Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME;
-        } else if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
-            if(fromHolding)
-                recordIDVariableName = Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME_FOR_HOLDING;
-            else
-                recordIDVariableName = Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME;
-        } else if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
-            if(fromHolding)
-                recordIDVariableName = Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME_FOR_HOLDING;
-            else
-                recordIDVariableName = Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME;
-        }
+        if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME))
+            recordIDVariableName = Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME;
+        else if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) 
+            recordIDVariableName = Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME;
+        else if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) 
+            recordIDVariableName = Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME;
+        
 
         String variableNamesPart = "UPDATE " + Globals.SCHEMA_NAME + "."
                 + canreg.common.Tools.toUpperCaseStandardized(tableName);
@@ -617,9 +608,8 @@ public class QueryGenerator {
             String variableType = element.getElementsByTagName(namespace + "variable_type").item(0).getTextContent();
             if (!"Meta".equalsIgnoreCase(variableType)) {
                 if (tableNameDB.equalsIgnoreCase(tableName)) {
-                    String shortName = canreg.common.Tools.toUpperCaseStandardized(element.getElementsByTagName(namespace + "short_name").item(0).getTextContent());
-                    if(fromHolding && shortName.equalsIgnoreCase(recordIDVariableName))
-                        continue;
+                    String shortName = canreg.common.Tools
+                            .toUpperCaseStandardized(element.getElementsByTagName(namespace + "short_name").item(0).getTextContent());
                     
                     if (first) {
                         first = false;
