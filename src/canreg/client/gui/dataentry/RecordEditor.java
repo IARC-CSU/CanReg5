@@ -27,6 +27,7 @@ package canreg.client.gui.dataentry;
 
 import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.client.CanRegClientApp;
+import canreg.client.LocalSettings;
 import canreg.client.gui.CanRegClientView;
 import static canreg.client.gui.CanRegClientView.maximizeHeight;
 import canreg.client.gui.management.ComparePatientsInternalFrame;
@@ -58,6 +59,7 @@ import java.beans.PropertyVetoException;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
+import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -68,6 +70,7 @@ import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
+import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
@@ -117,12 +120,15 @@ public class RecordEditor extends javax.swing.JInternalFrame
     private final CanRegServerInterface server;
     private BrowseInternalFrame browser;
     private final List<HoldingRawDataInternalFrame> rawDataFrames;
+    private canreg.client.gui.dataentry2.RecordEditor productionRecordEditor;
+    private final LocalSettings localSettings;
 
     
     public RecordEditor(JDesktopPane desktopPane, CanRegServerInterface server, BrowseInternalFrame browser) {
         this.desktopPane = desktopPane;
         this.server = server;
         this.browser = browser;
+        this.localSettings = CanRegClientApp.getApplication().getLocalSettings();
 
         initComponents();
         patientRecords = new LinkedHashSet<DatabaseRecord>();
@@ -181,8 +187,8 @@ public class RecordEditor extends javax.swing.JInternalFrame
         if(this.server == null) {
             this.productionBtn.setVisible(false);
             this.viewFullDataBtn.setVisible(false);
+            this.viewProductionRecordBtn.setVisible(false);
         }
-
     }
 
     private void addToPatientMap(RecordEditorPanel recordEditorPanel, DatabaseRecord dbr) {
@@ -264,16 +270,23 @@ public class RecordEditor extends javax.swing.JInternalFrame
         rePanel.repaint();
         if (dbr instanceof Patient) {
             patientRecords.add(dbr);
-            Object regno = dbr.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName());
+            String regno = dbr.getVariableAsString(globalToolBox
+                    .translateStandardVariableNameToDatabaseListElement(Globals
+                            .StandardVariableNames.PatientRecordID.toString())
+                    .getDatabaseVariableName());
             String regnoString = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("N/A");
             if (regno != null) {
-                regnoString = regno.toString();
-                if (regnoString.length() == 0) {
+                regnoString = regno;
+                if (regnoString.length() == 0)
                     regnoString = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("N/A");
-                } else {
+                else
                     patientRecordsMap.put(regno, rePanel);
-                }
-            }
+                
+                if(this.server != null) 
+                    this.loadProductionRecordEditor(regno);
+            } else
+                this.viewProductionRecordBtn.setVisible(false);
+                
             Object patientObsoleteStatus = dbr.getVariable(patientObsoleteVariableName);
             if (patientObsoleteStatus != null && patientObsoleteStatus.equals(Globals.OBSOLETE_VALUE)) {
                 regnoString += java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString(" (OBSOLETE)");
@@ -334,6 +347,7 @@ public class RecordEditor extends javax.swing.JInternalFrame
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         productionBtn = new javax.swing.JButton();
+        viewProductionRecordBtn = new javax.swing.JButton();
 
         setClosable(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -401,6 +415,10 @@ public class RecordEditor extends javax.swing.JInternalFrame
         productionBtn.setText(resourceMap.getString("productionBtn.text")); // NOI18N
         productionBtn.setName("productionBtn"); // NOI18N
 
+        viewProductionRecordBtn.setAction(actionMap.get("viewProductionRecordAction")); // NOI18N
+        viewProductionRecordBtn.setText(resourceMap.getString("viewProductionRecordBtn.text")); // NOI18N
+        viewProductionRecordBtn.setName("viewProductionRecordBtn"); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -414,6 +432,8 @@ public class RecordEditor extends javax.swing.JInternalFrame
                 .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(showObsoleteRecordsCheckBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(viewProductionRecordBtn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(productionBtn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -440,7 +460,8 @@ public class RecordEditor extends javax.swing.JInternalFrame
                 .addComponent(printButton)
                 .addComponent(jButton3)
                 .addComponent(productionBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(viewFullDataBtn))
+                .addComponent(viewFullDataBtn)
+                .addComponent(viewProductionRecordBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -471,6 +492,59 @@ public class RecordEditor extends javax.swing.JInternalFrame
 // TODO add your handling code here:
 }//GEN-LAST:event_addTumourRecordButtonActionPerformed
 
+    private void loadProductionRecordEditor(String patientRecordID) {
+        try {
+            String tumourIDVariable = globalToolBox
+                    .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString())
+                    .getDatabaseVariableName();
+            String patientIDVariable = globalToolBox
+                    .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString())
+                    .getDatabaseVariableName();
+            
+            Patient productionPatient = CanRegClientApp.getApplication().getPatientRecord(patientRecordID, false, null);
+            if(productionPatient != null) {
+                String dataEntryVersion = localSettings.getProperty(LocalSettings.DATA_ENTRY_VERSION_KEY);
+                if (dataEntryVersion.equalsIgnoreCase(LocalSettings.DATA_ENTRY_VERSION_NEW))
+                    this.productionRecordEditor = new canreg.client.gui.dataentry2
+                            .RecordEditorMainFrame(this.desktopPane, null, this.browser);
+                else 
+                    this.productionRecordEditor = new canreg.client.gui.dataentry
+                            .RecordEditor(this.desktopPane, null, this.browser);
+                this.productionRecordEditor.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
+                this.productionRecordEditor.setDictionary(CanRegClientApp.getApplication().getDictionary());
+                this.productionRecordEditor.addRecord(productionPatient);
+                
+                TreeSet<DatabaseRecord> set = new TreeSet<DatabaseRecord>(new Comparator<DatabaseRecord>() {
+                    @Override
+                    public int compare(DatabaseRecord o1, DatabaseRecord o2) {
+                        return (o1.getVariable(tumourIDVariable).toString().compareTo(o2.getVariable(tumourIDVariable).toString()));
+                    }
+                });
+
+                DatabaseRecord[] tumourRecords = CanRegClientApp.getApplication()
+                        .getTumourRecordsBasedOnPatientID(productionPatient.getVariableAsString(patientIDVariable), false, null);
+                for (DatabaseRecord rec : tumourRecords) {
+                    // store them in a set, so we don't show them several times
+                    if (rec != null) 
+                        set.add(rec);
+                }
+
+                for (DatabaseRecord rec : set) {
+                    // store them in a map, so we don't show them several times
+                    this.productionRecordEditor.addRecord(rec);
+                }
+                // make sure the records are locked...
+//                CanRegClientApp.getApplication()
+//                        .getPatientsByPatientID(productionPatient.getVariableAsString(patientIDVariable), true, null);
+            }
+        } catch(Exception ex) {
+            Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.WARNING, null, ex);
+            this.viewProductionRecordBtn.setVisible(false);
+        }
+    }
+    
+    
+    
     /**
      *
      */
@@ -641,6 +715,7 @@ public class RecordEditor extends javax.swing.JInternalFrame
     private javax.swing.JCheckBox showObsoleteRecordsCheckBox;
     private javax.swing.JTabbedPane tumourTabbedPane;
     private javax.swing.JButton viewFullDataBtn;
+    private javax.swing.JButton viewProductionRecordBtn;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -1454,6 +1529,14 @@ public class RecordEditor extends javax.swing.JInternalFrame
             rawData.append("</html>");
             frame.setData(formatErrors.toString(), rawData.toString());
             CanRegClientView.showAndPositionInternalFrame(desktopPane, frame);
+        }
+    }
+
+    @Action
+    public void viewProductionRecordAction() {
+        if(this.productionRecordEditor != null) {
+            CanRegClientView.showAndPositionInternalFrame(this.desktopPane, (JInternalFrame)productionRecordEditor);
+            CanRegClientView.maximizeHeight(this.desktopPane, (JInternalFrame)productionRecordEditor);
         }
     }
 }
