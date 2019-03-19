@@ -32,12 +32,10 @@ Args <- commandArgs(TRUE)
 initial.options <- commandArgs(trailingOnly = FALSE)
 #Parameters
 JSON.path <- "-paramsFile="
-# paramsJSON <- fromJSON(sub(JSON.path, "", initial.options[grep(JSON.path, initial.options)]))
-paramsJSON <- fromJSON("C://Users//Patricio//AppData//Local//Temp//rChecksParams.json")
+paramsJSON <- fromJSON(sub(JSON.path, "", initial.options[grep(JSON.path, initial.options)]))
 
 file.arg.name <- "--file="
-# script.name <- sub(file.arg.name, "", initial.options[grep(file.arg.name, initial.options)])
-script.name <- "C://Work//CanReg5//conf//import//r//CR5formatChecks.R"
+script.name <- sub(file.arg.name, "", initial.options[grep(file.arg.name, initial.options)])
 
 #Set locale to UTF-8
 Sys.setlocale("LC_CTYPE", "UTF-8")
