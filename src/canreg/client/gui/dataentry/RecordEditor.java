@@ -1488,48 +1488,40 @@ public class RecordEditor extends javax.swing.JInternalFrame
 
     @Action
     public void viewFullDataAction() {
-        for(DatabaseRecord patient : this.patientRecords) {
-            HoldingRawDataInternalFrame frame = new HoldingRawDataInternalFrame();
-            rawDataFrames.add(frame);
-            StringBuilder formatErrors = new StringBuilder(patient.getVariableAsString("format_errors"));
-            StringBuilder rawData =  new StringBuilder("<html>" + patient.getVariableAsString("raw_data"));
-            
+        StringBuilder formatErrors = new StringBuilder();
+        StringBuilder rawData =  new StringBuilder("<html>");
+        HoldingRawDataInternalFrame frame = new HoldingRawDataInternalFrame();
+        rawDataFrames.add(frame);
+        
+        int amountOfSources = 0;
+        for(DatabaseRecord tumour : this.tumourRecords) {
+            for(Source source : ((Tumour)tumour).getSources()) 
+                amountOfSources++;
+        }
+        
+        if(amountOfSources == 1) {
+            //WE ALWAYS ASUME THERE'S ONLY ONE PATIENT TAB OPEN!!
+            for(DatabaseRecord patient : this.patientRecords) {
+                formatErrors.append(patient.getVariableAsString("format_errors"));
+                rawData.append(patient.getVariableAsString("raw_data"));
+            }
+        } else {
             for(DatabaseRecord tumour : this.tumourRecords) {
-                
-                String tumourID = tumour.getVariableAsString("tumourid");
-                
-                //we check if the tumour belongs to this patient
-                if(tumour.getVariableAsString("patientrecordidtumourtable")
-                        .equalsIgnoreCase(patient.getVariableAsString("patientrecordid"))) {
+                for(Source source : ((Tumour)tumour).getSources()) {
+                    String sourceRecordId = source.getVariableAsString("sourcerecordid");
                     
-                    String tumourFormatErrors = tumour.getVariableAsString("format_errors");
-                    if( ! patient.getVariableAsString("format_errors").equalsIgnoreCase(tumourFormatErrors)) 
-                        formatErrors.append("\nTumour " + tumourID + ": ").append(tumourFormatErrors);
-                    
-                    String tumourRawData = tumour.getVariableAsString("raw_data");
-                    if( ! patient.getVariableAsString("raw_data").equalsIgnoreCase(tumourRawData)) 
-                        rawData.append("<br><br><strong>TUMOUR " + tumourID + ":</strong><br>").append(tumourRawData);
-                                        
-                    for(Source source : ((Tumour)tumour).getSources()) {
-                        String sourceRecordId = source.getVariableAsString("sourcerecordid");
-                        
-                        if(tumourID.equalsIgnoreCase(source.getVariableAsString("tumouridsourcetable"))) {
-                            
-                            String sourceFormatErrors = source.getVariableAsString("format_errors");
-                            if( ! tumourFormatErrors.equalsIgnoreCase(sourceFormatErrors)) 
-                                formatErrors.append("\nSource " + sourceRecordId + ": ").append(sourceFormatErrors);
-                            
-                            String sourceRawData = source.getVariableAsString("raw_data");
-                            if( ! tumourRawData.equalsIgnoreCase(sourceRawData))
-                                rawData.append("<br><br><strong>SOURCE " + sourceRecordId + ":</strong><br>").append(sourceRawData);
-                        }
-                    }
+                    String sourceFormatErrors = source.getVariableAsString("format_errors");
+                    formatErrors.append("Source " + sourceRecordId + ": ").append(sourceFormatErrors).append("\n");
+
+                    String sourceRawData = source.getVariableAsString("raw_data");
+                    rawData.append("<strong>SOURCE " + sourceRecordId + ":</strong><br>").append(sourceRawData).append("<br><br>");
                 }
             }
-            rawData.append("</html>");
-            frame.setData(formatErrors.toString(), rawData.toString());
-            CanRegClientView.showAndPositionInternalFrame(desktopPane, frame);
-        }
+        }                                
+            
+        rawData.append("</html>");
+        frame.setData(formatErrors.toString(), rawData.toString());
+        CanRegClientView.showAndPositionInternalFrame(desktopPane, frame);
     }
 
     @Action
