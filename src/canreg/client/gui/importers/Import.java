@@ -645,7 +645,7 @@ public class Import {
                             } else {
                                 String value = csvRecord.get(rel.getFileColumnNumber());
                                 if(rel.getDatabaseVariableName().equalsIgnoreCase(RAW_DATA_COLUMN))
-                                    value = value.replace("@#$", "  <br>");
+                                    value = value.replace("@#$", " <br>");
                                 patient.setVariable(rel.getDatabaseVariableName(), value);
                             }
                         }
@@ -676,6 +676,7 @@ public class Import {
                 parser.close();
                 reportWriter.write("Finished reading patients." + Globals.newline + Globals.newline);
                 reportWriter.flush();
+                patientFIS.close();
             }
             if (task != null) {
                 task.firePropertyChange(PATIENTS, 100, 100);
@@ -762,6 +763,7 @@ public class Import {
                 parser.close();
                 reportWriter.write("Finished reading tumours." + Globals.newline + Globals.newline);
                 reportWriter.flush();
+                tumourFIS.close();
             }
             if (task != null) {
                 task.firePropertyChange(TUMOURS, 100, 100);
@@ -818,7 +820,7 @@ public class Import {
                             } else {
                                 String value = csvRecord.get(rel.getFileColumnNumber());
                                 if(rel.getDatabaseVariableName().equalsIgnoreCase(RAW_DATA_COLUMN))
-                                    value = value.replace("@#$", "  <br>");
+                                    value = value.replace("@#$", " <br>");
                                 source.setVariable(rel.getDatabaseVariableName(), value);
                             }
                         }
@@ -848,7 +850,8 @@ public class Import {
                 }
                 reportWriter.write("Finished reading sources." + Globals.newline + Globals.newline);
                 reportWriter.flush();
-                parser.close();
+                parser.close();                
+                sourceFIS.close();
             }
             if (task != null) {
                 task.firePropertyChange(SOURCES, 100, 100);
@@ -884,11 +887,14 @@ public class Import {
             } catch (IOException ex) {
                 Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
             }
+            
+            files = null;
         }
         if (task != null) {
             task.firePropertyChange(PROGRESS, 100, 100);
             task.firePropertyChange("finished", null, null);
         }
+                
         return success;
     }
 
