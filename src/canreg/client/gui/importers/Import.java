@@ -592,6 +592,7 @@ public class Import {
                 .withDelimiter(io.getSeparators()[0]);
 
         int linesToRead = io.getMaxLines();
+        FileInputStream patientFIS = null, tumourFIS = null, sourceFIS = null;
 
         try {
             // first we get the patients
@@ -601,7 +602,7 @@ public class Import {
             }
             if (files[0] != null) {
                 reportWriter.write("Starting to import patients from " + files[0].getAbsolutePath() + Globals.newline);
-                FileInputStream patientFIS = new FileInputStream(files[0]);
+                patientFIS = new FileInputStream(files[0]);
                 InputStreamReader patientISR = new InputStreamReader(patientFIS, io.getFileCharsets()[0]);
 
                 Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding {0}", patientISR.getEncoding());
@@ -676,7 +677,6 @@ public class Import {
                 parser.close();
                 reportWriter.write("Finished reading patients." + Globals.newline + Globals.newline);
                 reportWriter.flush();
-                patientFIS.close();
             }
             if (task != null) {
                 task.firePropertyChange(PATIENTS, 100, 100);
@@ -691,7 +691,7 @@ public class Import {
             if (files[1] != null) {
                 reportWriter.write("Starting to import tumours from " + files[1].getAbsolutePath() + Globals.newline);
 
-                FileInputStream tumourFIS = new FileInputStream(files[1]);
+                tumourFIS = new FileInputStream(files[1]);
                 InputStreamReader tumourISR = new InputStreamReader(tumourFIS, io.getFileCharsets()[1]);
 
                 Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding {0}", tumourISR.getEncoding());
@@ -763,7 +763,6 @@ public class Import {
                 parser.close();
                 reportWriter.write("Finished reading tumours." + Globals.newline + Globals.newline);
                 reportWriter.flush();
-                tumourFIS.close();
             }
             if (task != null) {
                 task.firePropertyChange(TUMOURS, 100, 100);
@@ -776,7 +775,7 @@ public class Import {
             if (files[2] != null) {
                 reportWriter.write("Starting to import sources from " + files[2].getAbsolutePath() + Globals.newline);
 
-                FileInputStream sourceFIS = new FileInputStream(files[2]);
+                sourceFIS = new FileInputStream(files[2]);
                 InputStreamReader sourceISR = new InputStreamReader(sourceFIS, io.getFileCharsets()[2]);
 
                 Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding {0}", sourceISR.getEncoding());
@@ -851,7 +850,6 @@ public class Import {
                 reportWriter.write("Finished reading sources." + Globals.newline + Globals.newline);
                 reportWriter.flush();
                 parser.close();                
-                sourceFIS.close();
             }
             if (task != null) {
                 task.firePropertyChange(SOURCES, 100, 100);
@@ -889,6 +887,12 @@ public class Import {
             }
             
             files = null;
+            if(patientFIS != null)
+                patientFIS.close();
+            if(tumourFIS != null)
+                tumourFIS.close();
+            if(sourceFIS != null)
+                sourceFIS.close();
         }
         if (task != null) {
             task.firePropertyChange(PROGRESS, 100, 100);
