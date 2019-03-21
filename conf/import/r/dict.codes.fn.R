@@ -7,15 +7,19 @@ dict.codes.fn <- function(dic.codes){
   for (i in 1:(length(dic_idx)-1)){
     idx_ini <- dic_idx[i]
     idx_end <- dic_idx[i+1]
-    codes.df <- rep(df.codes[i],(idx_end - idx_ini -1))
-    dic.names.df <- rep(df.dic.names[i],(idx_end - idx_ini -1))
-    if(i != length(df.codes)){
-      aux.df <- cbind(dic.codes[(idx_ini + 1):(idx_end - 1),],codes.df, dic.names.df)
-    }else{
-      aux.df <- cbind(dic.codes[(idx_ini + 1):idx_end,],codes.df, dic.names.df)
-    }
+    if (idx_end - idx_ini >1){
+      codes.df <- rep(df.codes[i],(idx_end - idx_ini -1))
+      dic.names.df <- rep(df.dic.names[i],(idx_end - idx_ini -1))
+      if(i != length(df.codes)){
+        aux.df <- cbind(dic.codes[(idx_ini + 1):(idx_end - 1),],codes.df, dic.names.df)
+      }else{
+        aux.df <- cbind(dic.codes[(idx_ini + 1):idx_end,],codes.df, dic.names.df)
+      }
+      
+      dic.codes.tidy <- rbind(dic.codes.tidy, aux.df)
+    }else{NULL}
     
-    dic.codes.tidy <- rbind(dic.codes.tidy, aux.df)
+    
   }
   colnames(dic.codes.tidy) <- c("code", "description", "dictionary_id","name_dictionary")
   

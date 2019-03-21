@@ -9,6 +9,8 @@ format.date.fn <- function(doc.data = data.frame,
                            dt.type = "character"){#Patient, Tumour or Source
   # First we need to know which columns are dates
   date.columns <- doc.data[doc.data$variable_type == "Date" & doc.data$table == dt.type, c("short_name")]
+  #Date format in the raw data
+  date.format <- detect.date.format.fn(import.data, doc.data, dt.type)
   if (length(date.columns) > 0){
     #It is going to delete the slash and hyphen
     #Slash: /
@@ -49,6 +51,8 @@ format.date.fn <- function(doc.data = data.frame,
     #Check if all values are dates
     aux.data.yyyymmdd <- aux.data.yyyymmdd2 %>%
       mutate_all(funs(date.yyyymmdd = IsDate))
+    
+    #Change the false to true, unknown date is not an error 
     aux.data.yyyymmdd <- unknown.date.fn(aux.data,
                                          aux.data.yyyymmdd[str_detect(names(aux.data.yyyymmdd),"_date.yyyymmdd")],
                                          date.columns)
@@ -79,7 +83,8 @@ format.date.fn <- function(doc.data = data.frame,
     aux.data[,date.columns] <- mergeDataErrors(aux.errors.merged,
                                                aux.data.yyyymmdd2, 
                                                date.columns)
-    
+    #######
+    #I have to format the date that has 99
     aux.errors.merged[aux.errors.merged != "no error"] <- "error"
     #We need to change the column names in the dataset for the column names in the raw data,
     #so the format.error columns is going to help the user to identify which columns have errors
@@ -92,6 +97,9 @@ format.date.fn <- function(doc.data = data.frame,
                                              names.rdt, 
                                              date.columns)
     
+    #Format dates with unknown values: 99 for day or month or 9999 for year
+    aux.data <- format.unk.date.fn(doc.data, aux.data, dt.type, date.format)
+    
     
     #To merge the column names with errors into one column
     aux.data$format.errors <- apply(aux.errors.merged, 1, paste, collapse=", ")
@@ -99,7 +107,8 @@ format.date.fn <- function(doc.data = data.frame,
     aux.data$format.errors <- str_replace(aux.data$format.errors, 
                                           ", , ", "")
     colnames(aux.data)[colnames(aux.data) %in% date.columns] <- names.rdt
-    return(aux.data[,c(names.rdt,"format.errors")])
+    aux.dt <- aux.data[names(aux.data) %in% c(names.rdt,"format.errors")]
+    return(aux.dt)
   }else{
     return("no dates to check")
   }
