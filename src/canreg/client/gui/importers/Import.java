@@ -30,6 +30,7 @@ import canreg.client.CanRegClientApp;
 import canreg.client.dataentry.Relation;
 import canreg.common.DatabaseGroupsListElement;
 import canreg.common.DatabaseVariablesListElement;
+import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
 import canreg.common.conversions.ConversionResult;
 import canreg.common.conversions.Converter;
@@ -902,13 +903,14 @@ public class Import {
         return success;
     }
 
-    public static void importPatient(CanRegServerInterface server, int discrepancyOption,
+    public static int importPatient(CanRegServerInterface server, int discrepancyOption,
                                      String patientRecordID, Patient patientToImport, Writer reportWriter, 
                                      boolean intoHoldingDB, boolean isTestOnly, 
                                      boolean fromHoldingToProduction)
             throws SQLException, SecurityException, RecordLockedException, 
                    UnknownTableException, DistributedTableDescriptionException, RemoteException,
                    IOException, Exception {
+        GlobalToolBox globalToolBox = new GlobalToolBox(server.getDatabseDescription());
         Patient oldPatientRecord = null;
         try {
             oldPatientRecord = CanRegClientApp.getApplication().getPatientRecord(patientRecordID, false, server);
@@ -959,8 +961,16 @@ public class Import {
             if (savePatient) {
                 if (patientToImport.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME) != null) {
     //              try {
-                        if(fromHoldingToProduction)
-                            server.editPatientFromHoldingToProduction(patientToImport);
+                        if(fromHoldingToProduction) {
+                            if(patientToImport.getVariableAsString(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME_FOR_HOLDING).contains("@H")) {
+                                DatabaseVariablesListElement patientIDVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString());
+                                DatabaseVariablesListElement patientRecordIDVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString());
+                                patientToImport.setVariable(patientIDVariable.getDatabaseVariableName(), "");
+                                patientToImport.setVariable(patientRecordIDVariable.getDatabaseVariableName(), "");
+                                return server.savePatient(patientToImport);
+                            } else
+                                server.editPatientFromHoldingToProduction(patientToImport);
+                        }
                         else
                             server.editPatient(patientToImport);
     //              } catch(Exception ex) {
@@ -968,13 +978,15 @@ public class Import {
     //              }
                 } else {
     //              try {
-                        server.savePatient(patientToImport);
+                        return server.savePatient(patientToImport);
     //              } catch(Exception ex) {
     //                  Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "ERROR SAVING PATIENT " + patientID, ex);
     //              }
                 }
             }
         }
+        
+        return -1;
     }
     
     
@@ -990,6 +1002,8 @@ public class Import {
         // TODO: Implement this using arrays and getTumourRexords instead
         boolean saveTumour = true;
         boolean deleteTumour = false;
+        
+        GlobalToolBox globalToolBox = new GlobalToolBox(server.getDatabseDescription());
         ResultCode worstResultCodeFound;
         Tumour oldTumourRecord = null;
         
@@ -1130,16 +1144,20 @@ public class Import {
             }
             if (saveTumour) {
                 // if tumour has record ID we edit it
-                if (tumourToImport.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME) != null) {
+                if (tumourToImport.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME) != null &&
+                    ! tumourToImport.getVariableAsString(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME_FOR_HOLDING).isEmpty()) {
 //                  try {
-                        if(fromHoldingToProduction)
-                            server.editTumourFromHoldingToProduction(tumourToImport);
+                        if(fromHoldingToProduction) {
+                            if(tumourToImport.getVariableAsString(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME_FOR_HOLDING).isEmpty()) {
+                                server.saveTumour(tumourToImport);
+                            } else
+                                server.editTumourFromHoldingToProduction(tumourToImport);
+                        }
                         else
                             server.editTumour(tumourToImport);
 //                  } catch(Exception ex) {
 //                      Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "ERROR EDITING TUMOUR " + tumourID, ex);
 //                  }
-
                 } // if not we save it
                 else {
 //                  try {

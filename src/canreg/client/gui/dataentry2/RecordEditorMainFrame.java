@@ -2054,6 +2054,11 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
         if(this.productionRecordEditor != null) {
             CanRegClientView.showAndPositionInternalFrame(this.desktopPane, (JInternalFrame)productionRecordEditor);
             CanRegClientView.maximizeHeight(this.desktopPane, (JInternalFrame)productionRecordEditor);
+        } else {
+            JOptionPane.showMessageDialog(null, 
+                    java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("RECORD NOT PRESENT"), 
+                    java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), 
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
 

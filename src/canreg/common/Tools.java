@@ -1241,15 +1241,6 @@ public class Tools {
                 .withFirstRecordAsHeader()
                 .withDelimiter(separator);
         CSVParser parser = CSVParser.parse(csvFile, fileCharset, format);
-        int amountOfColumns = 0;
-        for(CSVRecord record : parser) {
-            try {
-                record.get(amountOfColumns);
-                amountOfColumns++;
-            } catch(Exception ex) {
-                break;
-            }
-        }
-        return amountOfColumns;
+        return parser.getHeaderMap().size();
     }
 }

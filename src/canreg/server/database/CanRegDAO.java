@@ -1141,8 +1141,11 @@ public class CanRegDAO {
      */
     private synchronized int saveSource(Source source) throws SQLException {
         String sourceIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.SourceRecordID.toString()).getDatabaseVariableName();
-        Object sourceID = source.getVariable(sourceIDVariableName);
-        if (sourceID == null || sourceID.toString().trim().length() == 0) {
+        String sourceID = source.getVariableAsString(sourceIDVariableName);
+        if(sourceID != null && sourceID.contains("@H"))
+            sourceID = "";
+        
+        if (sourceID == null || sourceID.trim().length() == 0) {
             String tumourIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourIDSourceTable.toString()).getDatabaseVariableName();
             String tumourID = (String) source.getVariable(tumourIDVariableName);
             sourceID = getNextSourceID(tumourID);
