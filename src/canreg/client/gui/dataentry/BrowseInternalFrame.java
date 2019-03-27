@@ -70,6 +70,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
@@ -953,6 +954,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                                          JOptionPane.DEFAULT_OPTION, 
                                          JOptionPane.INFORMATION_MESSAGE, null, 
                                          options, options[1]);
+            Task refreshTask = null;
             
             if(result > -1) {
                 Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
@@ -961,6 +963,9 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                 try {
                     setCursor(hourglassCursor);
                     Writer reportWriter = new BufferedWriter(new OutputStreamWriter(System.out));
+                    
+                    int successfullyDeletedRecord = 0;
+                    int errorDeletedRecord = 0;
                     
                     for(Integer rowNumber : resultTable.getSelectedRows()) {
                         String patientRecordIDVariable = globalToolBox
@@ -999,20 +1004,76 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
     //                                        sourceToImport.getVariableAsString(sourceIDlookupVariable),
     //                                        sourceIDlookupVariable, sourceToImport, tumourID, reportWriter, false, false, true);
     //                            }
-                        }
-                    }
                     
-                    JOptionPane.showMessageDialog(null, browseResourceMap.getString("SUCCESS"), 
-                            numberOfRecords + " " + browseResourceMap.getString("SUCCESS MESSAGE "), JOptionPane.INFORMATION_MESSAGE);
+                            if(deleteRecord(tumourToImport))
+                                successfullyDeletedRecord++;
+                            else
+                                errorDeletedRecord++;
+                        }
+                        
+                        if(deleteRecord(patientToImport)) 
+                            successfullyDeletedRecord++;                        
+                        else
+                            errorDeletedRecord++;
+                    }
+
+                    if(errorDeletedRecord == 0) 
+                        JOptionPane.showMessageDialog(null, browseResourceMap.getString("SUCCESS"), 
+                                successfullyDeletedRecord + " " + browseResourceMap.getString("SUCCESS MESSAGE "), JOptionPane.INFORMATION_MESSAGE);
+                    else 
+                        JOptionPane.showMessageDialog(null, browseResourceMap.getString("SUCCESS"), 
+                                successfullyDeletedRecord + " " + browseResourceMap.getString("SUCCESS MESSAGE ") + "\n" +
+                                successfullyDeletedRecord + " " + browseResourceMap.getString("ERROR WITH SOME RECORDS MESSAGE "), JOptionPane.INFORMATION_MESSAGE);
+                    
+                    refreshTask = refresh();
+                    refreshTask.execute();
+                    
                     return true;
                 } catch(Exception ex) {
                     Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                     JOptionPane.showMessageDialog(null, browseResourceMap.getString("ERROR IMPORTING "), "ERROR", JOptionPane.ERROR_MESSAGE);
                 } finally {
-                    setCursor(normalCursor);
+                    if(refreshTask == null)
+                        setCursor(normalCursor);
                 }
             }
         }
         return false;
+    }
+    
+    private boolean deleteRecord(DatabaseRecord record) {
+        boolean success = false;
+        int id = -1;
+        String tableName = null;
+        if (record instanceof Patient) {
+            Object idObject = record.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
+            if (idObject != null) 
+                id = (Integer) idObject;            
+            tableName = Globals.PATIENT_TABLE_NAME;
+        } else if (record instanceof Tumour) {
+            // delete sources first.
+            Tumour tumour = (Tumour) record;
+            for (Source source : tumour.getSources()) 
+                deleteRecord(source);
+            
+            Object idObject = record.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME);
+            if (idObject != null) 
+                id = (Integer) idObject;            
+            tableName = Globals.TUMOUR_TABLE_NAME;
+        } else if (record instanceof Source) {
+            Object idObject = record.getVariable(Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME);
+            if (idObject != null) 
+                id = (Integer) idObject;            
+            tableName = Globals.SOURCE_TABLE_NAME;
+        }
+        if (id >= 0) {
+            try {
+                canreg.client.CanRegClientApp.getApplication().releaseRecord(id, tableName, server);
+                success = canreg.client.CanRegClientApp.getApplication().deleteRecord(id, tableName, server);
+            } catch (Exception ex) {
+                Logger.getLogger(canreg.client.gui.dataentry.BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return success;
     }
 }
