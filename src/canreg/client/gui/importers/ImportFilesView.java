@@ -833,7 +833,7 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
                 if(holdingDBCheckBox.isSelected())
                     success = CanRegClientApp.getApplication().importFilesIntoHoldingDB(this, doc, variablesMap, files, io);
                 else {
-                    success = CanRegClientApp.getApplication().importFiles(this, doc, variablesMap, files, io);
+                    success = CanRegClientApp.getApplication().importFiles(this, variablesMap, files, io);
                 }
             } catch(Exception ex) {
                 Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);

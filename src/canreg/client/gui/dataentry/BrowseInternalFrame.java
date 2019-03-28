@@ -45,6 +45,7 @@ import canreg.common.database.Patient;
 import canreg.common.database.Source;
 import canreg.server.database.RecordLockedException;
 import canreg.common.database.Tumour;
+import canreg.server.CanRegRegistryProxy;
 import canreg.server.CanRegServerInterface;
 import canreg.server.database.UnknownTableException;
 import java.awt.Color;
@@ -124,7 +125,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
 
     public BrowseInternalFrame(JDesktopPane dtp, CanRegServerInterface server) {
         this.dtp = dtp;
-        this.server = server;        
+        this.server = server;         
         
         globalToolBox = CanRegClientApp.getApplication().getGlobalToolBox();
         patientIDlookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName();
@@ -172,6 +173,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
         holdingOptions = new javax.swing.JPanel();
         selectAllChkBox = new javax.swing.JCheckBox();
         productionBtn = new javax.swing.JButton();
+        deleteHoldingBtn = new javax.swing.JButton();
 
         setClosable(true);
         setMaximizable(true);
@@ -309,6 +311,10 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
         productionBtn.setText(resourceMap.getString("productionBtn.text")); // NOI18N
         productionBtn.setName("productionBtn"); // NOI18N
 
+        deleteHoldingBtn.setAction(actionMap.get("deleteHoldingDBAction")); // NOI18N
+        deleteHoldingBtn.setText(resourceMap.getString("deleteHoldingBtn.text")); // NOI18N
+        deleteHoldingBtn.setName("deleteHoldingBtn"); // NOI18N
+
         javax.swing.GroupLayout holdingOptionsLayout = new javax.swing.GroupLayout(holdingOptions);
         holdingOptions.setLayout(holdingOptionsLayout);
         holdingOptionsLayout.setHorizontalGroup(
@@ -318,7 +324,9 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
                 .addComponent(selectAllChkBox)
                 .addGap(75, 75, 75)
                 .addComponent(productionBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(deleteHoldingBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         holdingOptionsLayout.setVerticalGroup(
             holdingOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -326,7 +334,8 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
                 .addGap(0, 0, 0)
                 .addGroup(holdingOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(selectAllChkBox)
-                    .addComponent(productionBtn))
+                    .addComponent(productionBtn)
+                    .addComponent(deleteHoldingBtn))
                 .addGap(0, 0, 0))
         );
 
@@ -670,6 +679,9 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                 tca.setOnlyAdjustLarger(false);
                 tca.adjustColumns();
                 resultPanel.setVisible(true);
+                
+                if(resultTable.getRowCount() == 0)
+                    deleteHoldingDB();
             } else if (result.toString().startsWith("Not valid")) {
                 JOptionPane.showInternalMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("NOT_A_VALID_FILTER.") + "\n"
                         + result.toString().substring("Not valid".length()),
@@ -906,6 +918,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JPanel buttonsPanel;
     private javax.swing.JButton createNextButton;
+    private javax.swing.JButton deleteHoldingBtn;
     private javax.swing.JButton editPatientNumberButton;
     private javax.swing.JButton editTableRecordButton;
     private javax.swing.JButton editTumourNumberButton;
@@ -1075,5 +1088,25 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
             }
         }
         return success;
+    }
+
+    @Action
+    public void deleteHoldingDBAction() {
+        ResourceBundle browseResourceMap = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame");
+        int result = JOptionPane.showConfirmDialog(null, browseResourceMap.getString("ARE YOU SURE "),
+                browseResourceMap.getString("CONFIRM"), JOptionPane.YES_NO_OPTION);
+        if(result == JOptionPane.OK_OPTION) 
+            deleteHoldingDB();
+    }
+    
+    private void deleteHoldingDB() {
+        try {
+            this.close();
+            server.deleteHoldingDB(((CanRegRegistryProxy)server).getHoldingRegistryCode());
+            this.dispose();
+            canreg.client.CanRegClientApp.getApplication().refreshHoldingDBsList();
+        } catch(Exception ex) {
+            Logger.getLogger(canreg.client.gui.dataentry.BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

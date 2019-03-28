@@ -496,10 +496,11 @@ public interface CanRegServerInterface extends Remote {
 
     public String getCanRegSystemRegion() throws RemoteException, SecurityException;
     
-    public int getLastHoldingDBnumber(String registryCode) throws RemoteException, SecurityException;
-    
-    public SystemDescription createNewHoldingDB(String registryCode, String dbName, SystemDescription sysDesc)
+    public SystemDescription createNewHoldingDB(String registryCode, SystemDescription sysDesc)
             throws RemoteException, IOException, SecurityException;
+    
+    public void deleteHoldingDB(String holdingRegistryCode) 
+            throws RemoteException, IOException, SecurityException, SQLException;
     
     public void changeRegistryDB(String registryCode) throws RemoteException, SecurityException;
     

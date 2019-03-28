@@ -759,11 +759,11 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @throws java.rmi.RemoteException
      * @throws canreg.server.database.RecordLockedException
      */
-    public boolean importFiles(Task<Object, Void> task, Document doc, List<Relation> map, File[] files, ImportOptions io) 
+    public boolean importFiles(Task<Object, Void> task, List<Relation> map, File[] files, ImportOptions io) 
             throws SQLException, SecurityException, RecordLockedException, RemoteException, 
                    UnknownTableException, DistributedTableDescriptionException, Exception {
         try {
-            return canreg.client.gui.importers.Import.importFiles(task, doc, map, files, mainServer, io, false);
+            return canreg.client.gui.importers.Import.importFiles(task, map, files, mainServer, io, false);
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
             if (!handlePotentialDisconnect(ex)) {
@@ -893,6 +893,14 @@ public class CanRegClientApp extends SingleFrameApplication {
      */
     public boolean isLoggedIn() {
         return loggedIn;
+    }
+    
+    public void refreshHoldingDBsList() {
+        try {
+            canRegClientView.setHoldingDBsList(this.mainServer.getHoldingDBsList());
+        } catch(Exception ex) {
+            Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**

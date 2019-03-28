@@ -133,9 +133,6 @@ public class CanRegDAO {
          */
         setDBSystemDir();
         
-        if(! holding)
-            createHoldingDBDir();
-        
         dbProperties = loadDBProperties();
         String driverName = dbProperties.getProperty("derby.driver");
         loadDatabaseDriver(driverName);
@@ -597,11 +594,6 @@ public class CanRegDAO {
         // create the db system directory
         File fileSystemDir = new File(systemDir);
         fileSystemDir.mkdir();
-    }
-    
-    private void createHoldingDBDir() {
-        File fileSystemDir = new File(Globals.CANREG_SERVER_HOLDING_DB_FOLDER + Globals.FILE_SEPARATOR + registryCode);
-        fileSystemDir.mkdirs();
     }
 
     private void loadDatabaseDriver(String driverName) {

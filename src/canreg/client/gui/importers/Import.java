@@ -556,17 +556,14 @@ public class Import {
         
         //Creation of XML of Holding DB        
         String registryCode = server.getCanRegRegistryCode();
-        String dateStr = new SimpleDateFormat("yyyy-MM-dd").format((Calendar.getInstance()).getTime());
-        int newHoldingDBNumber = server.getLastHoldingDBnumber(registryCode) + 1;
-        String holdingRegistryCode = "HOLDING_" + registryCode + "_" +  + newHoldingDBNumber + "_" + dateStr;
-        systemDescription = server.createNewHoldingDB(registryCode, holdingRegistryCode, systemDescription);
+        systemDescription = server.createNewHoldingDB(registryCode, systemDescription);
 
-        CanRegServerInterface holdingProxy = ((CanRegRegistryProxy) server).getInstanceForHoldingDB(holdingRegistryCode);
+        CanRegServerInterface holdingProxy = ((CanRegRegistryProxy) server).getInstanceForHoldingDB(systemDescription.getRegistryCode());
 
-        return importFiles(task, systemDescription.getSystemDescriptionDocument(), map, files, holdingProxy, io, true);
+        return importFiles(task, map, files, holdingProxy, io, true);
     }    
 
-    public static boolean importFiles(Task<Object, Void> task, Document doc, 
+    public static boolean importFiles(Task<Object, Void> task, 
                                       List<canreg.client.dataentry.Relation> map, File[] files, 
                                       CanRegServerInterface server, ImportOptions io, 
                                       boolean intoHoldingDB) 
