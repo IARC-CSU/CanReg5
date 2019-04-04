@@ -19,11 +19,11 @@ Regional registries,Региональные регистры
 Mouth & pharynx,"Полость рта, глотка"
 Oesophagus,Пищевод
 Stomach,Желудок
-Colon, rectum, anus,"Толстая, прямая кишка, анус""
+"Colon, rectum, anus","Толстая, прямая кишка, анус"
 Liver,Печень
 Pancreas,Поджелудочная железа
 Larynx,Гортань
-Lung, trachea, bronchus,"Легкие, трахея, бронхи""
+"Lung, trachea, bronchus","Легкие, трахея, бронхи"
 Melanoma of skin,Меланома кожи
 Breast,Молочная железа
 Cervix,Шейка матки
@@ -33,7 +33,7 @@ Prostate,Предстательная железа
 Testis,Яичко
 Kidney & urinary NOS,Почки и мочеполовой системы БДУ
 Bladder,Мочевой пузырь
-Brain & nervous sytem","Мозг, ЦНС"
+Brain & nervous sytem,"Мозг, ЦНС"
 Thyroid,Щитовидная железа
 Lymphoma,Лимфома
 Leukaemia,Лейкоз
@@ -54,8 +54,8 @@ Colon,Толстая кишка
 Rectum,Прямая кишка
 Anus,Анус
 Gallbladder etc.,Желчный пузырь и др.
-Nose,  sinuses etc.,"Нос, пазухи и др."
-Trachea,  bronchus and lung,"Трахея, бронхи, легкие"
+"Nose,  sinuses etc.","Нос, пазухи и др."
+"Trachea,  bronchus and lung","Трахея, бронхи, легкие"
 Other thoracic organs,Другие органы дыхания
 Bone,Кости
 Other skin,Другие ЗН кожи
@@ -77,7 +77,7 @@ Renal pelvis,Почечные лоханки
 Ureter,Мочеточник
 Other urinary organs,Другие мочеполовые органы
 Eye,Глаз
-Brain, nervous system,"Мозг, ЦНС"
+"Brain, nervous system","Мозг, ЦНС"
 Adrenal gland,Надпочечники
 Other endocrine,Другие эндокринные органы
 Hodgkin disease,Болезнь Ходжкина
