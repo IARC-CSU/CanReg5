@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2015  International Agency for Research on Cancer
+ * Copyright (C) 2008-2018  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -133,6 +133,8 @@ public class DatabaseVariableEditorPanel extends javax.swing.JPanel {
 
         shortNameTextField.setBackground(resourceMap.getColor("shortNameTextField.background")); // NOI18N
         shortNameTextField.setText(resourceMap.getString("shortNameTextField.text")); // NOI18N
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(DatabaseVariableEditorPanel.class, this);
+        shortNameTextField.setAction(actionMap.get("shortNameSet")); // NOI18N
         shortNameTextField.setInputVerifier(new InputVerifier() {
 
             @Override
@@ -151,6 +153,11 @@ public class DatabaseVariableEditorPanel extends javax.swing.JPanel {
             }
         });
         shortNameTextField.setName("shortNameTextField"); // NOI18N
+        shortNameTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                shortNameTextFieldFocusLost(evt);
+            }
+        });
 
         englishNameTextField.setText(resourceMap.getString("englishNameTextField.text")); // NOI18N
         englishNameTextField.setName("englishNameTextField"); // NOI18N
@@ -166,7 +173,6 @@ public class DatabaseVariableEditorPanel extends javax.swing.JPanel {
 
         variableTypeComboBox.setBackground(resourceMap.getColor("variableTypeComboBox.background")); // NOI18N
         variableTypeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(DatabaseVariableEditorPanel.class, this);
         variableTypeComboBox.setAction(actionMap.get("variableTypeChosenAction")); // NOI18N
         variableTypeComboBox.setName("variableTypeComboBox"); // NOI18N
 
@@ -322,6 +328,10 @@ public class DatabaseVariableEditorPanel extends javax.swing.JPanel {
             englishNameTextField.setText(fullNameTextField.getText());
         }
     }//GEN-LAST:event_fullNameTextFieldFocusLost
+
+    private void shortNameTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_shortNameTextFieldFocusLost
+        shortNameSet();
+    }//GEN-LAST:event_shortNameTextFieldFocusLost
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox dictionaryComboBox;
@@ -504,6 +514,14 @@ public class DatabaseVariableEditorPanel extends javax.swing.JPanel {
         }
     }
 
+    
+    @Action
+    public void shortNameSet() {
+        if (listener != null) {
+            listener.actionPerformed(new ActionEvent(this, 0, DatabaseVariableEditorInternalFrame.SHORTNAMECHANGED));
+        }
+    }
+    
     public String getStandardVariable() {
         return standardVariableNameComboBox.getSelectedItem().toString();
     }
@@ -552,5 +570,9 @@ public class DatabaseVariableEditorPanel extends javax.swing.JPanel {
         groupComboBox.setModel(new DefaultComboBoxModel(new DatabaseGroupsListElement[]{
                     new DatabaseGroupsListElement(java.util.ResourceBundle.getBundle("canreg/client/gui/management/systemeditor/resources/DatabaseVariableEditorPanel").getString("DEFAULT"), 1, 1)
                 }));
+    }
+
+    String getShortName() {
+        return shortNameTextField.getText();
     }
 }

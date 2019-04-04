@@ -62,16 +62,16 @@ public class CanRegLoginImpl extends UnicastRemoteObject
     @Override
     public CanRegServerInterface login(String username, char[] password)
             throws java.rmi.RemoteException, LoginException {
-
         LoginContext lc = new LoginContext("CanRegLogin", new RemoteCallbackHandler(username, password));
         lc.login();
         Subject user = lc.getSubject();
-
-        theServer.userLoggedIn(username);
+        
+        CanRegServerInterface proxy = new CanRegServerProxy(user, theServer);
+        theServer.userLoggedIn(proxy.hashCode(), username);
 
         // Return a reference to a proxy object that encapsulates the access
         // to the theServer, for this client
-        return new CanRegServerProxy(user, theServer);
+        return proxy;
     }
 
     /**

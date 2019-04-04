@@ -48,7 +48,8 @@ public class SourcesPanel extends javax.swing.JPanel implements ActionListener {
     private Set<Source> sources;
     private Map<Integer, Dictionary> dictionary;
     private Document doc;
-    private final ActionListener listener;
+    private ActionListener listener;
+    private final ChangeListener tabbedPaneChangeListener;
 
     /** Creates new form SourcesPanel */
     public SourcesPanel(ActionListener listener) {
@@ -56,7 +57,7 @@ public class SourcesPanel extends javax.swing.JPanel implements ActionListener {
         this.listener = listener;
 
         // Add a listener for changing the active tab
-        ChangeListener tabbedPaneChangeListener = new ChangeListener() {
+        tabbedPaneChangeListener = new ChangeListener() {
 
             @Override
             public void stateChanged(ChangeEvent e) {
@@ -148,6 +149,22 @@ public class SourcesPanel extends javax.swing.JPanel implements ActionListener {
         refreshTitles();
         setScrollPaneSize();
     }
+    
+    void releaseResources() {
+        sourcesTabbedPane.removeChangeListener(tabbedPaneChangeListener);
+        for (Component comp : sourcesTabbedPane.getComponents()) {
+            RecordEditorPanel panel = (RecordEditorPanel) comp;
+            panel.releaseResources();
+            comp = null;
+        }
+        sourcesTabbedPane.removeAll();
+        sourcesTabbedPane = null;
+        sources = null;
+        dictionary = null;
+        doc = null;
+        listener = null;
+        
+    }
 
     private void buildTabs() {
         for (Source source : sources) {
@@ -188,30 +205,18 @@ public class SourcesPanel extends javax.swing.JPanel implements ActionListener {
         listener.actionPerformed(e);
     }
 
-    /**
-     * @return the dictionary
-     */
     public Map<Integer, Dictionary> getDictionary() {
         return dictionary;
     }
 
-    /**
-     * @param dictionary the dictionary to set
-     */
     public void setDictionary(Map<Integer, Dictionary> dictionary) {
         this.dictionary = dictionary;
     }
 
-    /**
-     * @return the doc
-     */
     public Document getDoc() {
         return doc;
     }
 
-    /**
-     * @param doc the doc to set
-     */
     public void setDoc(Document doc) {
         this.doc = doc;
     }
