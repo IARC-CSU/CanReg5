@@ -37,11 +37,15 @@ initial.options <- commandArgs(trailingOnly = FALSE)
 #Parameters
 JSON.path <- "-paramsFile="
 paramsJSON <- fromJSON(sub(JSON.path, "", initial.options[grep(JSON.path, initial.options)]))
+
 file.arg.name <- "--file="
 script.name <- sub(file.arg.name, "", initial.options[grep(file.arg.name, initial.options)])
 
 #Set locale to UTF-8
-Sys.setlocale("LC_CTYPE", "UTF-8")
+if(.Platform$OS.type != "windows") {
+  Sys.setlocale("LC_CTYPE", "UTF-8")  
+} else { NULL }
+
 
 #Load all the scripts
   setwd(dirname(script.name))
@@ -70,7 +74,8 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
                           quote = '',
                           comment = '',
                           stringsAsFactors = FALSE,
-                          colClasses = "character")
+                          colClasses = "character",
+                          fileEncoding = "UTF-8")
 
   #It's essencial a dataframe that has the dictionary id and the codes for future checkings
   #The exported dictionary from CanReg5 has the dictionary id and the codes in the same column
