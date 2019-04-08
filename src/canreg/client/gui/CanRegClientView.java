@@ -20,6 +20,7 @@
 package canreg.client.gui;
 
 import canreg.client.*;
+import canreg.client.gui.adhoc.AdhocWizardInternalFrame;
 import canreg.client.gui.analysis.ExportReportInternalFrame;
 import canreg.client.gui.analysis.FrequenciesByYearInternalFrame;
 import canreg.client.gui.analysis.TableBuilderInternalFrame;
@@ -224,6 +225,8 @@ public final class CanRegClientView extends FrameView {
         jSeparator13 = new javax.swing.JToolBar.Separator();
         optionsButton = new javax.swing.JButton();
         jSeparator15 = new javax.swing.JToolBar.Separator();
+        adhocButton = new javax.swing.JButton();
+        jSeparator17 = new javax.swing.JToolBar.Separator();
         handbookButton = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
@@ -366,6 +369,18 @@ public final class CanRegClientView extends FrameView {
         jSeparator15.setName("jSeparator15"); // NOI18N
         toolBar.add(jSeparator15);
 
+        adhocButton.setAction(actionMap.get("adhocButtonAction")); // NOI18N
+        adhocButton.setText(resourceMap.getString("adhocButton.text")); // NOI18N
+        adhocButton.setToolTipText(resourceMap.getString("adhocButton.toolTipText")); // NOI18N
+        adhocButton.setFocusable(false);
+        adhocButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        adhocButton.setName("adhocButton"); // NOI18N
+        adhocButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        toolBar.add(adhocButton);
+
+        jSeparator17.setName("jSeparator17"); // NOI18N
+        toolBar.add(jSeparator17);
+
         handbookButton.setAction(actionMap.get("openCanReg5Instructions")); // NOI18N
         handbookButton.setFocusable(false);
         handbookButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -382,11 +397,11 @@ public final class CanRegClientView extends FrameView {
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 797, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 798, Short.MAX_VALUE)
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 611, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 599, Short.MAX_VALUE)
         );
 
         menuBar.setName("menuBar"); // NOI18N
@@ -706,10 +721,10 @@ public final class CanRegClientView extends FrameView {
                 .addComponent(userLevelLabel)
                 .addGap(91, 91, 91)
                 .addGroup(statusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(statusPanelSeparator, javax.swing.GroupLayout.DEFAULT_SIZE, 629, Short.MAX_VALUE)
+                    .addComponent(statusPanelSeparator, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE)
                     .addGroup(statusPanelLayout.createSequentialGroup()
                         .addComponent(statusMessageLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 469, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 467, Short.MAX_VALUE)
                         .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(statusAnimationLabel)
@@ -1032,6 +1047,7 @@ public final class CanRegClientView extends FrameView {
         boolean management = false;
         boolean dataEntry = false;
         boolean loggedIn = false;
+        boolean adhoc = false;
 
         // Hide/reveal menus
         if (userRightsLevel == Globals.UserRightLevels.NOT_LOGGED_IN) {
@@ -1039,8 +1055,10 @@ public final class CanRegClientView extends FrameView {
             management = false;
             dataEntry = false;
             loggedIn = false;
+            adhoc = true;
         } else {
             loggedIn = true;
+            adhoc = false;
             if (userRightsLevel == Globals.UserRightLevels.SUPERVISOR) {
                 management = true;
                 dataEntry = true;
@@ -1062,6 +1080,7 @@ public final class CanRegClientView extends FrameView {
         createNewRecordButton.setEnabled(dataEntry);
         tableBuilderButton.setEnabled(analysis);
         holdingDBsButton.setEnabled(dataEntry);
+        adhocButton.setEnabled(adhoc);
 
         // startDatabaseServerButton.setEnabled(management);
         //Menus
@@ -1817,7 +1836,17 @@ public final class CanRegClientView extends FrameView {
         //Nothing here. Action is taken care by each of the menuitem's ActionPerformed
     }
 
+    @Action
+    public void adhocButtonAction() {
+        AdhocWizardInternalFrame internalFrame = new AdhocWizardInternalFrame();
+        showAndPositionInternalFrame(desktopPane, (JInternalFrame) internalFrame);
+//        maximizeHeight(desktopPane, (JInternalFrame) internalFrame);
+        internalFrame.setLocation(desktopPane.getWidth() / 2 - internalFrame.getWidth() / 2, desktopPane.getHeight() / 2 - internalFrame.getHeight() / 2);
+        internalFrame.setVisible(true);
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton adhocButton;
     private javax.swing.JMenu advancedMenu;
     private javax.swing.JMenu analysisMenu;
     private javax.swing.JMenuItem backupMenuItem;
@@ -1862,6 +1891,7 @@ public final class CanRegClientView extends FrameView {
     private javax.swing.JToolBar.Separator jSeparator14;
     private javax.swing.JToolBar.Separator jSeparator15;
     private javax.swing.JToolBar.Separator jSeparator16;
+    private javax.swing.JToolBar.Separator jSeparator17;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JPopupMenu.Separator jSeparator4;
