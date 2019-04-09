@@ -111,7 +111,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="languagePanel" min="-2" pref="75" max="-2" attributes="0"/>
+                      <Component id="languagePanel" min="-2" pref="85" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="lookAndFeelPanel" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -143,7 +143,7 @@
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="dateFormatComboBox" alignment="0" pref="284" max="32767" attributes="0"/>
+                              <Component id="dateFormatComboBox" alignment="0" pref="363" max="32767" attributes="0"/>
                               <Component id="languageComboBox" alignment="0" pref="0" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -236,26 +236,26 @@
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="fontSizeComboBox" alignment="1" pref="361" max="32767" attributes="0"/>
-                                      <Component id="fontNameTextField" alignment="0" pref="361" max="32767" attributes="0"/>
+                                      <Component id="fontSizeComboBox" alignment="1" pref="449" max="32767" attributes="0"/>
+                                      <Component id="fontNameTextField" alignment="0" pref="449" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
-                                  <Component id="showOutlineCheckBox" pref="413" max="32767" attributes="0"/>
+                                  <Component id="showOutlineCheckBox" pref="506" max="32767" attributes="0"/>
                                   <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="dataEntryLabel" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="dataEntryVersionComboBox" pref="323" max="32767" attributes="0"/>
+                                  <Component id="dataEntryVersionComboBox" pref="404" max="32767" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                               </Group>
-                              <Component id="newDataEntryVerticalSources" alignment="0" pref="431" max="32767" attributes="0"/>
+                              <Component id="newDataEntryVerticalSources" alignment="0" pref="524" max="32767" attributes="0"/>
                               <Group type="102" alignment="1" attributes="0">
                                   <Component id="dataEntryDisplayVariableLabel" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="dataEntryDisplayVariableComboBox" pref="312" max="32767" attributes="0"/>
+                                  <Component id="dataEntryDisplayVariableComboBox" pref="385" max="32767" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                               </Group>
                           </Group>
@@ -288,7 +288,7 @@
                               <Component id="dataEntryDisplayVariableComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="dataEntryDisplayVariableLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="14" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -407,7 +407,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="automaticBackupPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="193" max="32767" attributes="0"/>
+                      <EmptySpace pref="235" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -433,7 +433,7 @@
                           <Group type="103" groupAlignment="1" attributes="0">
                               <Group type="102" attributes="0">
                                   <Component id="automaticbackupCheckBox" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace pref="199" max="32767" attributes="0"/>
+                                  <EmptySpace pref="257" max="32767" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
                                   <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
@@ -534,9 +534,12 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="1" attributes="0">
+                  <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="versionPanel" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="versionPanel" alignment="0" max="32767" attributes="0"/>
+                          <Component id="timersPanel" alignment="1" max="32767" attributes="0"/>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -546,7 +549,9 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="versionPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="190" max="32767" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="timersPanel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="113" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -577,11 +582,11 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="downloadLatestButton" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace pref="47" max="32767" attributes="0"/>
+                                  <EmptySpace pref="80" max="32767" attributes="0"/>
                                   <Component id="downloadLatestButton1" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="latestVersionTextField" alignment="1" pref="239" max="32767" attributes="1"/>
-                              <Component id="versionInstalledTextField" alignment="1" pref="239" max="32767" attributes="1"/>
+                              <Component id="latestVersionTextField" alignment="1" max="32767" attributes="1"/>
+                              <Component id="versionInstalledTextField" alignment="1" max="32767" attributes="1"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="checkButton" min="-2" max="-2" attributes="0"/>
@@ -601,7 +606,7 @@
                               <Component id="checkButton" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="latestVersionTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="7" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="downloadLatestButton" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="downloadLatestButton1" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -683,6 +688,93 @@
                 </Component>
               </SubComponents>
             </Container>
+            <Container class="javax.swing.JPanel" name="timersPanel">
+              <Properties>
+                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                  <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                    <TitledBorder title="Timers">
+                      <Property name="titleX" resourceKey="timersPanel.border.title"/>
+                    </TitledBorder>
+                  </Border>
+                </Property>
+                <Property name="name" type="java.lang.String" value="timersPanel" noResource="true"/>
+              </Properties>
+
+              <Layout>
+                <DimensionLayout dim="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="clientSessionsCheckLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="clientToServerLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="clientSessionsCheckTextField" min="-2" pref="83" max="-2" attributes="0"/>
+                              <Component id="clientToServerTextField" alignment="0" min="-2" pref="83" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+                <DimensionLayout dim="1">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="clientToServerLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="clientToServerTextField" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="clientSessionsCheckLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="clientSessionsCheckTextField" alignment="3" pref="29" max="32767" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+              </Layout>
+              <SubComponents>
+                <Component class="javax.swing.JLabel" name="clientToServerLabel">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" resourceKey="clientToServerLabel.text"/>
+                    <Property name="name" type="java.lang.String" value="clientToServerLabel" noResource="true"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="clientSessionsCheckLabel">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" resourceKey="clientSessionsCheckLabel.text"/>
+                    <Property name="name" type="java.lang.String" value="clientSessionsCheckLabel" noResource="true"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JFormattedTextField" name="clientToServerTextField">
+                  <Properties>
+                    <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+                      <Format format="#0" subtype="-1" type="0"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" resourceKey="clientToServerTextField.text"/>
+                    <Property name="name" type="java.lang.String" value="clientToServerTextField" noResource="true"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="clientToServerTextFieldKeyTyped"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JFormattedTextField" name="clientSessionsCheckTextField">
+                  <Properties>
+                    <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+                      <Format format="#0" subtype="-1" type="0"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" resourceKey="clientSessionsCheckTextField.text"/>
+                    <Property name="toolTipText" type="java.lang.String" resourceKey="clientSessionsCheckTextField.toolTipText"/>
+                    <Property name="name" type="java.lang.String" value="clientSessionsCheckTextField" noResource="true"/>
+                  </Properties>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="clientSessionsCheckTextField.addKeyListener(new java.awt.event.KeyAdapter() {&#xa;    public void keyTyped(java.awt.event.KeyEvent evt) {&#xa;        clientToServerTextFieldKeyTyped(evt);&#xa;    }&#xa;});"/>
+                  </AuxValues>
+                </Component>
+              </SubComponents>
+            </Container>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="pathsPanel">
@@ -717,7 +809,7 @@
                       <Component id="rPanel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="gsPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="186" max="32767" attributes="0"/>
+                      <EmptySpace pref="208" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -741,7 +833,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="rInstallationLabel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="rInstallationTextField" pref="322" max="32767" attributes="0"/>
+                          <Component id="rInstallationTextField" pref="402" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="rInstallationBrowseButton" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
@@ -801,7 +893,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="gsInstallationLabel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="gsInstallationTextField" pref="318" max="32767" attributes="0"/>
+                          <Component id="gsInstallationTextField" pref="396" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="gsInstallationBrowseButton" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>

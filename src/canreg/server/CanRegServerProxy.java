@@ -54,8 +54,11 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
 
     private final CanRegServerInterface theServer;
     private final Subject theUser;
+    
+    
 
-    public CanRegServerProxy(Subject user, CanRegServerInterface server) throws RemoteException {
+    public CanRegServerProxy(Subject user, CanRegServerInterface server) 
+            throws RemoteException {
         // Prevent JAVA to use a random port.
         super(1099);
         
@@ -129,15 +132,16 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     }
 
     @Override
-    public void userLoggedIn(String username) throws RemoteException, SecurityException {
+    public void userLoggedIn(Integer remoteHashCode, String username) throws RemoteException, SecurityException {
         checkPermission("userLoggedIn");
-        theServer.userLoggedIn(username);
+        theServer.userLoggedIn(remoteHashCode, username);
     }
 
     @Override
-    public void userLoggedOut(String username) throws RemoteException, SecurityException {
+    public void userLoggedOut(Integer remoteHashCode, String username) 
+            throws RemoteException, SecurityException {
         checkPermission("userLoggedOut");
-        theServer.userLoggedOut(username);
+        theServer.userLoggedOut(remoteHashCode, username);
     }
 
     @Override
@@ -212,9 +216,10 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     }
 
     @Override
-    public DatabaseRecord getRecord(int recordID, String tableName, boolean lock) throws RemoteException, SecurityException, RecordLockedException {
+    public DatabaseRecord getRecord(int recordID, String tableName, boolean lock, Integer remoteHashCode) 
+            throws RemoteException, SecurityException, RecordLockedException {
         checkPermission("get:" + tableName);
-        return theServer.getRecord(recordID, tableName, lock);
+        return theServer.getRecord(recordID, tableName, lock, this.hashCode());
     }
 
     @Override
@@ -342,9 +347,10 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     }
 
     @Override
-    public void releaseRecord(int recordID, String tableName) throws RemoteException, SecurityException {
+    public void releaseRecord(int recordID, String tableName, Integer remoteHashCode) 
+            throws RemoteException, SecurityException {
         checkPermission("releaseRecord: " + tableName + "-" + recordID);
-        theServer.releaseRecord(recordID, tableName);
+        theServer.releaseRecord(recordID, tableName, this.hashCode());
     }
 
     @Override
@@ -360,9 +366,9 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     }
 
     @Override
-    public boolean setDBPassword(char[] newPasswordArray, char[] oldPasswordArray) throws RemoteException, SecurityException {
+    public boolean setDBPassword(char[] newPasswordArray, char[] oldPasswordArray, String encryptionAlgorithm, String encryptionKeyLength) throws RemoteException, SecurityException {
         checkPermission("setDBPassword");
-        return theServer.setDBPassword(newPasswordArray, oldPasswordArray);
+        return theServer.setDBPassword(newPasswordArray, oldPasswordArray, encryptionAlgorithm, encryptionKeyLength);
     }
 
     @Override
@@ -376,4 +382,11 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
         checkPermission("getSystemRegion");
         return theServer.getCanRegSystemRegion();
     }
+
+    @Override
+    public void pingRemote(Integer remoteClientHashCode) 
+            throws RemoteException, Exception {
+        //pingRemote's parameter is not needed here, hashCode() is supplied instead.
+        theServer.pingRemote(this.hashCode());
+    }    
 }

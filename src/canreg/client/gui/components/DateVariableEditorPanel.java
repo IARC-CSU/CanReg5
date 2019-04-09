@@ -192,4 +192,11 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
         }
         return valueObjectString;
     }
+    
+    public void releaseResources() {
+        this.dateChooser.cleanup();
+        this.dateChooser = null;
+        this.dateField = null;
+        this.databaseListElement = null;
+    }
 }
