@@ -72,7 +72,8 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends AbstractEdit
             PopulationDataset[] standardPopulations,
             LinkedList<ConfigFields> configList,
             String[] engineParameters,
-            FileTypes fileType) throws NotCompatibleDataException {
+            FileTypes fileType, 
+            String language) throws NotCompatibleDataException {
 
         LinkedList<String> generatedFiles = new LinkedList<String>();
 

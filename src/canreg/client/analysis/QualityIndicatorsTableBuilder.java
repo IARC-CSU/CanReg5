@@ -1600,7 +1600,7 @@ public class QualityIndicatorsTableBuilder extends AbstractEditorialTableBuilder
 
     @Override
     public LinkedList<String> buildTable(String registryLabel, String reportFileName, int startYear, int endYear, Object[][] incidenceData, PopulationDataset[] populations, PopulationDataset[] standardPopulations, LinkedList<ConfigFields> configList, String[] engineParameters,
-            FileTypes fileType) {
+            FileTypes fileType, String language) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

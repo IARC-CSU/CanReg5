@@ -92,7 +92,8 @@ public class SEERPrepFileTableBuilder implements TableBuilderInterface {
             PopulationDataset[] standardPopulations,
             LinkedList<ConfigFields> configList,
             String[] engineParameters,
-            FileTypes fileType) throws NotCompatibleDataException, TableErrorException {
+            FileTypes fileType, 
+            String language) throws NotCompatibleDataException, TableErrorException {
         LinkedList<String> filesCreated = new LinkedList<>();
 
         try {
