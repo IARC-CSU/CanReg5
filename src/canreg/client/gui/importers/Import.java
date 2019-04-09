@@ -30,6 +30,7 @@ import canreg.client.CanRegClientApp;
 import canreg.client.dataentry.Relation;
 import canreg.common.DatabaseGroupsListElement;
 import canreg.common.DatabaseVariablesListElement;
+import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
 import canreg.common.conversions.ConversionResult;
 import canreg.common.conversions.Converter;
@@ -555,17 +556,14 @@ public class Import {
         
         //Creation of XML of Holding DB        
         String registryCode = server.getCanRegRegistryCode();
-        String dateStr = new SimpleDateFormat("yyyy-MM-dd").format((Calendar.getInstance()).getTime());
-        int newHoldingDBNumber = server.getLastHoldingDBnumber(registryCode) + 1;
-        String holdingRegistryCode = "HOLDING_" + registryCode + "_" +  + newHoldingDBNumber + "_" + dateStr;
-        systemDescription = server.createNewHoldingDB(registryCode, holdingRegistryCode, systemDescription);
+        systemDescription = server.createNewHoldingDB(registryCode, systemDescription);
 
-        CanRegServerInterface holdingProxy = ((CanRegRegistryProxy) server).getInstanceForHoldingDB(holdingRegistryCode);
+        CanRegServerInterface holdingProxy = ((CanRegRegistryProxy) server).getInstanceForHoldingDB(systemDescription.getRegistryCode());
 
-        return importFiles(task, systemDescription.getSystemDescriptionDocument(), map, files, holdingProxy, io, true);
+        return importFiles(task, map, files, holdingProxy, io, true);
     }    
 
-    public static boolean importFiles(Task<Object, Void> task, Document doc, 
+    public static boolean importFiles(Task<Object, Void> task, 
                                       List<canreg.client.dataentry.Relation> map, File[] files, 
                                       CanRegServerInterface server, ImportOptions io, 
                                       boolean intoHoldingDB) 
@@ -592,6 +590,7 @@ public class Import {
                 .withDelimiter(io.getSeparators()[0]);
 
         int linesToRead = io.getMaxLines();
+        FileInputStream patientFIS = null, tumourFIS = null, sourceFIS = null;
 
         try {
             // first we get the patients
@@ -601,7 +600,7 @@ public class Import {
             }
             if (files[0] != null) {
                 reportWriter.write("Starting to import patients from " + files[0].getAbsolutePath() + Globals.newline);
-                FileInputStream patientFIS = new FileInputStream(files[0]);
+                patientFIS = new FileInputStream(files[0]);
                 InputStreamReader patientISR = new InputStreamReader(patientFIS, io.getFileCharsets()[0]);
 
                 Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding {0}", patientISR.getEncoding());
@@ -645,7 +644,7 @@ public class Import {
                             } else {
                                 String value = csvRecord.get(rel.getFileColumnNumber());
                                 if(rel.getDatabaseVariableName().equalsIgnoreCase(RAW_DATA_COLUMN))
-                                    value = value.replace("@#$", "  <br>");
+                                    value = value.replace("@#$", " <br>");
                                 patient.setVariable(rel.getDatabaseVariableName(), value);
                             }
                         }
@@ -690,7 +689,7 @@ public class Import {
             if (files[1] != null) {
                 reportWriter.write("Starting to import tumours from " + files[1].getAbsolutePath() + Globals.newline);
 
-                FileInputStream tumourFIS = new FileInputStream(files[1]);
+                tumourFIS = new FileInputStream(files[1]);
                 InputStreamReader tumourISR = new InputStreamReader(tumourFIS, io.getFileCharsets()[1]);
 
                 Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding {0}", tumourISR.getEncoding());
@@ -774,7 +773,7 @@ public class Import {
             if (files[2] != null) {
                 reportWriter.write("Starting to import sources from " + files[2].getAbsolutePath() + Globals.newline);
 
-                FileInputStream sourceFIS = new FileInputStream(files[2]);
+                sourceFIS = new FileInputStream(files[2]);
                 InputStreamReader sourceISR = new InputStreamReader(sourceFIS, io.getFileCharsets()[2]);
 
                 Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding {0}", sourceISR.getEncoding());
@@ -818,7 +817,7 @@ public class Import {
                             } else {
                                 String value = csvRecord.get(rel.getFileColumnNumber());
                                 if(rel.getDatabaseVariableName().equalsIgnoreCase(RAW_DATA_COLUMN))
-                                    value = value.replace("@#$", "  <br>");
+                                    value = value.replace("@#$", " <br>");
                                 source.setVariable(rel.getDatabaseVariableName(), value);
                             }
                         }
@@ -848,7 +847,7 @@ public class Import {
                 }
                 reportWriter.write("Finished reading sources." + Globals.newline + Globals.newline);
                 reportWriter.flush();
-                parser.close();
+                parser.close();                
             }
             if (task != null) {
                 task.firePropertyChange(SOURCES, 100, 100);
@@ -884,21 +883,31 @@ public class Import {
             } catch (IOException ex) {
                 Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
             }
+            
+            files = null;
+            if(patientFIS != null)
+                patientFIS.close();
+            if(tumourFIS != null)
+                tumourFIS.close();
+            if(sourceFIS != null)
+                sourceFIS.close();
         }
         if (task != null) {
             task.firePropertyChange(PROGRESS, 100, 100);
             task.firePropertyChange("finished", null, null);
         }
+                
         return success;
     }
 
-    public static void importPatient(CanRegServerInterface server, int discrepancyOption,
+    public static int importPatient(CanRegServerInterface server, int discrepancyOption,
                                      String patientRecordID, Patient patientToImport, Writer reportWriter, 
                                      boolean intoHoldingDB, boolean isTestOnly, 
                                      boolean fromHoldingToProduction)
             throws SQLException, SecurityException, RecordLockedException, 
                    UnknownTableException, DistributedTableDescriptionException, RemoteException,
                    IOException, Exception {
+        GlobalToolBox globalToolBox = new GlobalToolBox(server.getDatabseDescription());
         Patient oldPatientRecord = null;
         try {
             oldPatientRecord = CanRegClientApp.getApplication().getPatientRecord(patientRecordID, false, server);
@@ -949,8 +958,16 @@ public class Import {
             if (savePatient) {
                 if (patientToImport.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME) != null) {
     //              try {
-                        if(fromHoldingToProduction)
-                            server.editPatientFromHoldingToProduction(patientToImport);
+                        if(fromHoldingToProduction) {
+                            if(patientToImport.getVariableAsString(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME_FOR_HOLDING).contains("@H")) {
+                                DatabaseVariablesListElement patientIDVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString());
+                                DatabaseVariablesListElement patientRecordIDVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString());
+                                patientToImport.setVariable(patientIDVariable.getDatabaseVariableName(), "");
+                                patientToImport.setVariable(patientRecordIDVariable.getDatabaseVariableName(), "");
+                                return server.savePatient(patientToImport);
+                            } else
+                                server.editPatientFromHoldingToProduction(patientToImport);
+                        }
                         else
                             server.editPatient(patientToImport);
     //              } catch(Exception ex) {
@@ -958,13 +975,15 @@ public class Import {
     //              }
                 } else {
     //              try {
-                        server.savePatient(patientToImport);
+                        return server.savePatient(patientToImport);
     //              } catch(Exception ex) {
     //                  Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "ERROR SAVING PATIENT " + patientID, ex);
     //              }
                 }
             }
         }
+        
+        return -1;
     }
     
     
@@ -980,6 +999,8 @@ public class Import {
         // TODO: Implement this using arrays and getTumourRexords instead
         boolean saveTumour = true;
         boolean deleteTumour = false;
+        
+        GlobalToolBox globalToolBox = new GlobalToolBox(server.getDatabseDescription());
         ResultCode worstResultCodeFound;
         Tumour oldTumourRecord = null;
         
@@ -1120,16 +1141,20 @@ public class Import {
             }
             if (saveTumour) {
                 // if tumour has record ID we edit it
-                if (tumourToImport.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME) != null) {
+                if (tumourToImport.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME) != null &&
+                    ! tumourToImport.getVariableAsString(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME_FOR_HOLDING).isEmpty()) {
 //                  try {
-                        if(fromHoldingToProduction)
-                            server.editTumourFromHoldingToProduction(tumourToImport);
+                        if(fromHoldingToProduction) {
+                            if(tumourToImport.getVariableAsString(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME_FOR_HOLDING).isEmpty()) {
+                                server.saveTumour(tumourToImport);
+                            } else
+                                server.editTumourFromHoldingToProduction(tumourToImport);
+                        }
                         else
                             server.editTumour(tumourToImport);
 //                  } catch(Exception ex) {
 //                      Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "ERROR EDITING TUMOUR " + tumourID, ex);
 //                  }
-
                 } // if not we save it
                 else {
 //                  try {

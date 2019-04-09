@@ -12,7 +12,10 @@
 # each DB array has to be ordered on the same way of the file array
 # separated arrays for each table: patient, tumour and source will be necessary
 
+#Libraries
+#======================================================
 .libPaths(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5"))
+#======================================================
 
 #Libraries nedeed
 library("XML")
@@ -23,6 +26,7 @@ library("RJSONIO")
 library("jsonlite")
 library("anchors")
 library("lubridate")
+library("reshape2")
 options(scipen = 999)
 
 Args <- commandArgs(TRUE)
@@ -32,15 +36,16 @@ Args <- commandArgs(TRUE)
 initial.options <- commandArgs(trailingOnly = FALSE)
 #Parameters
 JSON.path <- "-paramsFile="
-# paramsJSON <- fromJSON(sub(JSON.path, "", initial.options[grep(JSON.path, initial.options)]))
-paramsJSON <- fromJSON("C://Users//Patricio//AppData//Local//Temp//rChecksParams.json")
+paramsJSON <- fromJSON(sub(JSON.path, "", initial.options[grep(JSON.path, initial.options)]))
 
 file.arg.name <- "--file="
-# script.name <- sub(file.arg.name, "", initial.options[grep(file.arg.name, initial.options)])
-script.name <- "C://Work//CanReg5//conf//import//r//CR5formatChecks.R"
+script.name <- sub(file.arg.name, "", initial.options[grep(file.arg.name, initial.options)])
 
 #Set locale to UTF-8
-Sys.setlocale("LC_CTYPE", "UTF-8")
+if(.Platform$OS.type != "windows") {
+  Sys.setlocale("LC_CTYPE", "UTF-8")  
+} else { NULL }
+
 
 #Load all the scripts
   setwd(dirname(script.name))
@@ -69,7 +74,8 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
                           quote = '',
                           comment = '',
                           stringsAsFactors = FALSE,
-                          colClasses = "character")
+                          colClasses = "character",
+                          fileEncoding = "UTF-8")
 
   #It's essencial a dataframe that has the dictionary id and the codes for future checkings
   #The exported dictionary from CanReg5 has the dictionary id and the codes in the same column
@@ -275,6 +281,7 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
       format.errors$format.errors <- gsub("NA, |, NA|NA","", format.errors$format.errors)
       format.errors$format.errors <- str_replace(format.errors$format.errors, 
                                                  ", , ", "")
+      raw.data <- source.raw.data[-(ncol(source.raw.data)-1)]
       raw.data$format.errors <- format.errors$format.errors
       #To replace the raw.data with the checked raw data
       raw.data[,names(raw.data) %in% names(patient.raw.data[, !(names(patient.raw.data) %in% c("patient.code.errors", "patient.format.errors"))])] <- patient.raw.data[, !(names(patient.raw.data) %in% c("patient.code.errors", "patient.format.errors"))]
@@ -283,7 +290,7 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
       
       #To paste the column name to the value it is necessary a auxiliar dataframe
       aux.raw.data <- raw.data[-ncol(raw.data)]
-      aux.raw.data[] <- Map(paste, names(aux.raw.data), aux.raw.data, sep = ': ')
+      aux.raw.data[] <- Map(paste,"<strong>",names(aux.raw.data), ": </strong>", aux.raw.data, sep = '')
       raw.data$all.raw.data <- apply(aux.raw.data, 1, paste, collapse = "@#$")
       file.write <- paste(dirname(paramsJSON$patientFilePath),
                           "output.raw.data.csv",
@@ -361,7 +368,9 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
       patient.raw.data$format.errors <- format.errors$format.errors
       
       #To write the raw.data file
-      patient.raw.data$all.raw.data <-  apply(patient.raw.data[,-ncol(patient.raw.data)], 1, paste, collapse = " @#$ ")
+      aux.patient.raw.data <- patient.raw.data[-ncol(patient.raw.data)]
+      aux.patient.raw.data[] <- Map(paste,"<strong>",names(aux.patient.raw.data), ": </strong>", aux.patient.raw.data, sep = '')
+      patient.raw.data$all.raw.data <- apply(aux.patient.raw.data, 1, paste, collapse = "@#$")
       file.patient.write <- paste(dirname(paramsJSON$patientFilePath),
                                   "output.patient.raw.data.csv",
                                   sep = "//")
@@ -440,7 +449,10 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
       tumour.raw.data$format.errors <- format.errors$format.errors
       
       #To write the raw.data file
-      tumour.raw.data$all.raw.data <-  apply(tumour.raw.data[,-ncol(tumour.raw.data)], 1, paste, collapse = " @#$ ")
+      aux.tumour.raw.data <- tumour.raw.data[-ncol(tumour.raw.data)]
+      aux.tumour.raw.data[] <- Map(paste,"<strong>",names(aux.tumour.raw.data), ": </strong>", aux.tumour.raw.data, sep = '')
+      tumour.raw.data$all.raw.data <- apply(aux.tumour.raw.data, 1, paste, collapse = "@#$")
+      
       file.tumour.write <- paste(dirname(paramsJSON$tumourFilePath),
                                  "output.tumour.raw.data.csv",
                                  sep = "//")
@@ -517,7 +529,10 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
       source.raw.data$format.errors <- format.errors$format.errors
       
       #To write the raw.data file
-      source.raw.data$all.raw.data <-  apply(source.raw.data[,-ncol(source.raw.data)], 1, paste, collapse = " @#$ ")
+      aux.source.raw.data <- source.raw.data[-ncol(source.raw.data)]
+      aux.source.raw.data[] <- Map(paste,"<strong>",names(aux.source.raw.data), ": </strong>", aux.source.raw.data, sep = '')
+      source.raw.data$all.raw.data <- apply(aux.source.raw.data, 1, paste, collapse = "@#$")
+      
       file.source.write <- paste(dirname(paramsJSON$sourceFilePath),
                                  "output.source.raw.data.csv",
                                  sep = "//")
@@ -592,8 +607,13 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
       format.errors$format.errors <- str_replace(format.errors$format.errors, 
                                                  ", , ", "")
       patient.raw.data$format.errors <- format.errors$format.errors
+      
       #To write the raw.data file
-      patient.raw.data$all.raw.data <-  apply(patient.raw.data[,-ncol(patient.raw.data)], 1, paste, collapse = " @#$ ")
+      aux.patient.raw.data <- patient.raw.data[-ncol(patient.raw.data)]
+      aux.patient.raw.data[] <- Map(paste,"<strong>",names(aux.patient.raw.data), ": </strong>", aux.patient.raw.data, sep = '')
+      patient.raw.data$all.raw.data <- apply(aux.patient.raw.data, 1, paste, collapse = "@#$")
+      
+      
       file.patient.write <- paste(dirname(paramsJSON$patientFilePath),
                                   "output.patient.raw.data.csv",
                                   sep = "//")
@@ -675,7 +695,10 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
       tumour.raw.data$format.errors <- format.errors$format.errors
       
       #To write the raw.data file
-      tumour.raw.data$all.raw.data <-  apply(tumour.raw.data[,-ncol(tumour.raw.data)], 1, paste, collapse = " @#$ ")
+      aux.tumour.raw.data <- tumour.raw.data[-ncol(tumour.raw.data)]
+      aux.tumour.raw.data[] <- Map(paste,"<strong>",names(aux.tumour.raw.data), ": </strong>", aux.tumour.raw.data, sep = '')
+      tumour.raw.data$all.raw.data <- apply(aux.tumour.raw.data, 1, paste, collapse = "@#$")
+      
       file.tumour.write <- paste(dirname(paramsJSON$tumourFilePath),
                                  "output.tumour.raw.data.csv",
                                  sep = "//")
@@ -757,7 +780,10 @@ Sys.setlocale("LC_CTYPE", "UTF-8")
       source.raw.data$format.errors <- format.errors$format.errors
       
       #To write the raw.data file
-      source.raw.data$all.raw.data <-  apply(source.raw.data[,-ncol(source.raw.data)], 1, paste, collapse = " @#$ ")
+      aux.source.raw.data <- source.raw.data[-ncol(source.raw.data)]
+      aux.source.raw.data[] <- Map(paste,"<strong>",names(aux.source.raw.data), ": </strong>", aux.source.raw.data, sep = '')
+      source.raw.data$all.raw.data <- apply(aux.source.raw.data, 1, paste, collapse = "@#$")
+      
       file.source.write <- paste(dirname(paramsJSON$sourceFilePath),
                                  "output.source.raw.data.csv",
                                  sep = "//")

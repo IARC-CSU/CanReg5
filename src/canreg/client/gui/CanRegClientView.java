@@ -777,11 +777,16 @@ public final class CanRegClientView extends FrameView {
     }
 
     public void setHoldingDBsList(List<String> holdingDBsList) {
+        if(this.browseInternalFrame != null) {
+           this.browseInternalFrame.dispose();
+           this.browseInternalFrame = null;
+        }
+            
         this.holdingDBsSystemCodes = holdingDBsList;
         this.reloadHoldingDBsList();
-    }
+    }    
     
-    public void reloadHoldingDBsList() {
+    private void reloadHoldingDBsList() {
         holdingPopup.removeAll();
         if(this.holdingDBsSystemCodes.isEmpty()) {
             JMenuItem menuItem = 
@@ -795,8 +800,7 @@ public final class CanRegClientView extends FrameView {
             }     
         }
     }
-    
-    
+
     
     private class HoldingDBMenuItem implements ActionListener {
         

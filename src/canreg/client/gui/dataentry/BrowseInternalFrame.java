@@ -45,6 +45,7 @@ import canreg.common.database.Patient;
 import canreg.common.database.Source;
 import canreg.server.database.RecordLockedException;
 import canreg.common.database.Tumour;
+import canreg.server.CanRegRegistryProxy;
 import canreg.server.CanRegServerInterface;
 import canreg.server.database.UnknownTableException;
 import java.awt.Color;
@@ -70,6 +71,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
@@ -123,7 +125,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
 
     public BrowseInternalFrame(JDesktopPane dtp, CanRegServerInterface server) {
         this.dtp = dtp;
-        this.server = server;        
+        this.server = server;         
         
         globalToolBox = CanRegClientApp.getApplication().getGlobalToolBox();
         patientIDlookupVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName();
@@ -171,6 +173,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
         holdingOptions = new javax.swing.JPanel();
         selectAllChkBox = new javax.swing.JCheckBox();
         productionBtn = new javax.swing.JButton();
+        deleteHoldingBtn = new javax.swing.JButton();
 
         setClosable(true);
         setMaximizable(true);
@@ -308,6 +311,10 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
         productionBtn.setText(resourceMap.getString("productionBtn.text")); // NOI18N
         productionBtn.setName("productionBtn"); // NOI18N
 
+        deleteHoldingBtn.setAction(actionMap.get("deleteHoldingDBAction")); // NOI18N
+        deleteHoldingBtn.setText(resourceMap.getString("deleteHoldingBtn.text")); // NOI18N
+        deleteHoldingBtn.setName("deleteHoldingBtn"); // NOI18N
+
         javax.swing.GroupLayout holdingOptionsLayout = new javax.swing.GroupLayout(holdingOptions);
         holdingOptions.setLayout(holdingOptionsLayout);
         holdingOptionsLayout.setHorizontalGroup(
@@ -317,7 +324,9 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
                 .addComponent(selectAllChkBox)
                 .addGap(75, 75, 75)
                 .addComponent(productionBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(deleteHoldingBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         holdingOptionsLayout.setVerticalGroup(
             holdingOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -325,7 +334,8 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
                 .addGap(0, 0, 0)
                 .addGroup(holdingOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(selectAllChkBox)
-                    .addComponent(productionBtn))
+                    .addComponent(productionBtn)
+                    .addComponent(deleteHoldingBtn))
                 .addGap(0, 0, 0))
         );
 
@@ -669,6 +679,9 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                 tca.setOnlyAdjustLarger(false);
                 tca.adjustColumns();
                 resultPanel.setVisible(true);
+                
+                if(resultTable.getRowCount() == 0)
+                    deleteHoldingDB();
             } else if (result.toString().startsWith("Not valid")) {
                 JOptionPane.showInternalMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("NOT_A_VALID_FILTER.") + "\n"
                         + result.toString().substring("Not valid".length()),
@@ -905,6 +918,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JPanel buttonsPanel;
     private javax.swing.JButton createNextButton;
+    private javax.swing.JButton deleteHoldingBtn;
     private javax.swing.JButton editPatientNumberButton;
     private javax.swing.JButton editTableRecordButton;
     private javax.swing.JButton editTumourNumberButton;
@@ -953,6 +967,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                                          JOptionPane.DEFAULT_OPTION, 
                                          JOptionPane.INFORMATION_MESSAGE, null, 
                                          options, options[1]);
+            Task refreshTask = null;
             
             if(result > -1) {
                 Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
@@ -962,21 +977,37 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                     setCursor(hourglassCursor);
                     Writer reportWriter = new BufferedWriter(new OutputStreamWriter(System.out));
                     
+                    int successfullyDeletedRecord = 0;
+                    int errorDeletedRecord = 0;
+                    
                     for(Integer rowNumber : resultTable.getSelectedRows()) {
                         String patientRecordIDVariable = globalToolBox
                                 .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString())
                                 .getDatabaseVariableName();
                         int columnNumber = tableColumnModel.getColumnIndex(canreg.common.Tools.toUpperCaseStandardized(patientRecordIDVariable), false);
-                        String patientRecordID = (String) tableDataModel.getValueAt(rowNumber, columnNumber);
-                        Patient patientToImport = CanRegClientApp.getApplication().getPatientRecord(patientRecordID, false, server);
-                        Import.importPatient(CanRegClientApp.getApplication().getServer(), result, 
-                                patientRecordID, patientToImport, reportWriter, false, false, true);
+                        String holdingPatientRecordID = (String) tableDataModel.getValueAt(rowNumber, columnNumber);
+                        Patient patientToImport = CanRegClientApp.getApplication().getPatientRecord(holdingPatientRecordID, false, server);
+                        int productionPRID = Import.importPatient(CanRegClientApp.getApplication().getServer(), result, 
+                                holdingPatientRecordID, patientToImport, reportWriter, false, false, true);
 
-                        Tumour[] tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientRecordID(patientRecordID, false, server);
+                        Tumour[] tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientRecordID(holdingPatientRecordID, false, server);
                         for(Tumour tumourToImport : tumourRecords) {
                             String tumourID = tumourToImport.getVariableAsString(tumourIDlookupVariable);
+                            
+                            if(productionPRID != -1) {
+                                Patient productionPatient = (Patient) CanRegClientApp.getApplication().getServer()
+                                        .getRecord(productionPRID, Globals.PATIENT_TABLE_NAME, false);
+                                holdingPatientRecordID = productionPatient.getVariableAsString(patientRecordIDVariable);
+                                
+                                String tumourIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
+                                String tumourPatientRecordIdVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName();
+                                tumourToImport.setVariable(tumourIDVariableName, "");
+                                tumourToImport.setVariable(tumourPatientRecordIdVariableName, holdingPatientRecordID);
+                                tumourID = "";
+                            }
+                            
                             Import.importTumour(CanRegClientApp.getApplication().getServer(), result, tumourID, 
-                                    patientRecordID, tumourToImport, null, reportWriter, false, false, true);
+                                    holdingPatientRecordID, tumourToImport, null, reportWriter, false, false, true);
                             
                             //NOT NECESSARY, sources are already taken care of in CanRegDAO.editRecord() when
                             //the record being updated is a Tumour (near the end of the method it deletes the sources
@@ -986,20 +1017,96 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
     //                                        sourceToImport.getVariableAsString(sourceIDlookupVariable),
     //                                        sourceIDlookupVariable, sourceToImport, tumourID, reportWriter, false, false, true);
     //                            }
-                        }
-                    }
                     
-                    JOptionPane.showMessageDialog(null, browseResourceMap.getString("SUCCESS"), 
-                            numberOfRecords + " " + browseResourceMap.getString("SUCCESS MESSAGE "), JOptionPane.INFORMATION_MESSAGE);
+                            if(deleteRecord(tumourToImport))
+                                successfullyDeletedRecord++;
+                            else
+                                errorDeletedRecord++;
+                        }
+                        
+                        if(deleteRecord(patientToImport)) 
+                            successfullyDeletedRecord++;                        
+                        else
+                            errorDeletedRecord++;
+                    }
+
+                    if(errorDeletedRecord == 0) 
+                        JOptionPane.showMessageDialog(null, browseResourceMap.getString("SUCCESS"), 
+                                successfullyDeletedRecord + " " + browseResourceMap.getString("SUCCESS MESSAGE "), JOptionPane.INFORMATION_MESSAGE);
+                    else 
+                        JOptionPane.showMessageDialog(null, browseResourceMap.getString("SUCCESS"), 
+                                successfullyDeletedRecord + " " + browseResourceMap.getString("SUCCESS MESSAGE ") + "\n" +
+                                successfullyDeletedRecord + " " + browseResourceMap.getString("ERROR WITH SOME RECORDS MESSAGE "), JOptionPane.INFORMATION_MESSAGE);
+                    
+                    refreshTask = refresh();
+                    refreshTask.execute();
+                    
                     return true;
                 } catch(Exception ex) {
                     Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                     JOptionPane.showMessageDialog(null, browseResourceMap.getString("ERROR IMPORTING "), "ERROR", JOptionPane.ERROR_MESSAGE);
                 } finally {
-                    setCursor(normalCursor);
+                    if(refreshTask == null)
+                        setCursor(normalCursor);
                 }
             }
         }
         return false;
+    }
+    
+    private boolean deleteRecord(DatabaseRecord record) {
+        boolean success = false;
+        int id = -1;
+        String tableName = null;
+        if (record instanceof Patient) {
+            Object idObject = record.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
+            if (idObject != null) 
+                id = (Integer) idObject;            
+            tableName = Globals.PATIENT_TABLE_NAME;
+        } else if (record instanceof Tumour) {
+            // delete sources first.
+            Tumour tumour = (Tumour) record;
+            for (Source source : tumour.getSources()) 
+                deleteRecord(source);
+            
+            Object idObject = record.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME);
+            if (idObject != null) 
+                id = (Integer) idObject;            
+            tableName = Globals.TUMOUR_TABLE_NAME;
+        } else if (record instanceof Source) {
+            Object idObject = record.getVariable(Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME);
+            if (idObject != null) 
+                id = (Integer) idObject;            
+            tableName = Globals.SOURCE_TABLE_NAME;
+        }
+        if (id >= 0) {
+            try {
+                canreg.client.CanRegClientApp.getApplication().releaseRecord(id, tableName, server);
+                success = canreg.client.CanRegClientApp.getApplication().deleteRecord(id, tableName, server);
+            } catch (Exception ex) {
+                Logger.getLogger(canreg.client.gui.dataentry.BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return success;
+    }
+
+    @Action
+    public void deleteHoldingDBAction() {
+        ResourceBundle browseResourceMap = java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame");
+        int result = JOptionPane.showConfirmDialog(null, browseResourceMap.getString("ARE YOU SURE "),
+                browseResourceMap.getString("CONFIRM"), JOptionPane.YES_NO_OPTION);
+        if(result == JOptionPane.OK_OPTION) 
+            deleteHoldingDB();
+    }
+    
+    private void deleteHoldingDB() {
+        try {
+            this.close();
+            server.deleteHoldingDB(((CanRegRegistryProxy)server).getHoldingRegistryCode());
+            this.dispose();
+            canreg.client.CanRegClientApp.getApplication().refreshHoldingDBsList();
+        } catch(Exception ex) {
+            Logger.getLogger(canreg.client.gui.dataentry.BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

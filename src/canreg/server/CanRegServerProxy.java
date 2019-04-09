@@ -401,17 +401,17 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     }    
     
     @Override
-    public int getLastHoldingDBnumber(String registryCode) 
-            throws RemoteException, SecurityException {
-        checkPermission("getLastHoldingDBnumber");
-        return theServer.getLastHoldingDBnumber(registryCode);
+    public SystemDescription createNewHoldingDB(String registryCode, SystemDescription sysDesc)
+            throws RemoteException, IOException, SecurityException {
+        checkPermission("createNewHoldingDB");
+        return theServer.createNewHoldingDB(registryCode, sysDesc);
     }
     
     @Override
-    public SystemDescription createNewHoldingDB(String registryCode, String dbName, SystemDescription sysDesc)
-            throws RemoteException, IOException, SecurityException {
-        checkPermission("createNewHoldingDB");
-        return theServer.createNewHoldingDB(registryCode, dbName, sysDesc);
+    public void deleteHoldingDB(String holdingRegistryCode)
+            throws SQLException, RemoteException, IOException, SecurityException {
+        checkPermission("deleteHoldingDB");
+        theServer.deleteHoldingDB(holdingRegistryCode);
     }
     
     @Override

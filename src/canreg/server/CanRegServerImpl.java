@@ -62,8 +62,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.derby.drda.NetworkServerControl;
 import java.net.InetAddress;
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -241,7 +242,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     public SystemDescription initSystemDescription(String originalRegistryCode, String holdingRegistryCode, boolean holding) {
         SystemDescription sysDesc = null;
         if(holding)
-            sysDesc = new SystemDescription(Globals.CANREG_SERVER_HOLDING_DB_FOLDER + Globals.FILE_SEPARATOR + originalRegistryCode +
+            sysDesc = new SystemDescription(Globals.CANREG_SERVER_HOLDING_DB_SYSTEM_DESCRIPTION_FOLDER + Globals.FILE_SEPARATOR + originalRegistryCode +
                                             Globals.FILE_SEPARATOR + holdingRegistryCode + Globals.FILE_SEPARATOR + holdingRegistryCode + ".xml");
         else
             sysDesc = new SystemDescription(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + originalRegistryCode + ".xml");
@@ -1029,7 +1030,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
 
     @Override
     public String getCanRegRegistryCode() throws RemoteException, SecurityException {
-        return defaultRegistryCode;
+        return systemDescription.getRegistryCode();
     }
 
     @Override
@@ -1037,9 +1038,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         return systemDescription.getRegion();
     }
     
-    @Override
-    public int getLastHoldingDBnumber(String registryCode) {
-        File holdingDir = new File(Globals.CANREG_SERVER_HOLDING_DB_FOLDER + Globals.FILE_SEPARATOR + registryCode);
+    private int getLastHoldingDBnumber(String registryCode) {
+        File holdingDir = new File(Globals.CANREG_SERVER_HOLDING_DB_SYSTEM_DESCRIPTION_FOLDER + Globals.FILE_SEPARATOR + registryCode);
         
         int highestNumber = 0;
         for(String folder : holdingDir.list()) {
@@ -1054,18 +1054,41 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
     
     @Override
-    public SystemDescription createNewHoldingDB(String registryCode, String dbName, SystemDescription sysDesc)
+    public SystemDescription createNewHoldingDB(String registryCode, SystemDescription sysDesc)
             throws RemoteException, IOException, SecurityException {
-        File registryCodeHoldingFolder = new File(Globals.CANREG_SERVER_HOLDING_DB_FOLDER + Globals.FILE_SEPARATOR + registryCode);
+        File registryCodeHoldingFolder = new File(Globals.CANREG_SERVER_HOLDING_DB_SYSTEM_DESCRIPTION_FOLDER + Globals.FILE_SEPARATOR + registryCode);
         //Include the date AND a number in the HDB system code (the user COULD do more than 1 HDB of the same xml on the same date)
-        File holdingXmlPath = new File(registryCodeHoldingFolder.getAbsolutePath() + Globals.FILE_SEPARATOR + dbName);
+        String dateStr = new SimpleDateFormat("yyyy-MM-dd").format((Calendar.getInstance()).getTime());
+        int newHoldingDBNumber = this.getLastHoldingDBnumber(registryCode) + 1;
+        String holdingRegistryCode = "HOLDING_" + registryCode + "_" +  + newHoldingDBNumber + "_" + dateStr;
+        File holdingXmlPath = new File(registryCodeHoldingFolder.getAbsolutePath() + Globals.FILE_SEPARATOR + holdingRegistryCode);
         holdingXmlPath.mkdirs();
-        File holdingXml = new File(holdingXmlPath.getAbsolutePath() + Globals.FILE_SEPARATOR + dbName + ".xml");
-        sysDesc.setRegistryCode(dbName);
+        File holdingXml = new File(holdingXmlPath.getAbsolutePath() + Globals.FILE_SEPARATOR + holdingRegistryCode + ".xml");
+        sysDesc.setRegistryCode(holdingRegistryCode);
         sysDesc.setSystemDescriptionLocation(holdingXmlPath);
         sysDesc.saveSystemDescriptionXML(holdingXml.getAbsolutePath());
         return sysDesc;
     }
+    
+    @Override
+    public void deleteHoldingDB(String holdingRegistryCode)
+            throws SQLException, RemoteException, IOException, SecurityException {
+        CanRegDAO dao = this.registriesDAOs.remove(holdingRegistryCode);
+        if(dao == null)
+            return;
+        dao.disconnect();
+        
+        String originalRegistryCode = holdingRegistryCode.substring(holdingRegistryCode.indexOf("_") + 1);
+        originalRegistryCode = originalRegistryCode.substring(0, originalRegistryCode.indexOf("_"));
+        File holdingDBSystemDescriptionFolder = new File(Globals.CANREG_SERVER_HOLDING_DB_SYSTEM_DESCRIPTION_FOLDER + Globals.FILE_SEPARATOR + originalRegistryCode + 
+                                                  Globals.FILE_SEPARATOR + holdingRegistryCode);
+        if( ! Tools.deleteFolderRecursively(holdingDBSystemDescriptionFolder))
+            holdingDBSystemDescriptionFolder.deleteOnExit();
+        
+        File holdingDBFolder = new File(Globals.CANREG_SERVER_DATABASE_FOLDER + Globals.FILE_SEPARATOR + holdingRegistryCode);
+        if( ! Tools.deleteFolderRecursively(holdingDBFolder))
+            holdingDBFolder.deleteOnExit();
+    }    
     
     @Override
     public void changeRegistryDB(String registryCode) 
@@ -1084,7 +1107,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     @Override
     public List<String> getHoldingDBsList() 
             throws IOException, RemoteException, SecurityException {
-        File registryCodeHoldingFolder = new File(Globals.CANREG_SERVER_HOLDING_DB_FOLDER + Globals.FILE_SEPARATOR + this.defaultRegistryCode);
+        File registryCodeHoldingFolder = new File(Globals.CANREG_SERVER_HOLDING_DB_SYSTEM_DESCRIPTION_FOLDER + Globals.FILE_SEPARATOR + this.defaultRegistryCode);
         List<String> holdingList = new LinkedList<>();
         if(registryCodeHoldingFolder.exists()) 
             holdingList = Arrays.asList(registryCodeHoldingFolder.list());

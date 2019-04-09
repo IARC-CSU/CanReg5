@@ -220,6 +220,8 @@
                   <EmptySpace min="-2" pref="75" max="-2" attributes="0"/>
                   <Component id="productionBtn" min="-2" pref="226" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
+                  <Component id="deleteHoldingBtn" min="-2" pref="226" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -230,6 +232,7 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="selectAllChkBox" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="productionBtn" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="deleteHoldingBtn" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
               </Group>
@@ -253,6 +256,15 @@
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="productionBtn.text"/>
             <Property name="name" type="java.lang.String" value="productionBtn" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="deleteHoldingBtn">
+          <Properties>
+            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+              <action class="canreg.client.gui.dataentry.BrowseInternalFrame" id="deleteHoldingDBAction" methodName="deleteHoldingDBAction"/>
+            </Property>
+            <Property name="text" type="java.lang.String" resourceKey="deleteHoldingBtn.text"/>
+            <Property name="name" type="java.lang.String" value="deleteHoldingBtn" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>

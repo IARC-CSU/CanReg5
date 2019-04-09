@@ -120,22 +120,12 @@ public class CanRegRegistryProxy implements CanRegServerInterface, Serializable 
         return new CanRegRegistryProxy(serverProxy, holdingRegistryCode);
     }
     
-    private Object invokeMethodOnSpecificRegistry(String methodName, Class<?>[] parameterTypes, Object... parameters) {
-        try {
-            changeRegistryDB(registryCode);
-            Method method = serverProxy.getClass().getMethod(methodName, parameterTypes);
-            Object toReturn = method.invoke(serverProxy, parameters);
-            resetRegistryDB();
-            return toReturn;
-        } catch (Exception ex) {
-            Logger.getLogger(CanRegRegistryProxy.class.getName()).log(Level.SEVERE, null, ex);
-            throw new RuntimeException(ex);
-        } 
+    public String getHoldingRegistryCode() {
+        return this.registryCode;
     }
     
     @Override
     public void addUser(User user) throws RemoteException, SecurityException {
-//        invokeMethodOnSpecificRegistry("addUser", new Class[] {User.class}, new User[]{user});
         changeRegistryDB(registryCode);
         serverProxy.addUser(user);
         resetRegistryDB();
@@ -143,7 +133,6 @@ public class CanRegRegistryProxy implements CanRegServerInterface, Serializable 
 
     @Override
     public void removeUser(User user) throws RemoteException, SecurityException {
-//        invokeMethodOnSpecificRegistry("removeUser", new Class[] {User.class}, new User[]{user});
         changeRegistryDB(registryCode);
         serverProxy.removeUser(user);
         resetRegistryDB();
@@ -151,7 +140,6 @@ public class CanRegRegistryProxy implements CanRegServerInterface, Serializable 
 
     @Override
     public void setUserPassword(String username, String password) throws RemoteException, SecurityException {
-//        invokeMethodOnSpecificRegistry("setUserPassword", new Class[] {String.class, String.class}, new String[]{username, password});
         changeRegistryDB(registryCode);
         serverProxy.setUserPassword(username, password);
         resetRegistryDB();
@@ -523,21 +511,20 @@ public class CanRegRegistryProxy implements CanRegServerInterface, Serializable 
     }    
     
     @Override
-    public int getLastHoldingDBnumber(String registryCode) 
-            throws RemoteException, SecurityException {
+    public SystemDescription createNewHoldingDB(String registryCode, SystemDescription sysDesc)
+            throws RemoteException, IOException, SecurityException {
         changeRegistryDB(registryCode);
-        int toReturn = serverProxy.getLastHoldingDBnumber(registryCode);
+        SystemDescription toReturn = serverProxy.createNewHoldingDB(registryCode, sysDesc);
         resetRegistryDB();
         return toReturn;
     }
     
     @Override
-    public SystemDescription createNewHoldingDB(String registryCode, String dbName, SystemDescription sysDesc)
-            throws RemoteException, IOException, SecurityException {
+    public void deleteHoldingDB(String holdingRegistryCode)
+            throws SQLException, RemoteException, IOException, SecurityException {
         changeRegistryDB(registryCode);
-        SystemDescription toReturn = serverProxy.createNewHoldingDB(registryCode, dbName, sysDesc);
+        serverProxy.deleteHoldingDB(holdingRegistryCode);
         resetRegistryDB();
-        return toReturn;
     }
     
     @Override

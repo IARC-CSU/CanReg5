@@ -1241,15 +1241,17 @@ public class Tools {
                 .withFirstRecordAsHeader()
                 .withDelimiter(separator);
         CSVParser parser = CSVParser.parse(csvFile, fileCharset, format);
-        int amountOfColumns = 0;
-        for(CSVRecord record : parser) {
-            try {
-                record.get(amountOfColumns);
-                amountOfColumns++;
-            } catch(Exception ex) {
-                break;
-            }
+        return parser.getHeaderMap().size();
+    }
+    
+    public static boolean deleteFolderRecursively(File folder) 
+            throws IOException {
+        if (folder.isDirectory()) {
+            for (File c : folder.listFiles())
+              deleteFolderRecursively(c);
         }
-        return amountOfColumns;
+        if (!folder.delete())
+          return false;
+        return true;
     }
 }

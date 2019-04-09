@@ -133,9 +133,6 @@ public class CanRegDAO {
          */
         setDBSystemDir();
         
-        if(! holding)
-            createHoldingDBDir();
-        
         dbProperties = loadDBProperties();
         String driverName = dbProperties.getProperty("derby.driver");
         loadDatabaseDriver(driverName);
@@ -597,11 +594,6 @@ public class CanRegDAO {
         // create the db system directory
         File fileSystemDir = new File(systemDir);
         fileSystemDir.mkdir();
-    }
-    
-    private void createHoldingDBDir() {
-        File fileSystemDir = new File(Globals.CANREG_SERVER_HOLDING_DB_FOLDER + Globals.FILE_SEPARATOR + registryCode);
-        fileSystemDir.mkdirs();
     }
 
     private void loadDatabaseDriver(String driverName) {
@@ -1141,8 +1133,11 @@ public class CanRegDAO {
      */
     private synchronized int saveSource(Source source) throws SQLException {
         String sourceIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.SourceRecordID.toString()).getDatabaseVariableName();
-        Object sourceID = source.getVariable(sourceIDVariableName);
-        if (sourceID == null || sourceID.toString().trim().length() == 0) {
+        String sourceID = source.getVariableAsString(sourceIDVariableName);
+        if(sourceID != null && sourceID.contains("@H"))
+            sourceID = "";
+        
+        if (sourceID == null || sourceID.trim().length() == 0) {
             String tumourIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourIDSourceTable.toString()).getDatabaseVariableName();
             String tumourID = (String) source.getVariable(tumourIDVariableName);
             sourceID = getNextSourceID(tumourID);

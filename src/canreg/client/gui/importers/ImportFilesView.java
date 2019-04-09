@@ -816,6 +816,9 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
                     //the import. The Algorithms that perform the import ALWAYS expect an
                     //array of 3 positions.
                     files = RTools.runRimportScript("CR5formatChecks.R", rParamsFile, files);
+                                       
+                    for(File file : files)
+                        tempFiles.add(file);
 
                     //The output files of the R format checks are all in UTF-8
                     io.setFilesCharsets(new Charset[]{
@@ -830,15 +833,16 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
                 if(holdingDBCheckBox.isSelected())
                     success = CanRegClientApp.getApplication().importFilesIntoHoldingDB(this, doc, variablesMap, files, io);
                 else {
-                    success = CanRegClientApp.getApplication().importFiles(this, doc, variablesMap, files, io);
+                    success = CanRegClientApp.getApplication().importFiles(this, variablesMap, files, io);
                 }
             } catch(Exception ex) {
                 Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
                 this.firePropertyChange(Import.R_SCRIPTS, 0, 10);
                 success = false;
             } finally {
-                for(File file : tempFiles)
+                for(File file : tempFiles) {
                     file.delete();
+                }
             }
             return success;  // return your result
         }
