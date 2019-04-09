@@ -1,4 +1,4 @@
-## Bundle for CanReg5 realease 43. 2018/11/14
+## Bundle for CanReg5 realease 43. 2018/12/06 + I18n packages fpr translations
 
 
 # destination folder for zip
@@ -11,7 +11,7 @@ dir.create(file.path(destdir),recursive = TRUE)
 unlink(paste0(destdir,"/*.zip"),recursive = TRUE)
 
 # package list
-packages_list <-c("flextable","Rcpp", "data.table", "ggplot2","shiny","shinydashboard", "shinyjs","gridExtra", "scales", "Cairo","officer", "zip", "bmp", "jpeg", "png", "Rcan")
+packages_list <-c("flextable","Rcpp", "data.table", "ggplot2","shiny","shinydashboard", "shinyjs","gridExtra", "scales", "Cairo","officer", "zip", "bmp", "jpeg", "png","shiny.i18n", "Rcan")
 
 #Select https repos
 old.repos <- getOption("repos") 

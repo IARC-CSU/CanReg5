@@ -16,7 +16,10 @@
 tryCatch({
   
   #load dependency packages
-  canreg_load_packages(c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","bmp", "jpeg"), Rcan_source=script.basename)
+  canreg_load_packages(c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","bmp", "jpeg",  "shiny.i18n"), Rcan_source=script.basename)
+	i18n <- Translator(translation_csvs_path  = (paste(sep="/", script.basename, "r-translations")))
+	
+	i18n$set_translation_language(ls_args$lang)
   
   #merge incidence and population
   dt_all <- csu_merge_inc_pop(
@@ -49,7 +52,7 @@ tryCatch({
   
   canreg_output(output_type = ls_args$ft, filename = ls_args$out,landscape = ls_args$landscape,list_graph = TRUE,
                 FUN=canreg_bar_CI5_compare,
-                dt=dt_both,xtitle=paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=",")),
+                dt=dt_both,xtitle=paste0(i18n$t("Age-standardized incidence rate per")," ", formatC(100000, format="d", big.mark=",")),
                 number=ls_args$number,text_size_factor=1,multi_graph=TRUE)
   
 	

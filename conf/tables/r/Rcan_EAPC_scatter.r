@@ -16,8 +16,10 @@
 tryCatch({
   
   #load dependency packages
-  canreg_load_packages(c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","bmp", "jpeg"), Rcan_source=script.basename)
-  
+  canreg_load_packages(c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","bmp", "jpeg",  "shiny.i18n"), Rcan_source=script.basename)
+ 	i18n <- Translator(translation_csvs_path  = (paste(sep="/", script.basename, "r-translations")))
+	i18n$set_translation_language(ls_args$lang)
+	
   #merge incidence and population
   dt_all <- csu_merge_inc_pop(
     inc_file =ls_args$inc,
@@ -63,7 +65,7 @@ tryCatch({
                 FUN=canreg_eapc_scatter,
                 dt_plot=dt_eapc,color_bar=c("Male" = "#2c7bb6", "Female" = "#b62ca1"),
                 canreg_header = ls_args$header,
-                ytitle=paste0("Estimated annual percentage change (%), ", canreg_age_group$label))
+                ytitle=paste0(i18n$t("Estimated annual percentage change")," (%), ", canreg_age_group$label))
 
 	
 	

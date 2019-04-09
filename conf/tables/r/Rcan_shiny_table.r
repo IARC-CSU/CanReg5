@@ -15,7 +15,9 @@
   
 tryCatch({
   
-  canreg_load_packages(c("flextable","Rcpp", "data.table", "ggplot2","shiny","shinydashboard", "shinyjs","gridExtra", "scales", "Cairo","grid","officer", "zip", "bmp", "jpeg", "png"), Rcan_source=script.basename)
+  canreg_load_packages(c("Rcpp", "data.table", "ggplot2","shiny","shinydashboard", "shinyjs","gridExtra", "scales", "Cairo","grid","officer","flextable", "zip", "bmp", "jpeg", "png","shiny.i18n"), Rcan_source=script.basename)
+	i18n <- Translator(translation_csvs_path  = (paste(sep="/", script.basename, "r-translations")))
+	i18n$set_translation_language(ls_args$lang)
   
   dt_base <- csu_merge_inc_pop(
     inc_file =ls_args$inc,

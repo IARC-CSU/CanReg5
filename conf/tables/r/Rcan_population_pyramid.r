@@ -16,8 +16,12 @@
 tryCatch({
   
   #load dependency packages
-  canreg_load_packages(c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","bmp", "jpeg"), Rcan_source=script.basename)
-  
+	canreg_load_packages(c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","bmp", "jpeg", "shiny.i18n"), Rcan_source=script.basename)
+	i18n <- Translator(translation_csvs_path  = (paste(sep="/", script.basename, "r-translations")))
+	i18n$set_translation_language(ls_args$lang)
+	
+	
+	
   #Prepare canreg data population pyramid
   dt_all <- canreg_pop_data(pop_file =ls_args$pop)
 

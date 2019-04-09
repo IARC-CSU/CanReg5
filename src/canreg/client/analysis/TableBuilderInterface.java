@@ -77,7 +77,8 @@ public interface TableBuilderInterface {
             PopulationDataset[] standardPopulations, // standard popluation
             LinkedList<ConfigFields> configList, // configuration fields
             String[] engineParameters, // parameters to the engine
-            FileTypes fileType // the requested filetype
+            FileTypes fileType, // the requested filetype
+            String language // the language specified
             )
             throws NotCompatibleDataException, TableErrorException;
 
