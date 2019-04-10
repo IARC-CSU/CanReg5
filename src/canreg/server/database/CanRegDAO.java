@@ -1020,14 +1020,14 @@ public class CanRegDAO {
         int id = saveRecord(Globals.TUMOUR_TABLE_NAME, tumour, stmtSaveNewTumour);
 
         Set<Source> sources = tumour.getSources();
-        // delete old sources
-        try {
-            deleteSources(tumourID);
-        } catch (DistributedTableDescriptionException ex) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnknownTableException ex) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        // delete old sources ## DEPRECATED
+//        try {
+//            deleteSources(tumourID);
+//        } catch (DistributedTableDescriptionException ex) {
+//            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+//        } catch (UnknownTableException ex) {
+//            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+//        }
         // save each of the source records
         saveSources(tumourID, sources);
 
@@ -1422,13 +1422,13 @@ public class CanRegDAO {
                 Object tumourID = tumour.getVariable(tumourIDVariableName);
                 Set<Source> sources = tumour.getSources();
                 // delete old sources
-                try {
-                    deleteSources(tumourID);
-                } catch (DistributedTableDescriptionException ex) {
-                    Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (UnknownTableException ex) {
-                    Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
-                }
+//                try {
+//                    deleteSources(tumourID);
+//                } catch (DistributedTableDescriptionException ex) {
+//                    Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+//                } catch (UnknownTableException ex) {
+//                    Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+//                }
                 // save each of the source records
                 saveSources(tumourID, sources);
             }
