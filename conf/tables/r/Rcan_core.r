@@ -367,7 +367,7 @@ canreg_load_packages <- function(packages_list) {
   }
   
 
-  #install Rcan package
+  #install Rcan package if not install from CRAN
   Rcan_source <- paste0(script.basename, "/", "r-packages")
   Rcan_file <- list.files(path=Rcan_source, pattern= "Rcan_\\d\\.\\d\\.\\d+\\.tar\\.gz")
   Rcan_version <- regmatches(Rcan_file,regexpr(pattern= "\\d\\.\\d\\.\\d+", Rcan_file))
@@ -2855,7 +2855,7 @@ canreg_asr_trend_top <- function(dt, var_asr="asr",
                                     ytitle = ytitle,
 																		xtitle = i18n$t("Year"),
                                     plot_title = canreg_header,
-                                    plot_subtitle = paste0(i18n$t("Top")," ",,number," ",i18n$t("cancer sites"),"\n",sex_label),
+                                    plot_subtitle = paste0(i18n$t("Top")," ",number," ",i18n$t("cancer sites"),"\n",sex_label),
                                     plot_caption = plot_caption,
                                     color_trend = color_cancer)$csu_plot
     
