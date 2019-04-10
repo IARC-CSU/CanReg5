@@ -648,17 +648,7 @@ public class Import {
                     try {
                         tumour2 = CanRegClientApp.getApplication().getTumourRecordBasedOnTumourID(
                                 (String) tumour.getVariable(io.getTumourIDVariablename()), false);
-                    } catch (DistributedTableDescriptionException ex) {
-                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (RecordLockedException ex) {
-                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (RemoteException ex) {
-                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (SQLException ex) {
-                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (SecurityException ex) {
-                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (UnknownTableException ex) {
+                    } catch (DistributedTableDescriptionException | RecordLockedException | RemoteException | SQLException | SecurityException | UnknownTableException ex) {
                         Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
                     }
 
@@ -876,17 +866,7 @@ public class Import {
                     try {
                         tumour = CanRegClientApp.getApplication().getTumourRecordBasedOnTumourID(
                                 (String) source.getVariable(io.getTumourIDSourceTableVariableName()), false);
-                    } catch (DistributedTableDescriptionException ex) {
-                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (RecordLockedException ex) {
-                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (RemoteException ex) {
-                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (SQLException ex) {
-                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (SecurityException ex) {
-                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (UnknownTableException ex) {
+                    } catch (DistributedTableDescriptionException | RecordLockedException | RemoteException | SQLException | SecurityException | UnknownTableException ex) {
                         Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     if (task != null) {
@@ -896,10 +876,10 @@ public class Import {
 
                     if (tumour != null) {
                         Set<Source> sources = tumour.getSources();
-                        Object sourceRecordID = source.getVariable(io.getSourceIDVariablename());
+                        Object sourceID = source.getVariable(io.getSourceIDVariablename());
                         // look for source in sources
                         for (Source oldSource : sources) {
-                            if (oldSource.getVariable(io.getSourceIDVariablename()).equals(sourceRecordID)) {
+                            if (oldSource.getVariable(io.getSourceIDVariablename()).equals(sourceID)) {
                                 // deal with discrepancies
                                 switch (io.getDiscrepancies()) {
                                     case ImportOptions.REJECT:
