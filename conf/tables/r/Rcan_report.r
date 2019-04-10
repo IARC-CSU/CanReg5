@@ -428,11 +428,6 @@ tryCatch({
     list_number$fig <- list_number$fig+1
     
   }
-
-        ft <- compose(ft,
-                    i = 1, j = 1,
-                    value = as_paragraph(as_image(src = paste0(tempdir(), "\\temp_graph", list_number$fig, sprintf("%03d",(2*i)-1), ".png"), width=3.2,height=3.2*dims[1]/dims[2])))
-      
   
   if (year_info$span >  time_limit) {
     
@@ -533,7 +528,6 @@ tryCatch({
 
     for (i in 1:5) {
       
-
       ft <- flextable(temp)
       ft <- width(ft, width = 3.2)
       ft <- compose(ft,
