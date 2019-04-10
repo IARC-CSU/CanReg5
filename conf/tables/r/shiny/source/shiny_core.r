@@ -213,7 +213,7 @@ shiny_data <- function(input) {
 																				first_age = first_age,
 																				last_age= last_age,
 																				pop_base_count = "REFERENCE_COUNT",
-																				age_label_list = "AGE_GROUP_LABEL")  
+																				age_label_list = "AGE_GROUP_LABEL") 																 
 			}
 				
 		}
@@ -631,8 +631,12 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 			
 		}
 		else if (table_number == 9){
-			
-		 if (!is.null( input$slideNbTopBar) & !is.null(input$radioLog)) {
+
+		
+		
+		 if ( !is.null( input$slideNbTopBar) & !is.null(input$radioLog) ) {
+
+		 	
 				
 				if (input$radioLog == "log") {
 					bool_log <- TRUE
@@ -640,6 +644,8 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 				else {
 					bool_log <- FALSE
 				}
+
+
 				
 				nb_top <- input$slideNbTopBar
 				last_age <- (isolate(input$slideAgeRange)[2]/5)
@@ -651,9 +657,9 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 					age2 <- paste0(((max_age-1)*5), "+")
 				}
 				
-				 ytitle <- paste0(i18n$t("Age-standardized incidence rate per")," ", formatC(100000, format="d", big.mark=","), ", ", isolate(input$slideAgeRange)[1], "-", age2, " years old" )
-		 
 
+				 ytitle <- paste0(i18n$t("Age-standardized incidence rate per")," ", formatC(100000, format="d", big.mark=","), ", ", isolate(input$slideAgeRange)[1], "-", age2, " ",i18n$t("years old"))
+		 
 				if (download) {
 				
 					canreg_output(output_type = output_type, filename =file,landscape = FALSE,list_graph = TRUE,
@@ -861,17 +867,17 @@ canreg_ageSpecific <- function(dt_plot,color_trend,plot_subtitle="",logscale=FAL
  
  
  canreg_asr_trend <- function(dt_plot,
-																 var_asr="asr", 
-                                 var_cases= "CASES", 
-                                 var_year= "YEAR",
-                                 group_by="SEX",
-                                 logscale = TRUE,
-                                 ytitle=NULL,
-                                 landscape = FALSE,
-                                 list_graph = FALSE,
-                                 return_data = FALSE,
-																 return_plot= FALSE,
-                                 plot_title="") {
+								var_asr="asr", 
+                                var_cases= "CASES", 
+                                var_year= "YEAR",
+                                group_by="SEX",
+                                logscale = TRUE,
+                                ytitle=NULL,
+                                landscape = FALSE,
+                                list_graph = FALSE,
+                                return_data = FALSE,
+								return_plot= FALSE,
+                                plot_title="") {
   
  
   
@@ -892,12 +898,11 @@ canreg_ageSpecific <- function(dt_plot,color_trend,plot_subtitle="",logscale=FAL
                                     logscale = logscale,
                                     smoothing = NULL,
                                     ytitle = ytitle,
-																		xtitle = i18n$t("Year"),
+									xtitle = i18n$t("Year"),
                                     plot_title = plot_title,
                                     color_trend = color_trend)$csu_plot
 
-																		
-  
+
   print(plot)
 
 }

@@ -196,8 +196,8 @@ canreg_args <- function(Args) {
   }
   
   ## Get the list of languages from the folder of translations...
-  translations_folder <- paste(script.basename, "r-translations", sep = "/") ## TODO: is this too fragile? Is script.basename always defined?
-  available_translations = sub("translation_(.*).csv", "\\1", list.files(translations_folder))
+  translations_files <- list.files(path=paste0(script.basename, "/r-translations"), pattern= "translation_.*?\\.csv")
+  available_translations = sub("translation_(.*)\\.csv", "\\1", translations_files)
 
   if (!(arg_list[["lang"]] %in% available_translations)) {
     ## see if "mother" variant language is in list
@@ -225,7 +225,7 @@ canreg_args <- function(Args) {
 
 
 
-canreg_load_packages <- function(packages_list, Rcan_source=NULL) { 
+canreg_load_packages <- function(packages_list) { 
   
   
 
@@ -293,13 +293,20 @@ canreg_load_packages <- function(packages_list, Rcan_source=NULL) {
     }
   }
   
-
-  
   if (!"officer" %in% missing_packages) {
     if (packageVersion("officer") < "0.2.2") {
       missing_packages <- c(missing_packages,"officer" )
     }
   }
+
+  if (!"flextable" %in% missing_packages) {
+    if (packageVersion("flextable") < "0.5.2") {
+      missing_packages <- c(missing_packages,"flextable" )
+    }
+  }
+
+
+
   
   if ("scales" %in% missing_packages) {
     
@@ -359,12 +366,14 @@ canreg_load_packages <- function(packages_list, Rcan_source=NULL) {
     }
   }
   
-  
-  #install Rcan package
-  Rcan_source <- paste0(Rcan_source, "/", "r-packages")
+
+  #install Rcan package if not install from CRAN
+  Rcan_source <- paste0(script.basename, "/", "r-packages")
   Rcan_file <- list.files(path=Rcan_source, pattern= "Rcan_\\d\\.\\d\\.\\d+\\.tar\\.gz")
   Rcan_version <- regmatches(Rcan_file,regexpr(pattern= "\\d\\.\\d\\.\\d+", Rcan_file))
 
+  Rcan_file <- Rcan_file[match(max(Rcan_version),Rcan_version)]
+  Rcan_version <- max(Rcan_version)
   
   if ("Rcan" %in% list_installed_packages) {
     if (packageVersion("Rcan") < Rcan_version) {
@@ -2846,7 +2855,7 @@ canreg_asr_trend_top <- function(dt, var_asr="asr",
                                     ytitle = ytitle,
 																		xtitle = i18n$t("Year"),
                                     plot_title = canreg_header,
-                                    plot_subtitle = paste0(i18n$t("Top")," ",,number," ",i18n$t("cancer sites"),"\n",sex_label),
+                                    plot_subtitle = paste0(i18n$t("Top")," ",number," ",i18n$t("cancer sites"),"\n",sex_label),
                                     plot_caption = plot_caption,
                                     color_trend = color_cancer)$csu_plot
     
