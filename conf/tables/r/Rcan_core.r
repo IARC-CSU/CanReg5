@@ -177,8 +177,6 @@ canreg_args <- function(Args) {
     arg_list[[logi_name]] <- FALSE
   }
   
-	arg_list[["lang"]] <- "en"
-  
   for (i in 1:length(Args)) {
     
     temp <- Args[i]
@@ -197,7 +195,21 @@ canreg_args <- function(Args) {
     arg_list[[varname]] <- get(varname)
   }
   
-  
+  ## Get the list of languages from the folder of translations...
+  translations_folder <- paste(script.basename, "r-translations", sep = "/") ## TODO: is this too fragile? Is script.basename always defined?
+  available_translations = sub("translation_(.*).csv", "\\1", list.files(translations_folder))
+
+  if (!(arg_list[["lang"]] %in% available_translations)) {
+    ## see if "mother" variant language is in list
+    mlang <- gsub("(..)_.*","\\1",arg_list[["lang"]])
+    if (mlang %in% available_translations) {
+      arg_list[["lang"]] <- mlang }
+    else {
+    ## Set default language to English if the language is not among the translated languages...
+    arg_list[["lang"]] <- "en"
+    }
+  }
+
   if (substr(arg_list$out,nchar(arg_list$out)-nchar(arg_list$ft),nchar(arg_list$out)) == paste0(".", arg_list$ft)) {
     arg_list[["filename"]] <- arg_list$out
     arg_list$out <- substr(arg_list$out,1,nchar(arg_list$out)-nchar(arg_list$ft)-1)

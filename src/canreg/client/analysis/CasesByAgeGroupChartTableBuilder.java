@@ -113,7 +113,8 @@ public class CasesByAgeGroupChartTableBuilder implements TableBuilderInterface, 
             PopulationDataset[] standardPopulations,
             LinkedList<ConfigFields> configList,
             String[] engineParameters,
-            FileTypes fileType) throws NotCompatibleDataException {
+            FileTypes fileType, 
+            String language) throws NotCompatibleDataException {
         // String footerString = java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder").getString("TABLE BUILT ") + new Date() + java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder").getString(" BY CANREG5.");
 
         LinkedList<String> generatedFiles = new LinkedList<String>();
