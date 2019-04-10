@@ -221,8 +221,7 @@ shinyServer(function(input, output, session) {
 	
 
   observeEvent(input$select_table,{
-    
-    
+
     if (input$select_table==1) {
       table$label <- "Population pyramid"
       hide(id="controls_COL1", anim=TRUE)
