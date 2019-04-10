@@ -1040,6 +1040,10 @@ public class CanRegDAO {
             id = saveRecord(Globals.SOURCE_TABLE_NAME, source, stmtSaveNewSource);
         } else {
             boolean success = editRecord(Globals.SOURCE_TABLE_NAME, source, stmtEditSource);
+            if (success) {
+                sourceRecordID = source.getVariable(canreg.common.Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME);
+                id = (int) sourceRecordID;
+            }
         }
         return id;
     }
