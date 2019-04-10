@@ -266,13 +266,13 @@ tryCatch({
   temp <- data.frame(1,2)
   ft <- flextable(temp)
   ft <- width(ft, width = dim_width)
-  ft <- display(ft,
-                i = NULL, col_key = "X1", pattern= "{{dummy1}}",
-                formatters = list(dummy1 ~ as_image(X1,src = paste0(tempdir(), "\\temp_graph", list_number$fig, "001.png"), width=dim_width,height=dim_width*dims[1]/dims[2])))
+  ft <- compose(ft,
+               i = 1, j = 1,
+               value = as_paragraph(as_image(src = paste0(tempdir(), "\\temp_graph", list_number$fig, "001.png"), width=dim_width,height=dim_width*dims[1]/dims[2])))
   
-  ft <- display(ft,
-                i = NULL, col_key = "X2", pattern= "{{dummy2}}",
-                formatters = list(dummy2 ~ as_image(X2,src = paste0(tempdir(), "\\temp_graph", list_number$fig, "002.png"), width=dim_width,height=dim_width*dims[1]/dims[2])))
+  ft <- compose(ft,
+                i = 1, j = 2,
+                value = as_paragraph(as_image(src = paste0(tempdir(), "\\temp_graph", list_number$fig, "002.png"), width=dim_width,height=dim_width*dims[1]/dims[2])))
   
   ft <- delete_part(ft, part = "header")
   ft <- border(ft,  border=fp_border(width=0))
@@ -298,13 +298,13 @@ tryCatch({
   temp <- data.frame(1,2)
   ft <- flextable(temp)
   ft <- width(ft, width = dim_width)
-  ft <- display(ft,
-                i = NULL, col_key = "X1", pattern= "{{dummy1}}",
-                formatters = list(dummy1 ~ as_image(X1,src = paste0(tempdir(), "\\temp_graph", list_number$fig, "001.png"), width=dim_width,height=dim_width*dims[1]/dims[2])))
+  ft <- compose(ft,
+               i = 1, j = 1,
+               value = as_paragraph(as_image(src = paste0(tempdir(), "\\temp_graph", list_number$fig, "001.png"), width=dim_width,height=dim_width*dims[1]/dims[2])))
   
-  ft <- display(ft,
-                i = NULL, col_key = "X2", pattern= "{{dummy2}}",
-                formatters = list(dummy2 ~ as_image(X2,src = paste0(tempdir(), "\\temp_graph", list_number$fig, "002.png"), width=dim_width,height=dim_width*dims[1]/dims[2])))
+  ft <- compose(ft,
+                i = 1, j = 2,
+                value = as_paragraph(as_image(src = paste0(tempdir(), "\\temp_graph", list_number$fig, "002.png"), width=dim_width,height=dim_width*dims[1]/dims[2])))
   
   ft <- delete_part(ft, part = "header")
   ft <- border(ft,  border=fp_border(width=0))
@@ -330,13 +330,13 @@ tryCatch({
   temp <- data.frame(1,2)
   ft <- flextable(temp)
   ft <- width(ft, width = dim_width)
-  ft <- display(ft,
-                i = NULL, col_key = "X1", pattern= "{{dummy1}}",
-                formatters = list(dummy1 ~ as_image(X1,src = paste0(tempdir(), "\\temp_graph", list_number$fig, "001.png"), width=dim_width,height=dim_width*dims[1]/dims[2])))
+  ft <- compose(ft,
+               i = 1, j = 1,
+               value = as_paragraph(as_image(src = paste0(tempdir(), "\\temp_graph", list_number$fig, "001.png"), width=dim_width,height=dim_width*dims[1]/dims[2])))
   
-  ft <- display(ft,
-                i = NULL, col_key = "X2", pattern= "{{dummy2}}",
-                formatters = list(dummy2 ~ as_image(X2,src = paste0(tempdir(), "\\temp_graph", list_number$fig, "002.png"), width=dim_width,height=dim_width*dims[1]/dims[2])))
+  ft <- compose(ft,
+                i = 1, j = 2,
+                value = as_paragraph(as_image(src = paste0(tempdir(), "\\temp_graph", list_number$fig, "002.png"), width=dim_width,height=dim_width*dims[1]/dims[2])))
   
   ft <- delete_part(ft, part = "header")
   ft <- border(ft,  border=fp_border(width=0))
@@ -366,13 +366,13 @@ tryCatch({
   temp <- data.frame(1,2)
   ft <- flextable(temp)
   ft <- width(ft, width = dim_width)
-  ft <- display(ft,
-                i = NULL, col_key = "X1", pattern= "{{dummy1}}",
-                formatters = list(dummy1 ~ as_image(X1,src = paste0(tempdir(), "\\temp_graph", list_number$fig, "001.png"), width=dim_width,height=dim_width*dims[1]/dims[2])))
+  ft <- compose(ft,
+               i = 1, j = 1,
+               value = as_paragraph(as_image(src = paste0(tempdir(), "\\temp_graph", list_number$fig, "001.png"), width=dim_width,height=dim_width*dims[1]/dims[2])))
   
-  ft <- display(ft,
-                i = NULL, col_key = "X2", pattern= "{{dummy2}}",
-                formatters = list(dummy2 ~ as_image(X2,src = paste0(tempdir(), "\\temp_graph", list_number$fig, "002.png"), width=dim_width,height=dim_width*dims[1]/dims[2])))
+  ft <- compose(ft,
+                i = 1, j = 2,
+                value = as_paragraph(as_image(src = paste0(tempdir(), "\\temp_graph", list_number$fig, "002.png"), width=dim_width,height=dim_width*dims[1]/dims[2])))
   
   ft <- delete_part(ft, part = "header")
   ft <- border(ft,  border=fp_border(width=0))
@@ -411,13 +411,13 @@ tryCatch({
     temp <- data.frame(1,2)
     ft <- flextable(temp)
     ft <- width(ft, width = dim_width)
-    ft <- display(ft,
-                  i = NULL, col_key = "X1", pattern= "{{dummy1}}",
-                  formatters = list(dummy1 ~ as_image(X1,src = paste0(tempdir(), "\\temp_graph", list_number$fig, "001.png"), width=dim_width,height=dim_width*dims[1]/dims[2])))
+    ft <- compose(ft,
+                 i = 1, j = 1,
+                 value = as_paragraph(as_image(src = paste0(tempdir(), "\\temp_graph", list_number$fig, "001.png"), width=dim_width,height=dim_width*dims[1]/dims[2])))
     
-    ft <- display(ft,
-                  i = NULL, col_key = "X2", pattern= "{{dummy2}}",
-                  formatters = list(dummy2 ~ as_image(X2,src = paste0(tempdir(), "\\temp_graph", list_number$fig, "002.png"), width=dim_width,height=dim_width*dims[1]/dims[2])))
+    ft <- compose(ft,
+                  i = 1, j = 2,
+                  value = as_paragraph(as_image(src = paste0(tempdir(), "\\temp_graph", list_number$fig, "002.png"), width=dim_width,height=dim_width*dims[1]/dims[2])))
     
     ft <- delete_part(ft, part = "header")
     ft <- border(ft,  border=fp_border(width=0))
@@ -428,6 +428,11 @@ tryCatch({
     list_number$fig <- list_number$fig+1
     
   }
+
+        ft <- compose(ft,
+                    i = 1, j = 1,
+                    value = as_paragraph(as_image(src = paste0(tempdir(), "\\temp_graph", list_number$fig, sprintf("%03d",(2*i)-1), ".png"), width=3.2,height=3.2*dims[1]/dims[2])))
+      
   
   if (year_info$span >  time_limit) {
     
@@ -524,19 +529,20 @@ tryCatch({
                   dt=dt_both,xtitle=paste0(i18n$t("Age-standardized incidence rate per")," ", formatC(100000, format="d", big.mark=",")))
     
     dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", list_number$fig, "001.png")), "dim" )
-    
+    temp <- data.frame(1,2)
+
     for (i in 1:5) {
       
-      temp <- data.frame(1,2)
+
       ft <- flextable(temp)
       ft <- width(ft, width = 3.2)
-      ft <- display(ft,
-                    i = NULL, col_key = "X1", pattern= "{{dummy1}}",
-                    formatters = list(dummy1 ~ as_image(X1,src = paste0(tempdir(), "\\temp_graph", list_number$fig, sprintf("%03d",(2*i)-1), ".png"), width=3.2,height=3.2*dims[1]/dims[2])))
+      ft <- compose(ft,
+                    i = 1, j = 1,
+                    value = as_paragraph(as_image(src = paste0(tempdir(), "\\temp_graph", list_number$fig, sprintf("%03d",(2*i)-1), ".png"), width=3.2,height=3.2*dims[1]/dims[2])))
       
-      ft <- display(ft,
-                    i = NULL, col_key = "X2", pattern= "{{dummy2}}",
-                    formatters = list(dummy2 ~ as_image(X2,src = paste0(tempdir(), "\\temp_graph", list_number$fig, sprintf("%03d",(2*i)), ".png"), width=3.2,height=3.2*dims[1]/dims[2])))
+      ft <- compose(ft,
+                    i = 1, j = 2,
+                    value = as_paragraph(as_image(src = paste0(tempdir(), "\\temp_graph", list_number$fig, sprintf("%03d",(2*i)), ".png"), width=3.2,height=3.2*dims[1]/dims[2])))
       
       ft <- delete_part(ft, part = "header")
       ft <- border(ft,  border=fp_border(width=0))
