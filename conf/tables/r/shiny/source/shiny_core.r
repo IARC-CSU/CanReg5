@@ -724,7 +724,7 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 					age2 <- paste0(((max_age-1)*5), "+")
 				}
 				
-				 ytitle <- paste0(i18n$t("Estimated average percentage change")," (%), ", isolate(input$slideAgeRange)[1], "-", age2, " ",i18n$t("years old"))
+				 ytitle <- paste0(i18n$t("Estimated annual percentage change")," (%), ", isolate(input$slideAgeRange)[1], "-", age2, " ",i18n$t("years old"))
 				 color_bar <- c("Male" = "#2c7bb6", "Female" = "#b62ca1")
 		 
 
