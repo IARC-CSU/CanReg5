@@ -91,6 +91,7 @@ public class Globals {
      */
     static public String DEFAULT_SYSTEM_XML = "./conf/database/TRN.xml";
     public static String DEFAULT_DICTIONARIES_FOLDER = "/canreg/common/resources/dictionaries";
+    public static String ADHOC_SYSTEM_XML = "./conf/adhoc/ADHOC.xml";
     /**
      *
      */
@@ -101,6 +102,7 @@ public class Globals {
     static final private String CANREG_SERVER_DATABASE_FOLDER_NAME = "Database";
     static final private String CANREG_BACKUP_FOLDER_NAME = "Backup";
     static final private String CANREG_HOLDING_DB_SYSTEM_DESCRIPTION_FOLDER_NAME = "Holding";
+    static final private String CANREG_ADHOC_DB_SYSTEM_DESCRIPTION_FOLDER_NAME = "AdHoc";
     static public String CANREG_PASSWORD_FILE_NAME = CANREG_SERVER_FOLDER + FILE_SEPARATOR + "passwords.properties";
     static public String CANREG_LEVELS_FILE_NAME = CANREG_SERVER_FOLDER + FILE_SEPARATOR + "levels.properties";
     static public String CANREG_UPDATED_INSTRUCTIONS_URL = "http://www.iacr.com.fr/CanReg5/CanReg5-instructions.pdf";
@@ -140,6 +142,10 @@ public class Globals {
      * 
      */
     static public String CANREG_SERVER_HOLDING_DB_SYSTEM_DESCRIPTION_FOLDER = CANREG_SERVER_FOLDER + Globals.FILE_SEPARATOR + CANREG_HOLDING_DB_SYSTEM_DESCRIPTION_FOLDER_NAME;
+    /**
+     * 
+     */
+    static public String CANREG_SERVER_ADHOC_DB_SYSTEM_DESCRIPTION_FOLDER = CANREG_SERVER_FOLDER + Globals.FILE_SEPARATOR + CANREG_ADHOC_DB_SYSTEM_DESCRIPTION_FOLDER_NAME;
     /**
      *
      */

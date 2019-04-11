@@ -1,4 +1,4 @@
-<?xml version="1.1" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 
 <Form version="1.5" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JInternalFrameFormInfo">
   <Properties>
@@ -208,7 +208,7 @@
                               </Group>
                               <Component id="basisCodesCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="193" max="32767" attributes="0"/>
+                          <EmptySpace pref="159" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -466,7 +466,7 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="regionLabel" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="regionComboBox" pref="94" max="32767" attributes="1"/>
+                              <Component id="regionComboBox" pref="82" max="32767" attributes="1"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="registryNameLabel" min="-2" max="-2" attributes="0"/>
@@ -476,8 +476,8 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="jButton1" min="-2" max="-2" attributes="0"/>
-                          <Component id="jButton2" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="loadXMLbtn" min="-2" max="-2" attributes="0"/>
+                          <Component id="saveXML" alignment="1" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -490,7 +490,7 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="registryNameLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="registryNameTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="loadXMLbtn" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -499,7 +499,7 @@
                           <Component id="checkIfUniqueButton" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="regionLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="regionComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jButton2" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="saveXML" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
@@ -563,20 +563,20 @@
                 <Property name="name" type="java.lang.String" value="registryNameTextField" noResource="true"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="jButton1">
+            <Component class="javax.swing.JButton" name="loadXMLbtn">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                  <action class="canreg.client.gui.management.ModifyDatabaseStructureInternalFrame" id="pickXML" methodName="pickXML"/>
+                  <action class="canreg.client.gui.management.systemeditor.ModifyDatabaseStructureInternalFrame" id="pickXML" methodName="pickXML"/>
                 </Property>
-                <Property name="name" type="java.lang.String" value="jButton1" noResource="true"/>
+                <Property name="name" type="java.lang.String" value="loadXMLbtn" noResource="true"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="jButton2">
+            <Component class="javax.swing.JButton" name="saveXML">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                   <action class="canreg.client.gui.management.ModifyDatabaseStructureInternalFrame" id="saveXML" methodName="saveXML"/>
                 </Property>
-                <Property name="name" type="java.lang.String" value="jButton2" noResource="true"/>
+                <Property name="name" type="java.lang.String" value="saveXML" noResource="true"/>
               </Properties>
             </Component>
           </SubComponents>

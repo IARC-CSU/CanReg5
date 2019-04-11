@@ -138,9 +138,11 @@ public class InstallNewSystemInternalFrame extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * 
-     */
+    
+    public void setSystemDescriptionPath(String path) {
+        fileNameTextField.setText(path);
+    }
+    
     @Action
     public void installAction() {
         String fileNameWithPath = fileNameTextField.getText().trim();

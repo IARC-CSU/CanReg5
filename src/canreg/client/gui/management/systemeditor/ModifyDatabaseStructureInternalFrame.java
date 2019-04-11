@@ -38,9 +38,12 @@ import canreg.server.management.SystemDescription;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.nio.file.Files;
 import java.util.Arrays;
+import java.util.ResourceBundle;
 import java.util.Set;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComponent;
 import javax.swing.JDesktopPane;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -83,6 +86,8 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
     private SystemDescription systemDescription;
     private final JDesktopPane dtp;
     private boolean structureChanged = false;
+    private boolean adHoc = false;
+    
 
     /** Creates new form ModifyDatabaseStructureInternalFrame */
     public ModifyDatabaseStructureInternalFrame(JDesktopPane dtp) {
@@ -102,6 +107,18 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         // databaseIndexPanel.setVisible(false);
         codingPanel.setVisible(false);
         settingsPanel.setVisible(false);
+    }
+    
+    public JComponent getMainPanel() {
+        return this.jSplitPane1;
+    }
+    
+    public String getRegistryName() {
+        return registryNameTextField.getText();
+    }
+    
+    public String getRegistryCode() {
+        return registryCodeTextField.getText();
     }
 
     private void setListeners() {
@@ -163,8 +180,8 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         regionComboBox = new javax.swing.JComboBox();
         registryNameLabel = new javax.swing.JLabel();
         registryNameTextField = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        loadXMLbtn = new javax.swing.JButton();
+        saveXML = new javax.swing.JButton();
 
         setClosable(true);
         setResizable(true);
@@ -292,9 +309,9 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
                             .addGroup(codingPanelLayout.createSequentialGroup()
                                 .addComponent(dateSeparatorLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(dateSeparatorTextField, 0, 0, Short.MAX_VALUE))))
+                                .addComponent(dateSeparatorTextField, 0, 1, Short.MAX_VALUE))))
                     .addComponent(basisCodesCheckBox))
-                .addContainerGap(193, Short.MAX_VALUE))
+                .addContainerGap(159, Short.MAX_VALUE))
         );
         codingPanelLayout.setVerticalGroup(
             codingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -421,11 +438,11 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         registryNameTextField.setName("registryNameTextField"); // NOI18N
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(ModifyDatabaseStructureInternalFrame.class, this);
-        jButton1.setAction(actionMap.get("pickXML")); // NOI18N
-        jButton1.setName("jButton1"); // NOI18N
+        loadXMLbtn.setAction(actionMap.get("pickXML")); // NOI18N
+        loadXMLbtn.setName("loadXMLbtn"); // NOI18N
 
-        jButton2.setAction(actionMap.get("saveXML")); // NOI18N
-        jButton2.setName("jButton2"); // NOI18N
+        saveXML.setAction(actionMap.get("saveXML")); // NOI18N
+        saveXML.setName("saveXML"); // NOI18N
 
         javax.swing.GroupLayout generalPanelLayout = new javax.swing.GroupLayout(generalPanel);
         generalPanel.setLayout(generalPanelLayout);
@@ -444,15 +461,15 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(regionLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(regionComboBox, 0, 94, Short.MAX_VALUE))
+                        .addComponent(regionComboBox, 0, 82, Short.MAX_VALUE))
                     .addGroup(generalPanelLayout.createSequentialGroup()
                         .addComponent(registryNameLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(registryNameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(loadXMLbtn)
+                    .addComponent(saveXML))
                 .addContainerGap())
         );
         generalPanelLayout.setVerticalGroup(
@@ -462,7 +479,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
                 .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(registryNameLabel)
                     .addComponent(registryNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(loadXMLbtn))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(registryCodeLabel)
@@ -470,7 +487,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
                     .addComponent(checkIfUniqueButton)
                     .addComponent(regionLabel)
                     .addComponent(regionComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2))
+                    .addComponent(saveXML))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -525,6 +542,11 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         }
         openXML();
     }
+    
+    public void pickXML(String pathToXML) {
+        fileName = pathToXML;
+        openXML();
+    }
 
     public void openXML() {
         // load system desc
@@ -558,36 +580,45 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         strictPasswordModeCheckBox.setSelected("1".equals(systemDescription.getTextContentFromElement("password_rules")));
 
         codeChanged(registryCodeTextField.getText());
-
+    }
+    
+    public void saveXML(String xmlPath) {
+        fileName = xmlPath;
+        systemDescription = new SystemDescription(fileName);
+        saveXML();
     }
 
     @Action
     public void saveXML() {
-        jButton2.setEnabled(false);
-        // first check to see if all minimum required variables are present
-        Set<String> missingStandardVariables = Tools.getMissingStandardVariables((DatabaseVariablesListElement[]) databaseVariablePanel.getDatabaseElements());
-        // In this editor we only warn - during database boot we will stop if not all variables are there...
-        if (!missingStandardVariables.isEmpty()) {
-            String warning = "Warning! The following variables are missing from the minimum required set of variables:";
-            for (String variable : missingStandardVariables) {
-                warning += "\n" + variable;
+        saveXML.setEnabled(false);
+        
+        if(! adHoc) {
+            // first check to see if all minimum required variables are present
+            Set<String> missingStandardVariables = Tools.getMissingStandardVariables((DatabaseVariablesListElement[]) databaseVariablePanel.getDatabaseElements());
+            // In this editor we only warn - during database boot we will stop if not all variables are there...
+            if (!missingStandardVariables.isEmpty()) {
+                String warning = "Warning! The following variables are missing from the minimum required set of variables:";
+                for (String variable : missingStandardVariables) {
+                    warning += "\n" + variable;
+                }
+                warning += "\n\nDo you still want to save?";
+                int option = JOptionPane.showConfirmDialog(this, warning, "Warning!", JOptionPane.YES_NO_OPTION);
+                if (option == JOptionPane.NO_OPTION) {
+                    return;
+                }
             }
-            warning += "\n\nDo you still want to save?";
-            int option = JOptionPane.showConfirmDialog(this, warning, "Warning!", JOptionPane.YES_NO_OPTION);
-            if (option == JOptionPane.NO_OPTION) {
-                return;
+            if (checkCode(registryCodeTextField.getText())) {
+                // overwriting the XML of a running system
+                if (structureChanged) {
+                    // don't let the user save their new XML
+                    JOptionPane.showMessageDialog(this, "Database '" + registryCodeTextField.getText() + "' exists and you have done changes to the structure of the database.\n"
+                            + "You can't save this XML with this code before you have deleted the old database files.\n"
+                            + "Please refer to the handbook for more information on this.", "Database exists", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
             }
         }
-        if (checkCode(registryCodeTextField.getText())) {
-            // overwriting the XML of a running system
-            if (structureChanged) {
-                // don't let the user save their new XML
-                JOptionPane.showMessageDialog(this, "Database '" + registryCodeTextField.getText() + "' exists and you have done changes to the structure of the database.\n"
-                        + "You can't save this XML with this code before you have deleted the old database files.\n"
-                        + "Please refer to the handbook for more information on this.", "Database exists", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-        }
+        
         // refresh the doc
         // set the system stuff
         systemDescription.setRegistryName(registryNameTextField.getText());
@@ -598,23 +629,26 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         systemDescription.setVariables((DatabaseVariablesListElement[]) databaseVariablePanel.getDatabaseElements());
         systemDescription.setIndexes((DatabaseIndexesListElement[]) databaseIndexPanel.getDatabaseElements());
         systemDescription.setPersonSearcher((PersonSearcher) personSearchVariablesPanel.getSearcher());
-        // save doc
-        fileName = Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + File.separator + registryCodeTextField.getText().trim() + ".xml";
-        File file = new File(fileName);
+        
         File oldFile = null;
-        if (file.exists()) {
-            int i = 0;
-            oldFile = new File(fileName + "." + i);
-            while (oldFile.exists()) {
-                i++;
+        File file = new File(fileName);
+        if(! adHoc) {
+            fileName = Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + File.separator + registryCodeTextField.getText().trim() + ".xml";
+                
+            if (file.exists()) {
+                int i = 0;
                 oldFile = new File(fileName + "." + i);
+                while (oldFile.exists()) {
+                    i++;
+                    oldFile = new File(fileName + "." + i);
+                }
+                file.renameTo(oldFile.getAbsoluteFile());
             }
-            file.renameTo(oldFile.getAbsoluteFile());
         }
         
         try {
             systemDescription.saveSystemDescriptionXML(fileName);
-            String message = java.util.ResourceBundle.getBundle("canreg/client/gui/management/systemeditor/resources/ModifyDatabaseStructureInternalFrame").getString("SYSTEM_DEFINITION_SAVED_AS_") + fileName + ".";
+            String message = java.util.ResourceBundle.getBundle("canreg/client/gui/management/systemeditor/resources/ModifyDatabaseStructureInternalFrame").getString("SYSTEM_DEFINITION_SAVED_AS_") + " " + fileName + ".";
             if (oldFile != null) {
                 message += "\n" + java.util.ResourceBundle.getBundle("canreg/client/gui/management/systemeditor/resources/ModifyDatabaseStructureInternalFrame").getString("OLD_FILE_BACKED_UP_AS_") + oldFile.getAbsolutePath();
             }
@@ -630,7 +664,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
             String message = "Something went wrong... Please look into the links between dictionaries, indexes, person search and variables";
             JOptionPane.showMessageDialog(this, message, "Not saved", JOptionPane.INFORMATION_MESSAGE);
         }
-        jButton2.setEnabled(true);
+        saveXML.setEnabled(true);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox basisCodesCheckBox;
@@ -651,10 +685,9 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
     private javax.swing.JPanel generalPanel;
     private javax.swing.JScrollPane groupsScrollPane;
     private javax.swing.JScrollPane indexesScrollPane1;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JButton loadXMLbtn;
     private javax.swing.JLabel maleCodeLabel;
     private javax.swing.JTextField maleCodeTextField;
     private javax.swing.JLabel morphologyLengthLabel;
@@ -667,6 +700,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
     private javax.swing.JTextField registryCodeTextField;
     private javax.swing.JLabel registryNameLabel;
     private javax.swing.JTextField registryNameTextField;
+    private javax.swing.JButton saveXML;
     private javax.swing.JScrollPane searchVariablesScrollPane;
     private javax.swing.JPanel settingsPanel;
     private javax.swing.JCheckBox specialRegistryCheckBox;
@@ -748,4 +782,14 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
             }
         }
     }
+
+    public void configureForAdHoc() {
+        this.adHoc = true;
+        fileName = Globals.ADHOC_SYSTEM_XML;
+        openXML();
+        this.loadXMLbtn.setVisible(false);
+        this.saveXML.setVisible(false);
+        this.jTabbedPane1.setVisible(false);
+    }
+    
 }
