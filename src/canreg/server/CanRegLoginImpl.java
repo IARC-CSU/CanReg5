@@ -52,11 +52,11 @@ public class CanRegLoginImpl extends UnicastRemoteObject
         this.theServer = server;
     }
 
-    public CanRegLoginImpl(String serverCode)
+    public CanRegLoginImpl(String serverCode, boolean isAdHocDB)
             throws RemoteException, MalformedURLException {
         System.setProperty("java.security.auth.login.config", Globals.LOGIN_FILENAME);
         System.setProperty("java.security.policy", Globals.POLICY_FILENAME);
-        theServer = new CanRegServerImpl(serverCode);
+        theServer = new CanRegServerImpl(serverCode, isAdHocDB);
     }
 
     @Override

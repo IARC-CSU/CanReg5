@@ -105,7 +105,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      * @param registryCode
      * @throws java.rmi.RemoteException
      */
-    public CanRegServerImpl(String registryCode) throws RemoteException {
+    public CanRegServerImpl(String registryCode, boolean isAdHocDB) 
+            throws RemoteException {
         // Prevent JAVA to use a random port.
         super(1099);
 
@@ -148,7 +149,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         }
 
         // Step one load the system definition...
-        systemDescription = initSystemDescription(defaultRegistryCode, null, false);
+        systemDescription = initSystemDescription(defaultRegistryCode, null, false, isAdHocDB);
         setTrayIconToolTip("CanReg5 server " + registryCode + " definitions read and initialized...");
         
         // Step two: start the database...
@@ -239,13 +240,21 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             throw new RuntimeException("Connection to Database not possible.");
     }
     
-    public SystemDescription initSystemDescription(String originalRegistryCode, String holdingRegistryCode, boolean holding) {
+    public SystemDescription initSystemDescription(String originalRegistryCode, String holdingRegistryCode, boolean holding, boolean isAdHocDB) {
         SystemDescription sysDesc = null;
-        if(holding)
-            sysDesc = new SystemDescription(Globals.CANREG_SERVER_HOLDING_DB_SYSTEM_DESCRIPTION_FOLDER + Globals.FILE_SEPARATOR + originalRegistryCode +
-                                            Globals.FILE_SEPARATOR + holdingRegistryCode + Globals.FILE_SEPARATOR + holdingRegistryCode + ".xml");
-        else
-            sysDesc = new SystemDescription(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + originalRegistryCode + ".xml");
+        
+        if(isAdHocDB) {
+            sysDesc = new SystemDescription(Globals.CANREG_SERVER_ADHOC_DB_SYSTEM_DESCRIPTION_FOLDER + Globals.FILE_SEPARATOR + originalRegistryCode + ".xml");
+        } else {
+            if(holding)
+                sysDesc = new SystemDescription(Globals.CANREG_SERVER_HOLDING_DB_SYSTEM_DESCRIPTION_FOLDER + Globals.FILE_SEPARATOR + originalRegistryCode +
+                                                Globals.FILE_SEPARATOR + holdingRegistryCode + Globals.FILE_SEPARATOR + holdingRegistryCode + ".xml");
+            else
+                sysDesc = new SystemDescription(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + originalRegistryCode + ".xml");
+        }
+        
+            
+        
 
         if (sysDesc.getSystemDescriptionDocument() == null) 
             throw new RuntimeException("Failed to initiate System Definition");

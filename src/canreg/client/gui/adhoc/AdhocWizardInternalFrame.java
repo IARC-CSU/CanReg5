@@ -20,6 +20,8 @@
 
 package canreg.client.gui.adhoc;
 
+import canreg.client.CanRegClientApp;
+import canreg.client.gui.importers.ImportFilesView;
 import canreg.client.gui.management.systemeditor.ModifyDatabaseStructureInternalFrame;
 import canreg.common.Globals;
 import canreg.server.management.SystemDescription;
@@ -40,14 +42,20 @@ import org.jdesktop.application.Action;
 public class AdhocWizardInternalFrame extends javax.swing.JInternalFrame
                                       /*implements ActionListener*/ {
 
-    ResourceBundle resourceMap = java.util.ResourceBundle.getBundle("canreg/client/gui/adhoc/resources/AdhocWizardInternalFrame");
-    ModifyDatabaseStructureInternalFrame databaseStructureFrame;
+    private ResourceBundle resourceMap = java.util.ResourceBundle.getBundle("canreg/client/gui/adhoc/resources/AdhocWizardInternalFrame");
+    private ModifyDatabaseStructureInternalFrame databaseStructureFrame;
+    private ImportFilesView importFilesFrame;
     
     public AdhocWizardInternalFrame() {
         initComponents();
         databaseStructureFrame = new ModifyDatabaseStructureInternalFrame(null);
         databaseStructureFrame.configureForAdHoc();
-        tabbedPane.addTab(resourceMap.getString("databaseStructure.tabTitle"), databaseStructureFrame.getMainPanel()); 
+        
+        importFilesFrame = new ImportFilesView();
+        importFilesFrame.configureForAdHoc();
+        
+        tabbedPane.addTab(resourceMap.getString("databaseStructure.tabTitle"), databaseStructureFrame.getMainPanel());
+        tabbedPane.addTab(resourceMap.getString("importFiles.tabTitle"), importFilesFrame.getMainPanel());
     }
 
     
@@ -130,17 +138,18 @@ public class AdhocWizardInternalFrame extends javax.swing.JInternalFrame
     // End of variables declaration//GEN-END:variables
 
 //    @Override
-    public void databaseStructureNext() {
+    private void databaseStructureNext() {
 //        if (e.getActionCommand().equals(ModifyDatabaseStructureInternalFrame.INSTALL_SYSTEM)) {
             try {
                 File adHocSysDescFolder = new File(Globals.CANREG_SERVER_ADHOC_DB_SYSTEM_DESCRIPTION_FOLDER);
                 if( ! adHocSysDescFolder.exists())
                     adHocSysDescFolder.mkdirs();
 
+                String adHocRegistryCode = databaseStructureFrame.getRegistryCode();
                 //Each AdHoc DB is unique by its registry code.
-                File newAdhocFile = new File(adHocSysDescFolder + Globals.FILE_SEPARATOR + databaseStructureFrame.getRegistryCode() + ".xml");
+                File newAdhocFile = new File(adHocSysDescFolder + Globals.FILE_SEPARATOR + adHocRegistryCode + ".xml");
                 if(newAdhocFile.exists()) {
-                    JOptionPane.showMessageDialog(null, resourceMap.getString("THE REGISTRY CODE ") + databaseStructureFrame.getRegistryCode() +
+                    JOptionPane.showMessageDialog(null, resourceMap.getString("THE REGISTRY CODE ") + adHocRegistryCode +
                                         " " + resourceMap.getString("ALREADY EXISTS"),
                                         resourceMap.getString("WARNING"), 
                                         JOptionPane.INFORMATION_MESSAGE);
@@ -151,12 +160,18 @@ public class AdhocWizardInternalFrame extends javax.swing.JInternalFrame
                 //in Canreg's installation folder.
                 Files.copy(new File(Globals.ADHOC_SYSTEM_XML).toPath(), newAdhocFile.toPath());
                 databaseStructureFrame.saveXML(newAdhocFile.getAbsolutePath());
+                CanRegClientApp.getApplication().loginDirect(adHocRegistryCode, "morten", new char[]{'e', 'r', 'v', 'i', 'k'}, true);
+                importFilesFrame.resetDocument();
             } catch(Exception ex) {
                 JOptionPane.showMessageDialog(null, resourceMap.getString("ERROR CREATING ADHOC DB"), 
                                             "ERROR", JOptionPane.ERROR_MESSAGE);
                 Logger.getLogger(AdhocWizardInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
 //        }
+    }
+    
+    private void importFilesNext() {
+        
     }
 
     @Action
@@ -170,8 +185,11 @@ public class AdhocWizardInternalFrame extends javax.swing.JInternalFrame
             case 0:
                 databaseStructureNext();
                 break;
+            case 1:
+                importFilesNext();
+                break;
         }
-//        this.tabbedPane.setSelectedIndex(currentTabIndex + 1);
+        this.tabbedPane.setSelectedIndex(currentTabIndex + 1);
     }
 
     @Action

@@ -1218,6 +1218,9 @@ public class Tools {
      */
     public static File createTempFileInUTF8(File source, String sourceEncoding)
                 throws IOException {
+        if(sourceEncoding == null)
+            return source;
+        
         if(sourceEncoding.toUpperCase().contains("UTF-8"))
             return source;
         

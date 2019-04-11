@@ -893,7 +893,7 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
                     canRegSystemName = CanRegClientApp.getApplication().loginRMI(serverObjectString, username, password);
                 } else {
                     // testing an approach to avoid the RMI for single users
-                    canRegSystemName = CanRegClientApp.getApplication().loginDirect(code, username, password);
+                    canRegSystemName = CanRegClientApp.getApplication().loginDirect(code, username, password, false);
                 }
                 return "OK";
             } catch (LoginException loginException) {

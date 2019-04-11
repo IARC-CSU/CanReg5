@@ -428,10 +428,10 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     }
 
     @Override
-    public SystemDescription initSystemDescription(String originalRegistryCode, String holdingRegistryCode, boolean holding) 
+    public SystemDescription initSystemDescription(String originalRegistryCode, String holdingRegistryCode, boolean holding, boolean isAdHocDB) 
             throws RemoteException, SecurityException {
         checkPermission("initSystemDefinition");
-        return theServer.initSystemDescription(originalRegistryCode, holdingRegistryCode, holding);
+        return theServer.initSystemDescription(originalRegistryCode, holdingRegistryCode, holding, isAdHocDB);
     }
 
     @Override

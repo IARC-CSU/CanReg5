@@ -514,6 +514,9 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
     }//GEN-LAST:event_registryCodeTextFieldFocusLost
 
     private void codeChanged(String code) {
+        if(this.dtp == null)
+            return;
+        
         if (checkCode(code)) {
             JOptionPane.showMessageDialog(this, "Database '" + code + "' exists.\nIf you haven't done so already, please connect to your CanReg system and perform a backup before proceeding.\nPlease refer to the handbook for more information on what changes you can do to a running CanReg5 system.", "Database exists", JOptionPane.INFORMATION_MESSAGE);
         }

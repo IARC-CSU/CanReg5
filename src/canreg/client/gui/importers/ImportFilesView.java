@@ -58,6 +58,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ButtonGroup;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.event.ChangeEvent;
@@ -83,13 +84,13 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
     private File patientInFile;
     private File tumourInFile;
     private File sourceInFile;
-    private final Document doc;
-    private final DatabaseVariablesListElement[] patientVariablesInDB;
-    private final DatabaseVariablesListElement[] tumourVariablesInDB;
-    private final DatabaseVariablesListElement[] sourceVariablesInDB;
+    private Document doc;
+    private DatabaseVariablesListElement[] patientVariablesInDB;
+    private DatabaseVariablesListElement[] tumourVariablesInDB;
+    private DatabaseVariablesListElement[] sourceVariablesInDB;
     private final String path;
     private final LocalSettings localSettings;
-    private final GlobalToolBox globalToolBox;
+    private GlobalToolBox globalToolBox;
     private Task importTask;
     private final JFileChooser chooser;
     private boolean reportFileNameSet = false;
@@ -145,6 +146,18 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
         patientVariablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, Globals.PATIENT_TABLE_NAME);
         tumourVariablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, Globals.TUMOUR_TABLE_NAME);
         sourceVariablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, Globals.SOURCE_TABLE_NAME);
+    }
+    
+    public void resetDocument() {
+        doc = CanRegClientApp.getApplication().getDatabseDescription();
+        patientVariablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, Globals.PATIENT_TABLE_NAME);
+        tumourVariablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, Globals.TUMOUR_TABLE_NAME);
+        sourceVariablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, Globals.SOURCE_TABLE_NAME);
+        globalToolBox = CanRegClientApp.getApplication().getGlobalToolBox();
+    }
+    
+    public JComponent getMainPanel() {
+        return this.tabbedPane;
     }
 
     private void changeTab(int tabNumber) {
@@ -771,6 +784,15 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
         }
     }
 
+    public void configureForAdHoc() {
+        this.holdingDBCheckBox.setSelected(false);
+        this.holdingDBCheckBox.setEnabled(false);
+        this.rejectRadioButton.setEnabled(true);
+        this.overwriteRadioButton.setEnabled(true);
+        this.updateRadioButton.setEnabled(true);
+        this.testOnlyCheckBox.setEnabled(false);
+    }
+
     private class ImportActionTask extends org.jdesktop.application.Task<Object, Void> {
 
         private final List<Relation> variablesMap;
@@ -837,8 +859,10 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
                 }
             } catch(Exception ex) {
                 Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
-                this.firePropertyChange(Import.R_SCRIPTS, 0, 10);
                 success = false;
+                checksBar.setIndeterminate(false);
+                checksBar.setValue(0);
+                importButton.setEnabled(true);
             } finally {
                 for(File file : tempFiles) {
                     file.delete();
@@ -924,7 +948,6 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
 
             vars.setSystemDescriptionXMLPath(RTools.fixPath(systemDescFile.getAbsolutePath()));
 
-                        
             LinkedList<String> shortNames = new LinkedList<>();
             LinkedList<String> varsInCSV = new LinkedList<>();
             if (patientVariablesAssociationPanel.getPanelList() != null) {

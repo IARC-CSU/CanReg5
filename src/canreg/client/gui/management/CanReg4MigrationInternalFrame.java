@@ -670,7 +670,7 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
                     publish(new Progress(Component.LOG, "Login to CanReg5 System.\n"));
                     String canregSystem = null;
                     try {
-                        canregSystem = CanRegClientApp.getApplication().loginDirect(regcode, "morten", password);
+                        canregSystem = CanRegClientApp.getApplication().loginDirect(regcode, "morten", password, false);
                         // Closing WelcomeInternalFrame
                         JDesktopPane jdp = new JDesktopPane();
                         jdp = CanRegClientApp.getApplication().getDeskTopPane();

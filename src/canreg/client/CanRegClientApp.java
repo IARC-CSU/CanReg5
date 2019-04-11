@@ -454,17 +454,17 @@ public class CanRegClientApp extends SingleFrameApplication {
         CanRegLoginInterface loginServer = getCanRegLoginServer(serverObjectString);
         //login object received
         if (loginServer != null) {
-            returnString = login(loginServer, username, password);
+            returnString = login(loginServer, username, password, false);
         }
         return returnString;
     }
 
-    public String loginDirect(String serverCode, String username, char[] password)
+    public String loginDirect(String serverCode, String username, char[] password, boolean isAdHocDB)
             throws LoginException, NullPointerException, NotBoundException, MalformedURLException,
                    RemoteException, UnknownHostException, WrongCanRegVersionException {
         // should this be moved to the loginserver?
-        CanRegLoginInterface loginServer = new CanRegLoginImpl(serverCode);
-        return login(loginServer, username, password);
+        CanRegLoginInterface loginServer = new CanRegLoginImpl(serverCode, isAdHocDB);
+        return login(loginServer, username, password, isAdHocDB);
     }
 
     private CanRegLoginInterface getCanRegLoginServer(String serverObjectString) 
@@ -472,7 +472,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         return (CanRegLoginInterface) Naming.lookup(serverObjectString);
     }
 
-    private String login(CanRegLoginInterface loginServer, String username, char[] password) 
+    private String login(CanRegLoginInterface loginServer, String username, char[] password, boolean isAdHocDB) 
             throws LoginException, NullPointerException, NotBoundException, MalformedURLException,
             RemoteException, UnknownHostException, WrongCanRegVersionException {
         if (!canRegSystemVersionString.trim().equalsIgnoreCase(loginServer.getSystemVersion().trim())) {
@@ -490,21 +490,29 @@ public class CanRegClientApp extends SingleFrameApplication {
             loggedIn = true;
             doc = mainServer.getDatabseDescription();
             dictionary = mainServer.getDictionary();
+            
+            if(isAdHocDB) 
+                globalToolBox = null;
+            
             globalToolBox = getGlobalToolBox();
 
             canregServerRunningOnThisMachine = InetAddress.getLocalHost().
                     equals(mainServer.getIPAddress());
-            Globals.UserRightLevels i = getUserRightLevel();
-            canRegClientView.setUserRightsLevel(i);
             
-            try {
-                canRegClientView.setHoldingDBsList(mainServer.getHoldingDBsList());
-            } catch(IOException ex) {
-                List<String> strs = new LinkedList<>();
-                strs.add(java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("ERROR HOLDING DB"));
-                canRegClientView.setHoldingDBsList(strs);
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, "Error while trying to list holding DBs", ex);
+            if( ! isAdHocDB) {
+                Globals.UserRightLevels i = getUserRightLevel();
+                canRegClientView.setUserRightsLevel(i);
+
+                try {
+                    canRegClientView.setHoldingDBsList(mainServer.getHoldingDBsList());
+                } catch(IOException ex) {
+                    List<String> strs = new LinkedList<>();
+                    strs.add(java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("ERROR HOLDING DB"));
+                    canRegClientView.setHoldingDBsList(strs);
+                    Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, "Error while trying to list holding DBs", ex);
+                }
             }
+            
 
             checker = new Checker(globalToolBox.getStandardVariables());
             converter = new Converter(globalToolBox.getStandardVariables());

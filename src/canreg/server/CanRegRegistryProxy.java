@@ -115,7 +115,7 @@ public class CanRegRegistryProxy implements CanRegServerInterface, Serializable 
             throws RemoteException {
         String originalRegistryCode = holdingRegistryCode.substring(holdingRegistryCode.indexOf("_") + 1);
         originalRegistryCode = originalRegistryCode.substring(0, originalRegistryCode.indexOf("_"));
-        SystemDescription sysDesc = serverProxy.initSystemDescription(originalRegistryCode, holdingRegistryCode, true);
+        SystemDescription sysDesc = serverProxy.initSystemDescription(originalRegistryCode, holdingRegistryCode, true, false);
         initDataBase(sysDesc, true);
         return new CanRegRegistryProxy(serverProxy, holdingRegistryCode);
     }
@@ -541,10 +541,10 @@ public class CanRegRegistryProxy implements CanRegServerInterface, Serializable 
     @Override
     public SystemDescription initSystemDescription(String originalRegistryCode, 
                                                   String holdingRegistryCode, 
-                                                  boolean holding) 
+                                                  boolean holding, boolean isAdHocDB) 
             throws RemoteException, SecurityException {
         changeRegistryDB(registryCode);
-        SystemDescription toReturn = serverProxy.initSystemDescription(originalRegistryCode, holdingRegistryCode, holding);
+        SystemDescription toReturn = serverProxy.initSystemDescription(originalRegistryCode, holdingRegistryCode, holding, isAdHocDB);
         resetRegistryDB();
         return toReturn;
     }

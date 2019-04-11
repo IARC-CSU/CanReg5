@@ -64,7 +64,7 @@ public interface CanRegServerInterface extends Remote {
      * @throws RemoteException
      * @throws SecurityException 
      */
-    public SystemDescription initSystemDescription(String originalRegistryCode, String holdingRegistryCode, boolean holding) 
+    public SystemDescription initSystemDescription(String originalRegistryCode, String holdingRegistryCode, boolean holding, boolean isAdHocDB) 
             throws RemoteException, SecurityException;
     
     
