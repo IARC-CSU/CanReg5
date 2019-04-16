@@ -865,7 +865,8 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
                 importButton.setEnabled(true);
             } finally {
                 for(File file : tempFiles) {
-                    file.delete();
+                    if(file != null)
+                        file.delete();
                 }
             }
             return success;  // return your result
