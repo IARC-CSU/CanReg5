@@ -20,6 +20,7 @@
 package canreg.client.gui;
 
 import canreg.client.*;
+import canreg.client.gui.adhoc.AdHocDatabaseFrame;
 import canreg.client.gui.adhoc.AdhocWizardInternalFrame;
 import canreg.client.gui.analysis.ExportReportInternalFrame;
 import canreg.client.gui.analysis.FrequenciesByYearInternalFrame;
@@ -1838,7 +1839,7 @@ public final class CanRegClientView extends FrameView {
 
     @Action
     public void adhocButtonAction() {
-        AdhocWizardInternalFrame internalFrame = new AdhocWizardInternalFrame();
+        AdHocDatabaseFrame internalFrame = new AdHocDatabaseFrame(desktopPane);
         showAndPositionInternalFrame(desktopPane, (JInternalFrame) internalFrame);
 //        maximizeHeight(desktopPane, (JInternalFrame) internalFrame);
         internalFrame.setLocation(desktopPane.getWidth() / 2 - internalFrame.getWidth() / 2, desktopPane.getHeight() / 2 - internalFrame.getHeight() / 2);

@@ -26,6 +26,7 @@
 package canreg.client.gui;
 
 import canreg.client.CanRegClientApp;
+import canreg.client.gui.adhoc.AdHocDatabaseFrame;
 import canreg.client.gui.adhoc.AdhocWizardInternalFrame;
 import canreg.client.gui.management.InstallNewSystemInternalFrame;
 import canreg.common.Globals;
@@ -331,9 +332,8 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
 
     @Action
     public void adHocAnalysisAction() {
-        AdhocWizardInternalFrame internalFrame = new AdhocWizardInternalFrame();
+        AdHocDatabaseFrame internalFrame = new AdHocDatabaseFrame(desktopPane);
         desktopPane.add(internalFrame, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        //JFrame mainFrame = CanRegClientApp.getApplication().getMainFrame();
         internalFrame.setLocation(desktopPane.getWidth() / 2 - internalFrame.getWidth() / 2, desktopPane.getHeight() / 2 - internalFrame.getHeight() / 2);
         internalFrame.setVisible(true);
         this.dispose();

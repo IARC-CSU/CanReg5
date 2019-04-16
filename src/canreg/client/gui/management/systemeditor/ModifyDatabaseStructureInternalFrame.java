@@ -794,5 +794,16 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         this.saveXML.setVisible(false);
         this.jTabbedPane1.setVisible(false);
     }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        this.registryNameTextField.setEnabled(enabled);
+        this.registryCodeTextField.setEnabled(enabled);
+        this.regionComboBox.setEnabled(enabled);
+        this.loadXMLbtn.setEnabled(enabled);
+        this.saveXML.setEnabled(enabled);
+        this.jTabbedPane1.setEnabled(enabled);
+    }
+    
     
 }
