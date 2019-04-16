@@ -21,7 +21,7 @@ check.code.dic <- function(dic.codes.tidy = data.frame,
     dt[str_detect(names(dt),"_error")] <- lapply(dt[str_detect(names(dt),"_error")], 
                                                  function(x) replace(x, (!x %in% c("no error")), "error"))
     dt <- pasteCodeError(dt,
-                         "(there is not this code in the dictionary)")
+                         "(this code is not in the dictionary)")
     
     aux.dt <- dt[str_detect(names(dt),"_error$")]
     aux.dt[aux.dt != "no error"] <- "error"
