@@ -47,14 +47,17 @@ public class AdHocDatabaseFrame extends javax.swing.JInternalFrame {
     
     public AdHocDatabaseFrame(JDesktopPane dtp) {
         initComponents();
-        setTitle(resourceMap.getString("Form.title")); // NOI18N
+        setTitle(resourceMap.getString("Form.title"));
         this.desktopPane = dtp;
         databaseStructureFrame = new ModifyDatabaseStructureInternalFrame(null);
         databaseStructureFrame.configureForAdHoc();
         databaseStructureFrame.setEnabled(false);
-        this.jPanel3.add(databaseStructureFrame.getMainPanel());
+        this.jPanel3.add(databaseStructureFrame.getMainPanel());        
+        
         this.pack();
         this.jPanel3.setVisible(false);
+        
+        dbsCombo.setModel(new javax.swing.DefaultComboBoxModel<>(getAdHocDBsList()));
     }
 
     /**
@@ -86,9 +89,6 @@ public class AdHocDatabaseFrame extends javax.swing.JInternalFrame {
         chooseDbLabel.setText(resourceMap.getString("chooseDbLabel.text")); // NOI18N
         chooseDbLabel.setName("chooseDbLabel"); // NOI18N
 
-        dbsCombo.setModel(new javax.swing.DefaultComboBoxModel<>(getAdHocDBsList()));
-        dbsCombo.setSelectedIndex(-1);
-        dbsCombo.setSelectedIndex(0);
         dbsCombo.setToolTipText(resourceMap.getString("dbsCombo.toolTipText")); // NOI18N
         dbsCombo.setName("dbsCombo"); // NOI18N
 
@@ -101,12 +101,12 @@ public class AdHocDatabaseFrame extends javax.swing.JInternalFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(24, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(chooseDbLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(dbsCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(newDBbutton, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -184,7 +184,7 @@ public class AdHocDatabaseFrame extends javax.swing.JInternalFrame {
 
     private String[] getAdHocDBsList() {
         File adHocSysDescFolder = new File(Globals.CANREG_SERVER_ADHOC_DB_SYSTEM_DESCRIPTION_FOLDER);
-        if( ! adHocSysDescFolder.exists()) {
+        if( ! adHocSysDescFolder.exists() || adHocSysDescFolder.listFiles().length == 0) {
             this.createNewDatabaseAction();
             return new String[]{resourceMap.getString("NO ADHOC DATABASE FOUND")};
         }
@@ -228,7 +228,7 @@ public class AdHocDatabaseFrame extends javax.swing.JInternalFrame {
                 adHocSysDescFolder.mkdirs();
             
             String adhocRegCode = null;
-            if(dbsCombo.getSelectedIndex() != -1) { 
+            if(dbsCombo.getSelectedIndex() != -1 && ! dbsCombo.getSelectedItem().equals(resourceMap.getString("NO ADHOC DATABASE FOUND"))) { 
                 adhocRegCode = (String) dbsCombo.getSelectedItem();
                 adhocRegCode = adhocRegCode.substring(0, adhocRegCode.indexOf(".xml"));
             }
@@ -273,7 +273,7 @@ public class AdHocDatabaseFrame extends javax.swing.JInternalFrame {
                                         resourceMap.getString("WARNING"), 
                                         JOptionPane.INFORMATION_MESSAGE);
             else if(resultString.equals(SUCCESS)) {
-                AdhocWizardInternalFrame internalFrame = new AdhocWizardInternalFrame();
+                AdhocWizardInternalFrame internalFrame = new AdhocWizardInternalFrame(desktopPane);
                 desktopPane.add(internalFrame, javax.swing.JLayeredPane.DEFAULT_LAYER);
                 internalFrame.setLocation(desktopPane.getWidth() / 2 - internalFrame.getWidth() / 2, desktopPane.getHeight() / 2 - internalFrame.getHeight() / 2);
                 internalFrame.setVisible(true);
