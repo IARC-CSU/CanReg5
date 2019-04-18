@@ -34,8 +34,13 @@ import java.nio.file.Files;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
 import javax.swing.JDesktopPane;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.ListModel;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
 import org.jdesktop.application.Action;
 
 /**
@@ -48,10 +53,12 @@ public class AdhocWizardInternalFrame extends javax.swing.JInternalFrame
     private ResourceBundle resourceMap = java.util.ResourceBundle.getBundle("canreg/client/gui/adhoc/resources/AdhocWizardInternalFrame");
     private ImportFilesView importFilesFrame;
     private BrowseInternalFrame browseFrame;
+    private JDesktopPane dtp;
     private PDSChooserInternalFrame populationFrame;
     private boolean changeTabFlag = false;
     
     public AdhocWizardInternalFrame(JDesktopPane dtp) {
+        this.dtp = dtp;
         initComponents();
         setTitle(resourceMap.getString("Form.title"));
         
@@ -60,12 +67,8 @@ public class AdhocWizardInternalFrame extends javax.swing.JInternalFrame
         
         browseFrame = new BrowseInternalFrame(dtp, null);
         
-        try {
-            populationFrame = new PDSChooserInternalFrame(dtp);
-        } catch(Exception ex) {
-            Logger.getLogger(AdhocWizardInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
-               
+        initPopulationTab();
+        
         tabbedPane.addTab(resourceMap.getString("importFiles.tabTitle"), importFilesFrame.getMainPanel());
         //Don't mind this flag, the tabbedPane is a crappy component.
         changeTabFlag = true;
@@ -73,6 +76,16 @@ public class AdhocWizardInternalFrame extends javax.swing.JInternalFrame
         tabbedPane.addTab(resourceMap.getString("population.tabTitle"), populationFrame.getMainPanel());
     }
 
+    private void initPopulationTab() {
+        try {
+            populationFrame = new PDSChooserInternalFrame(this.dtp);
+            populationFrame.configureForAdHoc(this);
+            if(populationFrame.getJList().getModel().getElementAt(0) != null)
+                tableBuilderBtn.setEnabled(true);
+        } catch(Exception ex) {
+            Logger.getLogger(AdhocWizardInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -194,7 +207,6 @@ public class AdhocWizardInternalFrame extends javax.swing.JInternalFrame
     // End of variables declaration//GEN-END:variables
 
 
-
     @Action
     public void backButtonAction() {
         this.tabbedPane.setSelectedIndex(this.tabbedPane.getSelectedIndex() - 1);
@@ -225,5 +237,12 @@ public class AdhocWizardInternalFrame extends javax.swing.JInternalFrame
         }
         
         super.dispose();
+    }
+
+    public void notifyPopulationListChanged() {
+        if(populationFrame.getJList().getModel().getElementAt(0) != null)
+            this.tableBuilderBtn.setEnabled(true);
+        else
+            this.tableBuilderBtn.setEnabled(false);
     }
 }

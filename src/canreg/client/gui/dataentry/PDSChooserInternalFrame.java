@@ -21,6 +21,7 @@ package canreg.client.gui.dataentry;
 
 import canreg.client.CanRegClientApp;
 import canreg.client.gui.CanRegClientView;
+import canreg.client.gui.adhoc.AdhocWizardInternalFrame;
 import canreg.common.database.PopulationDataset;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,8 +33,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JComponent;
 import javax.swing.JDesktopPane;
 import javax.swing.JFileChooser;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.filechooser.FileFilter;
@@ -50,6 +53,7 @@ public class PDSChooserInternalFrame extends javax.swing.JInternalFrame implemen
     PopulationDataset[] worldPopulationDatasets;
     JDesktopPane dtp;
     private JFileChooser chooser = null;
+    AdhocWizardInternalFrame adHocFrame;
 
     /**
      * Creates new form PDSChooserInternalFrame
@@ -63,6 +67,10 @@ public class PDSChooserInternalFrame extends javax.swing.JInternalFrame implemen
         initComponents();
         initValues();
     }
+    
+    public void configureForAdHoc(AdhocWizardInternalFrame adHocFrame) {
+        this.adHocFrame = adHocFrame;
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -73,6 +81,7 @@ public class PDSChooserInternalFrame extends javax.swing.JInternalFrame implemen
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        mainPanel = new javax.swing.JPanel();
         jButton2 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         populationDataSetsList = new javax.swing.JList();
@@ -100,6 +109,8 @@ public class PDSChooserInternalFrame extends javax.swing.JInternalFrame implemen
         } catch (java.beans.PropertyVetoException e1) {
             e1.printStackTrace();
         }
+
+        mainPanel.setName("mainPanel"); // NOI18N
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(PDSChooserInternalFrame.class, this);
         jButton2.setAction(actionMap.get("editAction")); // NOI18N
@@ -152,16 +163,15 @@ public class PDSChooserInternalFrame extends javax.swing.JInternalFrame implemen
         loadFromFileButton.setAction(actionMap.get("loadFromFile")); // NOI18N
         loadFromFileButton.setName("loadFromFileButton"); // NOI18N
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+        javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
+        mainPanel.setLayout(mainPanelLayout);
+        mainPanelLayout.setHorizontalGroup(
+            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(mainPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 321, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(mainPanelLayout.createSequentialGroup()
                         .addComponent(loadFromFileButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton3)
@@ -169,43 +179,43 @@ public class PDSChooserInternalFrame extends javax.swing.JInternalFrame implemen
                         .addComponent(jButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, mainPanelLayout.createSequentialGroup()
+                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
                             .addComponent(jLabel4)
                             .addComponent(jLabel2)
                             .addComponent(jLabel1))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
-                            .addComponent(dateTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
-                            .addComponent(nameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
-                            .addComponent(sourceTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE))))
+                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(dateTextField)
+                            .addComponent(nameTextField)
+                            .addComponent(sourceTextField))))
                 .addContainerGap())
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+        mainPanelLayout.setVerticalGroup(
+            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(mainPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(sourceTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(dateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2)
                     .addComponent(jButton1)
                     .addComponent(jButton3)
@@ -213,12 +223,34 @@ public class PDSChooserInternalFrame extends javax.swing.JInternalFrame implemen
                 .addContainerGap())
         );
 
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     *
-     */
+    public JComponent getMainPanel() {
+        return this.mainPanel;
+    }
+    
+    public JList getJList() {
+        return populationDataSetsList;
+    }
+    
     @Action
     public void editAction() {
         PDSEditorInternalFrame populationDatasetEditorInternalFrame = new PDSEditorInternalFrame(dtp, worldPopulationDatasets, this);
@@ -239,6 +271,7 @@ public class PDSChooserInternalFrame extends javax.swing.JInternalFrame implemen
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JButton loadFromFileButton;
+    private javax.swing.JPanel mainPanel;
     private javax.swing.JTextField nameTextField;
     private javax.swing.JList populationDataSetsList;
     private javax.swing.JTextField sourceTextField;
@@ -272,10 +305,12 @@ public class PDSChooserInternalFrame extends javax.swing.JInternalFrame implemen
 
     private void listElementChanged(ListSelectionEvent e) {
         PopulationDataset pds = (PopulationDataset) populationDataSetsList.getSelectedValue();
-        nameTextField.setText(pds.getPopulationDatasetName());
-        sourceTextField.setText(pds.getSource());
-        descriptionTextArea.setText(pds.getDescription());
-        dateTextField.setText(pds.getDate());
+        if(pds != null) {
+            nameTextField.setText(pds.getPopulationDatasetName());
+            sourceTextField.setText(pds.getSource());
+            descriptionTextArea.setText(pds.getDescription());
+            dateTextField.setText(pds.getDate());
+        }
     }
 
     /**
@@ -310,6 +345,8 @@ public class PDSChooserInternalFrame extends javax.swing.JInternalFrame implemen
             try {
                 populationDatasetsMap = CanRegClientApp.getApplication().getPopulationDatasets(null);
                 initValues();
+                if(adHocFrame != null)
+                    adHocFrame.notifyPopulationListChanged();
             } catch (SecurityException | RemoteException ex) {
                 Logger.getLogger(PDSChooserInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -344,7 +381,8 @@ public class PDSChooserInternalFrame extends javax.swing.JInternalFrame implemen
             idList = new LinkedList<>();
 
             for (PopulationDataset p : populationDatasets) {
-                idList.add(p.getPopulationDatasetID());
+                if(p != null)
+                    idList.add(p.getPopulationDatasetID());
             }
 
             String fileName;
