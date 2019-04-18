@@ -195,10 +195,13 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         jSplitPane1.setName("jSplitPane1"); // NOI18N
 
+        jTabbedPane1.setMinimumSize(new java.awt.Dimension(111, 10));
         jTabbedPane1.setName("jTabbedPane1"); // NOI18N
 
+        dictionariesScrollPane.setMinimumSize(new java.awt.Dimension(20, 10));
         dictionariesScrollPane.setName("dictionariesScrollPane"); // NOI18N
 
+        databaseDictionaryPanel.setMinimumSize(new java.awt.Dimension(64, 10));
         databaseDictionaryPanel.setName("databaseDictionaryPanel"); // NOI18N
         dictionariesScrollPane.setViewportView(databaseDictionaryPanel);
 
@@ -335,7 +338,7 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
                     .addComponent(morphologyLengthTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(basisCodesCheckBox)
-                .addContainerGap(160, Short.MAX_VALUE))
+                .addContainerGap(122, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(resourceMap.getString("codingPanel.TabConstraints.tabTitle"), codingPanel); // NOI18N

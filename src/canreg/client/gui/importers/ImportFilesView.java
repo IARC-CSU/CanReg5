@@ -148,7 +148,7 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
         sourceVariablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, Globals.SOURCE_TABLE_NAME);
     }
     
-    public void resetDocument() {
+    public void refreshServerDependentVars() {
         doc = CanRegClientApp.getApplication().getDatabseDescription();
         patientVariablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, Globals.PATIENT_TABLE_NAME);
         tumourVariablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, Globals.TUMOUR_TABLE_NAME);
