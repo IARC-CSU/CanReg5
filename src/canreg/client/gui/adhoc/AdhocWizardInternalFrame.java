@@ -21,6 +21,8 @@
 package canreg.client.gui.adhoc;
 
 import canreg.client.CanRegClientApp;
+import canreg.client.gui.dataentry.BrowseInternalFrame;
+import canreg.client.gui.dataentry.PDSChooserInternalFrame;
 import canreg.client.gui.importers.ImportFilesView;
 import canreg.client.gui.management.systemeditor.ModifyDatabaseStructureInternalFrame;
 import canreg.common.Globals;
@@ -32,6 +34,7 @@ import java.nio.file.Files;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 import org.jdesktop.application.Action;
 
@@ -43,19 +46,31 @@ public class AdhocWizardInternalFrame extends javax.swing.JInternalFrame
                                       /*implements ActionListener*/ {
 
     private ResourceBundle resourceMap = java.util.ResourceBundle.getBundle("canreg/client/gui/adhoc/resources/AdhocWizardInternalFrame");
-    private ModifyDatabaseStructureInternalFrame databaseStructureFrame;
     private ImportFilesView importFilesFrame;
+    private BrowseInternalFrame browseFrame;
+    private PDSChooserInternalFrame populationFrame;
+    private boolean changeTabFlag = false;
     
-    public AdhocWizardInternalFrame() {
+    public AdhocWizardInternalFrame(JDesktopPane dtp) {
         initComponents();
-        databaseStructureFrame = new ModifyDatabaseStructureInternalFrame(null);
-        databaseStructureFrame.configureForAdHoc();
+        setTitle(resourceMap.getString("Form.title"));
         
         importFilesFrame = new ImportFilesView();
         importFilesFrame.configureForAdHoc();
         
-        tabbedPane.addTab(resourceMap.getString("databaseStructure.tabTitle"), databaseStructureFrame.getMainPanel());
+        browseFrame = new BrowseInternalFrame(dtp, null);
+        
+        try {
+            populationFrame = new PDSChooserInternalFrame(dtp);
+        } catch(Exception ex) {
+            Logger.getLogger(AdhocWizardInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+               
         tabbedPane.addTab(resourceMap.getString("importFiles.tabTitle"), importFilesFrame.getMainPanel());
+        //Don't mind this flag, the tabbedPane is a crappy component.
+        changeTabFlag = true;
+        tabbedPane.addTab(resourceMap.getString("browse.tabTitle"), browseFrame.getMainPanel());
+        tabbedPane.addTab(resourceMap.getString("population.tabTitle"), populationFrame.getMainPanel());
     }
 
     
@@ -64,6 +79,7 @@ public class AdhocWizardInternalFrame extends javax.swing.JInternalFrame
     private void initComponents() {
 
         tabbedPane = new javax.swing.JTabbedPane();
+        jPanel1 = new javax.swing.JPanel();
         cancelBtn = new javax.swing.JButton();
         backBtn = new javax.swing.JButton();
         nextBtn = new javax.swing.JButton();
@@ -72,11 +88,19 @@ public class AdhocWizardInternalFrame extends javax.swing.JInternalFrame
         setClosable(true);
         setName("Form"); // NOI18N
 
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(AdhocWizardInternalFrame.class);
+        tabbedPane.setFont(resourceMap.getFont("tabbedPane.font")); // NOI18N
         tabbedPane.setName("tabbedPane"); // NOI18N
+        tabbedPane.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                tabbedPaneStateChanged(evt);
+            }
+        });
+
+        jPanel1.setName("jPanel1"); // NOI18N
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(AdhocWizardInternalFrame.class, this);
         cancelBtn.setAction(actionMap.get("cancelButtonAction")); // NOI18N
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(AdhocWizardInternalFrame.class);
         cancelBtn.setText(resourceMap.getString("cancelBtn.text")); // NOI18N
         cancelBtn.setName("cancelBtn"); // NOI18N
 
@@ -93,6 +117,33 @@ public class AdhocWizardInternalFrame extends javax.swing.JInternalFrame
         tableBuilderBtn.setEnabled(false);
         tableBuilderBtn.setName("tableBuilderBtn"); // NOI18N
 
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(cancelBtn)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 204, Short.MAX_VALUE)
+                .addComponent(backBtn)
+                .addGap(81, 81, 81)
+                .addComponent(nextBtn)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 225, Short.MAX_VALUE)
+                .addComponent(tableBuilderBtn)
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cancelBtn)
+                    .addComponent(backBtn)
+                    .addComponent(nextBtn)
+                    .addComponent(tableBuilderBtn))
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -100,100 +151,79 @@ public class AdhocWizardInternalFrame extends javax.swing.JInternalFrame
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(cancelBtn)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 209, Short.MAX_VALUE)
-                        .addComponent(backBtn)
-                        .addGap(81, 81, 81)
-                        .addComponent(nextBtn)
-                        .addGap(224, 224, 224)
-                        .addComponent(tableBuilderBtn))
-                    .addComponent(tabbedPane))
+                    .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 870, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(tabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 485, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap()
+                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 549, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cancelBtn)
-                    .addComponent(backBtn)
-                    .addComponent(nextBtn)
-                    .addComponent(tableBuilderBtn))
-                .addGap(0, 14, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void tabbedPaneStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabbedPaneStateChanged
+        if( ! changeTabFlag) 
+            return;
+        
+        if(this.tabbedPane.getSelectedIndex() != 0)
+            this.backBtn.setEnabled(true);
+        else
+            this.backBtn.setEnabled(false);
+        
+        if(this.tabbedPane.getSelectedIndex() == (this.tabbedPane.getTabCount() - 1))
+            this.nextBtn.setEnabled(false);
+        else
+            this.nextBtn.setEnabled(true);
+    }//GEN-LAST:event_tabbedPaneStateChanged
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backBtn;
     private javax.swing.JButton cancelBtn;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JButton nextBtn;
     private javax.swing.JTabbedPane tabbedPane;
     private javax.swing.JButton tableBuilderBtn;
     // End of variables declaration//GEN-END:variables
 
-//    @Override
-    private void databaseStructureNext() {
-//        if (e.getActionCommand().equals(ModifyDatabaseStructureInternalFrame.INSTALL_SYSTEM)) {
-            try {
-                File adHocSysDescFolder = new File(Globals.CANREG_SERVER_ADHOC_DB_SYSTEM_DESCRIPTION_FOLDER);
-                if( ! adHocSysDescFolder.exists())
-                    adHocSysDescFolder.mkdirs();
 
-                String adHocRegistryCode = databaseStructureFrame.getRegistryCode();
-                //Each AdHoc DB is unique by its registry code.
-                File newAdhocFile = new File(adHocSysDescFolder + Globals.FILE_SEPARATOR + adHocRegistryCode + ".xml");
-                if(newAdhocFile.exists()) {
-                    JOptionPane.showMessageDialog(null, resourceMap.getString("THE REGISTRY CODE ") + adHocRegistryCode +
-                                        " " + resourceMap.getString("ALREADY EXISTS"),
-                                        resourceMap.getString("WARNING"), 
-                                        JOptionPane.INFORMATION_MESSAGE);
-                    return;
-                }
-
-                //We need to copy the original adHoc system description so we dont modify the original one located
-                //in Canreg's installation folder.
-                Files.copy(new File(Globals.ADHOC_SYSTEM_XML).toPath(), newAdhocFile.toPath());
-                databaseStructureFrame.saveXML(newAdhocFile.getAbsolutePath());
-                CanRegClientApp.getApplication().loginDirect(adHocRegistryCode, "morten", new char[]{'e', 'r', 'v', 'i', 'k'}, true);
-                importFilesFrame.resetDocument();
-            } catch(Exception ex) {
-                JOptionPane.showMessageDialog(null, resourceMap.getString("ERROR CREATING ADHOC DB"), 
-                                            "ERROR", JOptionPane.ERROR_MESSAGE);
-                Logger.getLogger(AdhocWizardInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-            }
-//        }
-    }
-    
-    private void importFilesNext() {
-        
-    }
 
     @Action
     public void backButtonAction() {
+        this.tabbedPane.setSelectedIndex(this.tabbedPane.getSelectedIndex() - 1);
+        if(this.tabbedPane.getSelectedIndex() == 0)
+            this.backBtn.setEnabled(false);
     }
 
     @Action
     public void nextButtonAction() {
-        int currentTabIndex = this.tabbedPane.getSelectedIndex();
-        switch(currentTabIndex) {
-            case 0:
-                databaseStructureNext();
-                break;
-            case 1:
-                importFilesNext();
-                break;
-        }
-        this.tabbedPane.setSelectedIndex(currentTabIndex + 1);
+        this.tabbedPane.setSelectedIndex(this.tabbedPane.getSelectedIndex() + 1);
+        this.backBtn.setEnabled(true);
     }
 
     @Action
     public void cancelButtonAction() {
         this.dispose();
+    }
+    
+    
+    @Override
+    public void dispose() {
+        try {
+            //Logout sets the server reference to null, that's why we first must do the shutdown
+            CanRegClientApp.getApplication().getServer().shutDownServer();
+            CanRegClientApp.getApplication().logOut();
+        } catch(Exception ex) {
+            Logger.getLogger(AdhocWizardInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        super.dispose();
     }
 }

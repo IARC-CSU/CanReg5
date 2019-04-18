@@ -37,236 +37,264 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="resultPanel" alignment="0" max="32767" attributes="0"/>
-                  <Group type="102" alignment="1" attributes="0">
-                      <Component id="rangeFilterPanel" pref="461" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="variablesPanel" min="0" pref="0" max="32767" attributes="1"/>
-                          <Component id="navigationPanel" alignment="0" min="-2" max="-2" attributes="1"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="buttonsPanel" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Component id="holdingOptions" alignment="0" max="32767" attributes="0"/>
-              </Group>
+              <Component id="mainPanel" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <Component id="variablesPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="navigationPanel" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Component id="rangeFilterPanel" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="buttonsPanel" min="-2" max="-2" attributes="1"/>
-              </Group>
-              <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
-              <Component id="holdingOptions" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="resultPanel" max="32767" attributes="0"/>
+              <Component id="mainPanel" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Container class="javax.swing.JPanel" name="buttonsPanel">
+    <Container class="javax.swing.JPanel" name="mainPanel">
       <Properties>
-        <Property name="name" type="java.lang.String" value="buttonsPanel" noResource="true"/>
+        <Property name="name" type="java.lang.String" value="mainPanel" noResource="true"/>
       </Properties>
 
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="editPatientNumberButton" alignment="0" max="32767" attributes="1"/>
-              <Component id="editTableRecordButton" alignment="1" max="32767" attributes="1"/>
-              <Component id="createNextButton" alignment="0" max="32767" attributes="1"/>
-              <Component id="patientNumberTextField" alignment="1" max="32767" attributes="1"/>
-              <Component id="editTumourNumberButton" alignment="0" max="32767" attributes="1"/>
-              <Component id="tumourNumberTextField" alignment="0" max="32767" attributes="1"/>
-          </Group>
-        </DimensionLayout>
-        <DimensionLayout dim="1">
-          <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
-                  <Component id="createNextButton" min="-2" max="-2" attributes="0"/>
+              <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="editTableRecordButton" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="editPatientNumberButton" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="patientNumberTextField" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="editTumourNumberButton" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="tumourNumberTextField" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
-              </Group>
-          </Group>
-        </DimensionLayout>
-      </Layout>
-      <SubComponents>
-        <Component class="javax.swing.JButton" name="createNextButton">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="createNextButton.text"/>
-            <Property name="enabled" type="boolean" value="false"/>
-            <Property name="name" type="java.lang.String" value="createNextButton" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JButton" name="editTableRecordButton">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="editTableRecordButton.text"/>
-            <Property name="name" type="java.lang.String" value="editTableRecordButton" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="patientNumberTextField">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="patientNumberTextField.text"/>
-            <Property name="name" type="java.lang.String" value="patientNumberTextField" noResource="true"/>
-          </Properties>
-          <Events>
-            <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="patientNumberTextFieldMousePressed"/>
-            <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="patientNumberTextFieldMouseReleased"/>
-            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="editPatientIDKeyTyped"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JButton" name="editPatientNumberButton">
-          <Properties>
-            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="canreg.client.gui.dataentry.BrowseInternalFrame" id="editPatientID" methodName="editPatientID"/>
-            </Property>
-            <Property name="text" type="java.lang.String" resourceKey="editPatientNumberButton.text"/>
-            <Property name="name" type="java.lang.String" value="editPatientNumberButton" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="tumourNumberTextField">
-          <Properties>
-            <Property name="name" type="java.lang.String" value="tumourNumberTextField" noResource="true"/>
-          </Properties>
-          <Events>
-            <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tumourNumberTextFieldMousePressed"/>
-            <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tumourNumberTextFieldMouseReleased"/>
-            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="editTumourRecordKeyTyped"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JButton" name="editTumourNumberButton">
-          <Properties>
-            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="canreg.client.gui.dataentry.BrowseInternalFrame" id="editTumourID" methodName="editTumourID"/>
-            </Property>
-            <Property name="text" type="java.lang.String" resourceKey="editTumourNumberButton.text"/>
-            <Property name="name" type="java.lang.String" value="editTumourNumberButton" noResource="true"/>
-          </Properties>
-        </Component>
-      </SubComponents>
-    </Container>
-    <Component class="canreg.client.gui.components.RangeFilterPanel" name="rangeFilterPanel">
-      <Properties>
-        <Property name="name" type="java.lang.String" value="rangeFilterPanel" noResource="true"/>
-      </Properties>
-      <AuxValues>
-        <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="rangeFilterPanel.initValues();&#xa;rangeFilterPanel.setDeskTopPane(dtp);"/>
-      </AuxValues>
-    </Component>
-    <Component class="canreg.client.gui.components.NavigationPanel" name="navigationPanel">
-      <Properties>
-        <Property name="name" type="java.lang.String" value="navigationPanel" noResource="true"/>
-      </Properties>
-    </Component>
-    <Component class="canreg.client.gui.components.DisplayVariablesPanel" name="variablesPanel">
-      <Properties>
-        <Property name="name" type="java.lang.String" value="variablesPanel" noResource="true"/>
-      </Properties>
-    </Component>
-    <Container class="javax.swing.JPanel" name="resultPanel">
-      <Properties>
-        <Property name="name" type="java.lang.String" value="resultPanel" noResource="true"/>
-      </Properties>
-
-      <Layout>
-        <DimensionLayout dim="0">
-          <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="735" max="32767" attributes="0"/>
-          </Group>
-        </DimensionLayout>
-        <DimensionLayout dim="1">
-          <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="169" max="32767" attributes="0"/>
-          </Group>
-        </DimensionLayout>
-      </Layout>
-    </Container>
-    <Container class="javax.swing.JPanel" name="holdingOptions">
-      <Properties>
-        <Property name="name" type="java.lang.String" value="holdingOptions" noResource="true"/>
-      </Properties>
-
-      <Layout>
-        <DimensionLayout dim="0">
-          <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="selectAllChkBox" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="75" max="-2" attributes="0"/>
-                  <Component id="productionBtn" min="-2" pref="226" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
-                  <Component id="deleteHoldingBtn" min="-2" pref="226" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-              </Group>
-          </Group>
-        </DimensionLayout>
-        <DimensionLayout dim="1">
-          <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="selectAllChkBox" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="productionBtn" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="deleteHoldingBtn" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="resultPanel" alignment="0" max="32767" attributes="0"/>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Component id="rangeFilterPanel" pref="449" max="32767" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="variablesPanel" min="0" pref="0" max="32767" attributes="1"/>
+                              <Component id="navigationPanel" alignment="0" min="-2" max="-2" attributes="1"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="buttonsPanel" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Component id="holdingOptions" alignment="0" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="variablesPanel" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="navigationPanel" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Component id="rangeFilterPanel" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="buttonsPanel" min="-2" max="-2" attributes="1"/>
+                  </Group>
+                  <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
+                  <Component id="holdingOptions" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="resultPanel" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JCheckBox" name="selectAllChkBox">
+        <Container class="javax.swing.JPanel" name="buttonsPanel">
           <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="selectAllChkBox.text"/>
-            <Property name="name" type="java.lang.String" value="selectAllChkBox" noResource="true"/>
+            <Property name="name" type="java.lang.String" value="buttonsPanel" noResource="true"/>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="selectAllChkBoxActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JButton" name="productionBtn">
+
+          <Layout>
+            <DimensionLayout dim="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="editPatientNumberButton" alignment="0" max="32767" attributes="1"/>
+                  <Component id="editTableRecordButton" alignment="1" max="32767" attributes="1"/>
+                  <Component id="createNextButton" alignment="0" max="32767" attributes="1"/>
+                  <Component id="patientNumberTextField" alignment="1" max="32767" attributes="1"/>
+                  <Component id="editTumourNumberButton" alignment="0" max="32767" attributes="1"/>
+                  <Component id="tumourNumberTextField" alignment="0" max="32767" attributes="1"/>
+              </Group>
+            </DimensionLayout>
+            <DimensionLayout dim="1">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="createNextButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="editTableRecordButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="editPatientNumberButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="patientNumberTextField" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="editTumourNumberButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="tumourNumberTextField" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+          </Layout>
+          <SubComponents>
+            <Component class="javax.swing.JButton" name="createNextButton">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="createNextButton.text"/>
+                <Property name="enabled" type="boolean" value="false"/>
+                <Property name="name" type="java.lang.String" value="createNextButton" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JButton" name="editTableRecordButton">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="editTableRecordButton.text"/>
+                <Property name="name" type="java.lang.String" value="editTableRecordButton" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="patientNumberTextField">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="patientNumberTextField.text"/>
+                <Property name="name" type="java.lang.String" value="patientNumberTextField" noResource="true"/>
+              </Properties>
+              <Events>
+                <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="patientNumberTextFieldMousePressed"/>
+                <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="patientNumberTextFieldMouseReleased"/>
+                <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="editPatientIDKeyTyped"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="editPatientNumberButton">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="canreg.client.gui.dataentry.BrowseInternalFrame" id="editPatientID" methodName="editPatientID"/>
+                </Property>
+                <Property name="text" type="java.lang.String" resourceKey="editPatientNumberButton.text"/>
+                <Property name="name" type="java.lang.String" value="editPatientNumberButton" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="tumourNumberTextField">
+              <Properties>
+                <Property name="name" type="java.lang.String" value="tumourNumberTextField" noResource="true"/>
+              </Properties>
+              <Events>
+                <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tumourNumberTextFieldMousePressed"/>
+                <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tumourNumberTextFieldMouseReleased"/>
+                <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="editTumourRecordKeyTyped"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="editTumourNumberButton">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="canreg.client.gui.dataentry.BrowseInternalFrame" id="editTumourID" methodName="editTumourID"/>
+                </Property>
+                <Property name="text" type="java.lang.String" resourceKey="editTumourNumberButton.text"/>
+                <Property name="name" type="java.lang.String" value="editTumourNumberButton" noResource="true"/>
+              </Properties>
+            </Component>
+          </SubComponents>
+        </Container>
+        <Component class="canreg.client.gui.components.RangeFilterPanel" name="rangeFilterPanel">
           <Properties>
-            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="canreg.client.gui.dataentry.BrowseInternalFrame" id="productionButtonAction" methodName="productionButtonAction"/>
-            </Property>
-            <Property name="text" type="java.lang.String" resourceKey="productionBtn.text"/>
-            <Property name="name" type="java.lang.String" value="productionBtn" noResource="true"/>
+            <Property name="name" type="java.lang.String" value="rangeFilterPanel" noResource="true"/>
           </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="rangeFilterPanel.initValues();&#xa;rangeFilterPanel.setDeskTopPane(dtp);"/>
+          </AuxValues>
         </Component>
-        <Component class="javax.swing.JButton" name="deleteHoldingBtn">
+        <Component class="canreg.client.gui.components.NavigationPanel" name="navigationPanel">
           <Properties>
-            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="canreg.client.gui.dataentry.BrowseInternalFrame" id="deleteHoldingDBAction" methodName="deleteHoldingDBAction"/>
-            </Property>
-            <Property name="text" type="java.lang.String" resourceKey="deleteHoldingBtn.text"/>
-            <Property name="name" type="java.lang.String" value="deleteHoldingBtn" noResource="true"/>
+            <Property name="name" type="java.lang.String" value="navigationPanel" noResource="true"/>
           </Properties>
         </Component>
+        <Component class="canreg.client.gui.components.DisplayVariablesPanel" name="variablesPanel">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="variablesPanel" noResource="true"/>
+          </Properties>
+        </Component>
+        <Container class="javax.swing.JPanel" name="resultPanel">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="resultPanel" noResource="true"/>
+          </Properties>
+
+          <Layout>
+            <DimensionLayout dim="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <EmptySpace min="0" pref="730" max="32767" attributes="0"/>
+              </Group>
+            </DimensionLayout>
+            <DimensionLayout dim="1">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <EmptySpace min="0" pref="157" max="32767" attributes="0"/>
+              </Group>
+            </DimensionLayout>
+          </Layout>
+        </Container>
+        <Container class="javax.swing.JPanel" name="holdingOptions">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="holdingOptions" noResource="true"/>
+          </Properties>
+
+          <Layout>
+            <DimensionLayout dim="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="selectAllChkBox" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="75" max="-2" attributes="0"/>
+                      <Component id="productionBtn" min="-2" pref="226" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Component id="deleteHoldingBtn" min="-2" pref="226" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+            <DimensionLayout dim="1">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="selectAllChkBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="productionBtn" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="deleteHoldingBtn" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+          </Layout>
+          <SubComponents>
+            <Component class="javax.swing.JCheckBox" name="selectAllChkBox">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="selectAllChkBox.text"/>
+                <Property name="name" type="java.lang.String" value="selectAllChkBox" noResource="true"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="selectAllChkBoxActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="productionBtn">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="canreg.client.gui.dataentry.BrowseInternalFrame" id="productionButtonAction" methodName="productionButtonAction"/>
+                </Property>
+                <Property name="text" type="java.lang.String" resourceKey="productionBtn.text"/>
+                <Property name="name" type="java.lang.String" value="productionBtn" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JButton" name="deleteHoldingBtn">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="canreg.client.gui.dataentry.BrowseInternalFrame" id="deleteHoldingDBAction" methodName="deleteHoldingDBAction"/>
+                </Property>
+                <Property name="text" type="java.lang.String" resourceKey="deleteHoldingBtn.text"/>
+                <Property name="name" type="java.lang.String" value="deleteHoldingBtn" noResource="true"/>
+              </Properties>
+            </Component>
+          </SubComponents>
+        </Container>
       </SubComponents>
     </Container>
   </SubComponents>
