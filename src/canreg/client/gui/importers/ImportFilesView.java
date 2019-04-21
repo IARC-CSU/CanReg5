@@ -683,7 +683,7 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
                 importTask.cancel(true);
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportFilesView").getString("IMPORT_OF_FILE_INTERUPTED"), java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportFilesView").getString("WARNING"), JOptionPane.WARNING_MESSAGE);
                 importTask = null;
-                this.dispose();
+//                this.dispose();
             }
         } else {
             this.dispose();
@@ -890,7 +890,8 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportFilesView").getString("SUCCESSFULLY_IMPORTED_FILE(S)_") + fileListString + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportFilesView").getString("FILE(S)_SUCCESSFULLY_IMPORTED"), JOptionPane.INFORMATION_MESSAGE);
             }
             importTask = null;
-            dispose();
+//            dispose();
+            importButton.setEnabled(true);
         }
 
         private RCheksImportVariables buildRChecksVars()
