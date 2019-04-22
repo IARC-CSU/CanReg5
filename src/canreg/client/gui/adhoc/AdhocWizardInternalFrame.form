@@ -124,6 +124,9 @@
         </Component>
         <Component class="javax.swing.JButton" name="tableBuilderBtn">
           <Properties>
+            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+              <action class="canreg.client.gui.adhoc.AdhocWizardInternalFrame" id="tableBuilderButtonAction" methodName="tableBuilderButtonAction"/>
+            </Property>
             <Property name="text" type="java.lang.String" resourceKey="tableBuilderBtn.text"/>
             <Property name="enabled" type="boolean" value="false"/>
             <Property name="name" type="java.lang.String" value="tableBuilderBtn" noResource="true"/>

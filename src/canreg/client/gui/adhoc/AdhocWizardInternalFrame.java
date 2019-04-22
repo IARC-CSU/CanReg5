@@ -21,6 +21,7 @@
 package canreg.client.gui.adhoc;
 
 import canreg.client.CanRegClientApp;
+import canreg.client.gui.analysis.TableBuilderInternalFrame;
 import canreg.client.gui.dataentry.BrowseInternalFrame;
 import canreg.client.gui.dataentry.PDSChooserInternalFrame;
 import canreg.client.gui.importers.ImportFilesView;
@@ -126,6 +127,7 @@ public class AdhocWizardInternalFrame extends javax.swing.JInternalFrame
         nextBtn.setText(resourceMap.getString("nextBtn.text")); // NOI18N
         nextBtn.setName("nextBtn"); // NOI18N
 
+        tableBuilderBtn.setAction(actionMap.get("tableBuilderButtonAction")); // NOI18N
         tableBuilderBtn.setText(resourceMap.getString("tableBuilderBtn.text")); // NOI18N
         tableBuilderBtn.setEnabled(false);
         tableBuilderBtn.setName("tableBuilderBtn"); // NOI18N
@@ -244,5 +246,13 @@ public class AdhocWizardInternalFrame extends javax.swing.JInternalFrame
             this.tableBuilderBtn.setEnabled(true);
         else
             this.tableBuilderBtn.setEnabled(false);
+    }
+
+    @Action
+    public void tableBuilderButtonAction() {
+        TableBuilderInternalFrame internalFrame = new TableBuilderInternalFrame();
+        dtp.add(internalFrame, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        internalFrame.setLocation(dtp.getWidth() / 2 - internalFrame.getWidth() / 2, dtp.getHeight() / 2 - internalFrame.getHeight() / 2);
+        internalFrame.setVisible(true);
     }
 }
