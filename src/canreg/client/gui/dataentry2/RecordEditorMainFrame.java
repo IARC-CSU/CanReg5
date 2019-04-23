@@ -126,6 +126,7 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
     private BrowseInternalFrame browser;
     private final List<HoldingRawDataInternalFrame> rawDataFrames;
     private canreg.client.gui.dataentry2.RecordEditor productionRecordEditor;
+    private final ChangeListener tabbedPaneChangeListener;
         
     
     public RecordEditorMainFrame(JDesktopPane desktopPane, CanRegServerInterface server, BrowseInternalFrame browser) {        
@@ -161,16 +162,15 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                                 java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorMainFrame")
                                         .getString("REALLY CLOSE?CHANGES MADE WILL BE LOST."), 
                                 "Warning!", JOptionPane.YES_NO_OPTION);
-                    if (option == JOptionPane.YES_OPTION) {
-                        close();
-                    }
-                } else {
-                    close();
-                }
+
+                    if (option == JOptionPane.YES_OPTION) 
+                        releaseResources();
+                } else 
+                    releaseResources();
             }
         });        
         // Add a listener for changing the active tab
-        ChangeListener tabbedPaneChangeListener = new ChangeListener() {
+        tabbedPaneChangeListener = new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
                 JTabbedPane pane = (JTabbedPane) e.getSource();
@@ -195,6 +195,79 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
             frame.dispose();
         releaseRecords();
         dispose();
+    }
+    
+    private void releaseResources() {
+        // Release all patient records held
+        for (DatabaseRecord record : patientRecords) {
+            try {
+                Object idObj = record.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
+                if (idObj != null) {
+                    int id = (Integer) idObj;
+                    canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.PATIENT_TABLE_NAME, server);
+                }
+            } catch (RemoteException ex) {
+                Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SecurityException ex) {
+                Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        patientRecords.clear();
+        
+        // Release all tumour records held
+        for (DatabaseRecord record : tumourRecords) {
+            Tumour tumour = (Tumour) record;            
+            // Release all sources
+            for (Source source : tumour.getSources()) {
+                try {
+                    Object idObj = source.getVariable(Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME);
+                    if (idObj != null) {
+                        int id = (Integer) idObj;
+                        canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.SOURCE_TABLE_NAME, server);
+                    }
+                } catch (RemoteException ex) {
+                    Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SecurityException ex) {
+                    Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            try {
+                Object idObj = tumour.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME);
+                if (idObj != null) {
+                    int id = (Integer) idObj;
+                    canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.TUMOUR_TABLE_NAME, server);
+                }
+            } catch (RemoteException ex) {
+                Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SecurityException ex) {
+                Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        tumourRecords.clear();
+        
+        patientTabbedPane.removeChangeListener(tabbedPaneChangeListener);
+        
+        int totalTabs = patientTabbedPane.getTabCount();
+        for(int i = 0; i < totalTabs; i++) {
+           Component c = patientTabbedPane.getComponentAt(i);
+           ((RecordEditorPatient)c).releaseResources();
+           c = null;           
+        }
+            
+        patientTabbedPane.removeAll();
+        patientTabbedPane = null;
+        
+        tumourTabbedPane.removeChangeListener(tabbedPaneChangeListener);
+        
+        totalTabs = tumourTabbedPane.getTabCount();
+        for(int i = 0; i < totalTabs; i++) {
+           Component c = tumourTabbedPane.getComponentAt(i);
+           ((RecordEditorTumour)c).releaseResources();
+           c = null;           
+        }
+            
+        tumourTabbedPane.removeAll();
+        tumourTabbedPane = null;
     }
 
     private void addToPatientMap(RecordEditorPatient recordEditorPanel, DatabaseRecord dbr) {
@@ -337,7 +410,8 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                     }
                 }
             }                        
-        } else if (dbr instanceof Tumour) {
+        } 
+        else if (dbr instanceof Tumour) {
             //If no patients were previosly added, it gets very very difficult 
             //to link the tumours and the patients.
             if (this.patientTabbedPane.getComponentCount() == 0)
@@ -1719,7 +1793,6 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
         tumourPopupMenu.add(tumourChangePatientRecordMenuItem);
 
         setClosable(true);
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setIconifiable(true);
         setMaximizable(true);
         setResizable(true);

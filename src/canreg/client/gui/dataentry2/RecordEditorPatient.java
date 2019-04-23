@@ -21,7 +21,6 @@
 package canreg.client.gui.dataentry2;
 
 import canreg.client.CanRegClientApp;
-import canreg.client.gui.components.TextFieldVariableEditorPanel;
 import canreg.client.gui.components.VariableEditorPanelInterface;
 import canreg.client.gui.dataentry2.components.DateVariableEditorPanel;
 import canreg.client.gui.dataentry2.components.DictionaryVariableEditorPanel;
@@ -96,6 +95,8 @@ public class RecordEditorPatient extends javax.swing.JPanel
     private DatabaseVariablesListElement updateDateVariableListElement;   
     private final SimpleDateFormat dateFormat;
     private final LinkedList<DatabaseVariablesListElement> autoFillList;
+    
+    private Map<Integer, VariableEditorGroupPanel> groupIDtoPanelMap;
     
     private LinkedList<RecordEditorTumour> tumours;
     private HashMap<VariableEditorPanel, Boolean> changesMap;
@@ -387,9 +388,6 @@ public class RecordEditorPatient extends javax.swing.JPanel
         }*/
     }
     
-    void setActionListener(ActionListener listener) {
-        this.actionListener = listener;
-    }
     
     @Action
     public void runExactSearch() {
@@ -431,28 +429,74 @@ public class RecordEditorPatient extends javax.swing.JPanel
         }
 
         if (recordStatusVariableListElement != null) {
-            if (recordStatusVariableListElement != null && recordStatusVariableListElement.getUseDictionary() != null) {                                
+//            if (recordStatusVariableListElement != null && recordStatusVariableListElement.getUseDictionary() != null) {                                
+//                databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), "0");
+//                Logger.getLogger(RecordEditorPatient.class.getName()).log(Level.WARNING, 
+//                                 "Warning! Record status dictionary entries missing.");
+//            } else {
                 databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), "0");
-                Logger.getLogger(RecordEditorPatient.class.getName()).log(Level.WARNING, 
-                                 "Warning! Record status dictionary entries missing.");
-            } else {
-                databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), "0");
-                Logger.getLogger(RecordEditorPatient.class.getName()).log(Level.WARNING, 
-                                 "Warning! Record status dictionary entries missing.");
-            }
+//                Logger.getLogger(RecordEditorPatient.class.getName()).log(Level.WARNING, 
+//                                 "Warning! Record status dictionary entries missing.");
+//            }
         }
     }
     
-    private void buildPanel() {
+    void releaseResources() {
+        if (variableEditorPanels != null) {
+            for (VariableEditorPanelInterface vep : variableEditorPanels.values()) {
+                vep.removeListener();
+                if(vep instanceof DateVariableEditorPanel)
+                    ((DateVariableEditorPanel)vep).releaseResources();
+            }
+        }
+        
+        databaseRecord = null;
+        doc = null;
+        dictionary = null;
+        groupListElements = null;
+        actionListener = null;
+        variableEditorPanels.clear();
+        variableEditorPanels = null;
+        variablesInTable = null;
+        recordStatusVariableListElement = null;
+        unduplicationVariableListElement = null;        
+        recStatusDictMap = null;
+        recStatusDictWithConfirmArray = null;
+        recStatusDictWithoutConfirmArray = null;
+        patientIDVariableListElement = null;
+        patientRecordIDVariableListElement = null;
+        updatedByVariableListElement = null;
+        groupIDtoPanelMap.clear();
+        groupIDtoPanelMap = null;
+        tumours = null;
+        changesMap.clear();
+        changesMap = null;
+
+        clearMainPanel();
+        dataPanel = null;
+    }
+    
+    private void clearMainPanel() {
         dataPanel.removeAll();
-        this.changesMap = new HashMap<VariableEditorPanel, Boolean>();
+        dataPanel.revalidate();
+        dataPanel.repaint();
+    }
+    
+    private void buildPanel() {
+        clearMainPanel();
+        
+        changesMap = new HashMap<VariableEditorPanel, Boolean>();
 
         if (variableEditorPanels != null) {
-            for (VariableEditorPanelInterface vep : variableEditorPanels.values()) 
-                vep.removeListener();            
+            for (VariableEditorPanelInterface vep : variableEditorPanels.values()) {
+                vep.removeListener();
+                if(vep instanceof DateVariableEditorPanel)
+                    ((DateVariableEditorPanel)vep).releaseResources();
+            }
         }
+        
         variableEditorPanels = new LinkedHashMap();
-        Map<Integer, VariableEditorGroupPanel> groupIDtoPanelMap = new LinkedHashMap<Integer, VariableEditorGroupPanel>();
+        groupIDtoPanelMap = new LinkedHashMap<Integer, VariableEditorGroupPanel>();
 
         for (int i = 0; i < variablesInTable.length; i++) {
             DatabaseVariablesListElement currentVariable = variablesInTable[i];

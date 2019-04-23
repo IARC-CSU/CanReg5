@@ -179,6 +179,11 @@ public final class LocalSettings {
      */    
     public static String DATE_FORMAT_KEY = "date_format_string";
     public static String DISPLAY_VARIABLE_TYPE_KEY = "display_variable_type";
+     /**
+     *
+     */ 
+    public static String CLIENT_TO_SERVER_PING_KEY = "client_to_server_ping_key";
+    public static String CLIENT_SESSIONS_CHECK_KEY = "client_sessions_check_key";
 
     /**
      *
@@ -440,7 +445,11 @@ public final class LocalSettings {
             property = Globals.DATE_FORMAT_STRING;
         } else if (key.equalsIgnoreCase(DISPLAY_VARIABLE_TYPE_KEY)){
             property = DatabaseVariablesListElement.VariableType.FULL.toString();
-        }
+        } else if (key.equalsIgnoreCase(CLIENT_TO_SERVER_PING_KEY)) {
+            property = Globals.DEFAULT_CLIENT_TO_SERVER_PING;
+        } else if (key.equalsIgnoreCase(CLIENT_SESSIONS_CHECK_KEY)) {
+            property = Globals.DEFAULT_CLIENT_SESSIONS_CHECK_PING;
+        } 
         return property;
     }
 
@@ -459,6 +468,8 @@ public final class LocalSettings {
         setProperty(DATA_ENTRY_VERSION_KEY, getDefaultProperty(DATA_ENTRY_VERSION_KEY));
         setProperty(DATE_FORMAT_KEY, getDefaultProperty(DATE_FORMAT_KEY));
         setProperty(DISPLAY_VARIABLE_TYPE_KEY, getDefaultProperty(DISPLAY_VARIABLE_TYPE_KEY));
+        setProperty(CLIENT_TO_SERVER_PING_KEY, getDefaultProperty(CLIENT_TO_SERVER_PING_KEY));
+        setProperty(CLIENT_SESSIONS_CHECK_KEY, getDefaultProperty(CLIENT_SESSIONS_CHECK_KEY));
         settingsChanged = true;
     }
 

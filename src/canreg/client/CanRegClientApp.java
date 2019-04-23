@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2017  International Agency for Research on Cancer
+ * Copyright (C) 2008-2018  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -80,6 +80,9 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -102,6 +105,7 @@ import org.w3c.dom.Document;
 public class CanRegClientApp extends SingleFrameApplication {
 
     private CanRegServerInterface mainServer;
+    private ScheduledExecutorService pingExecutor;
     static boolean debug = true;
     private boolean canregServerRunningInThisThread = false;
     private String systemName = null;
@@ -297,7 +301,7 @@ public class CanRegClientApp extends SingleFrameApplication {
                 if (!isCanregServerRunningInThisThread()) {
                     int numberOfRecordsOpen = numberOfRecordsOpen();
                     if (numberOfRecordsOpen > 0) {
-                        option = JOptionPane.showConfirmDialog(null, java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?") + "\n" + java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("YOU_HAVE_") + numberOfRecordsOpen + java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("_RECORDS_OPEN."), java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?"), JOptionPane.YES_NO_OPTION);
+                        option = JOptionPane.showConfirmDialog(null, java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?") + "\n" + java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("YOU_HAVE_") + " " + numberOfRecordsOpen + java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("_RECORDS_OPEN."), java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?"), JOptionPane.YES_NO_OPTION);
                     } else {
                         option = JOptionPane.showConfirmDialog(null, java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?"), java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("REALLY_EXIT?"), JOptionPane.YES_NO_OPTION);
                     }
@@ -480,10 +484,14 @@ public class CanRegClientApp extends SingleFrameApplication {
         }
         //do the loginRMI 
         debugOut("ATTEMPTING LOGIN");
+
         mainServer = loginServer.login(username, password);
         if (mainServer != null) {
+            this.pingExecutor = Executors.newSingleThreadScheduledExecutor();
+            Integer seconds = Integer.parseInt(localSettings.getProperty(LocalSettings.CLIENT_TO_SERVER_PING_KEY));
+            this.pingExecutor.scheduleAtFixedRate(new PingToServer(), 0, seconds, TimeUnit.SECONDS);
+            
             // See if server version of CanReg matches the 
-
             debugOut("LOGIN SUCCESSFULL");
             // This should work...
             systemName = mainServer.getCanRegRegistryName();
@@ -859,16 +867,13 @@ public class CanRegClientApp extends SingleFrameApplication {
         }
     }
 
-    /**
-     *
-     * @throws java.rmi.RemoteException
-     */
+
     public void logOut() throws RemoteException {
         try {
             releaseAllRecordsHeldByThisClient();
             if (mainServer != null) {
                 try {
-                    mainServer.userLoggedOut(username);
+                    mainServer.userLoggedOut(mainServer.hashCode(), username);
                 } catch (RemoteException ex) {
                     Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
                     if (!handlePotentialDisconnect(ex)) {
@@ -877,6 +882,9 @@ public class CanRegClientApp extends SingleFrameApplication {
                 }
             }
             mainServer = null;
+            this.pingExecutor.shutdownNow();
+            this.pingExecutor = null;
+            
             systemName = "";
             loggedIn = false;
             canRegClientView.setUserRightsLevel(Globals.UserRightLevels.NOT_LOGGED_IN);
@@ -1029,7 +1037,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         if(server == null)
             server = this.mainServer;
         try {
-            DatabaseRecord record = server.getRecord(recordID, tableName, lock);
+            DatabaseRecord record = server.getRecord(recordID, tableName, lock, server.hashCode());
             if (lock && record != null) {
                 lockRecord(recordID, tableName);
             }
@@ -1139,7 +1147,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             server = this.mainServer;
         try {
             // release a locked record
-            server.releaseRecord(recordID, tableName);
+            server.releaseRecord(recordID, tableName, server.hashCode());
             Set lockSet = locksMap.get(tableName);
             if (lockSet != null) {
                 lockSet.remove(recordID);
@@ -1167,6 +1175,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             throws SecurityException, RemoteException {
         if(server == null)
             server = this.mainServer;
+
         try {
             return server.deleteDictionaryEntries(dictionaryID);
         } catch (RemoteException ex) {
@@ -1279,6 +1288,7 @@ public class CanRegClientApp extends SingleFrameApplication {
                     records[j] = (Tumour) getRecord(id, lookUpTableName, lock, server);
                 } catch (RecordLockedException recordLockedException) {
                     Logger.getLogger(CanRegClientApp.class.getName()).log(Level.WARNING, "Tumour record " + id + " already locked?", recordLockedException);
+                    throw recordLockedException;
                 } catch (RemoteException ex) {
                     Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
                     if (!handlePotentialDisconnect(ex)) {
@@ -1766,7 +1776,8 @@ public class CanRegClientApp extends SingleFrameApplication {
         int numberOfRecords = 0;
         for (String tableName : locksMap.keySet()) {
             Set<Integer> lockSet = locksMap.get(tableName);
-            numberOfRecords += lockSet.size();
+            if(lockSet != null)
+                numberOfRecords += lockSet.size();
         }
         return numberOfRecords;
     }
@@ -1797,18 +1808,24 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     private synchronized void releaseAllRecordsHeldByThisClient() {
-        locksMap.keySet().stream().forEach((tableName) -> {
-            Set<Integer> lockSet = locksMap.get(tableName);
-            if (lockSet != null) {
-                lockSet.stream().forEach((recordID) -> {
-                    try {
-                        releaseRecord(recordID, tableName, null);
-                    } catch (RemoteException | SecurityException ex) {
-                        Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                });
-            }
+//<<<<<<< HEAD
+//        locksMap.keySet().stream().forEach((tableName) -> {
+//            Set<Integer> lockSet = locksMap.get(tableName);
+//            if (lockSet != null) {
+//                lockSet.stream().forEach((recordID) -> {
+//                    try {
+//                        releaseRecord(recordID, tableName, null);
+//                    } catch (RemoteException | SecurityException ex) {
+//                        Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
+//                });
+//            }
+//=======
+        locksMap.forEach((t, u) -> {
+            locksMap.put(t, null);
+//>>>>>>> release/R44
         });
+        
         lockFile.writeMap();
     }
 
@@ -1838,9 +1855,14 @@ public class CanRegClientApp extends SingleFrameApplication {
                     canRegClientView.getDesktopPane(),
                     "You seem to have been disconnected from the server. \n"
                     + "Please log in again...");
+
             mainServer = null;
+            this.pingExecutor.shutdownNow();
+            this.pingExecutor = null;
+
             systemName = "";
             loggedIn = false;
+            releaseAllRecordsHeldByThisClient();
             canRegClientView.setLoggedOut();
             showLogginFrame();
             return true;
@@ -1868,4 +1890,19 @@ public class CanRegClientApp extends SingleFrameApplication {
         }
     }
 
+    
+    private class PingToServer implements Runnable {
+        @Override
+        public void run() {
+            try {
+                //pingRemote's parameter is not needed here
+                if(mainServer != null)
+                    mainServer.pingRemote(mainServer.hashCode());
+            } catch (RemoteException ex) {
+                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception ex) {
+                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
 }

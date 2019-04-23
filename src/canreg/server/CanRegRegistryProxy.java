@@ -184,16 +184,16 @@ public class CanRegRegistryProxy implements CanRegServerInterface, Serializable 
     }
 
     @Override
-    public void userLoggedIn(String username) throws RemoteException, SecurityException {
+    public void userLoggedIn(Integer remoteHashCode, String username) throws RemoteException, SecurityException {
         changeRegistryDB(registryCode);
-        serverProxy.userLoggedIn(username);
+        serverProxy.userLoggedIn(remoteHashCode, username);
         resetRegistryDB();
     }
 
     @Override
-    public void userLoggedOut(String username) throws RemoteException, SecurityException {        
+    public void userLoggedOut(Integer remoteHashCode, String username) throws RemoteException, SecurityException {        
         changeRegistryDB(registryCode);
-        serverProxy.userLoggedOut(username);
+        serverProxy.userLoggedOut(remoteHashCode, username);
         resetRegistryDB();
     }
 
@@ -287,10 +287,10 @@ public class CanRegRegistryProxy implements CanRegServerInterface, Serializable 
     }
 
     @Override
-    public DatabaseRecord getRecord(int recordID, String tableName, boolean lock) 
+    public DatabaseRecord getRecord(int recordID, String tableName, boolean lock, Integer remoteHashCode) 
             throws RemoteException, SecurityException, RecordLockedException {
         changeRegistryDB(registryCode);
-        DatabaseRecord toReturn = serverProxy.getRecord(recordID, tableName, lock);
+        DatabaseRecord toReturn = serverProxy.getRecord(recordID, tableName, lock, remoteHashCode);
         resetRegistryDB();
         return toReturn;
     }
@@ -464,9 +464,10 @@ public class CanRegRegistryProxy implements CanRegServerInterface, Serializable 
     }
 
     @Override
-    public void releaseRecord(int recordID, String tableName) throws RemoteException, SecurityException {
+    public void releaseRecord(int recordID, String tableName, Integer remoteHashCode)
+            throws RemoteException, SecurityException {
         changeRegistryDB(registryCode);
-        serverProxy.releaseRecord(recordID, tableName);
+        serverProxy.releaseRecord(recordID, tableName, remoteHashCode);
         resetRegistryDB();
     }
 
@@ -564,4 +565,13 @@ public class CanRegRegistryProxy implements CanRegServerInterface, Serializable 
         resetRegistryDB();
         return strs;
     }
+    
+    @Override
+    public void pingRemote(Integer remoteClientHashCode) 
+            throws RemoteException, Exception {
+        changeRegistryDB(registryCode);
+        //pingRemote's parameter is not needed here, hashCode() is supplied instead.
+        serverProxy.pingRemote(remoteClientHashCode);
+        resetRegistryDB();
+    }  
 }

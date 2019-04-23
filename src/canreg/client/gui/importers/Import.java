@@ -244,7 +244,9 @@ public class Import {
                 if (patientID == null) {
                     // save the record to get the new patientID;
                     patientDatabaseRecordID = server.savePatient(patient);
-                    patient = (Patient) server.getRecord(patientDatabaseRecordID, Globals.PATIENT_TABLE_NAME, false);
+                    
+                    //We can put CanRegServerInterface parameter as null because the lock is false
+                    patient = (Patient) server.getRecord(patientDatabaseRecordID, Globals.PATIENT_TABLE_NAME, false, null);
                     patientID = patient.getVariable(io.getPatientIDVariableName());
                     patientRecordID = patient.getVariable(io.getPatientRecordIDVariableName());
                 }
@@ -831,8 +833,7 @@ public class Import {
                     
                     importSource(server, io.getDiscrepancies(), sourceID, io.getSourceIDVariablename(), 
                                  source, tumourID, reportWriter, intoHoldingDB, io.isTestOnly(), false);
-                    
-                    
+                                        
                     if (task != null) {
                         task.firePropertyChange(RECORD, 75, 100);
                     }
