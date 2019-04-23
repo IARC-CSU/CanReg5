@@ -16,7 +16,9 @@
 tryCatch({
   
   #load dependency packages
-  canreg_load_packages(c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","bmp", "jpeg"), Rcan_source=script.basename)
+	canreg_load_packages(c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","bmp", "jpeg", "shiny.i18n", "Rcan"))
+	i18n <- Translator(translation_csvs_path  = (paste(sep="/", script.basename, "r-translations")))
+	i18n$set_translation_language(ls_args$lang)
   
   #merge incidence and population
   dt_all <- csu_merge_inc_pop(
@@ -31,9 +33,9 @@ tryCatch({
   
   #update header
   if (!ls_args$skin) {
-    header = paste0(ls_args$header, "\n\nAll cancers")
+    header = paste0(ls_args$header, "\n\n", i18n$t("All cancers"))
   } else {
-    header = paste0(ls_args$header, "\n\nAll cancers but C44")
+    header = paste0(ls_args$header, "\n\n",i18n$t("All cancers but C44"))
   }
   
   ##Produce output

@@ -163,7 +163,8 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
             PopulationDataset[] standardPopulations,
             LinkedList<ConfigFields> configList,
             String[] engineParameters,
-            FileTypes fileType) throws NotCompatibleDataException, TableErrorException {
+            FileTypes fileType, 
+            String language) throws NotCompatibleDataException, TableErrorException {
         LinkedList<String> filesCreated = new LinkedList<String>();
         InputStream is;
 
@@ -318,6 +319,7 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
                 commandList.add("-ft=" + fileType);
                 commandList.add("-sc=" + CanRegClientApp.getApplication().getSystemCode());
                 commandList.add("-sr=" + CanRegClientApp.getApplication().getSystemRegion());
+                commandList.add("-lang=" + language);
                 // add the rest of the arguments
                 commandList.addAll(Arrays.asList(rScriptsArguments));
                 // if (rScriptsArguments != null) {

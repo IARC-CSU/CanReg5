@@ -115,9 +115,10 @@ public class LockFile {
     public int getNumberOfRecordsLocked() {
         int records = 0;
         for (String key : locksMap.keySet()) {
-            for (Integer i : locksMap.get(key)) {
+            if(locksMap.get(key) == null)
+                continue;
+            for (Integer i : locksMap.get(key)) 
                 records++;
-            }
         }
         return records;
     }

@@ -250,6 +250,8 @@ public class Globals {
     public static int DEFAULT_UNKNOWN_AGE_CODE = 999;
     public static String DD_FILE_PATH = "/canreg/common/ruby/canreg5.dd";
     public static String DD_FILE_VARIABLES_FILE = "/canreg/common/ruby/export_format_canreg5.tsv";
+    public static final String DEFAULT_CLIENT_TO_SERVER_PING = "20";
+    public static final String DEFAULT_CLIENT_SESSIONS_CHECK_PING = "45";
 
     /**
      *

@@ -32,7 +32,7 @@ shiny_data <- function(input) {
 					age_group  <- c(15,30,50,70)
 				}
 				
-			dt_temp <- dt_base
+			dt_temp  <- copy(dt_base)
 			dt_temp[ICD10GROUP != "C44",]$ICD10GROUP ="O&U"
 			dt_temp[ICD10GROUP != "C44",]$ICD10GROUPLABEL ="Other and unspecified"
 			dt_temp <- dt_temp[, .(CASES=sum(CASES)),by=.(ICD10GROUP, ICD10GROUPLABEL, YEAR,SEX, AGE_GROUP,AGE_GROUP_LABEL,COUNT,REFERENCE_COUNT) ]
@@ -64,7 +64,7 @@ shiny_data <- function(input) {
 			
 		 
 				
-			dt_temp <- dt_base
+			dt_temp  <- copy(dt_base)
 			dt_temp[ICD10GROUP != "C44",]$ICD10GROUP ="O&U"
 			dt_temp[ICD10GROUP != "C44",]$ICD10GROUPLABEL ="Other and unspecified"
 			dt_temp <- dt_temp[, .(CASES=sum(CASES)),by=.(ICD10GROUP, ICD10GROUPLABEL, YEAR,SEX, AGE_GROUP,AGE_GROUP_LABEL,COUNT,REFERENCE_COUNT) ]
@@ -79,7 +79,7 @@ shiny_data <- function(input) {
 			
 			if (!is.null(input$slideAgeRange)& !is.null(input$radioValue)) {
 		
-				dt_temp <- dt_base
+				dt_temp  <- copy(dt_base)
 				dt_temp <- dt_temp[ICD10GROUP != "C44",]
 				dt_temp <- dt_temp[ICD10GROUP != "O&U",]
 				
@@ -120,7 +120,7 @@ shiny_data <- function(input) {
 			
 			if (!is.null(input$slideAgeRange) & !is.null(input$radioValue)) {
 		
-				dt_temp <- dt_base
+				dt_temp  <- copy(dt_base)
 				dt_temp <- dt_temp[ICD10GROUP != "C44",]
 				dt_temp <- dt_temp[ICD10GROUP != "O&U",]
 				
@@ -157,7 +157,7 @@ shiny_data <- function(input) {
 		}
 		else if (table_number == 6){
 
-			dt_temp <- dt_base
+			dt_temp  <- copy(dt_base)
 			dt_temp <- dt_temp[ICD10GROUP != "C44",]
 			dt_temp <- dt_temp[ICD10GROUP != "O&U",]
 			dt_temp <- canreg_ageSpecific_rate_data(dt_temp)
@@ -165,7 +165,7 @@ shiny_data <- function(input) {
 		}
 		else if (table_number == 7){
 
-			dt_temp <- dt_base
+			dt_temp  <- copy(dt_base)
 			dt_temp <- dt_temp[ICD10GROUP != "C44",]
 			dt_temp <- dt_temp[ICD10GROUP != "O&U",]
 			dt_temp <- canreg_ageSpecific_rate_data(dt_temp)
@@ -183,7 +183,7 @@ shiny_data <- function(input) {
 					bool_skin <- TRUE
 				}
 
-				dt_temp <- dt_base
+				dt_temp  <- copy(dt_base)
 				dt_temp[ICD10GROUP != "C44",]$ICD10GROUP ="O&U"
 				dt_temp[ICD10GROUP != "C44",]$ICD10GROUPLABEL ="Other and unspecified"
 				dt_temp <- dt_temp[, .(CASES=sum(CASES)),by=.(ICD10GROUP, ICD10GROUPLABEL, YEAR,SEX, AGE_GROUP,AGE_GROUP_LABEL,COUNT,REFERENCE_COUNT) ]
@@ -197,7 +197,7 @@ shiny_data <- function(input) {
 
 			if (!is.null(input$slideAgeRange)) {
 			
-				dt_temp <- dt_base
+				dt_temp  <- copy(dt_base)
 				dt_temp <- dt_temp[ICD10GROUP != "C44",]
 				dt_temp <- dt_temp[ICD10GROUP != "O&U",]
 				
@@ -213,7 +213,7 @@ shiny_data <- function(input) {
 																				first_age = first_age,
 																				last_age= last_age,
 																				pop_base_count = "REFERENCE_COUNT",
-																				age_label_list = "AGE_GROUP_LABEL")  
+																				age_label_list = "AGE_GROUP_LABEL") 																 
 			}
 				
 		}
@@ -221,7 +221,7 @@ shiny_data <- function(input) {
 
 			if (!is.null(input$slideAgeRange)) {
 			
-				dt_temp <- dt_base
+				dt_temp  <- copy(dt_base)
 				dt_temp <- dt_temp[ICD10GROUP != "C44",]
 				dt_temp <- dt_temp[ICD10GROUP != "O&U",]
 				
@@ -247,7 +247,7 @@ shiny_data <- function(input) {
 
 			if (!is.null(input$slideAgeRange)) {
 			
-				dt_temp <- dt_base
+				dt_temp  <- copy(dt_base)
 				dt_temp <- dt_temp[ICD10GROUP != "C44",]
 				dt_temp <- dt_temp[ICD10GROUP != "O&U",]
 				
@@ -346,10 +346,10 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 		else if (table_number == 3){
 			
 			if (isolate(input$radioSkin) == 1 ){
-			header = paste0(ls_args$header, "\n\nAll cancers but C44")
+			header = paste0(ls_args$header, "\n\n",i18n$t("All cancers but C44"))
 			}
 			else {
-			header = paste0(ls_args$header, "\n\nAll cancers")
+			header = paste0(ls_args$header, "\n\n",i18n$t("All cancers"))
 			}
 			
 			if (download) {
@@ -386,14 +386,14 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 				if (isolate(input$radioValue) == "asr") {
 					var_top <- "asr"
 					digit <- 1
-					ytitle <- paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=","), ", ", isolate(input$slideAgeRange)[1], "-", age2, " years old" )
+					ytitle <- paste0(i18n$t("Age-standardized incidence rate per")," ", formatC(100000, format="d", big.mark=","), ", ", isolate(input$slideAgeRange)[1], "-", age2, " years old" )
 					
 					
 				} 
 				else if (isolate(input$radioValue) == "cases"){
 					var_top <- "CASES"
 					digit <- 0
-					ytitle <-  paste0("Number of cases, ", isolate(input$slideAgeRange)[1], "-", age2, " years old" )
+					ytitle <-  paste0(i18n$t("Number of cases"),", ", isolate(input$slideAgeRange)[1], "-", age2, " years old" )
 					
 					
 				}
@@ -405,7 +405,7 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 					} else {
 						age2 <- isolate(input$slideAgeRange)[2]-1
 					}
-					ytitle<-paste0("Cumulative incidence risk (percent), 0-",age2, " years old" )
+					ytitle<-paste0(i18n$t("Cumulative incidence risk (percent)"),", 0-",age2, " years old" )
 					
 					
 				}
@@ -456,14 +456,14 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 				if (isolate(input$radioValue) == "asr") {
 					var_top <- "asr"
 					digit <- 1
-					ytitle <- paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=","), ", ", isolate(input$slideAgeRange)[1], "-", age2, " years old" )
+					ytitle <- paste0(i18n$t("Age-standardized incidence rate per")," ", formatC(100000, format="d", big.mark=","), ", ", isolate(input$slideAgeRange)[1], "-", age2, " years old" )
 					
 					
 				} 
 				else if (isolate(input$radioValue) == "cases"){
 					var_top <- "CASES"
 					digit <- 0
-					ytitle <-  paste0("Number of cases, ", isolate(input$slideAgeRange)[1], "-", age2, " years old" )
+					ytitle <-  paste0(i18n$t("Number of cases"),", ", isolate(input$slideAgeRange)[1], "-", age2, " years old" )
 					
 					
 				}
@@ -475,7 +475,7 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 					} else {
 						age2 <- isolate(input$slideAgeRange)[2]-1
 					}
-					ytitle<-paste0("Cumulative incidence risk (percent), 0-",age2, " years old" )
+					ytitle<-paste0(i18n$t("Cumulative incidence risk (percent)"),", 0-",age2, " years old" )
 					
 					
 				}
@@ -631,8 +631,12 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 			
 		}
 		else if (table_number == 9){
-			
-		 if (!is.null( input$slideNbTopBar) & !is.null(input$radioLog)) {
+
+		
+		
+		 if ( !is.null( input$slideNbTopBar) & !is.null(input$radioLog) ) {
+
+		 	
 				
 				if (input$radioLog == "log") {
 					bool_log <- TRUE
@@ -640,6 +644,8 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 				else {
 					bool_log <- FALSE
 				}
+
+
 				
 				nb_top <- input$slideNbTopBar
 				last_age <- (isolate(input$slideAgeRange)[2]/5)
@@ -651,9 +657,9 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 					age2 <- paste0(((max_age-1)*5), "+")
 				}
 				
-				 ytitle <- paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=","), ", ", isolate(input$slideAgeRange)[1], "-", age2, " years old" )
-		 
 
+				 ytitle <- paste0(i18n$t("Age-standardized incidence rate per")," ", formatC(100000, format="d", big.mark=","), ", ", isolate(input$slideAgeRange)[1], "-", age2, " ",i18n$t("years old"))
+		 
 				if (download) {
 				
 					canreg_output(output_type = output_type, filename =file,landscape = FALSE,list_graph = TRUE,
@@ -718,7 +724,7 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 					age2 <- paste0(((max_age-1)*5), "+")
 				}
 				
-				 ytitle <- paste0("Estimated average percentage change (%), ", isolate(input$slideAgeRange)[1], "-", age2, " years old" )
+				 ytitle <- paste0(i18n$t("Estimated annual percentage change")," (%), ", isolate(input$slideAgeRange)[1], "-", age2, " ",i18n$t("years old"))
 				 color_bar <- c("Male" = "#2c7bb6", "Female" = "#b62ca1")
 		 
 
@@ -785,7 +791,7 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 					age2 <- paste0(((max_age-1)*5), "+")
 				}
 				
-				ytitle <- paste0("Age-standardized incidence rate per ", formatC(100000, format="d", big.mark=","), ", ", isolate(input$slideAgeRange)[1], "-", age2, " years old" )
+				ytitle <- paste0(i18n$t("Age-standardized incidence rate per")," ", formatC(100000, format="d", big.mark=","), ", ", isolate(input$slideAgeRange)[1], "-", age2, " ",i18n$t("years old") )
 		 
 				
 				if (download) {
@@ -861,17 +867,17 @@ canreg_ageSpecific <- function(dt_plot,color_trend,plot_subtitle="",logscale=FAL
  
  
  canreg_asr_trend <- function(dt_plot,
-																 var_asr="asr", 
-                                 var_cases= "CASES", 
-                                 var_year= "YEAR",
-                                 group_by="SEX",
-                                 logscale = TRUE,
-                                 ytitle=NULL,
-                                 landscape = FALSE,
-                                 list_graph = FALSE,
-                                 return_data = FALSE,
-																 return_plot= FALSE,
-                                 plot_title="") {
+								var_asr="asr", 
+                                var_cases= "CASES", 
+                                var_year= "YEAR",
+                                group_by="SEX",
+                                logscale = TRUE,
+                                ytitle=NULL,
+                                landscape = FALSE,
+                                list_graph = FALSE,
+                                return_data = FALSE,
+								return_plot= FALSE,
+                                plot_title="") {
   
  
   
@@ -892,11 +898,11 @@ canreg_ageSpecific <- function(dt_plot,color_trend,plot_subtitle="",logscale=FAL
                                     logscale = logscale,
                                     smoothing = NULL,
                                     ytitle = ytitle,
+									xtitle = i18n$t("Year"),
                                     plot_title = plot_title,
                                     color_trend = color_trend)$csu_plot
 
-																		
-  
+
   print(plot)
 
 }
@@ -978,11 +984,11 @@ shiny_error_log <- function(log_file,filename) {
 
 shiny_dwn_data <- function(log_file) {
 
+	dt_temp <- copy(dt_base)
+	dt_temp[, ICD10GROUPLABEL := NULL]
+	dt_temp[, ICD10GROUPCOLOR := NULL]
+	dt_temp[, AGE_GROUP := NULL]
 	
-	dt_base[, ICD10GROUPLABEL := NULL]
-	dt_base[, ICD10GROUPCOLOR := NULL]
-	dt_base[, AGE_GROUP := NULL]
-	
-	write.csv(dt_base, paste0(log_file),row.names = FALSE)
+	write.csv(dt_temp, paste0(log_file),row.names = FALSE)
 
 }
