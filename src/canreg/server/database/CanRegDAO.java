@@ -754,6 +754,7 @@ public class CanRegDAO {
             stmtGetTumours = dbConnection.prepareStatement(strGetTumours);
 
             stmtGetSource = dbConnection.prepareStatement(strGetSource);
+            stmtGetSourceBySourceID = dbConnection.prepareStatement(strGetSourceBySourceID);
 
             stmtDeleteTumourRecord = dbConnection.prepareStatement(strDeleteTumourRecord);
             stmtDeletePatientRecord = dbConnection.prepareStatement(strDeletePatientRecord);
@@ -1055,7 +1056,7 @@ public class CanRegDAO {
         } else if (sourceRecordID == null || sourceRecordID.toString().trim().length() == 0) {
             id = saveRecord(Globals.SOURCE_TABLE_NAME, source, stmtSaveNewSource);
         } else {
-            boolean success = editRecord(Globals.SOURCE_TABLE_NAME, source, stmtEditSource, Globals.StandardVariableNames.SourceRecordID.toString());
+            boolean success = editRecord(Globals.SOURCE_TABLE_NAME, source, stmtEditSource, canreg.common.Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME);
             if (success) {
                 sourceRecordID = source.getVariable(canreg.common.Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME);
                 id = (int) sourceRecordID;
@@ -1495,7 +1496,14 @@ public class CanRegDAO {
                     String tumourID = record.getVariableAsString(tumourIDVariableName);
                     Tumour tumour = getTumourByTumourID(tumourID);
                     idInt = (Integer) tumour.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME);
-                }                
+                } else if(record instanceof Source) {
+                    String sourceIDVariableName = globalToolBox
+                            .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.SourceRecordID.toString())
+                            .getDatabaseVariableName();
+                    String sourceID = record.getVariableAsString(sourceIDVariableName);
+                    Source source = getSourceBySourceID(sourceID);
+                    idInt = (Integer) source.getVariable(Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME);
+                }                 
             } else {
                 idInt = (Integer) record.getVariable(idString);
             }
@@ -1797,7 +1805,7 @@ public class CanRegDAO {
         try {
             stmtGetTumourByTumourID.clearParameters();
             stmtGetTumourByTumourID.setString(1, tumourID);
-            ResultSet result = stmtGetTumour.executeQuery();
+            ResultSet result = stmtGetTumourByTumourID.executeQuery();
             metadata = result.getMetaData();
             int numberOfColumns = metadata.getColumnCount();
             if (result.next()) {
@@ -1854,6 +1862,34 @@ public class CanRegDAO {
                     }
                 }
             }
+            result = null;
+        } catch (SQLException sqle) {
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
+        }
+        return record;
+    }
+    
+    private synchronized Source getSourceBySourceID(String sourceID) throws RecordLockedException {
+        Source record = null;
+        ResultSetMetaData metadata;
+
+        try {
+            stmtGetSourceBySourceID.clearParameters();
+            stmtGetSourceBySourceID.setString(1, sourceID);
+            ResultSet result = stmtGetSourceBySourceID.executeQuery();
+            metadata = result.getMetaData();
+            int numberOfColumns = metadata.getColumnCount();
+            if (result.next()) {
+                record = new Source();
+                for (int i = 1; i <= numberOfColumns; i++) {
+                    if (metadata.getColumnType(i) == java.sql.Types.VARCHAR) {
+                        record.setVariable(metadata.getColumnName(i), result.getString(metadata.getColumnName(i)));
+                    } else if (metadata.getColumnType(i) == java.sql.Types.INTEGER) {
+                        record.setVariable(metadata.getColumnName(i), result.getInt(metadata.getColumnName(i)));
+                    }
+                }
+            }
+
             result = null;
         } catch (SQLException sqle) {
             Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
@@ -2071,6 +2107,7 @@ public class CanRegDAO {
     private PreparedStatement stmtGetTumour;
     private PreparedStatement stmtGetTumourByTumourID;
     private PreparedStatement stmtGetSource;
+    private PreparedStatement stmtGetSourceBySourceID;
     private PreparedStatement stmtGetPatients;
     private PreparedStatement stmtGetSources;
     private PreparedStatement stmtGetTumours;
@@ -2125,6 +2162,9 @@ public class CanRegDAO {
     private static final String strGetSource
             = "SELECT * FROM APP.Source "
             + "WHERE " + Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
+    private static final String strGetSourceBySourceID
+            = "SELECT * FROM APP.Source "
+            + "WHERE " + Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME_FOR_HOLDING + " = ?";
     private final String strGetTumours
             = "SELECT * FROM APP.TUMOUR";
     private final String strCountTumours
