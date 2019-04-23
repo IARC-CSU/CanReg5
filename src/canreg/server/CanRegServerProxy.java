@@ -455,4 +455,9 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
             throws RemoteException, Exception {
         theServer.pingRemote(remoteClientHashCode);
     }    
+    
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

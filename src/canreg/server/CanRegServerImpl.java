@@ -1134,4 +1134,9 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             throws RemoteException, Exception {
         userManager.remotePingReceived(remoteClientHashCode);
     }
+    
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

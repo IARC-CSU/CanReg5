@@ -574,4 +574,9 @@ public class CanRegRegistryProxy implements CanRegServerInterface, Serializable 
         serverProxy.pingRemote(remoteClientHashCode);
         resetRegistryDB();
     }  
+    
+    @Override
+    public int hashCode() {
+        return serverProxy.hashCode();
+    }
 }
