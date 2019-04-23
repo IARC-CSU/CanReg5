@@ -670,7 +670,7 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
                 importTask.cancel(true);
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportFilesView").getString("IMPORT_OF_FILE_INTERUPTED"), java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportFilesView").getString("WARNING"), JOptionPane.WARNING_MESSAGE);
                 importTask = null;
-                this.dispose();
+//                this.dispose();
             }
         } else {
             this.dispose();
@@ -852,6 +852,14 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
             // Runs on the EDT.  Update the GUI based on
             // the result computed by doInBackground().
             String fileListString = "";
+            
+            //In case they were replaced by the R scripts 
+            files = new File[]{
+                patientPreviewFilePanel.getInFile(),
+                tumourPreviewFilePanel.getInFile(),
+                sourcePreviewFilePanel.getInFile()
+            };
+            
             for (File file : files) {
                 if (file != null) {
                     fileListString += file.getName() + ", ";
@@ -865,7 +873,7 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportFilesView").getString("SUCCESSFULLY_IMPORTED_FILE(S)_") + fileListString + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportFilesView").getString("FILE(S)_SUCCESSFULLY_IMPORTED"), JOptionPane.INFORMATION_MESSAGE);
             }
             importTask = null;
-            dispose();
+//            dispose();
         }
 
         private RCheksImportVariables buildRChecksVars()
