@@ -1,6 +1,8 @@
-leading.zeros <- function(table.data = data.frame,
-                          doc.data = data.frame,
+leading.zeros <- function(table.data,
+                          doc.data,
                           type.table = "character"){
+  doc.data$short_name <- toupper(doc.data$short_name)
+  doc.data$standard_variable_name <- toupper(doc.data$standard_variable_name)
   dic.data <- doc.data$short_name[doc.data$table == type.table & doc.data$variable_type == "Dict"]
   for (i in 1:length(dic.data)){
     #table.data[,dic.data[i]] <- as.integer(table.data[,dic.data[i]])

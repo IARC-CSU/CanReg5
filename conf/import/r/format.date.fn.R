@@ -8,6 +8,7 @@ format.date.fn <- function(doc.data = data.frame,
                            names.raw.data, #variable names in the raw data file
                            dt.type = "character"){#Patient, Tumour or Source
   # First we need to know which columns are dates
+  doc.data$short_name <- toupper(doc.data$short_name)
   date.columns <- doc.data[doc.data$variable_type == "Date" & doc.data$table == dt.type, c("short_name")]
   #Date format in the raw data
   date.format <- detect.date.format.fn(import.data, doc.data, dt.type)
@@ -56,8 +57,8 @@ format.date.fn <- function(doc.data = data.frame,
     aux.data.yyyymmdd <- unknown.date.fn(aux.data,
                                          aux.data.yyyymmdd[str_detect(names(aux.data.yyyymmdd),"_date.yyyymmdd")],
                                          date.columns)
-    aux.data <- data.frame(cbind(aux.data.yyyymmdd,
-                                 aux.data[str_detect(names(aux.data),"_len")]),
+    aux.data <- data.frame(cbind(aux.data,
+                                 aux.data.yyyymmdd),
                            stringsAsFactors = FALSE)
     #If the date format es TRUE should be changeg for "no error" and 
     #if it is FALSE should be changed for "error"
