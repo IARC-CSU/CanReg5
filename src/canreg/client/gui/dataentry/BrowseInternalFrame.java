@@ -679,9 +679,6 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                 tca.setOnlyAdjustLarger(false);
                 tca.adjustColumns();
                 resultPanel.setVisible(true);
-                
-                if(resultTable.getRowCount() == 0)
-                    deleteHoldingDB();
             } else if (result.toString().startsWith("Not valid")) {
                 JOptionPane.showInternalMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("NOT_A_VALID_FILTER.") + "\n"
                         + result.toString().substring("Not valid".length()),
