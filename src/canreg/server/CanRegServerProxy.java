@@ -56,6 +56,9 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     private final Subject theUser;
 
     public CanRegServerProxy(Subject user, CanRegServerInterface server) throws RemoteException {
+        // Prevent JAVA to use a random port.
+        super(1099);
+        
         /** The user associated with this proxy
          */
         this.theUser = user;
@@ -357,9 +360,9 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     }
 
     @Override
-    public boolean setDBPassword(char[] newPasswordArray, char[] oldPasswordArray) throws RemoteException, SecurityException {
+    public boolean setDBPassword(char[] newPasswordArray, char[] oldPasswordArray, String encryptionAlgorithm, String encryptionKeyLength) throws RemoteException, SecurityException {
         checkPermission("setDBPassword");
-        return theServer.setDBPassword(newPasswordArray, oldPasswordArray);
+        return theServer.setDBPassword(newPasswordArray, oldPasswordArray, encryptionAlgorithm, encryptionKeyLength);
     }
 
     @Override

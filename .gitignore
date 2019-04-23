@@ -248,6 +248,12 @@ version.txt
 inno-settings.txt
 conf/tables/r/r-packages/*.zip
 .gitignore.orig
-buildnumber.properties
 out/*
 
+doc/CanReg5-Instructions.zip
+doc/CanReg5-Future.pdf
+.idea/workspace.xml
+
+conf/tables/r/\.RData
+
+conf/tables/r/\.Rhistory

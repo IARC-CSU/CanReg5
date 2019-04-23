@@ -44,6 +44,9 @@ public class CanRegLoginImpl extends UnicastRemoteObject
      */
     public CanRegLoginImpl(CanRegServerInterface server)
             throws RemoteException, MalformedURLException {
+        // Prevent JAVA to use a random port.
+        super(1099);
+        
         System.setProperty("java.security.auth.login.config", Globals.LOGIN_FILENAME);
         System.setProperty("java.security.policy", Globals.POLICY_FILENAME);
         this.theServer = server;
