@@ -704,9 +704,6 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                 tca.setOnlyAdjustLarger(false);
                 tca.adjustColumns();
                 resultPanel.setVisible(true);
-                
-                if(resultTable.getRowCount() == 0)
-                    deleteHoldingDB();
             } else if (result.toString().startsWith("Not valid")) {
                 JOptionPane.showInternalMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("NOT_A_VALID_FILTER.") + "\n"
                         + result.toString().substring("Not valid".length()),
@@ -791,16 +788,13 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
         
         recordEditor.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
         recordEditor.setDictionary(CanRegClientApp.getApplication().getDictionary());
-        Patient patient = null;
-        DatabaseFilter filter = new DatabaseFilter();
-        filter.setFilterString(patientIDlookupVariable + " = '" + idString + "' ");
-
-        Patient[] patients;
-        Object[][] rows;
-        DatabaseRecord[] tumourRecords;
 
         try {
-            patients = CanRegClientApp.getApplication().getPatientsByPatientID(idString, false, server);
+//<<<<<<< HEAD
+//            patients = CanRegClientApp.getApplication().getPatientsByPatientID(idString, false, server);
+//=======
+            Patient[] patients = CanRegClientApp.getApplication().getPatientsByPatientID(idString, false, server);
+//>>>>>>> release/R44
 
             if (patients.length < 1) {
                 /*
@@ -808,7 +802,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                  */
                 int answer = JOptionPane.showInternalConfirmDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("NO_PATIENT_WITH_THAT_ID_FOUND,_DO_YOU_WANT_TO_CREATE_ONE?"), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("PATIENT_ID_NOT_FOUND"), JOptionPane.YES_NO_OPTION);
                 if (answer == JOptionPane.YES_OPTION) {
-                    patient = new Patient();
+                    Patient patient = new Patient();
                     patient.setVariable(patientIDlookupVariable, idString);
                     CanRegClientApp.getApplication().saveRecord(patient, server);
                     patients = CanRegClientApp.getApplication().getPatientsByPatientID(idString, false, server);
@@ -827,7 +821,11 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
             // Get all the tumour records for all the patient records...
             for (Patient p : patients) {
                 recordEditor.addRecord(p);
-                tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(idString, true, server);
+//<<<<<<< HEAD
+//                tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(idString, true, server);
+//=======
+                DatabaseRecord[] tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(idString, true, server);
+//>>>>>>> release/R44
                 for (DatabaseRecord rec : tumourRecords) {
                     // store them in a set, so we don't show them several times
                     if (rec != null) {
@@ -892,7 +890,10 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
         DatabaseFilter filter = new DatabaseFilter();
 
         filter.setFilterString(tumourIDlookupVariable + " ='" + idString + "'");
-        Object[][] rows;
+//<<<<<<< HEAD
+//        Object[][] rows;
+//=======
+//>>>>>>> release/R44
 
         try {
             DistributedTableDescription distributedTableDescription = 
@@ -902,9 +903,14 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                 JOptionPane.showMessageDialog(rootPane,
                         java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("TUMOUR_RECORD_NOT_FOUND..."), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             } else {
-                rows = CanRegClientApp.getApplication()
-                        .retrieveRows(distributedTableDescription.getResultSetID(), 0, numberOfRecords, server);
+//<<<<<<< HEAD
+//                rows = CanRegClientApp.getApplication()
+//                        .retrieveRows(distributedTableDescription.getResultSetID(), 0, numberOfRecords, server);
+//                CanRegClientApp.getApplication().releaseResultSet(distributedTableDescription.getResultSetID(), server);
+//=======
+                Object[][] rows = CanRegClientApp.getApplication().retrieveRows(distributedTableDescription.getResultSetID(), 0, numberOfRecords, server);
                 CanRegClientApp.getApplication().releaseResultSet(distributedTableDescription.getResultSetID(), server);
+//>>>>>>> release/R44
                 String[] columnNames = distributedTableDescription.getColumnNames();
                 int ids[] = new int[numberOfRecords];
                 boolean found = false;
@@ -1022,7 +1028,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                             
                             if(productionPRID != -1) {
                                 Patient productionPatient = (Patient) CanRegClientApp.getApplication().getServer()
-                                        .getRecord(productionPRID, Globals.PATIENT_TABLE_NAME, false);
+                                        .getRecord(productionPRID, Globals.PATIENT_TABLE_NAME, false, server.hashCode());
                                 holdingPatientRecordID = productionPatient.getVariableAsString(patientRecordIDVariable);
                                 
                                 String tumourIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();

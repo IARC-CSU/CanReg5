@@ -65,12 +65,13 @@ public class CanRegLoginImpl extends UnicastRemoteObject
         LoginContext lc = new LoginContext("CanRegLogin", new RemoteCallbackHandler(username, password));
         lc.login();
         Subject user = lc.getSubject();
-
-        theServer.userLoggedIn(username);
+        
+        CanRegServerInterface proxy = CanRegRegistryProxy.getInstance(theServer, theServer.getCanRegRegistryCode(), user);
+        theServer.userLoggedIn(proxy.hashCode(), username);
 
         // Return a reference to a proxy object that encapsulates the access
         // to the theServer, for this client
-        return CanRegRegistryProxy.getInstance(theServer, theServer.getCanRegRegistryCode(), user);
+        return proxy;
     }
 
     /**

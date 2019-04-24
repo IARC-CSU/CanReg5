@@ -117,11 +117,14 @@ public class RecordEditor extends javax.swing.JInternalFrame
     private String patientIDVariableName = null;
     private String patientRecordIDVariableName = null;
     private final String patientRecordIDTumourTableVariableName = null;
+
     private final CanRegServerInterface server;
     private BrowseInternalFrame browser;
     private final List<HoldingRawDataInternalFrame> rawDataFrames;
     private canreg.client.gui.dataentry2.RecordEditor productionRecordEditor;
     private final LocalSettings localSettings;
+    private BrowseInternalFrame browseInternalFrame;
+    private final ChangeListener tabbedPaneChangeListener;
 
     
     public RecordEditor(JDesktopPane desktopPane, CanRegServerInterface server, BrowseInternalFrame browser) {
@@ -155,15 +158,18 @@ public class RecordEditor extends javax.swing.JInternalFrame
                 }
                 if (changesDone) {
                     option = JOptionPane.showConfirmDialog(null, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/RecordEditor").getString("REALLY CLOSE?CHANGES MADE WILL BE LOST."), "Warning!", JOptionPane.YES_NO_OPTION);
-                    if (option == JOptionPane.YES_OPTION) 
-                        close();
-                } else 
-                    close();
+
+                    if (option == JOptionPane.YES_OPTION) {
+                        releaseResources();
+                    }
+                } else {
+                    releaseResources();
+                }
             }
         });
 
         // Add a listener for changing the active tab
-        ChangeListener tabbedPaneChangeListener = new ChangeListener() {
+        tabbedPaneChangeListener = new ChangeListener() {
 
             @Override
             public void stateChanged(ChangeEvent e) {
@@ -199,7 +205,6 @@ public class RecordEditor extends javax.swing.JInternalFrame
     }
 
     private void changesDone() {
-
         changesDone = true;
     }
 
@@ -214,10 +219,6 @@ public class RecordEditor extends javax.swing.JInternalFrame
         }
     }
 
-    /**
-     * 
-     * @param doc
-     */
     public void setGlobalToolBox(GlobalToolBox globalToolBox) {
         this.globalToolBox = globalToolBox;
         this.doc = globalToolBox.getDocument();
@@ -249,6 +250,55 @@ public class RecordEditor extends javax.swing.JInternalFrame
         releaseRecords();
         this.dispose();
     }
+    
+    private void releaseRecords() {
+        // Release all patient records held
+        for (DatabaseRecord record : patientRecords) {
+            try {
+                Object idObj = record.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
+                if (idObj != null) {
+                    int id = (Integer) idObj;
+                    canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.PATIENT_TABLE_NAME, server);
+                }
+            } catch (RemoteException ex) {
+                Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SecurityException ex) {
+                Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        patientRecords.clear();
+        
+        // Release all tumour records held
+        for (DatabaseRecord record : tumourRecords) {
+            Tumour tumour = (Tumour) record;            
+            // Release all sources
+            for (Source source : tumour.getSources()) {
+                try {
+                    Object idObj = source.getVariable(Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME);
+                    if (idObj != null) {
+                        int id = (Integer) idObj;
+                        canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.SOURCE_TABLE_NAME, server);
+                    }
+                } catch (RemoteException ex) {
+                    Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SecurityException ex) {
+                    Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            try {
+                Object idObj = tumour.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME);
+                if (idObj != null) {
+                    int id = (Integer) idObj;
+                    canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.TUMOUR_TABLE_NAME, server);
+                }
+            } catch (RemoteException ex) {
+                Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SecurityException ex) {
+                Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        tumourRecords.clear();
+    }
 
     /**
      * 
@@ -258,10 +308,6 @@ public class RecordEditor extends javax.swing.JInternalFrame
         this.dictionary = dictionary;
     }
 
-    /**
-     * 
-     * @param dbr
-     */
     public void addRecord(DatabaseRecord dbr) {
         RecordEditorPanel rePanel = new RecordEditorPanel(this);
         rePanel.setDictionary(dictionary);
@@ -350,7 +396,6 @@ public class RecordEditor extends javax.swing.JInternalFrame
         viewProductionRecordBtn = new javax.swing.JButton();
 
         setClosable(true);
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setIconifiable(true);
         setMaximizable(true);
         setResizable(true);
@@ -555,9 +600,6 @@ public class RecordEditor extends javax.swing.JInternalFrame
         addRecord(tumour);
     }
 
-    /**
-     * 
-     */
     @Action
     public void addPatientAction() {
         Patient patient = new Patient();
@@ -609,9 +651,6 @@ public class RecordEditor extends javax.swing.JInternalFrame
         return dbr;
     }
 
-    /**
-     * 
-     */
     @Action
     public void saveAllAction() {
         LinkedList<RecordEditorPanel> reps = new LinkedList<RecordEditorPanel>();
@@ -641,7 +680,6 @@ public class RecordEditor extends javax.swing.JInternalFrame
     }
 
     private void refreshTitles(RecordEditorPanel recordEditorPanel, DatabaseRecord dbr) {
-
         if (dbr instanceof Patient) {
             // patientRecords.add(dbr);
             Object regno = dbr.getVariable(globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName());
@@ -692,9 +730,6 @@ public class RecordEditor extends javax.swing.JInternalFrame
         }
     }
 
-    /**
-     * 
-     */
     @Action
     public void printAction() {
         PrintUtilities.printComponent(patientTabbedPane.getSelectedComponent());
@@ -925,7 +960,7 @@ public class RecordEditor extends javax.swing.JInternalFrame
         }
     }
 
-    private void releaseRecords() {
+    private void releaseResources() {
         // Release all patient records held
         for (DatabaseRecord record : patientRecords) {
             try {
@@ -981,6 +1016,29 @@ public class RecordEditor extends javax.swing.JInternalFrame
         }
         tumourRecords.clear();
 
+        patientTabbedPane.removeChangeListener(tabbedPaneChangeListener);
+        
+        int totalTabs = patientTabbedPane.getTabCount();
+        for(int i = 0; i < totalTabs; i++) {
+           Component c = patientTabbedPane.getComponentAt(i);
+           ((RecordEditorPanel)c).releaseResources();
+           c = null;           
+        }
+            
+        patientTabbedPane.removeAll();
+        patientTabbedPane = null;
+        
+        tumourTabbedPane.removeChangeListener(tabbedPaneChangeListener);
+        
+        totalTabs = tumourTabbedPane.getTabCount();
+        for(int i = 0; i < totalTabs; i++) {
+           Component c = tumourTabbedPane.getComponentAt(i);
+           ((RecordEditorPanel)c).releaseResources();
+           c = null;           
+        }
+            
+        tumourTabbedPane.removeAll();
+        tumourTabbedPane = null;
     }
 
     private void updateTumourSequences() {

@@ -157,7 +157,8 @@ public abstract class AbstractEditorialTableBuilder implements TableBuilderInter
             PopulationDataset[] standardPopulations,
             LinkedList<ConfigFields> configList,
             String[] engineParameters,
-            FileTypes fileType) throws NotCompatibleDataException;
+            FileTypes fileType, 
+            String language) throws NotCompatibleDataException;
 
     @Override
     public boolean areThesePopulationDatasetsCompatible(PopulationDataset[] sets) {

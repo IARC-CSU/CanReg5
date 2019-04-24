@@ -2,9 +2,12 @@ check.code.dic <- function(dic.codes.tidy = data.frame,
                            var.dic.data = data.frame,
                            dt = data.frame,
                            type.table = "character",
-                           names.raw.data){
-
+                           names.raw.data,
+                           names.db.data){
+  doc.data$short_name <- toupper(doc.data$short_name)
+  var.dic.data$short_name <- toupper(var.dic.data$short_name)
   aux.vars <- var.dic.data[var.dic.data$table == type.table,]
+  names.raw.data[is.na(names.raw.data)] <- names.db.data[is.na(names.raw.data)]
   if (nrow(aux.vars) > 0){
     for (i in 1:nrow(aux.vars)){
       if (aux.vars$fill_in_status[i] != "Mandatory"){

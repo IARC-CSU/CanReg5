@@ -1,15 +1,16 @@
 generate.id <- function(type.table = "character",
-                        dt = data.frame){
+                        dt = data.frame,
+                        id.name = "character"){
   if (type.table == "patient"){
     #PatientID: length 8. E.g. @H000001
     #PatientRecordID: length 10. E.g. @H00000101
-    dt.empty <- dt[dt$PatientID == "",]
+    dt.empty <- dt[dt[,id.name] == "",]
     aux.id.num <- str_pad(rep(1:nrow(dt.empty)), 6, pad = "0")
-    dt.empty$PatientID <- paste("@H", aux.id.num, sep = "")
-    dt.empty$PatientRecordID <- paste(dt.empty$PatientID, "01", sep = "")
+    dt.empty[,id.name] <- paste("@H", aux.id.num, sep = "")
+    dt.empty$PATIENTRECORDID <- paste(dt.empty[,id.name], "01", sep = "")
     if(nrow(dt.empty) != nrow(dt)){
       dt <- data.frame(rbind(dt.empty, 
-                             dt[dt$PatientID != ","]),
+                             dt[dt[,id.name] != ","]),
                        stringsAsFactors = FALSE)
     }else{
       dt <- dt.empty
@@ -19,14 +20,14 @@ generate.id <- function(type.table = "character",
       #PatientIDTumourTable: =  PatientID: length 8. E.g. @H000001
       #TumourID: = PatientRecordID: length 10. E.g. @H00000101
       #PatientRecordIDTumourTable: = TumourID: length 10. E.g. @H00000101
-      dt.empty <- dt[dt$PatientIDTumourTable == "",]
+      dt.empty <- dt[dt$PATIENTIDTUMOURTABLE == "",]
       aux.id.num <- str_pad(rep(1:nrow(dt.empty)), 6, pad = "0")
-      dt.empty$PatientIDTumourTable <- paste("@H", aux.id.num, sep = "")
-      dt.empty$TumourID <- paste(dt.empty$PatientIDTumourTable, "01", sep = "")
-      dt.empty$PatientRecordIDTumourTable <- dt.empty$TumourID
+      dt.empty$PATIENTIDTUMOURTABLE <- paste("@H", aux.id.num, sep = "")
+      dt.empty[,id.name] <- paste(dt.empty$PATIENTIDTUMOURTABLE, "01", sep = "")
+      dt.empty$PATIENTRECORDIDTUMOURTABLE <- dt.empty[,id.name]
       if(nrow(dt.empty) != nrow(dt)){
         dt <- data.frame(rbind(dt.empty, 
-                               dt[dt$PatientIDTumourTable != ","]),
+                               dt[dt$PATIENTIDTUMOURTABLE != ","]),
                          stringsAsFactors = FALSE)
       }else{
         dt <- dt.empty
@@ -34,13 +35,13 @@ generate.id <- function(type.table = "character",
       }else{
       #TumourIDSourceTable: = TumourID
       #SourceRecordID: length 12. E.g. @H0000010101
-      dt.empty <- dt[dt$TumourIDSourceTable == "",]
+      dt.empty <- dt[dt$TUMOURIDSOURCETABLE == "",]
       aux.id.num <- str_pad(rep(1:nrow(dt.empty)), 6, pad = "0")
-      dt.empty$TumourIDSourceTable <- paste("@H", aux.id.num, "01", sep = "")
-      dt.empty$SourceRecordID <- paste(dt.empty$TumourIDSourceTable, "01", sep = "")
+      dt.empty$TUMOURIDSOURCETABLE <- paste("@H", aux.id.num, "01", sep = "")
+      dt.empty$SOURCERECORDID <- paste(dt.empty$TUMOURIDSOURCETABLE, "01", sep = "")
       if(nrow(dt.empty) != nrow(dt)){
         dt <- data.frame(rbind(dt.empty, 
-                               dt[dt$TumourIDSourceTable != ","]),
+                               dt[dt$TUMOURIDSOURCETABLE != ","]),
                          stringsAsFactors = FALSE)
       }else{
         dt <- dt.empty

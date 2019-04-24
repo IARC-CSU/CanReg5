@@ -877,6 +877,14 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
             // Runs on the EDT.  Update the GUI based on
             // the result computed by doInBackground().
             String fileListString = "";
+            
+            //In case they were replaced by the R scripts 
+            files = new File[]{
+                patientPreviewFilePanel.getInFile(),
+                tumourPreviewFilePanel.getInFile(),
+                sourcePreviewFilePanel.getInFile()
+            };
+            
             for (File file : files) {
                 if (file != null) {
                     fileListString += file.getName() + ", ";

@@ -37,14 +37,13 @@ initial.options <- commandArgs(trailingOnly = FALSE)
 #Parameters
 JSON.path <- "-paramsFile="
 paramsJSON <- fromJSON(sub(JSON.path, "", initial.options[grep(JSON.path, initial.options)]))
-
 file.arg.name <- "--file="
 script.name <- sub(file.arg.name, "", initial.options[grep(file.arg.name, initial.options)])
 
 #Set locale to UTF-8
-if(.Platform$OS.type != "windows") {
-  Sys.setlocale("LC_CTYPE", "UTF-8")  
-} else { NULL }
+if(.Platform$OS.type != "windows"){
+  Sys.setlocale("LC_CTYPE", "UTF-8")
+}else{NULL}
 
 
 #Load all the scripts
@@ -65,7 +64,7 @@ if(.Platform$OS.type != "windows") {
 
 #Parse the variables and dictionary nodes into a dataframe
   doc.data <- xmlToDataFrame(nodes = xmlChildren(xmlRoot(doc)[["variables"]]))
-  dic.data <- xmlToDataFrame(nodes = xmlChildren(xmlRoot(doc)[["dictionaries"]]))
+  dic.data <- xmlToDataFrame(nodes = xmlChildren(xmlRoot(doc)[["dictionaries"]]), stringsAsFactors = FALSE)
 
 #Read dictionaries
   dic.codes <- read.table(paramsJSON$dictionaryFilePath,
@@ -101,7 +100,16 @@ if(.Platform$OS.type != "windows") {
 #Which variables use dictionaries
   var.dic.data <- doc.data[doc.data$variable_type == "Dict", c("short_name", "use_dictionary", "table", "fill_in_status")]
   
-#Import the data file
+#To Uppercase names in the database
+  paramsJSON$patientVarNameInDatabase <- toupper(paramsJSON$patientVarNameInDatabase)
+  paramsJSON$tumourVarNameInDatabase <- toupper(paramsJSON$tumourVarNameInDatabase)
+  paramsJSON$sourceVarNameInDatabase <- toupper(paramsJSON$sourceVarNameInDatabase)
+  
+#Change colnames in paramsJSON that are null/NA
+  paramsJSON$patientVarNameInImportFile[is.na(paramsJSON$patientVarNameInImportFile)] <- paramsJSON$patientVarNameInDatabase[is.na(paramsJSON$patientVarNameInImportFile)]
+  paramsJSON$tumourVarNameInImportFile[is.na(paramsJSON$tumourVarNameInImportFile)] <- paramsJSON$tumourVarNameInDatabase[is.na(paramsJSON$tumourVarNameInImportFile)]
+  paramsJSON$sourceVarNameInImportFile[is.na(paramsJSON$sourceVarNameInImportFile)] <- paramsJSON$sourceVarNameInDatabase[is.na(paramsJSON$sourceVarNameInImportFile)]
+#Import the data file 
   #It is necessary to check if the file for Patient, Tumour and Source is the same
   if (!is.null(paramsJSON$patientFilePath) & !is.null(paramsJSON$tumourFilePath) & !is.null(paramsJSON$sourceFilePath)){
     if (paramsJSON$patientFilePath == paramsJSON$tumourFilePath & paramsJSON$tumourFilePath == paramsJSON$sourceFilePath){
@@ -117,17 +125,13 @@ if(.Platform$OS.type != "windows") {
       patient.import.data <- leading.zeros(patient.import.data, doc.data, "Patient")
       
       #To generate ids
-      if (paramsJSON$patientVarNameInImportFile[which(paramsJSON$patientVarNameInDatabase == "PatientID")] == ""){
-        patient.import.data <- generate.id("patient", patient.import.data)
-        patient.raw.data$PatientID <- patient.import.data$PatientID
-        patient.raw.data$PatientRecordID <- patient.import.data$PatientRecordID
-      }else{
-        if (all(patient.import.data$PatientID == "")){
-          patient.import.data <- generate.id("patient", patient.import.data)
-          patient.raw.data$PatientID <- patient.import.data$PatientID
-          patient.raw.data$PatientRecordID <- patient.import.data$PatientRecordID
-        }else{NULL}
-      }
+      PatientID.short.name <- toupper(doc.data$short_name[doc.data$standard_variable_name %in% "PatientID"])
+      if (all(patient.import.data[,PatientID.short.name] == "")){
+        patient.import.data <- generate.id("patient", patient.import.data, PatientID.short.name)
+        patient.raw.data[,PatientID.short.name] <- patient.import.data[,PatientID.short.name]
+        patient.raw.data$PATIENTRECORDID <- patient.import.data$PATIENTRECORDID
+      }else{NULL}
+      
       
       
       #To check dictionary codes
@@ -135,7 +139,8 @@ if(.Platform$OS.type != "windows") {
                                                   var.dic.data, 
                                                   patient.import.data, 
                                                   "Patient", 
-                                                  paramsJSON$patientVarNameInImportFile)
+                                                  paramsJSON$patientVarNameInImportFile,
+                                                  paramsJSON$patientVarNameInDatabase)
       
       #To replace the dictionary checked columns into the raw data
       if(class(patient.dict.checked.data) == "data.frame"){
@@ -173,26 +178,23 @@ if(.Platform$OS.type != "windows") {
       tumour.import.data <- leading.zeros(tumour.import.data, doc.data, "Tumour")
       
       #To generate ids
-      if (paramsJSON$tumourVarNameInImportFile[which(paramsJSON$tumourVarNameInDatabase == "TumourID")] == ""){
-        tumour.import.data <- generate.id("tumour", tumour.import.data)
-        tumour.raw.data$TumourID <- tumour.import.data$TumourID
-        tumour.raw.data$PatientIDTumourTable <- tumour.import.data$PatientIDTumourTable
-        tumour.raw.data$PatientRecordIDTumourTable <- tumour.import.data$PatientRecordIDTumourTable
-      }else{
-        if (all(tumour.import.data$TumourID == "")){
-          tumour.import.data <- generate.id("tumour", tumour.import.data)
-          tumour.raw.data$TumourID <- tumour.import.data$TumourID
-          tumour.raw.data$PatientIDTumourTable <- tumour.import.data$PatientIDTumourTable
-          tumour.raw.data$PatientRecordIDTumourTable <- tumour.import.data$PatientRecordIDTumourTable
-        }else{NULL}
-      }
+      TumourID.short.name <- toupper(doc.data$short_name[doc.data$standard_variable_name %in% "TumourID"])
+      if (all(tumour.import.data[,TumourID.short.name] == "")){
+        tumour.import.data <- generate.id("tumour", tumour.import.data, TumourID.short.name)
+        tumour.raw.data[,TumourID.short.name] <- tumour.import.data[,TumourID.short.name]
+        tumour.raw.data$PATIENTIDTUMOURTABLE <- tumour.import.data$PATIENTIDTUMOURTABLE
+        tumour.raw.data$PATIENTRECORDIDTUMOURTABLE <- tumour.import.data$PATIENTRECORDIDTUMOURTABLE
+        
+      }else{NULL}
+      
       
       #To check dictionary codes
       tumour.dict.checked.data <- check.code.dic(dic.codes.tidy, 
-                                                  var.dic.data, 
-                                                  tumour.import.data, 
-                                                  "Tumour", 
-                                                  paramsJSON$tumourVarNameInImportFile)
+                                                 var.dic.data, 
+                                                 tumour.import.data, 
+                                                 "Tumour", 
+                                                 paramsJSON$tumourVarNameInImportFile,
+                                                 paramsJSON$tumourVarNameInImportFile)
       
       #To replace the dictionary checked columns into the raw data
       if(class(tumour.dict.checked.data) == "data.frame"){
@@ -222,27 +224,26 @@ if(.Platform$OS.type != "windows") {
                                            paramsJSON$sourceVarNameInDatabase, 
                                            source.raw.data)
       #Add leading zeros
-      source.import.data <- leading.zeros(source.import.data, doc.data, "Source")
+      if(!all(paramsJSON$sourceVarNameInDatabase %in% c("TUMOURIDSOURCETABLE", "SOURCERECORDID"))){
+        source.import.data <- leading.zeros(source.import.data, doc.data, "Source")
+      }else{NULL}
+      
       
       #To generate ids
-      if (paramsJSON$sourceVarNameInImportFile[which(paramsJSON$sourceVarNameInDatabase == "SourceRecordID")] == ""){
-        source.import.data <- generate.id("source", source.import.data)
-        source.raw.data$SourceRecordID <- source.import.data$SourceRecordID
+      SourceID.short.name <- toupper(doc.data$short_name[doc.data$standard_variable_name %in% "SourceRecordID"])
+      if (all(source.import.data[,SourceID.short.name] == "")){
+        source.import.data <- generate.id("source", source.import.data, SourceID.short.name)
+        source.raw.data[,SourceID.short.name] <- source.import.data[,SourceID.short.name]
         source.raw.data$TumourIDSourceTable <- source.import.data$TumourIDSourceTable
-      }else{
-        if (all(source.import.data$SourceRecordID == "")){
-          source.import.data <- generate.id("source", source.import.data)
-          source.raw.data$SourceRecordID <- source.import.data$SourceRecordID
-          source.raw.data$TumourIDSourceTable <- source.import.data$TumourIDSourceTable
-        }else{NULL}
-      }
+      }else{NULL}
       
       #To check dictionary codes
       source.dict.checked.data <- check.code.dic(dic.codes.tidy, 
                                                   var.dic.data, 
                                                   source.import.data, 
                                                   "Source", 
-                                                  paramsJSON$sourceVarNameInImportFile)
+                                                  paramsJSON$sourceVarNameInImportFile,
+                                                 paramsJSON$sourceVarNameInDatabase)
       
       #To replace the dictionary checked columns into the raw data
       if(class(source.dict.checked.data) == "data.frame"){
@@ -315,24 +316,20 @@ if(.Platform$OS.type != "windows") {
       patient.import.data <- leading.zeros(patient.import.data, doc.data, "Patient")
       
       #To generate ids
-      if (paramsJSON$patientVarNameInImportFile[which(paramsJSON$patientVarNameInDatabase == "PatientID")] == ""){
-        patient.import.data <- generate.id("patient", patient.import.data)
-        patient.raw.data$PatientID <- patient.import.data$PatientID
-        patient.raw.data$PatientRecordID <- patient.import.data$PatientRecordID
-      }else{
-        if (all(patient.import.data$PatientID == "")){
-          patient.import.data <- generate.id("patient", patient.import.data)
-          patient.raw.data$PatientID <- patient.import.data$PatientID
-          patient.raw.data$PatientRecordID <- patient.import.data$PatientRecordID
-        }else{NULL}
-      }
+      PatientID.short.name <- toupper(doc.data$short_name[doc.data$standard_variable_name %in% "PatientID"])
+      if (all(patient.import.data[,PatientID.short.name] == "")){
+        patient.import.data <- generate.id("patient", patient.import.data, PatientID.short.name)
+        patient.raw.data[,PatientID.short.name] <- patient.import.data[,PatientID.short.name]
+        patient.raw.data$PATIENTRECORDID <- patient.import.data$PATIENTRECORDID
+      }else{NULL}
       
       #To check dictionary codes
       patient.dict.checked.data <- check.code.dic(dic.codes.tidy, 
                                                   var.dic.data, 
                                                   patient.import.data, 
                                                   "Patient", 
-                                                  paramsJSON$patientVarNameInImportFile)
+                                                  paramsJSON$patientVarNameInImportFile,
+                                                  paramsJSON$patientVarNameInDatabase)
       
       #To replace the dictionary checked columns into the raw data
       if(class(patient.dict.checked.data) == "data.frame"){
@@ -395,26 +392,23 @@ if(.Platform$OS.type != "windows") {
       tumour.import.data <- leading.zeros(tumour.import.data, doc.data, "Tumour")
       
       #To generate ids
-      if (paramsJSON$tumourVarNameInImportFile[which(paramsJSON$tumourVarNameInDatabase == "TumourID")] == ""){
-        tumour.import.data <- generate.id("tumour", tumour.import.data)
-        tumour.raw.data$TumourID <- tumour.import.data$TumourID
-        tumour.raw.data$PatientIDTumourTable <- tumour.import.data$PatientIDTumourTable
-        tumour.raw.data$PatientRecordIDTumourTable <- tumour.import.data$PatientRecordIDTumourTable
-      }else{
-        if (all(tumour.import.data$TumourID == "")){
-          tumour.import.data <- generate.id("tumour", tumour.import.data)
-          tumour.raw.data$TumourID <- tumour.import.data$TumourID
-          tumour.raw.data$PatientIDTumourTable <- tumour.import.data$PatientIDTumourTable
-          tumour.raw.data$PatientRecordIDTumourTable <- tumour.import.data$PatientRecordIDTumourTable
-        }else{NULL}
-      }
+      TumourID.short.name <- toupper(doc.data$short_name[doc.data$standard_variable_name %in% "TumourID"])
+      if (all(tumour.import.data[,TumourID.short.name] == "")){
+        tumour.import.data <- generate.id("tumour", tumour.import.data, TumourID.short.name)
+        tumour.raw.data[,TumourID.short.name] <- tumour.import.data[,TumourID.short.name]
+        tumour.raw.data$PATIENTIDTUMOURTABLE <- tumour.import.data$PATIENTIDTUMOURTABLE
+        tumour.raw.data$PATIENTRECORDIDTUMOURTABLE <- tumour.import.data$PATIENTRECORDIDTUMOURTABLE
+        
+      }else{NULL}
+      
       
       #To check dictionary codes
       tumour.dict.checked.data <- check.code.dic(dic.codes.tidy, 
                                                   var.dic.data, 
                                                   tumour.import.data, 
                                                   "Tumour", 
-                                                  paramsJSON$tumourVarNameInImportFile)
+                                                  paramsJSON$tumourVarNameInImportFile,
+                                                 paramsJSON$tumourVarNameInDatabase)
       
       #To replace the dictionary checked columns into the raw data
       if(class(tumour.dict.checked.data) == "data.frame"){
@@ -474,27 +468,26 @@ if(.Platform$OS.type != "windows") {
                                            source.raw.data)
       
       #Add leading zeros
-      source.import.data <- leading.zeros(source.import.data, doc.data, "Source")
+      if(!all(paramsJSON$sourceVarNameInDatabase %in% c("TUMOURIDSOURCETABLE", "SOURCERECORDID"))){
+        source.import.data <- leading.zeros(source.import.data, doc.data, "Source")
+      }else{NULL}
+      
       
       #To generate ids
-      if (paramsJSON$sourceVarNameInImportFile[which(paramsJSON$sourceVarNameInDatabase == "SourceRecordID")] == ""){
-        source.import.data <- generate.id("source", source.import.data)
-        source.raw.data$SourceRecordID <- source.import.data$SourceRecordID
+      SourceID.short.name <- toupper(doc.data$short_name[doc.data$standard_variable_name %in% "SourceRecordID"])
+      if (all(source.import.data[,SourceID.short.name] == "")){
+        source.import.data <- generate.id("source", source.import.data, SourceID.short.name)
+        source.raw.data[,SourceID.short.name] <- source.import.data[,SourceID.short.name]
         source.raw.data$TumourIDSourceTable <- source.import.data$TumourIDSourceTable
-      }else{
-        if (all(source.import.data$SourceRecordID == "")){
-          source.import.data <- generate.id("source", source.import.data)
-          source.raw.data$SourceRecordID <- source.import.data$SourceRecordID
-          source.raw.data$TumourIDSourceTable <- source.import.data$TumourIDSourceTable
-        }else{NULL}
-      }
+      }else{NULL}
       
       #To check dictionary codes
       source.dict.checked.data <- check.code.dic(dic.codes.tidy, 
                                                   var.dic.data, 
                                                   source.import.data, 
                                                   "Source", 
-                                                  paramsJSON$sourceVarNameInImportFile)
+                                                  paramsJSON$sourceVarNameInImportFile,
+                                                 paramsJSON$sourceVarNameInDatabase)
       
       #To replace the dictionary checked columns into the raw data
       if(class(source.dict.checked.data) == "data.frame"){
@@ -558,24 +551,20 @@ if(.Platform$OS.type != "windows") {
       patient.import.data <- leading.zeros(patient.import.data, doc.data, "Patient")
       
       #To generate ids
-      if (paramsJSON$patientVarNameInImportFile[which(paramsJSON$patientVarNameInDatabase == "PatientID")] == ""){
-        patient.import.data <- generate.id("patient", patient.import.data)
-        patient.raw.data$PatientID <- patient.import.data$PatientID
-        patient.raw.data$PatientRecordID <- patient.import.data$PatientRecordID
-      }else{
-        if (all(patient.import.data$PatientID == "")){
-          patient.import.data <- generate.id("patient", patient.import.data)
-          patient.raw.data$PatientID <- patient.import.data$PatientID
-          patient.raw.data$PatientRecordID <- patient.import.data$PatientRecordID
-        }else{NULL}
-      }
+      PatientID.short.name <- toupper(doc.data$short_name[doc.data$standard_variable_name %in% "PatientID"])
+      if (all(patient.import.data[,PatientID.short.name] == "")){
+        patient.import.data <- generate.id("patient", patient.import.data, PatientID.short.name)
+        patient.raw.data[,PatientID.short.name] <- patient.import.data[,PatientID.short.name]
+        patient.raw.data$PATIENTRECORDID <- patient.import.data$PATIENTRECORDID
+      }else{NULL}
       
       #To check dictionary codes
       patient.dict.checked.data <- check.code.dic(dic.codes.tidy, 
                                                   var.dic.data, 
                                                   patient.import.data, 
                                                   "Patient", 
-                                                  paramsJSON$patientVarNameInImportFile)
+                                                  paramsJSON$patientVarNameInImportFile,
+                                                  paramsJSON$patientVarNameInDatabase)
       
       #To replace the dictionary checked columns into the raw data
       if(class(patient.dict.checked.data) == "data.frame"){
@@ -641,26 +630,23 @@ if(.Platform$OS.type != "windows") {
       tumour.import.data <- leading.zeros(tumour.import.data, doc.data, "Tumour")
       
       #To generate ids
-      if (paramsJSON$tumourVarNameInImportFile[which(paramsJSON$tumourVarNameInDatabase == "TumourID")] == ""){
-        tumour.import.data <- generate.id("tumour", tumour.import.data)
-        tumour.raw.data$TumourID <- tumour.import.data$TumourID
-        tumour.raw.data$PatientIDTumourTable <- tumour.import.data$PatientIDTumourTable
-        tumour.raw.data$PatientRecordIDTumourTable <- tumour.import.data$PatientRecordIDTumourTable
-      }else{
-        if (all(tumour.import.data$TumourID == "")){
-          tumour.import.data <- generate.id("tumour", tumour.import.data)
-          tumour.raw.data$TumourID <- tumour.import.data$TumourID
-          tumour.raw.data$PatientIDTumourTable <- tumour.import.data$PatientIDTumourTable
-          tumour.raw.data$PatientRecordIDTumourTable <- tumour.import.data$PatientRecordIDTumourTable
-        }else{NULL}
-      }
+      TumourID.short.name <- toupper(doc.data$short_name[doc.data$standard_variable_name %in% "TumourID"])
+      if (all(tumour.import.data[,TumourID.short.name] == "")){
+        tumour.import.data <- generate.id("tumour", tumour.import.data, TumourID.short.name)
+        tumour.raw.data[,TumourID.short.name] <- tumour.import.data[,TumourID.short.name]
+        tumour.raw.data$PATIENTIDTUMOURTABLE <- tumour.import.data$PATIENTIDTUMOURTABLE
+        tumour.raw.data$PATIENTRECORDIDTUMOURTABLE <- tumour.import.data$PATIENTRECORDIDTUMOURTABLE
+        
+      }else{NULL}
+      
       
       #To check dictionary codes
       tumour.dict.checked.data <- check.code.dic(dic.codes.tidy, 
                                                   var.dic.data, 
                                                   tumour.import.data, 
                                                   "Tumour", 
-                                                  paramsJSON$tumourVarNameInImportFile)
+                                                  paramsJSON$tumourVarNameInImportFile,
+                                                 paramsJSON$tumourVarNameInDatabase)
       
       #To replace the dictionary checked columns into the raw data
       if(class(tumour.dict.checked.data) == "data.frame"){
@@ -723,28 +709,26 @@ if(.Platform$OS.type != "windows") {
                                            paramsJSON$sourceVarNameInDatabase, 
                                            source.raw.data)
       #Add leading zeros
-      source.import.data <- leading.zeros(source.import.data, doc.data, "Source")
+      if(!all(paramsJSON$sourceVarNameInDatabase %in% c("TUMOURIDSOURCETABLE", "SOURCERECORDID"))){
+        source.import.data <- leading.zeros(source.import.data, doc.data, "Source")
+      }else{NULL}
+      
       
       #To generate ids
-      source.import.data <- generate.id("source", source.import.data)#To generate ids
-      if (paramsJSON$sourceVarNameInImportFile[which(paramsJSON$sourceVarNameInDatabase == "SourceRecordID")] == ""){
-        source.import.data <- generate.id("source", source.import.data)
-        source.raw.data$SourceRecordID <- source.import.data$SourceRecordID
+      SourceID.short.name <- toupper(doc.data$short_name[doc.data$standard_variable_name %in% "SourceRecordID"])
+      if (all(source.import.data[,SourceID.short.name] == "")){
+        source.import.data <- generate.id("source", source.import.data, SourceID.short.name)
+        source.raw.data[,SourceID.short.name] <- source.import.data[,SourceID.short.name]
         source.raw.data$TumourIDSourceTable <- source.import.data$TumourIDSourceTable
-      }else{
-        if (all(source.import.data$SourceRecordID == "")){
-          source.import.data <- generate.id("source", source.import.data)
-          source.raw.data$SourceRecordID <- source.import.data$SourceRecordID
-          source.raw.data$TumourIDSourceTable <- source.import.data$TumourIDSourceTable
-        }else{NULL}
-      }
+      }else{NULL}
       
       #To check dictionary codes
       source.dict.checked.data <- check.code.dic(dic.codes.tidy, 
                                                   var.dic.data, 
                                                   source.import.data, 
                                                   "Source", 
-                                                  paramsJSON$sourceVarNameInImportFile)
+                                                  paramsJSON$sourceVarNameInImportFile,
+                                                 paramsJSON$sourceVarNameInDatabase)
       
       #To replace the dictionary checked columns into the raw data
       if(class(source.dict.checked.data) == "data.frame"){
