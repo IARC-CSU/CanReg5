@@ -618,7 +618,11 @@ public class Import {
                 }
                 parser = CSVParser.parse(files[0], io.getFileCharsets()[0], format);
 
-                for (CSVRecord csvRecord : parser) {         
+                for (CSVRecord csvRecord : parser) {    
+                    if(numberOfLinesRead > 200)
+                        break;
+                    
+                    
                     // We allow for null tasks...
                     boolean savePatient = true;
 //                    boolean deletePatient = false;
@@ -711,7 +715,11 @@ public class Import {
                         .withDelimiter(io.getSeparators()[1]);
                 parser = CSVParser.parse(files[1], io.getFileCharsets()[1], format);
 
-                for (CSVRecord csvRecord : parser) {      
+                for (CSVRecord csvRecord : parser) {    
+                    if(numberOfLinesRead > 200)
+                        break;
+                    
+                    
                     if (task != null) {
                         task.firePropertyChange(PROGRESS, 33 + ((numberOfLinesRead - 1) * 100 / linesToRead) / 3, 33 + ((numberOfLinesRead) * 100 / linesToRead) / 3);
                         task.firePropertyChange(TUMOURS, ((numberOfLinesRead - 1) * 100 / linesToRead), ((numberOfLinesRead) * 100 / linesToRead));
@@ -796,6 +804,10 @@ public class Import {
                 parser = CSVParser.parse(files[2], io.getFileCharsets()[2], format);
 
                 for (CSVRecord csvRecord : parser) {   
+                    if(numberOfLinesRead > 200)
+                        break;
+                    
+                    
                     // We allow for null tasks...
                     if (task != null) {
                         task.firePropertyChange(PROGRESS, 67 + ((numberOfLinesRead - 1) * 100 / linesToRead) / 3, 67 + ((numberOfLinesRead) * 100 / linesToRead) / 3);
@@ -1142,7 +1154,7 @@ public class Import {
             }
             if (saveTumour) {
                 // if tumour has record ID we edit it
-                if (tumourToImport.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME) != null ||
+                if (tumourToImport.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME) != null &&
                     ! tumourToImport.getVariableAsString(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME_FOR_HOLDING).isEmpty()) {
 //                  try {
                         if(fromHoldingToProduction) {
