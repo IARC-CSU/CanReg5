@@ -44,17 +44,18 @@ shinyServer(function(input, output, session) {
 		table_list <- c( "Population pyramid" = 1,
 			"Barchart of cases by age group by sex" = 2, 
 			"piechart of cases by age group by sex" = 3, 
-			"Barchart of cases by year" = 8,
 			"Top cancer both sexes" = 4 ,
 			"Top cancer by sexes" = 5 ,
 			"Age-specific rates (Top Cancer Sites)" = 6,
-			"Age-specific rate by cancer sites" = 7)
+			"Age-specific rate by cancer sites" = 7,
+			"Barchart of cases by year" = 8,
+			"CI5 XI comparaison" = 12)
 			
 			if (year_info$span >= 3) {
 			
 				table_list = c(table_list, "Time trends (Top cancer Sites)" = 9)
-				table_list = c(table_list, "Time trends by cancer sites" = 11)
 				table_list = c(table_list, "Estimated Average Percentage Change" = 10)
+				table_list = c(table_list, "Time trends by cancer sites" = 11)
 			
 			} 
 			
@@ -143,6 +144,20 @@ shinyServer(function(input, output, session) {
 				checkboxInput("checkCI", "Confidence interval",FALSE)
 
 			}
+			else if (input$select_table %in% c(12)) {
+				
+				
+				cancer_list <-  unique(dt_base$cancer_label)
+				n <- length(cancer_list)
+				cancer_list <- cancer_list[1:(n-1)]
+				cancer_list <- sort(as.character(cancer_list))
+
+				
+				selectInput("selectCancerSite", "Select cancer sites", cancer_list)
+				
+			
+			}
+
 		}
 		
 		
@@ -157,6 +172,14 @@ shinyServer(function(input, output, session) {
 					radioButtons("radioAgeGroup", "Age-group division:",
 										 c("0-4,5-9,...,80-84,85+" = 1,
 											 "0-14, 15-29,30-49,50-69,70+" = 2)
+				)
+				
+			}
+			else if (input$select_table %in% c(12)) {
+				
+				radioButtons("radioSex", "Sex:",
+										 c("Males" = "Male",
+											"Females" = "Female")
 				)
 				
 			}  
@@ -197,7 +220,7 @@ shinyServer(function(input, output, session) {
 				
 				cancer_list <-  unique(dt_base$cancer_label)
 				n <- length(cancer_list)
-				cancer_list <- as.character(cancer_list)
+				cancer_list <- sort(as.character(cancer_list))
 				cancer_list <- cancer_list[1:(n-1)]
 				
 				selectInput("selectCancerSite", "Select cancer sites", cancer_list)
@@ -216,6 +239,58 @@ shinyServer(function(input, output, session) {
 				sliderInput("slideAgeRange", "Age group:", 0, 90, c(0,90), step=5)
 			}
 		}
+
+			
+	})
+
+	output$UI_control5 <- renderUI({
+		
+		if  (!is.null(input$select_table)) {
+			if (input$select_table %in% c(12)) {
+				
+				
+				dt_CI5_list <- readRDS(paste0(script.basename, "/CI5_alldata.rds"))
+				registry_list <-  unique(dt_CI5_list$country_label)
+				registry_list <- as.character(registry_list)
+				selectInput("selectRegistry1",NULL, registry_list, selected = dt_CI5_label[0])
+				
+			}
+		}
+
+			
+	})
+
+	output$UI_control6 <- renderUI({
+		
+		if  (!is.null(input$select_table)) {
+			if (input$select_table %in% c(12)) {
+				
+				
+				dt_CI5_list <- readRDS(paste0(script.basename, "/CI5_alldata.rds"))
+				registry_list <-  unique(dt_CI5_list$country_label)
+				registry_list <- as.character(registry_list)
+				selectInput("selectRegistry2",NULL , registry_list, selected = dt_CI5_label[1])
+				
+			}
+		}
+
+			
+	})
+
+	output$UI_control7 <- renderUI({
+		
+		if  (!is.null(input$select_table)) {
+			if (input$select_table %in% c(12)) {
+				
+				
+				dt_CI5_list <- readRDS(paste0(script.basename, "/CI5_alldata.rds"))
+				registry_list <-  unique(dt_CI5_list$country_label)
+				registry_list <- as.character(registry_list)
+				selectInput("selectRegistry3", NULL, registry_list, selected = dt_CI5_label[2])
+				
+			}
+		}
+
 			
 	})
 	
@@ -226,51 +301,67 @@ shinyServer(function(input, output, session) {
       table$label <- "Population pyramid"
       hide(id="controls_COL1", anim=TRUE)
       hide(id="controls_COL2", anim=TRUE)
+      hide(id="fluid_test", anim=TRUE)
     }
 		else if (input$select_table== 2) {
 				table$label <- "Barchart by age and sex"
 				show(id="controls_COL1", anim=TRUE)
 				hide(id="controls_COL2", anim=TRUE)
+				hide(id="fluid_test", anim=TRUE)
 			}
 		else if (input$select_table== 3) {
 				table$label <- "Piechart by age and sex"
 				show(id="controls_COL1", anim=TRUE)
 				hide(id="controls_COL2", anim=TRUE)
+				hide(id="fluid_test", anim=TRUE)
 			}
 		else if (input$select_table== 4) {
 			table$label <- "Barchart Top cancer both sexes"
 			show(id="controls_COL1", anim=TRUE)
 			show(id="controls_COL2", anim=TRUE)
+			hide(id="fluid_test", anim=TRUE)
 		}
 		else if (input$select_table== 5) {
 			table$label <- "Barchart Top cancer by sexes"
 			show(id="controls_COL1", anim=TRUE)
 			show(id="controls_COL2", anim=TRUE)
+			hide(id="fluid_test", anim=TRUE)
 		}
 		else if (input$select_table== 6) {
 			table$label <- "Age-specific trend top cancer"
 			show(id="controls_COL1", anim=TRUE)
 			show(id="controls_COL2", anim=TRUE)
+			hide(id="fluid_test", anim=TRUE)
 		}
 		else if (input$select_table== 7) {
 			table$label <- "Age-specific trend"
 			show(id="controls_COL1", anim=TRUE)
 			show(id="controls_COL2", anim=TRUE)
+			hide(id="fluid_test", anim=TRUE)
 		}
 		else if (input$select_table== 8) {
 			table$label <- "Barchart by year"
 			show(id="controls_COL1", anim=TRUE)
 			hide(id="controls_COL2", anim=TRUE)
+			hide(id="fluid_test", anim=TRUE)
 		}
 		else if (input$select_table== 9) {
 			table$label <- "Time trend top cancer"
 			show(id="controls_COL1", anim=TRUE)
 			show(id="controls_COL2", anim=TRUE)
+			hide(id="fluid_test", anim=TRUE)
 		}
 		else if (input$select_table== 10) {
 			table$label <- "Estimated Annual Percentage Change"
 			show(id="controls_COL1", anim=TRUE)
 			show(id="controls_COL2", anim=TRUE)
+			hide(id="fluid_test", anim=TRUE)
+		}
+		else if (input$select_table== 12) {
+			table$label <- "CI5 XI comparison"
+			show(id="controls_COL1", anim=TRUE)
+			hide(id="controls_COL2", anim=TRUE)
+			show(id="fluid_test", anim=TRUE)
 		}
   })
   
@@ -316,7 +407,7 @@ shinyServer(function(input, output, session) {
 				
 
 		
-				dt_temp <- shiny_data(input)
+				dt_temp <- shiny_data(input, session)
 			
 				if (input$select_table %in% c(4,5,9,10)) {
 					if (length(bool_rv$trigger1) != 0) {

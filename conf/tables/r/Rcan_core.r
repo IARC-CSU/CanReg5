@@ -508,7 +508,7 @@ canreg_import_CI5_data <- function(dt,CI5_file,var_ICD_canreg="ICD10GROUP",var_a
   dt_CI5_age_label[,age_list:=NULL]
 
   setnames(dt_CI5_age_label,"age_label_canreg",var_age_label_canreg)
-  dt_temp <- unique(dt_all[,c("AGE_GROUP","REFERENCE_COUNT", var_age_label_canreg),  with=FALSE])
+  dt_temp <- unique(dt[,c("AGE_GROUP","REFERENCE_COUNT", var_age_label_canreg),  with=FALSE])
   dt_CI5_age_label <- merge(dt_CI5_age_label,dt_temp, by=c(var_age_label_canreg),all.x=TRUE, all.y=FALSE )
   
   
@@ -529,7 +529,7 @@ canreg_merge_CI5_registry <- function(dt, dt_CI5, registry_region, registry_labe
   
   ##calcul of ASR for canreg
   dt<- Rcan:::core.csu_asr(df_data =dt, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
-                    group_by = c("cancer_label", "SEX","ICD10GROUP","ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt_all),
+                    group_by = c("cancer_label", "SEX","ICD10GROUP","ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt),
                     pop_base_count = "REFERENCE_COUNT",
                     age_label_list = "AGE_GROUP_LABEL")
   

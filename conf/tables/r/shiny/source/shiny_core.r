@@ -1,6 +1,6 @@
 
 
-shiny_data <- function(input) {
+shiny_data <- function(input, session) {
   
   dt_temp <- NULL
   if  (!is.null(input$select_table)) {
@@ -269,6 +269,38 @@ shiny_data <- function(input) {
 			}
 				
 		}
+		else if (table_number == 12){
+
+			if (!is.null(input$selectRegistry1) & 
+				!is.null(input$selectRegistry2) & 
+				!is.null(input$selectRegistry3) ) {
+
+				registry_selection <- 
+					c(
+					input$selectRegistry1,
+					input$selectRegistry2,
+					input$selectRegistry3,
+					ls_args$header)  
+
+				dt_temp  <- copy(dt_base)
+				dt_temp <- dt_temp[ICD10GROUP != "C44",]
+				dt_temp <- dt_temp[ICD10GROUP != "O&U",]
+				dt_temp <- canreg_ageSpecific_rate_data(dt_temp, keep_ref = TRUE)
+
+				dt_CI5_data <- canreg_import_CI5_data(dt_temp, paste0(script.basename, "/CI5_alldata.rds"))
+				dt_temp <- shiny_merge_CI5_registry(dt_temp,dt_CI5_data, registry_region = ls_args$sr, registry_label = ls_args$header, number=40 )
+				
+				dt_temp <- dt_temp[country_label %in% registry_selection, ]
+				setkeyv(dt_temp, c("CSU_RANK", "SEX","asr"))
+				dt_temp[country_label!=ls_args$header,ICD10GROUPCOLOR:=paste0(ICD10GROUPCOLOR,"6E")]
+				dt_temp[country_label==ls_args$header,ICD10GROUPCOLOR:=paste0(ICD10GROUPCOLOR,"FF")]
+				temp <- as.character(unique(dt_temp[CSU_RANK == 1 & SEX == "Male",]$cancer_label))
+				updateSelectInput(session, "selectCancerSite",selected = temp)
+
+
+
+			}
+		}	
 	}
  
   return(dt_temp)
@@ -288,18 +320,19 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 				ls_args$header  <- ""
 				output_type <- "png"
 			}
-    else {
-      output_type <- input$select_format
-    }
-  }
+    		else {
+      			output_type <- input$select_format
+    		}
+  		}
 		else {
-			ls_args$header  <- ""
 			table_number <- isolate(input$select_table)
+			if (table_number != 12) {
+				ls_args$header  <- ""
+			}
+			
 		}
 		
-		
-		
-		
+	
 		
 		if ( table_number == 1) {
 			
@@ -816,9 +849,42 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 								)
 								
 				}
+
+			}
+		
+		}
+		else if (table_number == 12){
+			
+			if (!is.null( input$selectCancerSite) & !is.null(input$radioSex)) {
+
+				dt_plot <- dt_plot[cancer_label == input$selectCancerSite,]
+				dt_plot <- dt_plot[SEX == input$radioSex]
+
+				xtitle=paste0(i18n$t("Age-standardized incidence rate per")," ", formatC(100000, format="d", big.mark=","))
+
 				
-			
-			
+				if (download) {
+				 
+					canreg_output(output_type = output_type, filename =file,landscape = FALSE,list_graph = FALSE,
+								FUN=canreg_asr_trend,
+								dt_plot=dt_plot,
+								logscale = bool_log,
+								plot_title=ls_args$header,
+								ytitle = ytitle
+								)
+							
+				}
+				else {
+					
+					shiny_bar_CI5_compare(
+						dt=dt_plot,
+						xtitle = xtitle,
+                		number=2,
+                		text_size_factor=1,
+                		list_graph=TRUE,
+                		multi_graph=FALSE)
+								
+				}
 			}
 		
 		}
@@ -878,17 +944,14 @@ canreg_ageSpecific <- function(dt_plot,color_trend,plot_subtitle="",logscale=FAL
                                 return_data = FALSE,
 								return_plot= FALSE,
                                 plot_title="") {
-  
- 
-  
+
   if (return_data) {
     dt <- dt[, c(group_by,var_year,var_asr), with=FALSE]
     setkeyv(dt, c("SEX",var_year))
     return(dt)
     stop() 
   }
-  
-	
+
 	color_trend <- c("Male" = "#2c7bb6", "Female" = "#b62ca1")
     
    plot <- Rcan:::core.csu_time_trend(dt_plot,
@@ -905,6 +968,98 @@ canreg_ageSpecific <- function(dt_plot,color_trend,plot_subtitle="",logscale=FAL
 
   print(plot)
 
+}
+
+#shiny function for CI5 comparison
+
+
+shiny_bar_CI5_compare <- function(dt,group_by = "SEX", landscape = TRUE,list_graph=TRUE,multi_graph=FALSE,
+                                        xtitle = "",digit  =  1,text_size_factor =1.5,number=5,
+                                        return_data  =  FALSE) 
+{
+  
+  if (return_data) {
+    setnames(dt, "CSU_RANK","cancer_rank")
+    dt <-  dt[,-c("ICD10GROUPCOLOR"), with=FALSE]
+    
+    return(dt)
+    stop() 
+  }
+  
+  
+  CI5_registries <- as.character(unique(dt$country_label))
+  caption <- NULL
+  if (any(grepl("\\*",CI5_registries))) {
+    caption <- paste0("*: ",i18n$t("Regional registries"))
+  }
+
+  dt[["country_label"]] <-Rcan:::core.csu_legend_wrapper(dt[["country_label"]], 14)
+  dt[,country_label:=factor(country_label, levels=country_label)]
+      
+  temp <- csu_bar_plot(dt=dt, 
+                 var_top="asr",
+                 var_bar="country_label",
+                 plot_title = unique(dt$cancer_label),
+                 plot_subtitle = unique(i18n$t(dt$SEX)), 
+                 plot_caption = caption,
+                 xtitle=xtitle,
+                 digit = digit,
+                 color_bar = as.character(dt$ICD10GROUPCOLOR),
+                 text_size_factor = text_size_factor,
+                 landscape = TRUE) 
+ 
+
+
+      
+  geom_text_index <- which(sapply(temp$layers, function(x) class(x$geom)[1]) == "GeomText")
+  temp$layers[[geom_text_index]]$aes_params$size <- 6 
+  geom_hline_index <- which(sapply(temp$layers, function(x) class(x$geom)[1]) == "GeomHline")
+  temp$layers[[geom_hline_index]]$aes_params$size <- 0.4
+      
+  print(temp)
+  
+}
+
+
+shiny_merge_CI5_registry <- function(dt, dt_CI5, registry_region, registry_label, number=5) {
+  
+  ##calcul of ASR for canreg
+  dt<- Rcan:::core.csu_asr(df_data =dt, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
+                    group_by = c("cancer_label", "SEX","ICD10GROUP","ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt),
+                    pop_base_count = "REFERENCE_COUNT",
+                    age_label_list = "AGE_GROUP_LABEL")
+  
+  ##keep top 5 cancer for men and top 5 cancer women of canreg.
+  dt <- Rcan:::core.csu_dt_rank(dt,var_value = "CASES",var_rank = "cancer_label",
+                    group_by = "SEX", number =number, ties.method = "first") 
+  
+  #Keep selected cancer in CI5 data and prepare CI5 data
+  
+  dt_temp <- dt[,c("SEX", "ICD10GROUP", "CSU_RANK"),  with=FALSE]
+  dt_CI5 <- merge(dt_CI5,dt_temp, by=c("SEX", "ICD10GROUP"),all.y=TRUE )
+  dt_CI5 <- Rcan:::core.csu_asr(df_data =dt_CI5, var_age ="AGE_GROUP",var_cases = "cases", var_py = "py",
+                         group_by = c("country_label","cr" ,"SEX","ICD10GROUP", "CSU_RANK"),
+                         var_age_group=c("country_label"),
+                         missing_age = canreg_missing_age(dt_CI5),
+                         pop_base_count = "REFERENCE_COUNT",
+                         age_label_list = "AGE_GROUP_LABEL")
+  
+  dt_CI5 <- as.data.table(dt_CI5)
+  
+  #keep CI5 selected region
+  dt_CI5[, cr:=NULL]
+  
+  #add CI5 data to canreg data
+  dt_temp <- unique(dt[,c("ICD10GROUP", "ICD10GROUPCOLOR", "cancer_label"),  with=FALSE])
+  dt_CI5 <- merge(dt_CI5,dt_temp, by=c("ICD10GROUP"),all.x=TRUE )
+  setnames(dt_CI5, "cases", "CASES")
+  setnames(dt_CI5, "py", "COUNT")
+  dt[, country_label:=registry_label]
+  dt <- rbind(dt,dt_CI5)
+  
+  return(dt)
+  
+  
 }
 
 										
