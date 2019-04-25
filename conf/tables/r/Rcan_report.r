@@ -55,7 +55,7 @@ tryCatch({
   }
   
   
-  list_number <- list(fig=1, tbl=1)
+  list_number <- list(fig=1, tbl=1, example=FALSE)
   
   source(paste(sep="/", script.basename, "Rcan_core.r"))
   doc <- read_docx(paste(sep="/", script.basename,"slide_template", "template.docx"))

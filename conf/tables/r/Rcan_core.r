@@ -751,8 +751,11 @@ canreg_report_import_txt <- function(doc,text,folder, dt_all,pop_file, list_numb
   
   mark_table <- data.table(mark_pos=integer(),mark_length=integer(),mark_type=character())
   
-  temp <- gregexpr("<EDIT FILE PATH>", text = text)[[1]]
-  mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("PATH", length(temp)))))
+  temp <- gregexpr("<CANREG_EXAMPLE>", text = text)[[1]]
+  mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("EXAMPLE", length(temp)))))
+  
+  temp <- gregexpr("</CANREG_EXAMPLE>", text = text)[[1]]
+  mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("/EXAMPLE", length(temp)))))
   
   temp <- gregexpr("<EDIT MAP PATH>", text = text)[[1]]
   mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("MAP", length(temp)))))
@@ -819,20 +822,27 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all,pop_file, folder
       
       if (temp != "") {
         temp_1 <- strsplit(temp, "\n\n")
-        invisible(lapply(temp_1[[1]],body_add_par, x=doc))
+        canreg_style <- ifelse(list_number$example, "canreg_example", "Normal")
+        invisible(lapply(temp_1[[1]],body_add_par, x=doc, style=canreg_style))
       }
       
 
       
-      if (type == "PATH") {
+      if (type == "EXAMPLE") {
         
         temp <- paste0("If you want to keep changes for future reports, this text can be edit directly in the template file folder:\n",folder,"\n")
-        doc <- body_add_par(doc,temp) 
+        doc <- body_add_par(doc,temp, style="canreg_example") 
+        list_number$example = TRUE
+
+      } else if (type == "/EXAMPLE") {
         
+        list_number$example = FALSE
+        
+   
       } else if (type == "MAP") {
         
         temp <- paste0("If you want to keep changes for future reports, this map can be updated directly in the template file folder:\n",folder,"\\map_example.png\n")
-        doc <- body_add_par(doc,temp) 
+        doc <- body_add_par(doc,temp, style="canreg_example") 
         
       } else if (type == "POP"){
         
