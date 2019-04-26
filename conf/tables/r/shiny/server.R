@@ -59,12 +59,7 @@ shinyServer(function(input, output, session) {
 			
 			} 
 			
-			if (year_info$span >= 3) {
-			
-			
-			
-			} 
-		
+
 			
 		selectInput("select_table", NULL,selected = 4, table_list)
 
@@ -148,8 +143,6 @@ shinyServer(function(input, output, session) {
 				
 				
 				cancer_list <-  unique(dt_base$cancer_label)
-				n <- length(cancer_list)
-				cancer_list <- cancer_list[1:(n-1)]
 				cancer_list <- sort(as.character(cancer_list))
 
 				
@@ -442,7 +435,7 @@ shinyServer(function(input, output, session) {
 			
       isolate(progress_bar$object)$set(value = 50,  message = 'Please wait:', detail = 'Render graph')
       
-			shiny_plot(dt_all(), input, FALSE)
+			shiny_plot(dt_all(), input,session,  FALSE)
 			
 			isolate(progress_bar$object)$set(value = 100,  message = 'Please wait:', detail = 'Done')
 	  
@@ -479,7 +472,7 @@ shinyServer(function(input, output, session) {
 		withProgress(message = 'Download output', value = 0, {
       
 			file_temp <- substr(file,1, nchar(file)-nchar(input$select_format)-1)
-			shiny_plot(dt_all(),  input, TRUE,FALSE,file_temp)
+			shiny_plot(dt_all(),  input,session, TRUE,FALSE,file_temp)
 			incProgress(1, detail = "")
 			
 			bool_CI <- FALSE
@@ -522,7 +515,7 @@ shinyServer(function(input, output, session) {
 	  withProgress(message = 'add powerpoint slide', value = 0, {
       filename <- paste0(tempdir(), "\\temp_graph",values$nb_slide+1)  
       
-			shiny_plot(dt_all(),  input, TRUE,TRUE,filename)
+			shiny_plot(dt_all(),  input,session, TRUE,TRUE,filename)
 			incProgress(1, detail = "")
 			
 			if (input$select_table == 1) {
@@ -657,6 +650,15 @@ shinyServer(function(input, output, session) {
 				values$doc <-  add_slide(values$doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
 				values$doc <- ph_with_text(values$doc, type = "title", str = str_temp)
 				values$doc <- ph_with_img(values$doc, paste0(filename, ".png"), index=1,width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
+				
+				
+			}
+			else if (input$select_table==12) {
+				
+				dims <- attr( png::readPNG (paste0(filename, ".png")), "dim" )
+				values$doc <-  add_slide(values$doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
+				values$doc <- ph_with_text(values$doc, type = "title", str = "CI5 XI comparison")
+				values$doc <- ph_with_img(values$doc, paste0(filename, ".png"), index=1,width=graph_width,height=graph_width*dims[1]/dims[2])
 				
 				
 			}
