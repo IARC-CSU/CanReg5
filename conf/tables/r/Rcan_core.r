@@ -508,7 +508,7 @@ canreg_import_CI5_data <- function(dt,CI5_file,var_ICD_canreg="ICD10GROUP",var_a
   dt_CI5_age_label[,age_list:=NULL]
 
   setnames(dt_CI5_age_label,"age_label_canreg",var_age_label_canreg)
-  dt_temp <- unique(dt_all[,c("AGE_GROUP","REFERENCE_COUNT", var_age_label_canreg),  with=FALSE])
+  dt_temp <- unique(dt[,c("AGE_GROUP","REFERENCE_COUNT", var_age_label_canreg),  with=FALSE])
   dt_CI5_age_label <- merge(dt_CI5_age_label,dt_temp, by=c(var_age_label_canreg),all.x=TRUE, all.y=FALSE )
   
   
@@ -529,7 +529,7 @@ canreg_merge_CI5_registry <- function(dt, dt_CI5, registry_region, registry_labe
   
   ##calcul of ASR for canreg
   dt<- Rcan:::core.csu_asr(df_data =dt, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
-                    group_by = c("cancer_label", "SEX","ICD10GROUP","ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt_all),
+                    group_by = c("cancer_label", "SEX","ICD10GROUP","ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt),
                     pop_base_count = "REFERENCE_COUNT",
                     age_label_list = "AGE_GROUP_LABEL")
   
@@ -1628,7 +1628,7 @@ canreg_ageSpecific_rate_multi_plot <- function(dt,
                                  plot_subtitle = cancer_title,
                                  plot_caption = canreg_header,
 																 xtitle = i18n$t("Age at diagnosis"),
-																 ytitle = i18n$t("Age-standardized incidence rate per"),
+																 ytitle = i18n$t("Age-specific incidence rate per"),
 																 label_group_by = c(i18n$t("Male"),i18n$t("Female")),
                                  color_trend = color_trend,
                                  logscale = logscale,
@@ -1856,7 +1856,7 @@ temp <- Rcan:::core.csu_ageSpecific_top(df_data,var_age, var_cases, var_py,var_t
 									   var_age_label_list=var_age_label_list,
 										 label_group_by= c(i18n$t("Male"),i18n$t("Female")),
 										 xtitle = i18n$t("Age at diagnosis"),
-										 ytitle = i18n$t("Age-standardized incidence rate per"),
+										 ytitle = i18n$t("Age-specific incidence rate per"),
 									   caption_bypass=TRUE)
 
 for (i in  1:length(temp$plotlist)) {
@@ -2758,13 +2758,17 @@ canreg_cases_age_pie <- function(
   
   color_age <- c("#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3", "#a6d854")
   color_age <- color_age[1:length(levels(dt$CSU_BAR))]
-  
+
+  #legend name (for bug)
+  bool <- ls_args$lang %in% c("ru")
+  legend_title <- ifelse(bool,"",i18n$t("Age Group"))
+
   csu_plot <- 
     ggplot(data = dt, aes(x = "", y = CSU_CASES, fill = CSU_BAR)) + 
     geom_bar(width = 1, stat = "identity") +
     geom_text(aes(label = percent(percent), x=x_label, y= y_label, size=text_size), show.legend=FALSE) +
     coord_polar(theta = "y") +
-    scale_fill_manual(name = i18n$t("Age Group"), values = color_age) + 
+    scale_fill_manual(name = legend_title, values = color_age) + 
     scale_size_continuous(range=c(4,6))+
     labs(title = canreg_header, 
          subtitle = plot_subtitle)+
@@ -2853,8 +2857,14 @@ canreg_asr_trend_top <- function(dt, var_asr="asr",
     
     color_cancer <- as.character(dt_label_order$ICD10GROUPCOLOR)
     
+    print(color_cancer)
+    print(dt_plot$cancer_label)
+
+    
 
     sex_label <- i18n$t(i)
+
+
     
     plotlist[[j]] <- Rcan:::core.csu_time_trend(dt_plot,
                                     var_trend = "asr",
@@ -3353,6 +3363,7 @@ parse_age_label_dt <- function(dt,var_age_label) {
 
 
 extract_legend_axes<-function(a_gplot){
+
   pdf(file=NULL)
   tmp <- ggplotGrob(a_gplot)
   leg_index <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
@@ -3375,6 +3386,7 @@ extract_legend_axes<-function(a_gplot){
   title <- tmp$grobs[[title_index]]
   caption <- tmp$grobs[[caption_index]]
   dev.off()
+
   return(list(legend=legend, xlab=xlab, ylab=ylab, title=title, subtitle=subtitle, caption=caption))
 }
 

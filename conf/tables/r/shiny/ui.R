@@ -54,14 +54,24 @@ ui <- dashboardPage(
   
 												
 	dashboardBody(
-	
+		tags$style(type='text/css',
+                   ".selectize-dropdown-content{
+                 		max-height: 300px;
+                	}"
+        ),
 		tags$script(HTML(paste0('$(document).ready(function(){
 											$("header").find("nav").append(\'<div class="regtitle">',ls_args$header,'</div>\');
-                    })
-   '))),
+                    })'
+   		))),
 	  useShinyjs(),
 		downloadButton('downloadLog', '', class="log"),
 		downloadButton('downloadData', '', class="log"),
+		fluidRow(id="fluid_test",
+			column(4,uiOutput("UI_control5")),
+		 	column(4,uiOutput("UI_control6")),
+	     	column(4,uiOutput("UI_control7"))
+	    	
+	      ),
 	  fluidRow(
 
 	      plotOutput("plot", height ="600px")
