@@ -682,7 +682,7 @@ shinyServer(function(input, output, session) {
      
     })
   
-	 #Download log
+	#Download log
   output$downloadLog <- downloadHandler(
 	
 		filename =  paste0(gsub("\\W","", ls_args$label),"_",ls_args$sc,"_",gsub("\\D","", Sys.time()),"_error_log.txt"),
@@ -693,12 +693,28 @@ shinyServer(function(input, output, session) {
 	
 	)
 	
-		 #Download data
+	#Download data
   output$downloadData <- downloadHandler(
 	
 		filename =  paste0(ls_args$sc,"_",gsub("\\D","", Sys.time()),"_data.csv"),
 		content = function(file) {
 			shiny_dwn_data(file)
+		}
+	
+	)
+  #Download report
+  output$downloadReport <- downloadHandler(
+
+
+
+
+	
+		filename =  paste0(ls_args$sc,"_",gsub("\\D","", Sys.time()),"_report.docx"),
+		content = function(file) {
+
+			withProgress(message = 'Download report', value = 0, {
+				shiny_dwn_report(file, progress_report)
+			})
 		}
 	
 	)

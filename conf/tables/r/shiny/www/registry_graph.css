@@ -42,6 +42,40 @@ a#downloadData i.fa{
 	    color: #00000000!important;
 }
 
+a#downloadReport {
+    left: 400px;
+    z-index: 2000;
+    top: 5px;
+    position: absolute;
+    height: 40px;
+    background-image: url(log_report.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+        background-color: #0b80b7;
+    border: none;
+}
+
+a#downloadReport i.fa{
+        color: #00000000!important;
+}
+
+a#downloadSlide {
+    left: 440px;
+    z-index: 2000;
+    top: 5px;
+    position: absolute;
+    height: 40px;
+    background-image: url(log_slide.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+        background-color: #0b80b7;
+    border: none;
+}
+
+a#downloadSlide i.fa{
+        color: #00000000!important;
+}
+
 
 
 @media screen and (max-height : 750px){

@@ -30,7 +30,7 @@ tryCatch({
   
   time_limit <- 9
   graph_width <- 6
-  dim_width = 2.7
+  dim_width <- 2.7
   
   year_info <- canreg_get_years(dt_all)
   
@@ -57,7 +57,6 @@ tryCatch({
   
   list_number <- list(fig=1, tbl=1, example=FALSE)
   
-  source(paste(sep="/", script.basename, "Rcan_core.r"))
   doc <- read_docx(paste(sep="/", script.basename,"slide_template", "template.docx"))
   
   doc <- body_add_par( doc, value = ls_args$header, style="TitleDoc")
