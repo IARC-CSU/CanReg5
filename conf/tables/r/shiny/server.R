@@ -713,7 +713,19 @@ shinyServer(function(input, output, session) {
 		content = function(file) {
 
 			withProgress(message = 'Download report', value = 0, {
-				shiny_dwn_report(file, progress_report)
+				shiny_dwn_report(file)
+			})
+		}
+	
+	)
+  #Download slide
+  output$downloadSlide <- downloadHandler(
+
+		filename =  paste0(ls_args$sc,"_",gsub("\\D","", Sys.time()),"_slide.pptx"),
+		content = function(file) {
+
+			withProgress(message = 'Download presentation', value = 0, {
+				shiny_dwn_slide(file)
 			})
 		}
 	
