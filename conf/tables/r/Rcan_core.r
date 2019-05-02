@@ -2857,11 +2857,6 @@ canreg_asr_trend_top <- function(dt, var_asr="asr",
     dt_plot$cancer_label <- factor(dt_plot$cancer_label,levels = dt_label_order$cancer_label) 
     
     color_cancer <- as.character(dt_label_order$ICD10GROUPCOLOR)
-    
-    print(color_cancer)
-    print(dt_plot$cancer_label)
-
-    
 
     sex_label <- i18n$t(i)
 

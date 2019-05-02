@@ -1162,23 +1162,33 @@ shiny_dwn_data <- function(log_file) {
 
 }
 
-shiny_dwn_report <- function(log_file) {
+shiny_dwn_report <- function(log_file, directory_path) {
 
+	
 
-	ls_args$out <- tempdir()
+	if (length(directory_path) == 0) {
+		ls_args$out <- tempdir()
+	}
+	else {
+		ls_args$out <- directory_path
+	}
+
+	
 
 
 	#check if report path exist (if not create report path)
-	pos <- regexpr("\\\\[^\\\\]*$", ls_args$out)[[1]]
-	path <- substr(ls_args$out,start=1, stop=pos)
+	path <- ls_args$out
+	print(path)
 	if (ls_args$sc=="null") {
-	report_path <- paste0(path, "report-template")
+	report_path <- paste0(path, "/report-template")
 	} else {
-	report_path <- paste0(path, "report-template-", ls_args$sc)
+	report_path <- paste0(path, "/report-template-", ls_args$sc)
 	}
 	if(!file_test("-d",report_path)) {
 	dir.create(report_path)
 	}
+
+
 
 	incProgress(0, detail = "create docx")
 

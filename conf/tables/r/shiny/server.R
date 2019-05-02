@@ -444,63 +444,67 @@ shinyServer(function(input, output, session) {
   })
   
   #Download file
-  output$downloadFile <- downloadHandler(
-    
-    filename = function() {
-      
-			bool_CI <- FALSE
-			if (!is.null(input$checkCI)) {
-				bool_CI <- input$checkCI
-			}
+  output$downloadFile <- 
+
+	  downloadHandler(
+	    
+	    filename = function() {
+	    
+				bool_CI <- FALSE
+				if (!is.null(input$checkCI)) {
+					bool_CI <- input$checkCI
+				}
+				
+				#multiple file
+				bool_multiple <- multiple_output(input$select_table, bool_CI, input$select_format)
+					
+				if (bool_multiple) {
+					temp <- paste0(input$text_filename, ".", "zip")
+				}
+				else {
+					temp <- paste0(input$text_filename, ".", input$select_format)
+				}
+
+				return(temp)
+	 
+	    },
+	    
+	    content = function(file) {
 			
-      #multiple file
-			bool_multiple <- multiple_output(input$select_table, bool_CI, input$select_format)
-			
-      if (bool_multiple) {
-				paste0(input$text_filename, ".", "zip")
-			}
-			else {
-       paste0(input$text_filename, ".", input$select_format)
-			}
+			withProgress(message = 'Download output', value = 0, {
+	      
+				file_temp <- substr(file,1, nchar(file)-nchar(input$select_format)-1)
+				shiny_plot(dt_all(),  input,session, TRUE,FALSE,file_temp)
+				incProgress(1, detail = "")
+				
+				bool_CI <- FALSE
+				if (!is.null(input$checkCI)) {
+					bool_CI <- input$checkCI
+				}
+				bool_multiple <- multiple_output(input$select_table, bool_CI, input$select_format)
+				
+				if (bool_multiple) {
 						
+						file_male <- paste0(file_temp, "001", ".", input$select_format)
+						file_female <- paste0(file_temp, "002", ".", input$select_format)
+						
+						tempfile1 <- paste0(input$text_filename, "-male.", input$select_format)
+						tempfile2 <- paste0(input$text_filename, "-female.", input$select_format)
+						
+						file.copy(file_male, tempfile1, overwrite = TRUE)
+						file.copy(file_female,tempfile2, overwrite = TRUE)
+						
+						zip(file, c(tempfile1, tempfile2))
+						
+						file.remove(c(tempfile1,tempfile2))
 
-      
-    },
-    
-    content = function(file) {
-		
-		withProgress(message = 'Download output', value = 0, {
-      
-			file_temp <- substr(file,1, nchar(file)-nchar(input$select_format)-1)
-			shiny_plot(dt_all(),  input,session, TRUE,FALSE,file_temp)
-			incProgress(1, detail = "")
-			
-			bool_CI <- FALSE
-			if (!is.null(input$checkCI)) {
-				bool_CI <- input$checkCI
-			}
-			bool_multiple <- multiple_output(input$select_table, bool_CI, input$select_format)
-			
-			if (bool_multiple) {
-					
-					file_male <- paste0(file_temp, "001", ".", input$select_format)
-					file_female <- paste0(file_temp, "002", ".", input$select_format)
-					
-					tempfile1 <- paste0(input$text_filename, "-male.", input$select_format)
-					tempfile2 <- paste0(input$text_filename, "-female.", input$select_format)
-					
-					file.copy(file_male, tempfile1, overwrite = TRUE)
-					file.copy(file_female,tempfile2, overwrite = TRUE)
-					
-					zip(file, c(tempfile1, tempfile2))
-					
-					file.remove(c(tempfile1,tempfile2))
+				 }
 
-			 }
+
+			})
+	      
 		})
-      
-	})
-  
+
   #Action button: Add slide
   observeEvent(input$actionSlide,{ 
 
@@ -713,7 +717,9 @@ shinyServer(function(input, output, session) {
 		content = function(file) {
 
 			withProgress(message = 'Download report', value = 0, {
-				shiny_dwn_report(file)
+
+				shiny_dwn_report(file, parseDirPath(volumes, input$directory))
+
 			})
 		}
 	
@@ -725,10 +731,58 @@ shinyServer(function(input, output, session) {
 		content = function(file) {
 
 			withProgress(message = 'Download presentation', value = 0, {
+
 				shiny_dwn_slide(file)
 			})
 		}
 	
 	)
+
+  #Choose download folder  
+  #volumes <- c(Home = getVolumes()(),fs::path_home())
+  shinyDirChoose(input, "directory", roots = volumes, session = session, restrictions = system.file(package = "base"))
+
+  output$directorypath <- renderPrint({
+    parseDirPath(volumes, input$directory)
+  })
+
+  hide(id="directorypath", anim=FALSE)
+  #hide(id="downloadFile2", anim=FALSE)
+
+  observeEvent(input$directory,{
+  	
+  	if (length(parseDirPath(volumes, input$directory)) > 0) {
+
+	  	show(id="directorypath", anim=TRUE)
+	  	show(id="downloadFile2", anim=TRUE)
+	  	hide(id="downloadFile", anim=TRUE)
+
+	  }
+	  else {
+	  	hide(id="directorypath", anim=TRUE)
+	  	hide(id="downloadFile2", anim=TRUE)
+	  	show(id="downloadFile", anim=TRUE)
+
+	  }
+
+
+  })
+
+  observeEvent(input$downloadFile2,{ 
+
+   	withProgress(message = 'Download output', value = 0, {
+
+
+
+			path <- parseDirPath(volumes, input$directory)
+			file_temp <- paste0(path, "/", input$text_filename)
+			shiny_plot(dt_all(),  input,session, TRUE,FALSE,file_temp)
+			incProgress(1, detail = "")
+
+
+		})
+
+
+  })
 	
 })

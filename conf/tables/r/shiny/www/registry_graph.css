@@ -8,6 +8,8 @@ div#plot img{
 	height:600px!important
 }
 
+
+
 a#downloadLog {
     right: 20px;
     z-index: 2100;
@@ -94,6 +96,12 @@ a#downloadSlide i.fa{
 
 }
 
+#directorypath{
+    padding: 1px 0px 0px 15px;
+    font-size: 18px;
+    font-weight: 100;
+}
+
 .mat_btn {
   width: 215px;
   display:block;
@@ -104,6 +112,8 @@ a#downloadSlide i.fa{
   
 
 }
+
+
 
 .subHeader {
     font-size: 20px;

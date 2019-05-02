@@ -1,6 +1,7 @@
 
 library(shinydashboard)
 library(shinyjs)
+library(shinyFiles)
 
 ui <- dashboardPage(
 
@@ -33,7 +34,11 @@ ui <- dashboardPage(
 		
 		textInput("text_filename", "Filename", "CanReg5_graph"),
 		
+		shinyDirButton("directory", "Folder select", "Please select a folder",icon=icon("folder"),class="mat_btn"),
+		textOutput("directorypath"),
+
 		downloadButton('downloadFile', 'Export graph', class="mat_btn"),
+		actionButton('downloadFile2', 'Export graph',icon=icon("download"), class="mat_btn", style="display: none;"),
 		
 		tags$div(class="subHeader", checked=NA,
 		         tags$p("Powerpoint presentation")
@@ -46,6 +51,8 @@ ui <- dashboardPage(
 		downloadButton('downloadPres', 'Create presentation',  class="mat_btn"),
 		
 		uiOutput("UI_nbSlide")
+
+		
   	
 	   
 	 ),
