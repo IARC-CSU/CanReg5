@@ -33,6 +33,10 @@ tryCatch({
   dt_CI5_list <- readRDS(paste0(script.basename, "/CI5_alldata.rds"))
   dt_CI5_label <- as.character(unique(dt_CI5_list[cr == ls_args$sr, c("country_label"), with=FALSE])$country_label)
 
+  time_limit <- 9
+  graph_width <- 6
+  dim_width <- 2.7
+  
   volumes <- c(Home = getVolumes()(),fs::path_home())
   shiny_dir <- paste(sep="/", script.basename, "shiny")
   runApp(appDir =shiny_dir, launch.browser =TRUE)
