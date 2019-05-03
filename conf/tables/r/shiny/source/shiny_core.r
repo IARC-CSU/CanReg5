@@ -1164,6 +1164,9 @@ shiny_export_data <- function(log_file) {
   cat("\n")
   cat("data file\n")
   dput(as.data.frame(dt_base))
+  cat("\n")
+  cat("basis file\n")
+  dput(as.data.frame(dt_basis))
 
   #close log_file and send to canreg
   sink(type="message")
@@ -1177,6 +1180,7 @@ import_shiny_date <- function(datafile) {
 
 	fileTemp1 <- paste0(tempdir(),"/tempargs.txt")
 	fileTemp2 <- paste0(tempdir(),"/tempdata.txt")
+	fileTemp3 <- paste0(tempdir(),"/tempbasis.txt")
 
 	con_args=file(fileTemp1,open="wt")
 	sink(con_args)
@@ -1201,6 +1205,23 @@ import_shiny_date <- function(datafile) {
 	con_data=file(fileTemp2,open="wt")
 	sink(con_data)
 	sink(con_data, type="message")
+	j<-j+1
+
+	while (content[j] != "basis file") {
+		cat(content[j])
+		j <- j+1
+	}
+
+
+	sink(type="message")
+	sink()
+	close(con_data)
+
+	dt_base <-as.data.table(dget(paste0(tempdir(),"/tempdata.txt")))
+
+	con_basis=file(fileTemp3,open="wt")
+	sink(con_basis)
+	sink(con_basis, type="message")
 
 	for (i in (j+1):length(content)) {
 		cat(content[i])
@@ -1208,11 +1229,14 @@ import_shiny_date <- function(datafile) {
 
 	sink(type="message")
 	sink()
-	close(con_data)
+	close(con_basis)
+
+	dt_basis <-as.data.table(dget(paste0(tempdir(),"/tempbasis.txt")))
+
 	close(con_source)
 
-	dt_base <-as.data.table(dget(paste0(tempdir(),"/tempdata.txt")))
-	return(list(ls_args = ls_args, dt_base = dt_base))
+	
+	return(list(ls_args = ls_args, dt_base = dt_base,dt_basis = dt_basis))
 
 }
 

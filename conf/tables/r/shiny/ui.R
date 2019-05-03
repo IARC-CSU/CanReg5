@@ -53,13 +53,17 @@ ui <- dashboardPage(
 		uiOutput("UI_nbSlide"),
 
 		tags$div(class="subHeader mt20", checked=NA,
-             tags$p("Import data")
+             tags$p("Shiny data sytem")
 	    ),
 
-	    fileInput("shinydata", "Choose CSV File",
+	    fileInput("shinydata", "Import shiny data",
 	          multiple = FALSE,
 	          accept = c(".txt")
-	          )
+	          ),
+
+
+	    downloadButton('downloadShinyData', 'Export shiny data', class="mat_btn")
+
 	 ),
 	  
 	  

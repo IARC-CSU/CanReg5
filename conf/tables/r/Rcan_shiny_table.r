@@ -12,6 +12,7 @@
   
 tryCatch({
   
+  library(shiny)
   shiny_dir <- paste(sep="/", script.basename, "shiny")
   runApp(appDir =shiny_dir, launch.browser =TRUE)
  

@@ -247,7 +247,7 @@ shinyServer(function(input, output, session) {
 				dt_CI5_list <- readRDS(paste0(script.basename, "/CI5_alldata.rds"))
 				registry_list <-  unique(dt_CI5_list$country_label)
 				registry_list <- as.character(registry_list)
-				selectInput("selectRegistry1",NULL, registry_list, selected = dt_CI5_label[0])
+				selectInput("selectRegistry1",NULL, registry_list, selected = dt_CI5_label[1])
 				
 			}
 		}
@@ -264,7 +264,7 @@ shinyServer(function(input, output, session) {
 				dt_CI5_list <- readRDS(paste0(script.basename, "/CI5_alldata.rds"))
 				registry_list <-  unique(dt_CI5_list$country_label)
 				registry_list <- as.character(registry_list)
-				selectInput("selectRegistry2",NULL , registry_list, selected = dt_CI5_label[1])
+				selectInput("selectRegistry2",NULL , registry_list, selected = dt_CI5_label[2])
 				
 			}
 		}
@@ -281,7 +281,7 @@ shinyServer(function(input, output, session) {
 				dt_CI5_list <- readRDS(paste0(script.basename, "/CI5_alldata.rds"))
 				registry_list <-  unique(dt_CI5_list$country_label)
 				registry_list <- as.character(registry_list)
-				selectInput("selectRegistry3", NULL, registry_list, selected = dt_CI5_label[2])
+				selectInput("selectRegistry3", NULL, registry_list, selected = dt_CI5_label[3])
 				
 			}
 		}
@@ -698,6 +698,15 @@ shinyServer(function(input, output, session) {
 		}
 	
 	)
+
+  output$downloadShinyData <- downloadHandler(
+	
+		filename =  paste0(gsub("\\W","", ls_args$label),"_",ls_args$sc,"_",gsub("\\D","", Sys.time()),"_data.txt"),
+		content = function(file) {
+			shiny_export_data(file)
+		}
+	
+	)
 	
 	#Download data
   output$downloadData <- downloadHandler(
@@ -796,6 +805,7 @@ shinyServer(function(input, output, session) {
 				temp <- import_shiny_date(input$shinydata$datapath)
 				ls_args <<- temp$ls_args
 				dt_base <<- temp$dt_base
+				dt_basis <<- temp$dt_basis
 				canreg_age_group <<- canreg_get_agegroup_label(dt_base, ls_args$agegroup)
 				year_info <<- canreg_get_years(dt_base)
 				dt_CI5_label <<- as.character(unique(dt_CI5_list[cr == ls_args$sr, c("country_label"), with=FALSE])$country_label)
@@ -803,6 +813,9 @@ shinyServer(function(input, output, session) {
 				updateSelectInput(session, "select_table", selected = 1)
 				updateSelectInput(session, "select_table", selected = 4)
 				output$UI_regtitle <- renderText({ls_args$header})
+				cancer_list <-  unique(dt_base$cancer_label)
+				cancer_list <- sort(as.character(cancer_list))
+				updateSelectInput(session,"selectCancerSite", choices=cancer_list)
 
 
 	  })
