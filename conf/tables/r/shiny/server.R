@@ -37,6 +37,8 @@ shinyServer(function(input, output, session) {
   progress_bar <- reactiveValues(object=NULL)
   table <- reactiveValues(label="")
 
+  output$UI_regtitle <- renderText({ls_args$header})
+  output$directorypath <- renderText({"No folder selected"})
 
 	
 	output$UI_select_table <- renderUI({
@@ -742,26 +744,30 @@ shinyServer(function(input, output, session) {
   #volumes <- c(Home = getVolumes()(),fs::path_home())
   shinyDirChoose(input, "directory", roots = volumes, session = session, restrictions = system.file(package = "base"))
 
-  output$directorypath <- renderPrint({
-    parseDirPath(volumes, input$directory)
-  })
-
-  hide(id="directorypath", anim=FALSE)
+  #hide(id="directorypath", anim=FALSE)
   #hide(id="downloadFile2", anim=FALSE)
 
   observeEvent(input$directory,{
   	
   	if (length(parseDirPath(volumes, input$directory)) > 0) {
 
-	  	show(id="directorypath", anim=TRUE)
+
 	  	show(id="downloadFile2", anim=TRUE)
 	  	hide(id="downloadFile", anim=TRUE)
 
+	  	output$directorypath <- renderPrint({
+    		parseDirPath(volumes, input$directory)
+  		})
+
 	  }
 	  else {
-	  	hide(id="directorypath", anim=TRUE)
+
 	  	hide(id="downloadFile2", anim=TRUE)
 	  	show(id="downloadFile", anim=TRUE)
+
+	  	output$directorypath <- renderText({
+    		"No folder selected"
+  		})
 
 	  }
 
@@ -784,5 +790,21 @@ shinyServer(function(input, output, session) {
 
 
   })
-	
+
+	observeEvent(input$shinydata,{ 
+
+				temp <- import_shiny_date(input$shinydata$datapath)
+				ls_args <<- temp$ls_args
+				dt_base <<- temp$dt_base
+				canreg_age_group <<- canreg_get_agegroup_label(dt_base, ls_args$agegroup)
+				year_info <<- canreg_get_years(dt_base)
+				dt_CI5_label <<- as.character(unique(dt_CI5_list[cr == ls_args$sr, c("country_label"), with=FALSE])$country_label)
+				i18n$set_translation_language(ls_args$lang)
+				updateSelectInput(session, "select_table", selected = 1)
+				updateSelectInput(session, "select_table", selected = 4)
+				output$UI_regtitle <- renderText({ls_args$header})
+
+
+	  })
+		
 })

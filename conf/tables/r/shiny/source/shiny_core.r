@@ -1151,6 +1151,71 @@ shiny_error_log <- function(log_file,filename) {
   
 }
 
+
+shiny_export_data <- function(log_file) {
+  
+  shiny_log <- file(log_file,open="wt")
+  sink(shiny_log)
+  sink(shiny_log, type="message")
+  
+  #print argument from canreg
+  cat("arguments\n")
+  dput(ls_args)
+  cat("\n")
+  cat("data file\n")
+  dput(as.data.frame(dt_base))
+
+  #close log_file and send to canreg
+  sink(type="message")
+  sink()
+  close(shiny_log)
+  
+}
+
+
+import_shiny_date <- function(datafile) {
+
+	fileTemp1 <- paste0(tempdir(),"/tempargs.txt")
+	fileTemp2 <- paste0(tempdir(),"/tempdata.txt")
+
+	con_args=file(fileTemp1,open="wt")
+	sink(con_args)
+	sink(con_args, type="message")
+
+
+	con_source=file(datafile,open="r")
+	content=readLines(con_source)
+
+	j<-2
+	args <- NULL
+	while (content[j] != "data file") {
+		cat(content[j])
+		j <- j+1
+	}
+
+	sink(type="message")
+	sink()
+	close(con_args)
+	ls_args <-dget(paste0(tempdir(),"/tempargs.txt"))
+
+	con_data=file(fileTemp2,open="wt")
+	sink(con_data)
+	sink(con_data, type="message")
+
+	for (i in (j+1):length(content)) {
+		cat(content[i])
+	}
+
+	sink(type="message")
+	sink()
+	close(con_data)
+	close(con_source)
+
+	dt_base <-as.data.table(dget(paste0(tempdir(),"/tempdata.txt")))
+	return(list(ls_args = ls_args, dt_base = dt_base))
+
+}
+
 shiny_dwn_data <- function(log_file) {
 
 	dt_temp <- copy(dt_base)

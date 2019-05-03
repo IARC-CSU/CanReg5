@@ -3704,14 +3704,7 @@ rcan_report <- function(doc,report_path,dt_all,ls_args, shiny=FALSE) {
     incProgress(inc_progress_value, detail = "Basis of Diagnosis (DCO / Clinical / MV) by site")
   }
   
-  
-  dt_basis <- csu_merge_inc_pop(
-    inc_file =ls_args$inc,
-    pop_file =ls_args$pop,
-    group_by = c("ICD10GROUP", "ICD10GROUPLABEL", "YEAR", "SEX", "BASIS"),
-    column_group_list =list(c("ICD10GROUP", "ICD10GROUPLABEL"))
-  )
-  
+
   dt_basis[BASIS > 0 & BASIS < 5, BASIS:=1]
   dt_basis[BASIS >= 5, BASIS:=2]
   
@@ -4231,12 +4224,7 @@ rcan_slide <- function(doc,dt_all,ls_args, shiny=FALSE) {
     incProgress(inc_progress_value, detail = "Basis of diagnosis (DCO/Clinical/MV) by site")
   }
   
-  dt_basis <- csu_merge_inc_pop(
-    inc_file =ls_args$inc,
-    pop_file =ls_args$pop,
-    group_by = c("ICD10GROUP", "ICD10GROUPLABEL", "YEAR", "SEX", "BASIS"),
-    column_group_list =list(c("ICD10GROUP", "ICD10GROUPLABEL"))
-  )
+
   
   dt_basis[BASIS > 0 & BASIS < 5, BASIS:=1]
   dt_basis[BASIS >= 5, BASIS:=2]

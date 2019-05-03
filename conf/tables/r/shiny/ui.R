@@ -34,7 +34,7 @@ ui <- dashboardPage(
 		
 		textInput("text_filename", "Filename", "CanReg5_graph"),
 		
-		shinyDirButton("directory", "Folder select", "Please select a folder",icon=icon("folder"),class="mat_btn"),
+		shinyDirButton("directory", "Browse Folder...", "Please select a folder",icon=icon("folder"),class="browse_btn"),
 		textOutput("directorypath"),
 
 		downloadButton('downloadFile', 'Export graph', class="mat_btn"),
@@ -50,11 +50,16 @@ ui <- dashboardPage(
 		
 		downloadButton('downloadPres', 'Create presentation',  class="mat_btn"),
 		
-		uiOutput("UI_nbSlide")
+		uiOutput("UI_nbSlide"),
 
-		
-  	
-	   
+		tags$div(class="subHeader mt20", checked=NA,
+             tags$p("Import data")
+	    ),
+
+	    fileInput("shinydata", "Choose CSV File",
+	          multiple = FALSE,
+	          accept = c(".txt")
+	          )
 	 ),
 	  
 	  
@@ -67,7 +72,7 @@ ui <- dashboardPage(
                 	}"
         ),
 		tags$script(HTML(paste0('$(document).ready(function(){
-											$("header").find("nav").append(\'<div class="regtitle">',ls_args$header,'</div>\');
+											$("header").find("nav").append(\'<div class="regtitle">',textOutput("UI_regtitle"),'</div>\');
                     })'
    		))),
 	  useShinyjs(),

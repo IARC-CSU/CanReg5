@@ -28,6 +28,14 @@ tryCatch({
     column_group_list =list(c("ICD10GROUP", "ICD10GROUPLABEL", "ICD10GROUPCOLOR"))
   )
 
+  dt_basis <- csu_merge_inc_pop(
+    inc_file =ls_args$inc,
+    pop_file =ls_args$pop,
+    group_by = c("ICD10GROUP", "ICD10GROUPLABEL", "YEAR", "SEX", "BASIS"),
+    column_group_list =list(c("ICD10GROUP", "ICD10GROUPLABEL"))
+  )
+
+
   graph_width <- 6
 
   #check if report path exist (if not create report path)
