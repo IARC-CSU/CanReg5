@@ -1163,6 +1163,9 @@ shiny_export_data <- function(log_file) {
   dput(ls_args)
   cat("\n")
   cat("data file\n")
+
+  
+  
   dput(as.data.frame(dt_base))
   cat("\n")
   cat("basis file\n")
