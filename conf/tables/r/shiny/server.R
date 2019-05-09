@@ -38,12 +38,14 @@ shinyServer(function(input, output, session) {
   table <- reactiveValues(label="")
 
   output$UI_regtitle <- renderText({ls_args$header})
-  output$directorypath <- renderText({"No folder selected"})
+  output$directorypath <- renderText({download_dir})
 
 	
 	output$UI_select_table <- renderUI({
 	
-		table_list <- c( "Population pyramid" = 1,
+		table_list <- c( 
+			"Automatic report" = 0,
+			"Population pyramid" = 1,
 			"Barchart of cases by age group by sex" = 2, 
 			"piechart of cases by age group by sex" = 3, 
 			"Top cancer both sexes" = 4 ,
@@ -292,65 +294,77 @@ shinyServer(function(input, output, session) {
 
   observeEvent(input$select_table,{
 
-    if (input$select_table==1) {
+  	hide(id="report_option", anim=TRUE)
+  	hide(id="fluid_test", anim=TRUE)
+  	show(id="plot", anim=TRUE)
+
+  	if (input$select_table==0) {
+      table$label <- "Automatic Report"
+      show(id="report_option", anim=TRUE)
+      hide(id="plot", anim=TRUE)
+      hide(id="controls_COL1", anim=TRUE)
+      hide(id="controls_COL2", anim=TRUE)
+      
+    }
+    else if (input$select_table==1) {
       table$label <- "Population pyramid"
       hide(id="controls_COL1", anim=TRUE)
       hide(id="controls_COL2", anim=TRUE)
-      hide(id="fluid_test", anim=TRUE)
+      
     }
 		else if (input$select_table== 2) {
 				table$label <- "Barchart by age and sex"
 				show(id="controls_COL1", anim=TRUE)
 				hide(id="controls_COL2", anim=TRUE)
-				hide(id="fluid_test", anim=TRUE)
+				
 			}
 		else if (input$select_table== 3) {
 				table$label <- "Piechart by age and sex"
 				show(id="controls_COL1", anim=TRUE)
 				hide(id="controls_COL2", anim=TRUE)
-				hide(id="fluid_test", anim=TRUE)
+				
 			}
 		else if (input$select_table== 4) {
 			table$label <- "Barchart Top cancer both sexes"
 			show(id="controls_COL1", anim=TRUE)
 			show(id="controls_COL2", anim=TRUE)
-			hide(id="fluid_test", anim=TRUE)
+			
 		}
 		else if (input$select_table== 5) {
 			table$label <- "Barchart Top cancer by sexes"
 			show(id="controls_COL1", anim=TRUE)
 			show(id="controls_COL2", anim=TRUE)
-			hide(id="fluid_test", anim=TRUE)
+			
 		}
 		else if (input$select_table== 6) {
 			table$label <- "Age-specific trend top cancer"
 			show(id="controls_COL1", anim=TRUE)
 			show(id="controls_COL2", anim=TRUE)
-			hide(id="fluid_test", anim=TRUE)
+			
 		}
 		else if (input$select_table== 7) {
 			table$label <- "Age-specific trend"
 			show(id="controls_COL1", anim=TRUE)
 			show(id="controls_COL2", anim=TRUE)
-			hide(id="fluid_test", anim=TRUE)
+			
 		}
 		else if (input$select_table== 8) {
 			table$label <- "Barchart by year"
 			show(id="controls_COL1", anim=TRUE)
 			hide(id="controls_COL2", anim=TRUE)
-			hide(id="fluid_test", anim=TRUE)
+			
 		}
 		else if (input$select_table== 9) {
 			table$label <- "Time trend top cancer"
 			show(id="controls_COL1", anim=TRUE)
 			show(id="controls_COL2", anim=TRUE)
-			hide(id="fluid_test", anim=TRUE)
+			
 		}
 		else if (input$select_table== 10) {
 			table$label <- "Estimated Annual Percentage Change"
 			show(id="controls_COL1", anim=TRUE)
 			show(id="controls_COL2", anim=TRUE)
-			hide(id="fluid_test", anim=TRUE)
+			
 		}
 		else if (input$select_table== 12) {
 			table$label <- "CI5 XI comparison"
@@ -369,7 +383,9 @@ shinyServer(function(input, output, session) {
       hide(id="pptx_filename", anim=TRUE)
       hide(id="UI_nbSlide", anim=TRUE)
     } else {
-      show(id="downloadPres", anim=TRUE)
+      if (!is.na(download_dir)) {
+      	show(id="downloadPres", anim=TRUE)
+      }
       show(id="pptx_filename", anim=TRUE)
       show(id="UI_nbSlide", anim=TRUE)
     } 
@@ -729,7 +745,7 @@ shinyServer(function(input, output, session) {
 
 			withProgress(message = 'Download report', value = 0, {
 
-				shiny_dwn_report(file, parseDirPath(volumes, input$directory))
+				shiny_dwn_report(file, download_dir)
 
 			})
 		}
@@ -749,39 +765,9 @@ shinyServer(function(input, output, session) {
 	
 	)
 
-  #Choose download folder  
-  #volumes <- c(Home = getVolumes()(),fs::path_home())
-  shinyDirChoose(input, "directory", roots = volumes, session = session, restrictions = system.file(package = "base"))
+  
+  onclick("directorypath", shiny_update_dwn_folder(output,values))
 
-  #hide(id="directorypath", anim=FALSE)
-  #hide(id="downloadFile2", anim=FALSE)
-
-  observeEvent(input$directory,{
-  	
-  	if (length(parseDirPath(volumes, input$directory)) > 0) {
-
-
-	  	show(id="downloadFile2", anim=TRUE)
-	  	hide(id="downloadFile", anim=TRUE)
-
-	  	output$directorypath <- renderPrint({
-    		parseDirPath(volumes, input$directory)
-  		})
-
-	  }
-	  else {
-
-	  	hide(id="downloadFile2", anim=TRUE)
-	  	show(id="downloadFile", anim=TRUE)
-
-	  	output$directorypath <- renderText({
-    		"No folder selected"
-  		})
-
-	  }
-
-
-  })
 
   observeEvent(input$downloadFile2,{ 
 
@@ -789,7 +775,7 @@ shinyServer(function(input, output, session) {
 
 
 
-			path <- parseDirPath(volumes, input$directory)
+			path <- download_dir
 			file_temp <- paste0(path, "/", input$text_filename)
 			shiny_plot(dt_all(),  input,session, TRUE,FALSE,file_temp)
 			incProgress(1, detail = "")

@@ -1258,7 +1258,7 @@ shiny_dwn_report <- function(log_file, directory_path) {
 
 	
 
-	if (length(directory_path) == 0) {
+	if (is.na(directory_path)) {
 		ls_args$out <- tempdir()
 	}
 	else {
@@ -1308,3 +1308,21 @@ shiny_dwn_slide <- function(log_file) {
 
 
 }
+
+shiny_update_dwn_folder <- function(output,values) {
+
+	download_dir <<- choose.dir(download_dir)
+	if (is.na(download_dir)) {
+		output$directorypath <- renderText({"No folder selected"})
+  	hide(id="downloadFile2", anim=TRUE)
+  	show(id="downloadFile", anim=TRUE)
+ 	}
+ 	else {
+
+  	output$directorypath <- renderText({download_dir})
+  	show(id="downloadFile2", anim=TRUE)
+  	hide(id="downloadFile", anim=TRUE)
+  }
+
+}
+

@@ -29,14 +29,11 @@ ui <- dashboardPage(
 		tags$div(class="subHeader", checked=NA,
 		         tags$p("Export Graph")
 		),
-		
+		useShinyjs(),
 		selectInput("select_format", "Format", as.list(c( "pdf","tiff","png", "svg", "ps","csv"))),
 		
 		textInput("text_filename", "Filename", "CanReg5_graph"),
 		
-		shinyDirButton("directory", "Browse Folder...", "Please select a folder",icon=icon("folder"),class="browse_btn"),
-		textOutput("directorypath"),
-
 		downloadButton('downloadFile', 'Export graph', class="mat_btn"),
 		actionButton('downloadFile2', 'Export graph',icon=icon("download"), class="mat_btn", style="display: none;"),
 		
@@ -93,8 +90,13 @@ ui <- dashboardPage(
 	  fluidRow(
 
 	      plotOutput("plot", height ="600px")
-
 	   ),
+	  fluidRow(id="report_option",style="display: none;",
+		  tags$div(class="form-group shiny-input-container", checked=NA,
+			    tags$label("Choose folder"),
+			    textOutput("directorypath")
+			)
+	  ),
 	  fluidRow(
 	    box(id="controls_COL1",
 	      uiOutput("UI_control1"),

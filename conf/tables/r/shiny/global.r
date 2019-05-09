@@ -34,7 +34,9 @@ time_limit <- 9
 graph_width <- 6
 dim_width <- 2.7
 
-volumes <- c(Home = getVolumes()(),fs::path_home())
+download_dir <-  file.path(Sys.getenv("USERPROFILE"),"Documents",fsep="\\")
+
+
 #make function tu update, dt_base, args and update dependencies in global
 #make function to extract ls_args, dt_base
 
