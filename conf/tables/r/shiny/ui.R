@@ -84,7 +84,7 @@ ui <- dashboardPage(
 		fluidRow(id="fluid_test",
 			column(4,uiOutput("UI_control5")),
 		 	column(4,uiOutput("UI_control6")),
-	     	column(4,uiOutput("UI_control7"))
+	    column(4,uiOutput("UI_control7"))
 	    	
 	      ),
 	  fluidRow(
@@ -92,10 +92,11 @@ ui <- dashboardPage(
 	      plotOutput("plot", height ="600px")
 	   ),
 	  fluidRow(id="report_option",style="display: none;",
-		  tags$div(class="form-group shiny-input-container", checked=NA,
-			    tags$label("Choose folder"),
-			    textOutput("directorypath")
-			)
+	  	tags$h2("Reporting system"),
+			column(6,tags$label("Choose report template folder"),
+						   textOutput("directorypath"),
+						   textOutput("reportTips")),
+			column(6,tableOutput("folderContent"))		
 	  ),
 	  fluidRow(
 	    box(id="controls_COL1",

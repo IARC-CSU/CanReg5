@@ -1270,7 +1270,6 @@ shiny_dwn_report <- function(log_file, directory_path) {
 
 	#check if report path exist (if not create report path)
 	path <- ls_args$out
-	print(path)
 	if (ls_args$sc=="null") {
 	report_path <- paste0(path, "/report-template")
 	} else {
@@ -1322,7 +1321,33 @@ shiny_update_dwn_folder <- function(output,values) {
   	output$directorypath <- renderText({download_dir})
   	show(id="downloadFile2", anim=TRUE)
   	hide(id="downloadFile", anim=TRUE)
+
+  	shiny_list_folder_content(output)
+  	
   }
+
+}
+
+shiny_list_folder_content <- function(output) {
+
+	path <- download_dir
+	if (ls_args$sc=="null") {
+		report_source <- paste0(path, "/report-template")
+	} else {
+		report_source <- paste0(path, "/report-template-", ls_args$sc)
+	}
+	print(report_source)
+	if(!file_test("-d",report_source)) {
+		report_source <- paste0(script.basename,"/report_text")
+		output$reportTips <- renderText({"There is no prior report template"})
+	}
+	else {
+		output$reportTips <- renderText({"Template files will be used"})
+	}
+
+	temp <- as.data.frame(list.files(report_source))
+	names(temp) <-"Template files" 
+  output$folderContent <- renderTable(temp)
 
 }
 

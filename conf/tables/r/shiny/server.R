@@ -304,6 +304,7 @@ shinyServer(function(input, output, session) {
       hide(id="plot", anim=TRUE)
       hide(id="controls_COL1", anim=TRUE)
       hide(id="controls_COL2", anim=TRUE)
+      shiny_list_folder_content(output)
       
     }
     else if (input$select_table==1) {
