@@ -35,7 +35,6 @@ ui <- dashboardPage(
 		textInput("text_filename", "Filename", "CanReg5_graph"),
 		
 		downloadButton('downloadFile', 'Export graph', class="mat_btn"),
-		actionButton('downloadFile2', 'Export graph',icon=icon("download"), class="mat_btn", style="display: none;"),
 		
 		tags$div(class="subHeader", checked=NA,
 		         tags$p("Powerpoint presentation")
@@ -59,7 +58,7 @@ ui <- dashboardPage(
 	          ),
 
 
-	    downloadButton('downloadShinyData', 'Export shiny data', class="mat_btn")
+	    downloadButton('downloadShinyData', 'Export shiny data', class="mat_btn mt15m")
 
 	 ),
 	  
@@ -79,8 +78,6 @@ ui <- dashboardPage(
 	  useShinyjs(),
 		downloadButton('downloadLog', '', class="log"),
 		downloadButton('downloadData', '', class="log"),
-		downloadButton('downloadReport', '', class="log"),
-		downloadButton('downloadSlide', '', class="log"),
 		fluidRow(id="fluid_test",
 			column(4,uiOutput("UI_control5")),
 		 	column(4,uiOutput("UI_control6")),
@@ -88,15 +85,21 @@ ui <- dashboardPage(
 	    	
 	      ),
 	  fluidRow(
-
 	      plotOutput("plot", height ="600px")
 	   ),
 	  fluidRow(id="report_option",style="display: none;",
-	  	tags$h2("Reporting system"),
-			column(6,tags$label("Choose report template folder"),
-						   textOutput("directorypath"),
-						   textOutput("reportTips")),
-			column(6,tableOutput("folderContent"))		
+	  	
+			column(6,
+				tags$h3("DOCX report"),
+				tags$p("Several chapters in the report are generated based on a list of template files."),
+				tags$p(tags$b("Please, select a folder to store the report and the template files:")),
+				textOutput("directorypath"),
+				tags$br(),
+				htmlOutput("reportHTML"),
+				downloadButton('downloadReport', 'Create DOCX report', class="report_btn")),
+			column(6,
+				tags$h3("PPTX report"),
+				downloadButton('downloadSlide', 'Create PPTX report', class="report_btn"))
 	  ),
 	  fluidRow(
 	    box(id="controls_COL1",

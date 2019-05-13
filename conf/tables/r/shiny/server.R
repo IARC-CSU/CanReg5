@@ -111,7 +111,13 @@ shinyServer(function(input, output, session) {
 	output$UI_control1 <- renderUI({
 		
 		if  (!is.null(input$select_table)) {
-			if  (input$select_table %in% c(2,3,8)) {
+
+			if  (input$select_table %in% c(0)) {
+				
+			 checkboxInput("checkAnnexe", "Include annexe",FALSE)
+
+			}  
+			else if  (input$select_table %in% c(2,3,8)) {
 				
 			 radioButtons("radioSkin", "",
 										 c("excluding C44 skin" = 1,
@@ -302,7 +308,7 @@ shinyServer(function(input, output, session) {
       table$label <- "Automatic Report"
       show(id="report_option", anim=TRUE)
       hide(id="plot", anim=TRUE)
-      hide(id="controls_COL1", anim=TRUE)
+      show(id="controls_COL1", anim=TRUE)
       hide(id="controls_COL2", anim=TRUE)
       shiny_list_folder_content(output)
       
@@ -737,16 +743,12 @@ shinyServer(function(input, output, session) {
   #Download report
   output$downloadReport <- downloadHandler(
 
-
-
-
-	
 		filename =  paste0(ls_args$sc,"_",gsub("\\D","", Sys.time()),"_report.docx"),
 		content = function(file) {
 
 			withProgress(message = 'Download report', value = 0, {
 
-				shiny_dwn_report(file, download_dir)
+				shiny_dwn_report(file, download_dir, input$checkAnnexe)
 
 			})
 		}
@@ -760,7 +762,7 @@ shinyServer(function(input, output, session) {
 
 			withProgress(message = 'Download presentation', value = 0, {
 
-				shiny_dwn_slide(file)
+				shiny_dwn_slide(file, input$checkAnnexe)
 			})
 		}
 	

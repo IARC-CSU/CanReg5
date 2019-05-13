@@ -3165,7 +3165,7 @@ rcan_scatter_error_bar <- function(dt_plot,
   
 }
 
-rcan_report <- function(doc,report_path,dt_all,ls_args, shiny=FALSE) {
+rcan_report <- function(doc,report_path,dt_all,ls_args,ann=TRUE, shiny=FALSE) {
 
   time_limit <- 9
   graph_width <- 6
@@ -3753,23 +3753,24 @@ rcan_report <- function(doc,report_path,dt_all,ls_args, shiny=FALSE) {
   doc <- body_add_par(doc,paste0("Table ",list_number$tbl,"."), style="centered")
   
   
-  
-  dt_appendix <- canreg_report_template_extract(report_path, script.basename, appendix  =TRUE)
-  list_number$fig <- 1
-  list_number$tbl <- 1
-  
-  if (!is.null(dt_appendix)) {
-    if (shiny) {
-      incProgress(inc_progress_value, detail = "Add appendix")
+  if (ann) {
+    dt_appendix <- canreg_report_template_extract(report_path, script.basename, appendix  =TRUE)
+    list_number$fig <- 1
+    list_number$tbl <- 1
+    
+    if (!is.null(dt_appendix)) {
+      if (shiny) {
+        incProgress(inc_progress_value, detail = "Add appendix")
+      }
+      list_number <- canreg_report_chapter_txt(dt_appendix, doc, report_path,dt_all,pop_file =ls_args$pop,list_number, appendix=TRUE)
     }
-    list_number <- canreg_report_chapter_txt(dt_appendix, doc, report_path,dt_all,pop_file =ls_args$pop,list_number, appendix=TRUE)
   }
 
   return(doc)
 
 }
 
-rcan_slide <- function(doc,dt_all,ls_args, shiny=FALSE) {
+rcan_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
 
   graph_width <- 8
   graph_width_split <- 4
@@ -4258,38 +4259,44 @@ rcan_slide <- function(doc,dt_all,ls_args, shiny=FALSE) {
   
   doc <- ph_with_flextable_at(doc, ft, left=0.551, top=1.291)
   
-  
-  #################
-  dt_report <- dt_all
-  
-  dt_report <- canreg_ageSpecific_rate_data(dt_report)
-  
-  canreg_output(output_type = "png", filename = paste0(tempdir(), "\\ann_temp_graph"),landscape = FALSE,
-                list_graph = TRUE,
-                FUN=canreg_ageSpecific_rate_multi_plot,dt=dt_report,group_by="SEX",var_age_label_list = "AGE_GROUP_LABEL",
-                logscale = TRUE,  
-                color_trend=c("Male" = "#2c7bb6", "Female" = "#b62ca1"),
-                multi_graph= FALSE,
-                canreg_header=ls_args$header)
-  
-  dims <- attr( png::readPNG (paste0(tempdir(), "\\ann_temp_graph001.png")), "dim" )
-  
   doc <-  add_slide(doc, layout="Canreg_info", master="Office Theme") ## add Canreg information slide.
-  
-  if (shiny) {
-    incProgress(inc_progress_value, detail = "Age-specific incidence rate by site")
+  #################
+  if (ann) {
+
+    dt_report <- dt_all
+    
+    dt_report <- canreg_ageSpecific_rate_data(dt_report)
+    
+    canreg_output(output_type = "png", filename = paste0(tempdir(), "\\ann_temp_graph"),landscape = FALSE,
+                  list_graph = TRUE,
+                  FUN=canreg_ageSpecific_rate_multi_plot,dt=dt_report,group_by="SEX",var_age_label_list = "AGE_GROUP_LABEL",
+                  logscale = TRUE,  
+                  color_trend=c("Male" = "#2c7bb6", "Female" = "#b62ca1"),
+                  multi_graph= FALSE,
+                  canreg_header=ls_args$header)
+    
+    dims <- attr( png::readPNG (paste0(tempdir(), "\\ann_temp_graph001.png")), "dim" )
+    
+    
+    if (shiny) {
+      incProgress(inc_progress_value, detail = "Age-specific incidence rate by site")
+    }
+
+    for (j in 1:length(levels(dt_report$ICD10GROUP))) {
+      
+      doc <-  add_slide(doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
+      doc <- ph_with_text(doc, type = "title", str = paste0("Age-specific incidence rate:\r\n",  unique(dt_report[ICD10GROUP== levels(ICD10GROUP)[j] ,cancer_label])))
+      doc <- ph_with_img(doc, paste0(tempdir(), "\\ann_temp_graph",sprintf("%03d",j) ,".png"), index=1, width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
+      
+    }
   }
 
-  for (j in 1:length(levels(dt_report$ICD10GROUP))) {
-    
-    doc <-  add_slide(doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
-    doc <- ph_with_text(doc, type = "title", str = paste0("Age-specific incidence rate:\r\n",  unique(dt_report[ICD10GROUP== levels(ICD10GROUP)[j] ,cancer_label])))
-    doc <- ph_with_img(doc, paste0(tempdir(), "\\ann_temp_graph",sprintf("%03d",j) ,".png"), index=1, width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
-    
-  }
+  
   
   return(doc)
 }
+
+
 canreg_output <- function(output_type="pdf",filename=NULL, landscape = FALSE,list_graph = TRUE, FUN,...) {
   
   
