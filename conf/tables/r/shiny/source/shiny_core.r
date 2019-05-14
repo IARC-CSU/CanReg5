@@ -940,7 +940,7 @@ canreg_ageSpecific <- function(dt_plot,color_trend,plot_subtitle="",logscale=FAL
 }
  
  
- canreg_asr_trend <- function(dt_plot,
+canreg_asr_trend <- function(dt_plot,
 								var_asr="asr", 
                                 var_cases= "CASES", 
                                 var_year= "YEAR",
@@ -951,7 +951,9 @@ canreg_ageSpecific <- function(dt_plot,color_trend,plot_subtitle="",logscale=FAL
                                 list_graph = FALSE,
                                 return_data = FALSE,
 								return_plot= FALSE,
-                                plot_title="") {
+                                plot_title="") 
+
+{
 
   if (return_data) {
     dt <- dt[, c(group_by,var_year,var_asr), with=FALSE]
@@ -1149,6 +1151,105 @@ shiny_error_log <- function(log_file,filename) {
   
 }
 
+
+shiny_export_data <- function(log_file) {
+  
+  shiny_log <- file(log_file,open="wt")
+  sink(shiny_log)
+  sink(shiny_log, type="message")
+  
+  #print argument from canreg
+  cat("arguments\n")
+  dput(ls_args)
+  cat("\n")
+  cat("data file\n")
+
+  
+  
+  dput(as.data.frame(dt_base))
+  cat("\n")
+  cat("basis file\n")
+  dput(as.data.frame(dt_basis))
+
+  #close log_file and send to canreg
+  sink(type="message")
+  sink()
+  close(shiny_log)
+  
+}
+
+
+import_shiny_date <- function(datafile) {
+
+	fileTemp1 <- paste0(tempdir(),"/tempargs.txt")
+	fileTemp2 <- paste0(tempdir(),"/tempdata.txt")
+	fileTemp3 <- paste0(tempdir(),"/tempbasis.txt")
+
+	con_args=file(fileTemp1,open="wt")
+	sink(con_args)
+	sink(con_args, type="message")
+
+
+	con_source=file(datafile,open="r")
+	content=readLines(con_source)
+
+	j<-2
+	args <- NULL
+	while (content[j] != "data file") {
+		cat(content[j])
+		j <- j+1
+		if (j == length(content)-1){
+			sink(type="message")
+			sink()
+			close(con_args)
+			close(con_source)
+			return(NULL)
+		}
+	}
+
+	sink(type="message")
+	sink()
+	close(con_args)
+	ls_args <-dget(paste0(tempdir(),"/tempargs.txt"))
+
+	con_data=file(fileTemp2,open="wt")
+	sink(con_data)
+	sink(con_data, type="message")
+	j<-j+1
+
+	while (content[j] != "basis file") {
+		cat(content[j])
+		j <- j+1
+	}
+
+
+	sink(type="message")
+	sink()
+	close(con_data)
+
+	dt_base <-as.data.table(dget(paste0(tempdir(),"/tempdata.txt")))
+
+	con_basis=file(fileTemp3,open="wt")
+	sink(con_basis)
+	sink(con_basis, type="message")
+
+	for (i in (j+1):length(content)) {
+		cat(content[i])
+	}
+
+	sink(type="message")
+	sink()
+	close(con_basis)
+
+	dt_basis <-as.data.table(dget(paste0(tempdir(),"/tempbasis.txt")))
+
+	close(con_source)
+
+	
+	return(list(ls_args = ls_args, dt_base = dt_base,dt_basis = dt_basis))
+
+}
+
 shiny_dwn_data <- function(log_file) {
 
 	dt_temp <- copy(dt_base)
@@ -1159,3 +1260,126 @@ shiny_dwn_data <- function(log_file) {
 	write.csv(dt_temp, paste0(log_file),row.names = FALSE)
 
 }
+
+shiny_dwn_report <- function(log_file, directory_path, ann) {
+
+	
+
+	if (is.na(directory_path)) {
+		ls_args$out <- tempdir()
+	}
+	else {
+		ls_args$out <- directory_path
+	}
+
+	
+
+
+	#check if report path exist (if not create report path)
+	path <- ls_args$out
+	if (ls_args$sc=="null") {
+	report_path <- paste0(path, "/report-template")
+	} else {
+	report_path <- paste0(path, "/report-template-", ls_args$sc)
+	}
+	if(!file_test("-d",report_path)) {
+	dir.create(report_path)
+	}
+
+
+
+	incProgress(0, detail = "create docx")
+
+	doc <- read_docx(paste(sep="/", script.basename,"slide_template", "template.docx"))
+	doc <- rcan_report(doc, report_path, dt_base , ls_args,ann=ann, shiny=TRUE )
+	
+  print(doc, log_file)
+  
+
+
+}
+
+shiny_dwn_slide <- function(log_file, ann) {
+
+
+	ls_args$out <- tempdir()
+
+	incProgress(0, detail = "create docx")
+
+	doc <- read_pptx(path=paste(sep="/", script.basename,"slide_template", "canreg_template.pptx"))
+	doc <- rcan_slide(doc, dt_base , ls_args, ann=ann, shiny=TRUE)
+	
+  print(doc, log_file)
+  
+
+
+}
+
+shiny_update_dwn_folder <- function(output,values) {
+
+	download_dir <<- choose.dir(download_dir)
+	if (is.na(download_dir)) {
+		output$directorypath <- renderText({"Please select a folder"})
+ 	}
+ 	else {
+  	output$directorypath <- renderText({download_dir})
+  }
+  shiny_list_folder_content(output)
+
+}
+
+shiny_list_folder_content <- function(output) {
+
+	path <- download_dir
+
+	if (is.na(path)) {
+		output$reportHTML <- renderUI({shiny_report_info(path, TRUE)})
+	}
+	else {
+		
+		if (ls_args$sc=="null") {
+			report_source <- paste0(path, "\\report-template")
+		} else {
+			report_source <- paste0(path, "\\report-template-", ls_args$sc)
+		}
+
+		if(!file_test("-d",report_source)) {
+			temp_path <- report_source
+			output$reportHTML <- renderUI({shiny_report_info(temp_path, TRUE)})
+			report_source <- paste0(script.basename,"/report_text")
+		}
+		else {
+			output$reportHTML <- renderUI({shiny_report_info(report_source, FALSE)})
+		}
+
+		#temp <- as.data.frame(list.files(report_source))
+		#names(temp) <-"Template files" 
+	  #output$folderContent <- renderTable(temp)
+
+	}
+
+}
+
+shiny_report_info <- function (path, new=TRUE) {
+	
+	if (is.na(path)) {
+		text <- tags$p("There is no folder selected, the template files cannot be modified")
+	}
+	else {
+
+		if (new) {
+			text <- tags$p(
+				"There is no prior report in this folder",tags$br(),tags$br(),
+				"The template files will be create from base, and can be edit later in the folder:",tags$br(),
+				path)
+		}
+		else {
+			text <- tags$p(
+				"The report will be based on the template files in the folder:",tags$br(),
+				path)
+		}
+	}
+
+	return(text)
+}
+

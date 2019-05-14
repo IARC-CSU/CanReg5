@@ -37,11 +37,15 @@ shinyServer(function(input, output, session) {
   progress_bar <- reactiveValues(object=NULL)
   table <- reactiveValues(label="")
 
+  output$UI_regtitle <- renderText({ls_args$header})
+  output$directorypath <- renderText({download_dir})
 
 	
 	output$UI_select_table <- renderUI({
 	
-		table_list <- c( "Population pyramid" = 1,
+		table_list <- c( 
+			"Automatic report" = 0,
+			"Population pyramid" = 1,
 			"Barchart of cases by age group by sex" = 2, 
 			"piechart of cases by age group by sex" = 3, 
 			"Top cancer both sexes" = 4 ,
@@ -107,7 +111,13 @@ shinyServer(function(input, output, session) {
 	output$UI_control1 <- renderUI({
 		
 		if  (!is.null(input$select_table)) {
-			if  (input$select_table %in% c(2,3,8)) {
+
+			if  (input$select_table %in% c(0)) {
+				
+			 checkboxInput("checkAnnexe", "Include annexe",FALSE)
+
+			}  
+			else if  (input$select_table %in% c(2,3,8)) {
 				
 			 radioButtons("radioSkin", "",
 										 c("excluding C44 skin" = 1,
@@ -245,7 +255,7 @@ shinyServer(function(input, output, session) {
 				dt_CI5_list <- readRDS(paste0(script.basename, "/CI5_alldata.rds"))
 				registry_list <-  unique(dt_CI5_list$country_label)
 				registry_list <- as.character(registry_list)
-				selectInput("selectRegistry1",NULL, registry_list, selected = dt_CI5_label[0])
+				selectInput("selectRegistry1",NULL, registry_list, selected = dt_CI5_label[1])
 				
 			}
 		}
@@ -262,7 +272,7 @@ shinyServer(function(input, output, session) {
 				dt_CI5_list <- readRDS(paste0(script.basename, "/CI5_alldata.rds"))
 				registry_list <-  unique(dt_CI5_list$country_label)
 				registry_list <- as.character(registry_list)
-				selectInput("selectRegistry2",NULL , registry_list, selected = dt_CI5_label[1])
+				selectInput("selectRegistry2",NULL , registry_list, selected = dt_CI5_label[2])
 				
 			}
 		}
@@ -279,7 +289,7 @@ shinyServer(function(input, output, session) {
 				dt_CI5_list <- readRDS(paste0(script.basename, "/CI5_alldata.rds"))
 				registry_list <-  unique(dt_CI5_list$country_label)
 				registry_list <- as.character(registry_list)
-				selectInput("selectRegistry3", NULL, registry_list, selected = dt_CI5_label[2])
+				selectInput("selectRegistry3", NULL, registry_list, selected = dt_CI5_label[3])
 				
 			}
 		}
@@ -290,65 +300,78 @@ shinyServer(function(input, output, session) {
 
   observeEvent(input$select_table,{
 
-    if (input$select_table==1) {
+  	hide(id="report_option", anim=TRUE)
+  	hide(id="fluid_test", anim=TRUE)
+  	show(id="plot", anim=TRUE)
+
+  	if (input$select_table==0) {
+      table$label <- "Automatic Report"
+      show(id="report_option", anim=TRUE)
+      hide(id="plot", anim=TRUE)
+      show(id="controls_COL1", anim=TRUE)
+      hide(id="controls_COL2", anim=TRUE)
+      shiny_list_folder_content(output)
+      
+    }
+    else if (input$select_table==1) {
       table$label <- "Population pyramid"
       hide(id="controls_COL1", anim=TRUE)
       hide(id="controls_COL2", anim=TRUE)
-      hide(id="fluid_test", anim=TRUE)
+      
     }
 		else if (input$select_table== 2) {
 				table$label <- "Barchart by age and sex"
 				show(id="controls_COL1", anim=TRUE)
 				hide(id="controls_COL2", anim=TRUE)
-				hide(id="fluid_test", anim=TRUE)
+				
 			}
 		else if (input$select_table== 3) {
 				table$label <- "Piechart by age and sex"
 				show(id="controls_COL1", anim=TRUE)
 				hide(id="controls_COL2", anim=TRUE)
-				hide(id="fluid_test", anim=TRUE)
+				
 			}
 		else if (input$select_table== 4) {
 			table$label <- "Barchart Top cancer both sexes"
 			show(id="controls_COL1", anim=TRUE)
 			show(id="controls_COL2", anim=TRUE)
-			hide(id="fluid_test", anim=TRUE)
+			
 		}
 		else if (input$select_table== 5) {
 			table$label <- "Barchart Top cancer by sexes"
 			show(id="controls_COL1", anim=TRUE)
 			show(id="controls_COL2", anim=TRUE)
-			hide(id="fluid_test", anim=TRUE)
+			
 		}
 		else if (input$select_table== 6) {
 			table$label <- "Age-specific trend top cancer"
 			show(id="controls_COL1", anim=TRUE)
 			show(id="controls_COL2", anim=TRUE)
-			hide(id="fluid_test", anim=TRUE)
+			
 		}
 		else if (input$select_table== 7) {
 			table$label <- "Age-specific trend"
 			show(id="controls_COL1", anim=TRUE)
 			show(id="controls_COL2", anim=TRUE)
-			hide(id="fluid_test", anim=TRUE)
+			
 		}
 		else if (input$select_table== 8) {
 			table$label <- "Barchart by year"
 			show(id="controls_COL1", anim=TRUE)
 			hide(id="controls_COL2", anim=TRUE)
-			hide(id="fluid_test", anim=TRUE)
+			
 		}
 		else if (input$select_table== 9) {
 			table$label <- "Time trend top cancer"
 			show(id="controls_COL1", anim=TRUE)
 			show(id="controls_COL2", anim=TRUE)
-			hide(id="fluid_test", anim=TRUE)
+			
 		}
 		else if (input$select_table== 10) {
 			table$label <- "Estimated Annual Percentage Change"
 			show(id="controls_COL1", anim=TRUE)
 			show(id="controls_COL2", anim=TRUE)
-			hide(id="fluid_test", anim=TRUE)
+			
 		}
 		else if (input$select_table== 12) {
 			table$label <- "CI5 XI comparison"
@@ -367,7 +390,9 @@ shinyServer(function(input, output, session) {
       hide(id="pptx_filename", anim=TRUE)
       hide(id="UI_nbSlide", anim=TRUE)
     } else {
-      show(id="downloadPres", anim=TRUE)
+      if (!is.na(download_dir)) {
+      	show(id="downloadPres", anim=TRUE)
+      }
       show(id="pptx_filename", anim=TRUE)
       show(id="UI_nbSlide", anim=TRUE)
     } 
@@ -444,63 +469,67 @@ shinyServer(function(input, output, session) {
   })
   
   #Download file
-  output$downloadFile <- downloadHandler(
-    
-    filename = function() {
-      
-			bool_CI <- FALSE
-			if (!is.null(input$checkCI)) {
-				bool_CI <- input$checkCI
-			}
+  output$downloadFile <- 
+
+	  downloadHandler(
+	    
+	    filename = function() {
+	    
+				bool_CI <- FALSE
+				if (!is.null(input$checkCI)) {
+					bool_CI <- input$checkCI
+				}
+				
+				#multiple file
+				bool_multiple <- multiple_output(input$select_table, bool_CI, input$select_format)
+					
+				if (bool_multiple) {
+					temp <- paste0(input$text_filename, ".", "zip")
+				}
+				else {
+					temp <- paste0(input$text_filename, ".", input$select_format)
+				}
+
+				return(temp)
+	 
+	    },
+	    
+	    content = function(file) {
 			
-      #multiple file
-			bool_multiple <- multiple_output(input$select_table, bool_CI, input$select_format)
-			
-      if (bool_multiple) {
-				paste0(input$text_filename, ".", "zip")
-			}
-			else {
-       paste0(input$text_filename, ".", input$select_format)
-			}
+			withProgress(message = 'Download output', value = 0, {
+	      
+				file_temp <- substr(file,1, nchar(file)-nchar(input$select_format)-1)
+				shiny_plot(dt_all(),  input,session, TRUE,FALSE,file_temp)
+				incProgress(1, detail = "")
+				
+				bool_CI <- FALSE
+				if (!is.null(input$checkCI)) {
+					bool_CI <- input$checkCI
+				}
+				bool_multiple <- multiple_output(input$select_table, bool_CI, input$select_format)
+				
+				if (bool_multiple) {
 						
+						file_male <- paste0(file_temp, "001", ".", input$select_format)
+						file_female <- paste0(file_temp, "002", ".", input$select_format)
+						
+						tempfile1 <- paste0(input$text_filename, "-male.", input$select_format)
+						tempfile2 <- paste0(input$text_filename, "-female.", input$select_format)
+						
+						file.copy(file_male, tempfile1, overwrite = TRUE)
+						file.copy(file_female,tempfile2, overwrite = TRUE)
+						
+						zip(file, c(tempfile1, tempfile2))
+						
+						file.remove(c(tempfile1,tempfile2))
 
-      
-    },
-    
-    content = function(file) {
-		
-		withProgress(message = 'Download output', value = 0, {
-      
-			file_temp <- substr(file,1, nchar(file)-nchar(input$select_format)-1)
-			shiny_plot(dt_all(),  input,session, TRUE,FALSE,file_temp)
-			incProgress(1, detail = "")
-			
-			bool_CI <- FALSE
-			if (!is.null(input$checkCI)) {
-				bool_CI <- input$checkCI
-			}
-			bool_multiple <- multiple_output(input$select_table, bool_CI, input$select_format)
-			
-			if (bool_multiple) {
-					
-					file_male <- paste0(file_temp, "001", ".", input$select_format)
-					file_female <- paste0(file_temp, "002", ".", input$select_format)
-					
-					tempfile1 <- paste0(input$text_filename, "-male.", input$select_format)
-					tempfile2 <- paste0(input$text_filename, "-female.", input$select_format)
-					
-					file.copy(file_male, tempfile1, overwrite = TRUE)
-					file.copy(file_female,tempfile2, overwrite = TRUE)
-					
-					zip(file, c(tempfile1, tempfile2))
-					
-					file.remove(c(tempfile1,tempfile2))
+				 }
 
-			 }
+
+			})
+	      
 		})
-      
-	})
-  
+
   #Action button: Add slide
   observeEvent(input$actionSlide,{ 
 
@@ -682,7 +711,7 @@ shinyServer(function(input, output, session) {
      
     })
   
-	 #Download log
+	#Download log
   output$downloadLog <- downloadHandler(
 	
 		filename =  paste0(gsub("\\W","", ls_args$label),"_",ls_args$sc,"_",gsub("\\D","", Sys.time()),"_error_log.txt"),
@@ -692,8 +721,17 @@ shinyServer(function(input, output, session) {
 		}
 	
 	)
+
+  output$downloadShinyData <- downloadHandler(
 	
-		 #Download data
+		filename =  paste0(gsub("\\W","", ls_args$label),"_",ls_args$sc,"_",gsub("\\D","", Sys.time()),"_data.txt"),
+		content = function(file) {
+			shiny_export_data(file)
+		}
+	
+	)
+	
+	#Download data
   output$downloadData <- downloadHandler(
 	
 		filename =  paste0(ls_args$sc,"_",gsub("\\D","", Sys.time()),"_data.csv"),
@@ -702,5 +740,77 @@ shinyServer(function(input, output, session) {
 		}
 	
 	)
+  #Download report
+  output$downloadReport <- downloadHandler(
+
+		filename =  paste0(ls_args$sc,"_",gsub("\\D","", Sys.time()),"_report.docx"),
+		content = function(file) {
+
+			withProgress(message = 'Download report', value = 0, {
+
+				shiny_dwn_report(file, download_dir, input$checkAnnexe)
+
+			})
+		}
 	
+	)
+  #Download slide
+  output$downloadSlide <- downloadHandler(
+
+		filename =  paste0(ls_args$sc,"_",gsub("\\D","", Sys.time()),"_slide.pptx"),
+		content = function(file) {
+
+			withProgress(message = 'Download presentation', value = 0, {
+
+				shiny_dwn_slide(file, input$checkAnnexe)
+			})
+		}
+	
+	)
+
+  
+  onclick("directorypath", shiny_update_dwn_folder(output,values))
+
+
+  observeEvent(input$downloadFile2,{ 
+
+   	withProgress(message = 'Download output', value = 0, {
+
+
+
+			path <- download_dir
+			file_temp <- paste0(path, "/", input$text_filename)
+			shiny_plot(dt_all(),  input,session, TRUE,FALSE,file_temp)
+			incProgress(1, detail = "")
+
+
+		})
+
+
+  })
+
+	observeEvent(input$shinydata,{ 
+
+				temp <- import_shiny_date(input$shinydata$datapath)
+				if(!is.null(temp)) {
+					ls_args <<- temp$ls_args
+					dt_base <<- temp$dt_base
+					dt_basis <<- temp$dt_basis
+					canreg_age_group <<- canreg_get_agegroup_label(dt_base, ls_args$agegroup)
+					year_info <<- canreg_get_years(dt_base)
+					dt_CI5_label <<- as.character(unique(dt_CI5_list[cr == ls_args$sr, c("country_label"), with=FALSE])$country_label)
+					i18n$set_translation_language(ls_args$lang)
+					updateSelectInput(session, "select_table", selected = 1)
+					updateSelectInput(session, "select_table", selected = 4)
+					output$UI_regtitle <- renderText({ls_args$header})
+					cancer_list <-  unique(dt_base$cancer_label)
+					cancer_list <- sort(as.character(cancer_list))
+					updateSelectInput(session,"selectCancerSite", choices=cancer_list)
+					showNotification("Data imported",type="message")
+				}
+				else {
+					showNotification("This is not a valid shiny data file",type="error")
+				}
+	  })
+		
 })
