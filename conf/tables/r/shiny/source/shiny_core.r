@@ -1,6 +1,6 @@
 
 
-shiny_data <- function(input) {
+shiny_data <- function(input, session) {
   
   dt_temp <- NULL
   if  (!is.null(input$select_table)) {
@@ -269,6 +269,40 @@ shiny_data <- function(input) {
 			}
 				
 		}
+		else if (table_number == 12){
+
+			if (!is.null(input$selectRegistry1) & 
+				!is.null(input$selectRegistry2) & 
+				!is.null(input$selectRegistry3) ) {
+
+				registry_selection <- 
+					c(
+					input$selectRegistry1,
+					input$selectRegistry2,
+					input$selectRegistry3,
+					ls_args$header)  
+
+				dt_temp  <- copy(dt_base)
+				dt_temp <- dt_temp[ICD10GROUP != "C44",]
+				dt_temp <- dt_temp[ICD10GROUP != "O&U",]
+				dt_temp <- canreg_ageSpecific_rate_data(dt_temp, keep_ref = TRUE)
+
+				dt_CI5_data <- canreg_import_CI5_data(dt_temp, paste0(script.basename, "/CI5_alldata.rds"))
+				dt_temp <- shiny_merge_CI5_registry(dt_temp,dt_CI5_data, registry_region = ls_args$sr, registry_label = ls_args$header, number=40 )
+				
+				dt_temp <- dt_temp[country_label %in% registry_selection, ]
+				setkeyv(dt_temp, c("CSU_RANK", "SEX","asr"))
+				dt_temp[country_label!=ls_args$header,ICD10GROUPCOLOR:=paste0(ICD10GROUPCOLOR,"6E")]
+				dt_temp[country_label==ls_args$header,ICD10GROUPCOLOR:=paste0(ICD10GROUPCOLOR,"FF")]
+				cancer_list <- sort(as.character(unique(dt_temp$cancer_label)))
+				cancer_selected <- as.character(unique(dt_temp[CSU_RANK == 1 & SEX == levels(SEX)[1],]$cancer_label))
+				
+				updateSelectInput(session, "selectCancerSite",choices =cancer_list,selected = cancer_selected)
+
+
+
+			}
+		}	
 	}
  
   return(dt_temp)
@@ -278,7 +312,7 @@ shiny_data <- function(input) {
 
 
 
-shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL) {
+shiny_plot <- function(dt_plot,input,session, download = FALSE,slide=FALSE, file = NULL) {
   
 	if  (!is.null(input$select_table)) {
   
@@ -288,18 +322,19 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 				ls_args$header  <- ""
 				output_type <- "png"
 			}
-    else {
-      output_type <- input$select_format
-    }
-  }
+    		else {
+      			output_type <- input$select_format
+    		}
+  		}
 		else {
-			ls_args$header  <- ""
 			table_number <- isolate(input$select_table)
+			if (table_number != 12) {
+				ls_args$header  <- ""
+			}
+			
 		}
 		
-		
-		
-		
+	
 		
 		if ( table_number == 1) {
 			
@@ -386,14 +421,14 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 				if (isolate(input$radioValue) == "asr") {
 					var_top <- "asr"
 					digit <- 1
-					ytitle <- paste0(i18n$t("Age-standardized incidence rate per")," ", formatC(100000, format="d", big.mark=","), ", ", isolate(input$slideAgeRange)[1], "-", age2, " years old" )
+					ytitle <- paste0(i18n$t("Age-standardized incidence rate per")," ", formatC(100000, format="d", big.mark=","), ", ", isolate(input$slideAgeRange)[1], "-", age2, " ", i18n$t("years old"))
 					
 					
 				} 
 				else if (isolate(input$radioValue) == "cases"){
 					var_top <- "CASES"
 					digit <- 0
-					ytitle <-  paste0(i18n$t("Number of cases"),", ", isolate(input$slideAgeRange)[1], "-", age2, " years old" )
+					ytitle <-  paste0(i18n$t("Number of cases"),", ", isolate(input$slideAgeRange)[1], "-", age2, " ",i18n$t("years old"))
 					
 					
 				}
@@ -405,7 +440,7 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 					} else {
 						age2 <- isolate(input$slideAgeRange)[2]-1
 					}
-					ytitle<-paste0(i18n$t("Cumulative incidence risk (percent)"),", 0-",age2, " years old" )
+					ytitle<-paste0(i18n$t("Cumulative incidence risk (percent)"),", 0-",age2, " ",i18n$t("years old"))
 					
 					
 				}
@@ -456,14 +491,14 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 				if (isolate(input$radioValue) == "asr") {
 					var_top <- "asr"
 					digit <- 1
-					ytitle <- paste0(i18n$t("Age-standardized incidence rate per")," ", formatC(100000, format="d", big.mark=","), ", ", isolate(input$slideAgeRange)[1], "-", age2, " years old" )
+					ytitle <- paste0(i18n$t("Age-standardized incidence rate per")," ", formatC(100000, format="d", big.mark=","), ", ", isolate(input$slideAgeRange)[1], "-", age2, " ",i18n$t("years old"))
 					
 					
 				} 
 				else if (isolate(input$radioValue) == "cases"){
 					var_top <- "CASES"
 					digit <- 0
-					ytitle <-  paste0(i18n$t("Number of cases"),", ", isolate(input$slideAgeRange)[1], "-", age2, " years old" )
+					ytitle <-  paste0(i18n$t("Number of cases"),", ", isolate(input$slideAgeRange)[1], "-", age2, " ",i18n$t("years old"))
 					
 					
 				}
@@ -475,7 +510,7 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 					} else {
 						age2 <- isolate(input$slideAgeRange)[2]-1
 					}
-					ytitle<-paste0(i18n$t("Cumulative incidence risk (percent)"),", 0-",age2, " years old" )
+					ytitle<-paste0(i18n$t("Cumulative incidence risk (percent)"),", 0-",age2, " ",i18n$t("years old"))
 					
 					
 				}
@@ -552,7 +587,9 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 						var_color="ICD10GROUPCOLOR",
 						logscale = bool_log,
 						nb_top = nb_top,
-						plot_title = ls_args$header
+						plot_title = ls_args$header,
+						xtitle = i18n$t("Age at diagnosis"),
+						ytitle = i18n$t("Age-specific incidence rate per")
 					)
 							
 							
@@ -779,7 +816,6 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 			if (!is.null( input$selectCancerSite) & !is.null(input$radioLog)) {
 			
 				bool_log <- (input$radioLog == "log")
-				color_trend <- c("Male" = "#2c7bb6", "Female" = "#b62ca1")
 				dt_plot <- dt_plot[cancer_label == input$selectCancerSite,]
 				
 				last_age <- (isolate(input$slideAgeRange)[2]/5)
@@ -816,9 +852,43 @@ shiny_plot <- function(dt_plot,input, download = FALSE,slide=FALSE, file = NULL)
 								)
 								
 				}
+
+			}
+		
+		}
+		else if (table_number == 12){
+			
+			if (!is.null( input$selectCancerSite) & !is.null(input$radioSex)) {
+
+				dt_plot <- dt_plot[cancer_label == input$selectCancerSite,]
+				dt_plot <- dt_plot[SEX == input$radioSex]
+
+				if (nrow(dt_plot) == 0 ) {
+					temp <- ifelse(input$radioSex == "Male", "Female", "Male")
+					updateRadioButtons(session, "radioSex", selected= temp)
+					return()
+				}
+
+				xtitle=paste0(i18n$t("Age-standardized incidence rate per")," ", formatC(100000, format="d", big.mark=","))
+
 				
-			
-			
+				if (download) {
+				 
+					canreg_output(output_type = output_type, filename =file,landscape = TRUE,list_graph = FALSE,
+								FUN=shiny_bar_CI5_compare,
+								dt=dt_plot,
+								xtitle = xtitle,
+		                		text_size_factor=1.1)
+							
+				}
+				else {
+					
+					shiny_bar_CI5_compare(
+						dt=dt_plot,
+						xtitle = xtitle,
+                		text_size_factor=1.2)
+								
+				}
 			}
 		
 		}
@@ -851,22 +921,26 @@ canreg_ageSpecific <- function(dt_plot,color_trend,plot_subtitle="",logscale=FAL
 	} 
 		
 	plot<- Rcan:::core.csu_ageSpecific(dt_plot,
-																		 var_age="AGE_GROUP",
-																		 var_cases= "CASES",
-																		 var_py="COUNT",
-																		 group_by = "SEX",
-																		 plot_title = ls_args$header,
-																		 plot_subtitle = plot_subtitle,
-																		 color_trend = color_trend,
-																		 logscale = logscale,
-																		 age_label_list = unique(dt_plot[["AGE_GROUP_LABEL"]]))$csu_plot
-																		
+		var_age        ="AGE_GROUP",
+		var_cases      = "CASES",
+		var_py         ="COUNT",
+		group_by       = "SEX",
+		plot_title     = ls_args$header,
+		plot_subtitle  = plot_subtitle,
+		color_trend    = color_trend,
+		logscale       = logscale,
+		age_label_list = unique(dt_plot[["AGE_GROUP_LABEL"]]),
+		xtitle         = i18n$t("Age at diagnosis"),
+		ytitle         = i18n$t("Age-specific incidence rate per"),
+		label_group_by = c(i18n$t("Male"),i18n$t("Female"))
+ 		 )$csu_plot
+		
 	print(plot)
 
 }
  
  
- canreg_asr_trend <- function(dt_plot,
+canreg_asr_trend <- function(dt_plot,
 								var_asr="asr", 
                                 var_cases= "CASES", 
                                 var_year= "YEAR",
@@ -877,19 +951,22 @@ canreg_ageSpecific <- function(dt_plot,color_trend,plot_subtitle="",logscale=FAL
                                 list_graph = FALSE,
                                 return_data = FALSE,
 								return_plot= FALSE,
-                                plot_title="") {
-  
- 
-  
+                                plot_title="") 
+
+{
+
   if (return_data) {
     dt <- dt[, c(group_by,var_year,var_asr), with=FALSE]
     setkeyv(dt, c("SEX",var_year))
     return(dt)
     stop() 
   }
-  
-	
-	color_trend <- c("Male" = "#2c7bb6", "Female" = "#b62ca1")
+
+
+   temp_level <- c(i18n$t(levels(dt_plot$SEX)[1]),i18n$t(levels(dt_plot$SEX)[2]))
+   dt_plot$SEX <- factor(dt_plot$SEX,labels = temp_level) 
+
+   color_trend <- c("#2c7bb6", "#b62ca1")
     
    plot <- Rcan:::core.csu_time_trend(dt_plot,
                                     var_trend = "asr",
@@ -905,6 +982,98 @@ canreg_ageSpecific <- function(dt_plot,color_trend,plot_subtitle="",logscale=FAL
 
   print(plot)
 
+}
+
+#shiny function for CI5 comparison
+
+
+shiny_bar_CI5_compare <- function(dt,group_by = "SEX", landscape = TRUE,list_graph=FALSE,
+                                        xtitle = "",digit  =  1,text_size_factor =1.5,
+                                        return_data  =  FALSE) 
+{
+  
+  if (return_data) {
+    setnames(dt, "CSU_RANK","cancer_rank")
+    dt <-  dt[,-c("ICD10GROUPCOLOR"), with=FALSE]
+    
+    return(dt)
+    stop() 
+  }
+  
+  
+  CI5_registries <- as.character(unique(dt$country_label))
+  caption <- NULL
+  if (any(grepl("\\*",CI5_registries))) {
+    caption <- paste0("*: ",i18n$t("Regional registries"))
+  }
+
+  dt[["country_label"]] <-Rcan:::core.csu_legend_wrapper(dt[["country_label"]], 14)
+  dt[,country_label:=factor(country_label, levels=country_label)]
+      
+  temp <- csu_bar_plot(dt=dt, 
+                 var_top="asr",
+                 var_bar="country_label",
+                 plot_title = unique(dt$cancer_label),
+                 plot_subtitle = unique(i18n$t(dt$SEX)), 
+                 plot_caption = caption,
+                 xtitle=xtitle,
+                 digit = digit,
+                 color_bar = as.character(dt$ICD10GROUPCOLOR),
+                 text_size_factor = text_size_factor,
+                 landscape = TRUE) 
+ 
+
+
+      
+  geom_text_index <- which(sapply(temp$layers, function(x) class(x$geom)[1]) == "GeomText")
+  temp$layers[[geom_text_index]]$aes_params$size <- 6 
+  geom_hline_index <- which(sapply(temp$layers, function(x) class(x$geom)[1]) == "GeomHline")
+  temp$layers[[geom_hline_index]]$aes_params$size <- 0.4
+      
+  print(temp)
+  
+}
+
+
+shiny_merge_CI5_registry <- function(dt, dt_CI5, registry_region, registry_label, number=5) {
+  
+  ##calcul of ASR for canreg
+  dt<- Rcan:::core.csu_asr(df_data =dt, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
+                    group_by = c("cancer_label", "SEX","ICD10GROUP","ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt),
+                    pop_base_count = "REFERENCE_COUNT",
+                    age_label_list = "AGE_GROUP_LABEL")
+  
+  ##keep top 5 cancer for men and top 5 cancer women of canreg.
+  dt <- Rcan:::core.csu_dt_rank(dt,var_value = "CASES",var_rank = "cancer_label",
+                    group_by = "SEX", number =number, ties.method = "first") 
+  
+  #Keep selected cancer in CI5 data and prepare CI5 data
+  
+  dt_temp <- dt[,c("SEX", "ICD10GROUP", "CSU_RANK"),  with=FALSE]
+  dt_CI5 <- merge(dt_CI5,dt_temp, by=c("SEX", "ICD10GROUP"),all.y=TRUE )
+  dt_CI5 <- Rcan:::core.csu_asr(df_data =dt_CI5, var_age ="AGE_GROUP",var_cases = "cases", var_py = "py",
+                         group_by = c("country_label","cr" ,"SEX","ICD10GROUP", "CSU_RANK"),
+                         var_age_group=c("country_label"),
+                         missing_age = canreg_missing_age(dt_CI5),
+                         pop_base_count = "REFERENCE_COUNT",
+                         age_label_list = "AGE_GROUP_LABEL")
+  
+  dt_CI5 <- as.data.table(dt_CI5)
+  
+  #keep CI5 selected region
+  dt_CI5[, cr:=NULL]
+  
+  #add CI5 data to canreg data
+  dt_temp <- unique(dt[,c("ICD10GROUP", "ICD10GROUPCOLOR", "cancer_label"),  with=FALSE])
+  dt_CI5 <- merge(dt_CI5,dt_temp, by=c("ICD10GROUP"),all.x=TRUE )
+  setnames(dt_CI5, "cases", "CASES")
+  setnames(dt_CI5, "py", "COUNT")
+  dt[, country_label:=registry_label]
+  dt <- rbind(dt,dt_CI5)
+  
+  return(dt)
+  
+  
 }
 
 										
@@ -982,6 +1151,105 @@ shiny_error_log <- function(log_file,filename) {
   
 }
 
+
+shiny_export_data <- function(log_file) {
+  
+  shiny_log <- file(log_file,open="wt")
+  sink(shiny_log)
+  sink(shiny_log, type="message")
+  
+  #print argument from canreg
+  cat("arguments\n")
+  dput(ls_args)
+  cat("\n")
+  cat("data file\n")
+
+  
+  
+  dput(as.data.frame(dt_base))
+  cat("\n")
+  cat("basis file\n")
+  dput(as.data.frame(dt_basis))
+
+  #close log_file and send to canreg
+  sink(type="message")
+  sink()
+  close(shiny_log)
+  
+}
+
+
+import_shiny_date <- function(datafile) {
+
+	fileTemp1 <- paste0(tempdir(),"/tempargs.txt")
+	fileTemp2 <- paste0(tempdir(),"/tempdata.txt")
+	fileTemp3 <- paste0(tempdir(),"/tempbasis.txt")
+
+	con_args=file(fileTemp1,open="wt")
+	sink(con_args)
+	sink(con_args, type="message")
+
+
+	con_source=file(datafile,open="r")
+	content=readLines(con_source)
+
+	j<-2
+	args <- NULL
+	while (content[j] != "data file") {
+		cat(content[j])
+		j <- j+1
+		if (j == length(content)-1){
+			sink(type="message")
+			sink()
+			close(con_args)
+			close(con_source)
+			return(NULL)
+		}
+	}
+
+	sink(type="message")
+	sink()
+	close(con_args)
+	ls_args <-dget(paste0(tempdir(),"/tempargs.txt"))
+
+	con_data=file(fileTemp2,open="wt")
+	sink(con_data)
+	sink(con_data, type="message")
+	j<-j+1
+
+	while (content[j] != "basis file") {
+		cat(content[j])
+		j <- j+1
+	}
+
+
+	sink(type="message")
+	sink()
+	close(con_data)
+
+	dt_base <-as.data.table(dget(paste0(tempdir(),"/tempdata.txt")))
+
+	con_basis=file(fileTemp3,open="wt")
+	sink(con_basis)
+	sink(con_basis, type="message")
+
+	for (i in (j+1):length(content)) {
+		cat(content[i])
+	}
+
+	sink(type="message")
+	sink()
+	close(con_basis)
+
+	dt_basis <-as.data.table(dget(paste0(tempdir(),"/tempbasis.txt")))
+
+	close(con_source)
+
+	
+	return(list(ls_args = ls_args, dt_base = dt_base,dt_basis = dt_basis))
+
+}
+
 shiny_dwn_data <- function(log_file) {
 
 	dt_temp <- copy(dt_base)
@@ -992,3 +1260,126 @@ shiny_dwn_data <- function(log_file) {
 	write.csv(dt_temp, paste0(log_file),row.names = FALSE)
 
 }
+
+shiny_dwn_report <- function(log_file, directory_path, ann) {
+
+	
+
+	if (is.na(directory_path)) {
+		ls_args$out <- tempdir()
+	}
+	else {
+		ls_args$out <- directory_path
+	}
+
+	
+
+
+	#check if report path exist (if not create report path)
+	path <- ls_args$out
+	if (ls_args$sc=="null") {
+	report_path <- paste0(path, "/report-template")
+	} else {
+	report_path <- paste0(path, "/report-template-", ls_args$sc)
+	}
+	if(!file_test("-d",report_path)) {
+	dir.create(report_path)
+	}
+
+
+
+	incProgress(0, detail = "create docx")
+
+	doc <- read_docx(paste(sep="/", script.basename,"slide_template", "template.docx"))
+	doc <- rcan_report(doc, report_path, dt_base , ls_args,ann=ann, shiny=TRUE )
+	
+  print(doc, log_file)
+  
+
+
+}
+
+shiny_dwn_slide <- function(log_file, ann) {
+
+
+	ls_args$out <- tempdir()
+
+	incProgress(0, detail = "create docx")
+
+	doc <- read_pptx(path=paste(sep="/", script.basename,"slide_template", "canreg_template.pptx"))
+	doc <- rcan_slide(doc, dt_base , ls_args, ann=ann, shiny=TRUE)
+	
+  print(doc, log_file)
+  
+
+
+}
+
+shiny_update_dwn_folder <- function(output,values) {
+
+	download_dir <<- choose.dir(download_dir)
+	if (is.na(download_dir)) {
+		output$directorypath <- renderText({"Please select a folder"})
+ 	}
+ 	else {
+  	output$directorypath <- renderText({download_dir})
+  }
+  shiny_list_folder_content(output)
+
+}
+
+shiny_list_folder_content <- function(output) {
+
+	path <- download_dir
+
+	if (is.na(path)) {
+		output$reportHTML <- renderUI({shiny_report_info(path, TRUE)})
+	}
+	else {
+		
+		if (ls_args$sc=="null") {
+			report_source <- paste0(path, "\\report-template")
+		} else {
+			report_source <- paste0(path, "\\report-template-", ls_args$sc)
+		}
+
+		if(!file_test("-d",report_source)) {
+			temp_path <- report_source
+			output$reportHTML <- renderUI({shiny_report_info(temp_path, TRUE)})
+			report_source <- paste0(script.basename,"/report_text")
+		}
+		else {
+			output$reportHTML <- renderUI({shiny_report_info(report_source, FALSE)})
+		}
+
+		#temp <- as.data.frame(list.files(report_source))
+		#names(temp) <-"Template files" 
+	  #output$folderContent <- renderTable(temp)
+
+	}
+
+}
+
+shiny_report_info <- function (path, new=TRUE) {
+	
+	if (is.na(path)) {
+		text <- tags$p("There is no folder selected, the template files cannot be modified")
+	}
+	else {
+
+		if (new) {
+			text <- tags$p(
+				"There is no prior report in this folder",tags$br(),tags$br(),
+				"The template files will be create from base, and can be edit later in the folder:",tags$br(),
+				path)
+		}
+		else {
+			text <- tags$p(
+				"The report will be based on the template files in the folder:",tags$br(),
+				path)
+		}
+	}
+
+	return(text)
+}
+
