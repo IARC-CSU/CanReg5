@@ -4,14 +4,15 @@
   script.name <- sub(file.arg.name, "", 
                      initial.options[grep(file.arg.name, initial.options)])
   script.basename <- dirname(script.name)
-  
+  source(paste(sep="/", script.basename, "Rcan_core.r"))
 
   
   ## to get canreg argument list
   Args <- commandArgs(TRUE)
   
 tryCatch({
-  
+
+  canreg_load_packages(c("Rcpp", "data.table", "ggplot2","shiny","shinydashboard", "shinyjs","gridExtra", "scales", "Cairo","grid","officer","flextable", "zip", "bmp", "jpeg", "png","shiny.i18n", "Rcan"))
   library(shiny)
   shiny_dir <- paste(sep="/", script.basename, "shiny")
   runApp(appDir =shiny_dir, launch.browser =TRUE)
