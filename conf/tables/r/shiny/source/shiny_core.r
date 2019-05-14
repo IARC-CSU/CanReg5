@@ -1198,6 +1198,13 @@ import_shiny_date <- function(datafile) {
 	while (content[j] != "data file") {
 		cat(content[j])
 		j <- j+1
+		if (j == length(content)-1){
+			sink(type="message")
+			sink()
+			close(con_args)
+			close(con_source)
+			return(NULL)
+		}
 	}
 
 	sink(type="message")

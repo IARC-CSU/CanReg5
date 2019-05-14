@@ -792,21 +792,25 @@ shinyServer(function(input, output, session) {
 	observeEvent(input$shinydata,{ 
 
 				temp <- import_shiny_date(input$shinydata$datapath)
-				ls_args <<- temp$ls_args
-				dt_base <<- temp$dt_base
-				dt_basis <<- temp$dt_basis
-				canreg_age_group <<- canreg_get_agegroup_label(dt_base, ls_args$agegroup)
-				year_info <<- canreg_get_years(dt_base)
-				dt_CI5_label <<- as.character(unique(dt_CI5_list[cr == ls_args$sr, c("country_label"), with=FALSE])$country_label)
-				i18n$set_translation_language(ls_args$lang)
-				updateSelectInput(session, "select_table", selected = 1)
-				updateSelectInput(session, "select_table", selected = 4)
-				output$UI_regtitle <- renderText({ls_args$header})
-				cancer_list <-  unique(dt_base$cancer_label)
-				cancer_list <- sort(as.character(cancer_list))
-				updateSelectInput(session,"selectCancerSite", choices=cancer_list)
-
-
+				if(!is.null(temp)) {
+					ls_args <<- temp$ls_args
+					dt_base <<- temp$dt_base
+					dt_basis <<- temp$dt_basis
+					canreg_age_group <<- canreg_get_agegroup_label(dt_base, ls_args$agegroup)
+					year_info <<- canreg_get_years(dt_base)
+					dt_CI5_label <<- as.character(unique(dt_CI5_list[cr == ls_args$sr, c("country_label"), with=FALSE])$country_label)
+					i18n$set_translation_language(ls_args$lang)
+					updateSelectInput(session, "select_table", selected = 1)
+					updateSelectInput(session, "select_table", selected = 4)
+					output$UI_regtitle <- renderText({ls_args$header})
+					cancer_list <-  unique(dt_base$cancer_label)
+					cancer_list <- sort(as.character(cancer_list))
+					updateSelectInput(session,"selectCancerSite", choices=cancer_list)
+					showNotification("Data imported",type="message")
+				}
+				else {
+					showNotification("This is not a valid shiny data file",type="error")
+				}
 	  })
 		
 })
