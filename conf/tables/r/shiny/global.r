@@ -6,7 +6,7 @@ ls_args <- canreg_args(Args)
 
 i18n <- Translator(translation_csvs_path  = (paste(sep="/", script.basename, "r-translations")))
 i18n$set_translation_language(ls_args$lang)
-volumes <- c(Home = getVolumes()(),fs::path_home())
+
 
 dt_base <- csu_merge_inc_pop(
 	inc_file =ls_args$inc,
