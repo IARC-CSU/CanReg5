@@ -36,7 +36,5 @@ dim_width <- 2.7
 download_dir <-  file.path(Sys.getenv("USERPROFILE"),"Documents",fsep="\\")
 
 
-#make function tu update, dt_base, args and update dependencies in global
-#make function to extract ls_args, dt_base
 
 
