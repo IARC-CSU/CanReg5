@@ -303,11 +303,13 @@ shinyServer(function(input, output, session) {
   	hide(id="report_option", anim=TRUE)
   	hide(id="fluid_test", anim=TRUE)
   	show(id="plot", anim=TRUE)
+  	show(id="export_menu", anim=TRUE)
 
   	if (input$select_table==0) {
       table$label <- "Automatic Report"
       show(id="report_option", anim=TRUE)
       hide(id="plot", anim=TRUE)
+      hide(id="export_menu", anim=TRUE)
       show(id="controls_COL1", anim=TRUE)
       hide(id="controls_COL2", anim=TRUE)
       shiny_list_folder_content(output)
