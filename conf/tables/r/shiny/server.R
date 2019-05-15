@@ -323,6 +323,7 @@ shinyServer(function(input, output, session) {
 				table$label <- "Barchart by age and sex"
 				show(id="controls_COL1", anim=TRUE)
 				hide(id="controls_COL2", anim=TRUE)
+
 				
 			}
 		else if (input$select_table== 3) {

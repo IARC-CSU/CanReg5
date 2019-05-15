@@ -1346,7 +1346,7 @@ canreg_pop_data <- function(pop_file) {
   dt_pop <- dt_pop[!is.na(AGE_GROUP_LABEL),]
   dt_pop <- dt_pop[,.(COUNT=mean(COUNT)), by=.(AGE_GROUP,SEX,AGE_GROUP_LABEL)]
   dt_pop[,Total:=sum(COUNT)]
-  dt_pop[,Percent:=COUNT/sum(COUNT)*100, by=SEX]
+  dt_pop[,Percent:=COUNT/Total*100]
   dt_pop[,Percent:=round(Percent,1)]
   dt_pop$SEX <- factor(dt_pop$SEX, levels=c(1,2), labels=c("Male","Female"))
   return(dt_pop)
