@@ -1320,11 +1320,11 @@ shiny_update_dwn_folder <- function(output,values) {
 	download_dir <<- choose.dir(download_dir)
 	if (is.na(download_dir)) {
 		output$directorypath <- renderText({"Please select a folder"})
- 	}
- 	else {
-  	output$directorypath <- renderText({download_dir})
-  }
-  shiny_list_folder_content(output)
+	}
+	else {
+		output$directorypath <- renderText({download_dir})
+	}
+	shiny_list_folder_content(output)
 
 }
 
