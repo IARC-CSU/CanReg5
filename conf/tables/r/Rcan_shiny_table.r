@@ -12,7 +12,7 @@
   
 tryCatch({
 
-  canreg_load_packages(c("Rcpp", "data.table", "ggplot2","shiny","shinydashboard", "shinyjs","gridExtra", "scales", "Cairo","grid","officer","flextable", "zip", "bmp", "jpeg", "png","shiny.i18n", "Rcan"))
+  canreg_load_packages(c("data.table", "ggplot2","shiny","shinydashboard", "shinyjs","gridExtra", "scales", "Cairo","grid","officer","flextable", "zip", "bmp", "jpeg", "png","shiny.i18n", "Rcan"))
   library(shiny)
   shiny_dir <- paste(sep="/", script.basename, "shiny")
   runApp(appDir =shiny_dir, launch.browser =TRUE)
@@ -29,6 +29,7 @@ tryCatch({
       print(doc, ls_args$filename)
      if (file.exists(ls_args$filename)) file.remove(ls_args$filename)
     }
+
     
     canreg_error_log(e,ls_args$filename,ls_args$out,Args,ls_args$inc,ls_args$pop)
   }

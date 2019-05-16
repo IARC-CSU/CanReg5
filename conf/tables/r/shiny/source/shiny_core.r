@@ -1096,6 +1096,10 @@ multiple_output <- function(table_number, bool_ci, output_format) {
 										
 
 shiny_error_log <- function(log_file,filename) {
+
+  if (exists("pb")) {
+    close(pb)
+  }
   
   shiny_log <- file(log_file,open="wt")
   sink(shiny_log)
@@ -1120,7 +1124,7 @@ shiny_error_log <- function(log_file,filename) {
   cat("\n")
 
   #print missing package
-  packages_list <- c("Rcpp", "data.table", "ggplot2","shiny","shinydashboard", "shinyjs","gridExtra", "scales", "Cairo","grid","officer","flextable", "zip", "bmp", "jpeg", "png")
+  packages_list <- c("data.table", "ggplot2","shiny","shinydashboard", "shinyjs","gridExtra", "scales", "Cairo","grid","officer","flextable", "zip", "bmp", "jpeg", "png")
 
   missing_packages <- packages_list[!(packages_list %in% installed.packages()[,"Package"])]  
   if (length(missing_packages) == 0) {
