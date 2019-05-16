@@ -142,19 +142,19 @@ install.packages("gtools", dependencies=  c("Depends", "Imports", "LinkingTo"), 
 require("gtools", character.only = TRUE)
 
 all_pck <- getDependencies(packages_list, installed=FALSE, available=TRUE)
-missing_package <- c(packages_list, all_pck)
+missing_packages <- c(packages_list, all_pck)
 
-for (i in seq_along(missing_package)) {
+for (i in seq_along(missing_packages)) {
 
   if (sysName == "Windows") {
     setWinProgressBar(
       pb, 
-      value = i / (length(missing_package) + 1),
-      label = sprintf("%s - Make yourself at home, this can be long", missing_package[i])
+      value = i / (length(missing_packages) + 1),
+      label = sprintf("%s - Make yourself at home, this can be long", missing_packages[i])
     )
   }
 
-  install.packages(missing_package[i], dependencies=  FALSE, quiet = TRUE)
+  install.packages(missing_packages[i], dependencies=  FALSE, quiet = TRUE)
 
 }
 
