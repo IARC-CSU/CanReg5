@@ -4602,7 +4602,81 @@ rcan_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
   
   doc <- ph_with_flextable_at(doc, ft, left=0.551, top=1.291)
   
+
+  #################
+  ## ICCC
+  doc <-  add_slide(doc, layout="Canreg_basic_wide", master="Office Theme") ## add PPTX slide (Title + content)
+  doc <- ph_with_text(doc, type = "title", str = "Childhood cancers (0 to 14 years)")
+  
+  if (shiny) {
+    incProgress(inc_progress_value, detail = "Childhood cancers (0 to 14 years)")
+  } else {
+    if (sysName == "Windows") {
+      setWinProgressBar(pb, inc_progress_value*i_pb,label = "Childhood cancers (0 to 14 years)")
+      i_pb <- i_pb+1
+    }
+  }
+  
+
+  table_iccc <- canreg_iccc_table(dt_iccc)
+  dt_report <- table_iccc$dt
+  age_label <- table_iccc$age_label_order
+  
+  
+  
+  ft <- flextable(dt_report)
+  ft <- set_header_labels(ft, ICCC_code = "", ICCC_label = "", 
+    CSU_C.0= age_label[1],
+    CSU_C.1= age_label[2],
+    CSU_C.2= age_label[3],
+    total_cases = "All", 
+    ratio = "M/F",
+    frequence = "% total",
+    age_crude.0= age_label[1],
+    age_crude.1= age_label[2],
+    age_crude.2= age_label[3],
+    crude="crude",
+    asr="ASR")
+
+  ft <- add_header(ft, ICCC_code = "ICCC3", ICCC_label = "ICCC3", 
+    CSU_C.0= "Number of cases",
+    CSU_C.1= "Number of cases",
+    CSU_C.2= "Number of cases",
+    total_cases = "Number of cases",
+    ratio = "Number of cases",
+    frequence = "Number of cases",
+    age_crude.0= "Rates per million",
+    age_crude.1= "Rates per million",
+    age_crude.2= "Rates per million",
+    crude="Rates per million",
+    asr="Rates per million",
+    top=TRUE)
+  
+  ft <- width(ft, j = 1, width = 0.5)
+  ft <- width(ft, j = 2, width = 1.7)
+  ft <- width(ft, j = 3:13, width = 0.5)
+
+
+  ft <- fontsize(ft, size = 10, part = "all")
+
+  
+  ft <- merge_h(ft,i=1, part="header")
+  ft <- border(ft, i=c(1,nrow(dt_report)),border.top=fp_border(width = 1), part="body")
+  ft <- border(ft, i=nrow(dt_report),border.bottom=fp_border(width = 1), part="body")
+
+  ft <- border(ft, j=c(1,3,9),border.left=fp_border(width = 1), part="all")
+  ft <- border(ft, j=13,border.right=fp_border(width = 1), part="all")
+  ft <- align(ft, align="center", part="header")
+  ft <- height(ft, height = 0.1, part="header")
+  ft <- bg(ft, i = seq(1,nrow(dt_report),2), bg="#deebf7", part = "body")
+  ft <- bg(ft, i = nrow(dt_report), bg="#c6dbef", part = "body")
+  ft <- bg(ft, i = 1, bg="#c6dbef", part = "header")
+  ft <- bg(ft, i = 2, bg="#c6dbef", part = "header")
+  
+  doc <- ph_with_flextable_at(doc, ft, left=0.551, top=1.291)
+  
   doc <-  add_slide(doc, layout="Canreg_info", master="Office Theme") ## add Canreg information slide.
+  
   #################
   if (ann) {
 
