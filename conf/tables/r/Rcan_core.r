@@ -334,7 +334,7 @@ canreg_load_packages <- function(packages_list) {
         setWinProgressBar(
           pb, 
           value = i / (length(missing_packages) + 1),
-          label = sprintf("downloading package - %s", missing_packages[i])
+          label = sprintf("%s - Make yourself at home, this can be long", missing_package[i])
         )
       }
 
@@ -358,7 +358,7 @@ canreg_load_packages <- function(packages_list) {
         setWinProgressBar(
           pb, 
           value = i / (length(missing_packages) + 1),
-          label = sprintf("downloading package - %s", missing_packages[i])
+          label = sprintf("%s - Make yourself at home, this can be long", missing_package[i])
         )
       }
 

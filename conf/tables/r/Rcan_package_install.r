@@ -113,6 +113,9 @@ if (!bool_internet) {
 }
 
 
+if (sysName == "Windows") {
+  setWinProgressBar(pb, 0,label = "Cleaning canreg R folder")
+}
 unlink(file.path(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5")),recursive = TRUE)
 dir.create(file.path(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5")),recursive = TRUE)
 .libPaths(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5"))
@@ -131,6 +134,10 @@ if (sysName == "Windows") {
   options(pkgType="win.binary") 
 }
 
+if (sysName == "Windows") {
+  setWinProgressBar(pb, 0,label = "Downloading gtools")
+}
+
 install.packages("gtools", dependencies=  c("Depends", "Imports", "LinkingTo"), quiet = TRUE)
 require("gtools", character.only = TRUE)
 
@@ -143,7 +150,7 @@ for (i in seq_along(missing_package)) {
     setWinProgressBar(
       pb, 
       value = i / (length(missing_package) + 1),
-      label = sprintf("downloading package - %s", missing_package[i])
+      label = sprintf("%s - Make yourself at home, this can be long", missing_package[i])
     )
   }
 
