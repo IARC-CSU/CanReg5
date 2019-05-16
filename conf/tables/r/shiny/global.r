@@ -22,6 +22,11 @@ dt_basis <- csu_merge_inc_pop(
   column_group_list =list(c("ICD10GROUP", "ICD10GROUPLABEL"))
 )
 
+ dt_iccc <- csu_merge_iccc_pop(
+    inc_file =ls_args$inc,
+    pop_file =ls_args$pop,
+    group_by = c("ICCC",  "YEAR", "SEX")
+ )
   
 canreg_age_group <- canreg_get_agegroup_label(dt_base, ls_args$agegroup)
 year_info <- canreg_get_years(dt_base)
