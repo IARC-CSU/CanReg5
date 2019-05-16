@@ -36,7 +36,14 @@ tryCatch({
   )
   
 
+  sysName <- Sys.info()[['sysname']]
 
+  if (sysName == "Windows") {
+    pb <- winProgressBar(
+      title = "Create pptx",
+      label = "Initializing"
+    )
+  } 
 
   doc <- read_pptx(path=paste(sep="/", script.basename,"slide_template", "canreg_template.pptx"))
   
@@ -46,6 +53,10 @@ tryCatch({
   
   
   print(doc, target = ls_args$filename)
+
+  if (sysName == "Windows") {
+    close(pb)
+  }
   
   
 
