@@ -181,9 +181,10 @@ canreg_load_packages <- function(packages_list) {
   }
   if (sysName == "Windows") {
     setWinProgressBar(pb, 1, title = "Loading R packages",label = "Done")
+    close(pb)
   }
 
-  close(pb)
+
 
 }
 
