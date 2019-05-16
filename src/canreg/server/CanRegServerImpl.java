@@ -1063,8 +1063,10 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     
     private int getLastHoldingDBnumber(String registryCode) {
         File holdingDir = new File(Globals.CANREG_SERVER_HOLDING_DB_SYSTEM_DESCRIPTION_FOLDER + Globals.FILE_SEPARATOR + registryCode);
+        if( ! holdingDir.exists())
+            holdingDir.mkdirs();
         
-        int highestNumber = 0;
+        int highestNumber = 0;        
         for(String folder : holdingDir.list()) {
             //registryCode = ENR0
             //folder = HOLDING_ENR0_2_2019-01-21
