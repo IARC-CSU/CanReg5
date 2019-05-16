@@ -1166,14 +1166,18 @@ shiny_export_data <- function(log_file) {
   cat("arguments\n")
   dput(ls_args)
   cat("\n")
-  cat("data file\n")
 
-  
-  
+  cat("data file\n")
   dput(as.data.frame(dt_base))
   cat("\n")
+
   cat("basis file\n")
   dput(as.data.frame(dt_basis))
+  cat("\n")
+
+  cat("iccc file\n")
+  dput(as.data.frame(dt_iccc))
+
 
   #close log_file and send to canreg
   sink(type="message")
@@ -1188,6 +1192,7 @@ import_shiny_date <- function(datafile) {
 	fileTemp1 <- paste0(tempdir(),"/tempargs.txt")
 	fileTemp2 <- paste0(tempdir(),"/tempdata.txt")
 	fileTemp3 <- paste0(tempdir(),"/tempbasis.txt")
+	fileTemp4 <- paste0(tempdir(),"/tempiccc.txt")
 
 	con_args=file(fileTemp1,open="wt")
 	sink(con_args)
@@ -1236,9 +1241,11 @@ import_shiny_date <- function(datafile) {
 	con_basis=file(fileTemp3,open="wt")
 	sink(con_basis)
 	sink(con_basis, type="message")
+	j<-j+1
 
-	for (i in (j+1):length(content)) {
-		cat(content[i])
+	while (content[j] != "iccc file") {
+		cat(content[j])
+		j <- j+1
 	}
 
 	sink(type="message")
@@ -1247,10 +1254,25 @@ import_shiny_date <- function(datafile) {
 
 	dt_basis <-as.data.table(dget(paste0(tempdir(),"/tempbasis.txt")))
 
+	con_iccc=file(fileTemp4,open="wt")
+	sink(con_iccc)
+	sink(con_iccc, type="message")
+
+	for (i in (j+1):length(content)) {
+		cat(content[i])
+	}
+
+	sink(type="message")
+	sink()
+	close(con_iccc)
+
+	dt_iccc <-as.data.table(dget(paste0(tempdir(),"/tempiccc.txt")))
+
 	close(con_source)
 
+
 	
-	return(list(ls_args = ls_args, dt_base = dt_base,dt_basis = dt_basis))
+	return(list(ls_args = ls_args, dt_base = dt_base,dt_basis = dt_basis,dt_iccc = dt_iccc))
 
 }
 

@@ -799,6 +799,7 @@ shinyServer(function(input, output, session) {
 					ls_args <<- temp$ls_args
 					dt_base <<- temp$dt_base
 					dt_basis <<- temp$dt_basis
+					dt_iccc <<- temp$dt_iccc
 					canreg_age_group <<- canreg_get_agegroup_label(dt_base, ls_args$agegroup)
 					year_info <<- canreg_get_years(dt_base)
 					dt_CI5_label <<- as.character(unique(dt_CI5_list[cr == ls_args$sr, c("country_label"), with=FALSE])$country_label)
