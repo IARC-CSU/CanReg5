@@ -131,7 +131,7 @@ canreg_error_log <- function(e,filename,out,Args,inc,pop) {
   
   #print missing package
 
-  packages_list <- c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","officer","flextable", "zip", "bmp", "jpeg", "png")
+  packages_list <- c("data.table", "ggplot2", "gridExtra", "scales", "Cairo","officer","flextable", "zip", "bmp", "jpeg", "png","shiny.i18n", "Rcan")
 
   missing_packages <- packages_list[!(packages_list %in% installed.packages()[,"Package"])]  
   if (length(missing_packages) == 0) {

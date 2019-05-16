@@ -1124,7 +1124,7 @@ shiny_error_log <- function(log_file,filename) {
   cat("\n")
 
   #print missing package
-  packages_list <- c("data.table", "ggplot2","shiny","shinydashboard", "shinyjs","gridExtra", "scales", "Cairo","grid","officer","flextable", "zip", "bmp", "jpeg", "png")
+  packages_list <- c("data.table", "ggplot2","shiny","shinydashboard", "shinyjs","gridExtra", "scales", "Cairo","officer","flextable", "zip", "bmp", "jpeg", "png","shiny.i18n", "Rcan")
 
   missing_packages <- packages_list[!(packages_list %in% installed.packages()[,"Package"])]  
   if (length(missing_packages) == 0) {

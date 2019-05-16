@@ -16,7 +16,7 @@
 tryCatch({
   
   #load dependency packages
-  canreg_load_packages(c("data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","bmp", "jpeg",  "shiny.i18n", "Rcan"))
+  canreg_load_packages(c("data.table", "ggplot2", "gridExtra", "scales", "Cairo","bmp", "jpeg",  "shiny.i18n", "Rcan"))
 	i18n <- Translator(translation_csvs_path  = (paste(sep="/", script.basename, "r-translations")))
 	
 	i18n$set_translation_language(ls_args$lang)

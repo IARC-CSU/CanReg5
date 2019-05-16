@@ -12,8 +12,7 @@
   
 tryCatch({
 
-  canreg_load_packages(c("data.table", "ggplot2","shiny","shinydashboard", "shinyjs","gridExtra", "scales", "Cairo","grid","officer","flextable", "zip", "bmp", "jpeg", "png","shiny.i18n", "Rcan"))
-  library(shiny)
+  canreg_load_packages(c("data.table", "ggplot2","shiny","shinydashboard", "shinyjs","gridExtra", "scales", "Cairo","officer","flextable", "zip", "bmp", "jpeg", "png","shiny.i18n", "Rcan"))
   shiny_dir <- paste(sep="/", script.basename, "shiny")
   runApp(appDir =shiny_dir, launch.browser =TRUE)
  
