@@ -51,6 +51,14 @@ tryCatch({
   }
 
   
+  sysName <- Sys.info()[['sysname']]
+
+  if (sysName == "Windows") {
+    pb <- winProgressBar(
+      title = "Create docx",
+      label = "Initializing"
+    )
+  } 
 
   
   doc <- read_docx(paste(sep="/", script.basename,"slide_template", "template.docx"))
@@ -59,6 +67,10 @@ tryCatch({
   doc <- rcan_report(doc, report_path, dt_all, ls_args)
   
   print(doc, ls_args$filename)
+
+  if (sysName == "Windows") {
+    close(pb)
+  }
   
   #reporteRs_OO_patched(docx=ls_args$filename)
   

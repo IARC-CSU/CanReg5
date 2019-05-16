@@ -1071,6 +1071,56 @@ canreg_report_top_cancer_text <- function(dt_report, percent_equal=5, sex_select
   return(text)
 }
 
+canreg_iccc_table <- function(dt,var_cases="CASES", var_iccc_label = "ICCC_label") {
+  
+  dt <- as.data.table(dt_iccc)
+  setnames(dt, var_cases, "CSU_C")
+  setnames(dt, var_cancer_label, "CSU_label")
+
+
+
+
+  setnames(dt, var_iccc, "ICCC_code")
+  
+
+  dt_total <- dt[,list( CSU_C=sum(CSU_C)), by=var_age]
+  dt_total[, CSU_label:="All sites"]
+  dt_total[, CSU_ICD:="All"]
+  dt <- rbind(dt, dt_total)
+  
+  dt[, total_cases := sum(CSU_C), by=c("CSU_label", "CSU_ICD")]
+  dt[, BASIS_pc := CSU_C/total_cases*100]
+  dt[,BASIS_pc:=round(BASIS_pc,1)]
+  dt[, BASIS_pc:=format(BASIS_pc, big.mark = ",", scientific = FALSE, drop0trailing = FALSE)]
+  dt[, CSU_C := NULL]
+  
+  dt <- reshape(dt, timevar = "BASIS",idvar = c("CSU_label","CSU_ICD","total_cases"), direction = "wide")
+  dt[, total_pc_test:= total_cases/sum(total_cases)*200]
+  dt[,total_pc_test:=round(total_pc_test,1)]
+  dt[, total_pc_test:=format(total_pc_test, big.mark = ",", scientific = FALSE, drop0trailing = FALSE)]
+  setkeyv(dt, c("CSU_ICD"))
+  
+  if(!("BASIS_pc.0" %in% colnames(dt)))
+  {
+    dt[, BASIS_pc.0:="0.0"]
+  }
+  
+  if(!("BASIS_pc.1" %in% colnames(dt)))
+  {
+    dt[, BASIS_pc.1:="0.0"]
+  }
+  
+  if(!("BASIS_pc.2" %in% colnames(dt)))
+  {
+    dt[, BASIS_pc.2:="0.0"]
+  }
+  
+  setcolorder(dt, c("CSU_label", "CSU_ICD", "total_cases", "total_pc_test", "BASIS_pc.0", "BASIS_pc.1","BASIS_pc.2"))
+  
+  return(dt)
+}
+
+
 
 canreg_basis_table <- function(dt,var_cases="CASES", var_basis="BASIS", var_cancer_label="cancer_label", var_ICD="ICD10GROUP") {
   
@@ -1198,6 +1248,72 @@ csu_merge_inc_pop <- function(inc_file,
   setnames(dt_all,"CSU_C",var_cases)
   return(dt_all)
 }
+
+csu_merge_iccc_pop <- function(inc_file,
+                              pop_file,
+                              var_cases = "CASES",
+                              var_age = "AGE_GROUP",
+                              var_age_label = "AGE_GROUP_LABEL",
+                              var_pop = "COUNT",
+                              var_ref_count = "REFERENCE_COUNT",
+                              group_by = NULL){
+  
+  df_inc <- read.table(inc_file, header=TRUE, sep="\t")
+  df_pop <- read.table(pop_file, header=TRUE, sep="\t")
+  
+  dt_inc <- data.table(df_inc)
+  dt_pop <- data.table(df_pop)
+  
+  setnames(dt_inc, var_cases, "CSU_C")
+
+  dt_inc <- dt_inc[get(var_age) < 3]
+  
+  group_by <- intersect(group_by,colnames(dt_inc))
+  
+  dt_inc <- dt_inc[, c(var_age, group_by, "CSU_C"), with = FALSE]
+  dt_inc <-  dt_inc[,list(CSU_C = sum(CSU_C)), by=eval(colnames(dt_inc)[!colnames(dt_inc) %in% c("CSU_C")])]
+  
+  cj_var <-colnames(dt_inc)[!colnames(dt_inc) %in% c("CSU_C")]
+  dt_temp = dt_inc[, do.call(CJ, c(.SD, unique=TRUE)), .SDcols=cj_var]
+  
+  dt_inc <- merge(dt_temp, dt_inc,by=colnames(dt_temp), all.x=TRUE)[, CSU_C := ifelse(is.na(CSU_C),0, CSU_C )]
+  
+  dt_pop <- dt_pop[get(var_pop) != 0,]
+  dt_pop[[var_ref_count]] <-  dt_pop[[var_ref_count]]*100
+  
+  dt_all <- merge(dt_inc, dt_pop,by=intersect(colnames(dt_inc),colnames(dt_pop)), all.x=TRUE)
+  
+  
+  setnames(dt_all,var_age,"CSU_A")
+  setnames(dt_all,var_pop,"CSU_P")
+  
+  
+  dt_all[is.na(get(var_age_label)), CSU_A := max(CSU_A)]
+  dt_all[, YEAR:=NULL]
+  dt_all[, SEX:=NULL]
+
+  dt_all <-  dt_all[,list(CSU_C = sum(CSU_C), CSU_P = sum(CSU_P)), by=eval(colnames(dt_all)[!colnames(dt_all) %in% c("CSU_C", "CSU_P")])]
+
+  dt_sum <- dt_all 
+  dt_sum[, ICCC:=gsub("[a-z]", "", ICCC)]
+  dt_sum <-  dt_sum[,list(CSU_C = sum(CSU_C)), by=eval(colnames(dt_sum)[!colnames(dt_sum) %in% c("CSU_C")])]
+
+  dt_all <- rbind(dt_sum, dt_all)
+
+  iccc_code <- as.data.table(read.csv(paste(sep="/", script.basename, "ICCC.csv")))
+  iccc_code[, ICCC:=as.character(ICCC)]
+  dt_all <- merge(dt_all,iccc_code, by=c("ICCC"), all=TRUE)
+  dt_all[, ICCC:=NULL]
+
+  dt_all <-  dt_all[,list(CSU_C = sum(CSU_C)), by=eval(colnames(dt_all)[!colnames(dt_all) %in% c("CSU_C")])]
+
+  setnames(dt_all,"CSU_P",var_pop)
+  setnames(dt_all,"CSU_A",var_age)
+  setnames(dt_all,"CSU_C",var_cases)
+  return(dt_all)
+
+}
+
 
 
 canreg_attr_missing_sex <- function(dt, var_age, var_group2) {
@@ -3181,6 +3297,7 @@ rcan_report <- function(doc,report_path,dt_all,ls_args,ann=TRUE, shiny=FALSE) {
   dim_width <- 2.7
 
   inc_progress_value <- 1/10 
+  i_pb <- 1
   
   year_info <- canreg_get_years(dt_all)
   canreg_age_group <- canreg_get_agegroup_label(dt_all, ls_args$agegroup)
@@ -3197,6 +3314,12 @@ rcan_report <- function(doc,report_path,dt_all,ls_args,ann=TRUE, shiny=FALSE) {
 
   if (shiny) {
     incProgress(inc_progress_value, detail = "import / create template")
+  }
+  else {
+    if (sysName == "Windows") {
+      setWinProgressBar(pb, inc_progress_value*i_pb,label = "import / create template")
+      i_pb <- i_pb+1
+    }
   }
 
   dt_chapter <- canreg_report_template_extract(report_path, script.basename)
@@ -3256,6 +3379,12 @@ rcan_report <- function(doc,report_path,dt_all,ls_args,ann=TRUE, shiny=FALSE) {
   if (shiny) {
     incProgress(inc_progress_value, detail = "Number of cases in period, by age group & sex")
   }
+  else {
+    if (sysName == "Windows") {
+      setWinProgressBar(pb, inc_progress_value*i_pb,label = "Number of cases in period, by age group & sex")
+      i_pb <- i_pb+1
+    }
+  }
   
   canreg_output(output_type = "png", filename =  paste0(tempdir(), "\\temp_graph_a",list_number$fig ),landscape = TRUE,list_graph = FALSE,
                 FUN=canreg_cases_age_bar,
@@ -3288,6 +3417,12 @@ rcan_report <- function(doc,report_path,dt_all,ls_args,ann=TRUE, shiny=FALSE) {
   if (shiny) {
     incProgress(inc_progress_value, detail = "Number of cases by year")
   }
+  else {
+    if (sysName == "Windows") {
+      setWinProgressBar(pb, inc_progress_value*i_pb,label = "Number of cases by year")
+      i_pb <- i_pb+1
+    }
+  }
   
   dt_report <- dt_all
   dt_report[ICD10GROUP != "C44",]$ICD10GROUP ="O&U" 
@@ -3313,6 +3448,12 @@ rcan_report <- function(doc,report_path,dt_all,ls_args,ann=TRUE, shiny=FALSE) {
   doc <- body_add_par(doc, "The most common cancers, by sex",style = "heading 2")
   if (shiny) {
     incProgress(inc_progress_value, detail = "The most common cancers, by sex")
+  }
+  else {
+    if (sysName == "Windows") {
+      setWinProgressBar(pb, inc_progress_value*i_pb,label = "The most common cancers, by sex")
+      i_pb <- i_pb+1
+    }
   }
   
   dt_report <- dt_all
@@ -3491,6 +3632,12 @@ rcan_report <- function(doc,report_path,dt_all,ls_args,ann=TRUE, shiny=FALSE) {
   if (shiny) {
     incProgress(inc_progress_value, detail = "Age-specific incidence rates (most common sites) by sex")
   }
+  else {
+    if (sysName == "Windows") {
+      setWinProgressBar(pb, inc_progress_value*i_pb,label = "Age-specific incidence rates (most common sites) by sex")
+      i_pb <- i_pb+1
+    }
+  }
   
   
   dt_report <- dt_all
@@ -3531,6 +3678,12 @@ rcan_report <- function(doc,report_path,dt_all,ls_args,ann=TRUE, shiny=FALSE) {
     doc <- body_add_par(doc, "Trend in ASR (most common sites) by sex", style = "heading 2")
     if (shiny) {
       incProgress(inc_progress_value, detail = "Trend in ASR (most common sites) by sex")
+    }
+    else {
+      if (sysName == "Windows") {
+        setWinProgressBar(pb, inc_progress_value*i_pb,label = "Trend in ASR (most common sites) by sex")
+        i_pb <- i_pb+1
+      }
     }
     
     dt_report <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE, keep_year = TRUE)
@@ -3581,6 +3734,12 @@ rcan_report <- function(doc,report_path,dt_all,ls_args,ann=TRUE, shiny=FALSE) {
     if (shiny) {
       incProgress(inc_progress_value, detail = "Estimated annual percentage change")
     }
+    else {
+      if (sysName == "Windows") {
+        setWinProgressBar(pb, inc_progress_value*i_pb,label = "Estimated annual percentage change")
+        i_pb <- i_pb+1
+      }
+    }
     
     dt_report <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE, keep_year = TRUE)
     
@@ -3601,7 +3760,7 @@ rcan_report <- function(doc,report_path,dt_all,ls_args,ann=TRUE, shiny=FALSE) {
                                          number = 25
     )
     
-    
+
     ##calcul eapc
     dt_report <- Rcan:::core.csu_eapc(dt_report, var_rate = "asr",var_year = "YEAR" ,group_by =c("cancer_label", "SEX","CSU_RANK"))
     dt_report <-as.data.table(dt_report)
@@ -3635,8 +3794,15 @@ rcan_report <- function(doc,report_path,dt_all,ls_args,ann=TRUE, shiny=FALSE) {
     
     doc <- body_add_break(doc)
     doc <- body_add_par(doc, "Comparison of summary rates with other registries (in same region)", style = "heading 2")
+    
     if (shiny) {
       incProgress(inc_progress_value, detail = "Comparison of summary rates with other registries (in same region)")
+    }
+    else {
+      if (sysName == "Windows") {
+        setWinProgressBar(pb, inc_progress_value*i_pb,label = "Comparison of summary rates with other registries (in same region)")
+        i_pb <- i_pb+1
+      }
     }
 
     doc <- body_add_par(doc, "\r\n")
@@ -3712,12 +3878,75 @@ rcan_report <- function(doc,report_path,dt_all,ls_args,ann=TRUE, shiny=FALSE) {
   if (shiny) {
     incProgress(inc_progress_value, detail = "Basis of Diagnosis (DCO / Clinical / MV) by site")
   }
+  else {
+    if (sysName == "Windows") {
+      setWinProgressBar(pb, inc_progress_value*i_pb,label = "Basis of Diagnosis (DCO / Clinical / MV) by site")
+      i_pb <- i_pb+1
+    }
+  }
   
 
   dt_basis[BASIS > 0 & BASIS < 5, BASIS:=1]
   dt_basis[BASIS >= 5, BASIS:=2]
   
   dt_report <- canreg_ageSpecific_rate_data(dt_basis, keep_basis = TRUE)
+  dt_report <- canreg_basis_table(dt_report)
+  
+  
+  
+  ft <- flextable(dt_report)
+  ft <- set_header_labels(ft, CSU_label = "", CSU_ICD = "", total_cases= "",total_pc_test = "", 
+                          BASIS_pc.0= "% DCO", BASIS_pc.1= "% Clinical", BASIS_pc.2= "% M.V") 
+  ft <- add_header(ft, CSU_label = "Cancer site", CSU_ICD = "ICD-10", total_cases= "No. Cases",total_pc_test = "% total", 
+                   BASIS_pc.0= "Basis of diagnosis", BASIS_pc.1= "Basis of diagnosis", BASIS_pc.2= "Basis of diagnosis",
+                   top = TRUE ) 
+  
+  
+  ft <- display( ft, col_key = "total_cases", pattern = "{{cases}}", 
+                 formatters = list(cases ~ sprintf("%.00f", total_cases))) 
+  
+  ft <- width(ft, j = 1, width = 1.7)
+  ft <- width(ft, j = 2, width = 1.2)
+  
+  ft<- merge_h(ft,i=1, part="header")
+  ft <- border(ft ,j=1:4,border=fp_border(width = 0), part="header")
+  ft <- border(ft ,i=1,j=1:4,border.top=fp_border(width = 1), part="header")
+  ft <- border(ft ,border=fp_border(width = 0), part="body")
+  ft <- border(ft, i=c(1,nrow(dt_report)),border.top=fp_border(width = 1), part="body")
+  ft <- border(ft, i=nrow(dt_report),border.bottom=fp_border(width = 1), part="body")
+  ft <- border(ft, j=c(1,3,5,6,7),border.left=fp_border(width = 1), part="all")
+  ft <- border(ft, j=7,border.right=fp_border(width = 1), part="all")
+  ft <- align(ft, align="center", part="header")
+  ft <- height(ft, height = 0.1, part="header")
+  ft <- bg(ft, i = seq(1,nrow(dt_report),2), bg="#deebf7", part = "body")
+  ft <- bg(ft, i = nrow(dt_report), bg="#c6dbef", part = "body")
+  ft <- bg(ft, i = 1, bg="#c6dbef", part = "header")
+  ft <- bg(ft, i = 2, bg="#c6dbef", part = "header")
+  
+  doc <- body_add_par(doc, "\r\n")
+  
+  doc <- body_add_par(doc,
+                      paste0("Table ",list_number$tbl," shows the percentage of cases at the major sites that were registered on the basis of information from a death certificate only (DCO) and with morphological verification (MV) - that is, based on cytology or histology (of the primary tumor, or a metastasis)."))
+  
+  doc <- body_add_par(doc, "\r\n")
+  doc <- body_add_flextable(doc,ft, align = "center")
+  doc <- body_add_par(doc, "\r\n")
+  doc <- body_add_par(doc,paste0("Table ",list_number$tbl,"."), style="centered")
+
+  ## ICCC
+  doc <- body_add_break(doc)
+  doc <- body_add_par(doc, "Basis of Diagnosis (DCO / Clinical / MV) by site", style = "heading 2")
+  if (shiny) {
+    incProgress(inc_progress_value, detail = "Childhood cancers (0 to 14 years)")
+  }
+  else {
+    if (sysName == "Windows") {
+      setWinProgressBar(pb, inc_progress_value*i_pb,label = "Childhood cancers (0 to 14 years)")
+      i_pb <- i_pb+1
+    }
+  }
+  
+  
   dt_report <- canreg_basis_table(dt_report)
   
   
@@ -3768,9 +3997,17 @@ rcan_report <- function(doc,report_path,dt_all,ls_args,ann=TRUE, shiny=FALSE) {
     list_number$tbl <- 1
     
     if (!is.null(dt_appendix)) {
+
       if (shiny) {
         incProgress(inc_progress_value, detail = "Add appendix")
       }
+      else {
+        if (sysName == "Windows") {
+          setWinProgressBar(pb, inc_progress_value*i_pb,label = "Add appendix")
+          i_pb <- i_pb+1
+        }
+      }
+
       list_number <- canreg_report_chapter_txt(dt_appendix, doc, report_path,dt_all,pop_file =ls_args$pop,list_number, appendix=TRUE)
     }
   }
