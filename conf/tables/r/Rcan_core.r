@@ -346,7 +346,9 @@ canreg_load_packages <- function(packages_list) {
   }
 
   # ensure all package dependencies are installed
-  setWinProgressBar(pb, 0, label = "Ensuring package dependencies ...")
+  if (sysName == "Windows") {
+    setWinProgressBar(pb, 0, label = "Ensuring package dependencies ...")
+  }
   all_pck <- getDependencies(packages_list, installed=FALSE, available=TRUE)
   missing_packages <- all_pck[!(all_pck %in% list_installed_packages)]
 
@@ -3951,8 +3953,8 @@ rcan_report <- function(doc,report_path,dt_all,ls_args,ann=TRUE, shiny=FALSE) {
     }
   }
   
-  
-  table_iccc <- canreg_iccc_table(dt_iccc)
+  dt_temp <- copy(dt_iccc)
+  table_iccc <- canreg_iccc_table(dt_temp)
   dt_report <- table_iccc$dt
   age_label <- table_iccc$age_label_order
   
@@ -4617,8 +4619,8 @@ rcan_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
     }
   }
   
-
-  table_iccc <- canreg_iccc_table(dt_iccc)
+  dt_temp <- copy(dt_iccc)
+  table_iccc <- canreg_iccc_table(dt_temp)
   dt_report <- table_iccc$dt
   age_label <- table_iccc$age_label_order
   
