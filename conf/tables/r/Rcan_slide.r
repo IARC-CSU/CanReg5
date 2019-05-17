@@ -16,7 +16,7 @@
 tryCatch({
   
   #load dependency packages
-  canreg_load_packages(c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","officer","flextable", "zip", "bmp", "jpeg", "png","shiny.i18n", "Rcan"))
+  canreg_load_packages(c("data.table", "ggplot2", "gridExtra", "scales", "Cairo","officer","flextable", "zip", "bmp", "jpeg", "png","shiny.i18n", "Rcan"))
 	i18n <- Translator(translation_csvs_path  = (paste(sep="/", script.basename, "r-translations")))
 	i18n$set_translation_language(ls_args$lang)
 	
@@ -34,9 +34,21 @@ tryCatch({
     group_by = c("ICD10GROUP", "ICD10GROUPLABEL", "YEAR", "SEX", "BASIS"),
     column_group_list =list(c("ICD10GROUP", "ICD10GROUPLABEL"))
   )
-  
 
+  dt_iccc <- csu_merge_iccc_pop(
+    inc_file =ls_args$inc,
+    pop_file =ls_args$pop,
+    group_by = c("ICCC",  "YEAR", "SEX")
+  )
 
+  sysName <- Sys.info()[['sysname']]
+
+  if (sysName == "Windows") {
+    pb <- winProgressBar(
+      title = "Create pptx",
+      label = "Initializing"
+    )
+  } 
 
   doc <- read_pptx(path=paste(sep="/", script.basename,"slide_template", "canreg_template.pptx"))
   
@@ -46,6 +58,10 @@ tryCatch({
   
   
   print(doc, target = ls_args$filename)
+
+  if (sysName == "Windows") {
+    close(pb)
+  }
   
   
 

@@ -303,11 +303,13 @@ shinyServer(function(input, output, session) {
   	hide(id="report_option", anim=TRUE)
   	hide(id="fluid_test", anim=TRUE)
   	show(id="plot", anim=TRUE)
+  	show(id="export_menu", anim=TRUE)
 
   	if (input$select_table==0) {
       table$label <- "Automatic Report"
       show(id="report_option", anim=TRUE)
       hide(id="plot", anim=TRUE)
+      hide(id="export_menu", anim=TRUE)
       show(id="controls_COL1", anim=TRUE)
       hide(id="controls_COL2", anim=TRUE)
       shiny_list_folder_content(output)
@@ -323,6 +325,7 @@ shinyServer(function(input, output, session) {
 				table$label <- "Barchart by age and sex"
 				show(id="controls_COL1", anim=TRUE)
 				hide(id="controls_COL2", anim=TRUE)
+
 				
 			}
 		else if (input$select_table== 3) {
@@ -796,6 +799,7 @@ shinyServer(function(input, output, session) {
 					ls_args <<- temp$ls_args
 					dt_base <<- temp$dt_base
 					dt_basis <<- temp$dt_basis
+					dt_iccc <<- temp$dt_iccc
 					canreg_age_group <<- canreg_get_agegroup_label(dt_base, ls_args$agegroup)
 					year_info <<- canreg_get_years(dt_base)
 					dt_CI5_label <<- as.character(unique(dt_CI5_list[cr == ls_args$sr, c("country_label"), with=FALSE])$country_label)

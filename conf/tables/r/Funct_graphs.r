@@ -7,9 +7,8 @@
 	# }       
 	# require(ggplot2) 
 
-# canreg_load_packages(c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","ReporteRs", "zip", "bmp", "jpeg"))
 
-canreg_load_packages(c("ggplot2", "Cairo"),Rcan_source=script.basename) 
+canreg_load_packages(c("ggplot2", "Cairo")) 
 
 	
 ############################## NEW FUNCTIONS ############################## 	
