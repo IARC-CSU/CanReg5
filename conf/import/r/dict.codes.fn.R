@@ -8,11 +8,13 @@ dict.codes.fn <- function(dic.codes){
     idx_ini <- dic_idx[i]
     idx_end <- dic_idx[i+1]
     if (idx_end - idx_ini >1){
-      codes.df <- rep(df.codes[i],(idx_end - idx_ini -1))
-      dic.names.df <- rep(df.dic.names[i],(idx_end - idx_ini -1))
       if(i != length(df.codes)){
+        codes.df <- rep(df.codes[i],(idx_end - idx_ini -1))
+        dic.names.df <- rep(df.dic.names[i],(idx_end - idx_ini -1))
         aux.df <- cbind(dic.codes[(idx_ini + 1):(idx_end - 1),],codes.df, dic.names.df)
       }else{
+        dic.names.df <- rep(df.dic.names[i],(idx_end - idx_ini))
+        codes.df <- rep(df.codes[i],(idx_end - idx_ini))
         aux.df <- cbind(dic.codes[(idx_ini + 1):idx_end,],codes.df, dic.names.df)
       }
       

@@ -11,8 +11,9 @@ format.date.fn <- function(doc.data = data.frame,
   doc.data$short_name <- toupper(doc.data$short_name)
   date.columns <- doc.data[doc.data$variable_type == "Date" & doc.data$table == dt.type, c("short_name")]
   #Date format in the raw data
-  date.format <- detect.date.format.fn(import.data, doc.data, dt.type)
+  
   if (length(date.columns) > 0){
+    date.format <- detect.date.format.fn(import.data, doc.data, dt.type)
     #It is going to delete the slash and hyphen
     #Slash: /
     #Hyphen: -
@@ -21,14 +22,28 @@ format.date.fn <- function(doc.data = data.frame,
     #aux.data.slash$FechaN[2]<-'1946/07/15'
     #aux.data.slash$FUC[2]<-'2012-07-15'
     
-    aux.data <- aux.data %>%
-      transmute_all(funs(replacesString))
+    if(is.vector(aux.data)){
+      aux.data <- replacesString(aux.data)
+    }else{
+      aux.data <- aux.data %>%
+        transmute_all(funs(replacesString))
+    }
+    
+    
     
     #==========================
     #2- Right length: 8 digits
     #aux.data <- import.data[, date.columns]
-    aux.data <- aux.data %>% 
-      mutate_all(funs(len = str_length))
+    if(is.vector(aux.data)){
+      var_name <- paste(date.columns,"_len", sep = "")
+      aux.data <- data.frame(cbind(aux.data, rep(NA, length(aux.data))), stringsAsFactors = FALSE)
+      colnames(aux.data) <- c(date.columns,var_name)
+      aux.data[,var_name] <- str_length(aux.data[, date.columns])
+    }else{
+      aux.data <- aux.data %>% 
+        mutate_all(funs(len = str_length))
+    }
+    
     #If the lenght columns are not 0 or 8 the value is wrong
     aux.data[str_detect(names(aux.data),"_len$")] <- lapply(aux.data[str_detect(names(aux.data),"_len$")], 
                                                             function(x) replace(x, x %in% c(0,8), "no error"))
@@ -45,13 +60,32 @@ format.date.fn <- function(doc.data = data.frame,
     #There are going to be 2 dataframes: aux.data.yyyymmdd and aux.data.yyyymmdd2
     aux.data.yyyymmdd <- import.data[, date.columns]
     #Coverting the dates to the formats: ymd
-    aux.data.yyyymmdd2 <- aux.data.yyyymmdd %>% transmute_all(funs(ToDate))
-    aux.data.yyyymmdd2[aux.data.yyyymmdd2 == ""] <- NA
-    aux.data.yyyymmdd2[is.na(aux.data.yyyymmdd2)] <- aux.data.yyyymmdd[is.na(aux.data.yyyymmdd2)]
-    aux.data.yyyymmdd2[is.na(aux.data.yyyymmdd2)] <- ""
+    if(is.vector(aux.data.yyyymmdd)){
+      aux.data.yyyymmdd2 <- ToDate(aux.data.yyyymmdd)
+      aux.data.yyyymmdd2[aux.data.yyyymmdd2 == ""] <- NA
+      aux.data.yyyymmdd2[is.na(aux.data.yyyymmdd2)] <- aux.data.yyyymmdd[is.na(aux.data.yyyymmdd2)]
+      aux.data.yyyymmdd2[is.na(aux.data.yyyymmdd2)] <- ""
+    }else{
+      aux.data.yyyymmdd2 <- aux.data.yyyymmdd %>% transmute_all(funs(ToDate))
+      aux.data.yyyymmdd2[aux.data.yyyymmdd2 == ""] <- NA
+      aux.data.yyyymmdd2[is.na(aux.data.yyyymmdd2)] <- aux.data.yyyymmdd[is.na(aux.data.yyyymmdd2)]
+      aux.data.yyyymmdd2[is.na(aux.data.yyyymmdd2)] <- ""
+    }
+    
     #Check if all values are dates
-    aux.data.yyyymmdd <- aux.data.yyyymmdd2 %>%
-      mutate_all(funs(date.yyyymmdd = IsDate))
+    if(is.vector(aux.data.yyyymmdd2)){
+      var_name <- paste(date.columns,"_date.yyyymmdd", sep = "")
+      aux.data.yyyymmdd2 <- data.frame(cbind(aux.data.yyyymmdd2, rep(NA, length(aux.data.yyyymmdd2))), stringsAsFactors = FALSE)
+      colnames(aux.data.yyyymmdd2) <- c(date.columns,var_name)
+      aux.data.yyyymmdd <- data.frame(cbind(aux.data.yyyymmdd, rep(NA, length(aux.data.yyyymmdd))), stringsAsFactors = FALSE)
+      colnames(aux.data.yyyymmdd) <- c(date.columns,var_name)
+      aux.data.yyyymmdd[,var_name] <- IsDate(aux.data.yyyymmdd2[, date.columns])
+    }else{
+      aux.data.yyyymmdd <- aux.data.yyyymmdd2 %>%
+        mutate_all(funs(date.yyyymmdd = IsDate))
+    }
+    
+    
     
     #Change the false to true, unknown date is not an error 
     aux.data.yyyymmdd <- unknown.date.fn(aux.data,
@@ -81,9 +115,16 @@ format.date.fn <- function(doc.data = data.frame,
     aux.errors.merged <- mergeDataErrors(aux.data[str_detect(names(aux.data),"_len$")],
                                          aux.data[str_detect(names(aux.data),"_date.yyyymmdd")], 
                                          date.columns)
-    aux.data[,date.columns] <- mergeDataErrors(aux.errors.merged,
-                                               aux.data.yyyymmdd2, 
-                                               date.columns)
+    if (length(date.columns)>1){
+      aux.data[,date.columns] <- mergeDataErrors(aux.errors.merged,
+                                                 aux.data.yyyymmdd2, 
+                                                 date.columns)
+    }else{
+      aux.data[,date.columns] <- mergeDataErrors(aux.errors.merged,
+                                                 aux.data.yyyymmdd2[str_detect(names(aux.data.yyyymmdd2),"_date.yyyymmdd")], 
+                                                 date.columns)
+    }
+    
     #######
     #I have to format the date that has 99
     aux.errors.merged[aux.errors.merged != "no error"] <- "error"

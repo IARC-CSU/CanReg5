@@ -27,6 +27,7 @@ library("jsonlite")
 library("anchors")
 library("lubridate")
 library("reshape2")
+library("tidyr")
 options(scipen = 999)
 
 Args <- commandArgs(TRUE)

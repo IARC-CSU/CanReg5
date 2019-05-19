@@ -1,5 +1,5 @@
 replacesString <- function(mydate, 
-                           date.string = "/|-") {
+                           date.string = "/|-|''") {
   #index.empty.dates <- which(mydate == "", arr.ind = TRUE)
   #if (length(index.empty.dates) == 0){
   #  mydate <- str_replace_all(mydate, date.string, "")
@@ -7,4 +7,5 @@ replacesString <- function(mydate,
   #  mydate[index.empty.dates] <- TRUE
   #}
   mydate <- str_replace_all(mydate, date.string, "")
+  return(mydate)
 }
