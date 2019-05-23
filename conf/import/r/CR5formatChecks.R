@@ -28,6 +28,7 @@ library("anchors")
 library("lubridate")
 library("reshape2")
 library("tidyr")
+library("data.table")
 options(scipen = 999)
 
 Args <- commandArgs(TRUE)
