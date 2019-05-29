@@ -295,12 +295,25 @@ if(.Platform$OS.type != "windows"){
       aux.raw.data <- raw.data[-ncol(raw.data)]
       aux.raw.data[] <- Map(paste,"<strong>",names(aux.raw.data), ": </strong>", aux.raw.data, sep = '')
       raw.data$all.raw.data <- apply(aux.raw.data, 1, paste, collapse = "@#$")
+
+      #Replace NA
+      raw.data[is.na(raw.data)] <- ""
+      
       file.write <- paste(dirname(paramsJSON$patientFilePath),
                           "output.raw.data.csv",
                           sep = "//")
-      write.csv(raw.data, file.write,
-                row.names = FALSE,
-                fileEncoding = "UTF-8")
+      
+      if(paramsJSON$patientFileSeparator == "Comma"){
+        write.csv(raw.data, file.write,
+                  row.names = FALSE,
+                  fileEncoding = "UTF-8")
+      }else{
+        write.table(raw.data, file.write,
+                    row.names = FALSE,
+                    sep = "\t",
+                    fileEncoding = "UTF-8")
+      }
+      
       try(if(!file.exists(file.write)) stop("The file was not written"))
       
       #Standard output
@@ -370,12 +383,27 @@ if(.Platform$OS.type != "windows"){
       aux.patient.raw.data <- patient.raw.data[-ncol(patient.raw.data)]
       aux.patient.raw.data[] <- Map(paste,"<strong>",names(aux.patient.raw.data), ": </strong>", aux.patient.raw.data, sep = '')
       patient.raw.data$all.raw.data <- apply(aux.patient.raw.data, 1, paste, collapse = "@#$")
+     
+      #Replace NA
+      patient.raw.data[is.na(patient.raw.data)] <- ""
+    
       file.patient.write <- paste(dirname(paramsJSON$patientFilePath),
                                   "output.patient.raw.data.csv",
                                   sep = "//")
-      write.csv(patient.raw.data, file.patient.write, 
-                row.names = FALSE,
-                fileEncoding = "UTF-8")
+      
+      if(paramsJSON$patientFileSeparator == "Comma"){
+        write.csv(patient.raw.data, file.patient.write, 
+                  row.names = FALSE,
+                  fileEncoding = "UTF-8")
+      }else{
+        write.table(patient.raw.data, file.patient.write,  
+                    row.names = FALSE,
+                    sep = "\t",
+                    fileEncoding = "UTF-8")
+      }
+      
+      
+      
       #Ask if the file exists
       try(if(!file.exists(file.patient.write)) stop("The patient file was not written"))
       #Standard output
@@ -449,12 +477,24 @@ if(.Platform$OS.type != "windows"){
       aux.tumour.raw.data[] <- Map(paste,"<strong>",names(aux.tumour.raw.data), ": </strong>", aux.tumour.raw.data, sep = '')
       tumour.raw.data$all.raw.data <- apply(aux.tumour.raw.data, 1, paste, collapse = "@#$")
       
+      #Replace NA
+      tumour.raw.data[is.na(tumour.raw.data)] <- ""
+      
       file.tumour.write <- paste(dirname(paramsJSON$tumourFilePath),
                                  "output.tumour.raw.data.csv",
                                  sep = "//")
-      write.csv(tumour.raw.data, file.tumour.write, 
-                row.names = FALSE,
-                fileEncoding = "UTF-8")
+      
+      if(paramsJSON$tumourFileSeparator == "Comma"){
+        write.csv(tumour.raw.data, file.tumour.write, 
+                  row.names = FALSE,
+                  fileEncoding = "UTF-8")
+      }else{
+        write.table(tumour.raw.data, file.tumour.write,  
+                    row.names = FALSE,
+                    sep = "\t",
+                    fileEncoding = "UTF-8")
+      }
+      
       #Ask if the file exists
       try(if(!file.exists(file.tumour.write)) stop("The tumour file was not written"))
       #Standard output
@@ -528,12 +568,24 @@ if(.Platform$OS.type != "windows"){
       aux.source.raw.data[] <- Map(paste,"<strong>",names(aux.source.raw.data), ": </strong>", aux.source.raw.data, sep = '')
       source.raw.data$all.raw.data <- apply(aux.source.raw.data, 1, paste, collapse = "@#$")
       
+      #Replace NA
+      source.raw.data[is.na(source.raw.data)] <- ""
+      
       file.source.write <- paste(dirname(paramsJSON$sourceFilePath),
                                  "output.source.raw.data.csv",
                                  sep = "//")
-      write.csv(source.raw.data, file.source.write, 
-                row.names = FALSE,
-                fileEncoding = "UTF-8")
+      
+      if(paramsJSON$sourceFileSeparator == "Comma"){
+        write.csv(source.raw.data, file.source.write, 
+                  row.names = FALSE,
+                  fileEncoding = "UTF-8")
+      }else{
+        write.table(source.raw.data, file.source.write,   
+                    row.names = FALSE,
+                    sep = "\t",
+                    fileEncoding = "UTF-8")
+      }
+      
       #Ask if the file exists
       try(if(!file.exists(file.source.write)) stop("The source file was not written"))
       #Standard output
@@ -604,13 +656,24 @@ if(.Platform$OS.type != "windows"){
       aux.patient.raw.data[] <- Map(paste,"<strong>",names(aux.patient.raw.data), ": </strong>", aux.patient.raw.data, sep = '')
       patient.raw.data$all.raw.data <- apply(aux.patient.raw.data, 1, paste, collapse = "@#$")
       
+      #Replace NA
+      patient.raw.data[is.na(patient.raw.data)] <- ""
       
       file.patient.write <- paste(dirname(paramsJSON$patientFilePath),
                                   "output.patient.raw.data.csv",
                                   sep = "//")
-      write.csv(patient.raw.data, file.patient.write, 
-                row.names = FALSE,
-                fileEncoding = "UTF-8")
+      
+      
+      if(paramsJSON$patientFileSeparator == "Comma"){
+        write.csv(patient.raw.data, file.patient.write, 
+                  row.names = FALSE,
+                  fileEncoding = "UTF-8")
+      }else{
+        write.table(patient.raw.data, file.patient.write,  
+                    row.names = FALSE,
+                    sep = "\t",
+                    fileEncoding = "UTF-8")
+      }
       #Ask if the file exists
       try(if(!file.exists(file.patient.write)) stop("The patient file was not written"))
       #Standard output
@@ -687,12 +750,24 @@ if(.Platform$OS.type != "windows"){
       aux.tumour.raw.data[] <- Map(paste,"<strong>",names(aux.tumour.raw.data), ": </strong>", aux.tumour.raw.data, sep = '')
       tumour.raw.data$all.raw.data <- apply(aux.tumour.raw.data, 1, paste, collapse = "@#$")
       
+      #Replace NA
+      tumour.raw.data[is.na(tumour.raw.data)] <- ""
+      
       file.tumour.write <- paste(dirname(paramsJSON$tumourFilePath),
                                  "output.tumour.raw.data.csv",
                                  sep = "//")
-      write.csv(tumour.raw.data, file.tumour.write, 
-                row.names = FALSE,
-                fileEncoding = "UTF-8")
+      
+      if(paramsJSON$tumourFileSeparator == "Comma"){
+        write.csv(tumour.raw.data, file.tumour.write, 
+                  row.names = FALSE,
+                  fileEncoding = "UTF-8")
+      }else{
+        write.table(tumour.raw.data, file.tumour.write, 
+                    row.names = FALSE,
+                    sep = "\t",
+                    fileEncoding = "UTF-8")
+      }
+      
       #Ask if the file exists
       try(if(!file.exists(file.tumour.write)) stop("The tumour file was not written"))
       #Standard output
@@ -770,12 +845,22 @@ if(.Platform$OS.type != "windows"){
       aux.source.raw.data[] <- Map(paste,"<strong>",names(aux.source.raw.data), ": </strong>", aux.source.raw.data, sep = '')
       source.raw.data$all.raw.data <- apply(aux.source.raw.data, 1, paste, collapse = "@#$")
       
+      #Replace NA
+      source.raw.data[is.na(source.raw.data)] <- ""
       file.source.write <- paste(dirname(paramsJSON$sourceFilePath),
                                  "output.source.raw.data.csv",
                                  sep = "//")
-      write.csv(source.raw.data, file.source.write, 
-                row.names = FALSE,
-                fileEncoding = "UTF-8")
+      if(paramsJSON$sourceFileSeparator == "Comma"){
+        write.csv(source.raw.data, file.source.write, 
+                  row.names = FALSE,
+                  fileEncoding = "UTF-8")
+      }else{
+        write.table(source.raw.data, file.source.write, 
+                    row.names = FALSE,
+                    sep = "\t",
+                    fileEncoding = "UTF-8")
+      }
+      
       #Ask if the file exists
       try(if(!file.exists(file.source.write)) stop("The source file was not written"))
       #Standard output
