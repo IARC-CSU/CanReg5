@@ -35,7 +35,7 @@
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="tabbedPane" alignment="0" pref="646" max="32767" attributes="0"/>
+                  <Component id="tabbedPane" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="backButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -194,9 +194,9 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="1" attributes="0">
+                  <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jPanel2" alignment="0" max="32767" attributes="0"/>
                           <Group type="102" alignment="1" attributes="0">
                               <Component id="jPanel7" min="-2" max="-2" attributes="0"/>
@@ -204,10 +204,10 @@
                               <Component id="discrepanciesPanel" min="-2" max="-2" attributes="1"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="maxLinesPanel" min="-2" max="-2" attributes="1"/>
-                              <EmptySpace pref="8" max="32767" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                               <Component id="importButton" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="jScrollPane1" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jPanel1" alignment="0" pref="630" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -226,8 +226,8 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane1" min="-2" pref="173" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jPanel1" min="-2" pref="181" max="-2" attributes="0"/>
+                      <EmptySpace pref="31" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -514,26 +514,51 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+            <Container class="javax.swing.JPanel" name="jPanel1">
               <Properties>
-                <Property name="name" type="java.lang.String" value="jScrollPane1" noResource="true"/>
+                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                  <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                    <TitledBorder title="Progress">
+                      <Property name="titleX" resourceKey="jPanel1.border.title"/>
+                    </TitledBorder>
+                  </Border>
+                </Property>
+                <Property name="name" type="java.lang.String" value="jPanel1" noResource="true"/>
+                <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                  <Dimension value="[625, 159]"/>
+                </Property>
               </Properties>
 
-              <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+              <Layout>
+                <DimensionLayout dim="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jPanel3" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+                <DimensionLayout dim="1">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <EmptySpace min="0" pref="158" max="32767" attributes="0"/>
+                      <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
+                              <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace pref="23" max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+              </Layout>
               <SubComponents>
-                <Container class="javax.swing.JPanel" name="jPanel1">
+                <Container class="javax.swing.JPanel" name="jPanel3">
                   <Properties>
-                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                      <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                        <TitledBorder title="Progress">
-                          <Property name="titleX" resourceKey="jPanel1.border.title"/>
-                        </TitledBorder>
-                      </Border>
-                    </Property>
-                    <Property name="name" type="java.lang.String" value="jPanel1" noResource="true"/>
-                    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                      <Dimension value="[625, 159]"/>
-                    </Property>
+                    <Property name="name" type="java.lang.String" value="jPanel3" noResource="true"/>
                   </Properties>
 
                   <Layout>
@@ -550,30 +575,50 @@
                                   <Component id="checksLabel" alignment="1" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jPanel3" pref="547" max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="checksBar" pref="536" max="32767" attributes="1"/>
+                                  <Component id="recordProgressBar" max="32767" attributes="0"/>
+                                  <Component id="progressBar" alignment="1" max="32767" attributes="1"/>
+                                  <Component id="sourcesProgressBar" alignment="0" max="32767" attributes="1"/>
+                                  <Component id="tumoursProgressBar" max="32767" attributes="1"/>
+                                  <Component id="patientsProgressBar" alignment="0" max="32767" attributes="0"/>
+                              </Group>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="1" attributes="0">
-                              <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
-                                  <Group type="102" attributes="0">
-                                      <Component id="checksLabel" min="-2" pref="14" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="recordLabel" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="patientsLabel" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="tumoursLabel" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="sourcesLabel" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="overallLabel" min="-2" pref="14" max="-2" attributes="0"/>
-                                  </Group>
+                                  <Component id="checksLabel" min="-2" pref="14" max="-2" attributes="0"/>
+                                  <Component id="checksBar" min="-2" pref="12" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="recordLabel" min="-2" max="-2" attributes="0"/>
+                                  <Component id="recordProgressBar" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="patientsLabel" min="-2" max="-2" attributes="0"/>
+                                  <Component id="patientsProgressBar" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="tumoursProgressBar" min="-2" max="-2" attributes="0"/>
+                                  <Component id="tumoursLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="sourcesProgressBar" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="sourcesLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="overallLabel" min="-2" pref="14" max="-2" attributes="0"/>
+                                  <Component id="progressBar" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
@@ -617,84 +662,36 @@
                         <Property name="name" type="java.lang.String" value="checksLabel" noResource="true"/>
                       </Properties>
                     </Component>
-                    <Container class="javax.swing.JPanel" name="jPanel3">
+                    <Component class="javax.swing.JProgressBar" name="recordProgressBar">
                       <Properties>
-                        <Property name="name" type="java.lang.String" value="jPanel3" noResource="true"/>
-                        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                          <Dimension value="[200, 114]"/>
-                        </Property>
+                        <Property name="name" type="java.lang.String" value="recordProgressBar" noResource="true"/>
                       </Properties>
-
-                      <Layout>
-                        <DimensionLayout dim="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="1" attributes="0">
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="1" attributes="0">
-                                      <Component id="checksBar" pref="535" max="32767" attributes="1"/>
-                                      <Component id="tumoursProgressBar" alignment="0" max="32767" attributes="1"/>
-                                      <Component id="patientsProgressBar" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="recordProgressBar" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="sourcesProgressBar" max="32767" attributes="1"/>
-                                      <Component id="progressBar" alignment="0" max="32767" attributes="1"/>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                        </DimensionLayout>
-                        <DimensionLayout dim="1">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="checksBar" min="-2" pref="12" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="recordProgressBar" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="patientsProgressBar" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="tumoursProgressBar" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="sourcesProgressBar" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="progressBar" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                        </DimensionLayout>
-                      </Layout>
-                      <SubComponents>
-                        <Component class="javax.swing.JProgressBar" name="recordProgressBar">
-                          <Properties>
-                            <Property name="name" type="java.lang.String" value="recordProgressBar" noResource="true"/>
-                          </Properties>
-                        </Component>
-                        <Component class="javax.swing.JProgressBar" name="progressBar">
-                          <Properties>
-                            <Property name="name" type="java.lang.String" value="progressBar" noResource="true"/>
-                          </Properties>
-                        </Component>
-                        <Component class="javax.swing.JProgressBar" name="sourcesProgressBar">
-                          <Properties>
-                            <Property name="name" type="java.lang.String" value="sourcesProgressBar" noResource="true"/>
-                          </Properties>
-                        </Component>
-                        <Component class="javax.swing.JProgressBar" name="checksBar">
-                          <Properties>
-                            <Property name="name" type="java.lang.String" value="checksBar" noResource="true"/>
-                          </Properties>
-                        </Component>
-                        <Component class="javax.swing.JProgressBar" name="patientsProgressBar">
-                          <Properties>
-                            <Property name="name" type="java.lang.String" value="patientsProgressBar" noResource="true"/>
-                          </Properties>
-                        </Component>
-                        <Component class="javax.swing.JProgressBar" name="tumoursProgressBar">
-                          <Properties>
-                            <Property name="name" type="java.lang.String" value="tumoursProgressBar" noResource="true"/>
-                          </Properties>
-                        </Component>
-                      </SubComponents>
-                    </Container>
+                    </Component>
+                    <Component class="javax.swing.JProgressBar" name="patientsProgressBar">
+                      <Properties>
+                        <Property name="name" type="java.lang.String" value="patientsProgressBar" noResource="true"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JProgressBar" name="tumoursProgressBar">
+                      <Properties>
+                        <Property name="name" type="java.lang.String" value="tumoursProgressBar" noResource="true"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JProgressBar" name="sourcesProgressBar">
+                      <Properties>
+                        <Property name="name" type="java.lang.String" value="sourcesProgressBar" noResource="true"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JProgressBar" name="progressBar">
+                      <Properties>
+                        <Property name="name" type="java.lang.String" value="progressBar" noResource="true"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JProgressBar" name="checksBar">
+                      <Properties>
+                        <Property name="name" type="java.lang.String" value="checksBar" noResource="true"/>
+                      </Properties>
+                    </Component>
                   </SubComponents>
                 </Container>
               </SubComponents>
