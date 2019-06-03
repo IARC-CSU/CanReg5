@@ -128,7 +128,7 @@ if(.Platform$OS.type != "windows"){
       
       #To generate ids
       PatientID.short.name <- toupper(doc.data$short_name[doc.data$standard_variable_name %in% "PatientID"])
-      if (all(patient.import.data[,PatientID.short.name] == "")){
+      if (all(patient.import.data[,PatientID.short.name] == "") | any(sapply(patient.import.data[,PatientID.short.name],nchar)!=8)){
         patient.import.data <- generate.id("patient", patient.import.data, PatientID.short.name)
         patient.raw.data[,PatientID.short.name] <- patient.import.data[,PatientID.short.name]
         patient.raw.data$PATIENTRECORDID <- patient.import.data$PATIENTRECORDID
@@ -176,6 +176,9 @@ if(.Platform$OS.type != "windows"){
       tumour.import.data <- match.names.db(paramsJSON$tumourVarNameInImportFile, 
                                            paramsJSON$tumourVarNameInDatabase, 
                                            tumour.raw.data)
+      #Delete C from Topography
+      tumour.import.data <- deleting.C.fn(doc.data, tumour.import.data)
+      
       #Add leading zeros
       tumour.import.data <- leading.zeros(tumour.import.data, doc.data, "Tumour")
       
@@ -332,7 +335,7 @@ if(.Platform$OS.type != "windows"){
       
       #To generate ids
       PatientID.short.name <- toupper(doc.data$short_name[doc.data$standard_variable_name %in% "PatientID"])
-      if (all(patient.import.data[,PatientID.short.name] == "")){
+      if (all(patient.import.data[,PatientID.short.name] == "") | any(sapply(patient.import.data[,PatientID.short.name],nchar)!=8)){
         patient.import.data <- generate.id("patient", patient.import.data, PatientID.short.name)
         patient.raw.data[,PatientID.short.name] <- patient.import.data[,PatientID.short.name]
         patient.raw.data$PATIENTRECORDID <- patient.import.data$PATIENTRECORDID
@@ -417,6 +420,8 @@ if(.Platform$OS.type != "windows"){
       tumour.import.data <- match.names.db(paramsJSON$tumourVarNameInImportFile, 
                                            paramsJSON$tumourVarNameInDatabase, 
                                            tumour.raw.data)
+      #Delete C from Topography
+      tumour.import.data <- deleting.C.fn(doc.data, tumour.import.data)
       
       #Add leading zeros
       tumour.import.data <- leading.zeros(tumour.import.data, doc.data, "Tumour")
@@ -606,7 +611,7 @@ if(.Platform$OS.type != "windows"){
       
       #To generate ids
       PatientID.short.name <- toupper(doc.data$short_name[doc.data$standard_variable_name %in% "PatientID"])
-      if (all(patient.import.data[,PatientID.short.name] == "")){
+      if (all(patient.import.data[,PatientID.short.name] == "")  | any(sapply(patient.import.data[,PatientID.short.name],nchar)!=8)){
         patient.import.data <- generate.id("patient", patient.import.data, PatientID.short.name)
         patient.raw.data[,PatientID.short.name] <- patient.import.data[,PatientID.short.name]
         patient.raw.data$PATIENTRECORDID <- patient.import.data$PATIENTRECORDID
@@ -691,6 +696,9 @@ if(.Platform$OS.type != "windows"){
       tumour.import.data <- match.names.db(paramsJSON$tumourVarNameInImportFile, 
                                            paramsJSON$tumourVarNameInDatabase, 
                                            tumour.raw.data)
+      #Delete C from Topography
+      tumour.import.data <- deleting.C.fn(doc.data, tumour.import.data)
+      
       #Add leading zeros
       tumour.import.data <- leading.zeros(tumour.import.data, doc.data, "Tumour")
       

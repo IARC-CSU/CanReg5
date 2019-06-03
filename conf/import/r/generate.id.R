@@ -5,6 +5,11 @@ generate.id <- function(type.table = "character",
     #PatientID: length 8. E.g. @H000001
     #PatientRecordID: length 10. E.g. @H00000101
     dt.empty <- dt[dt[,id.name] == "",]
+    if(nrow(dt.empty) == 0){
+      dt.empty <- dt
+      dt.empty[,id.name] <- data.frame(rep("",nrow(dt), stringsAsFactors = FALSE))
+    }else{NULL}
+    
     aux.id.num <- str_pad(rep(1:nrow(dt.empty)), 6, pad = "0")
     dt.empty[,id.name] <- paste("@H", aux.id.num, sep = "")
     dt.empty$PATIENTRECORDID <- paste(dt.empty[,id.name], "01", sep = "")
