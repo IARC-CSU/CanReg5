@@ -130,7 +130,8 @@ if(.Platform$OS.type != "windows"){
       PatientID.short.name <- toupper(doc.data$short_name[doc.data$standard_variable_name %in% "PatientID"])
       if (all(patient.import.data[,PatientID.short.name] == "") | any(sapply(patient.import.data[,PatientID.short.name],nchar)!=8)){
         patient.import.data <- generate.id("patient", patient.import.data, PatientID.short.name)
-        patient.raw.data[,PatientID.short.name] <- patient.import.data[,PatientID.short.name]
+        index.PatientID <- which(paramsJSON$patientVarNameInDatabase == PatientID.short.name)
+        patient.raw.data[,paramsJSON$patientVarNameInImportFile[index.PatientID]] <- patient.import.data[,PatientID.short.name]
         patient.raw.data$PATIENTRECORDID <- patient.import.data$PATIENTRECORDID
       }else{NULL}
       
@@ -337,7 +338,8 @@ if(.Platform$OS.type != "windows"){
       PatientID.short.name <- toupper(doc.data$short_name[doc.data$standard_variable_name %in% "PatientID"])
       if (all(patient.import.data[,PatientID.short.name] == "") | any(sapply(patient.import.data[,PatientID.short.name],nchar)!=8)){
         patient.import.data <- generate.id("patient", patient.import.data, PatientID.short.name)
-        patient.raw.data[,PatientID.short.name] <- patient.import.data[,PatientID.short.name]
+        index.PatientID <- which(paramsJSON$patientVarNameInDatabase == PatientID.short.name)
+        patient.raw.data[,paramsJSON$patientVarNameInImportFile[index.PatientID]] <- patient.import.data[,PatientID.short.name]
         patient.raw.data$PATIENTRECORDID <- patient.import.data$PATIENTRECORDID
       }else{NULL}
       
@@ -611,9 +613,10 @@ if(.Platform$OS.type != "windows"){
       
       #To generate ids
       PatientID.short.name <- toupper(doc.data$short_name[doc.data$standard_variable_name %in% "PatientID"])
-      if (all(patient.import.data[,PatientID.short.name] == "")  | any(sapply(patient.import.data[,PatientID.short.name],nchar)!=8)){
+      if (all(patient.import.data[,PatientID.short.name] == "") | any(sapply(patient.import.data[,PatientID.short.name],nchar)!=8)){
         patient.import.data <- generate.id("patient", patient.import.data, PatientID.short.name)
-        patient.raw.data[,PatientID.short.name] <- patient.import.data[,PatientID.short.name]
+        index.PatientID <- which(paramsJSON$patientVarNameInDatabase == PatientID.short.name)
+        patient.raw.data[,paramsJSON$patientVarNameInImportFile[index.PatientID]] <- patient.import.data[,PatientID.short.name]
         patient.raw.data$PATIENTRECORDID <- patient.import.data$PATIENTRECORDID
       }else{NULL}
       
