@@ -51,23 +51,27 @@ ui <- dashboardPage(
 
 		),
 
-		tags$div(class="subHeader mt20", checked=NA,
-             tags$p("Shiny data sytem")
-	    ),
+		tags$div(id="div_advanced", class="mt20",
+			checkboxInput("CheckAdvanced", "Advanced shiny option",FALSE)
+		),
 
-	    fileInput("shinydata", "Import shiny data",
-	          multiple = FALSE,
-	          accept = c(".txt")
-	          ),
+		tags$div(id="advanced_menu",style="display: none;",
 
+			tags$div(class="subHeader", checked=NA,
+	             tags$p("Shiny data sytem")
+		    ),
 
-	    downloadButton('downloadShinyData', 'Export shiny data', class="mat_btn mt15m")
+		    fileInput("shinydata", "Import shiny data",
+		          multiple = FALSE,
+		          accept = c(".txt")
+		          ),
+
+		    downloadButton('downloadShinyData', 'Export shiny data', class="mat_btn mt15m")
+		 )
 
 	 ),
 	  
-	  
-  
-												
+	  						
 	dashboardBody(
 		tags$style(type='text/css',
                    ".selectize-dropdown-content{

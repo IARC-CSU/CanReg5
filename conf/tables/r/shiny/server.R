@@ -772,7 +772,7 @@ shinyServer(function(input, output, session) {
 	)
 
   
-  onclick("directorypath", shiny_update_dwn_folder(output,values))
+  onevent("dblclick","directorypath", shiny_update_dwn_folder(output,values))
 
 
   observeEvent(input$downloadFile2,{ 
@@ -788,6 +788,19 @@ shinyServer(function(input, output, session) {
 
 
 		})
+
+
+  })
+
+  observeEvent(input$CheckAdvanced,{
+
+  	if (input$CheckAdvanced) {
+  		show(id="advanced_menu", anim=TRUE)
+  	}
+  	else {
+  		hide(id="advanced_menu", anim=TRUE)
+  	}
+
 
 
   })

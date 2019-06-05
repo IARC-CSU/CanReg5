@@ -67,6 +67,7 @@ a#downloadData i.fa{
     background: #ffffff;
     color: #000;
     height: 34px;
+    cursor: pointer;
 }
 
 .report_btn {
@@ -95,7 +96,11 @@ a#downloadData i.fa{
 }
 
 .mt20 {
-    margin-top: 20px;
+    margin-top: 20px!important;
+}
+
+.dnone {
+  display:none!important;
 }
 
 .mt15m {
