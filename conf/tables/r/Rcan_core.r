@@ -2082,7 +2082,8 @@ canreg_bar_top_single <- function(dt, var_top, var_bar = "cancer_label" ,group_b
 
 canreg_bar_CI5_compare <- function(dt,group_by = "SEX", landscape = TRUE,list_graph=TRUE,multi_graph=FALSE,
                                         xtitle = "",digit  =  1,text_size_factor =1.5,number=5,
-                                        return_data  =  FALSE) {
+                                        return_data  =  FALSE) 
+{
   
   if (return_data) {
     setnames(dt, "CSU_RANK","cancer_rank")
@@ -2333,7 +2334,7 @@ csu_bar_plot <- function(dt,
       axis.line.x = element_line(colour = "black", 
                                  size = line_size, 
                                  linetype = "solid"),
-      legend.position = "none",
+      legend.position = "none"
     )
   
   return(csu_plot)
