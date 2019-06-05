@@ -346,7 +346,9 @@ canreg_load_packages <- function(packages_list) {
   }
 
   # ensure all package dependencies are installed
-  setWinProgressBar(pb, 0, label = "Ensuring package dependencies ...")
+  if (sysName == "Windows") {
+    setWinProgressBar(pb, 0, label = "Ensuring package dependencies ...")
+  }
   all_pck <- getDependencies(packages_list, installed=FALSE, available=TRUE)
   missing_packages <- all_pck[!(all_pck %in% list_installed_packages)]
 
@@ -2080,7 +2082,8 @@ canreg_bar_top_single <- function(dt, var_top, var_bar = "cancer_label" ,group_b
 
 canreg_bar_CI5_compare <- function(dt,group_by = "SEX", landscape = TRUE,list_graph=TRUE,multi_graph=FALSE,
                                         xtitle = "",digit  =  1,text_size_factor =1.5,number=5,
-                                        return_data  =  FALSE) {
+                                        return_data  =  FALSE) 
+{
   
   if (return_data) {
     setnames(dt, "CSU_RANK","cancer_rank")
@@ -2331,7 +2334,7 @@ csu_bar_plot <- function(dt,
       axis.line.x = element_line(colour = "black", 
                                  size = line_size, 
                                  linetype = "solid"),
-      legend.position = "none",
+      legend.position = "none"
     )
   
   return(csu_plot)
@@ -3951,8 +3954,8 @@ rcan_report <- function(doc,report_path,dt_all,ls_args,ann=TRUE, shiny=FALSE) {
     }
   }
   
-  
-  table_iccc <- canreg_iccc_table(dt_iccc)
+  dt_temp <- copy(dt_iccc)
+  table_iccc <- canreg_iccc_table(dt_temp)
   dt_report <- table_iccc$dt
   age_label <- table_iccc$age_label_order
   
@@ -4617,8 +4620,8 @@ rcan_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
     }
   }
   
-
-  table_iccc <- canreg_iccc_table(dt_iccc)
+  dt_temp <- copy(dt_iccc)
+  table_iccc <- canreg_iccc_table(dt_temp)
   dt_report <- table_iccc$dt
   age_label <- table_iccc$age_label_order
   
