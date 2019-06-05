@@ -7,6 +7,7 @@ shinyServer(function(input, output, session) {
   session$onSessionEnded(function() {
     cat("back to static life")
     stopApp()
+    q("no")
   })
   
 
