@@ -65,6 +65,10 @@ CSU_country_info <- function(df_data,var_code, folder_dict) {
 
 
 canreg_error_log <- function(e,filename,out,Args,inc,pop) {
+
+  if (exists("pb")) {
+    close(pb)
+  }
   
   ## get Args from canreg  
   skin <- FALSE
@@ -127,7 +131,7 @@ canreg_error_log <- function(e,filename,out,Args,inc,pop) {
   
   #print missing package
 
-  packages_list <- c("Rcpp", "data.table", "ggplot2", "gridExtra", "scales", "Cairo","grid","officer","flextable", "zip", "bmp", "jpeg", "png")
+  packages_list <- c("data.table", "ggplot2", "gridExtra", "scales", "Cairo","officer","flextable", "zip", "bmp", "jpeg", "png","shiny.i18n", "Rcan")
 
   missing_packages <- packages_list[!(packages_list %in% installed.packages()[,"Package"])]  
   if (length(missing_packages) == 0) {
@@ -203,8 +207,8 @@ canreg_args <- function(Args) {
     ## see if "mother" variant language is in list
     mlang <- gsub("(..)_.*","\\1",arg_list[["lang"]])
     if (mlang %in% available_translations) {
-      arg_list[["lang"]] <- mlang }
-    else {
+      arg_list[["lang"]] <- mlang 
+    } else {
     ## Set default language to English if the language is not among the translated languages...
     arg_list[["lang"]] <- "en"
     }
@@ -226,73 +230,73 @@ canreg_args <- function(Args) {
 
 
 canreg_load_packages <- function(packages_list) { 
-  
-  
 
-  
+
+  sysName <- Sys.info()[['sysname']]
+
+  if (sysName == "Windows") {
+    pb <- winProgressBar(
+    title = "Download R packages",
+    label = "Initializing"
+    )
+  } 
+
+
   if (getRversion() == '3.2.0') {
-   
+     
     stop("The table builder do not work with R '3.2.0', please install any version after '3.2.1'.\n '3.2.1' would do as well as '3.3.0' for instance.\n You can edit the Path in the 'Option' in CanReg.") 
     
   }
-  
+    
   dir.create(file.path(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5")),recursive = TRUE)
   .libPaths(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5"))
-  
+
   list_installed_packages <- installed.packages()[,"Package"]
-  
   missing_packages <- packages_list[!(packages_list %in% list_installed_packages)]
-  
+
   #managing installing package for old R version. 
   if (getRversion() < '3.2.0') {
     utils::setInternet2(TRUE)
-    if (Sys.info()[['sysname']] == "Windows") {
+    if (sysName == "Windows") {
       options(download.file.method = "internal")
-    } else if (Sys.info()[['sysname']] == "Linux") {
+    } else if (sysName == "Linux") {
       options(download.file.method = "wget")
-    } else if (Sys.info()[['sysname']] == "Darwin") {
+    } else if (sysName == "Darwin") {
       options(download.file.method = "curl")
     }
   } else if (getRversion() < '3.3.0') {
-    if (Sys.info()[['sysname']] == "Windows") {
+    if (sysName == "Windows") {
       options(download.file.method = "wininet")
     } else {
       options(download.file.method = "libcurl")
     }
   }
-  
+
   old.repos <- getOption("repos") 
   on.exit(options(repos = old.repos)) #this resets the repos option when the function exits 
-  new.repos <- old.repos 
+  new.repos <- old.repos
 
-  new.repos["CRAN"] <- "https://cran.r-project.org" #set your favorite  CRAN Mirror here 
-
+  new.repos["CRAN"] <- "https://cran.r-project.org"
   options(repos = new.repos) 
-  
-  if (!"Rcpp" %in% missing_packages) {
-    if (packageVersion("Rcpp") < "0.12.12") {
-      missing_packages <- c(missing_packages,"Rcpp" )
-    }
-  }
-  
+
   if (!"ggplot2" %in% missing_packages) {
     if (packageVersion("ggplot2") < "2.2.0") {
       missing_packages <- c(missing_packages,"ggplot2" )
     }
   }
-  
+
   if (!"data.table" %in% missing_packages) {
     if (packageVersion("data.table") < "1.9.6") {
       missing_packages <- c(missing_packages,"data.table" )
     }
   }
-  
+
   if (!"scales" %in% missing_packages) {
     if (packageVersion("scales") < "0.4.1") {
       missing_packages <- c(missing_packages,"scales" )
     }
   }
-  
+
   if (!"officer" %in% missing_packages) {
     if (packageVersion("officer") < "0.2.2") {
       missing_packages <- c(missing_packages,"officer" )
@@ -305,88 +309,95 @@ canreg_load_packages <- function(packages_list) {
     }
   }
 
-
-
-  
-  if ("scales" %in% missing_packages) {
-    
-    if ("munsell" %in% list_installed_packages) {
-      if (packageVersion("munsell") < "0.2") {
-        missing_packages <- c(missing_packages,"munsell" )
-      }
-    }
+  #to avoid package from source which need compilation.
+  if (sysName == "Windows") {
+    options(pkgType="win.binary") 
   }
-
-  if ("ggplot2" %in% missing_packages) {
-    
-    if ("gtable" %in% list_installed_packages) {
-      if (packageVersion("gtable") < "0.1.1") {
-        missing_packages <- c(missing_packages,"gtable" )
-      }
-    }
-    if ("plyr" %in% list_installed_packages) {
-      if (packageVersion("plyr") < "1.7.1") {
-        missing_packages <- c(missing_packages,"plyr" )
-      }
-    }
-  }
-
-  if ("officer" %in% missing_packages) {
-    
-    if ("xml2" %in% list_installed_packages) {
-      if (packageVersion("xml2") < "1.1.0") {
-        missing_packages <- c(missing_packages,"xml2")
-      }
-    }
-  }
-  
-  if ("flextable" %in% missing_packages) {
-     
-    if ("gdtools" %in% list_installed_packages) {
-      if (packageVersion("gdtools") < "0.1.6") {
-        missing_packages <- c(missing_packages,"gdtools")
-      }
-    }
-  }
-
 
   missing_packages <- unique(missing_packages)
-  
+
+  if (!"gtools" %in% list_installed_packages) {
+    install.packages("gtools", dependencies=  c("Depends", "Imports", "LinkingTo"), quiet = TRUE)
+  }
+
+  require("gtools", character.only = TRUE)
 
 
   if(length(missing_packages) > 0 ) {
-    
-    if (Sys.info()[['sysname']] == "Windows") {
-      options(pkgType="win.binary") #to avoid package from source which need compilation.
-    }
-    
-    for (i in missing_packages) {
-      install.packages(i, dependencies=  c("Depends", "Imports", "LinkingTo"), quiet = TRUE)
 
+    all_pck <- getDependencies(missing_packages, installed=FALSE, available=TRUE)
+    missing_packages <- c(missing_packages, all_pck)
+
+    for (i in seq_along(missing_packages)) {
+
+      if (sysName == "Windows") {
+        setWinProgressBar(
+          pb, 
+          value = i / (length(missing_packages) + 1),
+          label = sprintf("%s - Make yourself at home, this can be long", missing_packages[i])
+        )
+      }
+
+      install.packages(missing_packages[i], dependencies=  FALSE, quiet = TRUE)
+
+
+    }
+
+  }
+
+  # ensure all package dependencies are installed
+  if (sysName == "Windows") {
+    setWinProgressBar(pb, 0, label = "Ensuring package dependencies ...")
+  }
+  all_pck <- getDependencies(packages_list, installed=FALSE, available=TRUE)
+  missing_packages <- all_pck[!(all_pck %in% list_installed_packages)]
+
+  if(length(missing_packages) > 0 ) {
+
+    for (i in seq_along(missing_packages)) {
+
+      if (sysName == "Windows") {
+        setWinProgressBar(
+          pb, 
+          value = i / (length(missing_packages) + 1),
+          label = sprintf("%s - Make yourself at home, this can be long", missing_packages[i])
+        )
+      }
+
+      install.packages(missing_packages[i], dependencies=  FALSE, quiet = TRUE)
     }
   }
-  
 
-  #install Rcan package if not install from CRAN
-  Rcan_source <- paste0(script.basename, "/", "r-packages")
-  Rcan_file <- list.files(path=Rcan_source, pattern= "Rcan_\\d\\.\\d\\.\\d+\\.tar\\.gz")
-  Rcan_version <- regmatches(Rcan_file,regexpr(pattern= "\\d\\.\\d\\.\\d+", Rcan_file))
 
-  Rcan_file <- Rcan_file[match(max(Rcan_version),Rcan_version)]
-  Rcan_version <- max(Rcan_version)
-  
-  if ("Rcan" %in% list_installed_packages) {
-    if (packageVersion("Rcan") < Rcan_version) {
-      install.packages(paste0(Rcan_source, "/",Rcan_file), repos=NULL, type = "source")
-    }
-  } else {
-      install.packages(paste0(Rcan_source, "/",Rcan_file), repos=NULL, type = "source")
+  if (sysName == "Windows") {
+    setWinProgressBar(pb, 0, title = "Loading R packages",label = "Initializing")
   }
-      
 
-  lapply(packages_list, require, character.only = TRUE)
-  library(Rcan)
+  packages_list <- c(packages_list,"grid")
+
+
+ 
+  for (i in seq_along(packages_list)) {
+
+    if (sysName == "Windows") {
+      setWinProgressBar(
+        pb, 
+        value = i / (length(packages_list) + 1),
+        label = sprintf("Loading package - %s", packages_list[i])
+      )
+    }
+
+    require(packages_list[i], character.only = TRUE)
+
+  }
+
+  if (sysName == "Windows") {
+    setWinProgressBar(pb, 1, title = "Loading R packages",label = "Done")
+    close(pb)
+  }
+
   
+
 }
 
 canreg_output_cat <- function(ft, filename,sex_graph=FALSE, list_graph=FALSE) {
@@ -508,7 +519,7 @@ canreg_import_CI5_data <- function(dt,CI5_file,var_ICD_canreg="ICD10GROUP",var_a
   dt_CI5_age_label[,age_list:=NULL]
 
   setnames(dt_CI5_age_label,"age_label_canreg",var_age_label_canreg)
-  dt_temp <- unique(dt_all[,c("AGE_GROUP","REFERENCE_COUNT", var_age_label_canreg),  with=FALSE])
+  dt_temp <- unique(dt[,c("AGE_GROUP","REFERENCE_COUNT", var_age_label_canreg),  with=FALSE])
   dt_CI5_age_label <- merge(dt_CI5_age_label,dt_temp, by=c(var_age_label_canreg),all.x=TRUE, all.y=FALSE )
   
   
@@ -529,7 +540,7 @@ canreg_merge_CI5_registry <- function(dt, dt_CI5, registry_region, registry_labe
   
   ##calcul of ASR for canreg
   dt<- Rcan:::core.csu_asr(df_data =dt, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
-                    group_by = c("cancer_label", "SEX","ICD10GROUP","ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt_all),
+                    group_by = c("cancer_label", "SEX","ICD10GROUP","ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt),
                     pop_base_count = "REFERENCE_COUNT",
                     age_label_list = "AGE_GROUP_LABEL")
   
@@ -751,8 +762,11 @@ canreg_report_import_txt <- function(doc,text,folder, dt_all,pop_file, list_numb
   
   mark_table <- data.table(mark_pos=integer(),mark_length=integer(),mark_type=character())
   
-  temp <- gregexpr("<EDIT FILE PATH>", text = text)[[1]]
-  mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("PATH", length(temp)))))
+  temp <- gregexpr("<CANREG_EXAMPLE>", text = text)[[1]]
+  mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("EXAMPLE", length(temp)))))
+  
+  temp <- gregexpr("</CANREG_EXAMPLE>", text = text)[[1]]
+  mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("/EXAMPLE", length(temp)))))
   
   temp <- gregexpr("<EDIT MAP PATH>", text = text)[[1]]
   mark_table <- rbindlist(list(mark_table, list(temp, attr(temp,"match.length"),rep("MAP", length(temp)))))
@@ -819,20 +833,27 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all,pop_file, folder
       
       if (temp != "") {
         temp_1 <- strsplit(temp, "\n\n")
-        invisible(lapply(temp_1[[1]],body_add_par, x=doc))
+        canreg_style <- ifelse(list_number$example, "canreg_example", "Normal")
+        invisible(lapply(temp_1[[1]],body_add_par, x=doc, style=canreg_style))
       }
       
 
       
-      if (type == "PATH") {
+      if (type == "EXAMPLE") {
         
         temp <- paste0("If you want to keep changes for future reports, this text can be edit directly in the template file folder:\n",folder,"\n")
-        doc <- body_add_par(doc,temp) 
+        doc <- body_add_par(doc,temp, style="canreg_example") 
+        list_number$example = TRUE
+
+      } else if (type == "/EXAMPLE") {
         
+        list_number$example = FALSE
+        
+   
       } else if (type == "MAP") {
         
         temp <- paste0("If you want to keep changes for future reports, this map can be updated directly in the template file folder:\n",folder,"\\map_example.png\n")
-        doc <- body_add_par(doc,temp) 
+        doc <- body_add_par(doc,temp, style="canreg_example") 
         
       } else if (type == "POP"){
         
@@ -1052,6 +1073,72 @@ canreg_report_top_cancer_text <- function(dt_report, percent_equal=5, sex_select
   return(text)
 }
 
+canreg_iccc_table <- function(dt,var_cases="CASES", var_py = "COUNT") {
+  
+  setnames(dt, var_cases, "CSU_C") 
+  setnames(dt, var_py, "CSU_P")
+  setkeyv(dt, c("AGE_GROUP", "AGE_GROUP_LABEL", "ICCC_order"))
+
+  age_label_order <- as.character(unique(dt$AGE_GROUP_LABEL))
+  dt[,c("AGE_GROUP_LABEL", "AGE_GROUP_SIZE"):= NULL]
+
+
+  dt_cancer_total <- dt[,list( CSU_C=sum(CSU_C)), by=c("CSU_P", "AGE_GROUP", "REFERENCE_COUNT", "SEX")]
+  dt_cancer_total[, ICCC_code:=""]
+  dt_cancer_total[, ICCC_label:="All"]
+  dt_cancer_total[, ICCC_order:=100]
+  dt <- rbind(dt, dt_cancer_total)
+
+  dt_crude <- dt[,list(crude=(sum(CSU_C)/sum(CSU_P)*1000000)), by=c("ICCC_code")]
+
+  dt_sex <- dt[,list(CSU_C=sum(CSU_C)), by=c("ICCC_code", "SEX")]
+  dt_sex <- reshape(dt_sex, timevar = "SEX",idvar = c("ICCC_code"), direction = "wide")
+  dt_sex[, ratio:=CSU_C.1/CSU_C.2]
+  dt_sex[is.infinite(ratio), ratio:=0]
+  dt_sex[,c("CSU_C.1", "CSU_C.2"):= NULL]
+
+
+  dt_temp <-  dt[,list( CSU_C=sum(CSU_C),CSU_P=sum(CSU_P)), by=c("AGE_GROUP", "REFERENCE_COUNT", "ICCC_code", "ICCC_label")]
+  dt_asr<- as.data.table(Rcan:::core.csu_asr(df_data =dt_temp, var_age ="AGE_GROUP",var_cases = "CSU_C", var_py = "CSU_P",
+                               group_by = c("ICCC_code"),
+                               db_rate = 1000000,
+                               first_age = 1,
+                               last_age=   length(age_label_order),
+                               age_dropped = TRUE,
+                               pop_base_count = "REFERENCE_COUNT"))
+
+  dt_asr[, frequence:=(CSU_C)/sum(CSU_C)*2*100]
+  dt_asr <- merge(dt_asr,dt_crude, by=c("ICCC_code"))
+  dt_asr <- merge(dt_asr,dt_sex, by=c("ICCC_code"))
+  dt_asr[, CSU_P:=NULL]
+  setnames(dt_asr, "CSU_C", "total_cases")
+
+  dt_temp[, age_crude:= CSU_C/CSU_P*1000000]
+  dt_temp[,c("REFERENCE_COUNT", "CSU_P"):= NULL]
+  dt_temp <- reshape(dt_temp, timevar = "AGE_GROUP",idvar = c("ICCC_code", "ICCC_label"), direction = "wide")
+  dt <- merge(dt_temp, dt_asr, by=c("ICCC_code"))
+
+
+  dt[,CSU_C.0:=sprintf("%.0f",CSU_C.0)]
+  dt[,CSU_C.1:=sprintf("%.0f",CSU_C.1)]
+  dt[,CSU_C.2:=sprintf("%.0f",CSU_C.2)]
+  dt[,total_cases:=sprintf("%.0f",total_cases)]
+  dt[,ratio:=sprintf("%.1f",ratio)]
+  dt[,frequence:=sprintf("%.1f",frequence)]
+  dt[,age_crude.0:=sprintf("%.1f",age_crude.0)]
+  dt[,age_crude.1:=sprintf("%.1f",age_crude.1)]
+  dt[,age_crude.2:=sprintf("%.1f",age_crude.2)]
+  dt[,crude:=sprintf("%.1f",crude)]
+  dt[,asr:=sprintf("%.1f",asr)]
+
+
+
+  setcolorder(dt, c("ICCC_code", "ICCC_label", "CSU_C.0", "CSU_C.1", "CSU_C.2", "total_cases","ratio","frequence", "age_crude.0","age_crude.1","age_crude.2", "crude", "asr"))
+  
+  return(list(dt=dt, age_label_order=age_label_order))
+}
+
+
 
 canreg_basis_table <- function(dt,var_cases="CASES", var_basis="BASIS", var_cancer_label="cancer_label", var_ICD="ICD10GROUP") {
   
@@ -1179,6 +1266,72 @@ csu_merge_inc_pop <- function(inc_file,
   setnames(dt_all,"CSU_C",var_cases)
   return(dt_all)
 }
+
+csu_merge_iccc_pop <- function(inc_file,
+                              pop_file,
+                              var_cases = "CASES",
+                              var_age = "AGE_GROUP",
+                              var_age_label = "AGE_GROUP_LABEL",
+                              var_pop = "COUNT",
+                              var_ref_count = "REFERENCE_COUNT",
+                              group_by = NULL){
+  
+  df_inc <- read.table(inc_file, header=TRUE, sep="\t")
+  df_pop <- read.table(pop_file, header=TRUE, sep="\t")
+  
+  dt_inc <- data.table(df_inc)
+  dt_pop <- data.table(df_pop)
+  
+  setnames(dt_inc, var_cases, "CSU_C")
+
+  dt_inc <- dt_inc[get(var_age) < 3]
+  
+  group_by <- intersect(group_by,colnames(dt_inc))
+  
+  dt_inc <- dt_inc[, c(var_age, group_by, "CSU_C"), with = FALSE]
+  dt_inc <-  dt_inc[,list(CSU_C = sum(CSU_C)), by=eval(colnames(dt_inc)[!colnames(dt_inc) %in% c("CSU_C")])]
+  
+  cj_var <-colnames(dt_inc)[!colnames(dt_inc) %in% c("CSU_C")]
+  dt_temp = dt_inc[, do.call(CJ, c(.SD, unique=TRUE)), .SDcols=cj_var]
+  
+  dt_inc <- merge(dt_temp, dt_inc,by=colnames(dt_temp), all.x=TRUE)[, CSU_C := ifelse(is.na(CSU_C),0, CSU_C )]
+  
+  dt_pop <- dt_pop[get(var_pop) != 0,]
+  dt_pop[[var_ref_count]] <-  dt_pop[[var_ref_count]]*100
+  
+  dt_all <- merge(dt_inc, dt_pop,by=intersect(colnames(dt_inc),colnames(dt_pop)), all.x=TRUE)
+  
+  
+  setnames(dt_all,var_age,"CSU_A")
+  setnames(dt_all,var_pop,"CSU_P")
+  
+  
+  dt_all[is.na(get(var_age_label)), CSU_A := max(CSU_A)]
+  dt_all[, YEAR:=NULL]
+
+  dt_all <-  dt_all[,list(CSU_C = sum(CSU_C), CSU_P = sum(CSU_P)), by=eval(colnames(dt_all)[!colnames(dt_all) %in% c("CSU_C", "CSU_P")])]
+
+  dt_sum <- dt_all 
+  dt_sum[, ICCC:=gsub("[a-z]", "", ICCC)]
+  dt_sum <-  dt_sum[,list(CSU_C = sum(CSU_C)), by=eval(colnames(dt_sum)[!colnames(dt_sum) %in% c("CSU_C")])]
+
+  dt_all <- rbind(dt_sum, dt_all)
+
+  iccc_code <- as.data.table(read.csv(paste(sep="/", script.basename, "ICCC.csv")))
+  iccc_code[, ICCC:=as.character(ICCC)]
+  dt_all <- merge(dt_all,iccc_code, by=c("ICCC"), all=TRUE)
+
+  dt_all[, ICCC:=NULL]
+  dt_all <-  dt_all[,list(CSU_C = sum(CSU_C)), by=eval(colnames(dt_all)[!colnames(dt_all) %in% c("CSU_C")])]
+
+ 
+  setnames(dt_all,"CSU_P",var_pop)
+  setnames(dt_all,"CSU_A",var_age)
+  setnames(dt_all,"CSU_C",var_cases)
+  return(dt_all)
+
+}
+
 
 
 canreg_attr_missing_sex <- function(dt, var_age, var_group2) {
@@ -1336,7 +1489,7 @@ canreg_pop_data <- function(pop_file) {
   dt_pop <- dt_pop[!is.na(AGE_GROUP_LABEL),]
   dt_pop <- dt_pop[,.(COUNT=mean(COUNT)), by=.(AGE_GROUP,SEX,AGE_GROUP_LABEL)]
   dt_pop[,Total:=sum(COUNT)]
-  dt_pop[,Percent:=COUNT/sum(COUNT)*100, by=SEX]
+  dt_pop[,Percent:=COUNT/Total*100]
   dt_pop[,Percent:=round(Percent,1)]
   dt_pop$SEX <- factor(dt_pop$SEX, levels=c(1,2), labels=c("Male","Female"))
   return(dt_pop)
@@ -1618,7 +1771,7 @@ canreg_ageSpecific_rate_multi_plot <- function(dt,
                                  plot_subtitle = cancer_title,
                                  plot_caption = canreg_header,
 																 xtitle = i18n$t("Age at diagnosis"),
-																 ytitle = i18n$t("Age-standardized incidence rate per"),
+																 ytitle = i18n$t("Age-specific incidence rate per"),
 																 label_group_by = c(i18n$t("Male"),i18n$t("Female")),
                                  color_trend = color_trend,
                                  logscale = logscale,
@@ -1814,46 +1967,47 @@ canreg_ageSpecific_rate_top <- function(df_data,
 									   list_graph = FALSE,
 										return_data = FALSE) {
 		 
-if (return_data) {
-	dt_data <- Rcan:::core.csu_dt_rank(df_data, var_value = var_cases, var_rank = var_top ,group_by = group_by, number = nb_top) 		 
-	dt_data[, rate := CASES/COUNT*10000]
-    dt_data[, cancer_sex := NULL]
-    dt_data[, cancer_title := NULL]
-    dt_data[, AGE_GROUP_LABEL := paste0("'",AGE_GROUP_LABEL,"'")]
-    setnames(dt_data, "CSU_RANK","cancer_rank")
-    dt_data <- dt_data[, c(var_top,
-                 "ICD10GROUP",
-                 "cancer_rank",
-                 group_by,
-                 var_age,
-                 var_age_label_list,
-                 var_cases,
-                 var_py,
-                 "rate"), with=FALSE]
-    setkeyv(dt_data, c(group_by,"cancer_rank","ICD10GROUP" ,var_age ))
-    return(dt_data)
-    stop() 
-}
+  if (return_data) {
 
-plot_subtitle <- paste0(i18n$t("Top")," ",nb_top, " ",i18n$t("cancer sites") )
+      dt_data <- Rcan:::core.csu_dt_rank(df_data, var_value = var_cases, var_rank = var_top ,group_by = group_by, number = nb_top) 		 
+      dt_data[, rate := CASES/COUNT*10000]
+      dt_data[, cancer_sex := NULL]
+      dt_data[, cancer_title := NULL]
+      dt_data[, AGE_GROUP_LABEL := paste0("'",AGE_GROUP_LABEL,"'")]
+      setnames(dt_data, "CSU_RANK","cancer_rank")
+      dt_data <- dt_data[, c(var_top,
+                   "ICD10GROUP",
+                   "cancer_rank",
+                   group_by,
+                   var_age,
+                   var_age_label_list,
+                   var_cases,
+                   var_py,
+                   "rate"), with=FALSE]
+      setkeyv(dt_data, c(group_by,"cancer_rank","ICD10GROUP" ,var_age ))
+      return(dt_data)
+      stop() 
+  }
 
-temp <- Rcan:::core.csu_ageSpecific_top(df_data,var_age, var_cases, var_py,var_top, group_by,
-									   logscale=logscale, 
-									   nb_top=nb_top, 
-									   plot_title=plot_title,
-									   plot_subtitle=plot_subtitle,
-									   var_color=var_color,
-									   var_age_label_list=var_age_label_list,
-										 label_group_by= c(i18n$t("Male"),i18n$t("Female")),
-										 xtitle = i18n$t("Age at diagnosis"),
-										 ytitle = i18n$t("Age-standardized incidence rate per"),
-									   caption_bypass=TRUE)
+  plot_subtitle <- paste0(i18n$t("Top")," ",nb_top, " ",i18n$t("cancer sites") )
 
-for (i in  1:length(temp$plotlist)) {
-  
-  print(temp$plotlist[[i]]+guides(color = guide_legend(override.aes = list(size=1), nrow=1,byrow=TRUE)))
+  temp <- Rcan:::core.csu_ageSpecific_top(df_data,var_age, var_cases, var_py,var_top, group_by,
+  									   logscale=logscale, 
+  									   nb_top=nb_top, 
+  									   plot_title=plot_title,
+  									   plot_subtitle=plot_subtitle,
+  									   var_color=var_color,
+  									   var_age_label_list=var_age_label_list,
+  										 label_group_by= c(i18n$t("Male"),i18n$t("Female")),
+  										 xtitle = i18n$t("Age at diagnosis"),
+  										 ytitle = i18n$t("Age-specific incidence rate per"),
+  									   caption_bypass=TRUE)
 
-}
+  for (i in  1:length(temp$plotlist)) {
+    
+    print(temp$plotlist[[i]]+guides(color = guide_legend(override.aes = list(size=1), nrow=1,byrow=TRUE)))
+
+  }
 
 
 }
@@ -1918,10 +2072,9 @@ canreg_bar_top_single <- function(dt, var_top, var_bar = "cancer_label" ,group_b
 		if (!return_plot) {
 			print(plotlist[[1]])
 			print(plotlist[[2]])
-		}
-		else {
+		} else {
 			return(list(plotlist = plotlist))
-		}
+	}
   
 
 }
@@ -1929,7 +2082,8 @@ canreg_bar_top_single <- function(dt, var_top, var_bar = "cancer_label" ,group_b
 
 canreg_bar_CI5_compare <- function(dt,group_by = "SEX", landscape = TRUE,list_graph=TRUE,multi_graph=FALSE,
                                         xtitle = "",digit  =  1,text_size_factor =1.5,number=5,
-                                        return_data  =  FALSE) {
+                                        return_data  =  FALSE) 
+{
   
   if (return_data) {
     setnames(dt, "CSU_RANK","cancer_rank")
@@ -2180,7 +2334,7 @@ csu_bar_plot <- function(dt,
       axis.line.x = element_line(colour = "black", 
                                  size = line_size, 
                                  linetype = "solid"),
-      legend.position = "none",
+      legend.position = "none"
     )
   
   return(csu_plot)
@@ -2748,13 +2902,17 @@ canreg_cases_age_pie <- function(
   
   color_age <- c("#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3", "#a6d854")
   color_age <- color_age[1:length(levels(dt$CSU_BAR))]
-  
+
+  #legend name (for bug)
+  bool <- ls_args$lang %in% c("ru")
+  legend_title <- ifelse(bool,"",i18n$t("Age Group"))
+
   csu_plot <- 
     ggplot(data = dt, aes(x = "", y = CSU_CASES, fill = CSU_BAR)) + 
     geom_bar(width = 1, stat = "identity") +
     geom_text(aes(label = percent(percent), x=x_label, y= y_label, size=text_size), show.legend=FALSE) +
     coord_polar(theta = "y") +
-    scale_fill_manual(name = i18n$t("Age Group"), values = color_age) + 
+    scale_fill_manual(name = legend_title, values = color_age) + 
     scale_size_continuous(range=c(4,6))+
     labs(title = canreg_header, 
          subtitle = plot_subtitle)+
@@ -2842,9 +3000,10 @@ canreg_asr_trend_top <- function(dt, var_asr="asr",
     dt_plot$cancer_label <- factor(dt_plot$cancer_label,levels = dt_label_order$cancer_label) 
     
     color_cancer <- as.character(dt_label_order$ICD10GROUPCOLOR)
-    
 
     sex_label <- i18n$t(i)
+
+
     
     plotlist[[j]] <- Rcan:::core.csu_time_trend(dt_plot,
                                     var_trend = "asr",
@@ -2865,8 +3024,7 @@ canreg_asr_trend_top <- function(dt, var_asr="asr",
 	if (!return_plot) {
 		print(plotlist[[1]]+guides(color = guide_legend(override.aes = list(size=1), nrow=1,byrow=TRUE)))
 		print(plotlist[[2]]+guides(color = guide_legend(override.aes = list(size=1), nrow=1,byrow=TRUE)))
-	}
-	else {
+	} else {
 		return(list(plotlist = plotlist))
 	}
 
@@ -3039,8 +3197,7 @@ canreg_eapc_scatter_error_bar <- function(dt,
 	if (!return_plot) {
 		print(plotlist[[1]])
 		print(plotlist[[2]])
-	}
-	else {
+	} else {
 		return(list(plotlist = plotlist))
 	}
 }
@@ -3147,6 +3304,1422 @@ rcan_scatter_error_bar <- function(dt_plot,
   
   return(csu_plot)
   
+}
+
+rcan_report <- function(doc,report_path,dt_all,ls_args,ann=TRUE, shiny=FALSE) {
+
+  time_limit <- 9
+  graph_width <- 6
+  dim_width <- 2.7
+
+  inc_progress_value <- 1/10 
+  i_pb <- 1
+  
+  year_info <- canreg_get_years(dt_all)
+  canreg_age_group <- canreg_get_agegroup_label(dt_all, ls_args$agegroup)
+  temp <- min(as.numeric(substr(ls_args$agegroup,regexpr("-", ls_args$agegroup)[1]+1,nchar(ls_args$agegroup))),14)
+  canreg_age_group_cr <- canreg_get_agegroup_label(dt_all, paste0("0-",temp))
+  
+  list_number <- list(fig=1, tbl=1, example=FALSE)
+
+  doc <- body_add_par( doc, value = ls_args$header, style="TitleDoc")
+  #oups need solution to add real title
+  doc <- body_add_par(doc, "\r\n")
+  doc <- body_add_par(doc, "\r\n")
+  doc <- body_add_toc(doc)
+
+  if (shiny) {
+    incProgress(inc_progress_value, detail = "import / create template")
+  } else {
+    if (sysName == "Windows") {
+      setWinProgressBar(pb, inc_progress_value*i_pb,label = "import / create template")
+      i_pb <- i_pb+1
+    }
+  }
+
+  dt_chapter <- canreg_report_template_extract(report_path, script.basename)
+
+  
+  if (year_info$span <= time_limit) {
+    dt_chapter <- dt_chapter[title != "Estimated annual percentage change"]
+  }
+  
+  list_number <- canreg_report_chapter_txt(dt_chapter, doc, report_path,dt_all,pop_file =ls_args$pop,list_number)
+  
+  
+  doc <- body_add_break(doc)
+  doc <- body_add_par(doc, "Results", style =  paste("heading",1))
+  
+  
+  
+  # bar chart age
+  dt_report <- dt_all
+  dt_report[ICD10GROUP != "C44",]$ICD10GROUP ="O&U"
+  dt_report[ICD10GROUP != "C44",]$ICD10GROUPLABEL ="Other and unspecified"
+  dt_report <- dt_report[, .(CASES=sum(CASES)),by=.(ICD10GROUP, ICD10GROUPLABEL, YEAR,SEX, AGE_GROUP,AGE_GROUP_LABEL,COUNT,REFERENCE_COUNT) ]
+  dt_report <- canreg_age_cases_data(dt_report,age_group = c(5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80), skin=TRUE)
+  
+  total_cases <- formatC(dt_report[,sum(CASES)], format="d", big.mark=",")
+  total_male <- formatC(dt_report[SEX == "Male",sum(CASES)], format="d", big.mark=",")
+  total_female <-formatC(dt_report[SEX == "Female",sum(CASES)], format="d", big.mark=",")
+  
+  if (year_info$max == year_info$min) {
+    text_year <- paste0("In ",year_info$max,", ")
+  } else {
+    text_year <- paste0("Between ",year_info$min," and ",year_info$max, ", ")
+  }
+  
+  
+  #add warning if  many missing cases
+  # sex_missing <- canreg_desc_missing_sex(ls_args$inc)
+  # if (sex_missing$percent_missing > 0) {
+  #   
+  #   warning_note <- Footnote()
+  #   warning <- paste0(sex_missing$nb_missing ," cases over ", sex_missing$nb_total," (",
+  #                     sex_missing$percent_missing,"%) missed sex information. Sex have been attributed randomly based on known distribution")
+  #   warning_note <- addParagraph(warning_note,warning)
+  #   pot_intro <- pot(paste0(text_year,total_cases," cases"),footnote =warning_note)+
+  #     pot(paste0(" of cancers were registered: ",total_male," among men and ",total_female," among women."))
+  #   
+  # } else {
+  #   pot_intro <- pot(paste0(text_year,total_cases," cases of cancers were registered: ",
+  #                           total_male," among men and ",total_female," among women."))
+  # }
+  
+  # doc <- addParagraph(doc,pot_intro)
+  doc <- body_add_par(doc,paste0(text_year,total_cases," cases of cancers were registered: ",
+                                 total_male," among men and ",total_female," among women."))
+  
+  doc <- body_add_par(doc, "Number of cases in period, by age group & sex", style = "heading 2")
+  if (shiny) {
+    incProgress(inc_progress_value, detail = "Number of cases in period, by age group & sex")
+  } else {
+    if (sysName == "Windows") {
+      setWinProgressBar(pb, inc_progress_value*i_pb,label = "Number of cases in period, by age group & sex")
+      i_pb <- i_pb+1
+    }
+  }
+  
+  canreg_output(output_type = "png", filename =  paste0(tempdir(), "\\temp_graph_a",list_number$fig ),landscape = TRUE,list_graph = FALSE,
+                FUN=canreg_cases_age_bar,
+                df_data =dt_report,
+                canreg_header = "", skin=FALSE)
+  
+  
+  dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph_a", list_number$fig, ".png")), "dim" )
+  doc <- body_add_img(doc, paste0(tempdir(), "\\temp_graph_a", list_number$fig, ".png"),width=graph_width,height=graph_width*dims[1]/dims[2],style="centered" )
+  doc <- body_add_par(doc, paste0("Fig ",list_number$fig,"a. Bar chart, distribution of cases by age group and sex"))
+  
+  dt_report <- dt_all
+  dt_report[ICD10GROUP != "C44",]$ICD10GROUP ="O&U"
+  dt_report[ICD10GROUP != "C44",]$ICD10GROUPLABEL ="Other and unspecified"
+  dt_report <- dt_report[, .(CASES=sum(CASES)),by=.(ICD10GROUP, ICD10GROUPLABEL, YEAR,SEX, AGE_GROUP,AGE_GROUP_LABEL,COUNT,REFERENCE_COUNT) ]
+  dt_report <- canreg_age_cases_data(dt_all, skin=TRUE)
+  
+  
+  canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph_b", list_number$fig),landscape = TRUE,list_graph = FALSE,
+                FUN=canreg_age_cases_pie_multi_plot,
+                dt=dt_report,
+                canreg_header = i18n$t("All cancers but C44"))
+  
+  dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph_b", list_number$fig, ".png")), "dim" )
+  doc <- body_add_img(doc, paste0(tempdir(), "\\temp_graph_b", list_number$fig, ".png"),width=graph_width,height=graph_width*dims[1]/dims[2],style="centered" )
+  doc <- body_add_par(doc,paste0("Fig ",list_number$fig,"b. Pie chart, distribution of cases by age group and sex"))
+  list_number$fig <- list_number$fig +1
+  
+  doc <- body_add_par(doc, "Number of cases by year", style = "heading 2")
+  if (shiny) {
+    incProgress(inc_progress_value, detail = "Number of cases by year")
+  } else {
+    if (sysName == "Windows") {
+      setWinProgressBar(pb, inc_progress_value*i_pb,label = "Number of cases by year")
+      i_pb <- i_pb+1
+    }
+  }
+  
+  dt_report <- dt_all
+  dt_report[ICD10GROUP != "C44",]$ICD10GROUP ="O&U" 
+  dt_report[ICD10GROUP != "C44",]$ICD10GROUPLABEL ="Other and unspecified" 
+  dt_report <- dt_report[, .(CASES=sum(CASES)),by=.(ICD10GROUP, ICD10GROUPLABEL, YEAR,SEX, AGE_GROUP,AGE_GROUP_LABEL,COUNT,REFERENCE_COUNT) ]
+  
+  dt_report <- canreg_year_cases_data(dt_report, skin=FALSE)
+  
+  
+  ##Produce output
+  canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph", list_number$fig),landscape = TRUE,list_graph = FALSE,
+                FUN=canreg_cases_year_bar,
+                dt=dt_report,
+                canreg_header = "", skin=FALSE)
+  
+  dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", list_number$fig, ".png")), "dim" )
+  doc <- body_add_img(doc, paste0(tempdir(), "\\temp_graph", list_number$fig, ".png"),width=graph_width,height=graph_width*dims[1]/dims[2],style="centered" )
+  doc <- body_add_par(doc,paste0("Fig ",list_number$fig,". Number of cases by year"))
+  list_number$fig <- list_number$fig +1
+  
+  
+  
+  doc <- body_add_par(doc, "The most common cancers, by sex",style = "heading 2")
+  if (shiny) {
+    incProgress(inc_progress_value, detail = "The most common cancers, by sex")
+  } else {
+    if (sysName == "Windows") {
+      setWinProgressBar(pb, inc_progress_value*i_pb,label = "The most common cancers, by sex")
+      i_pb <- i_pb+1
+    }
+  }
+  
+  dt_report <- dt_all
+  dt_report <- dt_report[ICD10GROUP != "C44",]
+  dt_report <- dt_report[ICD10GROUP != "O&U",]
+  
+  dt_report <- canreg_ageSpecific_rate_data(dt_report, keep_ref = TRUE)
+  
+  
+  
+  
+  dt_report<- Rcan:::core.csu_asr(df_data =dt_report, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
+                                  group_by = c("cancer_label", "SEX"),
+                                  missing_age = canreg_missing_age(dt_report),
+                                  first_age = canreg_age_group$first_age+1,
+                                  last_age= canreg_age_group$last_age+1,
+                                  pop_base_count = "REFERENCE_COUNT",
+                                  age_label_list = "AGE_GROUP_LABEL")
+  
+  
+  
+  text_male <- canreg_report_top_cancer_text(dt_report, 5, sex_select="Male")
+  text_female <- canreg_report_top_cancer_text(dt_report, 5, sex_select="Female")
+  
+  doc <- body_add_par(doc, paste0("In men, ",tolower(text_male)))
+  doc <- body_add_par(doc, paste0("In women, ",tolower(text_female)))
+  
+  canreg_output(output_type = "png", filename =  paste0(tempdir(), "\\temp_graph_a", list_number$fig),landscape = TRUE,list_graph = FALSE,
+                FUN=canreg_bar_top,
+                df_data=dt_report,
+                var_top="CASES",
+                nsmall=0,
+                color_bar=c("Male" = "#2c7bb6", "Female" = "#b62ca1"),nb_top = 10,
+                canreg_header = "",
+                ytitle=paste0(i18n$t("Number of cases"),", ", canreg_age_group$label))
+  
+  dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph_a", list_number$fig, ".png")), "dim" )
+  doc <- body_add_img(doc, paste0(tempdir(), "\\temp_graph_a", list_number$fig, ".png"),width=graph_width,height=graph_width*dims[1]/dims[2],style="centered" )
+  doc <- body_add_par(doc, paste0("Fig ",list_number$fig,"a. Top 10 cancers, both sexes (Number of cases)"))
+  
+  
+  canreg_output(output_type = "png", filename =  paste0(tempdir(), "\\temp_graph_b", list_number$fig),landscape = TRUE,list_graph = FALSE,
+                FUN=canreg_bar_top,
+                df_data=dt_report,color_bar=c("Male" = "#2c7bb6", "Female" = "#b62ca1"),nb_top = 10,
+                canreg_header = "",
+                ytitle=paste0(i18n$t("Age-standardized incidence rate per")," ", formatC(100000, format="d", big.mark=","), ", ", canreg_age_group$label))
+  
+  dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph_b", list_number$fig, ".png")), "dim" )
+  doc <- body_add_img(doc, paste0(tempdir(), "\\temp_graph_b", list_number$fig, ".png"),width=graph_width,height=graph_width*dims[1]/dims[2],style="centered" )
+  doc <- body_add_par(doc, paste0("Fig ",list_number$fig,"b. Top 10 cancers, both sexes (Age-standardized rate per 100,000)"))
+  list_number$fig=list_number$fig+1
+  
+  doc <- body_add_par(doc, "\r\n")
+  
+  
+  
+  dt_report <- dt_all
+  dt_report <- dt_report[ICD10GROUP != "C44",]
+  dt_report <- dt_report[ICD10GROUP != "O&U",]
+  dt_report <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE, keep_year = FALSE)
+  
+  
+  ##calcul of ASR
+  dt_asr <- Rcan:::core.csu_asr(df_data =dt_report, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
+                                group_by = c("cancer_label", "SEX","ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt_all),
+                                first_age = canreg_age_group$first_age+1,
+                                last_age= canreg_age_group$last_age+1,
+                                pop_base_count = "REFERENCE_COUNT",
+                                age_label_list = "AGE_GROUP_LABEL")
+  
+  ##calcul of cumulative risk
+  dt_cum_risk <- csu_cum_risk_core(df_data = dt_report,var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
+                                   group_by = c("cancer_label", "SEX","ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt_all),
+                                   last_age= canreg_age_group_cr$last_age+1,
+                                   age_label_list = "AGE_GROUP_LABEL")
+  
+  dt_bar <- dt_asr
+  var_top <- "CASES"
+  digit <- 0
+  xtitle <- paste0(i18n$t("Number of cases"),", ", canreg_age_group$label)
+  
+  canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph", list_number$fig),landscape = FALSE,list_graph = TRUE,
+                FUN=canreg_bar_top_single,
+                dt=dt_bar,var_top=var_top,nb_top = 10,
+                canreg_header = "",digit=digit,
+                xtitle=xtitle)
+  
+  dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", list_number$fig, "001.png")), "dim" )
+  
+  temp <- data.frame(1,2)
+  ft <- flextable(temp)
+  ft <- width(ft, width = dim_width)
+  ft <- compose(ft,
+               i = 1, j = 1,
+               value = as_paragraph(as_image(src = paste0(tempdir(), "\\temp_graph", list_number$fig, "001.png"), width=dim_width,height=dim_width*dims[1]/dims[2])))
+  
+  ft <- compose(ft,
+                i = 1, j = 2,
+                value = as_paragraph(as_image(src = paste0(tempdir(), "\\temp_graph", list_number$fig, "002.png"), width=dim_width,height=dim_width*dims[1]/dims[2])))
+  
+  ft <- delete_part(ft, part = "header")
+  ft <- border(ft,  border=fp_border(width=0))
+  
+  doc <- body_add_par(doc, "\r\n")
+  doc <- body_add_flextable(doc,ft, align = "center")
+  doc <- body_add_par(doc, paste0("Fig ",list_number$fig,". Top 10 cancers, number of cases"))
+  list_number$fig = list_number$fig+1
+  
+  
+  var_top <- "asr"
+  digit <- 1
+  xtitle<-paste0(i18n$t("Age-standardized incidence rate per")," ", formatC(100000, format="d", big.mark=","), ", ", canreg_age_group$label)
+  
+  canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph", list_number$fig),landscape = FALSE,list_graph = TRUE,
+                FUN=canreg_bar_top_single,
+                dt=dt_bar,var_top=var_top,nb_top = 10,
+                canreg_header = "",digit=digit,
+                xtitle=xtitle)
+  
+  dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", list_number$fig, "001.png")), "dim" )
+  
+  temp <- data.frame(1,2)
+  ft <- flextable(temp)
+  ft <- width(ft, width = dim_width)
+  ft <- compose(ft,
+               i = 1, j = 1,
+               value = as_paragraph(as_image(src = paste0(tempdir(), "\\temp_graph", list_number$fig, "001.png"), width=dim_width,height=dim_width*dims[1]/dims[2])))
+  
+  ft <- compose(ft,
+                i = 1, j = 2,
+                value = as_paragraph(as_image(src = paste0(tempdir(), "\\temp_graph", list_number$fig, "002.png"), width=dim_width,height=dim_width*dims[1]/dims[2])))
+  
+  ft <- delete_part(ft, part = "header")
+  ft <- border(ft,  border=fp_border(width=0))
+  
+  doc <- body_add_par(doc, "\r\n")
+  doc <- body_add_flextable(doc,ft, align = "center")
+  doc <- body_add_par(doc, paste0("Fig ",list_number$fig,". Top 10 cancers, ASR"))
+  list_number$fig <- list_number$fig+1
+  
+  var_top <- "cum_risk"
+  digit <- 2
+  dt_bar <- dt_cum_risk
+  xtitle<-paste0(i18n$t("Cumulative incidence risk (percent)"),", ", canreg_age_group_cr$label)
+  
+  canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph", list_number$fig),landscape = FALSE,list_graph = TRUE,
+                FUN=canreg_bar_top_single,
+                dt=dt_bar,var_top=var_top,nb_top = 10,
+                canreg_header = "",digit=digit,
+                xtitle=xtitle)
+  
+  dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", list_number$fig, "001.png")), "dim" )
+  
+  temp <- data.frame(1,2)
+  ft <- flextable(temp)
+  ft <- width(ft, width = dim_width)
+  ft <- compose(ft,
+               i = 1, j = 1,
+               value = as_paragraph(as_image(src = paste0(tempdir(), "\\temp_graph", list_number$fig, "001.png"), width=dim_width,height=dim_width*dims[1]/dims[2])))
+  
+  ft <- compose(ft,
+                i = 1, j = 2,
+                value = as_paragraph(as_image(src = paste0(tempdir(), "\\temp_graph", list_number$fig, "002.png"), width=dim_width,height=dim_width*dims[1]/dims[2])))
+  
+  ft <- delete_part(ft, part = "header")
+  ft <- border(ft,  border=fp_border(width=0))
+  
+  doc <- body_add_par(doc, "\r\n")
+  doc <- body_add_flextable(doc,ft, align = "center")
+  doc <- body_add_par(doc, paste0("Fig ",list_number$fig,". Top 10 cancers, cumulative risk, 0-74 years"))
+  list_number$fig <- list_number$fig+1
+  
+  doc <- body_add_break(doc)
+  
+  doc <- body_add_par(doc, "Age-specific incidence rates (most common sites) by sex", style = "heading 2")
+  if (shiny) {
+    incProgress(inc_progress_value, detail = "Age-specific incidence rates (most common sites) by sex")
+  } else {
+    if (sysName == "Windows") {
+      setWinProgressBar(pb, inc_progress_value*i_pb,label = "Age-specific incidence rates (most common sites) by sex")
+      i_pb <- i_pb+1
+    }
+  }
+  
+  
+  dt_report <- dt_all
+  dt_report <- dt_report[ICD10GROUP != "C44",]
+  dt_report <- dt_report[ICD10GROUP != "O&U",]
+  dt_report <- canreg_ageSpecific_rate_data(dt_report)
+  
+  canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph", list_number$fig),landscape = FALSE,list_graph = TRUE,
+                FUN=canreg_ageSpecific_rate_top,
+                df_data=dt_report,logscale = TRUE,nb_top = 5,
+                plot_title = "")
+  
+  dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", list_number$fig, "001.png")), "dim" )
+  
+  temp <- data.frame(1,2)
+  ft <- flextable(temp)
+  ft <- width(ft, width = dim_width)
+  ft <- compose(ft,
+               i = 1, j = 1,
+               value = as_paragraph(as_image(src = paste0(tempdir(), "\\temp_graph", list_number$fig, "001.png"), width=dim_width,height=dim_width*dims[1]/dims[2])))
+  
+  ft <- compose(ft,
+                i = 1, j = 2,
+                value = as_paragraph(as_image(src = paste0(tempdir(), "\\temp_graph", list_number$fig, "002.png"), width=dim_width,height=dim_width*dims[1]/dims[2])))
+  
+  ft <- delete_part(ft, part = "header")
+  ft <- border(ft,  border=fp_border(width=0))
+  
+  doc <- body_add_par(doc, "\r\n")
+  doc <- body_add_flextable(doc,ft, align = "center")
+  doc <- body_add_par(doc, paste0("Fig ",list_number$fig,". Age-specific incidence rates"))
+  list_number$fig <- list_number$fig+1
+  
+  
+  if (year_info$span >  time_limit) {
+    
+    doc <- body_add_break(doc)
+    doc <- body_add_par(doc, "Trend in ASR (most common sites) by sex", style = "heading 2")
+    if (shiny) {
+      incProgress(inc_progress_value, detail = "Trend in ASR (most common sites) by sex")
+    } else {
+      if (sysName == "Windows") {
+        setWinProgressBar(pb, inc_progress_value*i_pb,label = "Trend in ASR (most common sites) by sex")
+        i_pb <- i_pb+1
+      }
+    }
+    
+    dt_report <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE, keep_year = TRUE)
+    
+    ##calcul of ASR
+    dt_report<- Rcan:::core.csu_asr(df_data =dt_report, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
+                                    group_by = c("cancer_label", "SEX", "YEAR", "ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt_all),
+                                    first_age =canreg_age_group$first_age+1,
+                                    last_age= canreg_age_group$last_age+1,
+                                    pop_base_count = "REFERENCE_COUNT",
+                                    age_label_list = "AGE_GROUP_LABEL")
+    
+    
+    #produce graph
+    canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph", list_number$fig),landscape = FALSE,list_graph = TRUE,
+                  FUN=canreg_asr_trend_top,
+                  dt=dt_report,number = 5,
+                  canreg_header = "",
+                  ytitle=paste0(i18n$t("Age-standardized incidence rate per")," ", formatC(100000, format="d", big.mark=","), ", ", canreg_age_group$label))
+    
+    dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", list_number$fig, "001.png")), "dim" )
+    
+    temp <- data.frame(1,2)
+    ft <- flextable(temp)
+    ft <- width(ft, width = dim_width)
+    ft <- compose(ft,
+                 i = 1, j = 1,
+                 value = as_paragraph(as_image(src = paste0(tempdir(), "\\temp_graph", list_number$fig, "001.png"), width=dim_width,height=dim_width*dims[1]/dims[2])))
+    
+    ft <- compose(ft,
+                  i = 1, j = 2,
+                  value = as_paragraph(as_image(src = paste0(tempdir(), "\\temp_graph", list_number$fig, "002.png"), width=dim_width,height=dim_width*dims[1]/dims[2])))
+    
+    ft <- delete_part(ft, part = "header")
+    ft <- border(ft,  border=fp_border(width=0))
+    
+    doc <- body_add_par(doc, "\r\n")
+    doc <- body_add_flextable(doc,ft, align = "center")
+    doc <- body_add_par(doc, paste0("Fig ",list_number$fig,". Trend in Age-standardized (W) incidence rate"))
+    list_number$fig <- list_number$fig+1
+    
+  }
+  
+  if (year_info$span >  time_limit) {
+    
+    doc <- body_add_break(doc)
+    doc <- body_add_par(doc, i18n$t("Estimated annual percentage change"), style = "heading 2")
+    if (shiny) {
+      incProgress(inc_progress_value, detail = "Estimated annual percentage change")
+    } else {
+      if (sysName == "Windows") {
+        setWinProgressBar(pb, inc_progress_value*i_pb,label = "Estimated annual percentage change")
+        i_pb <- i_pb+1
+      }
+    }
+    
+    dt_report <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE, keep_year = TRUE)
+    
+    
+    ##calcul of ASR
+    dt_report<- Rcan:::core.csu_asr(df_data =dt_report, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
+                                    group_by = c("cancer_label", "SEX", "YEAR"), missing_age = canreg_missing_age(dt_all),
+                                    first_age = canreg_age_group$first_age+1,
+                                    last_age= canreg_age_group$last_age+1,
+                                    pop_base_count = "REFERENCE_COUNT",
+                                    age_label_list = "AGE_GROUP_LABEL")
+    
+    ##Keep top based on rank
+    dt_report <- Rcan:::core.csu_dt_rank(dt_report,
+                                         var_value= "CASES",
+                                         var_rank = "cancer_label",
+                                         group_by = "SEX",
+                                         number = 25
+    )
+    
+
+    ##calcul eapc
+    dt_report <- Rcan:::core.csu_eapc(dt_report, var_rate = "asr",var_year = "YEAR" ,group_by =c("cancer_label", "SEX","CSU_RANK"))
+    dt_report <-as.data.table(dt_report)
+    
+    
+    #produce graph
+    canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph", list_number$fig),landscape = TRUE,list_graph = TRUE,
+                  FUN=canreg_eapc_scatter_error_bar,
+                  dt=dt_report,
+                  canreg_header = i18n$t("Estimated Average Percentage Change"),
+                  ytitle=paste0(i18n$t("Estimated average percentage change")," (%), ", canreg_age_group$label))
+    
+    
+    dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", list_number$fig, "001.png")), "dim" )
+    doc <- body_add_img(doc, paste0(tempdir(), "\\temp_graph", list_number$fig, "001.png"),width=graph_width*0.9,height=graph_width*0.9*dims[1]/dims[2],style="centered" )
+    doc <- body_add_par(doc, paste0("Fig ",list_number$fig,". Estimated annual percentage change, male"))
+    doc <- body_add_img(doc, paste0(tempdir(), "\\temp_graph", list_number$fig, "002.png"),width=graph_width*0.9,height=graph_width*0.9*dims[1]/dims[2],style="centered" )
+    doc <- body_add_par(doc, paste0("Fig ",list_number$fig,". Estimated annual percentage change, female"))
+    list_number$fig=list_number$fig+1 
+    doc <- body_add_par(doc, "\r\n")
+    
+  }
+  
+  
+  
+  ## comparison with CI5 registries.
+  
+  region_admit <- c("EastMed", "Americas", "West Pacific", "Europe", "SEAsia", "Africa")
+  
+  if (ls_args$sr %in% region_admit) {
+    
+    doc <- body_add_break(doc)
+    doc <- body_add_par(doc, "Comparison of summary rates with other registries (in same region)", style = "heading 2")
+    
+    if (shiny) {
+      incProgress(inc_progress_value, detail = "Comparison of summary rates with other registries (in same region)")
+    } else {
+      if (sysName == "Windows") {
+        setWinProgressBar(pb, inc_progress_value*i_pb,label = "Comparison of summary rates with other registries (in same region)")
+        i_pb <- i_pb+1
+      }
+    }
+
+    doc <- body_add_par(doc, "\r\n")
+    
+    
+    dt_report <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE)
+    
+    # import CI5 data with same cancer code and same age group
+    dt_CI5_data <- canreg_import_CI5_data(dt_report, paste0(script.basename, "/CI5_data.rds"))
+    
+    
+    
+    #merge CI5 and canreg data
+    dt_both <- canreg_merge_CI5_registry(dt_report,dt_CI5_data, registry_region = ls_args$sr, registry_label = ls_args$header )
+    
+    #create bar chart graphique 
+    setkeyv(dt_both, c("CSU_RANK", "SEX","asr"))
+    dt_both[country_label!=ls_args$header,ICD10GROUPCOLOR:=paste0(ICD10GROUPCOLOR,"6E")]
+    dt_both[country_label==ls_args$header,ICD10GROUPCOLOR:=paste0(ICD10GROUPCOLOR,"FF")]
+    
+    CI5_registries <- sort(as.character(unique(dt_both$country_label)))
+    CI5_registries <- CI5_registries[CI5_registries != ls_args$header]
+    CI5_registries <- gsub("\\*","",CI5_registries)
+    
+    doc <- body_add_par(doc,
+                        paste0("Figure ",list_number$fig," shows a comparison of the age-standardised incidence rates in ",
+                               ls_args$header, " with those observed in ", 
+                               CI5_registries[1], ", ", CI5_registries[2],
+                               " and ", CI5_registries[3], " (CI5 X, 2013)." ))
+    
+    
+    doc <- body_add_par(doc, "\r\n")
+    
+    canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph", list_number$fig),landscape = TRUE,list_graph = TRUE,
+                  FUN=canreg_bar_CI5_compare,
+                  dt=dt_both,xtitle=paste0(i18n$t("Age-standardized incidence rate per")," ", formatC(100000, format="d", big.mark=",")))
+    
+    dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", list_number$fig, "001.png")), "dim" )
+    temp <- data.frame(1,2)
+
+    for (i in 1:5) {
+      
+      ft <- flextable(temp)
+      ft <- width(ft, width = 3.2)
+      ft <- compose(ft,
+                    i = 1, j = 1,
+                    value = as_paragraph(as_image(src = paste0(tempdir(), "\\temp_graph", list_number$fig, sprintf("%03d",(2*i)-1), ".png"), width=3.2,height=3.2*dims[1]/dims[2])))
+      
+      ft <- compose(ft,
+                    i = 1, j = 2,
+                    value = as_paragraph(as_image(src = paste0(tempdir(), "\\temp_graph", list_number$fig, sprintf("%03d",(2*i)), ".png"), width=3.2,height=3.2*dims[1]/dims[2])))
+      
+      ft <- delete_part(ft, part = "header")
+      ft <- border(ft,  border=fp_border(width=0))
+      
+      doc <- body_add_flextable(doc,ft, align = "center")
+    }
+    
+    doc <- body_add_par(doc, paste0("Fig ",list_number$fig,". Comparison with other registries"))
+    list_number$fig=list_number$fig+1
+    
+    doc <- body_add_par(doc, "\r\n")
+    
+  }
+  
+  
+  
+  
+  
+  ## Basis of diagnosis
+  doc <- body_add_break(doc)
+  doc <- body_add_par(doc, "Basis of Diagnosis (DCO / Clinical / MV) by site", style = "heading 2")
+  if (shiny) {
+    incProgress(inc_progress_value, detail = "Basis of Diagnosis (DCO / Clinical / MV) by site")
+  } else {
+    if (sysName == "Windows") {
+      setWinProgressBar(pb, inc_progress_value*i_pb,label = "Basis of Diagnosis (DCO / Clinical / MV) by site")
+      i_pb <- i_pb+1
+    }
+  }
+  
+
+  dt_basis[BASIS > 0 & BASIS < 5, BASIS:=1]
+  dt_basis[BASIS >= 5, BASIS:=2]
+  
+  dt_report <- canreg_ageSpecific_rate_data(dt_basis, keep_basis = TRUE)
+  dt_report <- canreg_basis_table(dt_report)
+  
+  
+  
+  ft <- flextable(dt_report)
+  ft <- set_header_labels(ft, CSU_label = "", CSU_ICD = "", total_cases= "",total_pc_test = "", 
+                          BASIS_pc.0= "% DCO", BASIS_pc.1= "% Clinical", BASIS_pc.2= "% M.V") 
+  ft <- add_header(ft, CSU_label = "Cancer site", CSU_ICD = "ICD-10", total_cases= "No. Cases",total_pc_test = "% total", 
+                   BASIS_pc.0= "Basis of diagnosis", BASIS_pc.1= "Basis of diagnosis", BASIS_pc.2= "Basis of diagnosis",
+                   top = TRUE ) 
+  
+  
+  ft <- display( ft, col_key = "total_cases", pattern = "{{cases}}", 
+                 formatters = list(cases ~ sprintf("%.00f", total_cases))) 
+  
+  ft <- width(ft, j = 1, width = 1.7)
+  ft <- width(ft, j = 2, width = 1.2)
+  
+  ft <- merge_h(ft,i=1, part="header")
+  ft <- border(ft ,j=1:4,border=fp_border(width = 0), part="header")
+  ft <- border(ft ,i=1,j=1:4,border.top=fp_border(width = 1), part="header")
+  ft <- border(ft ,border=fp_border(width = 0), part="body")
+  ft <- border(ft, i=c(1,nrow(dt_report)),border.top=fp_border(width = 1), part="body")
+  ft <- border(ft, i=nrow(dt_report),border.bottom=fp_border(width = 1), part="body")
+  ft <- border(ft, j=c(1,3,5,6,7),border.left=fp_border(width = 1), part="all")
+  ft <- border(ft, j=7,border.right=fp_border(width = 1), part="all")
+  ft <- align(ft, align="center", part="header")
+  ft <- height(ft, height = 0.1, part="header")
+  ft <- bg(ft, i = seq(1,nrow(dt_report),2), bg="#deebf7", part = "body")
+  ft <- bg(ft, i = nrow(dt_report), bg="#c6dbef", part = "body")
+  ft <- bg(ft, i = 1, bg="#c6dbef", part = "header")
+  ft <- bg(ft, i = 2, bg="#c6dbef", part = "header")
+  
+  doc <- body_add_par(doc, "\r\n")
+  
+  doc <- body_add_par(doc,
+                      paste0("Table ",list_number$tbl," shows the percentage of cases at the major sites that were registered on the basis of information from a death certificate only (DCO) and with morphological verification (MV) - that is, based on cytology or histology (of the primary tumor, or a metastasis)."))
+  
+  doc <- body_add_par(doc, "\r\n")
+  doc <- body_add_flextable(doc,ft, align = "center")
+  doc <- body_add_par(doc, "\r\n")
+  doc <- body_add_par(doc,paste0("Table ",list_number$tbl,"."), style="centered")
+  list_number$tbl=list_number$tbl+1
+
+  ## ICCC
+  doc <- body_add_break(doc)
+  doc <- body_add_par(doc, "Childhood cancers (0 to 14 years)", style = "heading 2")
+
+  if (shiny) {
+    incProgress(inc_progress_value, detail = "Childhood cancers (0 to 14 years)")
+  } else {
+    if (sysName == "Windows") {
+      setWinProgressBar(pb, inc_progress_value*i_pb,label = "Childhood cancers (0 to 14 years)")
+      i_pb <- i_pb+1
+    }
+  }
+  
+  dt_temp <- copy(dt_iccc)
+  table_iccc <- canreg_iccc_table(dt_temp)
+  dt_report <- table_iccc$dt
+  age_label <- table_iccc$age_label_order
+  
+  
+  
+  ft <- flextable(dt_report)
+  ft <- set_header_labels(ft, ICCC_code = "", ICCC_label = "", 
+    CSU_C.0= age_label[1],
+    CSU_C.1= age_label[2],
+    CSU_C.2= age_label[3],
+    total_cases = "All", 
+    ratio = "M/F",
+    frequence = "% total",
+    age_crude.0= age_label[1],
+    age_crude.1= age_label[2],
+    age_crude.2= age_label[3],
+    crude="crude",
+    asr="ASR")
+
+  ft <- add_header(ft, ICCC_code = "ICCC3", ICCC_label = "ICCC3", 
+    CSU_C.0= "Number of cases",
+    CSU_C.1= "Number of cases",
+    CSU_C.2= "Number of cases",
+    total_cases = "Number of cases",
+    ratio = "Number of cases",
+    frequence = "Number of cases",
+    age_crude.0= "Rates per million",
+    age_crude.1= "Rates per million",
+    age_crude.2= "Rates per million",
+    crude="Rates per million",
+    asr="Rates per million",
+    top=TRUE)
+  
+  ft <- width(ft, j = 1, width = 0.5)
+  ft <- width(ft, j = 2, width = 1.7)
+  ft <- width(ft, j = 3:13, width = 0.5)
+
+
+  ft <- fontsize(ft, size = 10, part = "all")
+
+  
+  ft <- merge_h(ft,i=1, part="header")
+  ft <- border(ft, i=c(1,nrow(dt_report)),border.top=fp_border(width = 1), part="body")
+  ft <- border(ft, i=nrow(dt_report),border.bottom=fp_border(width = 1), part="body")
+
+  ft <- border(ft, j=c(1,3,9),border.left=fp_border(width = 1), part="all")
+  ft <- border(ft, j=13,border.right=fp_border(width = 1), part="all")
+  ft <- align(ft, align="center", part="header")
+  ft <- height(ft, height = 0.1, part="header")
+  ft <- bg(ft, i = seq(1,nrow(dt_report),2), bg="#deebf7", part = "body")
+  ft <- bg(ft, i = nrow(dt_report), bg="#c6dbef", part = "body")
+  ft <- bg(ft, i = 1, bg="#c6dbef", part = "header")
+  ft <- bg(ft, i = 2, bg="#c6dbef", part = "header")
+  
+  doc <- body_add_par(doc, "\r\n")
+  
+  doc <- body_add_par(doc, paste0("Table ",list_number$tbl," shows incidence of childhood cancer, classified according to the International Classification of Childhood cancer (ICCC-3) (Steliarova-Foucher et al, 2005)."))
+  
+  doc <- body_add_par(doc, "\r\n")
+  doc <- body_add_flextable(doc,ft, align = "center")
+  doc <- body_add_par(doc, "\r\n")
+  doc <- body_add_par(doc,paste0("Table ",list_number$tbl,"."), style="centered")
+  
+  
+  if (ann) {
+    dt_appendix <- canreg_report_template_extract(report_path, script.basename, appendix  =TRUE)
+    list_number$fig <- 1
+    list_number$tbl <- 1
+    
+    if (!is.null(dt_appendix)) {
+
+      if (shiny) {
+        incProgress(inc_progress_value, detail = "Add appendix")
+      } else {
+        if (sysName == "Windows") {
+          setWinProgressBar(pb, inc_progress_value*i_pb,label = "Add appendix")
+          i_pb <- i_pb+1
+        }
+      }
+
+      list_number <- canreg_report_chapter_txt(dt_appendix, doc, report_path,dt_all,pop_file =ls_args$pop,list_number, appendix=TRUE)
+    }
+  }
+
+  return(doc)
+
+}
+
+rcan_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
+
+  graph_width <- 8
+  graph_width_split <- 4
+  graph_width_vertical <- 5
+  time_limit <- 9
+  nb_slide <- 1
+
+  inc_progress_value <- 1/15 
+  i_pb <- 1
+
+  year_info <- canreg_get_years(dt_all)
+
+
+  ## get age group label
+  canreg_age_group <- canreg_get_agegroup_label(dt_all, ls_args$agegroup)
+  
+  ## get age group for cumulative risk 
+  temp <- min(as.numeric(substr(ls_args$agegroup,regexpr("-", ls_args$agegroup)[1]+1,nchar(ls_args$agegroup))),14)
+  canreg_age_group_cr <- canreg_get_agegroup_label(dt_all, paste0("0-",temp))
+  
+  doc <-  add_slide(doc, layout="Canreg_title", master="Office Theme") ## add PPTX slide (Title + content)
+  doc <- ph_with_text(doc, type = "ctrTitle", str = ls_args$header)
+  
+  date <- format(Sys.time(), "%B/%Y")
+  date <- paste0(toupper(substr(date,1,1)),substr(date,2,nchar(date)))
+  doc <- ph_with_text(doc, type = "subTitle", str = date)
+  
+  #################
+  doc <-  add_slide(doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
+  doc <- ph_with_text(doc, type = "title", str = "Population pyramid")
+  if (shiny) {
+    incProgress(inc_progress_value, detail = "Population pyramid")
+  } else {
+    if (sysName == "Windows") {
+      setWinProgressBar(pb, inc_progress_value*i_pb,label = "Population pyramid")
+      i_pb <- i_pb+1
+    }
+  }
+  
+  dt_report <- dt_all
+  dt_report <- canreg_pop_data(pop_file =ls_args$pop)
+  
+  canreg_output(output_type = "png", filename =  paste0(tempdir(), "\\temp_graph", nb_slide),landscape = TRUE,list_graph = FALSE,
+                FUN=canreg_population_pyramid,
+                df_data =dt_report,
+                canreg_header = "")
+  
+  dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", nb_slide, ".png")), "dim" )
+  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, ".png"),width=graph_width,height=graph_width*dims[1]/dims[2])
+  
+  nb_slide <- nb_slide +1
+  
+  
+  ################# 
+  doc <-  add_slide(doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
+  doc <- ph_with_text(doc, type = "title", str = "Number of cases by age group & sex")
+  if (shiny) {
+    incProgress(inc_progress_value, detail = "Number of cases by age group & sex")
+  } else {
+    if (sysName == "Windows") {
+      setWinProgressBar(pb, inc_progress_value*i_pb,label = "Number of cases by age group & sex")
+      i_pb <- i_pb+1
+    }
+  }
+
+  # bar chart age
+  dt_report <- dt_all
+  dt_report[ICD10GROUP != "C44",]$ICD10GROUP ="O&U" 
+  dt_report[ICD10GROUP != "C44",]$ICD10GROUPLABEL ="Other and unspecified" 
+  dt_report <- dt_report[, .(CASES=sum(CASES)),by=.(ICD10GROUP, ICD10GROUPLABEL, YEAR,SEX, AGE_GROUP,AGE_GROUP_LABEL,COUNT,REFERENCE_COUNT) ]
+  dt_report <- canreg_age_cases_data(dt_report,age_group = c(5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80), skin=TRUE)
+  
+  canreg_output(output_type = "png", filename =  paste0(tempdir(), "\\temp_graph", nb_slide),landscape = TRUE,list_graph = FALSE,
+                FUN=canreg_cases_age_bar,
+                df_data =dt_report,
+                canreg_header = "", skin=FALSE)
+  
+  
+  dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", nb_slide, ".png")), "dim" )
+  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, ".png"),width=graph_width,height=graph_width*dims[1]/dims[2])
+  nb_slide <- nb_slide +1
+  
+  
+  ################# 
+  doc <-  add_slide(doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
+  doc <- ph_with_text(doc, type = "title", str = "Proportion of cases by age group & sex")
+  if (shiny) {
+    incProgress(inc_progress_value, detail = "Proportion of cases by age group & sex")
+  } else {
+    if (sysName == "Windows") {
+      setWinProgressBar(pb, inc_progress_value*i_pb,label = "Proportion of cases by age group & sex")
+      i_pb <- i_pb+1
+    }
+  }
+
+  dt_report <- dt_all
+  dt_report[ICD10GROUP != "C44",]$ICD10GROUP ="O&U" 
+  dt_report[ICD10GROUP != "C44",]$ICD10GROUPLABEL ="Other and unspecified" 
+  dt_report <- dt_report[, .(CASES=sum(CASES)),by=.(ICD10GROUP, ICD10GROUPLABEL, YEAR,SEX, AGE_GROUP,AGE_GROUP_LABEL,COUNT,REFERENCE_COUNT) ]
+  dt_report <- canreg_age_cases_data(dt_all, skin=TRUE)
+  
+  
+  canreg_output(output_type = "png", filename = paste0(tempdir(),"\\temp_graph", nb_slide),landscape = TRUE,list_graph = FALSE,
+                FUN=canreg_age_cases_pie_multi_plot,
+                dt=dt_report,
+                canreg_header = i18n$t("All cancers but C44"))
+  
+  dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", nb_slide, ".png")), "dim" )
+  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, ".png"),width=graph_width,height=graph_width*dims[1]/dims[2])
+  nb_slide <- nb_slide +1
+  
+  ################# 
+  doc <-  add_slide(doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
+  doc <- ph_with_text(doc, type = "title", str = "Number of cases by year")
+  if (shiny) {
+    incProgress(inc_progress_value, detail = "Number of cases by year")
+  } else {
+    if (sysName == "Windows") {
+      setWinProgressBar(pb, inc_progress_value*i_pb,label = "Number of cases by year")
+      i_pb <- i_pb+1
+    }
+  }
+  
+  dt_report <- dt_all
+  dt_report[ICD10GROUP != "C44",]$ICD10GROUP ="O&U" 
+  dt_report[ICD10GROUP != "C44",]$ICD10GROUPLABEL ="Other and unspecified" 
+  dt_report <- dt_report[, .(CASES=sum(CASES)),by=.(ICD10GROUP, ICD10GROUPLABEL, YEAR,SEX, AGE_GROUP,AGE_GROUP_LABEL,COUNT,REFERENCE_COUNT) ]
+  
+  dt_report <- canreg_year_cases_data(dt_report, skin=FALSE)
+  
+  
+  ##Produce output
+  canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph", nb_slide),landscape = TRUE,list_graph = FALSE,
+                FUN=canreg_cases_year_bar,
+                dt=dt_report,
+                canreg_header = "", skin=FALSE)
+  
+  dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", nb_slide, ".png")), "dim" )
+  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, ".png"),width=graph_width,height=graph_width*dims[1]/dims[2])
+  nb_slide <- nb_slide +1
+  
+  
+  ################# 
+  
+  doc <-  add_slide(doc, layout="Canreg_basic_subtitle", master="Office Theme") ## add PPTX slide (Title + content)
+  doc <- ph_with_text(doc, type = "title", str = "Top 10 cancers, both sexes")
+  doc <- ph_with_text(doc, type = "body", str = "Number of cases")
+  
+  if (shiny) {
+    incProgress(inc_progress_value, detail = "Top 10 cancers, both sexes: number of cases")
+  } else {
+    if (sysName == "Windows") {
+      setWinProgressBar(pb, inc_progress_value*i_pb,label = "Top 10 cancers, both sexes: number of cases")
+      i_pb <- i_pb+1
+    }
+  }
+
+  dt_report <- dt_all
+  dt_report <- dt_report[ICD10GROUP != "C44",]
+  dt_report <- dt_report[ICD10GROUP != "O&U",]
+  
+  dt_report <- canreg_ageSpecific_rate_data(dt_report, keep_ref = TRUE)
+  
+  
+  
+  
+  dt_report<- Rcan:::core.csu_asr(df_data =dt_report, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
+                                  group_by = c("cancer_label", "SEX"),
+                                  missing_age = canreg_missing_age(dt_report),
+                                  first_age = canreg_age_group$first_age+1,
+                                  last_age= canreg_age_group$last_age+1,
+                                  pop_base_count = "REFERENCE_COUNT",
+                                  age_label_list = "AGE_GROUP_LABEL")
+  
+  
+  canreg_output(output_type = "png", filename =  paste0(tempdir(), "\\temp_graph", nb_slide),landscape = TRUE,list_graph = FALSE,
+                FUN=canreg_bar_top,
+                df_data=dt_report,
+                var_top="CASES",
+                nsmall=0,
+                color_bar=c("Male" = "#2c7bb6", "Female" = "#b62ca1"),nb_top = 10,
+                canreg_header = "",
+                ytitle=paste0(i18n$t("Number of cases")," ", canreg_age_group$label))
+  
+  dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", nb_slide, ".png")), "dim" )
+  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, ".png"),  width=graph_width,height=graph_width*dims[1]/dims[2])
+  nb_slide <- nb_slide +1
+  
+  
+  
+  
+  ################# 
+  doc <-  add_slide(doc, layout="Canreg_basic_subtitle", master="Office Theme") ## add PPTX slide (Title + content)
+  doc <- ph_with_text(doc, type = "title", str = "Top 10 cancers, both sexes")
+  doc <- ph_with_text(doc, type = "body", str = "Age-standardized incidence rate")
+  
+  if (shiny) {
+    incProgress(inc_progress_value, detail = "Top 10 cancers, both sexes: ASR")
+  } else {
+    if (sysName == "Windows") {
+      setWinProgressBar(pb, inc_progress_value*i_pb,label = "Top 10 cancers, both sexes: ASR")
+      i_pb <- i_pb+1
+    }
+  }
+
+  canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph", nb_slide),landscape = TRUE,list_graph = FALSE,
+                FUN=canreg_bar_top,
+                df_data=dt_report,color_bar=c("Male" = "#2c7bb6", "Female" = "#b62ca1"),nb_top = 10,
+                canreg_header = "",
+                ytitle=paste0(i18n$t("Age-standardized incidence rate per")," ", formatC(100000, format="d", big.mark=","), ", ", canreg_age_group$label))
+  
+  dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", nb_slide, ".png")), "dim" )
+  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, ".png"),  width=graph_width,height=graph_width*dims[1]/dims[2])
+  nb_slide <- nb_slide +1
+  #################
+  
+  doc <-  add_slide(doc, layout="Canreg_split", master="Office Theme") ## add PPTX slide (Title + content)
+  doc <- ph_with_text(doc, type = "title", str = "Top 10 cancers: Number of cases")
+  if (shiny) {
+    incProgress(inc_progress_value, detail = "Top 10 cancers: Number of cases")
+  } else {
+    if (sysName == "Windows") {
+      setWinProgressBar(pb, inc_progress_value*i_pb,label = "Top 10 cancers: Number of cases")
+      i_pb <- i_pb+1
+    }
+  }
+
+  dt_report <- dt_all
+  dt_report <- dt_report[ICD10GROUP != "C44",]
+  dt_report <- dt_report[ICD10GROUP != "O&U",]
+  dt_report <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE, keep_year = FALSE)
+  
+  
+  ##calcul of ASR
+  dt_asr<- Rcan:::core.csu_asr(df_data =dt_report, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
+                               group_by = c("cancer_label", "SEX","ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt_all),
+                               first_age = canreg_age_group$first_age+1,
+                               last_age= canreg_age_group$last_age+1,
+                               pop_base_count = "REFERENCE_COUNT",
+                               age_label_list = "AGE_GROUP_LABEL")
+  
+  ##calcul of cumulative risk
+  dt_cum_risk <- csu_cum_risk_core(df_data = dt_report,var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
+                                   group_by = c("cancer_label", "SEX","ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt_all),
+                                   last_age= canreg_age_group_cr$last_age+1,
+                                   age_label_list = "AGE_GROUP_LABEL")
+  
+  dt_bar <- dt_asr
+  var_top <- "CASES"
+  digit <- 0
+  xtitle <- paste0(i18n$t("Number of cases"),", ", canreg_age_group$label)
+  
+  canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph", nb_slide),landscape = FALSE,list_graph = TRUE,
+                FUN=canreg_bar_top_single,
+                dt=dt_bar,var_top=var_top,nb_top = 10,
+                canreg_header = "",digit=digit,
+                xtitle=xtitle)
+  
+  dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", nb_slide, "001.png")), "dim" )
+  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "001.png"), index=1, width=graph_width_split,height=graph_width_split*dims[1]/dims[2])
+  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "002.png"), index=2, width=graph_width_split,height=graph_width_split*dims[1]/dims[2])
+  nb_slide <- nb_slide +1
+  
+  
+  
+  ################# 
+  doc <-  add_slide(doc, layout="Canreg_split", master="Office Theme") ## add PPTX slide (Title + content)
+  doc <- ph_with_text(doc, type = "title", str = "Top 10 cancers: ASR")
+  if (shiny) {
+    incProgress(inc_progress_value, detail = "Top 10 cancers: ASR")
+  } else {
+    if (sysName == "Windows") {
+      setWinProgressBar(pb, inc_progress_value*i_pb,label = "Top 10 cancers: ASR")
+      i_pb <- i_pb+1
+    }
+  }
+  
+  var_top <- "asr"
+  digit <- 1
+  xtitle<-paste0(i18n$t("Age-standardized incidence rate per"),", ", formatC(100000, format="d", big.mark=","),", ", canreg_age_group$label)
+  
+  canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph", nb_slide),landscape = FALSE,list_graph = TRUE,
+                FUN=canreg_bar_top_single,
+                dt=dt_bar,var_top=var_top,nb_top = 10,
+                canreg_header = "",digit=digit,
+                xtitle=xtitle)
+  
+  dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", nb_slide, "001.png")), "dim" )
+  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "001.png"), index=1, width=graph_width_split,height=graph_width_split*dims[1]/dims[2])
+  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "002.png"), index=2, width=graph_width_split,height=graph_width_split*dims[1]/dims[2])
+  nb_slide <- nb_slide +1
+  ################# 
+  doc <-  add_slide(doc, layout="Canreg_split", master="Office Theme") ## add PPTX slide (Title + content)
+  doc <- ph_with_text(doc, type = "title", str = "Top 10 cancers: Cumulative risk")
+
+  if (shiny) {
+    incProgress(inc_progress_value, detail = "Top 10 cancers: Cumulative risk")
+  } else {
+    if (sysName == "Windows") {
+      setWinProgressBar(pb, inc_progress_value*i_pb,label = "Top 10 cancers: Cumulative risk")
+      i_pb <- i_pb+1
+    }
+  }
+  
+  var_top <- "cum_risk"
+  digit <- 2
+  dt_bar <- dt_cum_risk
+  xtitle<-paste0(i18n$t("Cumulative incidence risk (percent)"),", ", canreg_age_group_cr$label)
+  
+  canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph", nb_slide),landscape = FALSE,list_graph = TRUE,
+                FUN=canreg_bar_top_single,
+                dt=dt_bar,var_top=var_top,nb_top = 10,
+                canreg_header = "",digit=digit,
+                xtitle=xtitle)
+  
+  dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", nb_slide, "001.png")), "dim" )
+  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "001.png"), index=1, width=graph_width_split,height=graph_width_split*dims[1]/dims[2])
+  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "002.png"), index=2, width=graph_width_split,height=graph_width_split*dims[1]/dims[2])
+  nb_slide <- nb_slide +1
+  ################# ####
+  
+  
+  
+  
+  
+  dt_report <- dt_all
+  dt_report <- dt_report[ICD10GROUP != "C44",]
+  dt_report <- dt_report[ICD10GROUP != "O&U",]
+  dt_report <- canreg_ageSpecific_rate_data(dt_report)
+  
+  canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph", nb_slide),landscape = FALSE,list_graph = TRUE,
+                FUN=canreg_ageSpecific_rate_top,
+                df_data=dt_report,logscale = TRUE,nb_top = 5,
+                plot_title = "")
+  
+  doc <-  add_slide(doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
+  doc <- ph_with_text(doc, type = "title", str = "Age-specific rates:\r\nMales")
+
+  if (shiny) {
+    incProgress(inc_progress_value, detail = "Age-specific rates")
+  } else {
+    if (sysName == "Windows") {
+      setWinProgressBar(pb, inc_progress_value*i_pb,label = "Age-specific rates")
+      i_pb <- i_pb+1
+    }
+  }
+
+  
+  dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", nb_slide, "001.png")), "dim" )
+  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "001.png"), index=1, width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
+  
+  doc <-  add_slide(doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
+  doc <- ph_with_text(doc, type = "title", str = "Age-specific rates:\r\nFemales")
+  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "002.png"), index=1, width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
+  nb_slide <- nb_slide +1
+  
+  
+  
+  #################  
+  if (year_info$span > time_limit) {  
+    
+    
+    dt_report <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE, keep_year = TRUE)
+    
+    
+    ## get age group label
+    
+    
+    ##calcul of ASR
+    dt_report<- Rcan:::core.csu_asr(df_data =dt_report, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
+                                    group_by = c("cancer_label", "SEX", "YEAR", "ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt_all),
+                                    first_age = canreg_age_group$first_age+1,
+                                    last_age= canreg_age_group$last_age+1,
+                                    pop_base_count = "REFERENCE_COUNT",
+                                    age_label_list = "AGE_GROUP_LABEL")
+    
+    
+    #produce graph
+    canreg_output(output_type = "png", filename = paste0(tempdir(),"\\temp_graph", nb_slide),landscape = FALSE,list_graph = TRUE,
+                  FUN=canreg_asr_trend_top,
+                  dt=dt_report,number = 5,
+                  canreg_header = "",
+                  ytitle=paste0(i18n$t("Age-standardized incidence rate per")," ", formatC(100000, format="d", big.mark=","), ", ", canreg_age_group$label))
+    
+    doc <-  add_slide(doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
+    doc <- ph_with_text(doc, type = "title", str = "Trend in ASR:\r\nMales")
+    
+    if (shiny) {
+      incProgress(inc_progress_value, detail = "Trend in ASR")
+    } else {
+      if (sysName == "Windows") {
+        setWinProgressBar(pb, inc_progress_value*i_pb,detail = "Trend in ASR")
+        i_pb <- i_pb+1
+      }
+    }
+
+    dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", nb_slide, "001.png")), "dim" )
+    doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "001.png"), index=1, width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
+    
+    doc <-  add_slide(doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
+    doc <- ph_with_text(doc, type = "title", str = "Trend in ASR:\r\nFemales")
+    doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "002.png"), index=1, width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
+    nb_slide <- nb_slide +1
+    
+  }
+  
+  if (year_info$span > time_limit) {
+    
+    dt_report <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE, keep_year = TRUE)
+    
+    
+    ##calcul of ASR
+    dt_report<- Rcan:::core.csu_asr(df_data =dt_report, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
+                                    group_by = c("cancer_label", "SEX", "YEAR"), missing_age = canreg_missing_age(dt_all),
+                                    first_age = canreg_age_group$first_age+1,
+                                    last_age= canreg_age_group$last_age+1,
+                                    pop_base_count = "REFERENCE_COUNT",
+                                    age_label_list = "AGE_GROUP_LABEL")
+    
+    ##Keep top based on rank
+    dt_report <- Rcan:::core.csu_dt_rank(dt_report,
+                                         var_value= "CASES",
+                                         var_rank = "cancer_label",
+                                         group_by = "SEX",
+                                         number = 25
+    )
+    
+    
+    ##calcul eapc
+    dt_report <- Rcan:::core.csu_eapc(dt_report, var_rate = "asr",var_year = "YEAR" ,group_by =c("cancer_label", "SEX","CSU_RANK"))
+    dt_report <-as.data.table(dt_report)
+    
+    
+    #produce graph
+    canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph", nb_slide),landscape = TRUE,list_graph = TRUE,
+                  FUN=canreg_eapc_scatter_error_bar,
+                  dt=dt_report,
+                  canreg_header = i18n$t("Estimated annual percentage change"),
+                  ytitle=paste0(i18n$t("Estimated annual percentage change")," (%), ", canreg_age_group$label))
+    
+    
+    dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", nb_slide, "001.png")), "dim" )
+    
+    doc <-  add_slide(doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
+    doc <- ph_with_text(doc, type = "title", str = "Estimated annual percentage change:\r\nMales")
+    doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "001.png"),width=graph_width,height=graph_width*dims[1]/dims[2])
+    
+    if (shiny) {
+      incProgress(inc_progress_value, detail = "Estimated annual percentage change")
+    } else {
+      if (sysName == "Windows") {
+        setWinProgressBar(pb, inc_progress_value*i_pb,label ="Estimated annual percentage change")
+        i_pb <- i_pb+1
+      }
+    }
+    
+    doc <-  add_slide(doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
+    doc <- ph_with_text(doc, type = "title", str = "Estimated annual percentage change:\r\nFemales")
+    doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "002.png"),width=graph_width,height=graph_width*dims[1]/dims[2])
+    nb_slide <- nb_slide +1
+    
+  }
+  
+  region_admit <- c("EastMed", "Americas", "West Pacific", "Europe", "SEAsia", "Africa")
+  if (ls_args$sr %in% region_admit) {
+    
+    dt_report <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE)
+    
+    # import CI5 data with same cancer code and same age group
+    dt_CI5_data <- canreg_import_CI5_data(dt_report, paste0(script.basename, "/CI5_data.rds"))
+    
+    #merge CI5 and canreg data
+    dt_both <- canreg_merge_CI5_registry(dt_report,dt_CI5_data, registry_region = ls_args$sr, registry_label = ls_args$header )
+    
+    #create bar chart graphique 
+    setkeyv(dt_both, c("CSU_RANK", "SEX","asr"))
+    dt_both[country_label!=ls_args$header,ICD10GROUPCOLOR:=paste0(ICD10GROUPCOLOR,"6E")]
+    dt_both[country_label==ls_args$header,ICD10GROUPCOLOR:=paste0(ICD10GROUPCOLOR,"FF")]
+    
+    
+    canreg_output(output_type = "png", filename = paste0(tempdir(), "\\temp_graph", nb_slide),landscape = TRUE,list_graph = TRUE,
+                  FUN=canreg_bar_CI5_compare,
+                  dt=dt_both,xtitle=paste0(i18n$t("Age-standardized incidence rate per")," ", formatC(100000, format="d", big.mark=",")))
+    
+    dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", nb_slide, "001.png")), "dim" )
+    
+    if (shiny) {
+      incProgress(inc_progress_value, detail = "Comparison of summary rates with other registries")
+    } else {
+      if (sysName == "Windows") {
+        setWinProgressBar(pb, inc_progress_value*i_pb,label = "Comparison of summary rates with other registries")
+        i_pb <- i_pb+1
+      }
+    }
+
+    for (i in seq(1,10,2)) {
+      
+      doc <-  add_slide(doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
+      doc <- ph_with_text(doc, type = "title", str = "Comparison of summary rates with other registries")
+      doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, sprintf("%03d",i), ".png"),width=graph_width,height=graph_width*dims[1]/dims[2])
+    }
+    
+    for (i in seq(2,10,2)) {
+      
+      
+      doc <-  add_slide(doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
+      doc <- ph_with_text(doc, type = "title", str = "Comparison of summary rates with other registries")
+      doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, sprintf("%03d",i), ".png"),width=graph_width,height=graph_width*dims[1]/dims[2])
+    }
+    
+  }
+  
+  ###############
+  
+  doc <-  add_slide(doc, layout="Canreg_basic_wide", master="Office Theme") ## add PPTX slide (Title + content)
+  doc <- ph_with_text(doc, type = "title", str = "Basis of diagnosis (DCO/Clinical/MV) by site")
+  
+  if (shiny) {
+    incProgress(inc_progress_value, detail = "Basis of diagnosis (DCO/Clinical/MV) by site")
+  } else {
+    if (sysName == "Windows") {
+      setWinProgressBar(pb, inc_progress_value*i_pb,label = "Basis of diagnosis (DCO/Clinical/MV) by site")
+      i_pb <- i_pb+1
+    }
+  }
+  
+
+  
+  dt_basis[BASIS > 0 & BASIS < 5, BASIS:=1]
+  dt_basis[BASIS >= 5, BASIS:=2]
+  
+  dt_report <- canreg_ageSpecific_rate_data(dt_basis, keep_basis = TRUE)
+  dt_report <- canreg_basis_table(dt_report)
+  
+  ft <- flextable(dt_report)
+  ft <- set_header_labels(ft, CSU_label = "", CSU_ICD = "", total_cases= "",total_pc_test = "", 
+                          BASIS_pc.0= "% DCO", BASIS_pc.1= "% Clinical", BASIS_pc.2= "% M.V") 
+  ft <- add_header(ft, CSU_label = "Cancer site", CSU_ICD = "ICD-10", total_cases= "No. Cases",total_pc_test = "% total", 
+                   BASIS_pc.0= "Basis of diagnosis", BASIS_pc.1= "Basis of diagnosis", BASIS_pc.2= "Basis of diagnosis",
+                   top = TRUE ) 
+  
+  
+  ft <- display( ft, col_key = "total_cases", pattern = "{{cases}}", 
+                 formatters = list(cases ~ sprintf("%.00f", total_cases))) 
+  
+  ft <- width(ft,  width = 1.2)
+  ft <- width(ft, j=1, width = 1.7)
+  
+  ft<- merge_h(ft,i=1, part="header")
+  ft <- align(ft, align="center", part="header")
+  ft <- border(ft ,i=1,j=1:4,border.bottom=fp_border(width = 0), part="header")
+  ft <- height(ft, height = 0.331, part="header")
+  ft <- height(ft, height = 0.22, part="body")
+  ft <- bg(ft, i = seq(1,nrow(dt_report),2), bg="#deebf7", part = "body")
+  ft <- bg(ft, i = nrow(dt_report), bg="#c6dbef", part = "body")
+  ft <- bg(ft, i = 1, bg="#c6dbef", part = "header")
+  ft <- bg(ft, i = 2, bg="#c6dbef", part = "header")
+  
+  doc <- ph_with_flextable_at(doc, ft, left=0.551, top=1.291)
+  
+
+  #################
+  ## ICCC
+  doc <-  add_slide(doc, layout="Canreg_basic_wide", master="Office Theme") ## add PPTX slide (Title + content)
+  doc <- ph_with_text(doc, type = "title", str = "Childhood cancers (0 to 14 years)")
+  
+  if (shiny) {
+    incProgress(inc_progress_value, detail = "Childhood cancers (0 to 14 years)")
+  } else {
+    if (sysName == "Windows") {
+      setWinProgressBar(pb, inc_progress_value*i_pb,label = "Childhood cancers (0 to 14 years)")
+      i_pb <- i_pb+1
+    }
+  }
+  
+  dt_temp <- copy(dt_iccc)
+  table_iccc <- canreg_iccc_table(dt_temp)
+  dt_report <- table_iccc$dt
+  age_label <- table_iccc$age_label_order
+  
+  
+  
+  ft <- flextable(dt_report)
+  ft <- set_header_labels(ft, ICCC_code = "", ICCC_label = "", 
+    CSU_C.0= age_label[1],
+    CSU_C.1= age_label[2],
+    CSU_C.2= age_label[3],
+    total_cases = "All", 
+    ratio = "M/F",
+    frequence = "% total",
+    age_crude.0= age_label[1],
+    age_crude.1= age_label[2],
+    age_crude.2= age_label[3],
+    crude="crude",
+    asr="ASR")
+
+  ft <- add_header(ft, ICCC_code = "ICCC3", ICCC_label = "ICCC3", 
+    CSU_C.0= "Number of cases",
+    CSU_C.1= "Number of cases",
+    CSU_C.2= "Number of cases",
+    total_cases = "Number of cases",
+    ratio = "Number of cases",
+    frequence = "Number of cases",
+    age_crude.0= "Rates per million",
+    age_crude.1= "Rates per million",
+    age_crude.2= "Rates per million",
+    crude="Rates per million",
+    asr="Rates per million",
+    top=TRUE)
+  
+  ft <- width(ft, j = 1, width = 0.5)
+  ft <- width(ft, j = 2, width = 1.7)
+  ft <- width(ft, j = 3:13, width = 0.5)
+
+
+  ft <- fontsize(ft, size = 10, part = "all")
+
+  
+  ft <- merge_h(ft,i=1, part="header")
+  ft <- border(ft, i=c(1,nrow(dt_report)),border.top=fp_border(width = 1), part="body")
+  ft <- border(ft, i=nrow(dt_report),border.bottom=fp_border(width = 1), part="body")
+
+  ft <- border(ft, j=c(1,3,9),border.left=fp_border(width = 1), part="all")
+  ft <- border(ft, j=13,border.right=fp_border(width = 1), part="all")
+  ft <- align(ft, align="center", part="header")
+  ft <- height(ft, height = 0.1, part="header")
+  ft <- bg(ft, i = seq(1,nrow(dt_report),2), bg="#deebf7", part = "body")
+  ft <- bg(ft, i = nrow(dt_report), bg="#c6dbef", part = "body")
+  ft <- bg(ft, i = 1, bg="#c6dbef", part = "header")
+  ft <- bg(ft, i = 2, bg="#c6dbef", part = "header")
+  
+  doc <- ph_with_flextable_at(doc, ft, left=0.551, top=1.291)
+  
+  doc <-  add_slide(doc, layout="Canreg_info", master="Office Theme") ## add Canreg information slide.
+  
+  #################
+  if (ann) {
+
+    dt_report <- dt_all
+    
+    dt_report <- canreg_ageSpecific_rate_data(dt_report)
+    
+    canreg_output(output_type = "png", filename = paste0(tempdir(), "\\ann_temp_graph"),landscape = FALSE,
+                  list_graph = TRUE,
+                  FUN=canreg_ageSpecific_rate_multi_plot,dt=dt_report,group_by="SEX",var_age_label_list = "AGE_GROUP_LABEL",
+                  logscale = TRUE,  
+                  color_trend=c("Male" = "#2c7bb6", "Female" = "#b62ca1"),
+                  multi_graph= FALSE,
+                  canreg_header=ls_args$header)
+    
+    dims <- attr( png::readPNG (paste0(tempdir(), "\\ann_temp_graph001.png")), "dim" )
+    
+    
+    if (shiny) {
+      incProgress(inc_progress_value, detail = "Age-specific incidence rate by site")
+    } else {
+      if (sysName == "Windows") {
+        setWinProgressBar(pb, inc_progress_value*i_pb,label = "Age-specific incidence rate by site")
+        i_pb <- i_pb+1
+      }
+    }
+  
+
+    for (j in 1:length(levels(dt_report$ICD10GROUP))) {
+      
+      doc <-  add_slide(doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
+      doc <- ph_with_text(doc, type = "title", str = paste0("Age-specific incidence rate:\r\n",  unique(dt_report[ICD10GROUP== levels(ICD10GROUP)[j] ,cancer_label])))
+      doc <- ph_with_img(doc, paste0(tempdir(), "\\ann_temp_graph",sprintf("%03d",j) ,".png"), index=1, width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
+      
+    }
+  }
+
+  
+  
+  return(doc)
 }
 
 
@@ -3343,6 +4916,7 @@ parse_age_label_dt <- function(dt,var_age_label) {
 
 
 extract_legend_axes<-function(a_gplot){
+
   pdf(file=NULL)
   tmp <- ggplotGrob(a_gplot)
   leg_index <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
@@ -3365,6 +4939,7 @@ extract_legend_axes<-function(a_gplot){
   title <- tmp$grobs[[title_index]]
   caption <- tmp$grobs[[caption_index]]
   dev.off()
+
   return(list(legend=legend, xlab=xlab, ylab=ylab, title=title, subtitle=subtitle, caption=caption))
 }
 
