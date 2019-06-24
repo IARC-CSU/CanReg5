@@ -3,12 +3,16 @@
 5.00.44BETA3
 - Data visualizations in R are now translated to Russian, Spanish and Portuguese.
   - As usual, defaults to English if no language is available.
+  - Update to CI5XI for comparison.
+  - Progress bar addded for launching R/installing packages.
+  - Fixed a bug with "total population" being unisex.
+  - ICCC table added to report.
 - Memory leaks fixed.
 - Remote sessions are automatically logged out if connection drops.
 - Warning message when trying to add duplicate short names of variables -- also across tables.
 - Fixed a bug where existing source records could dissapear during import.
-- Added a very simple ADHOC database for data analysis/quality control.
-- Rcan updated to 1.3.64
+- Added a very simple ADHOC database XML for data analysis/quality control.
+- Rcan updated to 1.3.71
 - jcalendar updated
 - Various fixes.
 
