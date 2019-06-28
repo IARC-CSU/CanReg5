@@ -1151,6 +1151,8 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("TABLE_TYPE_NOT_YET_IMPLEMENTED"), java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("TABLE_TYPE_NOT_YET_IMPLEMENTED"), JOptionPane.ERROR_MESSAGE);
             return;
         } else {
+            String language = CanRegClientApp.getApplication().getLocalSettings().getLanguageCode();
+            LinkedList<ConfigFields> configFields = tble.getConfigFields();
             String heading = headerOfTableTextField.getText();
             int startYear = startYearChooser.getValue();
             int endYear = endYearChooser.getValue();
@@ -1244,6 +1246,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                 filter.setDatabaseVariables(variables);
                 DistributedTableDataSourceClient tableDataSource;
                 Object[][] incidenceData = null;
+                
                 try {
                     tableDatadescription = canreg.client.CanRegClientApp.getApplication().getDistributedTableDescription(filter, tableName);
                     tableDataSource = new DistributedTableDataSourceClient(tableDatadescription);
@@ -1267,9 +1270,11 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                                     incidenceData,
                                     populations,
                                     standardPopulations,
-                                    tble.getConfigFields(),
+                                    configFields,
                                     tble.getEngineParameters(),
-                                    filetype);
+                                    filetype, 
+                                    language
+                            );
 
                     if (filetype != FileTypes.jchart) {
 

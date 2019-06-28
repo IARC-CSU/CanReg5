@@ -19,6 +19,7 @@
  */
 package canreg.server;
 
+import canreg.client.LocalSettings;
 import canreg.common.database.User;
 import canreg.server.management.UserManagerNew;
 import canreg.common.cachingtableapi.DistributedTableDescription;
@@ -67,9 +68,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import org.w3c.dom.Document;
 
@@ -399,22 +398,17 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      * @throws java.lang.SecurityException
      */
     @Override
-    public void userLoggedIn(String username)
+    public void userLoggedIn(Integer remoteHashCode, String username)
             throws RemoteException, SecurityException {
-        userManager.userLoggedIn(username);
+        userManager.userLoggedIn(remoteHashCode, username);
         displayTrayIconPopUpMessage("User logged in", "User " + username + " logged in.", MessageType.INFO);
     }
 
-    /**
-     *
-     * @param username
-     * @throws java.rmi.RemoteException
-     * @throws java.lang.SecurityException
-     */
+
     @Override
-    public void userLoggedOut(String username)
+    public void userLoggedOut(Integer remoteHashCode, String username)
             throws RemoteException, SecurityException {
-        userManager.userLoggedOut(username);
+        userManager.userLoggedOut(remoteHashCode);
         displayTrayIconPopUpMessage("User logged out", "User " + username + " logged out.", MessageType.INFO);
     }
 
@@ -561,7 +555,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      * @throws DistributedTableDescriptionException
      */
     @Override
-    public DistributedTableDescription getDistributedTableDescription(DatabaseFilter filter, String tableName) throws RemoteException, SecurityException, SQLException, UnknownTableException, DistributedTableDescriptionException {
+    public DistributedTableDescription getDistributedTableDescription(DatabaseFilter filter, String tableName) 
+            throws RemoteException, SecurityException, SQLException, UnknownTableException, DistributedTableDescriptionException {
         return db.getDistributedTableDescriptionAndInitiateDatabaseQuery(filter, tableName, db.generateResultSetID());
     }
 
@@ -572,22 +567,28 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
-    private DatabaseRecord getPatient(int patientID, boolean lock) throws RemoteException, SecurityException, RecordLockedException {
-        return getRecord(patientID, Globals.PATIENT_TABLE_NAME, lock);
+    private DatabaseRecord getPatient(int patientID) 
+            throws RemoteException, SecurityException, RecordLockedException {
+        return getRecord(patientID, Globals.PATIENT_TABLE_NAME, false, null);
     }
 
     /**
      *
      * @param recordID
      * @param tableName
+     * @param client
      * @return
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      * @throws RecordLockedException
      */
     @Override
-    public DatabaseRecord getRecord(int recordID, String tableName, boolean lock) throws RemoteException, SecurityException, RecordLockedException {
-        return db.getRecord(recordID, tableName, lock);
+    public DatabaseRecord getRecord(int recordID, String tableName, boolean lock, Integer remoteHashCode)
+            throws RemoteException, SecurityException, RecordLockedException {
+        DatabaseRecord rec = db.getRecord(recordID, tableName, lock);
+        if(lock)
+            userManager.lockRecord(recordID, tableName, remoteHashCode);
+        return rec;
     }
 
     /**
@@ -598,8 +599,9 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      * @throws SecurityException
      */
     @Override
-    public void releaseRecord(int recordID, String tableName) throws RemoteException, SecurityException {
-        db.releaseRecord(recordID, tableName);
+    public void releaseRecord(int recordID, String tableName, Integer remoteHashCode)
+            throws RemoteException, SecurityException {
+        userManager.releaseRecord(recordID, tableName, remoteHashCode);
     }
 
     /**
@@ -610,7 +612,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      * @throws RecordLockedException
      */
     @Override
-    public synchronized void editPatient(Patient patient) throws RemoteException, SecurityException, RecordLockedException {
+    public synchronized void editPatient(Patient patient) 
+            throws RemoteException, SecurityException, RecordLockedException {
         db.editPatient(patient);
     }
 
@@ -814,7 +817,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
                 Object[][] rowData = globalPersonSearchHandler.getPatientRecordIDsWithinRange();
                 for (int row = startRow; row < endRow && row < rowData.length; row++) {
                     int patientIDA = (Integer) rowData[row][0];
-                    Patient patientA = (Patient) getPatient(patientIDA, false);
+                    Patient patientA = (Patient) getPatient(patientIDA);
                     // Map<String, Float> patientIDScoreMap = performPersonSearch(patientA, searcher, globalPersonSearchHandler.getDistributedTableDescription());
                     Map<String, Float> patientIDScoreMap = performPersonSearch(patientA, searcher, globalPersonSearchHandler.getAllPatientRecordIDs());
                     if (patientIDScoreMap.size() > 0) {
@@ -910,7 +913,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
                 int patientIDB = (Integer) r[0];
                 if (patientIDB != patientIDA) {
                     try {
-                        patientB = (Patient) getPatient(patientIDB, false);
+                        patientB = (Patient) getPatient(patientIDB);
                         float score = searcher.compare(patient, patientB);
                         if (score > threshold) {
                             patientIDScoreMap.put((String) patientB.getVariable(patientRecordIDvariableName), score);
@@ -1034,5 +1037,11 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     @Override
     public String getCanRegSystemRegion() throws RemoteException, SecurityException {
         return systemDescription.getRegion();
+    }
+
+    @Override
+    public void pingRemote(Integer remoteClientHashCode) 
+            throws RemoteException, Exception {
+        userManager.remotePingReceived(remoteClientHashCode);
     }
 }

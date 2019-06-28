@@ -1,10 +1,8 @@
 ## LIST OF ARGUMENTS FROM THE COMMAND LINE (CANREG) + SCRIPT DIRECTORY
 Args <- commandArgs(TRUE)
 
-
-
-packages_list <- c("Rcpp", "data.table", "ggplot2","shiny","shinydashboard", "shinyjs","gridExtra", "scales", "Cairo","grid","officer","flextable", "zip", "bmp", "jpeg", "png")
-
+## 2019-03-04(ME): This list now contains packages from both analysis and format checking... (starting with XML)
+packages_list <- c("Rcpp", "data.table", "ggplot2","shiny","shinydashboard", "shinyjs","gridExtra", "scales", "Cairo","grid","officer","flextable", "zip", "bmp", "jpeg", "png", "shiny.i18n","Rcan", "XML", "plyr", "stringr", "dplyr", "RJSONIO", "jsonlite", "anchors", "lubridate")
 
 ## get Args from canreg  
 skin <- FALSE
@@ -139,6 +137,14 @@ if (!"officer" %in% missing_packages) {
     missing_packages <- c(missing_packages,"officer" )
   }
 }
+
+if (!"flextable" %in% missing_packages) {
+  if (packageVersion("flextable") < "0.5.2") {
+    missing_packages <- c(missing_packages,"flextable" )
+  }
+}
+
+  
 
 if ("scales" %in% missing_packages) {
   
