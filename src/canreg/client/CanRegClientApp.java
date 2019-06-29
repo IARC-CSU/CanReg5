@@ -779,7 +779,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             throws SQLException, SecurityException, RecordLockedException, RemoteException, 
                    UnknownTableException, DistributedTableDescriptionException, Exception {
         try {
-            return canreg.client.gui.importers.Import.importFiles(task, map, files, mainServer, io, false);
+            return canreg.client.gui.importers.Import.importFiles(task, map, files, mainServer, io, false, doc);
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
             if (!handlePotentialDisconnect(ex)) {

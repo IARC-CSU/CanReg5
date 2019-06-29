@@ -94,7 +94,7 @@ public class Import {
     public static String SOURCES = "sources";
     public static String R_SCRIPTS = "r_scripts";
     private static final String RAW_DATA_COLUMN = "RAW_DATA";
-    private static final String FORMAT_ERRORS_COLUMN = "FORMAT_ERRORS";
+    private static final String FORMAT_ERRORS_COLUMN = "FORMAT_ERRORS";    
 
     /**
      *
@@ -562,15 +562,18 @@ public class Import {
 
         CanRegServerInterface holdingProxy = ((CanRegRegistryProxy) server).getInstanceForHoldingDB(systemDescription.getRegistryCode());
 
-        return importFiles(task, map, files, holdingProxy, io, true);
+        return importFiles(task, map, files, holdingProxy, io, true, originalDBDescription);
     }    
 
     public static boolean importFiles(Task<Object, Void> task, 
                                       List<canreg.client.dataentry.Relation> map, File[] files, 
                                       CanRegServerInterface server, ImportOptions io, 
-                                      boolean intoHoldingDB) 
+                                      boolean intoHoldingDB, Document doc) 
             throws SQLException, RemoteException, SecurityException, RecordLockedException, 
                    UnknownTableException, DistributedTableDescriptionException, Exception {
+        
+        GlobalToolBox globalToolBox = new GlobalToolBox(doc);
+        
         int numberOfLinesRead = 0;
         Writer reportWriter = new BufferedWriter(new OutputStreamWriter(System.out));
         if (io.getReportFileName() != null && io.getReportFileName().trim().length() > 0) {
@@ -711,7 +714,7 @@ public class Import {
                         .withDelimiter(io.getSeparators()[1]);
                 parser = CSVParser.parse(files[1], io.getFileCharsets()[1], format);
 
-                for (CSVRecord csvRecord : parser) {    
+                for (CSVRecord csvRecord : parser) {                                                              
                     if (task != null) {
                         task.firePropertyChange(PROGRESS, 33 + ((numberOfLinesRead - 1) * 100 / linesToRead) / 3, 33 + ((numberOfLinesRead) * 100 / linesToRead) / 3);
                         task.firePropertyChange(TUMOURS, ((numberOfLinesRead - 1) * 100 / linesToRead), ((numberOfLinesRead) * 100 / linesToRead));
@@ -743,9 +746,24 @@ public class Import {
                     } 
 
                     String tumourID = (String) tumour.getVariable(io.getTumourIDVariablename());
-                    String patientID = (String) tumour.getVariable(io.getPatientRecordIDTumourTableVariableName());
+                    String patientRecordID = (String) tumour.getVariable(io.getPatientRecordIDTumourTableVariableName());
                     
-                    importTumour(server, io.getDiscrepancies(), tumourID, patientID, 
+                    //patientRecordID IS A MUST if the tumour is new, because without that
+                    //the new tumourID cannot be calculated!!!
+                    if(patientRecordID == null || patientRecordID.isEmpty()) {
+                        String patientID = tumour.getVariableAsString(io.getPatientIDTumourTableVariableName());
+                        Patient[] patients = CanRegClientApp.getApplication().getPatientsByPatientID(patientID, false, server);
+                        patientRecordID = patients[0].getVariableAsString(io.getPatientRecordIDVariableName());
+                        
+                        //This should not happen, but... this is our last chance to save the procedure.
+                        if(patientRecordID == null || patientRecordID.isEmpty())
+                            patientRecordID = patients[0].getVariableAsString(io.getTumourIDVariablename());
+                        
+                        tumour.setVariable(io.getPatientRecordIDVariableName(), patientRecordID);
+                        tumour.setVariable(io.getPatientRecordIDTumourTableVariableName(), patientRecordID);
+                    }
+                    
+                    importTumour(server, io.getDiscrepancies(), tumourID, patientRecordID, 
                                  tumour, io, reportWriter, intoHoldingDB, io.isTestOnly(), false);
                     
                     if (task != null) {
@@ -1001,7 +1019,6 @@ public class Import {
         boolean saveTumour = true;
         boolean deleteTumour = false;
         
-        GlobalToolBox globalToolBox = new GlobalToolBox(server.getDatabseDescription());
         ResultCode worstResultCodeFound;
         Tumour oldTumourRecord = null;
         

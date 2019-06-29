@@ -128,8 +128,10 @@ if(.Platform$OS.type != "windows"){
       
       #To generate ids
       PatientID.short.name <- toupper(doc.data$short_name[doc.data$standard_variable_name %in% "PatientID"])
+      mp.seq.name <- toupper(doc.data$short_name[doc.data$standard_variable_name %in% "MultPrimSeq"])
+      
       if (all(patient.import.data[,PatientID.short.name] == "") | any(sapply(patient.import.data[,PatientID.short.name],nchar)!=8)){
-        patient.import.data <- generate.id("patient", patient.import.data, PatientID.short.name)
+        patient.import.data <- generate.id("patient", patient.import.data, PatientID.short.name, mp.sep.name)
         index.PatientID <- which(paramsJSON$patientVarNameInDatabase == PatientID.short.name)
         patient.raw.data[,paramsJSON$patientVarNameInImportFile[index.PatientID]] <- patient.import.data[,PatientID.short.name]
         patient.raw.data$PATIENTRECORDID <- patient.import.data$PATIENTRECORDID
@@ -184,13 +186,14 @@ if(.Platform$OS.type != "windows"){
       tumour.import.data <- leading.zeros(tumour.import.data, doc.data, "Tumour")
       
       #To generate ids
-      TumourID.short.name <- toupper(doc.data$short_name[doc.data$standard_variable_name %in% "TumourID"])
-      if (all(tumour.import.data[,TumourID.short.name] == "")){
-        tumour.import.data <- generate.id("tumour", tumour.import.data, TumourID.short.name)
-        tumour.raw.data[,TumourID.short.name] <- tumour.import.data[,TumourID.short.name]
-        tumour.raw.data$PATIENTIDTUMOURTABLE <- tumour.import.data$PATIENTIDTUMOURTABLE
+      TumourID.short.name <- toupper(doc.data$short_name[doc.data$standard_variable_name %in% "PatientIDTumourTable"])
+      mp.seq.name <- toupper(doc.data$short_name[doc.data$standard_variable_name %in% "MultPrimSeq"])
+      if (all(tumour.import.data[,TumourID.short.name] == "") | any(sapply(tumour.import.data[,TumourID.short.name],nchar)!=8)){
+        tumour.import.data <- generate.id("tumour", tumour.import.data, TumourID.short.name, mp.seq.name)
+        index.TumourtID <- which(paramsJSON$tumourVarNameInDatabase == TumourID.short.name)
+        tumour.raw.data[,paramsJSON$tumourVarNameInImportFile[index.TumourtID]] <- tumour.import.data[,TumourID.short.name]
         tumour.raw.data$PATIENTRECORDIDTUMOURTABLE <- tumour.import.data$PATIENTRECORDIDTUMOURTABLE
-        
+        tumour.raw.data$TUMOURID <- tumour.import.data$TUMOURID
       }else{NULL}
       
       
@@ -237,8 +240,9 @@ if(.Platform$OS.type != "windows"){
       
       #To generate ids
       SourceID.short.name <- toupper(doc.data$short_name[doc.data$standard_variable_name %in% "SourceRecordID"])
-      if (all(source.import.data[,SourceID.short.name] == "")){
-        source.import.data <- generate.id("source", source.import.data, SourceID.short.name)
+      mp.seq.name <- toupper(doc.data$short_name[doc.data$standard_variable_name %in% "MultPrimSeq"])
+      if (all(source.import.data[,SourceID.short.name] == "") | any(sapply(source.import.data[,SourceID.short.name],nchar)!=8)){
+        source.import.data <- generate.id("source", source.import.data, SourceID.short.name, mp.seq.name)
         source.raw.data[,SourceID.short.name] <- source.import.data[,SourceID.short.name]
         source.raw.data$TumourIDSourceTable <- source.import.data$TumourIDSourceTable
       }else{NULL}
@@ -336,8 +340,9 @@ if(.Platform$OS.type != "windows"){
       
       #To generate ids
       PatientID.short.name <- toupper(doc.data$short_name[doc.data$standard_variable_name %in% "PatientID"])
+      mp.seq.name <- toupper(doc.data$short_name[doc.data$standard_variable_name %in% "MultPrimSeq"])
       if (all(patient.import.data[,PatientID.short.name] == "") | any(sapply(patient.import.data[,PatientID.short.name],nchar)!=8)){
-        patient.import.data <- generate.id("patient", patient.import.data, PatientID.short.name)
+        patient.import.data <- generate.id("patient", patient.import.data, PatientID.short.name, mp.seq.name)
         index.PatientID <- which(paramsJSON$patientVarNameInDatabase == PatientID.short.name)
         patient.raw.data[,paramsJSON$patientVarNameInImportFile[index.PatientID]] <- patient.import.data[,PatientID.short.name]
         patient.raw.data$PATIENTRECORDID <- patient.import.data$PATIENTRECORDID
@@ -429,12 +434,14 @@ if(.Platform$OS.type != "windows"){
       tumour.import.data <- leading.zeros(tumour.import.data, doc.data, "Tumour")
       
       #To generate ids
-      TumourID.short.name <- toupper(doc.data$short_name[doc.data$standard_variable_name %in% "TumourID"])
+      TumourID.short.name <- toupper(doc.data$short_name[doc.data$standard_variable_name %in% "PatientIDTumourTable"])
+      mp.seq.name <- toupper(doc.data$short_name[doc.data$standard_variable_name %in% "MultPrimSeq"])
       if (all(tumour.import.data[,TumourID.short.name] == "")){
-        tumour.import.data <- generate.id("tumour", tumour.import.data, TumourID.short.name)
-        tumour.raw.data[,TumourID.short.name] <- tumour.import.data[,TumourID.short.name]
-        tumour.raw.data$PATIENTIDTUMOURTABLE <- tumour.import.data$PATIENTIDTUMOURTABLE
+        tumour.import.data <- generate.id("tumour", tumour.import.data, TumourID.short.name, mp.seq.name)
+        index.TumourtID <- which(paramsJSON$tumourVarNameInDatabase == TumourID.short.name)
+        tumour.raw.data[,paramsJSON$tumourVarNameInImportFile[index.TumourtID]] <- tumour.import.data[,TumourID.short.name]
         tumour.raw.data$PATIENTRECORDIDTUMOURTABLE <- tumour.import.data$PATIENTRECORDIDTUMOURTABLE
+        tumour.raw.data$TUMOURID <- tumour.import.data$TUMOURID
         
       }else{NULL}
       
@@ -524,8 +531,9 @@ if(.Platform$OS.type != "windows"){
       
       #To generate ids
       SourceID.short.name <- toupper(doc.data$short_name[doc.data$standard_variable_name %in% "SourceRecordID"])
+      mp.seq.name <- toupper(doc.data$short_name[doc.data$standard_variable_name %in% "MultPrimSeq"])
       if (all(source.import.data[,SourceID.short.name] == "")){
-        source.import.data <- generate.id("source", source.import.data, SourceID.short.name)
+        source.import.data <- generate.id("source", source.import.data, SourceID.short.name, mp.seq.name)
         source.raw.data[,SourceID.short.name] <- source.import.data[,SourceID.short.name]
         source.raw.data$TumourIDSourceTable <- source.import.data$TumourIDSourceTable
       }else{NULL}
@@ -613,8 +621,9 @@ if(.Platform$OS.type != "windows"){
       
       #To generate ids
       PatientID.short.name <- toupper(doc.data$short_name[doc.data$standard_variable_name %in% "PatientID"])
+      mp.seq.name <- toupper(doc.data$short_name[doc.data$standard_variable_name %in% "MultPrimSeq"])
       if (all(patient.import.data[,PatientID.short.name] == "") | any(sapply(patient.import.data[,PatientID.short.name],nchar)!=8)){
-        patient.import.data <- generate.id("patient", patient.import.data, PatientID.short.name)
+        patient.import.data <- generate.id("patient", patient.import.data, PatientID.short.name, mp.seq.name)
         index.PatientID <- which(paramsJSON$patientVarNameInDatabase == PatientID.short.name)
         patient.raw.data[,paramsJSON$patientVarNameInImportFile[index.PatientID]] <- patient.import.data[,PatientID.short.name]
         patient.raw.data$PATIENTRECORDID <- patient.import.data$PATIENTRECORDID
@@ -706,12 +715,14 @@ if(.Platform$OS.type != "windows"){
       tumour.import.data <- leading.zeros(tumour.import.data, doc.data, "Tumour")
       
       #To generate ids
-      TumourID.short.name <- toupper(doc.data$short_name[doc.data$standard_variable_name %in% "TumourID"])
-      if (all(tumour.import.data[,TumourID.short.name] == "")){
-        tumour.import.data <- generate.id("tumour", tumour.import.data, TumourID.short.name)
-        tumour.raw.data[,TumourID.short.name] <- tumour.import.data[,TumourID.short.name]
-        tumour.raw.data$PATIENTIDTUMOURTABLE <- tumour.import.data$PATIENTIDTUMOURTABLE
+      TumourID.short.name <- toupper(doc.data$short_name[doc.data$standard_variable_name %in% "PatientIDTumourTable"])
+      mp.seq.name <- toupper(doc.data$short_name[doc.data$standard_variable_name %in% "MultPrimSeq"])
+      if (all(tumour.import.data[,TumourID.short.name] == "") | any(sapply(tumour.import.data[,TumourID.short.name],nchar)!=8)){
+        tumour.import.data <- generate.id("tumour", tumour.import.data, TumourID.short.name, mp.seq.name)
+        index.TumourtID <- which(paramsJSON$tumourVarNameInDatabase == TumourID.short.name)
+        tumour.raw.data[,paramsJSON$tumourVarNameInImportFile[index.TumourtID]] <- tumour.import.data[,TumourID.short.name]
         tumour.raw.data$PATIENTRECORDIDTUMOURTABLE <- tumour.import.data$PATIENTRECORDIDTUMOURTABLE
+        tumour.raw.data$TUMOURID <- tumour.import.data$TUMOURID
         
       }else{NULL}
       
@@ -804,8 +815,9 @@ if(.Platform$OS.type != "windows"){
       
       #To generate ids
       SourceID.short.name <- toupper(doc.data$short_name[doc.data$standard_variable_name %in% "SourceRecordID"])
-      if (all(source.import.data[,SourceID.short.name] == "")){
-        source.import.data <- generate.id("source", source.import.data, SourceID.short.name)
+      mp.seq.name <- toupper(doc.data$short_name[doc.data$standard_variable_name %in% "MultPrimSeq"])
+      if (all(source.import.data[,SourceID.short.name] == "") | any(sapply(source.import.data[,SourceID.short.name],nchar)!=8)){
+        source.import.data <- generate.id("source", source.import.data, SourceID.short.name, mp.seq.name)
         source.raw.data[,SourceID.short.name] <- source.import.data[,SourceID.short.name]
         source.raw.data$TumourIDSourceTable <- source.import.data$TumourIDSourceTable
       }else{NULL}
