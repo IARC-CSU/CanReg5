@@ -1310,12 +1310,8 @@ csu_merge_iccc_pop <- function(inc_file,
   dt_all[, YEAR:=NULL]
 
   dt_all <-  dt_all[,list(CSU_C = sum(CSU_C), CSU_P = sum(CSU_P)), by=eval(colnames(dt_all)[!colnames(dt_all) %in% c("CSU_C", "CSU_P")])]
-
-  dt_sum <- dt_all 
-  dt_sum[, ICCC:=gsub("[a-z]", "", ICCC)]
-  dt_sum <-  dt_sum[,list(CSU_C = sum(CSU_C)), by=eval(colnames(dt_sum)[!colnames(dt_sum) %in% c("CSU_C")])]
-
-  dt_all <- rbind(dt_sum, dt_all)
+  dt_all[, ICCC:=gsub("[a-z]", "", ICCC)]
+  dt_all <-  dt_all[,list(CSU_C = sum(CSU_C)), by=eval(colnames(dt_all)[!colnames(dt_all) %in% c("CSU_C")])]
 
   iccc_code <- as.data.table(read.csv(paste(sep="/", script.basename, "ICCC.csv")))
   iccc_code[, ICCC:=as.character(ICCC)]
@@ -1324,6 +1320,10 @@ csu_merge_iccc_pop <- function(inc_file,
   dt_all[, ICCC:=NULL]
   dt_all <-  dt_all[,list(CSU_C = sum(CSU_C)), by=eval(colnames(dt_all)[!colnames(dt_all) %in% c("CSU_C")])]
 
+  dt_all[is.na(ICCC_order),ICCC_order:=12]  
+  dt_all[ICCC_order==12,ICCC_label:="Unknown"]
+  dt_all[ICCC_order==12,ICCC_code:=" "]
+  dt_all <- dt_all[!is.na(CSU_A),]
  
   setnames(dt_all,"CSU_P",var_pop)
   setnames(dt_all,"CSU_A",var_age)
