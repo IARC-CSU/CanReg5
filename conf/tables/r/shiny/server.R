@@ -728,9 +728,11 @@ shinyServer(function(input, output, session) {
 
   output$downloadShinyData <- downloadHandler(
 	
-		filename =  paste0(gsub("\\W","", ls_args$label),"_",ls_args$sc,"_",gsub("\\D","", Sys.time()),"_data.txt"),
+		filename =  paste0(gsub("\\W","", ls_args$label),"_",ls_args$sc,"_",gsub("\\D","", Sys.time()),"_data.zip"),
 		content = function(file) {
-			shiny_export_data(file)
+
+			shiny_export_data(paste0(tempdir(),"/shinydata.txt"))
+			zip::zipr(file, c(paste0(tempdir(),"/shinydata.txt")))
 		}
 	
 	)
@@ -811,6 +813,7 @@ shinyServer(function(input, output, session) {
 				temp <- import_shiny_date(input$shinydata$datapath)
 				if(!is.null(temp)) {
 					ls_args <<- temp$ls_args
+					dt_pyramid <<- temp$dt_pyramid
 					dt_base <<- temp$dt_base
 					dt_basis <<- temp$dt_basis
 					dt_iccc <<- temp$dt_iccc
