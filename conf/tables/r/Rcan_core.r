@@ -2048,7 +2048,7 @@ canreg_bar_top_single <- function(dt, var_top, var_bar = "cancer_label" ,group_b
       plot_caption <- canreg_header
     }
     
-    plot_subtitle <-  paste0(i18n$t("Top")," ",nb_top," ",i18n$t("cancer sites"),"\n",i)
+    plot_subtitle <-  paste0(i18n$t("Top")," ",nb_top," ",i18n$t("cancer sites"),"\n",i18n$t(i))
     
     dt_plot <- dt[get(group_by) == i]
     dt_label_order <- setkey(unique(dt_plot[, c(var_bar,"ICD10GROUPCOLOR", "CSU_RANK"), with=FALSE]), CSU_RANK)
