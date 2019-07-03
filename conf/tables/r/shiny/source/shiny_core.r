@@ -588,6 +588,7 @@ shiny_plot <- function(dt_plot,input,session, download = FALSE,slide=FALSE, file
 						logscale = bool_log,
 						nb_top = nb_top,
 						plot_title = ls_args$header,
+						label_group_by= c(i18n$t("Male"),i18n$t("Female")),
 						xtitle = i18n$t("Age at diagnosis"),
 						ytitle = i18n$t("Age-specific incidence rate per")
 					)
