@@ -17,6 +17,7 @@ ui <- dashboardPage(
 	
   dashboardSidebar(
     
+  	useShinyjs(),
     tags$link(rel = "stylesheet", type = "text/css", href = "registry_graph.css"),
     width = 350,
     
@@ -26,45 +27,51 @@ ui <- dashboardPage(
     		
 		uiOutput("UI_select_table"),
 		
-		tags$div(class="subHeader", checked=NA,
-		         tags$p("Export Graph")
+		tags$div(id="export_menu",
+			tags$div(class="subHeader", checked=NA,
+			         tags$p("Export Graph")
+			),
+			selectInput("select_format", "Format", as.list(c( "pdf","tiff","png", "svg", "ps","csv"))),
+			
+			textInput("text_filename", "Filename", "CanReg5_graph"),
+			
+			downloadButton('downloadFile', 'Export graph', class="mat_btn"),
+			
+			tags$div(class="subHeader", checked=NA,
+			         tags$p("Powerpoint presentation")
+			),
+			
+			actionButton('actionSlide', "Add to presentation",  class="mat_btn"),
+			
+			textInput("pptx_filename", "Powerpoint filename", "CanReg5_slide"),
+			
+			downloadButton('downloadPres', 'Create presentation',  class="mat_btn"),
+			
+			uiOutput("UI_nbSlide")
+
 		),
-		useShinyjs(),
-		selectInput("select_format", "Format", as.list(c( "pdf","tiff","png", "svg", "ps","csv"))),
-		
-		textInput("text_filename", "Filename", "CanReg5_graph"),
-		
-		downloadButton('downloadFile', 'Export graph', class="mat_btn"),
-		
-		tags$div(class="subHeader", checked=NA,
-		         tags$p("Powerpoint presentation")
+
+		tags$div(id="div_advanced", class="mt20",
+			checkboxInput("CheckAdvanced", "Advanced shiny option",FALSE)
 		),
-		
-		actionButton('actionSlide', "Add to presentation",  class="mat_btn"),
-		
-		textInput("pptx_filename", "Powerpoint filename", "CanReg5_slide"),
-		
-		downloadButton('downloadPres', 'Create presentation',  class="mat_btn"),
-		
-		uiOutput("UI_nbSlide"),
 
-		tags$div(class="subHeader mt20", checked=NA,
-             tags$p("Shiny data sytem")
-	    ),
+		tags$div(id="advanced_menu",style="display: none;",
 
-	    fileInput("shinydata", "Import shiny data",
-	          multiple = FALSE,
-	          accept = c(".txt")
-	          ),
+			tags$div(class="subHeader", checked=NA,
+	             tags$p("Shiny data sytem")
+		    ),
 
+		    fileInput("shinydata", "Import shiny data",
+		          multiple = FALSE,
+		          accept = c(".txt")
+		          ),
 
-	    downloadButton('downloadShinyData', 'Export shiny data', class="mat_btn mt15m")
+		    downloadButton('downloadShinyData', 'Export shiny data', class="mat_btn mt15m")
+		 )
 
 	 ),
 	  
-	  
-  
-												
+	  						
 	dashboardBody(
 		tags$style(type='text/css',
                    ".selectize-dropdown-content{

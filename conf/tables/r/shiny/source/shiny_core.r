@@ -588,6 +588,7 @@ shiny_plot <- function(dt_plot,input,session, download = FALSE,slide=FALSE, file
 						logscale = bool_log,
 						nb_top = nb_top,
 						plot_title = ls_args$header,
+						label_group_by= c(i18n$t("Male"),i18n$t("Female")),
 						xtitle = i18n$t("Age at diagnosis"),
 						ytitle = i18n$t("Age-specific incidence rate per")
 					)
@@ -1096,6 +1097,10 @@ multiple_output <- function(table_number, bool_ci, output_format) {
 										
 
 shiny_error_log <- function(log_file,filename) {
+
+  if (exists("pb")) {
+    close(pb)
+  }
   
   shiny_log <- file(log_file,open="wt")
   sink(shiny_log)
@@ -1120,7 +1125,7 @@ shiny_error_log <- function(log_file,filename) {
   cat("\n")
 
   #print missing package
-  packages_list <- c("Rcpp", "data.table", "ggplot2","shiny","shinydashboard", "shinyjs","gridExtra", "scales", "Cairo","grid","officer","flextable", "zip", "bmp", "jpeg", "png")
+  packages_list <- c("data.table", "ggplot2","shiny","shinydashboard", "shinyjs","gridExtra", "scales", "Cairo","officer","flextable", "zip", "bmp", "jpeg", "png","shiny.i18n", "Rcan")
 
   missing_packages <- packages_list[!(packages_list %in% installed.packages()[,"Package"])]  
   if (length(missing_packages) == 0) {
@@ -1162,14 +1167,18 @@ shiny_export_data <- function(log_file) {
   cat("arguments\n")
   dput(ls_args)
   cat("\n")
-  cat("data file\n")
 
-  
-  
+  cat("data file\n")
   dput(as.data.frame(dt_base))
   cat("\n")
+
   cat("basis file\n")
   dput(as.data.frame(dt_basis))
+  cat("\n")
+
+  cat("iccc file\n")
+  dput(as.data.frame(dt_iccc))
+
 
   #close log_file and send to canreg
   sink(type="message")
@@ -1184,6 +1193,7 @@ import_shiny_date <- function(datafile) {
 	fileTemp1 <- paste0(tempdir(),"/tempargs.txt")
 	fileTemp2 <- paste0(tempdir(),"/tempdata.txt")
 	fileTemp3 <- paste0(tempdir(),"/tempbasis.txt")
+	fileTemp4 <- paste0(tempdir(),"/tempiccc.txt")
 
 	con_args=file(fileTemp1,open="wt")
 	sink(con_args)
@@ -1232,9 +1242,11 @@ import_shiny_date <- function(datafile) {
 	con_basis=file(fileTemp3,open="wt")
 	sink(con_basis)
 	sink(con_basis, type="message")
+	j<-j+1
 
-	for (i in (j+1):length(content)) {
-		cat(content[i])
+	while (content[j] != "iccc file") {
+		cat(content[j])
+		j <- j+1
 	}
 
 	sink(type="message")
@@ -1243,10 +1255,25 @@ import_shiny_date <- function(datafile) {
 
 	dt_basis <-as.data.table(dget(paste0(tempdir(),"/tempbasis.txt")))
 
+	con_iccc=file(fileTemp4,open="wt")
+	sink(con_iccc)
+	sink(con_iccc, type="message")
+
+	for (i in (j+1):length(content)) {
+		cat(content[i])
+	}
+
+	sink(type="message")
+	sink()
+	close(con_iccc)
+
+	dt_iccc <-as.data.table(dget(paste0(tempdir(),"/tempiccc.txt")))
+
 	close(con_source)
 
+
 	
-	return(list(ls_args = ls_args, dt_base = dt_base,dt_basis = dt_basis))
+	return(list(ls_args = ls_args, dt_base = dt_base,dt_basis = dt_basis,dt_iccc = dt_iccc))
 
 }
 
@@ -1320,11 +1347,11 @@ shiny_update_dwn_folder <- function(output,values) {
 	download_dir <<- choose.dir(download_dir)
 	if (is.na(download_dir)) {
 		output$directorypath <- renderText({"Please select a folder"})
- 	}
- 	else {
-  	output$directorypath <- renderText({download_dir})
-  }
-  shiny_list_folder_content(output)
+	}
+	else {
+		output$directorypath <- renderText({download_dir})
+	}
+	shiny_list_folder_content(output)
 
 }
 

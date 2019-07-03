@@ -7,6 +7,7 @@ shinyServer(function(input, output, session) {
   session$onSessionEnded(function() {
     cat("back to static life")
     stopApp()
+    q("no")
   })
   
 
@@ -303,11 +304,13 @@ shinyServer(function(input, output, session) {
   	hide(id="report_option", anim=TRUE)
   	hide(id="fluid_test", anim=TRUE)
   	show(id="plot", anim=TRUE)
+  	show(id="export_menu", anim=TRUE)
 
   	if (input$select_table==0) {
       table$label <- "Automatic Report"
       show(id="report_option", anim=TRUE)
       hide(id="plot", anim=TRUE)
+      hide(id="export_menu", anim=TRUE)
       show(id="controls_COL1", anim=TRUE)
       hide(id="controls_COL2", anim=TRUE)
       shiny_list_folder_content(output)
@@ -770,7 +773,7 @@ shinyServer(function(input, output, session) {
 	)
 
   
-  onclick("directorypath", shiny_update_dwn_folder(output,values))
+  onevent("dblclick","directorypath", shiny_update_dwn_folder(output,values))
 
 
   observeEvent(input$downloadFile2,{ 
@@ -790,6 +793,19 @@ shinyServer(function(input, output, session) {
 
   })
 
+  observeEvent(input$CheckAdvanced,{
+
+  	if (input$CheckAdvanced) {
+  		show(id="advanced_menu", anim=TRUE)
+  	}
+  	else {
+  		hide(id="advanced_menu", anim=TRUE)
+  	}
+
+
+
+  })
+
 	observeEvent(input$shinydata,{ 
 
 				temp <- import_shiny_date(input$shinydata$datapath)
@@ -797,6 +813,7 @@ shinyServer(function(input, output, session) {
 					ls_args <<- temp$ls_args
 					dt_base <<- temp$dt_base
 					dt_basis <<- temp$dt_basis
+					dt_iccc <<- temp$dt_iccc
 					canreg_age_group <<- canreg_get_agegroup_label(dt_base, ls_args$agegroup)
 					year_info <<- canreg_get_years(dt_base)
 					dt_CI5_label <<- as.character(unique(dt_CI5_list[cr == ls_args$sr, c("country_label"), with=FALSE])$country_label)
