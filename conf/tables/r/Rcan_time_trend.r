@@ -34,6 +34,7 @@ tryCatch({
     stop(i18n$t("Time trend analysis need at least 2 years data"))
   }
 
+  dt_all <- dt_all[ICD10GROUP != "O&U",]
   dt <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE, keep_year = TRUE)
   
   ## get age group label

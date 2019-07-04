@@ -28,6 +28,8 @@ tryCatch({
     column_group_list =list(c("ICD10GROUP", "ICD10GROUPLABEL", "ICD10GROUPCOLOR"))
   )
   
+  dt_all <- dt_all[ICD10GROUP != "C44",]
+  dt_all <- dt_all[ICD10GROUP != "O&U",]
   dt <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE, keep_year = FALSE)
   
   ## get age group label
