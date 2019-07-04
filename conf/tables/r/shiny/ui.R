@@ -63,7 +63,7 @@ ui <- dashboardPage(
 
 		    fileInput("shinydata", "Import shiny data",
 		          multiple = FALSE,
-		          accept = c(".txt")
+		          accept = c(".zip")
 		          ),
 
 		    downloadButton('downloadShinyData', 'Export shiny data', class="mat_btn mt15m")

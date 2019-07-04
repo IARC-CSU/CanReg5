@@ -6,9 +6,7 @@ shiny_data <- function(input, session) {
   if  (!is.null(input$select_table)) {
 		table_number <- input$select_table
 		if ( table_number == 1) {
-			dt_temp <- canreg_pop_data(pop_file =ls_args$pop)
-			
-			
+			dt_temp <- copy(dt_pyramid)	
 		}
 		else if (table_number == 2){
 			
@@ -1168,6 +1166,10 @@ shiny_export_data <- function(log_file) {
   dput(ls_args)
   cat("\n")
 
+  cat("pop file\n")
+  dput(as.data.frame(dt_pyramid))
+  cat("\n")
+
   cat("data file\n")
   dput(as.data.frame(dt_base))
   cat("\n")
@@ -1188,92 +1190,117 @@ shiny_export_data <- function(log_file) {
 }
 
 
-import_shiny_date <- function(datafile) {
 
-	fileTemp1 <- paste0(tempdir(),"/tempargs.txt")
-	fileTemp2 <- paste0(tempdir(),"/tempdata.txt")
-	fileTemp3 <- paste0(tempdir(),"/tempbasis.txt")
-	fileTemp4 <- paste0(tempdir(),"/tempiccc.txt")
-
-	con_args=file(fileTemp1,open="wt")
-	sink(con_args)
-	sink(con_args, type="message")
+import_shiny_date <- function(zipfile) {
 
 
-	con_source=file(datafile,open="r")
-	content=readLines(con_source)
+  unzip(zipfile, exdir=tempdir())
 
-	j<-2
-	args <- NULL
-	while (content[j] != "data file") {
-		cat(content[j])
-		j <- j+1
-		if (j == length(content)-1){
-			sink(type="message")
-			sink()
-			close(con_args)
-			close(con_source)
-			return(NULL)
-		}
-	}
+  fileTemp1 <- paste0(tempdir(),"/tempargs.txt")
+  fileTemp2 <- paste0(tempdir(),"/temppyr.txt")
+  fileTemp3 <- paste0(tempdir(),"/tempdata.txt")
+  fileTemp4 <- paste0(tempdir(),"/tempbasis.txt")
+  fileTemp5 <- paste0(tempdir(),"/tempiccc.txt")
 
-	sink(type="message")
-	sink()
-	close(con_args)
-	ls_args <-dget(paste0(tempdir(),"/tempargs.txt"))
+  datafile <- paste0(tempdir(),"/shinydata.txt")
 
-	con_data=file(fileTemp2,open="wt")
-	sink(con_data)
-	sink(con_data, type="message")
-	j<-j+1
-
-	while (content[j] != "basis file") {
-		cat(content[j])
-		j <- j+1
-	}
+  con_args=file(fileTemp1,open="wt")
+  sink(con_args)
+  sink(con_args, type="message")
 
 
-	sink(type="message")
-	sink()
-	close(con_data)
+  con_source=file(datafile,open="r")
+  content=readLines(con_source)
 
-	dt_base <-as.data.table(dget(paste0(tempdir(),"/tempdata.txt")))
+  j<-2
+  args <- NULL
+  while (content[j] != "pop file") {
+    cat(content[j])
+    j <- j+1
+    if (j == length(content)-1){
+      sink(type="message")
+      sink()
+      close(con_args)
+      close(con_source)
+      return(NULL)
+    }
+  }
 
-	con_basis=file(fileTemp3,open="wt")
-	sink(con_basis)
-	sink(con_basis, type="message")
-	j<-j+1
+  sink(type="message")
+  sink()
+  close(con_args)
 
-	while (content[j] != "iccc file") {
-		cat(content[j])
-		j <- j+1
-	}
+  ls_args <-dget(paste0(tempdir(),"/tempargs.txt"))
 
-	sink(type="message")
-	sink()
-	close(con_basis)
+  con_pyr=file(fileTemp2,open="wt")
+  sink(con_pyr)
+  sink(con_pyr, type="message")
+  j<-j+1
 
-	dt_basis <-as.data.table(dget(paste0(tempdir(),"/tempbasis.txt")))
-
-	con_iccc=file(fileTemp4,open="wt")
-	sink(con_iccc)
-	sink(con_iccc, type="message")
-
-	for (i in (j+1):length(content)) {
-		cat(content[i])
-	}
-
-	sink(type="message")
-	sink()
-	close(con_iccc)
-
-	dt_iccc <-as.data.table(dget(paste0(tempdir(),"/tempiccc.txt")))
-
-	close(con_source)
+  while (content[j] != "data file") {
+    cat(content[j])
+    j <- j+1
+  }
 
 
-	
-	return(list(ls_args = ls_args, dt_base = dt_base,dt_basis = dt_basis,dt_iccc = dt_iccc))
+  sink(type="message")
+  sink()
+  close(con_pyr)
+
+  dt_pyramid <-as.data.table(dget(paste0(tempdir(),"/temppyr.txt")))
+
+
+  con_data=file(fileTemp3,open="wt")
+  sink(con_data)
+  sink(con_data, type="message")
+  j<-j+1
+
+  while (content[j] != "basis file") {
+    cat(content[j])
+    j <- j+1
+  }
+
+
+  sink(type="message")
+  sink()
+  close(con_data)
+
+  dt_base <-as.data.table(dget(paste0(tempdir(),"/tempdata.txt")))
+
+  con_basis=file(fileTemp4,open="wt")
+  sink(con_basis)
+  sink(con_basis, type="message")
+  j<-j+1
+
+  while (content[j] != "iccc file") {
+    cat(content[j])
+    j <- j+1
+  }
+
+  sink(type="message")
+  sink()
+  close(con_basis)
+
+  dt_basis <-as.data.table(dget(paste0(tempdir(),"/tempbasis.txt")))
+
+  con_iccc=file(fileTemp5,open="wt")
+  sink(con_iccc)
+  sink(con_iccc, type="message")
+
+  for (i in (j+1):length(content)) {
+    cat(content[i])
+  }
+
+  sink(type="message")
+  sink()
+  close(con_iccc)
+
+  dt_iccc <-as.data.table(dget(paste0(tempdir(),"/tempiccc.txt")))
+
+  close(con_source)
+  closeAllConnections()
+
+  return(list(ls_args = ls_args,dt_pyramid = dt_pyramid, dt_base = dt_base,dt_basis = dt_basis,dt_iccc = dt_iccc))
 
 }
 
