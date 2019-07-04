@@ -4805,11 +4805,11 @@ csu_cancer_color <- function(cancer_list) {
                     "Testis",
                     "Kidney & urinary NOS","Kidney",
                     "Bladder",
-                    "Brain & nervous sytem","Brain, nervous system",
+                    "Brain & central nervous system","Brain, nervous system",
                     "Thyroid",
                     "Lymphoma","Non-Hodgkin lymphoma",
                     "Leukaemia",
-                    "Non-Melanoma Skin","Other skin",
+                    "Non-melanoma skin","Other skin",
                     "Ill-defined",
                     "Others and unspecified","Other and unspecified")
   
