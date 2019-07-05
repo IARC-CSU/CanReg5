@@ -41,6 +41,8 @@ tryCatch({
     group_by = c("ICCC",  "YEAR", "SEX")
   )
 
+  dt_pyramid <- canreg_pop_data(pop_file =ls_args$pop)
+
 
 
   graph_width <- 6

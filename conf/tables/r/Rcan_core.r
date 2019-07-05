@@ -857,8 +857,7 @@ canreg_report_add_text <- function(doc, text, mark_table,dt_all,pop_file, folder
         
       } else if (type == "POP"){
         
-        dt_report <- dt_all
-        dt_report <- canreg_pop_data(pop_file)
+        dt_report <- copy(dt_pyramid)
         doc <- body_add_par(doc, "\r\n")
         
         total_pop <- formatC(round(unique(dt_report$Total)), format="d", big.mark=",") 
@@ -2394,6 +2393,8 @@ canreg_bar_top <- function(df_data,
   
   
   dt$CSU_BAR <-Rcan:::core.csu_legend_wrapper(dt$CSU_BAR, 15)
+
+  dt[, CSU_ASR:= as.double(CSU_ASR)]
   dt[CSU_BY==levels(dt$CSU_BY)[[1]], asr_plot:= CSU_ASR*(-1)]
   dt[CSU_BY==levels(dt$CSU_BY)[[2]], asr_plot:= CSU_ASR]
   
@@ -2518,7 +2519,8 @@ canreg_population_pyramid <- function(df_data,
   
   dt$CSU_BY <- factor(dt$CSU_BY)
   dt$CSU_BAR <- factor(dt$CSU_BAR)
-  
+ 
+  dt[, CSU_CASES:= as.double(CSU_CASES)] 
   dt[CSU_BY==levels(dt$CSU_BY)[[1]], cases_plot:= CSU_CASES*(-1)]
   dt[CSU_BY==levels(dt$CSU_BY)[[2]], cases_plot:= CSU_CASES]
   
@@ -2775,6 +2777,7 @@ canreg_cases_age_bar <- function(df_data,
   dt$CSU_BY <- factor(dt$CSU_BY)
   dt$CSU_BAR <- factor(dt$CSU_BAR)
   
+  dt[, CSU_CASES:= as.double(CSU_CASES)]
   dt[CSU_BY==levels(dt$CSU_BY)[[1]], cases_plot:= CSU_CASES*(-1)]
   dt[CSU_BY==levels(dt$CSU_BY)[[2]], cases_plot:= CSU_CASES]
   
@@ -3525,7 +3528,7 @@ rcan_report <- function(doc,report_path,dt_all,ls_args,ann=TRUE, shiny=FALSE) {
   dt_report <- dt_all
   dt_report <- dt_report[ICD10GROUP != "C44",]
   dt_report <- dt_report[ICD10GROUP != "O&U",]
-  dt_report <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE, keep_year = FALSE)
+  dt_report <- canreg_ageSpecific_rate_data(dt_report, keep_ref = TRUE, keep_year = FALSE)
   
   
   ##calcul of ASR
@@ -3696,7 +3699,10 @@ rcan_report <- function(doc,report_path,dt_all,ls_args,ann=TRUE, shiny=FALSE) {
       }
     }
     
-    dt_report <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE, keep_year = TRUE)
+    dt_report <- dt_all
+    dt_report <- dt_report[ICD10GROUP != "C44",]
+    dt_report <- dt_report[ICD10GROUP != "O&U",]
+    dt_report <- canreg_ageSpecific_rate_data(dt_report, keep_ref = TRUE, keep_year = TRUE)
     
     ##calcul of ASR
     dt_report<- Rcan:::core.csu_asr(df_data =dt_report, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
@@ -3750,7 +3756,10 @@ rcan_report <- function(doc,report_path,dt_all,ls_args,ann=TRUE, shiny=FALSE) {
       }
     }
     
-    dt_report <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE, keep_year = TRUE)
+    dt_report <- dt_all
+    dt_report <- dt_report[ICD10GROUP != "C44",]
+    dt_report <- dt_report[ICD10GROUP != "O&U",]
+    dt_report <- canreg_ageSpecific_rate_data(dt_report, keep_ref = TRUE, keep_year = TRUE)
     
     
     ##calcul of ASR
@@ -3816,7 +3825,10 @@ rcan_report <- function(doc,report_path,dt_all,ls_args,ann=TRUE, shiny=FALSE) {
     doc <- body_add_par(doc, "\r\n")
     
     
-    dt_report <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE)
+    dt_report <- dt_all
+    dt_report <- dt_report[ICD10GROUP != "C44",]
+    dt_report <- dt_report[ICD10GROUP != "O&U",]
+    dt_report <- canreg_ageSpecific_rate_data(dt_report, keep_ref = TRUE)
     
     # import CI5 data with same cancer code and same age group
     dt_CI5_data <- canreg_import_CI5_data(dt_report, paste0(script.basename, "/CI5_data.rds"))
@@ -4084,9 +4096,8 @@ rcan_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
     }
   }
   
-  dt_report <- dt_all
-  dt_report <- canreg_pop_data(pop_file =ls_args$pop)
-  
+  dt_report <- dt_pyramid 
+
   canreg_output(output_type = "png", filename =  paste0(tempdir(), "\\temp_graph", nb_slide),landscape = TRUE,list_graph = FALSE,
                 FUN=canreg_population_pyramid,
                 df_data =dt_report,
@@ -4275,7 +4286,7 @@ rcan_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
   dt_report <- dt_all
   dt_report <- dt_report[ICD10GROUP != "C44",]
   dt_report <- dt_report[ICD10GROUP != "O&U",]
-  dt_report <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE, keep_year = FALSE)
+  dt_report <- canreg_ageSpecific_rate_data(dt_report, keep_ref = TRUE, keep_year = FALSE)
   
   
   ##calcul of ASR
@@ -4407,7 +4418,10 @@ rcan_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
   if (year_info$span > time_limit) {  
     
     
-    dt_report <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE, keep_year = TRUE)
+    dt_report <- dt_all
+    dt_report <- dt_report[ICD10GROUP != "C44",]
+    dt_report <- dt_report[ICD10GROUP != "O&U",]
+    dt_report <- canreg_ageSpecific_rate_data(dt_report, keep_ref = TRUE, keep_year = TRUE)
     
     
     ## get age group label
@@ -4452,8 +4466,11 @@ rcan_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
   }
   
   if (year_info$span > time_limit) {
-    
-    dt_report <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE, keep_year = TRUE)
+
+    dt_report <- dt_all
+    dt_report <- dt_report[ICD10GROUP != "C44",]
+    dt_report <- dt_report[ICD10GROUP != "O&U",]
+    dt_report <- canreg_ageSpecific_rate_data(dt_report, keep_ref = TRUE, keep_year = TRUE)
     
     
     ##calcul of ASR
@@ -4511,7 +4528,11 @@ rcan_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
   region_admit <- c("EastMed", "Americas", "West Pacific", "Europe", "SEAsia", "Africa")
   if (ls_args$sr %in% region_admit) {
     
-    dt_report <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE)
+
+    dt_report <- dt_all
+    dt_report <- dt_report[ICD10GROUP != "C44",]
+    dt_report <- dt_report[ICD10GROUP != "O&U",]
+    dt_report <- canreg_ageSpecific_rate_data(dt_report, keep_ref = TRUE)
     
     # import CI5 data with same cancer code and same age group
     dt_CI5_data <- canreg_import_CI5_data(dt_report, paste0(script.basename, "/CI5_data.rds"))
@@ -4799,7 +4820,7 @@ csu_cancer_color <- function(cancer_list) {
                     "Melanoma of skin",
                     "Breast",
                     "Cervix", "Cervix uteri",
-                    "Corpus & Uterus NOS", "Corpus uteri",
+                    "Corpus & uterus NOS", "Corpus uteri",
                     "Ovary & adnexa","Ovary",
                     "Prostate",
                     "Testis",

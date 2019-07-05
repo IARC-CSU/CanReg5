@@ -32,7 +32,9 @@ tryCatch({
   if (year_info$span < 3) {
     stop("EAPC analysis need at least 3 years data")
   }
-  
+
+
+  dt_all <- dt_all[ICD10GROUP != "O&U",]
   dt <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE, keep_year = TRUE)
  
   ## get age group label

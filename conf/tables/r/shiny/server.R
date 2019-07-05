@@ -728,9 +728,17 @@ shinyServer(function(input, output, session) {
 
   output$downloadShinyData <- downloadHandler(
 	
-		filename =  paste0(gsub("\\W","", ls_args$label),"_",ls_args$sc,"_",gsub("\\D","", Sys.time()),"_data.txt"),
+		filename =  paste0(gsub("\\W","", ls_args$label),"_",ls_args$sc,"_",gsub("\\D","", Sys.time()),"_data.zip"),
 		content = function(file) {
-			shiny_export_data(file)
+
+			withProgress(message = 'export shiny data', value = 0, {
+
+				shiny_export_data(paste0(tempdir(),"/shinydata.txt"))
+				incProgress(1/6, detail = "zip file")
+				zip::zipr(file, c(paste0(tempdir(),"/shinydata.txt")))
+				incProgress(1/6, detail = "")
+
+			})
 		}
 	
 	)
@@ -808,9 +816,12 @@ shinyServer(function(input, output, session) {
 
 	observeEvent(input$shinydata,{ 
 
+		withProgress(message = 'import shiny data', value = 0, {
+
 				temp <- import_shiny_date(input$shinydata$datapath)
 				if(!is.null(temp)) {
 					ls_args <<- temp$ls_args
+					dt_pyramid <<- temp$dt_pyramid
 					dt_base <<- temp$dt_base
 					dt_basis <<- temp$dt_basis
 					dt_iccc <<- temp$dt_iccc
@@ -827,8 +838,12 @@ shinyServer(function(input, output, session) {
 					showNotification("Data imported",type="message")
 				}
 				else {
+					incProgress(1, detail = "")
 					showNotification("This is not a valid shiny data file",type="error")
+
 				}
-	  })
+	 	 })
+
+	})
 		
 })
