@@ -4820,7 +4820,7 @@ csu_cancer_color <- function(cancer_list) {
                     "Melanoma of skin",
                     "Breast",
                     "Cervix", "Cervix uteri",
-                    "Corpus & Uterus NOS", "Corpus uteri",
+                    "Corpus & uterus NOS", "Corpus uteri",
                     "Ovary & adnexa","Ovary",
                     "Prostate",
                     "Testis",
