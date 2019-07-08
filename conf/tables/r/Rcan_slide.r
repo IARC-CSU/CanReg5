@@ -41,6 +41,9 @@ tryCatch({
     group_by = c("ICCC",  "YEAR", "SEX")
   )
 
+
+  dt_pyramid <- canreg_pop_data(pop_file =ls_args$pop)
+
   sysName <- Sys.info()[['sysname']]
 
   if (sysName == "Windows") {

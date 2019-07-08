@@ -33,6 +33,7 @@ tryCatch({
     stop("EAPC analysis need at least 3 years data")
   }
   
+  dt_all <- dt_all[ICD10GROUP != "O&U",]
   dt <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE, keep_year = TRUE)
   first_age <- as.numeric(substr(ls_args$agegroup,1,regexpr("-", ls_args$agegroup)[1]-1))
   last_age <- as.numeric(substr(ls_args$agegroup,regexpr("-", ls_args$agegroup)[1]+1,nchar(ls_args$agegroup)))

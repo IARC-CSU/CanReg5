@@ -36,6 +36,8 @@ tryCatch({
   }
   
 	##Prepare canreg data for ageSpecific rate
+  dt_all <- dt_all[ICD10GROUP != "C44",]
+  dt_all <- dt_all[ICD10GROUP != "O&U",]
   dt_all <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE)
   
   # import CI5 data with same cancer code and same age group
