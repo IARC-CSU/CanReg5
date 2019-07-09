@@ -2417,7 +2417,7 @@ canreg_bar_top <- function(df_data,
   dt$asr_label <- dt$CSU_ASR + (tick_space*0.1)
   dt[CSU_BY==levels(dt$CSU_BY)[[1]], asr_label:= asr_label*(-1)]
   
-  dt$asr_round <-  format(round(dt$CSU_ASR, digits = 1), nsmall = nsmall)
+  dt$asr_round <-  format(round(dt$CSU_ASR, digits = nsmall), nsmall = nsmall)
   
   csu_plot <- ggplot(dt, aes(CSU_BAR, asr_plot, fill=CSU_BY)) +
     geom_bar(stat="identity", width = 0.8)+
@@ -4816,7 +4816,7 @@ csu_cancer_color <- function(cancer_list) {
                     "Liver", 
                     "Pancreas", 
                     "Larynx",
-                    "Lung, trachea, bronchus","Trachea, bronchus and lung","Lung",
+                    "Trachea, bronchus, lung","Trachea, bronchus and lung","Lung",
                     "Melanoma of skin",
                     "Breast",
                     "Cervix", "Cervix uteri",
