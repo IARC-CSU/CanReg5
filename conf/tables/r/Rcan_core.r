@@ -4816,7 +4816,7 @@ csu_cancer_color <- function(cancer_list) {
                     "Liver", 
                     "Pancreas", 
                     "Larynx",
-                    "Lung, trachea, bronchus","Trachea, bronchus and lung","Lung",
+                    "Trachea, bronchus, lung","Trachea, bronchus and lung","Lung",
                     "Melanoma of skin",
                     "Breast",
                     "Cervix", "Cervix uteri",
