@@ -43,8 +43,8 @@ public class HoldingRawDataInternalFrame extends javax.swing.JInternalFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        scroll1 = new javax.swing.JScrollPane();
-        formatErrorsText = new javax.swing.JTextArea();
+        scroll3 = new javax.swing.JScrollPane();
+        formatErrorsText = new javax.swing.JTextPane();
         rawDataPanel = new javax.swing.JPanel();
         scroll2 = new javax.swing.JScrollPane();
         rawDataText = new javax.swing.JTextPane();
@@ -62,13 +62,11 @@ public class HoldingRawDataInternalFrame extends javax.swing.JInternalFrame {
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel2.border.title"))); // NOI18N
         jPanel2.setName("jPanel2"); // NOI18N
 
-        scroll1.setName("scroll1"); // NOI18N
+        scroll3.setName("scroll3"); // NOI18N
 
-        formatErrorsText.setColumns(20);
-        formatErrorsText.setLineWrap(true);
-        formatErrorsText.setRows(5);
+        formatErrorsText.setContentType("text/html"); // NOI18N
         formatErrorsText.setName("formatErrorsText"); // NOI18N
-        scroll1.setViewportView(formatErrorsText);
+        scroll3.setViewportView(formatErrorsText);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -76,14 +74,15 @@ public class HoldingRawDataInternalFrame extends javax.swing.JInternalFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(3, 3, 3)
-                .addComponent(scroll1, javax.swing.GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE)
+                .addComponent(scroll3)
                 .addGap(3, 3, 3))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(scroll1, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
-                .addGap(3, 3, 3))
+                .addGap(3, 3, 3)
+                .addComponent(scroll3, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         rawDataPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("rawDataPanel.border.title"))); // NOI18N
@@ -101,14 +100,14 @@ public class HoldingRawDataInternalFrame extends javax.swing.JInternalFrame {
             rawDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(rawDataPanelLayout.createSequentialGroup()
                 .addGap(3, 3, 3)
-                .addComponent(scroll2)
+                .addComponent(scroll2, javax.swing.GroupLayout.DEFAULT_SIZE, 452, Short.MAX_VALUE)
                 .addGap(3, 3, 3))
         );
         rawDataPanelLayout.setVerticalGroup(
             rawDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(rawDataPanelLayout.createSequentialGroup()
                 .addGap(3, 3, 3)
-                .addComponent(scroll2, javax.swing.GroupLayout.DEFAULT_SIZE, 304, Short.MAX_VALUE)
+                .addComponent(scroll2, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
                 .addGap(3, 3, 3))
         );
 
@@ -128,7 +127,7 @@ public class HoldingRawDataInternalFrame extends javax.swing.JInternalFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(3, 3, 3)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(rawDataPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
@@ -137,7 +136,9 @@ public class HoldingRawDataInternalFrame extends javax.swing.JInternalFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -149,13 +150,13 @@ public class HoldingRawDataInternalFrame extends javax.swing.JInternalFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextArea formatErrorsText;
+    private javax.swing.JTextPane formatErrorsText;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel rawDataPanel;
     private javax.swing.JTextPane rawDataText;
-    private javax.swing.JScrollPane scroll1;
     private javax.swing.JScrollPane scroll2;
+    private javax.swing.JScrollPane scroll3;
     // End of variables declaration//GEN-END:variables
 
     public void setData(String formatErrors, String rawData){
