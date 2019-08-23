@@ -2091,31 +2091,35 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
         HoldingRawDataInternalFrame frame = new HoldingRawDataInternalFrame();
         rawDataFrames.add(frame);
         
-        int amountOfSources = 0;
-        for(DatabaseRecord tumour : this.tumourRecords) {
-            for(Source source : ((Tumour)tumour).getSources()) 
-                amountOfSources++;
-        }
+        String tumourIDVariable = globalToolBox
+                    .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString())
+                    .getDatabaseVariableName();
+        String patientIDVariable = globalToolBox
+                .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString())
+                .getDatabaseVariableName();
         
-        if(amountOfSources == 1) {
-            //WE ALWAYS ASUME THERE'S ONLY ONE PATIENT TAB OPEN!!
-            for(DatabaseRecord patient : this.patientRecords) {
-                formatErrors.append(patient.getVariableAsString("format_errors"));
-                rawData.append(patient.getVariableAsString("raw_data"));
-            }
-        } else {
+        //WE ALWAYS ASUME THERE'S ONLY ONE PATIENT TAB OPEN!!
+        for(DatabaseRecord patient : this.patientRecords) {
+            formatErrors.append("<strong>PATIENT " + patient.getVariableAsString(patientIDVariable) 
+                    + ":</strong><br>" + patient.getVariableAsString("format_errors") + "<br><br>");
+            rawData.append("<strong>PATIENT " + patient.getVariableAsString(patientIDVariable) + 
+                    ":</strong><br>" + patient.getVariableAsString("raw_data") + "<br>");
+            
             for(DatabaseRecord tumour : this.tumourRecords) {
+                formatErrors.append("<strong>TUMOUR " + tumour.getVariableAsString(tumourIDVariable) 
+                    + ":</strong><br>" + tumour.getVariableAsString("format_errors") + "<br><br>");
+                rawData.append("<strong>TUMOUR " + tumour.getVariableAsString(tumourIDVariable) + 
+                        ":</strong><br>" + tumour.getVariableAsString("raw_data") + "<br>");
+                
                 for(Source source : ((Tumour)tumour).getSources()) {
                     String sourceRecordId = source.getVariableAsString("sourcerecordid");
-                    
-                    String sourceFormatErrors = source.getVariableAsString("format_errors");
-                    formatErrors.append("Source " + sourceRecordId + ": ").append(sourceFormatErrors).append("\n");
-
-                    String sourceRawData = source.getVariableAsString("raw_data");
-                    rawData.append("<strong>SOURCE " + sourceRecordId + ":</strong><br>").append(sourceRawData).append("<br><br>");
+                    formatErrors.append("<strong>SOURCE " + sourceRecordId + ":</strong><br>")
+                                .append(source.getVariableAsString("format_errors")).append("<br><br>");
+                    rawData.append("<strong>SOURCE " + sourceRecordId + ":</strong><br>")
+                           .append(source.getVariableAsString("raw_data")).append("<br><br>");
                 }
             }
-        }                                
+        }                             
             
         rawData.append("</html>");
         frame.setData(formatErrors.toString(), rawData.toString());
