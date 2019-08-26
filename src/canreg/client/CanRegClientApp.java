@@ -1816,22 +1816,8 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     private synchronized void releaseAllRecordsHeldByThisClient() {
-//<<<<<<< HEAD
-//        locksMap.keySet().stream().forEach((tableName) -> {
-//            Set<Integer> lockSet = locksMap.get(tableName);
-//            if (lockSet != null) {
-//                lockSet.stream().forEach((recordID) -> {
-//                    try {
-//                        releaseRecord(recordID, tableName, null);
-//                    } catch (RemoteException | SecurityException ex) {
-//                        Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-//                    }
-//                });
-//            }
-//=======
         locksMap.forEach((t, u) -> {
             locksMap.put(t, null);
-//>>>>>>> release/R44
         });
         
         lockFile.writeMap();

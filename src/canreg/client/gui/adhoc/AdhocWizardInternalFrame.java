@@ -27,6 +27,7 @@ import canreg.client.gui.dataentry.PDSChooserInternalFrame;
 import canreg.client.gui.importers.ImportFilesView;
 import canreg.client.gui.management.systemeditor.ModifyDatabaseStructureInternalFrame;
 import canreg.common.Globals;
+import canreg.server.CanRegServerInterface;
 import canreg.server.management.SystemDescription;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -40,6 +41,7 @@ import javax.swing.JDesktopPane;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.ListModel;
+import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import org.jdesktop.application.Action;
@@ -57,16 +59,19 @@ public class AdhocWizardInternalFrame extends javax.swing.JInternalFrame
     private JDesktopPane dtp;
     private PDSChooserInternalFrame populationFrame;
     private boolean changeTabFlag = false;
+    private CanRegServerInterface server;
     
-    public AdhocWizardInternalFrame(JDesktopPane dtp) {
+    
+    public AdhocWizardInternalFrame(JDesktopPane dtp, CanRegServerInterface server) {
         this.dtp = dtp;
+        this.server = server;
         initComponents();
         setTitle(resourceMap.getString("Form.title"));
         
         importFilesFrame = new ImportFilesView();
         importFilesFrame.configureForAdHoc();
         
-        browseFrame = new BrowseInternalFrame(dtp, null);
+        browseFrame = new BrowseInternalFrame(dtp, this.server);
         
         initPopulationTab();
         
