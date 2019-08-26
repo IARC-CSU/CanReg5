@@ -311,14 +311,19 @@ if(.Platform$OS.type != "windows"){
                           "output.raw.data.csv",
                           sep = "//")
       
-      if(paramsJSON$patientFileSeparator == "Comma"){
+      if (paramsJSON$patientFileSeparator == "Comma") {
         write.csv(raw.data, file.write,
                   row.names = FALSE,
                   fileEncoding = "UTF-8")
-      }else{
+      }else if (paramsJSON$patientFileSeparator == "Tab") {
         write.table(raw.data, file.write,
                     row.names = FALSE,
                     sep = "\t",
+                    fileEncoding = "UTF-8")
+      } else {
+        write.table(raw.data, file.write,
+                    row.names = FALSE,
+                    sep = paramsJSON$patientFileSeparator,
                     fileEncoding = "UTF-8")
       }
       
@@ -405,10 +410,15 @@ if(.Platform$OS.type != "windows"){
         write.csv(patient.raw.data, file.patient.write, 
                   row.names = FALSE,
                   fileEncoding = "UTF-8")
-      }else{
+      }else if(paramsJSON$patientFileSeparator == "Tab"){
         write.table(patient.raw.data, file.patient.write,  
                     row.names = FALSE,
                     sep = "\t",
+                    fileEncoding = "UTF-8")
+      }else{
+        write.table(patient.raw.data, file.patient.write,  
+                    row.names = FALSE,
+                    sep = paramsJSON$patientFileSeparator,
                     fileEncoding = "UTF-8")
       }
       
@@ -502,10 +512,15 @@ if(.Platform$OS.type != "windows"){
         write.csv(tumour.raw.data, file.tumour.write, 
                   row.names = FALSE,
                   fileEncoding = "UTF-8")
-      }else{
+      }else if(paramsJSON$tumourFileSeparator == "Tab"){
         write.table(tumour.raw.data, file.tumour.write,  
                     row.names = FALSE,
                     sep = "\t",
+                    fileEncoding = "UTF-8")
+      }else{
+        write.table(tumour.raw.data, file.tumour.write,  
+                    row.names = FALSE,
+                    sep = paramsJSON$tumourFileSeparator,
                     fileEncoding = "UTF-8")
       }
       
@@ -594,10 +609,15 @@ if(.Platform$OS.type != "windows"){
         write.csv(source.raw.data, file.source.write, 
                   row.names = FALSE,
                   fileEncoding = "UTF-8")
-      }else{
+      }else if(paramsJSON$sourceFileSeparator == "Tab"){
         write.table(source.raw.data, file.source.write,   
                     row.names = FALSE,
                     sep = "\t",
+                    fileEncoding = "UTF-8")
+      }else{
+        write.table(source.raw.data, file.source.write,   
+                    row.names = FALSE,
+                    sep = paramsJSON$sourceFileSeparator,
                     fileEncoding = "UTF-8")
       }
       
@@ -685,10 +705,15 @@ if(.Platform$OS.type != "windows"){
         write.csv(patient.raw.data, file.patient.write, 
                   row.names = FALSE,
                   fileEncoding = "UTF-8")
-      }else{
+      }else if(paramsJSON$patientFileSeparator == "Tab"){
         write.table(patient.raw.data, file.patient.write,  
                     row.names = FALSE,
                     sep = "\t",
+                    fileEncoding = "UTF-8")
+      }else{
+        write.table(patient.raw.data, file.patient.write,  
+                    row.names = FALSE,
+                    sep = paramsJSON$patientFileSeparator,
                     fileEncoding = "UTF-8")
       }
       #Ask if the file exists
@@ -783,10 +808,15 @@ if(.Platform$OS.type != "windows"){
         write.csv(tumour.raw.data, file.tumour.write, 
                   row.names = FALSE,
                   fileEncoding = "UTF-8")
-      }else{
+      }else if(paramsJSON$tumourFileSeparator == "Tab"){
         write.table(tumour.raw.data, file.tumour.write, 
                     row.names = FALSE,
                     sep = "\t",
+                    fileEncoding = "UTF-8")
+      }else{
+        write.table(tumour.raw.data, file.tumour.write, 
+                    row.names = FALSE,
+                    sep = paramsJSON$tumourFileSeparator,
                     fileEncoding = "UTF-8")
       }
       

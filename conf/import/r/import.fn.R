@@ -7,10 +7,17 @@ import.fn <- function (filepath = 'character',
                             stringsAsFactors = FALSE, 
                             colClasses = 'character', 
                             check.names = FALSE)
-  }else{
+  }else if (separator == 'Tab'){
     import.data <- read.delim(filepath, 
                               header = TRUE, 
                               sep = "\t", 
+                              dec = ".", 
+                              colClasses = 'character', 
+                              check.names = FALSE)
+  }else{
+    import.data <- read.delim(filepath, 
+                              header = TRUE, 
+                              sep = separator, 
                               dec = ".", 
                               colClasses = 'character', 
                               check.names = FALSE)
