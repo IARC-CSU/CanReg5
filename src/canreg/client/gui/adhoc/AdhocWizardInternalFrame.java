@@ -41,6 +41,7 @@ import javax.swing.JDesktopPane;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.ListModel;
+import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
@@ -80,6 +81,18 @@ public class AdhocWizardInternalFrame extends javax.swing.JInternalFrame
         changeTabFlag = true;
         tabbedPane.addTab(resourceMap.getString("browse.tabTitle"), browseFrame.getMainPanel());
         tabbedPane.addTab(resourceMap.getString("population.tabTitle"), populationFrame.getMainPanel());
+        
+        addInternalFrameListener(new InternalFrameAdapter() {
+            @Override
+            public void internalFrameClosing(InternalFrameEvent e) {                
+                int option = JOptionPane.showConfirmDialog(null, 
+                            resourceMap.getString("Form.close"), 
+                            "Warning!", JOptionPane.YES_NO_OPTION);
+
+                if (option == JOptionPane.YES_OPTION) 
+                    dispose();
+            }
+        });
     }
 
     private void initPopulationTab() {
@@ -105,6 +118,7 @@ public class AdhocWizardInternalFrame extends javax.swing.JInternalFrame
         tableBuilderBtn = new javax.swing.JButton();
 
         setClosable(true);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setName("Form"); // NOI18N
 
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(AdhocWizardInternalFrame.class);
