@@ -580,17 +580,12 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      * @throws RecordLockedException
      */
     @Override
-//<<<<<<< HEAD
-//    public DatabaseRecord getRecord(int recordID, String tableName, boolean lock) throws RemoteException, SecurityException, RecordLockedException {
-//        return currentDAO.getRecord(recordID, tableName, lock);
-//=======
     public DatabaseRecord getRecord(int recordID, String tableName, boolean lock, Integer remoteHashCode)
             throws RemoteException, SecurityException, RecordLockedException {
         DatabaseRecord rec = currentDAO.getRecord(recordID, tableName, lock);
         if(lock)
             userManager.lockRecord(recordID, tableName, remoteHashCode);
         return rec;
-//>>>>>>> release/R44
     }
 
     /**
@@ -601,16 +596,10 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      * @throws SecurityException
      */
     @Override
-//<<<<<<< HEAD
-//    public void releaseRecord(int recordID, String tableName)
-//            throws RemoteException, SecurityException {
-//        currentDAO.releaseRecord(recordID, tableName);
-//=======
     public void releaseRecord(int recordID, String tableName, Integer remoteHashCode)
             throws RemoteException, SecurityException {
         currentDAO.releaseRecord(recordID, tableName);
         userManager.releaseRecord(recordID, tableName, remoteHashCode);
-//>>>>>>> release/R44
     }
 
     /**

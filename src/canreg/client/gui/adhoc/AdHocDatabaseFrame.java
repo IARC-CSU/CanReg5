@@ -267,7 +267,7 @@ public class AdHocDatabaseFrame extends javax.swing.JInternalFrame {
                                         resourceMap.getString("WARNING"), 
                                         JOptionPane.INFORMATION_MESSAGE);
             else if(resultString.equals(SUCCESS)) {
-                AdhocWizardInternalFrame internalFrame = new AdhocWizardInternalFrame(desktopPane);
+                AdhocWizardInternalFrame internalFrame = new AdhocWizardInternalFrame(desktopPane, CanRegClientApp.getApplication().getServer());
                 desktopPane.add(internalFrame, javax.swing.JLayeredPane.DEFAULT_LAYER);
                 internalFrame.setLocation(desktopPane.getWidth() / 2 - internalFrame.getWidth() / 2, desktopPane.getHeight() / 2 - internalFrame.getHeight() / 2);
                 internalFrame.setVisible(true);

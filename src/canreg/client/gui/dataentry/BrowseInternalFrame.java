@@ -33,7 +33,6 @@ import canreg.client.DistributedTableDataSourceClient;
 import canreg.client.LocalSettings;
 import canreg.client.gui.CanRegClientView;
 import canreg.client.gui.importers.Import;
-import canreg.client.gui.importers.ImportOptions;
 import canreg.client.gui.tools.TableColumnAdjuster;
 import canreg.client.gui.tools.XTableColumnModel;
 import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
@@ -72,7 +71,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
@@ -120,7 +118,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
     int tumourIDLength;
     // private int highlightedColumnNumber = 0;
     private final String patientRecordIDVariable;
-    private final CanRegServerInterface server;
+    private final CanRegServerInterface server;   
     
     
 
@@ -790,11 +788,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
         recordEditor.setDictionary(CanRegClientApp.getApplication().getDictionary());
 
         try {
-//<<<<<<< HEAD
-//            patients = CanRegClientApp.getApplication().getPatientsByPatientID(idString, false, server);
-//=======
             Patient[] patients = CanRegClientApp.getApplication().getPatientsByPatientID(idString, false, server);
-//>>>>>>> release/R44
 
             if (patients.length < 1) {
                 /*
@@ -821,11 +815,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
             // Get all the tumour records for all the patient records...
             for (Patient p : patients) {
                 recordEditor.addRecord(p);
-//<<<<<<< HEAD
-//                tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(idString, true, server);
-//=======
                 DatabaseRecord[] tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(idString, true, server);
-//>>>>>>> release/R44
                 for (DatabaseRecord rec : tumourRecords) {
                     // store them in a set, so we don't show them several times
                     if (rec != null) {
@@ -864,7 +854,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
             setCursor(normalCursor);
         }
     }
-
+    
 
     @Action
     public void editTumourID() {
@@ -890,10 +880,6 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
         DatabaseFilter filter = new DatabaseFilter();
 
         filter.setFilterString(tumourIDlookupVariable + " ='" + idString + "'");
-//<<<<<<< HEAD
-//        Object[][] rows;
-//=======
-//>>>>>>> release/R44
 
         try {
             DistributedTableDescription distributedTableDescription = 
