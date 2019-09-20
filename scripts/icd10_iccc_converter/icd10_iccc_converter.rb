@@ -20,7 +20,7 @@ options[:sex_column] = "SEX"
 options[:separating_character] = "\t"
 options[:in_file_name] = "Lots of Data.txt"
 options[:out_file_name] = options[:in_file_name].split(".")[0]+"-out.txt"
-options[:canreg_path] = '../../dist/CanReg.jar'
+options[:canreg_path] = '../../CanReg.jar'
 
 # overrides
 option_parser = OptionParser.new do |opts|
