@@ -13,7 +13,7 @@ This tool lets you add icd10 codes and user defined groups to data in a csv file
   - Windows: Run the install.bat in this folder.
   - Linux/Mac: run the following commands
     - ```jgem install bundler```
-    - ```jruby -S bundle install```
+  - ```jruby -S bundle install```
 
 ## Usage
 
