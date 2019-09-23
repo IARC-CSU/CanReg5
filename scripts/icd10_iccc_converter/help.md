@@ -17,8 +17,8 @@ Add column of icd10 and iccc3 for incidence data in a spreadsheet.
 
 ```bash
 Add column of icd10, iccc3, for incidence data in a spreadsheet.
-  Usage: jruby --1.9 icd10_iccc_converter.rb [options]
-  Example: jruby --1.9 icd10_iccc_converter.rb -t Topography -m Morphology -b Behaviour -s Sex -c , -f LotsOfData.csv
+  Usage: jruby icd10_iccc_converter.rb [options]
+  Example: jruby icd10_iccc_converter.rb -t Topography -m Morphology -b Behaviour -s Sex -c , -f LotsOfData.csv
 
     -t TOPOGRAPHY_COLUMN_NAME,       Name of the column containing topography.
  Default: TOP

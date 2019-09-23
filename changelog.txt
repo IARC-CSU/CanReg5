@@ -20,6 +20,7 @@
 - Added a very simple ADHOC database XML for data analysis/quality control.
 - Fixed a possible freeze if entering incorrect dates.
 - Rcan updated to 1.3.71
+- Added a jRuby script to generate ICCC and ICD10 based on ICD-O-3 without launching CanReg5.
 - jcalendar updated
 - Various fixes.
 
