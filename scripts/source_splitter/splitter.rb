@@ -8,11 +8,13 @@
 
 require 'csv'
 require 'optparse'
+require 'JSON'
 
 options = {}
 
 ## default values
 options[:separating_character] = "\t"
+options[:map_file_name] = "conf.json"
 options[:in_file_name] = "Lots of Data.txt"
 options[:out_file_name] = options[:in_file_name].split(".")[0]+"-out.txt"
 
@@ -33,6 +35,9 @@ option_parser = OptionParser.new do |opts|
     fileparts.length>1 ? fileparts[-2] = fileparts[-2]+"-out" : fileparts[0] = fileparts[0]+"-out"
     options[:out_file_name] = fileparts.join(".")
   end
+  opts.on("-m MAP_FILE", "--map-file MAP_FILE", "JSON file with variable mapping.\n Default: #{options[:map_file_name]}") do |file|
+    options[:map_file_name] = file
+  end
   opts.on("-h", "--help", "Display help functions.") do 
     puts option_parser.help
     exit 0
@@ -52,52 +57,39 @@ unless File.exist?(options[:in_file_name])
   exit 1
 end
 
-source_fields_map    = [ 
-  {
-    "HOSP1" => "HOSP",
-    "DATE1" => "SDATE",
-    "HOSPNO1" => "REFNO"
-  },
-  {
-    "HOSP2" => "HOSP",
-    "DATE2" => "SDATE",
-    "REFNO2" => "REFNO"
-  },
-  {
-    "HOSP3" => "HOSP",
-    "DATE3" => "SDATE",
-    "REFNO3" => "REFNO"
-  }
-]
+unless File.exist?(options[:map_file_name])
+  puts "ERROR: No such file: #{options[:map_file_name]}.\n---\n"
+  puts option_parser.help
+  exit 1
+end
 
-common_fields_map = {
-  "SERONO" => "SERONO",
-  "HISTONO" => "HISTONO",
-  "OTHERLNO" => "OTHERLNO",
-  "SOURCE" => "SOURCE"
-}
+maps = JSON.parse(open(options[:map_file_name]).read)
+source_fields_map   = maps["source_fields_map"]
+common_fields_map   = maps["common_fields_map"]
+tumour_id_field     = maps["tumour_id_field"]
+source_id_field     = maps["source_id_field"]
 
-tumour_id_field = "TUMOURIDSOURCETABLE"
-source_id_field = "SOURCERECORDID"
-
-in_file = CSV.open(options[:in_file_name], mode = "rb", headers: true, col_sep: options[:separating_character])
+in_file  = CSV.open(options[:in_file_name],  mode = "rb", headers: true, col_sep: options[:separating_character])
 out_file = CSV.open(options[:out_file_name], mode = "wb", headers: true, col_sep: options[:separating_character])
 
 puts "Processing file: #{options[:in_file_name]}"
-puts "Writing to: #{options[:out_file_name]}"
+puts "Writing to:      #{options[:out_file_name]}"
 
-in_file_headers = source_fields_map.map(&:keys).flatten.uniq + common_fields_map.values + [tumour_id_field, source_id_field]
+in_file_headers  = source_fields_map.map(&:keys).flatten.uniq   + common_fields_map.values + [tumour_id_field, source_id_field]
 out_file_headers = source_fields_map.map(&:values).flatten.uniq + common_fields_map.values + [tumour_id_field, source_id_field]
-puts in_file_headers.join(",")
-puts out_file_headers.join(",")
 
+puts "Expected headers in out-file:  #{out_file_headers.sort.join(",")}"
+puts "Expected headers in in-file:   #{in_file_headers.sort.join(",")}"
 
 idx = 0
 in_file.each do |line|
   if (idx==0)
     headers = line.headers
+    puts "Actual headers in in-file:     #{headers.sort.join(",")}"
+    missing_columns = headers.reject{|x| in_file_headers.include? x}
+    puts "Columns not preserved: #{missing_columns.join(',')}" unless missing_columns.empty?
     puts "Number of comlumns in in-file: #{headers.length}"
-    puts headers.join(",")
+
     in_file_headers.each do |column|
       unless headers.include? column
         puts "No such column name: #{column}.\n---\n"
@@ -105,6 +97,7 @@ in_file.each do |line|
         exit 1
       end
     end
+    print "Working"
     out_file.puts(out_file_headers)
   end
 
@@ -130,5 +123,5 @@ in_file.each do |line|
   end
 
   idx += 1
-  print "+" if (idx%1000==0)
+  print "." if (idx%1000==0)
 end
