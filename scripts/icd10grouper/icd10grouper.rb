@@ -27,8 +27,8 @@ options[:canreg_path] = '../../CanReg.jar'
 option_parser = OptionParser.new do |opts|
   executable_name = File.split($0)[1]
   opts.banner = "Add column of icd10, groups and group defs for incidence data in a spreadsheet.
-  Usage: jruby --1.9 #{executable_name} [options]
-  Example: jruby --1.9 #{executable_name} -t Topography -m Morphology -b Behaviour -s Sex -c , -g Groups.conf -f LotsOfData.csv
+  Usage: jruby #{executable_name} [options]
+  Example: jruby #{executable_name} -t Topography -m Morphology -b Behaviour -s Sex -c , -g Groups.conf -f LotsOfData.csv
   "
   # Create a switch
   opts.on("-t TOPOGRAPHY_COLUMN_NAME","--topography-column-name TOPOGRAPHY_COLUMN_NAME", "Name of the column containing topography.\n Default: #{options[:top_column]}") do |column|

@@ -89,6 +89,7 @@ public class GregorianCalendarCanReg extends GregorianCalendar implements Calend
     
     @Override
     public GregorianCalendarCanReg clone() {
+        super.clone();
         GregorianCalendarCanReg newDate = new GregorianCalendarCanReg(this);
         newDate.setUnknownDay(unknownDay);
         newDate.setUnkownMonth(unkownMonth);

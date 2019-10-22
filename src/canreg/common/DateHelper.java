@@ -76,32 +76,30 @@ public class DateHelper {
 
         boolean dateReadProperly = false;
 
-        while (!dateReadProperly) {
-            try {
-                calendar.getTimeInMillis(); // This is just to trigger an error - if we have one latent...
-                dateReadProperly = true;
-            } catch (IllegalArgumentException iae) {
-                if ("YEAR".equalsIgnoreCase(iae.getMessage())) {
-                    calendar.clear(Calendar.YEAR);
-                    if ("9999".equals(yearString) || "0000".equals(yearString)) {
-                        unknownYear = true;
-                    } else {
-                        throw iae;
-                    }
-                } else if ("MONTH".equalsIgnoreCase(iae.getMessage())) {
-                    calendar.clear(Calendar.MONTH);
-                    if ("99".equals(monthString) || "00".equals(monthString)) {
-                        unknownMonth = true;
-                    } else {
-                        throw iae;
-                    }
-                } else if ("DAY_OF_MONTH".equalsIgnoreCase(iae.getMessage())) {
-                    calendar.clear(Calendar.DAY_OF_MONTH);
-                    if ("99".equals(dayString) || "00".equals(dayString)) {
-                        unknownDay = true;
-                    } else {
-                        throw iae;
-                    }
+        try {
+            calendar.getTimeInMillis(); // This is just to trigger an error - if we have one latent...
+            dateReadProperly = true;
+        } catch (IllegalArgumentException iae) {
+            if ("YEAR".equalsIgnoreCase(iae.getMessage())) {
+                calendar.clear(Calendar.YEAR);
+                if ("9999".equals(yearString) || "0000".equals(yearString)) {
+                    unknownYear = true;
+                } else {
+                    throw iae;
+                }
+            } else if ("MONTH".equalsIgnoreCase(iae.getMessage())) {
+                calendar.clear(Calendar.MONTH);
+                if ("99".equals(monthString) || "00".equals(monthString)) {
+                    unknownMonth = true;
+                } else {
+                    throw iae;
+                }
+            } else if ("DAY_OF_MONTH".equalsIgnoreCase(iae.getMessage())) {
+                calendar.clear(Calendar.DAY_OF_MONTH);
+                if ("99".equals(dayString) || "00".equals(dayString)) {
+                    unknownDay = true;
+                } else {
+                    throw iae;
                 }
             }
         }
