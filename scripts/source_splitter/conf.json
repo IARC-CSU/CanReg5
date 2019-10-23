@@ -1,0 +1,27 @@
+{
+  "tumour_id_field": "TUMOURIDSOURCETABLE",
+  "source_id_field": "SOURCERECORDID",
+  "common_fields_map": {
+    "SERONO": "SERONO",
+    "HISTONO": "HISTONO",
+    "OTHERLNO": "OTHERLNO",
+    "SOURCE": "SOURCE"
+  },
+  "source_fields_map": [
+    {
+      "HOSP1": "HOSP",
+      "DATE1": "SDATE",
+      "HOSPNO1": "REFNO"
+    },
+    {
+      "HOSP2": "HOSP",
+      "DATE2": "SDATE",
+      "REFNO2": "REFNO"
+    },
+    {
+      "HOSP3": "HOSP",
+      "DATE3": "SDATE",
+      "REFNO3": "REFNO"
+    }
+  ]
+}
