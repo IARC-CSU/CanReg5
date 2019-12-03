@@ -29,7 +29,7 @@ source(paste(sep="/", script.basename, "StartUp.r"))
 	fileInc <- checkArgs(Args, "-inc")
 	dataInc <- read.table(fileInc, header=TRUE)
       
-      # Removing Non-Melanoma Skin Cancer
+      # Removing Non-melanoma skin Cancer
       dataInc <- dataInc[dataInc$ICD10GROUP!="C44",]      
 
       # Setting all ICDs to All sites

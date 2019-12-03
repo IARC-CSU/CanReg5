@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2015  International Agency for Research on Cancer
+ * Copyright (C) 2008-2019  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1244,7 +1244,7 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
             LinkedList<CheckResult> checkResults = canreg.client.CanRegClientApp.getApplication().performChecks(patient, tumour);
 
             Map<Globals.StandardVariableNames, CheckResult.ResultCode> mapOfVariablesAndWorstResultCodes =
-                    new EnumMap<Globals.StandardVariableNames, CheckResult.ResultCode>(Globals.StandardVariableNames.class);
+                    new EnumMap<>(Globals.StandardVariableNames.class);
             worstResultCodeFound = CheckResult.ResultCode.OK;
             for (CheckResult result : checkResults) {
                 if (result.getResultCode() != CheckResult.ResultCode.OK && result.getResultCode() != CheckResult.ResultCode.NotDone) {
@@ -1260,7 +1260,7 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                         }
                     }
                 }
-                Logger.getLogger(RecordEditorMainFrame.class.getName()).log(Level.INFO, result.toString());
+                // Logger.getLogger(RecordEditorMainFrame.class.getName()).log(Level.INFO, result.toString());
             }
 
             if (worstResultCodeFound != CheckResult.ResultCode.Invalid && worstResultCodeFound != CheckResult.ResultCode.Missing) {

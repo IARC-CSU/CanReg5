@@ -11,6 +11,7 @@ Year,Год
 years,Годы
 years old,лет
 Age-standardized incidence rate per,Стандартизованный показатель на
+Age-specific incidence rate per,Повозрастной показатель заболеваемости на
 Cumulative incidence risk (percent),Кумулятивный риск (%)
 cancer sites,Локализации
 Age at diagnosis,Возраст на момент установления диагноза 
@@ -23,21 +24,21 @@ Stomach,Желудок
 Liver,Печень
 Pancreas,Поджелудочная железа
 Larynx,Гортань
-"Lung, trachea, bronchus","Легкие, трахея, бронхи"
+"Trachea, bronchus, lung","Легкие, трахея, бронхи"
 Melanoma of skin,Меланома кожи
 Breast,Молочная железа
 Cervix,Шейка матки
-Corpus & Uterus NOS,Тело матки и матки БДУ
+Corpus & uterus NOS,Тело матки и матки БДУ
 Ovary & adnexa,Яичники и придатки
 Prostate,Предстательная железа
 Testis,Яичко
 Kidney & urinary NOS,Почки и мочеполовой системы БДУ
 Bladder,Мочевой пузырь
-Brain & nervous sytem,"Мозг, ЦНС"
+Brain & central nervous system,"Мозг, ЦНС"
 Thyroid,Щитовидная железа
 Lymphoma,Лимфома
 Leukaemia,Лейкоз
-Non-Melanoma Skin,Немеланомные ЗН кожи
+Non-melanoma skin,Немеланомные ЗН кожи
 Ill-defined,Неточно указанные ЗН
 Others and unspecified,Другие и неуточненные ЗН
 Lip,Губа

@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2015 International Agency for Research on Cancer
+ * Copyright (C) 2008-2019 International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -53,19 +53,19 @@ public class DateHelper {
         if (dayString.trim().length() > 0) {
             day = Integer.parseInt(dayString);
         } else {
-            dayString = "99";
+            day = 99;
         }
         if (monthString.trim().length() > 0) {
             month = Integer.parseInt(monthString);
         } else {
-            monthString = "99";
+            month = 99;
 
         }
         if (yearString.trim().length() > 0) {
             year = Integer.parseInt(yearString);
 
         } else {
-            yearString = "9999";
+            year = 9999;
         }
 
         GregorianCalendarCanReg calendar = new GregorianCalendarCanReg();
@@ -76,33 +76,27 @@ public class DateHelper {
 
         boolean dateReadProperly = false;
 
-        while (!dateReadProperly) {
-            try {
-                calendar.getTimeInMillis(); // This is just to trigger an error - if we have one latent...
-                dateReadProperly = true;
-            } catch (IllegalArgumentException iae) {
-                if ("YEAR".equalsIgnoreCase(iae.getMessage())) {
-                    calendar.clear(Calendar.YEAR);
-                    if ("9999".equals(yearString) || "0000".equals(yearString)) {
-                        unknownYear = true;
-                    } else {
-                        throw iae;
-                    }
-                } else if ("MONTH".equalsIgnoreCase(iae.getMessage())) {
-                    calendar.clear(Calendar.MONTH);
-                    if ("99".equals(monthString) || "00".equals(monthString)) {
-                        unknownMonth = true;
-                    } else {
-                        throw iae;
-                    }
-                } else if ("DAY_OF_MONTH".equalsIgnoreCase(iae.getMessage())) {
-                    calendar.clear(Calendar.DAY_OF_MONTH);
-                    if ("99".equals(dayString) || "00".equals(dayString)) {
-                        unknownDay = true;
-                    } else {
-                        throw iae;
-                    }
-                }
+        try {
+            calendar.getTimeInMillis(); // This is just to trigger an error - if we have one latent...
+            dateReadProperly = true;
+        } catch (IllegalArgumentException iae) {
+            if ("YEAR".equalsIgnoreCase(iae.getMessage())) {
+                calendar.clear(Calendar.YEAR);
+                calendar.setUnknownYearValue(yearString);
+                // if this is what triggers the error set it to unknown
+                unknownYear = true;
+            } else if ("MONTH".equalsIgnoreCase(iae.getMessage()) || "MONTH: 1 -> 2".equalsIgnoreCase(iae.getMessage())) {
+                calendar.clear(Calendar.MONTH);
+                calendar.setUnknownMonthValue(monthString);
+                // if this is what triggers the error set it to unknown
+                unknownMonth = true;
+            } else if ("DAY_OF_MONTH".equalsIgnoreCase(iae.getMessage())) {
+                calendar.clear(Calendar.DAY_OF_MONTH);
+                calendar.setUnknownDayValue(dayString);
+                // if this is what triggers the error set it to unknown
+                unknownDay = true;
+            } else {
+                throw iae;
             }
         }
 
@@ -121,17 +115,17 @@ public class DateHelper {
         format.setGroupingUsed(false);
         try {
             if (calendar.isUnknownYear() || !calendar.isSet(Calendar.YEAR)) {
-                dateString = setYear(dateString, dateFormatString, "9999");
+                dateString = setYear(dateString, dateFormatString, calendar.getUnknownYearValue() + "");
             } else {
                 dateString = setYear(dateString, dateFormatString, format.format(calendar.get(Calendar.YEAR)));
             }
             if (calendar.isUnknownMonth() || !calendar.isSet(Calendar.MONTH)) {
-                dateString = setMonth(dateString, dateFormatString, "99");
+                dateString = setMonth(dateString, dateFormatString, calendar.getUnknownMonthValue() + "");
             } else {
                 dateString = setMonth(dateString, dateFormatString, format.format(calendar.get(Calendar.MONTH) + 1));
             }
             if (calendar.isUnknownDay() || !calendar.isSet(Calendar.DAY_OF_MONTH)) {
-                dateString = setDay(dateString, dateFormatString, "99");
+                dateString = setDay(dateString, dateFormatString, calendar.getUnknownDayValue() + "");
             } else {
                 dateString = setDay(dateString, dateFormatString, format.format(calendar.get(Calendar.DAY_OF_MONTH)));
             }

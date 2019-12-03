@@ -257,3 +257,5 @@ doc/CanReg5-Future.pdf
 conf/tables/r/\.RData
 
 conf/tables/r/\.Rhistory
+
+scripts/source_splitter/Gemfile.lock

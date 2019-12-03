@@ -1,14 +1,30 @@
 ﻿Changelog
 
-5.00.44BETA3
-- Data visualizations in R are now translated to Russian, Spanish and Portuguese.
-  - As usual, defaults to English if no language is available.
-- Memory leaks fixed.
-- Remote sessions are automatically logged out if connection drops.
+5.00.44
+- Table Builder:
+  - Data visualizations in R are now translated to Russian, Spanish and Portuguese.
+    - As usual, defaults to English if no language is available.
+  - Web browser based interactive analysis ("Shiny builder") is now out of its BETA phase.
+  - Update to CI5XI for comparison.
+  - Progress bar added for launching R/installing packages on Windows systems.
+  - Fixed a bug with "total population" being unisex.
+  - ICCC table added to report.
+  - Import/export system.
+  - Digit rounding fix.
+  - Harmonization of labels in conf files.
+  - Population datasets are now sorted by name in Table Builder.
+  - Updated list of R packages needed.
+- Memory leaks fixed. (With Betty Carballo and Patricio Carranza.)
+    - Remote sessions are automatically logged out if connection drops.
 - Warning message when trying to add duplicate short names of variables -- also across tables.
-- Fixed a bug where existing source records could dissapear during import.
-- Added a very simple ADHOC database for data analysis/quality control.
-- Rcan updated to 1.3.64
+- Fixed a bug where existing source records could disappear during import.
+- Added a very simple ADHOC database XML for data analysis/quality control.
+- Added database variable name in the variables association panel.
+- Fixed a possible user interface freeze if entering incorrect dates.
+- Basic support for non-Gregorian dates added.
+- Rcan updated to 1.3.71
+- Added a jRuby script to generate ICCC and ICD10 based on ICD-O-3 without launching CanReg5.
+- Added a Ruby script to split source records to facilitate migration from flat databases to CanReg5.
 - jcalendar updated
 - Various fixes.
 

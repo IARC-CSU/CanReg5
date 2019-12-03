@@ -43,6 +43,7 @@ import canreg.client.gui.components.LabelAndComboBoxJPanel;
 import canreg.client.gui.components.RangeFilterPanel;
 import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 import canreg.common.DatabaseFilter;
+import canreg.common.DatabaseGroupsListElement;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
 import canreg.common.cachingtableapi.DistributedTableDescriptionException;
@@ -59,6 +60,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -1034,6 +1036,11 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                 populationDatasetsCollection2.add(pd);
             });
             populationDatasetsArray = populationDatasetsCollection2.toArray(new PopulationDataset[0]);
+            
+            Arrays.sort(populationDatasetsArray, (PopulationDataset o1, PopulationDataset o2) -> {
+                return o1.getPopulationDatasetName().compareTo(o2.getPopulationDatasetName());
+            });
+            
             populatePopulationDataSetChooser();
         } catch (SecurityException | RemoteException ex) {
             Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
