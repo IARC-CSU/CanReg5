@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2015  International Agency for Research on Cancer
+ * Copyright (C) 2008-2019  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,7 +40,6 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
 
     private com.toedter.calendar.JDateChooser dateChooser;
     private JTextField dateField;
-    
     
     public DateVariableEditorPanel(ActionListener listener) {
         super(listener);
@@ -121,11 +120,9 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
                     String dateString = codeTextField.getText();
                     String dateFormatString = dateChooser.getDateFormatString();
                     if (date.isUnknownDay()) 
-                        dateString = DateHelper.setDay(dateString, dateFormatString, "99");
-                    
+                        dateString = DateHelper.setDay(dateString, dateFormatString, date.getUnknownDayValue());                    
                     if (date.isUnknownMonth()) 
-                        dateString = DateHelper.setMonth(dateString, dateFormatString, "99");
-                    
+                        dateString = DateHelper.setMonth(dateString, dateFormatString, date.getUnknownMonthValue());                    
                     codeTextField.setText(dateString);
                 } else 
                     codeTextField.setText(value);                
@@ -136,16 +133,11 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
                         .log(Level.WARNING, java.util.ResourceBundle
                                 .getBundle("canreg/client/gui/dataentry2/components/resources/VariableEditorPanel")
                                 .getString("VALUE: ") + value, numberFormatException);
-            } catch (IllegalArgumentException ex) {
+            } catch (IllegalArgumentException | StringIndexOutOfBoundsException ex) {
                 Logger.getLogger(DateVariableEditorPanel.class.getName())
                         .log(Level.WARNING, java.util.ResourceBundle
                                 .getBundle("canreg/client/gui/dataentry2/components/resources/VariableEditorPanel")
                                 .getString("VALUE: ") + value, ex);
-            } catch (StringIndexOutOfBoundsException stringIndexOutOfBoundsException) {
-                Logger.getLogger(DateVariableEditorPanel.class.getName())
-                        .log(Level.WARNING, java.util.ResourceBundle
-                                .getBundle("canreg/client/gui/dataentry2/components/resources/VariableEditorPanel")
-                                .getString("VALUE: ") + value, stringIndexOutOfBoundsException);
             }
         }
     }
@@ -156,7 +148,7 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
         String valueObjectString = null;
         if (valueString.length() > 0) {
             try {
-                String dateFormatString = dateChooser.getDateFormatString();
+                String dateFormatString = databaseListElement.getDateFormatString();
                 GregorianCalendarCanReg tempCalendar = DateHelper.parseDateStringToGregorianCalendarCanReg(valueString, dateFormatString);
                 if (tempCalendar != null) 
                     valueObjectString = DateHelper.parseGregorianCalendarCanRegToDateString(tempCalendar, Globals.DATE_FORMAT_STRING);                
@@ -172,7 +164,7 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
             } finally {
                 // if the date is malformed we just return the data as is.
                 if (valueObjectString == null || valueObjectString.isEmpty()) 
-                    valueObjectString = codeTextField.getText().trim();                
+                    valueObjectString = codeTextField.getText().trim();
             }
         }
         return valueObjectString;
