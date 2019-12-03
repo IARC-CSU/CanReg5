@@ -141,12 +141,10 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
                     String dateString = codeTextField.getText();
                     String dateFormatString = dateChooser.getDateFormatString();
                     // dateField.setText(value);
-                    if (date.isUnknownDay()) {
-                        dateString = DateHelper.setDay(dateString, dateFormatString, "99");
-                    }
-                    if (date.isUnknownMonth()) {
-                        dateString = DateHelper.setMonth(dateString, dateFormatString, "99");
-                    }
+                    if (date.isUnknownDay()) 
+                        dateString = DateHelper.setDay(dateString, dateFormatString, date.getUnknownDayValue());                    
+                    if (date.isUnknownMonth()) 
+                        dateString = DateHelper.setMonth(dateString, dateFormatString, date.getUnknownMonthValue());     
                     codeTextField.setText(dateString);
                 } else {
                     codeTextField.setText(value);
@@ -155,10 +153,8 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
                 Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
             } catch (NumberFormatException numberFormatException) {
                 Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.WARNING, java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("VALUE: ") + value, numberFormatException);
-            } catch (IllegalArgumentException ex) {
+            } catch (IllegalArgumentException | StringIndexOutOfBoundsException ex) {
                 Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.WARNING, java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("VALUE: ") + value, ex);
-            } catch (StringIndexOutOfBoundsException stringIndexOutOfBoundsException) {
-                Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.WARNING, java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("VALUE: ") + value, stringIndexOutOfBoundsException);
             }
         }
 
@@ -174,7 +170,7 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
         String valueObjectString = null;
         if (valueString.length() > 0) {
             try {
-                String dateFormatString = dateChooser.getDateFormatString();
+                String dateFormatString = databaseListElement.getDateFormatString();
                 GregorianCalendarCanReg tempCalendar = DateHelper.parseDateStringToGregorianCalendarCanReg(valueString, dateFormatString);
                 if (tempCalendar != null) {
                     valueObjectString = DateHelper.parseGregorianCalendarCanRegToDateString(tempCalendar, Globals.DATE_FORMAT_STRING);
