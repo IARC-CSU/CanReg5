@@ -109,12 +109,12 @@ for (i in c(packages_list, "gtools")) {
 }
 
 if (!bool_internet) {
-  stop("Canreg can not access internet and download the R packages. Please try again later") 
+  stop("CanReg5 can't access the internet and download the R packages. Please try again later.") 
 }
 
 
 if (sysName == "Windows") {
-  setWinProgressBar(pb, 0,label = "Cleaning canreg R folder")
+  setWinProgressBar(pb, 0,label = "Cleaning CanReg R folder")
 }
 unlink(file.path(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5")),recursive = TRUE)
 dir.create(file.path(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5")),recursive = TRUE)
@@ -150,7 +150,7 @@ for (i in seq_along(missing_packages)) {
     setWinProgressBar(
       pb, 
       value = i / (length(missing_packages) + 1),
-      label = sprintf("%s - Please note this will take a while depending on your connection speed, so why not have a tea while you wait...", missing_packages[i])
+      label = sprintf("%s (This might take a while...)", missing_packages[i])
     )
   }
 
