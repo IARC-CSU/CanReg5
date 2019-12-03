@@ -150,7 +150,7 @@ for (i in seq_along(missing_packages)) {
     setWinProgressBar(
       pb, 
       value = i / (length(missing_packages) + 1),
-      label = sprintf("%s - Make yourself at home, this can be long", missing_packages[i])
+      label = sprintf("%s - Please note this will take a while depending on your connection speed, so why not have a tea while you wait...", missing_packages[i])
     )
   }
 
