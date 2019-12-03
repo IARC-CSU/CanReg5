@@ -11,6 +11,7 @@ Year,Año
 years,Años
 years old,Años
 Age-standardized incidence rate per,Tasa de incidencia estandarizada por edad por
+Age-specific incidence rate per,Tasa de incidencia específica por edad
 Cumulative incidence risk (percent),Riesgo de incidencia acumulada (porcentaje)
 cancer sites,sitios de cáncer
 Age at diagnosis,Edad al momento del diagnóstico
@@ -23,21 +24,21 @@ Stomach,Estómago
 Liver,Hígado
 Pancreas,Páncreas
 Larynx,Laringe
-"Lung, trachea, bronchus","Pulmón, tráquea, bronquios"
+"Trachea, bronchus, lung","Pulmón, tráquea, bronquios"
 Melanoma of skin,Melanoma de piel
 Breast,mama
 Cervix,cervical
-Corpus & Uterus NOS,Corpus y Úter
+Corpus & uterus NOS,Corpus y Úter
 Ovary & adnexa,Ovario y anexos
 Prostate,Próstata
 Testis,Testículo
 Kidney & urinary NOS,Riñón y orina
 Bladder,vejiga
-Brain & nervous sytem,Cerebro y sistema nervioso
+Brain & central nervous system,Cerebro y sistema nervioso
 Thyroid,Tiroides
 Lymphoma,Linfoma
 Leukaemia,Leucemia
-Non-Melanoma Skin,Piel no melanoma
+Non-melanoma skin,Piel no melanoma
 Ill-defined,Mal definido
 Others and unspecified,Otros y no especificados
 Lip,Labio

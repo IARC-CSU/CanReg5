@@ -78,7 +78,6 @@ public class CanRegDAO {
     StringBuilder getterStringBuilder = new StringBuilder();
     StringBuilder filterStringBuilder = new StringBuilder();
 
-
     public CanRegDAO(String systemCode, Document doc) {
         this.doc = doc;
 
@@ -137,7 +136,6 @@ public class CanRegDAO {
         }
     }
 
-
     public synchronized Map<Integer, Dictionary> getDictionary() {
         // Map<Integer, Dictionary> dictionaryMap = new LinkedHashMap<Integer, Dictionary>();
         Statement queryStatement;
@@ -167,7 +165,6 @@ public class CanRegDAO {
         return dictionaryMap;
     }
 
-
     public synchronized Map<String, Integer> getNameSexTables() {
 
         Map<String, Integer> nameSexMap = new LinkedHashMap<String, Integer>();
@@ -190,7 +187,6 @@ public class CanRegDAO {
         return nameSexMap;
     }
 
-
     public synchronized String getSystemPropery(String lookup) {
         String value = null;
         try {
@@ -208,7 +204,6 @@ public class CanRegDAO {
         }
         return value;
     }
-
 
     public synchronized void setSystemPropery(String lookup, String value) {
         try {
@@ -228,7 +223,6 @@ public class CanRegDAO {
             Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
 
     public synchronized int saveUser(User user) {
         int ID = user.getID();
@@ -295,7 +289,6 @@ public class CanRegDAO {
         return ID;
     }
 
-
     public synchronized Map<String, User> getUsers() {
         Map<String, User> usersMap = new LinkedHashMap<String, User>();
         Statement queryStatement;
@@ -326,7 +319,6 @@ public class CanRegDAO {
         }
         return usersMap;
     }
-
 
     public synchronized Map<Integer, PopulationDataset> getPopulationDatasets() {
         Map<Integer, PopulationDataset> populationDatasetMap = new LinkedHashMap<Integer, PopulationDataset>();
@@ -408,7 +400,6 @@ public class CanRegDAO {
         return populationDatasetMap;
     }
 
-
     public String generateResultSetID() {
         // generate resultSetID
         boolean foundPlace = false;
@@ -421,7 +412,6 @@ public class CanRegDAO {
         }
         return resultSetID;
     }
-
 
     public synchronized DistributedTableDescription getDistributedTableDescriptionAndInitiateDatabaseQuery(DatabaseFilter filter, String tableName, String resultSetID)
             throws SQLException, UnknownTableException, DistributedTableDescriptionException {
@@ -484,6 +474,7 @@ public class CanRegDAO {
 
     /**
      * Perform backup of the database
+     *
      * @return Path to backup
      */
     public synchronized String performBackup() {
@@ -632,6 +623,7 @@ public class CanRegDAO {
 
     /**
      * Restore database from backup.
+     *
      * @param path to database backup.
      * @return true if successful, false if not
      */
@@ -792,8 +784,8 @@ public class CanRegDAO {
         return success;
     }
 
-    public boolean encryptDatabase(char[] newPasswordArray, char[] oldPasswordArray, 
-                                   String encryptionAlgorithm, String encryptionKeyLength) 
+    public boolean encryptDatabase(char[] newPasswordArray, char[] oldPasswordArray,
+            String encryptionAlgorithm, String encryptionKeyLength)
             throws RemoteException, SQLException {
         // To use the AES algorithm with a key length of 192 or 256, you must use unrestricted policy jar files for your JRE. You can obtain these files from your Java provider. They might have a name like "Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files." If you specify a non-default key length using the default policy jar files, a Java exception occurs.
         // https://db.apache.org/derby/docs/10.9/devguide/cdevcsecure67151.html
@@ -818,7 +810,7 @@ public class CanRegDAO {
             try {
                 disconnect();
                 // side effect of removing password is that we have to upgrade the database version
-                dbConnection = DriverManager.getConnection(getDatabaseUrl()+";bootPassword= "+ oldPassword+ ";upgrade=true", dbProperties);
+                dbConnection = DriverManager.getConnection(getDatabaseUrl() + ";bootPassword= " + oldPassword + ";upgrade=true", dbProperties);
                 disconnect();
             } catch (SQLException ex) {
                 Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -959,7 +951,7 @@ public class CanRegDAO {
         return id;
     }
 
-    public synchronized int savePatient(Patient patient) 
+    public synchronized int savePatient(Patient patient)
             throws SQLException {
         DatabaseVariablesListElement patientIDVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString());
         DatabaseVariablesListElement patientRecordIDVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString());
@@ -986,8 +978,7 @@ public class CanRegDAO {
         return saveRecord(Globals.PATIENT_TABLE_NAME, patient, stmtSaveNewPatient);
     }
 
-
-    public synchronized int saveTumour(Tumour tumour) 
+    public synchronized int saveTumour(Tumour tumour)
             throws SQLException, RecordLockedException {
         String tumourIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
         Object tumourID = tumour.getVariable(tumourIDVariableName);
@@ -1020,30 +1011,41 @@ public class CanRegDAO {
         int id = saveRecord(Globals.TUMOUR_TABLE_NAME, tumour, stmtSaveNewTumour);
 
         Set<Source> sources = tumour.getSources();
-        // delete old sources
-        try {
-            deleteSources(tumourID);
-        } catch (DistributedTableDescriptionException ex) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnknownTableException ex) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        // delete old sources ## DEPRECATED
+//        try {
+//            deleteSources(tumourID);
+//        } catch (DistributedTableDescriptionException ex) {
+//            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+//        } catch (UnknownTableException ex) {
+//            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+//        }
         // save each of the source records
         saveSources(tumourID, sources);
 
         return id;
     }
 
-    private synchronized int saveSource(Source source) throws SQLException {
+    private synchronized int saveSource(Source source) throws SQLException, RecordLockedException {
         String sourceIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.SourceRecordID.toString()).getDatabaseVariableName();
         Object sourceID = source.getVariable(sourceIDVariableName);
+        Object sourceRecordID = source.getVariable(canreg.common.Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME);
+        int id = -1;
         if (sourceID == null || sourceID.toString().trim().length() == 0) {
             String tumourIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourIDSourceTable.toString()).getDatabaseVariableName();
             String tumourID = (String) source.getVariable(tumourIDVariableName);
             sourceID = getNextSourceID(tumourID);
             source.setVariable(sourceIDVariableName, sourceID);
+            id = saveRecord(Globals.SOURCE_TABLE_NAME, source, stmtSaveNewSource);
+        } else if (sourceRecordID == null || sourceRecordID.toString().trim().length() == 0) {
+            id = saveRecord(Globals.SOURCE_TABLE_NAME, source, stmtSaveNewSource);
+        } else {
+            boolean success = editRecord(Globals.SOURCE_TABLE_NAME, source, stmtEditSource);
+            if (success) {
+                sourceRecordID = source.getVariable(canreg.common.Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME);
+                id = (int) sourceRecordID;
+            }
         }
-        return saveRecord(Globals.SOURCE_TABLE_NAME, source, stmtSaveNewSource);
+        return id;
     }
 
     public synchronized int saveDictionary(Dictionary dictionary) {
@@ -1347,10 +1349,9 @@ public class CanRegDAO {
      * @return
      * @throws RecordLockedException
      */
-    private synchronized boolean editRecord(String tableName, DatabaseRecord record, PreparedStatement stmtEditRecord) 
+    private synchronized boolean editRecord(String tableName, DatabaseRecord record, PreparedStatement stmtEditRecord)
             throws RecordLockedException {
         boolean bEdited = false;
-        int id = -1;
         try {
             stmtEditRecord.clearParameters();
 
@@ -1422,13 +1423,13 @@ public class CanRegDAO {
                 Object tumourID = tumour.getVariable(tumourIDVariableName);
                 Set<Source> sources = tumour.getSources();
                 // delete old sources
-                try {
-                    deleteSources(tumourID);
-                } catch (DistributedTableDescriptionException ex) {
-                    Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (UnknownTableException ex) {
-                    Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
-                }
+//                try {
+//                    deleteSources(tumourID);
+//                } catch (DistributedTableDescriptionException ex) {
+//                    Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+//                } catch (UnknownTableException ex) {
+//                    Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+//                }
                 // save each of the source records
                 saveSources(tumourID, sources);
             }
@@ -1561,9 +1562,9 @@ public class CanRegDAO {
 
         // NodeList dictionaries = variablesElement.getElementsByTagName(Globals.NAMESPACE + "dictionary");
         DatabaseDictionaryListElement[] dictionaries = canreg.common.Tools.getDictionaryListElements(doc, Globals.NAMESPACE);
-        
+
         // Go through all the variable definitions
-        for (DatabaseDictionaryListElement ddle:dictionaries) {
+        for (DatabaseDictionaryListElement ddle : dictionaries) {
             Dictionary dic = new Dictionary();
 
             // Create dictionary
@@ -1615,7 +1616,6 @@ public class CanRegDAO {
 
         return record;
     }
-
 
     private synchronized Tumour getTumour(int recordID, boolean lock) throws RecordLockedException {
         Tumour record = null;
@@ -1868,6 +1868,7 @@ public class CanRegDAO {
 
     /**
      * Simple console trace to system.out for debug purposes only.
+     *
      * @param message the message to be printed to the console
      */
     private static void debugOut(String msg) {
@@ -2024,7 +2025,11 @@ public class CanRegDAO {
             String tumourIDSourceTableVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourIDSourceTable.toString()).getDatabaseVariableName();
             for (Source source : sources) {
                 source.setVariable(tumourIDSourceTableVariableName, tumourID);
-                saveSource(source);
+                try {
+                    saveSource(source);
+                } catch (RecordLockedException ex) {
+                    Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
     }
@@ -2320,7 +2325,6 @@ public class CanRegDAO {
         return dataSource;
     }
 
-    
     private void fillDictionary(Globals.StandardVariableNames standardVariableName, String fileName) throws IOException {
         DatabaseVariablesListElement element
                 = globalToolBox.translateStandardVariableNameToDatabaseListElement(
@@ -2347,13 +2351,11 @@ public class CanRegDAO {
         }
     }
 
-    
     public boolean dropAndRebuildKeys() throws SQLException {
         Statement statement = dbConnection.createStatement();
         return dropAndRebuildKeys(statement);
     }
 
-    
     private boolean dropAndRebuildKeys(Statement statement) throws SQLException {
         boolean success = true;
         // Set primary keys in patient table
@@ -2461,7 +2463,7 @@ public class CanRegDAO {
 
     void upgrade() throws SQLException, RemoteException {
         // disconnect();
-        dbConnection = DriverManager.getConnection(getDatabaseUrl()+";upgrade=true", dbProperties);
+        dbConnection = DriverManager.getConnection(getDatabaseUrl() + ";upgrade=true", dbProperties);
         Logger.getLogger(CanRegDAO.class.getName()).log(Level.INFO, "JavaDB Version: {0}", dbConnection.getMetaData().getDatabaseProductVersion());
         // disconnect();
         // connect();
