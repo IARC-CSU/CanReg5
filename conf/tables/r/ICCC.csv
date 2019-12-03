@@ -1,0 +1,13 @@
+ICCC,ICCC_code,ICCC_label,ICCC_order
+1,I,Leukaemias,1
+2,II,Lymphomas,2
+3,III,CNS neoplasms,3
+4,IV,Neuroblastoma ,4
+5,V,Retinoblastoma,5
+6,VI,Renal tumors,6
+7,VII,Hepatic tumors,7
+8,VIII,Malignant bone tumors,8
+9,IX,Soft tissue sarcomas,9
+10,X,Germ cell tumors,10
+11,XI-XII,Other,11
+12,XI-XII,Other,11

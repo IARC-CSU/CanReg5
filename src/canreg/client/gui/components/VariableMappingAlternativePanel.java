@@ -63,8 +63,12 @@ public class VariableMappingAlternativePanel extends javax.swing.JPanel {
 
     private static String dbVariableLabel(DatabaseVariablesListElement databaseVariablesListElement) {
         return databaseVariablesListElement.getFullName()
-                + " (" + databaseVariablesListElement.getFillInStatus()
-                + java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableMappingAlternativePanel").getString(" - LENGTH: ") + databaseVariablesListElement.getVariableLength() + ""
+                + " (" 
+                + databaseVariablesListElement.getShortName() 
+                + " - "
+                + databaseVariablesListElement.getFillInStatus()
+                + java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableMappingAlternativePanel").getString(" - LENGTH: ") 
+                + databaseVariablesListElement.getVariableLength() + ""
                 + ")";
     }
 
