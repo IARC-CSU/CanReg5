@@ -1,7 +1,9 @@
-#LyX 2.1 created this file. For more info see http://www.lyx.org/
-\lyxformat 474
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
 \begin_document
 \begin_header
+\save_transient_properties true
+\origin unavailable
 \textclass scrbook
 \begin_preamble
 %% ================================================================================
@@ -26,16 +28,18 @@
 \language_package default
 \inputencoding iso8859-1
 \fontencoding global
-\font_roman default
-\font_sans default
-\font_typewriter default
-\font_math auto
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
 \font_default_family default
 \use_non_tex_fonts false
 \font_sc false
 \font_osf false
-\font_sf_scale 100
-\font_tt_scale 100
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures false
 \graphics default
 \default_output_format default
 \output_sync 0
@@ -78,6 +82,7 @@
 \suppress_date false
 \justification true
 \use_refstyle 0
+\use_minted 0
 \index Index
 \shortcut idx
 \color #008000
@@ -86,7 +91,10 @@
 \tocdepth 3
 \paragraph_separation indent
 \paragraph_indentation default
-\quotes_language english
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
 \papercolumns 1
 \papersides 2
 \paperpagestyle headings
@@ -209,7 +217,7 @@ CanReg5 is an open source tool to input, store, check and analyse cancer
 A short introduction to the database structure in CanReg5
 \begin_inset CommandInset label
 LatexCommand label
-name "sub:A-short-introduction"
+name "subsec:A-short-introduction"
 
 \end_inset
 
@@ -354,6 +362,7 @@ We have created a project page at GitHub to help us keep track of issues
 LatexCommand href
 name "https://github.com/IARC-CSU/CanReg5"
 target "https://github.com/IARC-CSU/CanReg5"
+literal "false"
 
 \end_inset
 
@@ -370,6 +379,7 @@ You can of course still send us emails at
 LatexCommand href
 target "canreg@iarc.fr"
 type "mailto:"
+literal "false"
 
 \end_inset
 
@@ -443,6 +453,7 @@ Please be aware that some problems can be avoided by installing the latest
 \begin_inset CommandInset href
 LatexCommand href
 target "http://java.com/en/download/manual.jsp"
+literal "false"
 
 \end_inset
 
@@ -456,6 +467,7 @@ Videos documenting certain operations described below can be downloaded
 \begin_inset CommandInset href
 LatexCommand href
 target "http://www.iacr.com.fr/CanReg5/videos.zip"
+literal "false"
 
 \end_inset
 
@@ -470,6 +482,7 @@ Last, but not, least: CanReg has its own stream on twitter.
 \begin_inset CommandInset href
 LatexCommand href
 target "http://twitter.com/canreg"
+literal "false"
 
 \end_inset
 
@@ -595,6 +608,7 @@ download the newest version from here:
 \begin_inset CommandInset href
 LatexCommand href
 target "http://www.iacr.com.fr/CanReg5/CanReg5.zip"
+literal "false"
 
 \end_inset
 
@@ -665,6 +679,11 @@ width "100col%"
 special "none"
 height "1in"
 height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
 status open
 
 \begin_layout Plain Layout
@@ -685,6 +704,10 @@ Example content of a log-file:
 
 \begin_layout LyX-Code
 <record>
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -797,7 +820,7 @@ installation
 \series bold
 \begin_inset CommandInset label
 LatexCommand label
-name "sub:Java-Runtime-Environment"
+name "subsec:Java-Runtime-Environment"
 
 \end_inset
 
@@ -850,6 +873,7 @@ Before you install and run CanReg5 for the first time it is recommended
 \begin_inset CommandInset href
 LatexCommand href
 target "http://java.com/en/download/manual.jsp"
+literal "false"
 
 \end_inset
 
@@ -862,7 +886,7 @@ target "http://java.com/en/download/manual.jsp"
 \series bold
 \begin_inset CommandInset label
 LatexCommand label
-name "sub:Install-CanReg5"
+name "subsec:Install-CanReg5"
 
 \end_inset
 
@@ -962,7 +986,7 @@ CanReg can produce tables in the post script format.
  (See 
 \begin_inset CommandInset ref
 LatexCommand vref
-reference "sub:PostScript-Viewer"
+reference "subsec:PostScript-Viewer"
 
 \end_inset
 
@@ -980,7 +1004,7 @@ Some of the more advanced analytical features in CanReg relies on the free
  (See 
 \begin_inset CommandInset ref
 LatexCommand vref
-reference "sub:R"
+reference "subsec:R"
 
 \end_inset
 
@@ -1087,7 +1111,7 @@ url{http://en.wikipedia.org/wiki/Home_directory}
 Afterwards you can delete the folder from 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "sub:Install-CanReg5"
+reference "subsec:Install-CanReg5"
 
 \end_inset
 
@@ -1131,7 +1155,7 @@ If, at this point, CanReg5 does not start you might have to update your
  (See 
 \begin_inset CommandInset ref
 LatexCommand vref
-reference "sub:Java-Runtime-Environment"
+reference "subsec:Java-Runtime-Environment"
 
 \end_inset
 
@@ -1257,7 +1281,7 @@ Import complete dictionary from a file
 Install a new CanReg5 system
 \begin_inset CommandInset label
 LatexCommand label
-name "sub:Install-a-new"
+name "subsec:Install-a-new"
 
 \end_inset
 
@@ -1312,6 +1336,10 @@ Click browse to find the system definition file.
 If the XML file is associated with a backup of CanReg5 the program will
  ask you if you want to restore from this backup.
  
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1631,7 +1659,7 @@ setting up a CanReg system
  using the built in editor
 \begin_inset CommandInset label
 LatexCommand label
-name "sub:Setting-up-or-modifying"
+name "subsec:Setting-up-or-modifying"
 
 \end_inset
 
@@ -2586,6 +2614,10 @@ notification area
 \end_inset
 
 .
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2679,7 +2711,7 @@ login
 
 \begin_inset CommandInset label
 LatexCommand label
-name "sub:Login"
+name "subsec:Login"
 
 \end_inset
 
@@ -3243,7 +3275,7 @@ import data from CanReg4
  from CanReg4
 \begin_inset CommandInset label
 LatexCommand label
-name "sub:Import-the-data"
+name "subsec:Import-the-data"
 
 \end_inset
 
@@ -3603,8 +3635,8 @@ Import
 \begin_inset Quotes erd
 \end_inset
 
- (leave everything as by default -- the import function only works on empty
- CanReg databases as per now\SpecialChar \ldots{}
+ (leave everything as by default – the import function only works on empty
+ CanReg databases as per now\SpecialChar ldots
 ) 
 \end_layout
 
@@ -3674,7 +3706,7 @@ You can import data from other programs than CanReg4 by using the import
 
 \begin_layout Itemize
 \align left
-Dates should be coded as year month day (yyyyMMdd) -- ISO 8601
+Dates should be coded as year month day (yyyyMMdd) – ISO 8601
 \end_layout
 
 \begin_layout Itemize
@@ -3761,7 +3793,7 @@ If CanReg5 has already been setup on this computer for your cancer registry,
  (See 
 \begin_inset CommandInset ref
 LatexCommand vref
-reference "sub:Login"
+reference "subsec:Login"
 
 \end_inset
 
@@ -3904,7 +3936,7 @@ The CanReg5 program has been installed but you wish to add the Registry
  (See 
 \begin_inset CommandInset ref
 LatexCommand vref
-reference "sub:Install-a-new"
+reference "subsec:Install-a-new"
 
 \end_inset
 
@@ -4031,7 +4063,7 @@ sorty by
 
 \begin_inset CommandInset label
 LatexCommand label
-name "sub:Sorty-by"
+name "subsec:Sorty-by"
 
 \end_inset
 
@@ -4058,7 +4090,7 @@ range
 
 \begin_inset CommandInset label
 LatexCommand label
-name "sub:Range"
+name "subsec:Range"
 
 \end_inset
 
@@ -4118,7 +4150,7 @@ filter
 
 \begin_inset CommandInset label
 LatexCommand label
-name "sub:Filter"
+name "subsec:Filter"
 
 \end_inset
 
@@ -4142,7 +4174,7 @@ To select records.
 \begin_layout Standard
 \begin_inset Tabular
 <lyxtabular version="3" rows="10" columns="2">
-<features rotate="0" tabularvalignment="middle">
+<features tabularvalignment="middle">
 <column alignment="center" valignment="top">
 <column alignment="center" valignment="top" width="75line%">
 <row>
@@ -4365,7 +4397,7 @@ If you know the exact value you want to return for at least one of the columns.
 \begin_layout Standard
 \begin_inset Tabular
 <lyxtabular version="3" rows="3" columns="2">
-<features rotate="0" tabularvalignment="middle">
+<features tabularvalignment="middle">
 <column alignment="center" valignment="top">
 <column alignment="center" valignment="top">
 <row>
@@ -4769,6 +4801,10 @@ Edit Patient ID:
 
 \begin_layout Standard
 or double click on any record in the browser.
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -4799,6 +4835,10 @@ With the mouse, simply click on the variable you wish to edit, or on the
 \begin_inset Graphics
 	filename dictionaryelementchooser.png
 
+\end_inset
+
+
+\begin_inset Separator latexpar
 \end_inset
 
 
@@ -4903,7 +4943,7 @@ check
 Performs various consistency checks (
 \begin_inset CommandInset ref
 LatexCommand vref
-reference "sub:Check"
+reference "subsec:Check"
 
 \end_inset
 
@@ -5024,7 +5064,7 @@ check
 
 \begin_inset CommandInset label
 LatexCommand label
-name "sub:Check"
+name "subsec:Check"
 
 \end_inset
 
@@ -5313,6 +5353,10 @@ dictionary
 \begin_layout Standard
 Import a complete set of CanReg5 dictionaries from a tab-separated file.
  (Or a two-space-separated CanReg4 dictionary.)
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -5370,7 +5414,7 @@ PDS
 \end_inset
 
 editor lets you edit population data set to be used in the table builder.
- This is located under File -- Data Entry Edit Population Dataset: 
+ This is located under File – Data Entry Edit Population Dataset: 
 \end_layout
 
 \begin_layout Standard
@@ -5518,6 +5562,10 @@ Edit
 \end_inset
 
  button.)
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -5776,7 +5824,7 @@ The import function lets you import data from other CanReg systems or other
  
 \begin_inset CommandInset ref
 LatexCommand vref
-reference "sub:Import-the-data"
+reference "subsec:Import-the-data"
 
 \end_inset
 
@@ -6192,21 +6240,21 @@ The following steps need to be taken:
 Specify the records you want to be selected by using the Filter(
 \begin_inset CommandInset ref
 LatexCommand vref
-reference "sub:Filter"
+reference "subsec:Filter"
 
 \end_inset
 
 ) and Range(
 \begin_inset CommandInset ref
 LatexCommand vref
-reference "sub:Range"
+reference "subsec:Range"
 
 \end_inset
 
 ) options, and the order in which they will be written using the Sort by(
 \begin_inset CommandInset ref
 LatexCommand vref
-reference "sub:Sorty-by"
+reference "subsec:Sorty-by"
 
 \end_inset
 
@@ -6217,7 +6265,7 @@ reference "sub:Sorty-by"
 Select the Variables(
 \begin_inset CommandInset ref
 LatexCommand vref
-reference "sub:ExportVariablesSelector"
+reference "subsec:ExportVariablesSelector"
 
 \end_inset
 
@@ -6232,7 +6280,7 @@ Choose the Variable headers to include.
 Choose the File Format (
 \begin_inset CommandInset ref
 LatexCommand vref
-reference "sub:Export-file-format"
+reference "subsec:Export-file-format"
 
 \end_inset
 
@@ -6275,7 +6323,7 @@ export file format
 
 \begin_inset CommandInset label
 LatexCommand label
-name "sub:Export-file-format"
+name "subsec:Export-file-format"
 
 \end_inset
 
@@ -6290,6 +6338,10 @@ All file formats produce text files, with one case per line (a new line
  "Tab Delimited" writes each variable separated by the TAB character.
  "Comma Separated Values" encloses each variable in quotes, and separates
  by a comma.
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -6408,7 +6460,7 @@ Writes the full name of the variable at the top of each column.
 Variables
 \begin_inset CommandInset label
 LatexCommand label
-name "sub:ExportVariablesSelector"
+name "subsec:ExportVariablesSelector"
 
 \end_inset
 
@@ -6570,7 +6622,7 @@ incidence tables
 \end_inset
 
  etc in CanReg.
- You find it under analysis --> table builder.
+ You find it under analysis –> table builder.
  
 \end_layout
 
@@ -6697,6 +6749,10 @@ ICD10
 \end_inset
 
  cancer type.
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -6941,7 +6997,7 @@ Tables built.
 Click OK and if you have a program that can read PostScript (See page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "sub:Tables"
+reference "subsec:Tables"
 
 \end_inset
 
@@ -7134,7 +7190,7 @@ CanReg5 chart editor
 CanReg and SEER*Stat
 \begin_inset CommandInset label
 LatexCommand label
-name "sub:CanReg-and-SEER*stat"
+name "subsec:CanReg-and-SEER*stat"
 
 \end_inset
 
@@ -7169,6 +7225,7 @@ SEER*Prep
 \begin_inset CommandInset href
 LatexCommand href
 target "http://seer.cancer.gov/seerprep/"
+literal "false"
 
 \end_inset
 
@@ -7176,6 +7233,7 @@ target "http://seer.cancer.gov/seerprep/"
 \begin_inset CommandInset href
 LatexCommand href
 target "http://seer.cancer.gov/seerstat"
+literal "false"
 
 \end_inset
 
@@ -7194,6 +7252,11 @@ width "100col%"
 special "none"
 height "1in"
 height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
 status open
 
 \begin_layout Plain Layout
@@ -7330,6 +7393,11 @@ width "100col%"
 special "none"
 height "1in"
 height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
 status open
 
 \begin_layout Plain Layout
@@ -7503,6 +7571,7 @@ That's it.
 \begin_inset CommandInset href
 LatexCommand href
 target "http://seer.cancer.gov/seerprep/example.html"
+literal "false"
 
 \end_inset
 
@@ -7642,7 +7711,7 @@ cross-tabulate
 \end_inset
 
  several variables.
- To start this module go to Analysis -- Frequencies Distributions: 
+ To start this module go to Analysis – Frequencies Distributions: 
 \end_layout
 
 \begin_layout Standard
@@ -7783,6 +7852,10 @@ R
 \end_inset
 
 ...) for further analysis.
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -8182,7 +8255,7 @@ user manager
 
 \end_inset
 
- is located under management -- users:
+ is located under management – users:
 \end_layout
 
 \begin_layout Standard
@@ -8373,6 +8446,7 @@ ted policy jar files for your JRE.
 \begin_inset CommandInset href
 LatexCommand href
 target "https://db.apache.org/derby/docs/10.9/devguide/cdevcsecure67151.html"
+literal "false"
 
 \end_inset
 
@@ -8380,6 +8454,7 @@ target "https://db.apache.org/derby/docs/10.9/devguide/cdevcsecure67151.html"
 \begin_inset CommandInset href
 LatexCommand href
 target "https://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html"
+literal "false"
 
 \end_inset
 
@@ -8958,6 +9033,10 @@ New Version
 
  of the data entry form and the original version.
  
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -9725,7 +9804,7 @@ ng to your system or do necessary modifications.
 \series bold
 \begin_inset CommandInset label
 LatexCommand label
-name "sub:Tables"
+name "subsec:Tables"
 
 \end_inset
 
@@ -9801,6 +9880,7 @@ GSview
 \begin_inset CommandInset href
 LatexCommand href
 target "http://pages.cs.wisc.edu/~ghost/gsview/"
+literal "false"
 
 \end_inset
 
@@ -9819,6 +9899,7 @@ Ghostscript
 \begin_inset CommandInset href
 LatexCommand href
 target "http://pages.cs.wisc.edu/~ghost/doc/GPL/gpl864.htm"
+literal "false"
 
 \end_inset
 
@@ -9836,6 +9917,7 @@ GPL Ghostscript 8.64 for 32-bit Windows (the common variety)
 LatexCommand href
 name "http://mirror.cs.wisc.edu/pub/mirrors/ghost/GPL/gs864/gs864w32.exe"
 target "http://mirror.cs.wisc.edu/pub/mirrors/ghost/GPL/gs864/gs864w32.exe"
+literal "false"
 
 \end_inset
 
@@ -9845,6 +9927,7 @@ target "http://mirror.cs.wisc.edu/pub/mirrors/ghost/GPL/gs864/gs864w32.exe"
 LatexCommand href
 name "http://pages.cs.wisc.edu/~ghost/gsview/get49.htm"
 target "http://pages.cs.wisc.edu/~ghost/gsview/get49.htm"
+literal "false"
 
 \end_inset
 
@@ -9855,6 +9938,7 @@ target "http://pages.cs.wisc.edu/~ghost/gsview/get49.htm"
 LatexCommand href
 name "http://mirror.cs.wisc.edu/pub/mirrors/ghost/ghostgum/gsv49w32.exe"
 target "http://mirror.cs.wisc.edu/pub/mirrors/ghost/ghostgum/gsv49w32.exe"
+literal "false"
 
 \end_inset
 
@@ -9965,7 +10049,7 @@ Another possibility is that your Java Runtime Environment has been set up
  To address this please see 
 \begin_inset CommandInset ref
 LatexCommand vref
-reference "sub:Issues-with-memory"
+reference "subsec:Issues-with-memory"
 
 \end_inset
 
@@ -10019,6 +10103,7 @@ The minimum data set required is up to your registry to define.
 LatexCommand href
 name "this publication"
 target "http://www.iarc.fr./en/publications/pdfs-online/epi/sp95/index.php"
+literal "false"
 
 \end_inset
 
@@ -10027,6 +10112,7 @@ target "http://www.iarc.fr./en/publications/pdfs-online/epi/sp95/index.php"
 LatexCommand href
 name "Chapter 6"
 target "http://www.iarc.fr./en/publications/pdfs-online/epi/sp95/sp95-chap6.pdf"
+literal "false"
 
 \end_inset
 
@@ -10057,6 +10143,10 @@ name
 \end_inset
 
 (s): 
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -10078,6 +10168,10 @@ sex
 \end_inset
 
 : 
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -10088,6 +10182,10 @@ Coded, 1 Male; 2 Female; 9 Unknown; (Some registries use 3 for Other.)
 \end_deeper
 \begin_layout Itemize
 Birth date: 
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -10099,6 +10197,10 @@ String, Stored in the database as yyyyMMdd (but can, in principle, be entered
 \end_deeper
 \begin_layout Itemize
 Incidence date: 
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -10110,6 +10212,10 @@ String, Stored in the database as yyyyMMdd (but can, in principle, be entered
 \end_deeper
 \begin_layout Itemize
 Address: 
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -10120,6 +10226,10 @@ Coded, According to local usage/needs.
 \end_deeper
 \begin_layout Itemize
 Ethnic group (optional, but in some cases encouraged): 
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -10130,6 +10240,10 @@ Coded, According to local usage/needs.
 \end_deeper
 \begin_layout Itemize
 Age: 
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -10142,6 +10256,10 @@ Integer (For legacy reasons this is input as 3 digits, with 999 as unknown.
 \end_deeper
 \begin_layout Itemize
 (Most valid) Basis of diagnosis: 
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -10153,6 +10271,10 @@ Coded, (1,2,3,4) Non-microscopic, (5,6,7,8) Microscopic, 9 Unknown, 0 Death
 \end_deeper
 \begin_layout Itemize
 Source of information: 
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -10163,6 +10285,10 @@ Coded, According to local usage, eg hospital number.
 \end_deeper
 \begin_layout Itemize
 Source of information - additional information: 
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -10404,6 +10530,10 @@ errors
 \align left
 Using a population dataset with a cut off age at less than 85 while building
  some R-tables leads to errors in the last age group in the tables.
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -10445,7 +10575,7 @@ limitations
 \begin_layout Itemize
 \align left
 You need a population dataset with 5 years age groups for many of the tables
- to work properly\SpecialChar \ldots{}
+ to work properly\SpecialChar ldots
  
 \end_layout
 
@@ -10458,6 +10588,10 @@ Age can not yet be calculated automatically.
 \align left
 The result set in the browser is sometimes very slow to scroll around in.
  
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -10551,6 +10685,7 @@ Resources
 \begin_inset CommandInset href
 LatexCommand href
 target "http://gicr.iarc.fr/en/resources.php#TRAINING"
+literal "false"
 
 \end_inset
 
@@ -10606,6 +10741,10 @@ The first step is to import the variables of CanReg4 to CanReg5 - the system
 \begin_layout Enumerate
 Go to “Tool” in CanReg5 menu and click “Convert system definition”.
  
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -10648,6 +10787,10 @@ Click “Convert”.
 \begin_layout Enumerate
 The program will then ask you if you want to add this server to your favourites.
  Click “Yes” here.
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -10670,7 +10813,7 @@ The next step is the trickiest one during the conversion.
 n and yet another one for source information
 \begin_inset CommandInset ref
 LatexCommand eqref
-reference "sub:A-short-introduction"
+reference "subsec:A-short-introduction"
 
 \end_inset
 
@@ -10685,6 +10828,10 @@ reference "sub:A-short-introduction"
 \begin_layout Enumerate
 The program presents an initial proposal that you might agree with, but
  please go through one by one the variables and decide.
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -10720,7 +10867,7 @@ Optional: Before you proceed to the next step and launch the server you
  Either using the built in grapical tool in CanReg5 
 \begin_inset CommandInset ref
 LatexCommand eqref
-reference "sub:Setting-up-or-modifying"
+reference "subsec:Setting-up-or-modifying"
 
 \end_inset
 
@@ -10743,6 +10890,10 @@ Click “Login”.
 
 \begin_layout Enumerate
 Launch the CanReg server 
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -10763,6 +10914,10 @@ Click “Launch Server”.
 \begin_layout Enumerate
 Now it is time to log into the system.
  
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -10845,6 +11000,10 @@ y from your CanReg4 system.
 
 \begin_layout Enumerate
 Go to “File”, “Data Entry”, “Edit dictionary” in CanReg5 
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -10973,6 +11132,10 @@ data
 \begin_layout Enumerate
 Make sure you export the most updated data from your CanReg4 system.
  
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -11150,6 +11313,7 @@ Does nothing at the moment!
 \begin_inset CommandInset href
 LatexCommand href
 target "http://insilico.ehu.es/mini_tools/discriminatory_power/index.php"
+literal "false"
 
 \end_inset
 
@@ -11472,6 +11636,10 @@ For a series of sites enter them like <site or range>, <site or range> etc.,
 There are some special sites that can be defined by using their standard
  names.
  These can not be part of any range or series:
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -11669,6 +11837,10 @@ This is the simplest configuration file so far as it looks like this:
 
 \begin_layout LyX-Code
 table_label {
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -11683,6 +11855,10 @@ table_label {
 \end_deeper
 \begin_layout LyX-Code
 table_description {
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -11697,6 +11873,10 @@ table_description {
 \end_deeper
 \begin_layout LyX-Code
 table_engine {
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -11711,6 +11891,10 @@ table_engine {
 \end_deeper
 \begin_layout LyX-Code
 preview_image {
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -11839,7 +12023,7 @@ You can call R programs directly from within the TableBuilder of CanReg5.
  This is detailed in 
 \begin_inset CommandInset ref
 LatexCommand vref
-reference "sub:CanReg-and-R"
+reference "subsec:CanReg-and-R"
 
 \end_inset
 
@@ -11849,7 +12033,7 @@ reference "sub:CanReg-and-R"
 \begin_layout Section
 \begin_inset CommandInset label
 LatexCommand label
-name "sub:CanReg-and-R"
+name "subsec:CanReg-and-R"
 
 \end_inset
 
@@ -11904,6 +12088,10 @@ This details what filetypes this R script can generate.
 
 \begin_layout LyX-Code
 file_types_generated { 
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -12175,6 +12363,10 @@ When calling the R scripts CanReg provides the following arguments:
 -ft=<filetype>
 \emph default
  The file type - either pdf, png, wmf, ps, html or svg.
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -12190,6 +12382,10 @@ This is how CanReg gives information to the R program on what file(s) should
 -out=<filename>
 \emph default
  The base of the report file name - or output file name if you want.
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -12384,6 +12580,10 @@ If you use the r-engine you can specify the columns you need from CanReg
 
 \begin_layout LyX-Code
 variables_needed { 
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -12544,6 +12744,7 @@ Java Runtime Environment
 \begin_inset CommandInset href
 LatexCommand href
 target "http://java.com/en/download/manual.jsp"
+literal "false"
 
 \end_inset
 
@@ -12553,7 +12754,7 @@ target "http://java.com/en/download/manual.jsp"
 \begin_layout Subsection
 \begin_inset CommandInset label
 LatexCommand label
-name "sub:Issues-with-memory"
+name "subsec:Issues-with-memory"
 
 \end_inset
 
@@ -12631,7 +12832,7 @@ Analysis
 \begin_layout Subsection
 \begin_inset CommandInset label
 LatexCommand label
-name "sub:R"
+name "subsec:R"
 
 \end_inset
 
@@ -12648,6 +12849,7 @@ More information about it on:
 \begin_inset CommandInset href
 LatexCommand href
 target "http://www.r-project.org/"
+literal "false"
 
 \end_inset
 
@@ -12669,6 +12871,7 @@ R
 \begin_inset CommandInset href
 LatexCommand href
 target "http://cran.r-project.org/mirrors.html"
+literal "false"
 
 \end_inset
 
@@ -12676,6 +12879,7 @@ target "http://cran.r-project.org/mirrors.html"
 \begin_inset CommandInset href
 LatexCommand href
 target "http://cran.univ-lyon1.fr/"
+literal "false"
 
 \end_inset
 
@@ -12694,6 +12898,7 @@ base
 \begin_inset CommandInset href
 LatexCommand href
 target "http://cran.univ-lyon1.fr/bin/windows/base/"
+literal "false"
 
 \end_inset
 
@@ -12763,6 +12968,7 @@ More information about it on:
 \begin_inset CommandInset href
 LatexCommand href
 target "http://wwwn.cdc.gov/epiinfo/"
+literal "false"
 
 \end_inset
 
@@ -12836,7 +13042,7 @@ SEER*Prep
  (See 
 \begin_inset CommandInset ref
 LatexCommand vref
-reference "sub:CanReg-and-SEER*stat"
+reference "subsec:CanReg-and-SEER*stat"
 
 \end_inset
 
@@ -12861,6 +13067,7 @@ PSPP is a program for statistical analysis of sampled data.
 \begin_inset CommandInset href
 LatexCommand href
 target "http://www.gnu.org/software/pspp/"
+literal "false"
 
 \end_inset
 
@@ -12878,6 +13085,7 @@ SOFA - Statistics Open For All The user-friendly, open-source statistics,
 \begin_inset CommandInset href
 LatexCommand href
 target "http://www.sofastatistics.com/home.php"
+literal "false"
 
 \end_inset
 
@@ -12929,6 +13137,7 @@ More information about it on:
 \begin_inset CommandInset href
 LatexCommand href
 target "https://github.com/OpenRefine"
+literal "false"
 
 \end_inset
 
@@ -12963,6 +13172,7 @@ More information about it on:
 \begin_inset CommandInset href
 LatexCommand href
 target "http://www.talend.com/"
+literal "false"
 
 \end_inset
 
@@ -12998,6 +13208,7 @@ More information about it on:
 \begin_inset CommandInset href
 LatexCommand href
 target "http://fril.sourceforge.net/index.html"
+literal "false"
 
 \end_inset
 
@@ -13093,6 +13304,7 @@ Complete and free implementation of the OpenPGP standard.
 \begin_inset CommandInset href
 LatexCommand href
 target "http://gnupg.org/"
+literal "false"
 
 \end_inset
 
@@ -13111,6 +13323,10 @@ Easy to use and set up.
 
 \begin_layout Itemize
 OS independant 
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -13119,6 +13335,7 @@ Gpg4win on Windows
 \begin_inset CommandInset href
 LatexCommand href
 target "http://www.gpg4win.org"
+literal "false"
 
 \end_inset
 
@@ -13132,6 +13349,10 @@ GPGTools on Mac OS X
 \end_deeper
 \begin_layout Itemize
 Integrates with email clients 
+\begin_inset Separator latexpar
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
@@ -13184,6 +13405,7 @@ For Windows 7/Vista/XP, Mac OS X, and Linux.
 \begin_inset CommandInset href
 LatexCommand href
 target "http://www.truecrypt.org"
+literal "false"
 
 \end_inset
 
@@ -13199,7 +13421,7 @@ Graphics display/editing
 \series bold
 \begin_inset CommandInset label
 LatexCommand label
-name "sub:PostScript-Viewer"
+name "subsec:PostScript-Viewer"
 
 \end_inset
 
@@ -13293,6 +13515,7 @@ Ghostscript first.
 \begin_inset CommandInset href
 LatexCommand href
 target "http://www.ghostscript.com/download/gsdnld.html"
+literal "false"
 
 \end_inset
 
@@ -13326,6 +13549,7 @@ Then you can get GS View from here:
 \begin_inset CommandInset href
 LatexCommand href
 target "http://pages.cs.wisc.edu/~ghost/gsview/get50.htm"
+literal "false"
 
 \end_inset
 
@@ -13378,6 +13602,7 @@ Available from:
 \begin_inset CommandInset href
 LatexCommand href
 target "http://inkscape.org/"
+literal "false"
 
 \end_inset
 
@@ -13400,6 +13625,7 @@ Notepad++ is an excellent open source text editor that is perfect for writing
 \begin_inset CommandInset href
 LatexCommand href
 target "http://notepad-plus-plus.org/"
+literal "false"
 
 \end_inset
 
@@ -13578,6 +13804,379 @@ Here be Data.txt
 -h, --help Display help functions.
 \end_layout
 
+\begin_layout Subsection
+Script to generate iccc codes
+\end_layout
+
+\begin_layout Standard
+Add column of icd10 and iccc3 for incidence data in a spreadsheet.
+\end_layout
+
+\begin_layout Subsubsection
+Prerequisites
+\end_layout
+
+\begin_layout Paragraph
+Install JRuby 
+\end_layout
+
+\begin_layout Enumerate
+Downoad the latest JRuby from here: http://jruby.org/download fitting your
+ machine 
+\end_layout
+
+\begin_layout Enumerate
+Run the installer and follow on screen instructions.
+ (Make sure you add jruby to the path when asked.)
+\end_layout
+
+\begin_layout Enumerate
+Windows: Run the 
+\begin_inset Quotes eld
+\end_inset
+
+install.bat
+\begin_inset Quotes erd
+\end_inset
+
+ in the script folder.
+ Linux/Mac: run the following commands:
+\end_layout
+
+\begin_layout LyX-Code
+jgem install bundler 
+\end_layout
+
+\begin_layout LyX-Code
+jruby --1.9 -S bundle install
+\end_layout
+
+\begin_layout Subsubsection
+Usage
+\end_layout
+
+\begin_layout LyX-Code
+jruby icd10_iccc_converter.rb [options] 
+\end_layout
+
+\begin_layout Paragraph
+Example: 
+\end_layout
+
+\begin_layout LyX-Code
+jruby icd10_iccc_converter.rb -t Topography -m Morphology -b Behaviour -s
+ Sex -c , -f LotsOfData.csv
+\end_layout
+
+\begin_layout Paragraph
+Arguments:
+\end_layout
+
+\begin_layout LyX-Code
+-t TOPOGRAPHY_COLUMN_NAME,       Name of the column containing topography.
+  Default: TOP         --topography-column-name     
+\end_layout
+
+\begin_layout LyX-Code
+-m MORPHOLOGY_COLUMN_NAME,       Name of the column containing morphology.
+  Default: MOR         --morphology-column-name     
+\end_layout
+
+\begin_layout LyX-Code
+-b BEHAVIOUR_COLUMN_NAME,        Name of the column containing behaviour.
+  Default: BEH         --behaviour-column-name     
+\end_layout
+
+\begin_layout LyX-Code
+-s SEX_COLUMN_NAME,              Name of the column containing sex.
+ (Coded: 1-Male, 2-Female)  Default: SEX         --sex-column-name     
+\end_layout
+
+\begin_layout LyX-Code
+-c SEPARATING_CHARACTER,         Separating character in the files.
+  Default: tab         --separating-character     
+\end_layout
+
+\begin_layout LyX-Code
+-p PATH_TO_CANREG,               Path to the CanReg.jar-file.
+  Default: ../../CanReg.jar         --path-to-canreg     
+\end_layout
+
+\begin_layout LyX-Code
+-f, --in-file IN_FILE            File to process.
+  Default: Lots of Data.txt     
+\end_layout
+
+\begin_layout LyX-Code
+-h, --help                       Display help functions.
+\end_layout
+
+\begin_layout Subsection
+Script to split source records
+\end_layout
+
+\begin_layout Standard
+Split CanReg5 data records with multiple sources into multiple records.
+\end_layout
+
+\begin_layout Subsubsection
+Prerequisites
+\end_layout
+
+\begin_layout Standard
+To use this tool you need to either install an implementation of Ruby --
+ JRuby or regular ruby is recommended.
+\end_layout
+
+\begin_layout Paragraph
+Install JRuby
+\end_layout
+
+\begin_layout Enumerate
+Downoad the latest JRuby from here: http://jruby.org/download fitting your
+ machine 
+\end_layout
+
+\begin_layout Enumerate
+Run the installer and follow on screen instructions.
+ (Make sure you add jruby to the path when asked.)
+\end_layout
+
+\begin_layout Enumerate
+Windows: Run the 
+\begin_inset Quotes eld
+\end_inset
+
+install.bat
+\begin_inset Quotes erd
+\end_inset
+
+ in the script folder.
+ Linux/Mac: run the following commands:
+\end_layout
+
+\begin_layout LyX-Code
+jgem install bundler 
+\end_layout
+
+\begin_layout LyX-Code
+jruby -S bundle install
+\end_layout
+
+\begin_layout Paragraph
+Install JRuby
+\end_layout
+
+\begin_layout Enumerate
+Downoad the latest Ruby from here: http://ruby.org/download fitting your
+ machine
+\end_layout
+
+\begin_layout Enumerate
+Run the installer and follow on screen instructions.
+ (Make sure you add jruby to the path when asked.)
+\end_layout
+
+\begin_layout Enumerate
+Run the following commands:
+\end_layout
+
+\begin_layout LyX-Code
+gem install bundler 
+\end_layout
+
+\begin_layout LyX-Code
+bundle install
+\end_layout
+
+\begin_layout Subsubsection
+Usage
+\end_layout
+
+\begin_layout LyX-Code
+jruby splitter.rb [options] 
+\end_layout
+
+\begin_layout Paragraph
+Example: 
+\end_layout
+
+\begin_layout LyX-Code
+jruby splitter.rb -c ',' -f LotsOfData.csv
+\end_layout
+
+\begin_layout Paragraph
+Arguments:
+\end_layout
+
+\begin_layout LyX-Code
+-c SEPARATING_CHARACTER,         Separating character in the files.
+  Default: tab         --separating-character     
+\end_layout
+
+\begin_layout LyX-Code
+-f, --in-file IN_FILE            File to process.
+  Default: Lots of Data.txt     
+\end_layout
+
+\begin_layout LyX-Code
+-m, --map-file MAP_FILE          JSON file with variable mapping.
+  Default: conf.json     
+\end_layout
+
+\begin_layout LyX-Code
+-h, --help                       Display help functions.
+\end_layout
+
+\begin_layout Paragraph
+Example mapping file
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+{   
+\end_layout
+
+\begin_layout Plain Layout
+
+  "tumour_id_field": "TUMOURIDSOURCETABLE",
+\end_layout
+
+\begin_layout Plain Layout
+
+  "source_id_field": "SOURCERECORDID",   
+\end_layout
+
+\begin_layout Plain Layout
+
+  "common_fields_map": {
+\end_layout
+
+\begin_layout Plain Layout
+
+    "SERONO": "SERONO",
+\end_layout
+
+\begin_layout Plain Layout
+
+    "HISTONO": "HISTONO",
+\end_layout
+
+\begin_layout Plain Layout
+
+    "OTHERLNO": "OTHERLNO",
+\end_layout
+
+\begin_layout Plain Layout
+
+    "SOURCE": "SOURCE"
+\end_layout
+
+\begin_layout Plain Layout
+
+  },
+\end_layout
+
+\begin_layout Plain Layout
+
+  "source_fields_map": [
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      "HOSP1": "HOSP",
+\end_layout
+
+\begin_layout Plain Layout
+
+      "DATE1": "SDATE",
+\end_layout
+
+\begin_layout Plain Layout
+
+      "HOSPNO1": "REFNO"
+\end_layout
+
+\begin_layout Plain Layout
+
+    },
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      "HOSP2": "HOSP",
+\end_layout
+
+\begin_layout Plain Layout
+
+      "DATE2": "SDATE",
+\end_layout
+
+\begin_layout Plain Layout
+
+      "REFNO2": "REFNO"
+\end_layout
+
+\begin_layout Plain Layout
+
+    },
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      "HOSP3": "HOSP",
+\end_layout
+
+\begin_layout Plain Layout
+
+      "DATE3": "SDATE",
+\end_layout
+
+\begin_layout Plain Layout
+
+      "REFNO3": "REFNO"
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+  ]
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Standard
 \begin_inset Newpage newpage
 \end_inset
@@ -13597,7 +14196,7 @@ Copyright
 \end_layout
 
 \begin_layout Standard
-© 2008-2018 International Agency for Research on Cancer World Health Organizatio
+© 2008-2019 International Agency for Research on Cancer World Health Organizatio
 n All rights reserved.
 \end_layout
 
@@ -13639,7 +14238,7 @@ Sebastien Antoni (R code for analysis)
 \end_layout
 
 \begin_layout Itemize
-Betty Carballo and Patricio Carranza (New Data Entry form)
+Betty Carballo and Patricio Carranza (New Data Entry form, bugfixes)
 \end_layout
 
 \begin_layout Subsection
@@ -14051,6 +14650,8 @@ lstparams "basicstyle={\\small},breaklines=true,lineskip=0pt"
 \begin_inset CommandInset index_print
 LatexCommand printindex
 type "idx"
+name "Index"
+literal "true"
 
 \end_inset
 
