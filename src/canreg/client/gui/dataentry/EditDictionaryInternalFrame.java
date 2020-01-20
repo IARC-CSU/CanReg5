@@ -26,6 +26,7 @@
  */
 package canreg.client.gui.dataentry;
 
+import canreg.client.gui.importers.ImportCompleteDictionaryInternalFrame;
 import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
 import canreg.client.gui.CanRegClientView;
@@ -36,8 +37,10 @@ import canreg.common.database.Dictionary;
 import canreg.common.database.DictionaryEntry;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.rmi.RemoteException;
 import java.util.Iterator;
 import java.util.Map;
@@ -65,9 +68,8 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
     private LocalSettings localSettings;
     private String path;
 
-    /** Creates new form EditDictionaryInternalFrame
-     * @param dtp 
-     */
+
+    
     public EditDictionaryInternalFrame(JDesktopPane dtp) {
         this.desktopPane = dtp;
         localSettings = CanRegClientApp.getApplication().getLocalSettings();
@@ -255,14 +257,11 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
         chooseDictionaryComboBox.setSelectedIndex(0);
     }
 
-    /**
-     * 
-     */
+
     @Action
     public void exportCompleteDictionaryAction() {
         int returnVal = chooser.showSaveDialog(this);
         String fileName = null;
-        BufferedWriter bw;
         int selectedDbdle = chooseDictionaryComboBox.getSelectedIndex();
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
@@ -270,7 +269,16 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
                 fileName = chooser.getSelectedFile().getCanonicalPath();
                 File file = new File(fileName);
                 if (file.exists()) {
-                    int choice = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/EditDictionaryInternalFrame").getString("FILE_EXISTS")+": " + fileName + ".\n "+java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/EditDictionaryInternalFrame").getString("OVERWRITE?"), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/EditDictionaryInternalFrame").getString("FILE_EXISTS")+".", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+                    int choice = JOptionPane.showInternalConfirmDialog(
+                            CanRegClientApp.getApplication().getMainFrame().getContentPane(), 
+                            java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/EditDictionaryInternalFrame")
+                                    .getString("FILE_EXISTS") + ": " + fileName + ".\n " + 
+                                    java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/EditDictionaryInternalFrame")
+                                            .getString("OVERWRITE?"), 
+                            java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/EditDictionaryInternalFrame")
+                                    .getString("FILE_EXISTS") + ".", 
+                            JOptionPane.YES_NO_CANCEL_OPTION, 
+                            JOptionPane.QUESTION_MESSAGE);
                     if (choice == JOptionPane.CANCEL_OPTION) {
                         return;
                     } else if (choice == JOptionPane.NO_OPTION) {
@@ -282,29 +290,10 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
 
                 localSettings.setProperty("dictionary_import_path", file.getParent());
                 localSettings.writeSettings();
-
-                bw = new BufferedWriter(new FileWriter(file));
-
-                for (DatabaseDictionaryListElement dbdle : dictionariesInDB) {
-                    bw.write("#" + dbdle.getDictionaryID() + "\t----" + dbdle.getName() + Globals.newline);
-                    // chooseDictionaryComboBox.setSelectedItem(dbdle);
-                    // refreshSelectedDictionaryAction();
-                    Dictionary dic = CanRegClientApp.getApplication().getDictionary().get(dbdle.getDictionaryID());
-                    if (dic != null) {
-                        // Map sortedMap = new TreeMap(map);
-                        Map<String, DictionaryEntry> map = dic.getDictionaryEntries();
-                        Iterator<Entry<String, DictionaryEntry>> iterator = map.entrySet().iterator();
-                        while (iterator.hasNext()) {
-                            DictionaryEntry entry = iterator.next().getValue();
-                            bw.write(entry.getCode() + "\t" + entry.getDescription() + Globals.newline);
-                        }
-                    }
-                    bw.write(Globals.newline);
-                }
-                bw.flush();
-                bw.close();
+                
+                canreg.common.Tools.writeDictionaryToFileUTF8(file, dictionariesInDB);
             } catch (IOException ex) {
-                Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(EditDictionaryInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/EditDictionaryInternalFrame").getString("SUCCESSFULLY_WROTE_DICTIONARIES")+": " + fileName, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/EditDictionaryInternalFrame").getString("DICTIONARIES_SUCCESSFULLY_WRITTEN"), JOptionPane.INFORMATION_MESSAGE);
             }
@@ -312,9 +301,6 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
         chooseDictionaryComboBox.setSelectedIndex(selectedDbdle);
     }
 
-    /**
-     * 
-     */
     @Action
     public void importCompleteDictionaryAction() {
         JInternalFrame importFrame = new ImportCompleteDictionaryInternalFrame();
@@ -322,18 +308,13 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
         this.dispose();
     }
 
-    /**
-     * 
-     */
+
     @Action
     public void selectDictionaryAction() {
         //TODO select dictionary action
     }
 
-    /**
-     * 
-     * @return
-     */
+
     @Action
     public Task updateDictionaryAction() {
         return new UpdateDictionaryActionTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
@@ -412,9 +393,7 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
         }
     }
 
-    /**
-     * 
-     */
+
     @Action
     public void refreshSelectedDictionaryAction() {
         DatabaseDictionaryListElement dbdle = (DatabaseDictionaryListElement) chooseDictionaryComboBox.getSelectedItem();

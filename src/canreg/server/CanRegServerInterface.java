@@ -36,6 +36,8 @@ import canreg.common.database.PopulationDataset;
 import canreg.server.database.RecordLockedException;
 import canreg.common.database.Tumour;
 import canreg.server.database.UnknownTableException;
+import canreg.server.management.SystemDescription;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -51,6 +53,24 @@ import org.w3c.dom.Document;
  */
 public interface CanRegServerInterface extends Remote {
 
+    /**
+     * Instantiates a SystemDescription object. If it's a regular database and NOT a holding
+     * then the parameter holdingRegistryCode must be NULL and holding must be FALSE.
+     * @param originalRegistryCode
+     * @param holdingRegistryCode
+     * @param holding
+     * @return
+     * @throws RemoteException
+     * @throws SecurityException 
+     */
+    public SystemDescription initSystemDescription(String originalRegistryCode, String holdingRegistryCode, boolean holding, boolean isAdHocDB) 
+            throws RemoteException, SecurityException;
+    
+    
+    public void initDataBase(SystemDescription systemDescription, boolean holding) 
+            throws RemoteException, SecurityException;
+    
+    
     /**
      *
      * @param populationDatasetID
@@ -68,7 +88,10 @@ public interface CanRegServerInterface extends Remote {
      * @throws RecordLockedException
      */
     public void editPatient(Patient patient)
-            throws RemoteException, SecurityException, RecordLockedException;
+            throws RemoteException, SecurityException, RecordLockedException, SQLException;
+    
+    public void editPatientFromHoldingToProduction(Patient patient)
+            throws RemoteException, SecurityException, RecordLockedException, SQLException;
 
     /**
      * 
@@ -78,7 +101,10 @@ public interface CanRegServerInterface extends Remote {
      * @throws RecordLockedException
      */
     public void editTumour(Tumour tumour)
-            throws RemoteException, SecurityException, RecordLockedException;
+            throws SQLException, RemoteException, SecurityException, RecordLockedException;
+    
+    public void editTumourFromHoldingToProduction(Tumour tumour)
+            throws SQLException, RemoteException, SecurityException, RecordLockedException;
 
     /**
      * 
@@ -86,7 +112,7 @@ public interface CanRegServerInterface extends Remote {
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
-    public String getCanRegSystemName()
+    public String getCanRegRegistryName()
             throws RemoteException, SecurityException;
 
     /**
@@ -349,7 +375,8 @@ public interface CanRegServerInterface extends Remote {
      * @throws UnknownTableException
      * @throws DistributedTableDescriptionException
      */
-    public DistributedTableDescription getDistributedTableDescription(DatabaseFilter filter, String tableName) throws SQLException, RemoteException, SecurityException, UnknownTableException, DistributedTableDescriptionException ;
+    public DistributedTableDescription getDistributedTableDescription(DatabaseFilter filter, String tableName)
+            throws SQLException, RemoteException, SecurityException, UnknownTableException, DistributedTableDescriptionException ;
 
     /**
      * Retrieve rows from a resultset
@@ -470,9 +497,22 @@ public interface CanRegServerInterface extends Remote {
                                  String encryptionAlgorithm, String encryptionKeyLength)
             throws RemoteException, SecurityException;
 
-    public String getCanRegSystemCode() throws RemoteException, SecurityException;
+    public String getCanRegRegistryCode() throws RemoteException, SecurityException;
 
-    public String getCanRegSystemRegion()throws RemoteException, SecurityException;
+    public String getCanRegSystemRegion() throws RemoteException, SecurityException;
+    
+    public SystemDescription createNewHoldingDB(String registryCode, SystemDescription sysDesc)
+            throws RemoteException, IOException, SecurityException;
+    
+    public void deleteHoldingDB(String holdingRegistryCode) 
+            throws RemoteException, IOException, SecurityException, SQLException;
+    
+    public void changeRegistryDB(String registryCode) throws RemoteException, SecurityException;
+    
+    public void resetRegistryDB() throws RemoteException, SecurityException;
+    
+    public List<String> getHoldingDBsList() throws IOException, RemoteException, SecurityException;
+
 
     /**
      * Method to be used by a CanReg client to notify a CanReg server that the client

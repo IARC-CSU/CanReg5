@@ -523,7 +523,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
         protected Object doInBackground() {
             String result = "OK";
             try {
-                newTableDatadescription = canreg.client.CanRegClientApp.getApplication().getDistributedTableDescription(filter, tableName);
+                newTableDatadescription = canreg.client.CanRegClientApp.getApplication().getDistributedTableDescription(filter, tableName, null);
             } catch (SQLException ex) {
                 Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 result = "Not valid";
@@ -557,7 +557,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                 // release old resultSet
                 if (tableDatadescription != null) {
                     try {
-                        CanRegClientApp.getApplication().releaseResultSet(tableDatadescription.getResultSetID());
+                        CanRegClientApp.getApplication().releaseResultSet(tableDatadescription.getResultSetID(), null);
                         tableDataSource = null;
                     } catch (SQLException ex) {
                         Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -574,7 +574,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
 
                 if (tableDatadescription != null) {
                     try {
-                        tableDataSource = new DistributedTableDataSourceClient(tableDatadescription);
+                        tableDataSource = new DistributedTableDataSourceClient(tableDatadescription, null);
                     } catch (DistributedTableDescriptionException ex) {
                         Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -779,7 +779,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
             if (exportSourceInformationCheckBox.isSelected()) {
                 try {
                     exportSources = true;
-                    maxNumberOfSourcesPerTumour = CanRegClientApp.getApplication().getDatabaseStats().getMaxNumberOfSourcesPerTumourRecord();
+                    maxNumberOfSourcesPerTumour = CanRegClientApp.getApplication().getDatabaseStats(null).getMaxNumberOfSourcesPerTumourRecord();
                     Enumeration<TableColumn> columns = tableColumnModel.getColumns(false);
                     boolean found = false;
 
@@ -982,7 +982,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                             Tumour tumour;
                             int numberOfSourcesWritten = 0;
                             try {
-                                tumour = CanRegClientApp.getApplication().getTumourRecordBasedOnTumourID(tumourID, false);
+                                tumour = CanRegClientApp.getApplication().getTumourRecordBasedOnTumourID(tumourID, false, null);
                                 if (tumour != null && tumour.getSources() != null) {
                                     for (Source source : tumour.getSources()) {
                                         for (String variableName : sourceVariableNames) {
@@ -991,17 +991,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                                         numberOfSourcesWritten++;
                                     }
                                 }
-                            } catch (DistributedTableDescriptionException ex) {
-                                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                            } catch (UnknownTableException ex) {
-                                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                            } catch (RemoteException ex) {
-                                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                            } catch (SecurityException ex) {
-                                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                            } catch (SQLException ex) {
-                                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                            } catch (RecordLockedException ex) {
+                            } catch (Exception ex) {
                                 Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                             } finally {
                                 for (; numberOfSourcesWritten < maxNumberOfSourcesPerTumour;) {

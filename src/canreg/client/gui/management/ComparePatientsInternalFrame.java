@@ -353,9 +353,9 @@ public class ComparePatientsInternalFrame extends javax.swing.JInternalFrame {
         canreg.client.gui.dataentry2.RecordEditor recordEditor = null;
         String dataEntryVersion = localSettings.getProperty(LocalSettings.DATA_ENTRY_VERSION_KEY);
         if (dataEntryVersion.equalsIgnoreCase(LocalSettings.DATA_ENTRY_VERSION_NEW))
-            recordEditor = new canreg.client.gui.dataentry2.RecordEditorMainFrame(desktopPane);
+            recordEditor = new canreg.client.gui.dataentry2.RecordEditorMainFrame(desktopPane, null, null);
         else 
-            recordEditor = new RecordEditor(desktopPane);
+            recordEditor = new RecordEditor(desktopPane, null, null);
         
         recordEditor.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
         recordEditor.setDictionary(CanRegClientApp.getApplication().getDictionary());
@@ -367,7 +367,7 @@ public class ComparePatientsInternalFrame extends javax.swing.JInternalFrame {
         DatabaseRecord[] tumourRecords;
 
         try {
-            distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.PATIENT_TABLE_NAME);
+            distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.PATIENT_TABLE_NAME, null);
             int numberOfRecords = distributedTableDescription.getRowCount();
 
             if (numberOfRecords == 0) {
@@ -378,8 +378,8 @@ public class ComparePatientsInternalFrame extends javax.swing.JInternalFrame {
                 if (answer == JOptionPane.YES_OPTION) {
                     record = new Patient();
                     record.setVariable(patientIDlookupVariable, idString);
-                    CanRegClientApp.getApplication().saveRecord(record);
-                    distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.PATIENT_TABLE_NAME);
+                    CanRegClientApp.getApplication().saveRecord(record, null);
+                    distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.PATIENT_TABLE_NAME, null);
                     numberOfRecords = distributedTableDescription.getRowCount();
                 } else {
                     setCursor(normalCursor);
@@ -387,8 +387,8 @@ public class ComparePatientsInternalFrame extends javax.swing.JInternalFrame {
                 }
             }
 
-            rows = CanRegClientApp.getApplication().retrieveRows(distributedTableDescription.getResultSetID(), 0, numberOfRecords);
-            CanRegClientApp.getApplication().releaseResultSet(distributedTableDescription.getResultSetID());
+            rows = CanRegClientApp.getApplication().retrieveRows(distributedTableDescription.getResultSetID(), 0, numberOfRecords, null);
+            CanRegClientApp.getApplication().releaseResultSet(distributedTableDescription.getResultSetID(), null);
             String[] columnNames = distributedTableDescription.getColumnNames();
             int ids[] = new int[numberOfRecords];
             boolean found = false;
@@ -409,10 +409,10 @@ public class ComparePatientsInternalFrame extends javax.swing.JInternalFrame {
                 // Get all the tumour records for all the patient records...
                 for (int j = 0; j < numberOfRecords; j++) {
                     ids[j] = (Integer) rows[j][idColumnNumber];
-                    record = CanRegClientApp.getApplication().getRecord(ids[j], Globals.PATIENT_TABLE_NAME, true);
+                    record = CanRegClientApp.getApplication().getRecord(ids[j], Globals.PATIENT_TABLE_NAME, true, null);
                     recordEditor.addRecord(record);
 
-                    tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(idString, true);
+                    tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(idString, true, null);
                     for (DatabaseRecord rec : tumourRecords) {
                         // store them in a set, so we don't show them several times
                         if (rec != null) {

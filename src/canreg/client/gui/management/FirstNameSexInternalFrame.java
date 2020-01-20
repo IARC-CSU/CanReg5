@@ -194,7 +194,7 @@ public class FirstNameSexInternalFrame extends javax.swing.JInternalFrame {
             super(app);
             URL nameSexFileURL = this.getClass().getResource("/canreg/client/gui/management/resources/namesex.tsv");
             try {
-                canreg.client.CanRegClientApp.getApplication().clearNameSexTable();
+                canreg.client.CanRegClientApp.getApplication().clearNameSexTable(null);
                 FileReader fileReader = new FileReader(canreg.common.Tools.getTempFileFromURL(nameSexFileURL));
                 br = new BufferedReader(fileReader);
                 line = br.readLine();
@@ -220,7 +220,7 @@ public class FirstNameSexInternalFrame extends javax.swing.JInternalFrame {
                     NameSexRecord nsr = new NameSexRecord();
                     nsr.setName(name);
                     nsr.setSex(sex);
-                    canreg.client.CanRegClientApp.getApplication().saveRecord(nsr);
+                    canreg.client.CanRegClientApp.getApplication().saveRecord(nsr, null);
                 }
 
             line = br.readLine();
@@ -248,7 +248,7 @@ public class FirstNameSexInternalFrame extends javax.swing.JInternalFrame {
     @Action
     public void showFirstNamesBySexAction() {
         try {
-            Map<String, Integer> map = canreg.client.CanRegClientApp.getApplication().getNameSexTables();
+            Map<String, Integer> map = canreg.client.CanRegClientApp.getApplication().getNameSexTables(null);
             String[] names = new String[3];
             names[0]="";
             names[1]="";

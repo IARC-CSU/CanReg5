@@ -72,7 +72,7 @@ public class ServerLauncher {
             }
             
             if (!alreadyBound) {
-                server = new CanRegServerImpl(systemCode);
+                server = new CanRegServerImpl(systemCode, false);
                 CanRegLoginInterface service = new CanRegLoginImpl(server);
                 Naming.bind(rmiAddresse, service);
                 success = true;

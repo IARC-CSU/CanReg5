@@ -34,7 +34,7 @@ public interface CanRegLoginInterface extends Remote {
      * @return The name
      * @throws java.rmi.RemoteException
      */
-    public String getSystemName() throws java.rmi.RemoteException ;
+    public String getRegistryName() throws java.rmi.RemoteException ;
 
     /**
      * Returns the version of CanReg running on the server

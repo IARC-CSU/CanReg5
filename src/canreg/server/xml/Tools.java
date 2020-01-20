@@ -113,11 +113,11 @@ public class Tools {
         } catch (TransformerConfigurationException e) {
             // this is fatal, just dump the stack and throw a runtime exception
             Logger.getLogger(Tools.class.getName()).log(Level.SEVERE, null, e);
-            // throw new RuntimeException(e);
+            throw new RuntimeException(e);
         } catch (TransformerException e) {
             // this is fatal, just dump the stack and throw a runtime exception
             Logger.getLogger(Tools.class.getName()).log(Level.SEVERE, null, e);
-            // throw new RuntimeException(e);
+            throw new RuntimeException(e);
         } catch (NullPointerException npe) {
             try {
                 // this is fatal, just dump the stack and throw a runtime exception
@@ -132,8 +132,10 @@ public class Tools {
             throw new RuntimeException(npe);
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(Tools.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException(ex);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Tools.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException(ex);
         } finally {
             try {
                 if (result != null && result.getWriter() != null) {

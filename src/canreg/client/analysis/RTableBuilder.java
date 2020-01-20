@@ -183,7 +183,9 @@ public class RTableBuilder implements TableBuilderInterface {
                 commandList.add("-ft="       + fileType);
                 commandList.add("-lang=" + CanRegClientApp.getApplication().getLocalSettings().getLanguageCode());
                 // add the rest of the arguments
-                commandList.addAll(Arrays.asList(rScriptsArguments));
+                
+                if(rScriptsArguments != null)
+                    commandList.addAll(Arrays.asList(rScriptsArguments));
                 
                 System.out.println(commandList);
                 Process pr = rt.exec(commandList.toArray(new String[]{}));

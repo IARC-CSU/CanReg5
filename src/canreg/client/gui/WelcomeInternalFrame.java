@@ -26,6 +26,8 @@
 package canreg.client.gui;
 
 import canreg.client.CanRegClientApp;
+import canreg.client.gui.adhoc.AdHocDatabaseFrame;
+import canreg.client.gui.adhoc.AdhocWizardInternalFrame;
 import canreg.client.gui.management.InstallNewSystemInternalFrame;
 import canreg.common.Globals;
 import java.io.IOException;
@@ -100,6 +102,7 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
         buttonPanel = new javax.swing.JPanel();
         loginButton = new javax.swing.JButton();
         restoreBackupButton = new javax.swing.JButton();
+        adHocButton = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         versionLabel = new javax.swing.JLabel();
@@ -176,7 +179,6 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(logoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -198,7 +200,7 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
 
         buttonPanel.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         buttonPanel.setName("buttonPanel"); // NOI18N
-        buttonPanel.setLayout(new java.awt.GridLayout(2, 1));
+        buttonPanel.setLayout(new java.awt.GridLayout(3, 1));
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(WelcomeInternalFrame.class, this);
         loginButton.setAction(actionMap.get("showLoginFrame")); // NOI18N
@@ -214,6 +216,14 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
         restoreBackupButton.setActionCommand(resourceMap.getString("restoreBackupButton.actionCommand")); // NOI18N
         restoreBackupButton.setName("restoreBackupButton"); // NOI18N
         buttonPanel.add(restoreBackupButton);
+
+        adHocButton.setAction(actionMap.get("adHocAnalysisAction")); // NOI18N
+        adHocButton.setIcon(resourceMap.getIcon("adHocButton.icon")); // NOI18N
+        adHocButton.setText(resourceMap.getString("adHocButton.text")); // NOI18N
+        adHocButton.setToolTipText(resourceMap.getString("adHocButton.toolTipText")); // NOI18N
+        adHocButton.setActionCommand(resourceMap.getString("adHocButton.actionCommand")); // NOI18N
+        adHocButton.setName("adHocButton"); // NOI18N
+        buttonPanel.add(adHocButton);
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -293,9 +303,7 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
         CanRegClientApp.getApplication().show(aboutBox);
     }//GEN-LAST:event_jLabel1MouseClicked
 
-    /**
-     * 
-     */
+    
     @Action
     public void showLoginFrame() {
         this.dispose();
@@ -306,17 +314,12 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
         loginInternalFrame.setVisible(true);
     }
 
-    /**
-     * 
-     * @param dtp
-     */
+    
     public void setDesktopPane(JDesktopPane dtp) {
         desktopPane = dtp;
     }
 
-    /**
-     * 
-     */
+    
     @Action
     public void installNewSystemAction() {
         InstallNewSystemInternalFrame internalFrame = new InstallNewSystemInternalFrame();
@@ -326,9 +329,21 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
         internalFrame.setVisible(true);
         this.dispose();
     }
+
+    @Action
+    public void adHocAnalysisAction() {
+        AdHocDatabaseFrame internalFrame = new AdHocDatabaseFrame(desktopPane);
+        desktopPane.add(internalFrame, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        internalFrame.setLocation(desktopPane.getWidth() / 2 - internalFrame.getWidth() / 2, desktopPane.getHeight() / 2 - internalFrame.getHeight() / 2);
+        internalFrame.setVisible(true);
+        this.dispose();
+    }
+    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JEditorPane aboutEditorPane;
     private javax.swing.JScrollPane aboutScrollPane;
+    private javax.swing.JButton adHocButton;
     private javax.swing.JPanel buttonPanel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;

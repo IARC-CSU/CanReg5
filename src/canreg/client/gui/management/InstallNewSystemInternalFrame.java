@@ -138,9 +138,11 @@ public class InstallNewSystemInternalFrame extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * 
-     */
+    
+    public void setSystemDescriptionPath(String path) {
+        fileNameTextField.setText(path);
+    }
+    
     @Action
     public void installAction() {
         String fileNameWithPath = fileNameTextField.getText().trim();
@@ -168,7 +170,7 @@ public class InstallNewSystemInternalFrame extends javax.swing.JInternalFrame {
                 // load the document
                 loadDocument(document);
                 // Add this new server to the list of favourite servers
-                int i = localSettings.addServerToServerList(systemDescription.getSystemName(), Globals.DEFAULT_SERVER_ADDRESS, Globals.DEFAULT_PORT, systemDescription.getSystemCode());
+                int i = localSettings.addServerToServerList(systemDescription.getRegistryName(), Globals.DEFAULT_SERVER_ADDRESS, Globals.DEFAULT_PORT, systemDescription.getRegistryCode());
                 // Set it as default start up server
                 localSettings.setProperty(LocalSettings.LAST_SERVER_ID_KEY, "" + i);
                 // Set it to autostart
@@ -176,7 +178,7 @@ public class InstallNewSystemInternalFrame extends javax.swing.JInternalFrame {
                 // Look for a backup in the same folder
                 File backupFolder = new File(file.getParent()
                         + Globals.FILE_SEPARATOR
-                        + systemDescription.getSystemCode());
+                        + systemDescription.getRegistryCode());
                 if (backupFolder.isDirectory()) {
                     File[] files = backupFolder.listFiles();
                     int found = 0;
@@ -201,7 +203,7 @@ public class InstallNewSystemInternalFrame extends javax.swing.JInternalFrame {
 
                 // and show confirmation
                 if (!backupTried) {
-                    JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), systemDescription.getSystemName() + java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/InstallNewSystemInternalFrame").getString(" IS NOW READY. PLEASE LOG IN."), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/InstallNewSystemInternalFrame").getString("MESSAGE."), JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), systemDescription.getRegistryName() + java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/InstallNewSystemInternalFrame").getString(" IS NOW READY. PLEASE LOG IN."), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/InstallNewSystemInternalFrame").getString("MESSAGE."), JOptionPane.INFORMATION_MESSAGE);
                     CanRegClientApp.getApplication().showLogginFrame();
                 }
                 // this.dispose();
@@ -280,7 +282,7 @@ public class InstallNewSystemInternalFrame extends javax.swing.JInternalFrame {
             // the Swing GUI from here...
             String result = "stopped";
             try {
-                if (canreg.common.ServerLauncher.start(Globals.DEFAULT_SERVER_ADDRESS, systemDescription.getSystemCode(), Globals.DEFAULT_PORT)) {
+                if (canreg.common.ServerLauncher.start(Globals.DEFAULT_SERVER_ADDRESS, systemDescription.getRegistryCode(), Globals.DEFAULT_PORT)) {
                     result = "started";
                 }
             } catch (AlreadyBoundException ex) {
@@ -348,9 +350,9 @@ public class InstallNewSystemInternalFrame extends javax.swing.JInternalFrame {
             waitFrame.setLocation((desktopPane.getWidth() - waitFrame.getWidth()) / 2, (desktopPane.getHeight() - waitFrame.getHeight()) / 2);
 
             // log in as default user
-            // String serverObjectString = "rmi://" + Globals.DEFAULT_SERVER_ADDRESS + ":" + Globals.DEFAULT_PORT + "/CanRegLogin" + systemDescription.getSystemCode();
+            // String serverObjectString = "rmi://" + Globals.DEFAULT_SERVER_ADDRESS + ":" + Globals.DEFAULT_PORT + "/CanRegLogin" + systemDescription.getRegistryCode();
             try {
-                String canRegSystemName = CanRegClientApp.getApplication().loginDirect(systemDescription.getSystemCode(), "morten", new char[]{'e', 'r', 'v', 'i', 'k'});
+                String canRegSystemName = CanRegClientApp.getApplication().loginDirect(systemDescription.getRegistryCode(), "morten", new char[]{'e', 'r', 'v', 'i', 'k'}, false);
             } catch (LoginException ex) {
                 Logger.getLogger(InstallNewSystemInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             } catch (NullPointerException ex) {

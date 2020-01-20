@@ -125,7 +125,7 @@ public class DatabaseVariableEditorInternalFrame extends javax.swing.JInternalFr
     @Action
     public void okAction() {
         try {
-            databaseVariableEditor.refreshDatabaseVariablesListElement();
+            databaseVariablesListElement = databaseVariableEditor.refreshDatabaseVariablesListElement();
             if (databaseVariablesListElement.getDatabaseVariableName().length() == 0) {
                 JOptionPane.showInternalMessageDialog(rootPane, "Short name can't be empty...");
             } else {

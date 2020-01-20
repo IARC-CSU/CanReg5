@@ -20,9 +20,11 @@
  */
 package canreg.client.dataentry;
 
+import canreg.client.gui.importers.ImportOptions;
+import canreg.client.gui.importers.Import;
 import canreg.common.Globals;
 import canreg.client.CanRegClientApp;
-import canreg.client.gui.dataentry.ImportView;
+import canreg.client.gui.importers.ImportView;
 import canreg.server.management.SystemDescription;
 import canreg.server.CanRegServerInterface;
 import canreg.server.database.*;
@@ -394,7 +396,10 @@ public class Convert {
         return allErrors;  // return your result
     }
 
-    public static boolean importFile(canreg.client.gui.management.CanReg4MigrationInternalFrame.MigrationTask task, Document doc, List<canreg.client.dataentry.Relation> map, File file, CanRegServerInterface server, ImportOptions io) throws SQLException, RemoteException, SecurityException, RecordLockedException {
+    public static boolean importFile(canreg.client.gui.management.CanReg4MigrationInternalFrame.MigrationTask task,
+                                     Document doc, List<canreg.client.dataentry.Relation> map, File file, 
+                                     CanRegServerInterface server, ImportOptions io) 
+            throws SQLException, RemoteException, SecurityException, RecordLockedException {
         boolean success = false;
 
         Set<String> noNeedToLookAtPatientVariables = new TreeSet<String>();
@@ -565,12 +570,9 @@ public class Convert {
                         // rebuild sequenceNumber
                         Tumour[] tumours = new Tumour[0];
                         try {
-                            tumours = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(patientID + "", false);
+                            tumours = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(patientID + "", false, null);
                         }
-                        catch (DistributedTableDescriptionException ex) {
-                            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                        catch (UnknownTableException ex) {
+                        catch (Exception ex) {
                             Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
                         }
 
@@ -582,20 +584,10 @@ public class Convert {
                         patientRecordID = patientID + "" + tumourSequenceString;
                         Patient[] oldPatients = null;
                         try {
-                            oldPatients = CanRegClientApp.getApplication().getPatientRecordsByID((String) patientID, false);
-                        } catch (RemoteException ex) {
+                            oldPatients = CanRegClientApp.getApplication().getPatientsByPatientID((String) patientID, false, null);
+                        } catch (Exception ex) {
                             Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (SecurityException ex) {
-                            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (DistributedTableDescriptionException ex) {
-                            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (RecordLockedException ex) {
-                            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (SQLException ex) {
-                            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (UnknownTableException ex) {
-                            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+                        } 
                         for (Patient oldPatient : oldPatients) {
                             if (!Tools.newRecordContainsNewInfo(patient, oldPatient, noNeedToLookAtPatientVariables)) {
                                 needToSavePatientAgain = false;

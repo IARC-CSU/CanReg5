@@ -227,13 +227,16 @@ public class UserManagerNew {
     }
     
     public void releaseRecord(int recordID, String tableName, Integer remoteHashCode) {
-        db.releaseRecord(recordID, tableName);
+//        db.releaseRecord(recordID, tableName);
         if(remoteHashCode == null)
             return;
         
-        Set lockSet = clientSessionsMap.get(remoteHashCode).records.get(tableName);
-        if (lockSet != null) 
-            lockSet.remove(recordID);
+        ClientSessionData sessionData = clientSessionsMap.get(remoteHashCode);
+        if(sessionData != null) {
+            Set lockSet = sessionData.records.get(tableName);
+            if (lockSet != null) 
+                lockSet.remove(recordID);
+        }
     }
 
     public void userLoggedOut(Integer remoteHashCode) {

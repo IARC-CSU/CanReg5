@@ -32,7 +32,7 @@ import canreg.server.management.SystemDefinitionConverter;
 import canreg.exceptions.WrongCanRegVersionException;
 import canreg.client.dataentry.Relation;
 import canreg.client.gui.components.VariableMappingPanel;
-import canreg.client.dataentry.ImportOptions;
+import canreg.client.gui.importers.ImportOptions;
 
 import java.io.*;
 import java.io.File;
@@ -670,7 +670,7 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
                     publish(new Progress(Component.LOG, "Login to CanReg5 System.\n"));
                     String canregSystem = null;
                     try {
-                        canregSystem = CanRegClientApp.getApplication().loginDirect(regcode, "morten", password);
+                        canregSystem = CanRegClientApp.getApplication().loginDirect(regcode, "morten", password, false);
                         // Closing WelcomeInternalFrame
                         JDesktopPane jdp = new JDesktopPane();
                         jdp = CanRegClientApp.getApplication().getDeskTopPane();

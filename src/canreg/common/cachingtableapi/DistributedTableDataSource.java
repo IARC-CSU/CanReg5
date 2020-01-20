@@ -1,5 +1,7 @@
 package canreg.common.cachingtableapi;
 
+import canreg.server.CanRegServerInterface;
+
 /**
  * Interface that isolates all of the remote method calls necessary to
  * retrieve data from a distributed table model in an efficient way.

@@ -52,11 +52,11 @@ public class CanRegLoginImpl extends UnicastRemoteObject
         this.theServer = server;
     }
 
-    public CanRegLoginImpl(String serverCode)
+    public CanRegLoginImpl(String serverCode, boolean isAdHocDB)
             throws RemoteException, MalformedURLException {
         System.setProperty("java.security.auth.login.config", Globals.LOGIN_FILENAME);
         System.setProperty("java.security.policy", Globals.POLICY_FILENAME);
-        theServer = new CanRegServerImpl(serverCode);
+        theServer = new CanRegServerImpl(serverCode, isAdHocDB);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class CanRegLoginImpl extends UnicastRemoteObject
         lc.login();
         Subject user = lc.getSubject();
         
-        CanRegServerInterface proxy = new CanRegServerProxy(user, theServer);
+        CanRegServerInterface proxy = CanRegRegistryProxy.getInstance(theServer, theServer.getCanRegRegistryCode(), user);
         theServer.userLoggedIn(proxy.hashCode(), username);
 
         // Return a reference to a proxy object that encapsulates the access
@@ -80,8 +80,8 @@ public class CanRegLoginImpl extends UnicastRemoteObject
      * @throws java.rmi.RemoteException
      */
     @Override
-    public String getSystemName() throws RemoteException {
-        return theServer.getCanRegSystemName();
+    public String getRegistryName() throws RemoteException {
+        return theServer.getCanRegRegistryName();
     }
 
     /**

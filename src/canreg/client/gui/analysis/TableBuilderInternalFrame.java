@@ -1028,7 +1028,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
 
         // get population datasets
         try {
-            populationDatasetsMap = canreg.client.CanRegClientApp.getApplication().getPopulationDatasets();
+            populationDatasetsMap = canreg.client.CanRegClientApp.getApplication().getPopulationDatasets(null);
             Collection<PopulationDataset> populationDatasetsCollection;
             Collection<PopulationDataset> populationDatasetsCollection2 = new LinkedList<>();
             populationDatasetsCollection = populationDatasetsMap.values();
@@ -1255,8 +1255,8 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                 Object[][] incidenceData = null;
                 
                 try {
-                    tableDatadescription = canreg.client.CanRegClientApp.getApplication().getDistributedTableDescription(filter, tableName);
-                    tableDataSource = new DistributedTableDataSourceClient(tableDatadescription);
+                    tableDatadescription = canreg.client.CanRegClientApp.getApplication().getDistributedTableDescription(filter, tableName, null);
+                    tableDataSource = new DistributedTableDataSourceClient(tableDatadescription, null);
                     if (tableDatadescription.getRowCount() > 0) {
                         incidenceData = tableDataSource.retrieveRows(0, tableDatadescription.getRowCount());
                     } else {

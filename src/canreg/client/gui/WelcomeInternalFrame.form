@@ -196,7 +196,7 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridLayout">
                 <Property name="columns" type="int" value="1"/>
-                <Property name="rows" type="int" value="2"/>
+                <Property name="rows" type="int" value="3"/>
               </Layout>
               <SubComponents>
                 <Component class="javax.swing.JButton" name="loginButton">
@@ -219,6 +219,18 @@
                     <Property name="toolTipText" type="java.lang.String" resourceKey="restoreBackupButton.toolTipText"/>
                     <Property name="actionCommand" type="java.lang.String" resourceKey="restoreBackupButton.actionCommand"/>
                     <Property name="name" type="java.lang.String" value="restoreBackupButton" noResource="true"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JButton" name="adHocButton">
+                  <Properties>
+                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                      <action class="canreg.client.gui.WelcomeInternalFrame" id="adHocAnalysisAction" methodName="adHocAnalysisAction"/>
+                    </Property>
+                    <Property name="icon" type="javax.swing.Icon" resourceKey="adHocButton.icon"/>
+                    <Property name="text" type="java.lang.String" resourceKey="adHocButton.text"/>
+                    <Property name="toolTipText" type="java.lang.String" resourceKey="adHocButton.toolTipText"/>
+                    <Property name="actionCommand" type="java.lang.String" resourceKey="adHocButton.actionCommand"/>
+                    <Property name="name" type="java.lang.String" value="adHocButton" noResource="true"/>
                   </Properties>
                 </Component>
               </SubComponents>
