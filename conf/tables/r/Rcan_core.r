@@ -1,67 +1,5 @@
 
 
-CSU_country_info <- function(df_data,var_code, folder_dict) {
-  
-  df_data <- data.table(df_data)
-  
-  if (var_code == "country_code") {
-    
-    df_data[, country_code_old:=NULL]
-    setnames(df_data, "country_code", "country_code_old")
-  }
-  
-  setnames(df_data, var_code, "CSU_varcode")
-  
-  if (mean(df_data[["CSU_varcode"]]) > 100000) {
-    
-    df_data[CSU_varcode==250091,CSU_varcode:= 474000] #special for french martinique for CI5XI
-    df_data[CSU_varcode==250093,CSU_varcode:= 540000] #special for new caledonia for CI5XI
-    df_data[CSU_varcode==250094,CSU_varcode:= 254000] #special for french guiana for CI5XI
-    
-  
-    df_data[, temp:=CSU_varcode/1000]
-    df_data[, country_code:=floor(temp)]
-    df_data[, regional:=ifelse(temp-country_code>0,1,0)]
-    
-  } else if (mean(df_data[["CSU_varcode"]]) > 1000) {
-    
-    df_data[, temp:=CSU_varcode/100]
-    df_data[, country_code:=floor(temp)]
-    df_data[, regional:=ifelse(temp-country_code>0,1,0)]
-    
-    
-  } else {
-    
-    df_data[, country_code:=CSU_varcode]
-    df_data[, regional:=0]
-    
-  }
-  
-  setnames(df_data, "CSU_varcode",var_code )
-  
-  df_data[,temp := NULL]
-  df_data[country_code==891, country_code:=688] #special for serbia in CI5X
-  
-  df_UNcode<- read.csv(paste0(folder_dict, "UN_country_info.csv"))
-  df_data <- merge(df_data,df_UNcode, by=c("country_code"),  all.x = TRUE)  
-  
-  unique(df_data$country_label)
-  
-  list_country <- unique(df_data[is.na(country_label) & is.na(area_code) & is.na(area_label)]$country_code)
-  
-  
-  if (length(list_country) > 0) {
-    cat("these country have not been associated with an area!!\n")
-    cat(list_country)
-  } else {
-    cat("All country have been associated with an area!!")
-  }
-  
-  return(df_data)
-  
-}
-
-
 
 
 canreg_error_log <- function(e,filename,out,Args,inc,pop) {
@@ -126,7 +64,7 @@ canreg_error_log <- function(e,filename,out,Args,inc,pop) {
   
   #print java information if windows
   if (Sys.info()[['sysname']] == "Windows") {
-    print(find.java())
+    print(canreg_find_java())
   }
   
   #print missing package
@@ -477,8 +415,8 @@ canreg_import_CI5_data <- function(dt,CI5_file,var_ICD_canreg="ICD10GROUP",var_a
   ICD_CI5 <- ICD_CI5[grepl("^C",ICD_CI5 )]
   
   #parse ICD10 code 
-  dt_ICD_CI5 <- data.table(ICD10=ICD_CI5,ICD_list=(lapply(ICD_CI5,parse_icd10)))
-  dt_ICD_canreg <- data.table(ICD10=ICD_canreg,ICD_list=(lapply(ICD_canreg,parse_icd10)))
+  dt_ICD_CI5 <- data.table(ICD10=ICD_CI5,ICD_list=(lapply(ICD_CI5,canreg_parse_icd10)))
+  dt_ICD_canreg <- data.table(ICD10=ICD_canreg,ICD_list=(lapply(ICD_canreg,canreg_parse_icd10)))
   dt_ICD_CI5$ICD_canreg <- character(0) 
   
   #associate CI5 ICD code with CANREG ICD code
@@ -501,8 +439,8 @@ canreg_import_CI5_data <- function(dt,CI5_file,var_ICD_canreg="ICD10GROUP",var_a
   
   #list age group label from canreg and CI5
   dt_CI5_data[age<19, age_label:= (age-1)*5]
-  dt_CI5_age_label <- parse_age_label_dt(dt_CI5_data,var_age_label = "age_label")
-  dt_canreg_age_label <- parse_age_label_dt(dt,var_age_label =var_age_label_canreg)
+  dt_CI5_age_label <- canreg_parse_age_label_dt(dt_CI5_data,var_age_label = "age_label")
+  dt_canreg_age_label <- canreg_parse_age_label_dt(dt,var_age_label =var_age_label_canreg)
   dt_CI5_age_label$age_label_canreg <- character(0) 
   
   #associate CI5 age group with CANREG age group and age code and reference count
@@ -1187,7 +1125,7 @@ canreg_basis_table <- function(dt,var_cases="CASES", var_basis="BASIS", var_canc
 
 
 
-csu_merge_inc_pop <- function(inc_file,
+canreg_merge_inc_pop <- function(inc_file,
                               pop_file,
                               var_cases = "CASES",
                               var_age = "AGE_GROUP",
@@ -1195,7 +1133,8 @@ csu_merge_inc_pop <- function(inc_file,
                               var_pop = "COUNT",
                               var_ref_count = "REFERENCE_COUNT",
                               group_by = NULL,
-                              column_group_list = NULL){
+                              column_group_list = NULL) 
+{
   
   df_inc <- read.table(inc_file, header=TRUE, sep="\t")
   df_pop <- read.table(pop_file, header=TRUE, sep="\t")
@@ -1249,7 +1188,7 @@ csu_merge_inc_pop <- function(inc_file,
   dt_all$cancer_label <- canreg_cancer_info(dt_all)$cancer_label
   if (!"ICD10GROUPCOLOR" %in% colnames(dt_all)) {
     
-    dt_color_map <- csu_cancer_color(unique(canreg_cancer_info(dt_all)$cancer_label))
+    dt_color_map <- canreg_cancer_color(unique(canreg_cancer_info(dt_all)$cancer_label))
     dt_all <- merge(dt_all, dt_color_map, by = c("cancer_label"), all.x=TRUE, sort=F )
   }
   
@@ -1266,14 +1205,15 @@ csu_merge_inc_pop <- function(inc_file,
   return(dt_all)
 }
 
-csu_merge_iccc_pop <- function(inc_file,
+canreg_merge_iccc_pop <- function(inc_file,
                               pop_file,
                               var_cases = "CASES",
                               var_age = "AGE_GROUP",
                               var_age_label = "AGE_GROUP_LABEL",
                               var_pop = "COUNT",
                               var_ref_count = "REFERENCE_COUNT",
-                              group_by = NULL){
+                              group_by = NULL)
+{
   
   df_inc <- read.table(inc_file, header=TRUE, sep="\t")
   df_pop <- read.table(pop_file, header=TRUE, sep="\t")
@@ -1400,7 +1340,8 @@ canreg_attr_missing_sex <- function(dt, var_age, var_group2) {
 
 
 canreg_desc_missing_sex <- function(inc_file,
-                                    var_cases = "CASES"){
+                                    var_cases = "CASES")
+{
   
   df_inc <- read.table(inc_file, header=TRUE, sep="\t")
   dt_inc <- data.table(df_inc)
@@ -1520,9 +1461,10 @@ canreg_get_agegroup_label <- function(dt, agegroup) {
 
 
 
-csu_cum_risk_core <- function(df_data, var_age, var_cases, var_py, group_by=NULL,
+canreg_cum_risk_core <- function(df_data, var_age, var_cases, var_py, group_by=NULL,
                               missing_age = NULL,age_label_list = NULL,last_age = 15,
-                              var_cum_risk="cum_risk") {
+                              var_cum_risk="cum_risk") 
+{
   
   
   
@@ -1656,7 +1598,8 @@ canreg_ageSpecific_rate_multi_plot <- function(dt,
                                                list_graph=TRUE,
                                                landscape = FALSE,
                                                return_data = FALSE,
-                                               canreg_header=canreg_header) {
+                                               canreg_header=canreg_header)
+{
   
   
   if (return_data) {
@@ -1788,7 +1731,7 @@ canreg_ageSpecific_rate_multi_plot <- function(dt,
       
       if (j==1) {
         
-        grid_legend <- extract_legend_axes(temp)
+        grid_legend <- canreg_extract_legend_axes(temp)
       }
       
       temp <- temp  + theme_orient + theme_log + theme_3p4
@@ -1870,7 +1813,8 @@ canreg_age_cases_pie_multi_plot <- function(dt,
                                             list_graph=FALSE,
                                             landscape = TRUE,
                                             return_data = FALSE,
-                                            canreg_header=NULL) {
+                                            canreg_header=NULL)
+{
   
   
   
@@ -1918,7 +1862,7 @@ canreg_age_cases_pie_multi_plot <- function(dt,
     )
     if (j==1) {
       
-      grid_legend <- extract_legend_axes(temp)
+      grid_legend <- canreg_extract_legend_axes(temp)
     }
     
     temp <- temp  + theme_3p4
@@ -1964,7 +1908,8 @@ canreg_ageSpecific_rate_top <- function(df_data,
 										plot_title=NULL,
 										landscape = FALSE,
 									   list_graph = FALSE,
-										return_data = FALSE) {
+										return_data = FALSE)
+{
 		 
   if (return_data) {
 
@@ -2018,7 +1963,8 @@ canreg_ageSpecific_rate_top <- function(df_data,
 canreg_bar_top_single <- function(dt, var_top, var_bar = "cancer_label" ,group_by = "SEX",
                                   nb_top = 10, landscape = FALSE,list_graph=TRUE,
                                   canreg_header = "", xtitle = "",digit  =  1,
-                                  return_data  =  FALSE, return_plot=FALSE) {
+                                  return_data  =  FALSE, return_plot=FALSE)
+{
   
   dt <- Rcan:::core.csu_dt_rank(dt, var_value = var_top, var_rank = var_bar,group_by = group_by, number = nb_top) 
   
@@ -2057,7 +2003,7 @@ canreg_bar_top_single <- function(dt, var_top, var_bar = "cancer_label" ,group_b
 
     
      return(
-      csu_bar_plot(
+      canreg_bar_plot(
         dt_plot,var_top=var_top,var_bar=var_bar,
         plot_title=plot_title,plot_caption=plot_caption,plot_subtitle = plot_subtitle,
         color_bar=color_cancer,
@@ -2159,7 +2105,7 @@ canreg_bar_CI5_compare <- function(dt,group_by = "SEX", landscape = TRUE,list_gr
       
       
       temp <-
-        csu_bar_plot(dt=dt_plot, 
+        canreg_bar_plot(dt=dt_plot, 
                      var_top="asr",
                      var_bar="country_label",
                      plot_title = unique(dt_plot$cancer_label),
@@ -2178,12 +2124,12 @@ canreg_bar_CI5_compare <- function(dt,group_by = "SEX", landscape = TRUE,list_gr
       if (multi_graph) {
         
         if (i==1) { 
-          grid_legend <<- extract_legend_axes(temp)
+          grid_legend <<- canreg_extract_legend_axes(temp)
           plotlist_grid[[11]] <<- grid_legend$subtitle
         }
         
         if (i == 2) {
-          grid_legend <<- extract_legend_axes(temp)
+          grid_legend <<- canreg_extract_legend_axes(temp)
           plotlist_grid[[12]] <<- grid_legend$subtitle
         } 
         
@@ -2242,7 +2188,7 @@ canreg_bar_CI5_compare <- function(dt,group_by = "SEX", landscape = TRUE,list_gr
   
 }
 
-csu_bar_plot <- function(dt, 
+canreg_bar_plot <- function(dt, 
                              var_top,
                              var_bar,
                              plot_title = plot_title,
@@ -2252,7 +2198,8 @@ csu_bar_plot <- function(dt,
                              digit = 1,
                              color_bar = NULL,
                              text_size_factor = 1,
-                             landscape = FALSE)  {
+                             landscape = FALSE) 
+{
   
   line_size <- 0.4
   text_size <- 14 
@@ -2353,7 +2300,8 @@ canreg_bar_top <- function(df_data,
                                ytitle = "",
                                nsmall = 1,
                                return_data = FALSE,
-                               plot_caption= NULL) {
+                               plot_caption= NULL)
+{
   
   
   dt <- data.table(df_data)
@@ -2489,7 +2437,8 @@ canreg_population_pyramid <- function(df_data,
                                       list_graph = FALSE,
                                       canreg_header=NULL,
                                       return_data = FALSE,
-                                      plot_caption= NULL) {
+                                      plot_caption= NULL)
+{
   
   
 	
@@ -2629,7 +2578,8 @@ canreg_cases_year_bar <- function(dt,
                                   list_graph = FALSE,
                                   canreg_header=NULL,
                                   return_data = FALSE,
-                                  plot_caption= NULL) {
+                                  plot_caption= NULL)
+{
   
   
   dt <- as.data.table(dt)
@@ -2739,7 +2689,8 @@ canreg_cases_age_bar <- function(df_data,
                                      canreg_header=NULL,
                                      return_data = FALSE,
                                      skin=TRUE,
-                                     plot_caption= NULL) {
+                                     plot_caption= NULL)
+{
   
   
   dt <- as.data.table(df_data)
@@ -2869,7 +2820,8 @@ canreg_cases_age_pie <- function(
                         color_age = c("#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3", "#a6d854"),
                         list_graph  =  FALSE,
                         plot_subtitle = "Male",
-                        canreg_header  = NULL) {
+                        canreg_header  = NULL)
+{
   
   dt <- as.data.table(df_data)
   dt[, percent:=sum(get(var_cases))]
@@ -2959,7 +2911,8 @@ canreg_asr_trend_top <- function(dt, var_asr="asr",
                                  list_graph = FALSE,
                                  return_data = FALSE,
 																 return_plot= FALSE,
-                                 canreg_header="") {
+                                 canreg_header="")
+{
   
   
   dt <- Rcan:::core.csu_dt_rank(dt,
@@ -3046,7 +2999,8 @@ canreg_eapc_scatter <- function(dt_plot,
                                 canreg_header=NULL,
                                 ytitle = "",
                                 return_data = FALSE,
-                                plot_caption= NULL) {
+                                plot_caption= NULL)
+{
   
   if (return_data) {
     dt_plot[, CSU_RANK := NULL]
@@ -3151,7 +3105,8 @@ canreg_eapc_scatter_error_bar <- function(dt,
                                           canreg_header=NULL,
                                           return_data = FALSE,
 																					return_plot = FALSE, 
-                                          ytitle="") {
+                                          ytitle="")
+{
   
   if (return_data) {
     
@@ -3185,7 +3140,7 @@ canreg_eapc_scatter_error_bar <- function(dt,
     dt_plot <- dt[get(group_by) == i]
     
     plotlist[[j]] <-
-      rcan_scatter_error_bar(
+      canreg_scatter_error_bar(
         dt_plot,
         tick_list = tick$tick_list,
         plot_title=plot_title,plot_subtitle = plot_subtitle,
@@ -3208,7 +3163,7 @@ canreg_eapc_scatter_error_bar <- function(dt,
 
 
 
-rcan_scatter_error_bar <- function(dt_plot,
+canreg_scatter_error_bar <- function(dt_plot,
                                    var_bar = "cancer_label",
                                    var_data = "eapc",
                                    var_data_up = "eapc_up",
@@ -3219,7 +3174,8 @@ rcan_scatter_error_bar <- function(dt_plot,
                                    plot_title=NULL,
                                    plot_subtitle=NULL,
                                    plot_caption= NULL,
-                                   tick_list=NULL) {
+                                   tick_list=NULL)
+{
   
   
   
@@ -3309,7 +3265,7 @@ rcan_scatter_error_bar <- function(dt_plot,
   
 }
 
-rcan_report <- function(doc,report_path,dt_all,ls_args,ann=TRUE, shiny=FALSE) {
+canreg_report <- function(doc,report_path,dt_all,ls_args,ann=TRUE, shiny=FALSE) {
 
   time_limit <- 9
   graph_width <- 6
@@ -3540,7 +3496,7 @@ rcan_report <- function(doc,report_path,dt_all,ls_args,ann=TRUE, shiny=FALSE) {
                                 age_label_list = "AGE_GROUP_LABEL")
   
   ##calcul of cumulative risk
-  dt_cum_risk <- csu_cum_risk_core(df_data = dt_report,var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
+  dt_cum_risk <- canreg_cum_risk_core(df_data = dt_report,var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
                                    group_by = c("cancer_label", "SEX","ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt_all),
                                    last_age= canreg_age_group_cr$last_age+1,
                                    age_label_list = "AGE_GROUP_LABEL")
@@ -4054,7 +4010,7 @@ rcan_report <- function(doc,report_path,dt_all,ls_args,ann=TRUE, shiny=FALSE) {
 
 }
 
-rcan_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
+canreg_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
 
   graph_width <- 8
   graph_width_split <- 4
@@ -4305,7 +4261,7 @@ rcan_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
                                age_label_list = "AGE_GROUP_LABEL")
   
   ##calcul of cumulative risk
-  dt_cum_risk <- csu_cum_risk_core(df_data = dt_report,var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
+  dt_cum_risk <- canreg_cum_risk_core(df_data = dt_report,var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
                                    group_by = c("cancer_label", "SEX","ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt_all),
                                    last_age= canreg_age_group_cr$last_age+1,
                                    age_label_list = "AGE_GROUP_LABEL")
@@ -4838,7 +4794,7 @@ canreg_output <- function(output_type="pdf",filename=NULL, landscape = FALSE,lis
 
 
 
-csu_cancer_color <- function(cancer_list) {
+canreg_cancer_color <- function(cancer_list) {
   
   
   
@@ -4909,7 +4865,7 @@ csu_cancer_color <- function(cancer_list) {
 }
 
 
-parse_icd10 <- function (icd) {
+canreg_parse_icd10 <- function (icd) {
   
   icd_list <- NULL
   
@@ -4947,7 +4903,7 @@ parse_icd10 <- function (icd) {
 }
 
 
-parse_age_label_dt <- function(dt,var_age_label) {
+canreg_parse_age_label_dt <- function(dt,var_age_label) {
   
   dt_age_label <- data.table(age_label=unique(dt[[var_age_label]]))
   dt_age_label <- dt_age_label[!is.na(age_label) ,]
@@ -4970,7 +4926,7 @@ parse_age_label_dt <- function(dt,var_age_label) {
 }
 
 
-extract_legend_axes<-function(a_gplot){
+canreg_extract_legend_axes<-function(a_gplot){
 
   pdf(file=NULL)
   tmp <- ggplotGrob(a_gplot)
@@ -4998,26 +4954,9 @@ extract_legend_axes<-function(a_gplot){
   return(list(legend=legend, xlab=xlab, ylab=ylab, title=title, subtitle=subtitle, caption=caption))
 }
 
-reporteRs_OO_patched <- function (docx,temp_path=paste0(tempdir(),"\\temp" )) {
-  
-  
-  # number: 4104, 2382... correspond to the table column wide setup by word and extract from the document.xml..
-  unzip(docx, exdir=temp_path)
-  tmp_txt <- readLines(paste0(temp_path, "\\word\\document.xml"))
-  tmp_txt <- gsub("<w:tblGrid/><w:tr><w:tc>","<w:tblGrid><w:gridCol w:w=\"4104\"/><w:gridCol w:w=\"4104\"/></w:tblGrid><w:tr><w:tc>",tmp_txt,fixed = TRUE)
-  tmp_txt <- gsub("<w:tblGrid/><w:tr><w:trPr>","<w:tblGrid><w:gridCol w:w=\"2382\"/><w:gridCol w:w=\"1741\"/><w:gridCol w:w=\"1149\"/><w:gridCol w:w=\"886\"/><w:gridCol w:w=\"825\"/><w:gridCol w:w=\"953\"/><w:gridCol w:w=\"825\"/></w:tblGrid><w:tr><w:trPr>",tmp_txt,fixed = TRUE)
-  writeLines(tmp_txt, con=paste0(temp_path, "\\word\\document.xml"))
-  
-  temp_wd <- getwd()
-  setwd(temp_path)
-  zip("tmp.docx", files=list.files(all.files = TRUE, recursive = TRUE))
-  setwd(temp_wd)
-  file.copy(paste0(temp_path,"\\tmp.docx"),docx,overwrite=TRUE)
-  #file.remove(temp_path)
-  
-}
 
-find.java <- function() {
+
+canreg_find_java <- function() {
   for (root in c("HLM", "HCU")) for (key in c("Software\\JavaSoft\\Java Runtime Environment", 
                                               "Software\\JavaSoft\\Java Development Kit")) {
     hive <- try(utils::readRegistry(key, root, 2), 

@@ -8,21 +8,21 @@ i18n <- Translator(translation_csvs_path  = (paste(sep="/", script.basename, "r-
 i18n$set_translation_language(ls_args$lang)
 
 
-dt_base <- csu_merge_inc_pop(
+dt_base <- canreg_merge_inc_pop(
 	inc_file =ls_args$inc,
 	pop_file =ls_args$pop,
 	group_by = c("ICD10GROUP", "ICD10GROUPLABEL","ICD10GROUPCOLOR", "YEAR", "SEX"),
 	column_group_list =list(c("ICD10GROUP", "ICD10GROUPLABEL", "ICD10GROUPCOLOR"))
 )
 
-dt_basis <- csu_merge_inc_pop(
+dt_basis <- canreg_merge_inc_pop(
   inc_file =ls_args$inc,
   pop_file =ls_args$pop,
   group_by = c("ICD10GROUP", "ICD10GROUPLABEL", "YEAR", "SEX", "BASIS"),
   column_group_list =list(c("ICD10GROUP", "ICD10GROUPLABEL"))
 )
 
-dt_iccc <- csu_merge_iccc_pop(
+dt_iccc <- canreg_merge_iccc_pop(
     inc_file =ls_args$inc,
     pop_file =ls_args$pop,
     group_by = c("ICCC",  "YEAR", "SEX")

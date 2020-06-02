@@ -22,7 +22,7 @@ tryCatch({
 	i18n$set_translation_language(ls_args$lang)
   
   #merge incidence and population
-  dt_all <- csu_merge_inc_pop(
+  dt_all <- canreg_merge_inc_pop(
     inc_file =ls_args$inc,
     pop_file =ls_args$pop,
     group_by = c("ICD10GROUP", "ICD10GROUPLABEL","ICD10GROUPCOLOR", "YEAR", "SEX"),

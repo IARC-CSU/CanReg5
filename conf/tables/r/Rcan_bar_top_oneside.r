@@ -21,7 +21,7 @@ tryCatch({
 	i18n$set_translation_language(ls_args$lang)
 	
   #merge incidence and population
-  dt_all <- csu_merge_inc_pop(
+  dt_all <- canreg_merge_inc_pop(
     inc_file =ls_args$inc,
     pop_file =ls_args$pop,
     group_by = c("ICD10GROUP", "ICD10GROUPLABEL","ICD10GROUPCOLOR", "YEAR", "SEX"),
@@ -44,7 +44,7 @@ tryCatch({
                         age_label_list = "AGE_GROUP_LABEL")
   
   ##calcul of cumulative risk
-  dt_cum_risk <- csu_cum_risk_core(df_data = dt,var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
+  dt_cum_risk <- canreg_cum_risk_core(df_data = dt,var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
                                    group_by = c("cancer_label", "SEX","ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt_all),
                                    last_age= canreg_age_group$last_age+1,
                                    age_label_list = "AGE_GROUP_LABEL")

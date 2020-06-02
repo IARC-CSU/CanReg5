@@ -309,7 +309,7 @@ shinyServer(function(input, output, session) {
       hide(id="export_menu", anim=TRUE)
       show(id="controls_COL1", anim=TRUE)
       hide(id="controls_COL2", anim=TRUE)
-      shiny_list_folder_content(output)
+      canreg_shiny_list_folder_content(output)
       
     }
     else if (input$select_table==1) {
@@ -430,7 +430,7 @@ shinyServer(function(input, output, session) {
 				
 
 		
-				dt_temp <- shiny_data(input, session)
+				dt_temp <- canreg_shiny_data(input, session)
 			
 				if (input$select_table %in% c(4,5,9,10)) {
 					if (length(bool_rv$trigger1) != 0) {
@@ -465,7 +465,7 @@ shinyServer(function(input, output, session) {
 			
       isolate(progress_bar$object)$set(value = 50,  message = 'Please wait:', detail = 'Render graph')
       
-			shiny_plot(dt_all(), input,session,  FALSE)
+			canreg_shiny_plot(dt_all(), input,session,  FALSE)
 			
 			isolate(progress_bar$object)$set(value = 100,  message = 'Please wait:', detail = 'Done')
 	  
@@ -486,7 +486,7 @@ shinyServer(function(input, output, session) {
 				}
 				
 				#multiple file
-				bool_multiple <- multiple_output(input$select_table, bool_CI, input$select_format)
+				bool_multiple <- canreg_shiny_multiple_output(input$select_table, bool_CI, input$select_format)
 					
 				if (bool_multiple) {
 					temp <- paste0(input$text_filename, ".", "zip")
@@ -504,14 +504,14 @@ shinyServer(function(input, output, session) {
 			withProgress(message = 'Download output', value = 0, {
 	      
 				file_temp <- substr(file,1, nchar(file)-nchar(input$select_format)-1)
-				shiny_plot(dt_all(),  input,session, TRUE,FALSE,file_temp)
+				canreg_shiny_plot(dt_all(),  input,session, TRUE,FALSE,file_temp)
 				incProgress(1, detail = "")
 				
 				bool_CI <- FALSE
 				if (!is.null(input$checkCI)) {
 					bool_CI <- input$checkCI
 				}
-				bool_multiple <- multiple_output(input$select_table, bool_CI, input$select_format)
+				bool_multiple <- canreg_shiny_multiple_output(input$select_table, bool_CI, input$select_format)
 				
 				if (bool_multiple) {
 						
@@ -549,7 +549,7 @@ shinyServer(function(input, output, session) {
 	  withProgress(message = 'add powerpoint slide', value = 0, {
       filename <- paste0(tempdir(), "\\temp_graph",values$nb_slide+1)  
       
-			shiny_plot(dt_all(),  input,session, TRUE,TRUE,filename)
+			canreg_shiny_plot(dt_all(),  input,session, TRUE,TRUE,filename)
 			incProgress(1, detail = "")
 			
 			if (input$select_table == 1) {
@@ -741,7 +741,7 @@ shinyServer(function(input, output, session) {
 		filename =  paste0(gsub("\\W","", ls_args$label),"_",ls_args$sc,"_",gsub("\\D","", Sys.time()),"_error_log.txt"),
 		content = function(file) {
 			temp <- paste0(gsub("\\W","", ls_args$label),"_",ls_args$sc,"_",gsub("\\D","", Sys.time()),"_error_log.txt")
-			shiny_error_log(file,temp)
+			canreg_shiny_error_log(file,temp)
 		}
 	
 	)
@@ -753,7 +753,7 @@ shinyServer(function(input, output, session) {
 
 			withProgress(message = 'export shiny data', value = 0, {
 
-				shiny_export_data(paste0(tempdir(),"/shinydata.txt"))
+				canreg_shiny_export_data(paste0(tempdir(),"/shinydata.txt"))
 				incProgress(1/6, detail = "zip file")
 				zip::zipr(file, c(paste0(tempdir(),"/shinydata.txt")))
 				incProgress(1/6, detail = "")
@@ -768,7 +768,7 @@ shinyServer(function(input, output, session) {
 	
 		filename =  paste0(ls_args$sc,"_",gsub("\\D","", Sys.time()),"_data.csv"),
 		content = function(file) {
-			shiny_dwn_data(file)
+			canreg_shiny_dwn_data(file)
 		}
 	
 	)
@@ -780,7 +780,7 @@ shinyServer(function(input, output, session) {
 
 			withProgress(message = 'Download report', value = 0, {
 
-				shiny_dwn_report(file, download_dir, input$checkAnnexe)
+				canreg_shiny_dwn_report(file, download_dir, input$checkAnnexe)
 
 			})
 		}
@@ -794,14 +794,14 @@ shinyServer(function(input, output, session) {
 
 			withProgress(message = 'Download presentation', value = 0, {
 
-				shiny_dwn_slide(file, input$checkAnnexe)
+				canreg_shiny_dwn_slide(file, input$checkAnnexe)
 			})
 		}
 	
 	)
 
   
-  onevent("dblclick","directorypath", shiny_update_dwn_folder(output,values))
+  onevent("dblclick","directorypath", canreg_shiny_update_dwn_folder(output,values))
 
 
   observeEvent(input$downloadFile2,{ 
@@ -812,7 +812,7 @@ shinyServer(function(input, output, session) {
 
 			path <- download_dir
 			file_temp <- paste0(path, "/", input$text_filename)
-			shiny_plot(dt_all(),  input,session, TRUE,FALSE,file_temp)
+			canreg_shiny_plot(dt_all(),  input,session, TRUE,FALSE,file_temp)
 			incProgress(1, detail = "")
 
 
@@ -838,7 +838,7 @@ shinyServer(function(input, output, session) {
 
 		withProgress(message = 'import shiny data', value = 0, {
 
-				temp <- import_shiny_date(input$shinydata$datapath)
+				temp <- canreg_import_shiny_data(input$shinydata$datapath)
 				if(!is.null(temp)) {
 					ls_args <<- temp$ls_args
 					dt_pyramid <<- temp$dt_pyramid

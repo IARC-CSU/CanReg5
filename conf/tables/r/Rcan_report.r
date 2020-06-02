@@ -21,21 +21,21 @@ tryCatch({
 	i18n$set_translation_language(ls_args$lang)
   
   #merge incidence and population
-  dt_all <- csu_merge_inc_pop(
+  dt_all <- canreg_merge_inc_pop(
     inc_file =ls_args$inc,
     pop_file =ls_args$pop,
     group_by = c("ICD10GROUP", "ICD10GROUPLABEL","ICD10GROUPCOLOR", "YEAR", "SEX"),
     column_group_list =list(c("ICD10GROUP", "ICD10GROUPLABEL", "ICD10GROUPCOLOR"))
   )
 
-  dt_basis <- csu_merge_inc_pop(
+  dt_basis <- canreg_merge_inc_pop(
     inc_file =ls_args$inc,
     pop_file =ls_args$pop,
     group_by = c("ICD10GROUP", "ICD10GROUPLABEL", "YEAR", "SEX", "BASIS"),
     column_group_list =list(c("ICD10GROUP", "ICD10GROUPLABEL"))
   )
 
-  dt_iccc <- csu_merge_iccc_pop(
+  dt_iccc <- canreg_merge_iccc_pop(
     inc_file =ls_args$inc,
     pop_file =ls_args$pop,
     group_by = c("ICCC",  "YEAR", "SEX")
@@ -73,7 +73,7 @@ tryCatch({
   doc <- read_docx(paste(sep="/", script.basename,"slide_template", "template.docx"))
   
   
-  doc <- rcan_report(doc, report_path, dt_all, ls_args)
+  doc <- canreg_report(doc, report_path, dt_all, ls_args)
   
   print(doc, ls_args$filename)
 
