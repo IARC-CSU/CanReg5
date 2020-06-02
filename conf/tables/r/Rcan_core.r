@@ -172,6 +172,9 @@ canreg_load_packages <- function(packages_list) {
 
   sysName <- Sys.info()[['sysname']]
 
+  timeStart<-Sys.time()
+
+
   if (sysName == "Windows") {
     pb <- winProgressBar(
     title = "Download R packages",
@@ -337,9 +340,20 @@ canreg_load_packages <- function(packages_list) {
     close(pb)
   }
 
-  source_url("https://github.com/timat35/CanReg5/blob/feature/RcanReg/conf/tables/r/r-sources/canreg_core.r")
-  source_url("https://github.com/timat35/CanReg5/blob/feature/RcanReg/conf/tables/r/r-sources/shiny_core.r")
+  timeEnd<-Sys.time()
+  difference <- difftime(timeEnd, timeStart, units='mins')
+  print(difference)
 
+
+  
+
+}
+
+canreg_update_sources <- function (url,folder)
+{
+
+  folder <- "C:/Projects/CanReg5/conf/tables/r/r-sources"
+  url <- "https://raw.githubusercontent.com/timat35/CanReg5/feature/RcanReg/conf/tables/r/r-sources/canreg_core.r"
 
   
 

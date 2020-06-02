@@ -13,6 +13,9 @@
 tryCatch({
 
   canreg_load_packages(c("data.table", "ggplot2","shiny","shinydashboard", "shinyjs","gridExtra", "scales", "Cairo","officer","flextable", "zip", "bmp", "jpeg", "png","shiny.i18n", "Rcan"))
+  
+  source(paste(sep="/", script.basename, "canreg_core.r"))
+
   shiny_dir <- paste(sep="/", script.basename, "shiny")
   runApp(appDir =shiny_dir, launch.browser =TRUE)
  
