@@ -552,21 +552,22 @@ shinyServer(function(input, output, session) {
 			incProgress(1, detail = "")
 			
 			if (input$select_table == 1) {
-								
+							
+
 				values$doc <-  add_slide(values$doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
-				values$doc <- ph_with(doc, value =  "Population pyramid", location = ph_location_type(type =  "title"))
+				values$doc <- ph_with(values$doc, value =  "Population pyramid", location = ph_location_type(type =  "title"))
 				dims <- attr( png::readPNG (paste0(filename, ".png")), "dim" )
 				
 				temp_img <- external_img(src = paste0(filename, ".png"), height =graph_width*dims[1]/dims[2],width = graph_width)
-  				values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE)
+  			 	values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE)
 			} 
 			else if (input$select_table==2) {
 				
 				values$doc <-  add_slide(values$doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
-				values$doc <- ph_with(doc, value =  "Number of cases by age group & sex", location = ph_location_type(type =  "title"))
+				values$doc <- ph_with(values$doc, value =  "Number of cases by age group & sex", location = ph_location_type(type =  "title"))
 				dims <- attr( png::readPNG (paste0(filename, ".png")), "dim" )
 				temp_img <- external_img(src = paste0(filename, ".png"), height =graph_width*dims[1]/dims[2],width = graph_width)
-  				values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE
+  				values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE)
 				
 				
 			}
@@ -574,10 +575,10 @@ shinyServer(function(input, output, session) {
 				
 
 				values$doc <-  add_slide(values$doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
-				values$doc <- ph_with(doc, value =  "Proportion of cases by age group & sex", location = ph_location_type(type =  "title"))
+				values$doc <- ph_with(values$doc, value =  "Proportion of cases by age group & sex", location = ph_location_type(type =  "title"))
 				dims <- attr( png::readPNG (paste0(filename, ".png")), "dim" )
 				temp_img <- external_img(src = paste0(filename, ".png"), height =graph_width*dims[1]/dims[2],width = graph_width)
-  				values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE
+  				values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE)
 				
 				
 			}
@@ -587,10 +588,10 @@ shinyServer(function(input, output, session) {
 				str_temp <- paste0("top ", isolate(input$slideNbTopBar), " cancers, both sexes")
 				
 				values$doc <-  add_slide(values$doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
-				values$doc <- ph_with(doc, value =  str_temp, location = ph_location_type(type =  "title"))
+				values$doc <- ph_with(values$doc, value =  str_temp, location = ph_location_type(type =  "title"))
 				dims <- attr( png::readPNG (paste0(filename, ".png")), "dim" )
 				temp_img <- external_img(src = paste0(filename, ".png"), height =graph_width*dims[1]/dims[2],width = graph_width)
-  				values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE
+  				values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE)
 				
 				
 			}
@@ -600,13 +601,13 @@ shinyServer(function(input, output, session) {
 				str_temp <- paste0("top ", isolate(input$slideNbTopBar), " cancers")
 				
 				values$doc <-  add_slide(values$doc, layout="Canreg_split", master="Office Theme") ## add PPTX slide (Title + content)
-				values$doc <- ph_with(doc, value =  str_temp, location = ph_location_type(type =  "title"))
+				values$doc <- ph_with(values$doc, value =  str_temp, location = ph_location_type(type =  "title"))
 
 				dims <- attr( png::readPNG (paste0(filename, "001.png")), "dim" )
 				temp_img1 <- external_img(src = paste0(filename, "001.png"), height =graph_width_split*dims[1]/dims[2],width = graph_width_split)
 				temp_img2 <- external_img(src = paste0(filename, "002.png"), height =graph_width_split*dims[1]/dims[2],width = graph_width_split)
-  				values$doc <- ph_with(values$doc,value = temp_img1,location = ph_location_type(type = "body", id=1), use_loc_size =FALSE
-  				values$doc <- ph_with(values$doc,value = temp_img2,location = ph_location_type(type = "body", id=2), use_loc_size =FALSE
+  				values$doc <- ph_with(values$doc,value = temp_img1,location = ph_location_type(type = "body", id=1), use_loc_size =FALSE)
+  				values$doc <- ph_with(values$doc,value = temp_img2,location = ph_location_type(type = "body", id=2), use_loc_size =FALSE)
 
 				
 			}
@@ -617,17 +618,15 @@ shinyServer(function(input, output, session) {
 			dims <- attr( png::readPNG (paste0(filename, "001.png")), "dim" )
 
 			values$doc <-  add_slide(values$doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
-			values$doc <- ph_with(doc, value =  "Age-specific rates:\r\nMales", location = ph_location_type(type =  "title"))
-			
+			values$doc <- ph_with(values$doc, value =  "Age-specific rates:\r\nMales", location = ph_location_type(type =  "title"))			
 			temp_img <- external_img(src = paste0(filename, "001.png"), height =graph_width_vertical*dims[1]/dims[2],width = graph_width_vertical)
-			values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE
+			values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE)
 
-			values$doc <- ph_with(values$doc, paste0(filename, "001.png"), index=1,width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
 			
 			values$doc <-  add_slide(values$doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
-			values$doc <- ph_with(doc, value =  "Age-specific rates:\r\nFemales", location = ph_location_type(type =  "title"))
+			values$doc <- ph_with(values$doc, value =  "Age-specific rates:\r\nFemales", location = ph_location_type(type =  "title"))
 			temp_img <- external_img(src = paste0(filename, "002.png"), height =graph_width_vertical*dims[1]/dims[2],width = graph_width_vertical)
-			values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE
+			values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE)
 				
 			}
 			
@@ -636,18 +635,18 @@ shinyServer(function(input, output, session) {
 				str_temp <- paste0("Age-specific rates:\r\n", isolate(input$selectCancerSite))
 				dims <- attr( png::readPNG (paste0(filename, ".png")), "dim" )
 				values$doc <-  add_slide(values$doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
-				values$doc <- ph_with(doc, value =  str_temp, location = ph_location_type(type =  "title"))
+				values$doc <- ph_with(values$doc, value =  str_temp, location = ph_location_type(type =  "title"))
 				temp_img <- external_img(src = paste0(filename, ".png"), height =graph_width_vertical*dims[1]/dims[2],width = graph_width_vertical)
-				values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE
+				values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE)
 				
 			}
 			else if (input$select_table==8) {
 				
 				values$doc <-  add_slide(values$doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
-				values$doc <- ph_with(doc, value =  "Number of cases by year", location = ph_location_type(type =  "title"))
+				values$doc <- ph_with(values$doc, value =  "Number of cases by year", location = ph_location_type(type =  "title"))
 				dims <- attr( png::readPNG (paste0(filename, ".png")), "dim" )
 				temp_img <- external_img(src = paste0(filename, ".png"), height =graph_width*dims[1]/dims[2],width = graph_width)
-  				values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE
+  				values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE)
 				
 				
 			}
@@ -657,15 +656,15 @@ shinyServer(function(input, output, session) {
 				dims <- attr( png::readPNG (paste0(filename, "001.png")), "dim" )
 
 				values$doc <-  add_slide(values$doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
-				values$doc <- ph_with(doc, value =  "Trend in ASR:\r\nMales", location = ph_location_type(type =  "title"))
+				values$doc <- ph_with(values$doc, value =  "Trend in ASR:\r\nMales", location = ph_location_type(type =  "title"))
 				temp_img <- external_img(src = paste0(filename, "001.png"), height =graph_width_vertical*dims[1]/dims[2],width = graph_width_vertical)
-				values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE
+				values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE)
 
 
 				values$doc <-  add_slide(values$doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
 				values$doc <- ph_with_text(values$doc, type = "title",  str = "Trend in ASR:\r\nFemales")
 				temp_img <- external_img(src = paste0(filename, "002.png"), height =graph_width_vertical*dims[1]/dims[2],width = graph_width_vertical)
-				values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE
+				values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE)
 
 
 			}
@@ -676,22 +675,22 @@ shinyServer(function(input, output, session) {
 					dims <- attr( png::readPNG (paste0(filename, "001.png")), "dim" )
 
 					values$doc <-  add_slide(values$doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
-					values$doc <- ph_with(doc, value =  "Estimated annual percentage change:\r\nMales", location = ph_location_type(type =  "title"))
+					values$doc <- ph_with(values$doc, value =  "Estimated annual percentage change:\r\nMales", location = ph_location_type(type =  "title"))
 					temp_img <- external_img(src = paste0(filename, "001.png"), height =graph_width*dims[1]/dims[2],width = graph_width)
-					values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE
+					values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE)
 
 					values$doc <-  add_slide(values$doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
-					values$doc <- ph_with(doc, value =  "Estimated annual percentage change:\r\nFemales", location = ph_location_type(type =  "title"))
+					values$doc <- ph_with(values$doc, value =  "Estimated annual percentage change:\r\nFemales", location = ph_location_type(type =  "title"))
 					temp_img <- external_img(src = paste0(filename, "002.png"), height =graph_width*dims[1]/dims[2],width = graph_width)
-					values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE
+					values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE)
 				
 				}
 				else {
 					values$doc <-  add_slide(values$doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
-					values$doc <- ph_with(doc, value =  "Estimated annual percentage change", location = ph_location_type(type =  "title"))
+					values$doc <- ph_with(values$doc, value =  "Estimated annual percentage change", location = ph_location_type(type =  "title"))
 					dims <- attr( png::readPNG (paste0(filename, ".png")), "dim" )
 					temp_img <- external_img(src = paste0(filename, ".png"), height =graph_width*dims[1]/dims[2],width = graph_width)
-  					values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE
+  					values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE)
 
 				}
 				
@@ -701,22 +700,22 @@ shinyServer(function(input, output, session) {
 				str_temp <- paste0("Time trends:\r\n", isolate(input$selectCancerSite))
 				dims <- attr( png::readPNG (paste0(filename, ".png")), "dim" )
 				values$doc <-  add_slide(values$doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
-				values$doc <- ph_with(doc, value =  str_temp, location = ph_location_type(type =  "title"))
+				values$doc <- ph_with(values$doc, value =  str_temp, location = ph_location_type(type =  "title"))
 				temp_img <- external_img(src = paste0(filename, ".png"), height =graph_width_vertical*dims[1]/dims[2],width = graph_width_vertical)
-  				values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE
+  				values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE)
 				
 			}
 			else if (input$select_table==12) {
 				
 				dims <- attr( png::readPNG (paste0(filename, ".png")), "dim" )
 				values$doc <-  add_slide(values$doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
-				values$doc <- ph_with(doc, value =  "CI5 XI comparison", location = ph_location_type(type =  "title"))
+				values$doc <- ph_with(values$doc, value =  "CI5 XI comparison", location = ph_location_type(type =  "title"))
 				temp_img <- external_img(src = paste0(filename, ".png"), height =graph_width*dims[1]/dims[2],width = graph_width)
-  				values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE
+  				values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE)
 				
 			}
 			 
-				
+			
 			values$nb_slide <- values$nb_slide + 1
 		
 		})
