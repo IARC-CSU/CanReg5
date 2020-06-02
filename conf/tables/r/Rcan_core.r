@@ -337,6 +337,10 @@ canreg_load_packages <- function(packages_list) {
     close(pb)
   }
 
+  source_url("https://github.com/timat35/CanReg5/blob/feature/RcanReg/conf/tables/r/r-sources/canreg_core.r")
+  source_url("https://github.com/timat35/CanReg5/blob/feature/RcanReg/conf/tables/r/r-sources/shiny_core.r")
+
+
   
 
 }
