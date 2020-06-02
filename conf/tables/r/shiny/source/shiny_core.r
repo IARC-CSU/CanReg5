@@ -610,7 +610,6 @@ shiny_plot <- function(dt_plot,input,session, download = FALSE,slide=FALSE, file
 			if (!is.null( input$selectCancerSite) & !is.null(input$radioLog)) {
 			
 				bool_log <- (input$radioLog == "log")
-				color_trend <- c("Male" = "#2c7bb6", "Female" = "#b62ca1")
 				dt_plot <- dt_plot[cancer_label == input$selectCancerSite,]
 				
 				 if (download) {
@@ -619,8 +618,7 @@ shiny_plot <- function(dt_plot,input,session, download = FALSE,slide=FALSE, file
 								FUN=canreg_ageSpecific,
 								dt_plot=dt_plot,
 								logscale = bool_log,
-								plot_subtitle = isolate(input$selectCancerSite),
-								color_trend = color_trend
+								plot_subtitle = isolate(input$selectCancerSite)
 								)
 							
 				}
@@ -630,8 +628,7 @@ shiny_plot <- function(dt_plot,input,session, download = FALSE,slide=FALSE, file
 					canreg_ageSpecific(
 								dt_plot=dt_plot,
 								logscale = bool_log,
-								plot_subtitle = isolate(input$selectCancerSite),
-								color_trend = color_trend
+								plot_subtitle = isolate(input$selectCancerSite)
 								)
 								
 				}
@@ -899,7 +896,7 @@ shiny_plot <- function(dt_plot,input,session, download = FALSE,slide=FALSE, file
 
 
 #create a new function to print the graph and return data (adapt to canreg_output function)
-canreg_ageSpecific <- function(dt_plot,color_trend,plot_subtitle="",logscale=FALSE, landscape = TRUE,list_graph = FALSE, return_data = FALSE) {
+canreg_ageSpecific <- function(dt_plot,plot_subtitle="",logscale=FALSE, landscape = TRUE,list_graph = FALSE, return_data = FALSE) {
 	
 	if (return_data) {
 		
@@ -918,6 +915,26 @@ canreg_ageSpecific <- function(dt_plot,color_trend,plot_subtitle="",logscale=FAL
 		stop() 
 		
 	} 
+
+	color_trend <- c("#2c7bb6","#b62ca1")
+
+	if (length(unique(dt_plot$SEX)) > 1)
+	{
+		temp_level <- c(i18n$t(levels(dt_plot$SEX)[1]),i18n$t(levels(dt_plot$SEX)[2]))
+		dt_plot$SEX <- factor(dt_plot$SEX,labels = temp_level)
+
+
+	}
+	else
+	{
+		 dt_plot$SEX <- droplevels(dt_plot$SEX)
+		 temp_level <- c(i18n$t(levels(dt_plot$SEX)[1]))
+		 dt_plot$SEX <- factor(dt_plot$SEX,labels = temp_level) 
+
+	}
+
+
+
 		
 	plot<- Rcan:::core.csu_ageSpecific(dt_plot,
 		var_age        ="AGE_GROUP",
@@ -931,7 +948,7 @@ canreg_ageSpecific <- function(dt_plot,color_trend,plot_subtitle="",logscale=FAL
 		age_label_list = unique(dt_plot[["AGE_GROUP_LABEL"]]),
 		xtitle         = i18n$t("Age at diagnosis"),
 		ytitle         = i18n$t("Age-specific incidence rate per"),
-		label_group_by = c(i18n$t("Male"),i18n$t("Female"))
+		label_group_by = temp_level
  		 )$csu_plot
 		
 	print(plot)
@@ -962,8 +979,20 @@ canreg_asr_trend <- function(dt_plot,
   }
 
 
-   temp_level <- c(i18n$t(levels(dt_plot$SEX)[1]),i18n$t(levels(dt_plot$SEX)[2]))
-   dt_plot$SEX <- factor(dt_plot$SEX,labels = temp_level) 
+   if (length(unique(dt_plot$SEX)) > 1)
+   {
+   	 temp_level <- c(i18n$t(levels(dt_plot$SEX)[1]),i18n$t(levels(dt_plot$SEX)[2]))
+   	 dt_plot$SEX <- factor(dt_plot$SEX,labels = temp_level) 
+   }
+   else 
+   {
+   	 dt_plot$SEX <- droplevels(dt_plot$SEX)
+   	 temp_level <- c(i18n$t(levels(dt_plot$SEX)[1]))
+   	 dt_plot$SEX <- factor(dt_plot$SEX,labels = temp_level) 
+
+   }
+
+  
 
    color_trend <- c("#2c7bb6", "#b62ca1")
     

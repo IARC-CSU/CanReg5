@@ -3921,9 +3921,7 @@ rcan_report <- function(doc,report_path,dt_all,ls_args,ann=TRUE, shiny=FALSE) {
                    top = TRUE ) 
   
   
-  ft <- display( ft, col_key = "total_cases", pattern = "{{cases}}", 
-                 formatters = list(cases ~ sprintf("%.00f", total_cases))) 
-  
+  ft <- colformat_int(x = ft, j = "total_cases")
   ft <- width(ft, j = 1, width = 1.7)
   ft <- width(ft, j = 2, width = 1.2)
   
@@ -4078,15 +4076,16 @@ rcan_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
   canreg_age_group_cr <- canreg_get_agegroup_label(dt_all, paste0("0-",temp))
   
   doc <-  add_slide(doc, layout="Canreg_title", master="Office Theme") ## add PPTX slide (Title + content)
-  doc <- ph_with_text(doc, type = "ctrTitle", str = ls_args$header)
+  doc <- ph_with(doc, value = ls_args$header,location = ph_location_type(type = "ctrTitle"))
   
   date <- format(Sys.time(), "%B/%Y")
   date <- paste0(toupper(substr(date,1,1)),substr(date,2,nchar(date)))
-  doc <- ph_with_text(doc, type = "subTitle", str = date)
+  doc <- ph_with(doc, value = date,location = ph_location_type(type = "subTitle"))
   
   #################
   doc <-  add_slide(doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
-  doc <- ph_with_text(doc, type = "title", str = "Population pyramid")
+  doc <- ph_with(doc, value = "Population pyramid",location = ph_location_type(type = "title"))
+
   if (shiny) {
     incProgress(inc_progress_value, detail = "Population pyramid")
   } else {
@@ -4104,14 +4103,16 @@ rcan_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
                 canreg_header = "")
   
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", nb_slide, ".png")), "dim" )
-  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, ".png"),width=graph_width,height=graph_width*dims[1]/dims[2])
+  temp_img <- external_img(src = paste0(tempdir(), "\\temp_graph", nb_slide, ".png"), height =graph_width*dims[1]/dims[2],width = graph_width)
+  doc <- ph_with(doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE)
   
   nb_slide <- nb_slide +1
   
   
   ################# 
   doc <-  add_slide(doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
-  doc <- ph_with_text(doc, type = "title", str = "Number of cases by age group & sex")
+  doc <- ph_with(doc, value =  "Number of cases by age group & sex", location = ph_location_type(type =  "title"))
+  
   if (shiny) {
     incProgress(inc_progress_value, detail = "Number of cases by age group & sex")
   } else {
@@ -4135,13 +4136,14 @@ rcan_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
   
   
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", nb_slide, ".png")), "dim" )
-  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, ".png"),width=graph_width,height=graph_width*dims[1]/dims[2])
+  temp_img <- external_img(src = paste0(tempdir(), "\\temp_graph", nb_slide, ".png"), height =graph_width*dims[1]/dims[2],width = graph_width)
+  doc <- ph_with(doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE)
   nb_slide <- nb_slide +1
   
   
   ################# 
   doc <-  add_slide(doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
-  doc <- ph_with_text(doc, type = "title", str = "Proportion of cases by age group & sex")
+  doc <- ph_with(doc, value =  "Proportion of cases by age group & sex", location = ph_location_type(type =  "title"))
   if (shiny) {
     incProgress(inc_progress_value, detail = "Proportion of cases by age group & sex")
   } else {
@@ -4164,12 +4166,13 @@ rcan_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
                 canreg_header = i18n$t("All cancers but C44"))
   
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", nb_slide, ".png")), "dim" )
-  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, ".png"),width=graph_width,height=graph_width*dims[1]/dims[2])
+  temp_img <- external_img(src = paste0(tempdir(), "\\temp_graph", nb_slide, ".png"), height =graph_width*dims[1]/dims[2],width = graph_width)
+  doc <- ph_with(doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE)
   nb_slide <- nb_slide +1
   
   ################# 
   doc <-  add_slide(doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
-  doc <- ph_with_text(doc, type = "title", str = "Number of cases by year")
+  doc <- ph_with(doc, value =  "Number of cases by year", location = ph_location_type(type =  "title"))
   if (shiny) {
     incProgress(inc_progress_value, detail = "Number of cases by year")
   } else {
@@ -4194,15 +4197,16 @@ rcan_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
                 canreg_header = "", skin=FALSE)
   
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", nb_slide, ".png")), "dim" )
-  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, ".png"),width=graph_width,height=graph_width*dims[1]/dims[2])
+  temp_img <- external_img(src = paste0(tempdir(), "\\temp_graph", nb_slide, ".png"), height =graph_width*dims[1]/dims[2],width = graph_width)
+  doc <- ph_with(doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE)
   nb_slide <- nb_slide +1
   
   
   ################# 
   
   doc <-  add_slide(doc, layout="Canreg_basic_subtitle", master="Office Theme") ## add PPTX slide (Title + content)
-  doc <- ph_with_text(doc, type = "title", str = "Top 10 cancers, both sexes")
-  doc <- ph_with_text(doc, type = "body", str = "Number of cases")
+  doc <- ph_with(doc, value =  "Top 10 cancers, both sexes", location = ph_location_type(type =  "title"))
+  doc <- ph_with(doc, value =  "Number of cases", location = ph_location_type(type =  "body"))
   
   if (shiny) {
     incProgress(inc_progress_value, detail = "Top 10 cancers, both sexes: number of cases")
@@ -4241,7 +4245,8 @@ rcan_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
                 ytitle=paste0(i18n$t("Number of cases")," ", canreg_age_group$label))
   
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", nb_slide, ".png")), "dim" )
-  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, ".png"),  width=graph_width,height=graph_width*dims[1]/dims[2])
+  temp_img <- external_img(src = paste0(tempdir(), "\\temp_graph", nb_slide, ".png"), height =graph_width*dims[1]/dims[2],width = graph_width)
+  doc <- ph_with(doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE)
   nb_slide <- nb_slide +1
   
   
@@ -4249,8 +4254,8 @@ rcan_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
   
   ################# 
   doc <-  add_slide(doc, layout="Canreg_basic_subtitle", master="Office Theme") ## add PPTX slide (Title + content)
-  doc <- ph_with_text(doc, type = "title", str = "Top 10 cancers, both sexes")
-  doc <- ph_with_text(doc, type = "body", str = "Age-standardized incidence rate")
+  doc <- ph_with(doc, value =  "Top 10 cancers, both sexes", location = ph_location_type(type =  "title"))
+  doc <- ph_with(doc, value =  "Age-standardized incidence rate", location = ph_location_type(type =  "body"))
   
   if (shiny) {
     incProgress(inc_progress_value, detail = "Top 10 cancers, both sexes: ASR")
@@ -4268,12 +4273,14 @@ rcan_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
                 ytitle=paste0(i18n$t("Age-standardized incidence rate per")," ", formatC(100000, format="d", big.mark=","), ", ", canreg_age_group$label))
   
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", nb_slide, ".png")), "dim" )
-  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, ".png"),  width=graph_width,height=graph_width*dims[1]/dims[2])
+  temp_img <- external_img(src = paste0(tempdir(), "\\temp_graph", nb_slide, ".png"), height =graph_width*dims[1]/dims[2],width = graph_width)
+  doc <- ph_with(doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE)
+
   nb_slide <- nb_slide +1
   #################
   
   doc <-  add_slide(doc, layout="Canreg_split", master="Office Theme") ## add PPTX slide (Title + content)
-  doc <- ph_with_text(doc, type = "title", str = "Top 10 cancers: Number of cases")
+  doc <- ph_with(doc, value =  "Top 10 cancers: Number of cases", location = ph_location_type(type =  "title"))
   if (shiny) {
     incProgress(inc_progress_value, detail = "Top 10 cancers: Number of cases")
   } else {
@@ -4315,15 +4322,17 @@ rcan_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
                 xtitle=xtitle)
   
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", nb_slide, "001.png")), "dim" )
-  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "001.png"), index=1, width=graph_width_split,height=graph_width_split*dims[1]/dims[2])
-  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "002.png"), index=2, width=graph_width_split,height=graph_width_split*dims[1]/dims[2])
+  temp_img1 <- external_img(src = paste0(tempdir(), "\\temp_graph", nb_slide, "001.png"), height =graph_width_split*dims[1]/dims[2],width = graph_width_split)
+  temp_img2 <- external_img(src = paste0(tempdir(), "\\temp_graph", nb_slide, "002.png"), height =graph_width_split*dims[1]/dims[2],width = graph_width_split)
+  doc <- ph_with(doc,value = temp_img1,location = ph_location_type(type = "body", id=1), use_loc_size =FALSE)
+  doc <- ph_with(doc,value = temp_img2,location = ph_location_type(type = "body", id=2), use_loc_size =FALSE)
   nb_slide <- nb_slide +1
   
   
   
   ################# 
   doc <-  add_slide(doc, layout="Canreg_split", master="Office Theme") ## add PPTX slide (Title + content)
-  doc <- ph_with_text(doc, type = "title", str = "Top 10 cancers: ASR")
+  doc <- ph_with(doc, value =  "Top 10 cancers: ASR", location = ph_location_type(type =  "title"))
   if (shiny) {
     incProgress(inc_progress_value, detail = "Top 10 cancers: ASR")
   } else {
@@ -4344,12 +4353,15 @@ rcan_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
                 xtitle=xtitle)
   
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", nb_slide, "001.png")), "dim" )
-  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "001.png"), index=1, width=graph_width_split,height=graph_width_split*dims[1]/dims[2])
-  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "002.png"), index=2, width=graph_width_split,height=graph_width_split*dims[1]/dims[2])
+  temp_img1 <- external_img(src = paste0(tempdir(), "\\temp_graph", nb_slide, "001.png"), height =graph_width_split*dims[1]/dims[2],width = graph_width_split)
+  temp_img2 <- external_img(src = paste0(tempdir(), "\\temp_graph", nb_slide, "002.png"), height =graph_width_split*dims[1]/dims[2],width = graph_width_split)
+  doc <- ph_with(doc,value = temp_img1,location = ph_location_type(type = "body", id=1), use_loc_size =FALSE)
+  doc <- ph_with(doc,value = temp_img2,location = ph_location_type(type = "body", id=2), use_loc_size =FALSE)
+
   nb_slide <- nb_slide +1
   ################# 
   doc <-  add_slide(doc, layout="Canreg_split", master="Office Theme") ## add PPTX slide (Title + content)
-  doc <- ph_with_text(doc, type = "title", str = "Top 10 cancers: Cumulative risk")
+  doc <- ph_with(doc, value =  "Top 10 cancers: Cumulative risk", location = ph_location_type(type =  "title"))
 
   if (shiny) {
     incProgress(inc_progress_value, detail = "Top 10 cancers: Cumulative risk")
@@ -4372,8 +4384,10 @@ rcan_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
                 xtitle=xtitle)
   
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", nb_slide, "001.png")), "dim" )
-  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "001.png"), index=1, width=graph_width_split,height=graph_width_split*dims[1]/dims[2])
-  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "002.png"), index=2, width=graph_width_split,height=graph_width_split*dims[1]/dims[2])
+  temp_img1 <- external_img(src = paste0(tempdir(), "\\temp_graph", nb_slide, "001.png"), height =graph_width_split*dims[1]/dims[2],width = graph_width_split)
+  temp_img2 <- external_img(src = paste0(tempdir(), "\\temp_graph", nb_slide, "002.png"), height =graph_width_split*dims[1]/dims[2],width = graph_width_split)
+  doc <- ph_with(doc,value = temp_img1,location = ph_location_type(type = "body", id=1), use_loc_size =FALSE)
+  doc <- ph_with(doc,value = temp_img2,location = ph_location_type(type = "body", id=2), use_loc_size =FALSE)
   nb_slide <- nb_slide +1
   ################# ####
   
@@ -4392,7 +4406,7 @@ rcan_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
                 plot_title = "")
   
   doc <-  add_slide(doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
-  doc <- ph_with_text(doc, type = "title", str = "Age-specific rates:\r\nMales")
+  doc <- ph_with(doc, value =  "Age-specific rates:\r\nMales", location = ph_location_type(type =  "title"))
 
   if (shiny) {
     incProgress(inc_progress_value, detail = "Age-specific rates")
@@ -4405,11 +4419,16 @@ rcan_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
 
   
   dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", nb_slide, "001.png")), "dim" )
-  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "001.png"), index=1, width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
   
+  temp_img1 <- external_img(src = paste0(tempdir(), "\\temp_graph", nb_slide, "001.png"), height =graph_width_vertical*dims[1]/dims[2],width = graph_width_vertical)
+  doc <- ph_with(doc,value = temp_img1,location = ph_location_type(type = "body"), use_loc_size =FALSE)
+
   doc <-  add_slide(doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
-  doc <- ph_with_text(doc, type = "title", str = "Age-specific rates:\r\nFemales")
-  doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "002.png"), index=1, width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
+  doc <- ph_with(doc, value =  "Age-specific rates:\r\nFemales", location = ph_location_type(type =  "title"))
+  
+  temp_img2 <- external_img(src = paste0(tempdir(), "\\temp_graph", nb_slide, "002.png"), height =graph_width_vertical*dims[1]/dims[2],width = graph_width_vertical)
+  doc <- ph_with(doc,value = temp_img2,location = ph_location_type(type = "body"), use_loc_size =FALSE)
+
   nb_slide <- nb_slide +1
   
   
@@ -4444,7 +4463,7 @@ rcan_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
                   ytitle=paste0(i18n$t("Age-standardized incidence rate per")," ", formatC(100000, format="d", big.mark=","), ", ", canreg_age_group$label))
     
     doc <-  add_slide(doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
-    doc <- ph_with_text(doc, type = "title", str = "Trend in ASR:\r\nMales")
+    doc <- ph_with(doc, value =  "Trend in ASR:\r\nMales", location = ph_location_type(type =  "title"))
     
     if (shiny) {
       incProgress(inc_progress_value, detail = "Trend in ASR")
@@ -4456,11 +4475,15 @@ rcan_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
     }
 
     dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", nb_slide, "001.png")), "dim" )
-    doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "001.png"), index=1, width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
-    
+    temp_img1 <- external_img(src = paste0(tempdir(), "\\temp_graph", nb_slide, "001.png"), height =graph_width_vertical*dims[1]/dims[2],width = graph_width_vertical)
+    doc <- ph_with(doc,value = temp_img1,location = ph_location_type(type = "body"), use_loc_size =FALSE)
+
     doc <-  add_slide(doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
-    doc <- ph_with_text(doc, type = "title", str = "Trend in ASR:\r\nFemales")
-    doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "002.png"), index=1, width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
+    doc <- ph_with(doc, value =  "Trend in ASR:\r\nFemales", location = ph_location_type(type =  "title"))
+    
+    temp_img2 <- external_img(src = paste0(tempdir(), "\\temp_graph", nb_slide, "002.png"), height =graph_width_vertical*dims[1]/dims[2],width = graph_width_vertical)
+    doc <- ph_with(doc,value = temp_img2,location = ph_location_type(type = "body"), use_loc_size =FALSE)
+
     nb_slide <- nb_slide +1
     
   }
@@ -4506,8 +4529,10 @@ rcan_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
     dims <- attr( png::readPNG (paste0(tempdir(), "\\temp_graph", nb_slide, "001.png")), "dim" )
     
     doc <-  add_slide(doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
-    doc <- ph_with_text(doc, type = "title", str = "Estimated annual percentage change:\r\nMales")
-    doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "001.png"),width=graph_width,height=graph_width*dims[1]/dims[2])
+    doc <- ph_with(doc, value =  "Estimated annual percentage change:\r\nMales", location = ph_location_type(type =  "title"))
+    
+    temp_img1 <- external_img(src = paste0(tempdir(), "\\temp_graph", nb_slide, "001.png"), height =graph_width*dims[1]/dims[2],width = graph_width)
+    doc <- ph_with(doc,value = temp_img1,location = ph_location_type(type = "body"), use_loc_size =FALSE)
     
     if (shiny) {
       incProgress(inc_progress_value, detail = "Estimated annual percentage change")
@@ -4519,8 +4544,11 @@ rcan_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
     }
     
     doc <-  add_slide(doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
-    doc <- ph_with_text(doc, type = "title", str = "Estimated annual percentage change:\r\nFemales")
-    doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, "002.png"),width=graph_width,height=graph_width*dims[1]/dims[2])
+    doc <- ph_with(doc, value =  "Estimated annual percentage change:\r\nFemales", location = ph_location_type(type =  "title"))
+    
+    temp_img2 <- external_img(src = paste0(tempdir(), "\\temp_graph", nb_slide, "002.png"), height =graph_width*dims[1]/dims[2],width = graph_width)
+    doc <- ph_with(doc,value = temp_img2,location = ph_location_type(type = "body"), use_loc_size =FALSE)
+
     nb_slide <- nb_slide +1
     
   }
@@ -4564,16 +4592,22 @@ rcan_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
     for (i in seq(1,10,2)) {
       
       doc <-  add_slide(doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
-      doc <- ph_with_text(doc, type = "title", str = "Comparison of summary rates with other registries")
-      doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, sprintf("%03d",i), ".png"),width=graph_width,height=graph_width*dims[1]/dims[2])
+      doc <- ph_with(doc, value =  "Comparison of summary rates with other registries", location = ph_location_type(type =  "title"))
+      
+      temp_img <- external_img(src = paste0(tempdir(), "\\temp_graph", nb_slide, sprintf("%03d",i), ".png"), height =graph_width*dims[1]/dims[2],width = graph_width)
+      doc <- ph_with(doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE)
+
     }
     
     for (i in seq(2,10,2)) {
       
       
       doc <-  add_slide(doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
-      doc <- ph_with_text(doc, type = "title", str = "Comparison of summary rates with other registries")
-      doc <- ph_with_img(doc,paste0(tempdir(), "\\temp_graph", nb_slide, sprintf("%03d",i), ".png"),width=graph_width,height=graph_width*dims[1]/dims[2])
+      doc <- ph_with(doc, value =  "Comparison of summary rates with other registries", location = ph_location_type(type =  "title"))
+      
+      temp_img <- external_img(src = paste0(tempdir(), "\\temp_graph", nb_slide, sprintf("%03d",i), ".png"), height =graph_width*dims[1]/dims[2],width = graph_width)
+      doc <- ph_with(doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE)
+
     }
     
   }
@@ -4581,7 +4615,7 @@ rcan_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
   ###############
   
   doc <-  add_slide(doc, layout="Canreg_basic_wide", master="Office Theme") ## add PPTX slide (Title + content)
-  doc <- ph_with_text(doc, type = "title", str = "Basis of diagnosis (DCO/Clinical/MV) by site")
+  doc <- ph_with(doc, value =  "Basis of diagnosis (DCO/Clinical/MV) by site", location = ph_location_type(type =  "title"))
   
   if (shiny) {
     incProgress(inc_progress_value, detail = "Basis of diagnosis (DCO/Clinical/MV) by site")
@@ -4606,17 +4640,15 @@ rcan_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
   ft <- add_header(ft, CSU_label = "Cancer site", CSU_ICD = "ICD-10", total_cases= "No. Cases",total_pc_test = "% total", 
                    BASIS_pc.0= "Basis of diagnosis", BASIS_pc.1= "Basis of diagnosis", BASIS_pc.2= "Basis of diagnosis",
                    top = TRUE ) 
-  
-  
-  ft <- display( ft, col_key = "total_cases", pattern = "{{cases}}", 
-                 formatters = list(cases ~ sprintf("%.00f", total_cases))) 
+
+  ft <- colformat_int(x = ft, j = "total_cases")
   
   ft <- width(ft,  width = 1.2)
   ft <- width(ft, j=1, width = 1.7)
   
   ft<- merge_h(ft,i=1, part="header")
   ft <- align(ft, align="center", part="header")
-  ft <- border(ft ,i=1,j=1:4,border.bottom=fp_border(width = 0), part="header")
+  ft <- align(ft, j=3:7, align="center", part="body")
   ft <- height(ft, height = 0.331, part="header")
   ft <- height(ft, height = 0.22, part="body")
   ft <- bg(ft, i = seq(1,nrow(dt_report),2), bg="#deebf7", part = "body")
@@ -4624,13 +4656,13 @@ rcan_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
   ft <- bg(ft, i = 1, bg="#c6dbef", part = "header")
   ft <- bg(ft, i = 2, bg="#c6dbef", part = "header")
   
-  doc <- ph_with_flextable_at(doc, ft, left=0.551, top=1.291)
+  doc <- ph_with(doc, ft, location = ph_location(left=0.551, top=1.291))
   
 
   #################
   ## ICCC
   doc <-  add_slide(doc, layout="Canreg_basic_wide", master="Office Theme") ## add PPTX slide (Title + content)
-  doc <- ph_with_text(doc, type = "title", str = "Childhood cancers (0 to 14 years)")
+  doc <- ph_with(doc, value =  "Childhood cancers (0 to 14 years)", location = ph_location_type(type =  "title"))
   
   if (shiny) {
     incProgress(inc_progress_value, detail = "Childhood cancers (0 to 14 years)")
@@ -4697,7 +4729,7 @@ rcan_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
   ft <- bg(ft, i = 1, bg="#c6dbef", part = "header")
   ft <- bg(ft, i = 2, bg="#c6dbef", part = "header")
   
-  doc <- ph_with_flextable_at(doc, ft, left=0.551, top=1.291)
+  doc <- ph_with(doc, ft, location = ph_location(left=0.551, top=1.291))
   
   doc <-  add_slide(doc, layout="Canreg_info", master="Office Theme") ## add Canreg information slide.
   
@@ -4732,9 +4764,11 @@ rcan_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
     for (j in 1:length(levels(dt_report$ICD10GROUP))) {
       
       doc <-  add_slide(doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
-      doc <- ph_with_text(doc, type = "title", str = paste0("Age-specific incidence rate:\r\n",  unique(dt_report[ICD10GROUP== levels(ICD10GROUP)[j] ,cancer_label])))
-      doc <- ph_with_img(doc, paste0(tempdir(), "\\ann_temp_graph",sprintf("%03d",j) ,".png"), index=1, width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
+      doc <- ph_with(doc, value =  paste0("Age-specific incidence rate:\r\n",  unique(dt_report[ICD10GROUP== levels(ICD10GROUP)[j] ,cancer_label])), location = ph_location_type(type =  "title"))
       
+      temp_img <- external_img(src = paste0(tempdir(), "\\ann_temp_graph",sprintf("%03d",j) ,".png"), height =graph_width_vertical*dims[1]/dims[2],width = graph_width_vertical)
+      doc <- ph_with(doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE)
+
     }
   }
 
