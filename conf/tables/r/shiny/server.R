@@ -77,29 +77,25 @@ shinyServer(function(input, output, session) {
     if (values$nb_slide == 0) {
 
       values$text <- "Slide included:"
-    } else {
+    } 
+    else {
       
       values$text <- paste0(isolate(values$text), '<br>',isolate(table$label))
       
       if (isolate(input$select_table == 7)) {
         values$text <- paste(isolate(values$text), isolate(input$selectCancerSite))
       }
-			else if (isolate(input$select_table == 11)) {
+	  	else if (isolate(input$select_table == 11)) {
         values$text <- paste(isolate(values$text), isolate(input$selectCancerSite))
       }
 			else if (isolate(input$select_table == 10)) {
-				
+			
 				if (isolate(input$checkCI)) {
-					values$text <- paste(isolate(values$text), isolate(input$selectCancerSite), "with CI")
+					values$text <- paste(isolate(values$text), "with CI")
 				}
-				else {
-					values$text <- paste(isolate(values$text), isolate(input$selectCancerSite))
 				
-				}
-			
-			
 			}
-      
+
     }
     
     tags$div(id="divSlidelist", class="mat_text", checked=NA,
@@ -376,6 +372,11 @@ shinyServer(function(input, output, session) {
 			show(id="controls_COL1", anim=TRUE)
 			show(id="controls_COL2", anim=TRUE)
 			
+		}
+		else if (input$select_table== 11) {
+			table$label <- "Time trends"
+			show(id="controls_COL1", anim=TRUE)
+			show(id="controls_COL2", anim=TRUE)
 		}
 		else if (input$select_table== 12) {
 			table$label <- "CI5 XI comparison"
