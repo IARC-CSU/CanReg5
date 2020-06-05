@@ -260,3 +260,5 @@ conf/tables/r/\.Rhistory
 
 scripts/source_splitter/Gemfile.lock
 .vscode/settings.json
+
+.Rhistory
