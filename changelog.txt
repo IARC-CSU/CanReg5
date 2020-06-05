@@ -1,5 +1,11 @@
 ﻿Changelog
 
+5.00.44b
+- Table builder is now compatible with latest version of R. (4.0.0)
+- Population data sets with different reference populations are not compatible.
+- Added Ruby script to recode variables in a CSV file.
+- Added help files to scripts.
+
 5.00.44
 - Table Builder:
   - Data visualizations in R are now translated to Russian, Spanish and Portuguese.
