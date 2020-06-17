@@ -5,8 +5,8 @@ set iwz-r=helpers\InnoSetup\CanReg5-R-packages-InnoSetup.iss
 set iwz-w-r=helpers\InnoSetup\CanReg5-with-R-packages-InnoSetup.iss
 set zippath="C:\Program Files\7-Zip"
 set zx=%zippath%\7z.exe
-pandoc changelog.txt -f markdown -t rtf -c helpers\pandoc\pandoc.css -s -o changelog.rtf
-pandoc changelog.txt -f markdown -t html -c helpers\pandoc\pandoc.css -s -o changelog.html
+pandoc changelog.txt -f markdown -t rtf -s -o changelog.rtf
+pandoc changelog.txt -f markdown -t html --metadata title="CanReg5 Changelog" -H helpers\pandoc\pandoc.html -s -o changelog.html
 REM if not exist %isx% set errormsg=%isx% not found && goto errorhandler
 %isx% "%iwz%"
 %isx% "%iwz-r%"
