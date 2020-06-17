@@ -24,7 +24,7 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 OutputDir={#CanReg5Dir}\dist
-InfoBeforeFile={#CanReg5Dir}\changelog.txt
+InfoBeforeFile={#CanReg5Dir}\changelog.rtf
 LicenseFile={#CanReg5Dir}\src\canreg\client\gui\resources\gpl-3.0-standalone.txt
 AllowNoIcons=yes
 OutputBaseFilename=CanReg5-Setup
@@ -52,6 +52,7 @@ Source: "{#CanReg5Dir}\dist\lib\*"; DestDir: "{app}\lib"; Flags: ignoreversion r
 Source: "{#CanReg5Dir}\dist\CanReg.jar"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#CanReg5Dir}\dist\README.TXT"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#CanReg5Dir}\changelog.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#CanReg5Dir}\changelog.html"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#CanReg5Dir}\doc\CanReg5-Instructions\CanReg5-Instructions.pdf"; DestDir: "{app}\doc"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
