@@ -1,5 +1,8 @@
 ﻿Changelog
 
+5.00.44c
+- Fixed a bug in recording of unknown dates.
+
 5.00.44b
 - Table builder is now compatible with latest version of R. (4.0.0)
 - Population data sets with different reference populations are not compatible.
