@@ -1,0 +1,14 @@
+{
+  "HOSP": {
+    "type": "recode",
+    "map": {
+      "01": "312",
+      "02": "314"
+    }
+  },
+  "REGNO": {
+    "type": "insert",
+    "location": 4,
+    "element": "0"
+  } 
+}

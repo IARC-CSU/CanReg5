@@ -13,6 +13,7 @@
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{B8398F6C-55C8-40CC-9053-DBBA21741E39}
+SignTool=MsSign $f
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
@@ -23,7 +24,7 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 OutputDir={#CanReg5Dir}\dist
-InfoBeforeFile={#CanReg5Dir}\changelog.txt
+InfoBeforeFile={#CanReg5Dir}\changelog.rtf
 LicenseFile={#CanReg5Dir}\src\canreg\client\gui\resources\gpl-3.0-standalone.txt
 AllowNoIcons=yes
 OutputBaseFilename=CanReg5-with-R-Packages-Setup
