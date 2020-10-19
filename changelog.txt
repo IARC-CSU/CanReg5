@@ -1,5 +1,8 @@
 # CanReg5 Changelog
 
+## 5.00.44e
+- Table builder is now compatible with latest version of R (4.0.3) libraries. 
+
 ## 5.00.44d
 - Fixed a bug related to answering 'no' to 'really close?' for record with changes.
 
