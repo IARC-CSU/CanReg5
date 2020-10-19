@@ -17,8 +17,7 @@ tryCatch({
   
   #load dependency packages
 	canreg_load_packages(c("data.table", "ggplot2", "gridExtra", "scales", "Cairo","bmp", "jpeg", "shiny.i18n", "Rcan"))
-  
-  source_url("https://github.com/timat35/CanReg5/blob/feature/RcanReg/conf/tables/r/r-sources/canreg_core.r")
+  source_url("https://raw.githubusercontent.com/timat35/CanReg5/feature/RcanReg/conf/tables/r/r-sources/canreg_core.r")
   # source(paste(sep="/", script.basename, "r-sources", "canreg_core.r"))
 
 

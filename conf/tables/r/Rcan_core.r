@@ -344,17 +344,31 @@ canreg_load_packages <- function(packages_list) {
   difference <- difftime(timeEnd, timeStart, units='mins')
   print(difference)
 
-
-  
-
 }
 
-canreg_update_sources <- function (url,folder)
+canreg_update_sources <- function (url, folder)
 {
+  folder <- "C:/Projects/CanReg5/conf/tables/r/"
+  url <- "https://raw.githubusercontent.com/timat35/CanReg5/feature/RcanReg/conf/tables/r/version.txt"
 
-  folder <- "C:/Projects/CanReg5/conf/tables/r/r-sources"
-  url <- "https://raw.githubusercontent.com/timat35/CanReg5/feature/RcanReg/conf/tables/r/r-sources/canreg_core.r"
+  filename <- regmatches(url, regexpr("[^\\/]*\\.[a-zA-Z]+?$", url))
 
-  
+  con <- file(paste0(folder, filename),"r")
+  file_text <- readLines(con,n=2)
+  close(con)
+  local_source_version <- regmatches(file_text[1], regexpr("[^:]*$", file_text[1]))
+  local_data_version <- regmatches(file_text[2], regexpr("[^:]*$", file_text[2]))
 
+  con <- file(url,"r")
+  file_text <- readLines(con,n=2)
+  close(con)
+  remote_source_version <- regmatches(file_text[1], regexpr("[^:]*$", file_text[1]))
+  remote_data_version <- regmatches(file_text[2], regexpr("[^:]*$", file_text[2]))
+
+  if (remote_data_version > local_source_version) 
+  {
+
+    
+    download.file(url, paste0(folder, filename))
+  }
 }
