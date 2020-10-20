@@ -1,5 +1,5 @@
-#LyX 2.2 created this file. For more info see http://www.lyx.org/
-\lyxformat 508
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
 \begin_document
 \begin_header
 \save_transient_properties true
@@ -21,6 +21,8 @@
 \font_osf false
 \font_sf_scale 100 100
 \font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
 \graphics default
 \default_output_format default
 \output_sync 0
@@ -50,6 +52,7 @@
 \suppress_date false
 \justification true
 \use_refstyle 0
+\use_minted 0
 \index Index
 \shortcut idx
 \color #008000
@@ -58,7 +61,10 @@
 \tocdepth 3
 \paragraph_separation indent
 \paragraph_indentation default
-\quotes_language english
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
 \papercolumns 1
 \papersides 1
 \paperpagestyle default
@@ -82,7 +88,7 @@ By: Morten Johannes Ervik, CSU, IARC
 \begin_layout Standard
 \align center
 \begin_inset Graphics
-	filename CanReg5-Instructions/LogoBetaNewer.png
+	filename ../CanReg5-Instructions/LogoBetaNewer.png
 	lyxscale 33
 	width 50line%
 
@@ -251,7 +257,7 @@ Group by other meta variables for frequencies by year (age group, 2 digit
 \end_layout
 
 \begin_layout Itemize
-Export report automatically opened in the System?
+Export report automatically opened in the System? [DONE]
 \end_layout
 
 \begin_layout Itemize
@@ -415,19 +421,9 @@ Pending bugs
 \end_layout
 
 \begin_layout Itemize
-Bug in R script:
-\begin_inset Separator latexpar
-\end_inset
-
-
+Merge issues
 \end_layout
 
-\begin_deeper
-\begin_layout Itemize
-drops cases when highest age group cutoff < 85?
-\end_layout
-
-\end_deeper
 \begin_layout Section*
 (Computer) Code related improvements
 \end_layout
@@ -533,7 +529,7 @@ Data Entry related
 \end_layout
 
 \begin_layout Itemize
-Let user enter dates in the format they wish?
+Let user enter dates in the format they wish? [DONE]
 \end_layout
 
 \begin_layout Itemize
@@ -733,6 +729,10 @@ Using Spark? http://www.sparkjava.com/index.html
 \end_layout
 
 \end_deeper
+\begin_layout Itemize
+Capture/recapture analysis
+\end_layout
+
 \begin_layout Section*
 Management related
 \end_layout

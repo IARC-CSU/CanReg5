@@ -4,7 +4,7 @@ source(paste(sep="/", script.basename, "Rcan_core.r"))
 ls_args <- canreg_args(Args)
 
 
-i18n <- Translator(translation_csvs_path  = (paste(sep="/", script.basename, "r-translations")))
+i18n <- Translator$new(translation_csvs_path  = (paste(sep="/", script.basename, "r-translations")))
 i18n$set_translation_language(ls_args$lang)
 
 

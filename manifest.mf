@@ -2,4 +2,3 @@ Manifest-Version: 1.0
 X-COMMENT: Main-Class will be added automatically by build...
 Main-Class: canreg.client.CanRegClientApp
 SplashScreen-Image: canreg/client/gui/resources/splash.png
-
