@@ -374,12 +374,9 @@ canreg_check_update <- function()
 }
 
 
-
-
-
 canreg_update_source <- function (url, data=FALSE) {
 
-  bool = FALSE
+  bool <- FALSE
 
   filename <- regmatches(url, regexpr("[^\\/]*\\.[a-zA-Z]+?$", url))
   folder_base <- regmatches(script.basename, regexpr("^.+?conf", script.basename))
