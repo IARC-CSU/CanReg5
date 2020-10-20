@@ -1,4 +1,4 @@
-## version : 1.1
+## version : 1.0
 
 canreg_error_log <- function(e,filename,out,Args,inc,pop) {
 
@@ -348,25 +348,31 @@ canreg_check_update <- function()
 {
 
   # need to add test for internet
-  remote_folder <- "https://raw.githubusercontent.com/timat35/CanReg5/feature/RcanReg/conf/tables/r/r-sources/"
-  
-  if (canreg_update_source(paste0(remote_folder,"versions.txt")))
+  remote_source_folder <- "https://raw.githubusercontent.com/timat35/CanReg5/feature/RcanReg/conf/tables/r/r-sources/"
+  remote_shiny_folder <- "https://raw.githubusercontent.com/timat35/CanReg5/feature/RcanReg/conf/tables/r/shiny/"
+
+  if (canreg_update_source(paste0(remote_source_folder,"versions.txt")))
   {
-    if (canreg_update_source(paste0(remote_folder,"Rcan_core.r")))
+    if (canreg_update_source(paste0(remote_source_folder,"Rcan_core.r")))
     {
       source(paste(sep="/", script.basename, "r-sources", "Rcan_core.r"))
     }
 
-    canreg_update_source(paste0(remote_folder,"canreg_table.r"))
-    canreg_update_source(paste0(remote_folder,"canreg_core.r"))
-    canreg_update_source(paste0(remote_folder,"shiny_core.r"))
+    canreg_update_source(paste0(remote_source_folder,"canreg_table.r"))
+    canreg_update_source(paste0(remote_source_folder,"canreg_core.r"))
+    canreg_update_source(paste0(remote_source_folder,"shiny_core.r"))
 
-    canreg_update_source(paste0(remote_folder,"CI5_alldata.rds"), TRUE)
-    canreg_update_source(paste0(remote_folder,"CI5_data.rds"), TRUE)
+    canreg_update_source(paste0(remote_source_folder,"CI5_alldata.rds"), TRUE)
+    canreg_update_source(paste0(remote_source_folder,"CI5_data.rds"), TRUE)
+
+    canreg_update_source(paste0(remote_shiny_folder,"global.r"))
+    canreg_update_source(paste0(remote_shiny_folder,"server.r"))
+    canreg_update_source(paste0(remote_shiny_folder,"ui.r"))
 
   }
 
 }
+
 
 
 

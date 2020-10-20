@@ -1,4 +1,4 @@
-
+## version : 1.0
 
 ls_args <- canreg_args(Args)
 
@@ -41,10 +41,3 @@ dim_width <- 2.7
 
 download_dir <-  file.path(Sys.getenv("USERPROFILE"),"Documents",fsep="\\")
 
-
-
-
-##
-script.basename <- "C:/Projects/CanReg5/conf/tables/r"
-comment(dt_CI5_list) <- 'test'
-attr(dt_CI5_list,"version") <- "1.0"
