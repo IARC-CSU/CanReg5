@@ -11,7 +11,7 @@ shinyServer(function(input, output, session) {
   })
   
 
-  source_url("https://github.com/timat35/CanReg5/blob/feature/RcanReg/conf/tables/r/r-sources/shiny_core.r")
+
 
   file_data <- "data/"
   file_pptx <-paste(sep="/","slide_template", "canreg_template.pptx")

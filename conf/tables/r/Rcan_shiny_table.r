@@ -4,25 +4,24 @@
   script.name <- sub(file.arg.name, "", 
                      initial.options[grep(file.arg.name, initial.options)])
   script.basename <- dirname(script.name)
-  source(paste(sep="/", script.basename, "Rcan_core.r"))
-
-  
-  ## to get canreg argument list
+    ## to get canreg argument list
   Args <- commandArgs(TRUE)
   
-tryCatch({
+  tryCatch({
+    ## source function to check if update needed
+    source(paste(sep="/", script.basename, "Rcan_core.r"))
 
-  canreg_load_packages(c("data.table", "ggplot2","shiny","shinydashboard", "shinyjs","gridExtra", "scales", "Cairo","officer","flextable", "zip", "bmp", "jpeg", "png","shiny.i18n", "Rcan"))
-  
-  source(paste(sep="/", script.basename, "canreg_core.r"))
+    ## check for update and update source
 
-  shiny_dir <- paste(sep="/", script.basename, "shiny")
-  runApp(appDir =shiny_dir, launch.browser =TRUE)
- 
+    ## load other function 
+    source(paste(sep="/", script.basename, "r-sources", "canreg_core.r"))
+    source(paste(sep="/", script.basename, "r-sources", "canreg_table.r"))
+    
+    # init argument from canreg
+    ls_args <- canreg_args(Args)
 
-#talk to canreg
-  cat(paste("-outFile",ls_args$filename,sep=":"))
-	
+    canreg_table_shiny(ls_args)
+
 	
   },
   
@@ -36,7 +35,5 @@ tryCatch({
     canreg_error_log(e,ls_args$filename,ls_args$out,Args,ls_args$inc,ls_args$pop)
   }
 )
-	
-	
 	
 	

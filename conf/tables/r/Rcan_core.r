@@ -190,7 +190,7 @@ canreg_load_packages <- function(packages_list) {
   }
 
   #add devtools fro loading source from github
-  packages_list <- c("devtools", packages_list)
+  # packages_list <- c("devtools", packages_list)
     
   dir.create(file.path(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5")),recursive = TRUE)
   .libPaths(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5"))
