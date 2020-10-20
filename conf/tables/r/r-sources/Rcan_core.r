@@ -344,40 +344,69 @@ canreg_load_packages <- function(packages_list) {
 
 }
 
-canreg_update_sources <- function (url, folder, data=FALSE) {
+canreg_check_udpate <- function()
+{
 
-  folder <- "C:/Projects/CanReg5/conf/tables/r/r-sources"
-  url <- "https://raw.githubusercontent.com/timat35/CanReg5/feature/RcanReg/conf/tables/r/version.txt"
+  remote_folder <- "https://raw.githubusercontent.com/timat35/CanReg5/feature/RcanReg/conf/tables/r/r-sources/"
+  # need to add test for internet
 
-  filename <- regmatches(url, regexpr("[^\\/]*\\.[a-zA-Z]+?$", url))
 
-  con <- file(paste0(folder, filename),"r")
-  file_text <- readLines(con,n=2)
-  close(con)
-  local_source_version <- regmatches(file_text[1], regexpr("[^:]*$", file_text[1]))
-  local_data_version <- regmatches(file_text[2], regexpr("[^:]*$", file_text[2]))
 
-  con <- file(url,"r")
-  file_text <- readLines(con,n=2)
-  close(con)
-  remote_source_version <- regmatches(file_text[1], regexpr("[^:]*$", file_text[1]))
-  remote_data_version <- regmatches(file_text[2], regexpr("[^:]*$", file_text[2]))
-
-  if (remote_data_version > local_source_version) 
+  if (canreg_update_source(paste0(remote_folder,"Rcan_core.r")))
   {
-
-    
-    download.file(url, paste0(folder, filename))
+    source(paste(sep="/", script.basename, "r-sources", "Rcan_core.r"))
   }
+
+  canreg_update_source(paste0(remote_folder,"canreg_table"))
+  canreg_update_source(paste0(remote_folder,"canreg_core"))
+  canreg_update_source(paste0(remote_folder,"shiny_core"))
+
+  canreg_update_source(paste0(remote_folder,"CI5_alldata.rds"))
+  canreg_update_source(paste0(remote_folder,"CI5_data.rds"))
+
 
 }
 
-canreg_get_source_version <- function(file) {
 
+canreg_update_source <- function (url, data=FALSE) {
 
+  bool = FALSE
 
+  filename <- regmatches(url, regexpr("[^\\/]*\\.[a-zA-Z]+?$", url))
+  folder_base <- regmatches(script.basename, regexpr("^.+?conf", script.basename))
+  folder_url <- regmatches(url, regexpr("conf.+?$", url))
+  folder_url <- regmatches(folder_url, regexpr("\\/.+?$", folder_url))
+  local_file <- paste0(folder_base, folder_url)
 
+  if (data)
+  {
 
+    dt_temp <- readRDS(local_file)
+    local_version <- attr(dt_temp, "version")
+
+    dt_temp <- readRDS(url(url))
+    remote_version <- attr(dt_temp, "version")
+
+  }
+  else {
+    con <- file(local_file,"r")
+    file_text <- readLines(con,n=1)
+    local_version <- regmatches(file_text, regexpr("\\d\\.\\d+", file_text))
+    close(con)
+
+    con <- file(url,"r")
+    file_text <- readLines(con,n=1)
+    remote_version <- regmatches(file_text, regexpr("\\d\\.\\d+", file_text))
+    close(con)
+
+  }
+
+  if (remote_version > local_version) 
+  {
+      download.file(url, local_file)
+      bool = TRUE
+  }
+  
 
 }
 
