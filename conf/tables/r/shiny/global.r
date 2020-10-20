@@ -1,6 +1,5 @@
 
 
-source(paste(sep="/", script.basename, "Rcan_core.r"))
 ls_args <- canreg_args(Args)
 
 
@@ -33,7 +32,7 @@ dt_pyramid <- canreg_pop_data(pop_file =ls_args$pop)
 canreg_age_group <- canreg_get_agegroup_label(dt_base, ls_args$agegroup)
 year_info <- canreg_get_years(dt_base)
 
-dt_CI5_list <- readRDS(paste0(script.basename, "/CI5_alldata.rds"))
+dt_CI5_list <- readRDS(paste0(script.basename,"/r-sources", "/CI5_alldata.rds"))
 dt_CI5_label <- as.character(unique(dt_CI5_list[cr == ls_args$sr, c("country_label"), with=FALSE])$country_label)
 
 time_limit <- 9
@@ -45,3 +44,7 @@ download_dir <-  file.path(Sys.getenv("USERPROFILE"),"Documents",fsep="\\")
 
 
 
+##
+script.basename <- "C:/Projects/CanReg5/conf/tables/r"
+comment(dt_CI5_list) <- 'test'
+attr(dt_CI5_list,"version") <- "1.0"

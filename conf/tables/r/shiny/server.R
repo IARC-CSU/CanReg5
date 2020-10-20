@@ -249,7 +249,7 @@ shinyServer(function(input, output, session) {
 			if (input$select_table %in% c(12)) {
 				
 				
-				dt_CI5_list <- readRDS(paste0(script.basename, "/CI5_alldata.rds"))
+				dt_CI5_list <- readRDS(paste0(script.basename,"/r-sources", "/CI5_alldata.rds"))
 				registry_list <-  unique(dt_CI5_list$country_label)
 				registry_list <- as.character(registry_list)
 				selectInput("selectRegistry1",NULL, registry_list, selected = dt_CI5_label[1])
@@ -266,7 +266,7 @@ shinyServer(function(input, output, session) {
 			if (input$select_table %in% c(12)) {
 				
 				
-				dt_CI5_list <- readRDS(paste0(script.basename, "/CI5_alldata.rds"))
+				dt_CI5_list <- readRDS(paste0(script.basename,"/r-sources", "/CI5_alldata.rds"))
 				registry_list <-  unique(dt_CI5_list$country_label)
 				registry_list <- as.character(registry_list)
 				selectInput("selectRegistry2",NULL , registry_list, selected = dt_CI5_label[2])
@@ -283,7 +283,7 @@ shinyServer(function(input, output, session) {
 			if (input$select_table %in% c(12)) {
 				
 				
-				dt_CI5_list <- readRDS(paste0(script.basename, "/CI5_alldata.rds"))
+				dt_CI5_list <- readRDS(paste0(script.basename,"/r-sources", "/CI5_alldata.rds"))
 				registry_list <-  unique(dt_CI5_list$country_label)
 				registry_list <- as.character(registry_list)
 				selectInput("selectRegistry3", NULL, registry_list, selected = dt_CI5_label[3])

@@ -678,7 +678,7 @@ canreg_table_CI5_comp <- function(ls_args)
   dt_all <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE)
   
   # import CI5 data with same cancer code and same age group
-  dt_CI5_data <- canreg_import_CI5_data(dt_all, paste0(script.basename, "/CI5_data.rds"))
+  dt_CI5_data <- canreg_import_CI5_data(dt_all, paste0(script.basename, "/r-sources", "/CI5_data.rds"))
   
   #merge CI5 and canreg data
   dt_both <- canreg_merge_CI5_registry(dt_all,dt_CI5_data, registry_region = ls_args$sr, registry_label = ls_args$header, number=ls_args$number )

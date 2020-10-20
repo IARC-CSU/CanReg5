@@ -10,7 +10,7 @@ Args <- commandArgs(TRUE)
 tryCatch({
 
   ## source function to check if update needed
-  source(paste(sep="/", script.basename, "Rcan_core.r"))
+  source(paste(sep="/", script.basename, "r-sources", "Rcan_core.r"))
 
   ## check for update and update source
 

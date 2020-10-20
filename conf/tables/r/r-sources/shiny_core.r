@@ -285,7 +285,7 @@ canreg_shiny_data <- function(input, session) {
 				dt_temp <- dt_temp[ICD10GROUP != "O&U",]
 				dt_temp <- canreg_ageSpecific_rate_data(dt_temp, keep_ref = TRUE)
 
-				dt_CI5_data <- canreg_import_CI5_data(dt_temp, paste0(script.basename, "/CI5_alldata.rds"))
+				dt_CI5_data <- canreg_import_CI5_data(dt_temp, paste0(script.basename, "/r-sources","/CI5_alldata.rds"))
 				dt_temp <- canreg_shiny_merge_CI5_registry(dt_temp,dt_CI5_data, registry_region = ls_args$sr, registry_label = ls_args$header, number=40 )
 				
 				dt_temp <- dt_temp[country_label %in% registry_selection, ]
