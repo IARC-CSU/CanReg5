@@ -12,6 +12,7 @@
     source(paste(sep="/", script.basename, "r-sources", "Rcan_core.r"))
 
     ## check for update and update source
+    canreg_check_update()
 
     ## load other function 
     source(paste(sep="/", script.basename, "r-sources", "canreg_core.r"))

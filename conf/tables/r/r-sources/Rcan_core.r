@@ -344,26 +344,27 @@ canreg_load_packages <- function(packages_list) {
 
 }
 
-canreg_check_udpate <- function()
+canreg_check_update <- function()
 {
 
-  remote_folder <- "https://raw.githubusercontent.com/timat35/CanReg5/feature/RcanReg/conf/tables/r/r-sources/"
   # need to add test for internet
-
-  canreg_update_source(paste0(remote_folder,"version.txt"))
-
-  if (canreg_update_source(paste0(remote_folder,"Rcan_core.r")))
+  remote_folder <- "https://raw.githubusercontent.com/timat35/CanReg5/feature/RcanReg/conf/tables/r/r-sources/"
+  
+  if (canreg_update_source(paste0(remote_folder,"versions.txt")))
   {
-    source(paste(sep="/", script.basename, "r-sources", "Rcan_core.r"))
+    if (canreg_update_source(paste0(remote_folder,"Rcan_core.r")))
+    {
+      source(paste(sep="/", script.basename, "r-sources", "Rcan_core.r"))
+    }
+
+    canreg_update_source(paste0(remote_folder,"canreg_table.r"))
+    canreg_update_source(paste0(remote_folder,"canreg_core.r"))
+    canreg_update_source(paste0(remote_folder,"shiny_core.r"))
+
+    canreg_update_source(paste0(remote_folder,"CI5_alldata.rds"), TRUE)
+    canreg_update_source(paste0(remote_folder,"CI5_data.rds"), TRUE)
+
   }
-
-  canreg_update_source(paste0(remote_folder,"canreg_table.r"))
-  canreg_update_source(paste0(remote_folder,"canreg_core.r"))
-  canreg_update_source(paste0(remote_folder,"shiny_core.r"))
-
-  canreg_update_source(paste0(remote_folder,"CI5_alldata.rds"), TRUE)
-  canreg_update_source(paste0(remote_folder,"CI5_data.rds"), TRUE)
-
 
 }
 
