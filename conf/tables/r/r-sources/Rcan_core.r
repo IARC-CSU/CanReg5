@@ -1,6 +1,4 @@
-
-
-
+## version : 1.0
 
 canreg_error_log <- function(e,filename,out,Args,inc,pop) {
 
@@ -346,9 +344,9 @@ canreg_load_packages <- function(packages_list) {
 
 }
 
-canreg_update_sources <- function (url, folder)
-{
-  folder <- "C:/Projects/CanReg5/conf/tables/r/"
+canreg_update_sources <- function (url, folder, data=FALSE) {
+
+  folder <- "C:/Projects/CanReg5/conf/tables/r/r-sources"
   url <- "https://raw.githubusercontent.com/timat35/CanReg5/feature/RcanReg/conf/tables/r/version.txt"
 
   filename <- regmatches(url, regexpr("[^\\/]*\\.[a-zA-Z]+?$", url))
@@ -371,4 +369,18 @@ canreg_update_sources <- function (url, folder)
     
     download.file(url, paste0(folder, filename))
   }
+
 }
+
+canreg_get_source_version <- function(file) {
+
+
+
+
+
+
+}
+
+
+
+
