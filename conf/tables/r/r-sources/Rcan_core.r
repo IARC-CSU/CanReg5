@@ -350,22 +350,24 @@ canreg_check_udpate <- function()
   remote_folder <- "https://raw.githubusercontent.com/timat35/CanReg5/feature/RcanReg/conf/tables/r/r-sources/"
   # need to add test for internet
 
-
+  canreg_update_source(paste0(remote_folder,"version.txt"))
 
   if (canreg_update_source(paste0(remote_folder,"Rcan_core.r")))
   {
     source(paste(sep="/", script.basename, "r-sources", "Rcan_core.r"))
   }
 
-  canreg_update_source(paste0(remote_folder,"canreg_table"))
-  canreg_update_source(paste0(remote_folder,"canreg_core"))
-  canreg_update_source(paste0(remote_folder,"shiny_core"))
+  canreg_update_source(paste0(remote_folder,"canreg_table.r"))
+  canreg_update_source(paste0(remote_folder,"canreg_core.r"))
+  canreg_update_source(paste0(remote_folder,"shiny_core.r"))
 
-  canreg_update_source(paste0(remote_folder,"CI5_alldata.rds"))
-  canreg_update_source(paste0(remote_folder,"CI5_data.rds"))
+  canreg_update_source(paste0(remote_folder,"CI5_alldata.rds"), TRUE)
+  canreg_update_source(paste0(remote_folder,"CI5_data.rds"), TRUE)
 
 
 }
+
+
 
 
 canreg_update_source <- function (url, data=FALSE) {
@@ -406,6 +408,8 @@ canreg_update_source <- function (url, data=FALSE) {
       download.file(url, local_file)
       bool = TRUE
   }
+
+  return(bool)
   
 
 }
