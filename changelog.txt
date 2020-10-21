@@ -1,5 +1,8 @@
 # CanReg5 Changelog
 
+## 5.00.44f
+- CanReg can now be bundled with an installation of R and packages that are known to work. (Windows only.)
+
 ## 5.00.44e
 - Table builder is now compatible with latest version of R (4.0.3) libraries. 
 
