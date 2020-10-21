@@ -35,7 +35,7 @@ if (length(packages) < 10)
     	label = "Initializing"
     )
 
-    setWinProgressBar(pb, 0,label = "Cleaning CanReg R folder")
+    setWinProgressBar(pb, 0.01,label = "Cleaning CanReg R folder (I'm not responding cause I'm busy.. please wait)")
 
   } 
 
@@ -57,6 +57,8 @@ if (length(packages) < 10)
     }
 
 	  eval(parse(text=paste("install.packages('", x, "', lib='", rlibs,"', repos = NULL  )", sep="")))
+
+	  i <- i + 1
 	}
 }
 
