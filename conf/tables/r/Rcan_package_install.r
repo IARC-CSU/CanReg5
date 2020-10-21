@@ -59,7 +59,8 @@ error = function(e) {
   cat("\n")
 
   print(canreg_get_table_builder_version())
-  
+  cat("\n")
+
 
   
   #close log_file and send to canreg

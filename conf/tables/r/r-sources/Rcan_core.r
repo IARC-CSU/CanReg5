@@ -62,6 +62,7 @@ canreg_error_log <- function(e,filename,out,Args,inc,pop) {
 
   #print table builder version 
   print(canreg_get_table_builder_version())
+  cat("\n")
   
   
   #print java information if windows
@@ -430,13 +431,13 @@ canreg_update_source <- function (url, data=FALSE) {
 
 canreg_get_table_builder_version <- function()
 {
-  local_file <- paste0(script.basename, "/r-sources/version.txt")
+  local_file <- paste0(script.basename, "/r-sources/versions.txt")
   con <- file(local_file,"r")
   file_text <- readLines(con,n=1)
   local_version <- regmatches(file_text, regexpr("\\d\\.\\d+", file_text))
   close(con)
 
-  return(paste0("TB version: ", local_version)
+  return(paste0("TB version: ", local_version))
 
 }
 

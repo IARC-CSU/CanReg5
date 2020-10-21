@@ -151,11 +151,11 @@ canreg_table_slide <- function(ls_args)
 canreg_table_population_pyramid <- function(ls_args)
 {
 
+
+
   canreg_load_packages(c("data.table", "ggplot2", "gridExtra", "scales", "Cairo","bmp", "jpeg", "shiny.i18n", "Rcan"))
   i18n <<- Translator$new(translation_csvs_path  = (paste(sep="/", script.basename, "r-translations")))
   i18n$set_translation_language(ls_args$lang)
-  
-  
   
   #Prepare canreg data population pyramid
   dt_all <- canreg_pop_data(pop_file =ls_args$pop)

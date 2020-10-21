@@ -1,23 +1,91 @@
+package 'anchors' successfully unpacked and MD5 sums checked
 package 'assertthat' successfully unpacked and MD5 sums checked
-assertthat_0.2.0.zip installedpackage 'backports' successfully unpacked and MD5 sums checked
-backports_1.1.2.zip installedpackage 'base64enc' successfully unpacked and MD5 sums checked
-base64enc_0.1-3.zip installedpackage 'BH' successfully unpacked and MD5 sums checked
-BH_1.66.0-1.zip installedpackage 'bmp' successfully unpacked and MD5 sums checked
-bmp_0.3.zip installedpackage 'Cairo' successfully unpacked and MD5 sums checked
-Cairo_1.5-9.zip installedpackage 'cli' successfully unpacked and MD5 sums checked
-cli_1.0.1.zip installedpackage 'colorspace' successfully unpacked and MD5 sums checked
-colorspace_1.3-2.zip installedpackage 'crayon' successfully unpacked and MD5 sums checked
-crayon_1.3.4.zip installedpackage 'data.table' successfully unpacked and MD5 sums checked
-data.table_1.11.8.zip installedpackage 'digest' successfully unpacked and MD5 sums checked
-digest_0.6.18.zip installedpackage 'evaluate' successfully unpacked and MD5 sums checked
-evaluate_0.12.zip installedpackage 'fansi' successfully unpacked and MD5 sums checked
-fansi_0.4.0.zip installedpackage 'flextable' successfully unpacked and MD5 sums checked
-flextable_0.4.6.zip installedpackage 'gdtools' successfully unpacked and MD5 sums checked
-gdtools_0.1.7.zip installedpackage 'ggplot2' successfully unpacked and MD5 sums checked
-ggplot2_3.1.0.zip installedpackage 'glue' successfully unpacked and MD5 sums checked
-glue_1.3.0.zip installedpackage 'gridExtra' successfully unpacked and MD5 sums checked
-gridExtra_2.3.zip installedpackage 'gtable' successfully unpacked and MD5 sums checked
-gtable_0.2.0.zip installedpackage 'highr' successfully unpacked and MD5 sums checked
-highr_0.7.zip installedpackage 'htmltools' successfully unpacked and MD5 sums checked
-htmltools_0.3.6.zip installedpackage 'httpuv' successfully unpacked and MD5 sums checked
-httpuv_1.4.5.zip installed
+package 'backports' successfully unpacked and MD5 sums checked
+package 'base64enc' successfully unpacked and MD5 sums checked
+package 'BH' successfully unpacked and MD5 sums checked
+package 'bmp' successfully unpacked and MD5 sums checked
+package 'Cairo' successfully unpacked and MD5 sums checked
+package 'callr' successfully unpacked and MD5 sums checked
+package 'cli' successfully unpacked and MD5 sums checked
+package 'colorspace' successfully unpacked and MD5 sums checked
+package 'crayon' successfully unpacked and MD5 sums checked
+package 'data.table' successfully unpacked and MD5 sums checked
+package 'desc' successfully unpacked and MD5 sums checked
+package 'digest' successfully unpacked and MD5 sums checked
+package 'dplyr' successfully unpacked and MD5 sums checked
+package 'ellipsis' successfully unpacked and MD5 sums checked
+package 'evaluate' successfully unpacked and MD5 sums checked
+package 'fansi' successfully unpacked and MD5 sums checked
+package 'farver' successfully unpacked and MD5 sums checked
+package 'fastmap' successfully unpacked and MD5 sums checked
+package 'flextable' successfully unpacked and MD5 sums checked
+package 'gdtools' successfully unpacked and MD5 sums checked
+package 'generics' successfully unpacked and MD5 sums checked
+package 'ggplot2' successfully unpacked and MD5 sums checked
+package 'glue' successfully unpacked and MD5 sums checked
+package 'gridExtra' successfully unpacked and MD5 sums checked
+package 'gtable' successfully unpacked and MD5 sums checked
+package 'highr' successfully unpacked and MD5 sums checked
+package 'htmltools' successfully unpacked and MD5 sums checked
+package 'httpuv' successfully unpacked and MD5 sums checked
+package 'isoband' successfully unpacked and MD5 sums checked
+package 'jpeg' successfully unpacked and MD5 sums checked
+package 'jsonlite' successfully unpacked and MD5 sums checked
+package 'knitr' successfully unpacked and MD5 sums checked
+package 'labeling' successfully unpacked and MD5 sums checked
+package 'later' successfully unpacked and MD5 sums checked
+package 'lifecycle' successfully unpacked and MD5 sums checked
+package 'lubridate' successfully unpacked and MD5 sums checked
+package 'magrittr' successfully unpacked and MD5 sums checked
+package 'markdown' successfully unpacked and MD5 sums checked
+package 'mime' successfully unpacked and MD5 sums checked
+package 'munsell' successfully unpacked and MD5 sums checked
+package 'officer' successfully unpacked and MD5 sums checked
+package 'pillar' successfully unpacked and MD5 sums checked
+package 'pkgbuild' successfully unpacked and MD5 sums checked
+package 'pkgconfig' successfully unpacked and MD5 sums checked
+package 'pkgload' successfully unpacked and MD5 sums checked
+package 'plyr' successfully unpacked and MD5 sums checked
+package 'png' successfully unpacked and MD5 sums checked
+package 'praise' successfully unpacked and MD5 sums checked
+package 'prettyunits' successfully unpacked and MD5 sums checked
+package 'processx' successfully unpacked and MD5 sums checked
+package 'promises' successfully unpacked and MD5 sums checked
+package 'ps' successfully unpacked and MD5 sums checked
+package 'purrr' successfully unpacked and MD5 sums checked
+package 'R6' successfully unpacked and MD5 sums checked
+package 'Rcan' successfully unpacked and MD5 sums checked
+package 'RColorBrewer' successfully unpacked and MD5 sums checked
+package 'Rcpp' successfully unpacked and MD5 sums checked
+package 'reshape2' successfully unpacked and MD5 sums checked
+package 'rgenoud' successfully unpacked and MD5 sums checked
+package 'RJSONIO' successfully unpacked and MD5 sums checked
+package 'rlang' successfully unpacked and MD5 sums checked
+package 'rmarkdown' successfully unpacked and MD5 sums checked
+package 'rprojroot' successfully unpacked and MD5 sums checked
+package 'rstudioapi' successfully unpacked and MD5 sums checked
+package 'scales' successfully unpacked and MD5 sums checked
+package 'shiny.i18n' successfully unpacked and MD5 sums checked
+package 'shiny' successfully unpacked and MD5 sums checked
+package 'shinydashboard' successfully unpacked and MD5 sums checked
+package 'shinyjs' successfully unpacked and MD5 sums checked
+package 'sourcetools' successfully unpacked and MD5 sums checked
+package 'stringi' successfully unpacked and MD5 sums checked
+package 'stringr' successfully unpacked and MD5 sums checked
+package 'systemfonts' successfully unpacked and MD5 sums checked
+package 'testthat' successfully unpacked and MD5 sums checked
+package 'tibble' successfully unpacked and MD5 sums checked
+package 'tidyr' successfully unpacked and MD5 sums checked
+package 'tidyselect' successfully unpacked and MD5 sums checked
+package 'tinytex' successfully unpacked and MD5 sums checked
+package 'utf8' successfully unpacked and MD5 sums checked
+package 'uuid' successfully unpacked and MD5 sums checked
+package 'vctrs' successfully unpacked and MD5 sums checked
+package 'viridisLite' successfully unpacked and MD5 sums checked
+package 'withr' successfully unpacked and MD5 sums checked
+package 'xfun' successfully unpacked and MD5 sums checked
+package 'XML' successfully unpacked and MD5 sums checked
+package 'xml2' successfully unpacked and MD5 sums checked
+package 'xtable' successfully unpacked and MD5 sums checked
+package 'yaml' successfully unpacked and MD5 sums checked
+package 'zip' successfully unpacked and MD5 sums checked
