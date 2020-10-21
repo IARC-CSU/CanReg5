@@ -1,4 +1,4 @@
-## Bundle for CanReg5 realease 43. 2018/12/06 + I18n packages fpr translations
+## Bundle for CanReg5 realease 44g. 2020/10/21 + I18n packages for translations
 
 
 # destination folder for zip
