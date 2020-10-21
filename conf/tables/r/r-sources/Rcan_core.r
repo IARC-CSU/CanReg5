@@ -372,6 +372,7 @@ canreg_check_update <- function()
     canreg_update_source(paste0(remote_source_folder,"canreg_table.r"))
     canreg_update_source(paste0(remote_source_folder,"canreg_core.r"))
     canreg_update_source(paste0(remote_source_folder,"shiny_core.r"))
+    canreg_update_source(paste0(remote_source_folder,"News.md"))
 
     canreg_update_source(paste0(remote_source_folder,"CI5_alldata.rds"), TRUE)
     canreg_update_source(paste0(remote_source_folder,"CI5_data.rds"), TRUE)
