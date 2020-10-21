@@ -13,37 +13,13 @@ tryCatch({
   source(paste(sep="/", script.basename, "r-sources", "Rcan_core.r"))
   canreg_check_update()
 
-  cat(paste("-outFile",(paste(sep="/", script.basename, "r-sources", "News.md"),sep=":")))
+  cat(paste("-outFile",paste(sep="/", script.basename, "r-sources", "News.txt"), sep=":"))
+
 
 
 },
 error = function(e) {
 
-  if (exists("pb")) {
-    close(pb)
-  }
-  
-  sink(type="message")
-  sink()
-  close(log_connection)
-  if (file.exists(filename)) file.remove(filename)
-  
-   
-  #create log error file name 
-  log_name <- paste0(gsub("\\W","", label),"_",sc,"_",gsub("\\D","", Sys.time()),"_error_log.txt") 
-  
-  
-  #find path and create log file
-  pos <- max(gregexpr("\\", out, fixed=TRUE)[[1]])
-  path <- substr(out,start=1, stop=pos)
-
-  log_file <- paste0(path, log_name)
-  error_connection <- file(log_file,open="wt")
-  sink(error_connection)
-  sink(error_connection, type="message")
-  
-  #print error
-  cat(paste0("An error occured! please send the log file: `",log_file,"` to  canreg@iarc.fr\n\n"))
   print(paste("MY_ERROR:  ",e))
   cat("\n")
   #print argument from canreg
