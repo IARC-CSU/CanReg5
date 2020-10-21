@@ -5,7 +5,7 @@ script.name <- sub(file.arg.name, "", initial.options[grep(file.arg.name, initia
 script.basename <- dirname(script.name)
 
 
-filename <- paste0(script.basename, "/log_install.txt")
+filename <- paste0(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5"), "/log_install.txt")
 print(filename)
 log_connection <- file(filename,open="wt")
 
