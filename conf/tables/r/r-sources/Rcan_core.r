@@ -359,8 +359,8 @@ canreg_check_update <- function()
   }
 
   # need to add test for internet
-  remote_source_folder <- "https://raw.githubusercontent.com/timat35/CanReg5/feature/RcanReg/conf/tables/r/r-sources/"
-  remote_shiny_folder <- "https://raw.githubusercontent.com/timat35/CanReg5/feature/RcanReg/conf/tables/r/shiny/"
+  remote_source_folder <- "https://raw.githubusercontent.com/IARC-CSU/CanReg5/develop/conf/tables/r/r-sources/"
+  remote_shiny_folder <- "https://raw.githubusercontent.com/IARC-CSU/CanReg5/develop/conf/tables/r/shiny/"
 
   if (canreg_update_source(paste0(remote_source_folder,"versions.txt")))
   {
