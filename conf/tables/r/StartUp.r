@@ -21,7 +21,10 @@
     source(paste(sep="/", script.basename, "checkArgs.r")) 
 	
 ## RCAN FUNCTIONS
-	source(paste(sep="/", script.basename, "Rcan_core.r")) 
+	source(paste(sep="/", script.basename, "r-sources", "Rcan_core.r")) 
+
+## RCAN FUNCTIONS 2eme partie
+    source(paste(sep="/", script.basename, "r-sources", "canreg_core.r"))
 
 ## MISC FUNCTIONS
     source(paste(sep="/", script.basename, "Funct_misc.r"))  
