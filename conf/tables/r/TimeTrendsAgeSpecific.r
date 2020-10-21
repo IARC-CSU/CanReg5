@@ -19,7 +19,8 @@ script.name <- sub(file.arg.name, "",
 script.basename <- dirname(script.name)
 
 ## LOADING DEPENDENCIES
-source(paste(sep="/", script.basename, "Rcan_core.r"))
+source(paste(sep="/", script.basename, "r-sources", "Rcan_core.r"))
+source(paste(sep="/", script.basename, "r-sources", "canreg_core.r"))
 source(paste(sep="/", script.basename, "StartUp.r")) 
 
 
