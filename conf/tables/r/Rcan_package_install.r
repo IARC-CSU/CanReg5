@@ -12,13 +12,12 @@ tryCatch({
   ## source function to check if update needed
   source(paste(sep="/", script.basename, "r-sources", "Rcan_core.r"))
 
-  ## check for update and update source
+  canreg_check_update()
 
   ## load other function 
   source(paste(sep="/", script.basename, "r-sources", "canreg_core.r"))
   source(paste(sep="/", script.basename, "r-sources", "canreg_table.r"))
 
-  
   canreg_clean_install(Args)
 
 },
@@ -58,14 +57,10 @@ error = function(e) {
   #print R version and package load
   print(sessionInfo())
   cat("\n")
+
+  print(canreg_get_table_builder_version())
   
-  #print incidence / population file (r format)
-  cat("Incidence file\n")
-  dput(read.table(inc, header=TRUE))
-  cat("\n")
-  cat("population file\n")
-  dput(read.table(pop, header=TRUE))
-  cat("\n")
+
   
   #close log_file and send to canreg
   sink(type="message")

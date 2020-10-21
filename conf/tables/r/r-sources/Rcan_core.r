@@ -59,6 +59,10 @@ canreg_error_log <- function(e,filename,out,Args,inc,pop) {
   #print R version and package load
   print(sessionInfo())
   cat("\n")
+
+  #print table builder version 
+  print(canreg_get_table_builder_version())
+  
   
   #print java information if windows
   if (Sys.info()[['sysname']] == "Windows") {
@@ -187,8 +191,8 @@ canreg_load_packages <- function(packages_list) {
     
   }
 
-  #add devtools fro loading source from github
-  packages_list <- c("curl", packages_list)
+  #add curl to loading source from github
+  # packages_list <- c("curl", packages_list)
     
   dir.create(file.path(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5")),recursive = TRUE)
   .libPaths(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5"))
@@ -347,6 +351,12 @@ canreg_load_packages <- function(packages_list) {
 canreg_check_update <- function()
 {
 
+   #check internet 
+  ap <- available.packages()
+  if (length(ap) == 0) {
+    stop("CanReg5 can't access the internet and download the R packages. Please try again later.") 
+  }
+
   # need to add test for internet
   remote_source_folder <- "https://raw.githubusercontent.com/timat35/CanReg5/feature/RcanReg/conf/tables/r/r-sources/"
   remote_shiny_folder <- "https://raw.githubusercontent.com/timat35/CanReg5/feature/RcanReg/conf/tables/r/shiny/"
@@ -415,6 +425,18 @@ canreg_update_source <- function (url, data=FALSE) {
 
   return(bool)
   
+
+}
+
+canreg_get_table_builder_version <- function()
+{
+  local_file <- paste0(script.basename, "/r-sources/version.txt")
+  con <- file(local_file,"r")
+  file_text <- readLines(con,n=1)
+  local_version <- regmatches(file_text, regexpr("\\d\\.\\d+", file_text))
+  close(con)
+
+  return(paste0("TB version: ", local_version)
 
 }
 

@@ -1,0 +1,23 @@
+package 'assertthat' successfully unpacked and MD5 sums checked
+assertthat_0.2.0.zip installedpackage 'backports' successfully unpacked and MD5 sums checked
+backports_1.1.2.zip installedpackage 'base64enc' successfully unpacked and MD5 sums checked
+base64enc_0.1-3.zip installedpackage 'BH' successfully unpacked and MD5 sums checked
+BH_1.66.0-1.zip installedpackage 'bmp' successfully unpacked and MD5 sums checked
+bmp_0.3.zip installedpackage 'Cairo' successfully unpacked and MD5 sums checked
+Cairo_1.5-9.zip installedpackage 'cli' successfully unpacked and MD5 sums checked
+cli_1.0.1.zip installedpackage 'colorspace' successfully unpacked and MD5 sums checked
+colorspace_1.3-2.zip installedpackage 'crayon' successfully unpacked and MD5 sums checked
+crayon_1.3.4.zip installedpackage 'data.table' successfully unpacked and MD5 sums checked
+data.table_1.11.8.zip installedpackage 'digest' successfully unpacked and MD5 sums checked
+digest_0.6.18.zip installedpackage 'evaluate' successfully unpacked and MD5 sums checked
+evaluate_0.12.zip installedpackage 'fansi' successfully unpacked and MD5 sums checked
+fansi_0.4.0.zip installedpackage 'flextable' successfully unpacked and MD5 sums checked
+flextable_0.4.6.zip installedpackage 'gdtools' successfully unpacked and MD5 sums checked
+gdtools_0.1.7.zip installedpackage 'ggplot2' successfully unpacked and MD5 sums checked
+ggplot2_3.1.0.zip installedpackage 'glue' successfully unpacked and MD5 sums checked
+glue_1.3.0.zip installedpackage 'gridExtra' successfully unpacked and MD5 sums checked
+gridExtra_2.3.zip installedpackage 'gtable' successfully unpacked and MD5 sums checked
+gtable_0.2.0.zip installedpackage 'highr' successfully unpacked and MD5 sums checked
+highr_0.7.zip installedpackage 'htmltools' successfully unpacked and MD5 sums checked
+htmltools_0.3.6.zip installedpackage 'httpuv' successfully unpacked and MD5 sums checked
+httpuv_1.4.5.zip installed
