@@ -264,3 +264,4 @@ scripts/source_splitter/Gemfile.lock
 .Rhistory
 
 conf/tables/r/r-installation
+conf/tables/r/r-packages/log_install.txt
