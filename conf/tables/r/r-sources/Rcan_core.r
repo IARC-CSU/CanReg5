@@ -352,15 +352,23 @@ canreg_load_packages <- function(packages_list) {
 canreg_check_update <- function()
 {
 
-   #check internet 
+   #check internet
+  old.repos <- getOption("repos") 
+  on.exit(options(repos = old.repos)) #this resets the repos option when the function exits 
+  new.repos <- old.repos 
+
+
+  new.repos["CRAN"] <- "https://cran.r-project.org" #set your favorite  CRAN Mirror here 
+
+  options(repos = new.repos)  
   ap <- available.packages()
   if (length(ap) == 0) {
     stop("CanReg5 can't access the internet and download the R packages. Please try again later.") 
   }
 
   # need to add test for internet
-  remote_source_folder <- "https://raw.githubusercontent.com/IARC-CSU/CanReg5/develop/conf/tables/r/r-sources/"
-  remote_shiny_folder <- "https://raw.githubusercontent.com/IARC-CSU/CanReg5/develop/conf/tables/r/shiny/"
+  remote_source_folder <- "https://raw.githubusercontent.com/IARC-CSU/CanReg5/master/conf/tables/r/r-sources/"
+  remote_shiny_folder <- "https://raw.githubusercontent.com/IARC-CSU/CanReg5/master/conf/tables/r/shiny/"
 
   if (canreg_update_source(paste0(remote_source_folder,"versions.txt")))
   {
@@ -372,7 +380,7 @@ canreg_check_update <- function()
     canreg_update_source(paste0(remote_source_folder,"canreg_table.r"))
     canreg_update_source(paste0(remote_source_folder,"canreg_core.r"))
     canreg_update_source(paste0(remote_source_folder,"shiny_core.r"))
-    canreg_update_source(paste0(remote_source_folder,"News.md"))
+    canreg_update_source(paste0(remote_source_folder,"News.txt"))
 
     canreg_update_source(paste0(remote_source_folder,"CI5_alldata.rds"), TRUE)
     canreg_update_source(paste0(remote_source_folder,"CI5_data.rds"), TRUE)
