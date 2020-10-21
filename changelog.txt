@@ -1,5 +1,12 @@
 # CanReg5 Changelog
 
+## 5.00.44g
+- Table builder:
+  - Better progress bar when installing bundled R packages.
+  - Fixed bug where installing bundled R packages never finished.
+  - Table builder scripts can be updated independently of CanReg.
+  - Updated list of R packages needed.
+
 ## 5.00.44f
 - CanReg can now be bundled with an installation of R and packages that are known to work. (Windows only.)
 
