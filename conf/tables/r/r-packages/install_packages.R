@@ -35,7 +35,7 @@ if (length(packages) < 10)
     	label = "Initializing"
     )
 
-    setWinProgressBar(pb, 0.01,label = "Cleaning CanReg R folder (I'm not responding cause I'm busy.. please wait)")
+    setWinProgressBar(pb, 0.01,label = "I'm not responding cause I'm busy.. please wait")
 
   } 
 
