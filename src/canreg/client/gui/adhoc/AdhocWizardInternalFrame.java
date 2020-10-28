@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2019  International Agency for Research on Cancer
+ * Copyright (C) 2008-2020  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Patricio Carranza, patocarranza@gmail.com
+ * @author Morten Ervik, ervikm@iarc.fr
  */
 
 package canreg.client.gui.adhoc;
@@ -25,26 +26,15 @@ import canreg.client.gui.analysis.TableBuilderInternalFrame;
 import canreg.client.gui.dataentry.BrowseInternalFrame;
 import canreg.client.gui.dataentry.PDSChooserInternalFrame;
 import canreg.client.gui.importers.ImportFilesView;
-import canreg.client.gui.management.systemeditor.ModifyDatabaseStructureInternalFrame;
-import canreg.common.Globals;
 import canreg.server.CanRegServerInterface;
-import canreg.server.management.SystemDescription;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.nio.file.Files;
+import java.rmi.RemoteException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.DefaultListModel;
 import javax.swing.JDesktopPane;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
-import javax.swing.ListModel;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
-import javax.swing.event.ListDataEvent;
-import javax.swing.event.ListDataListener;
 import org.jdesktop.application.Action;
 
 /**
@@ -101,7 +91,7 @@ public class AdhocWizardInternalFrame extends javax.swing.JInternalFrame
             populationFrame.configureForAdHoc(this);
             if(populationFrame.getJList().getModel().getElementAt(0) != null)
                 tableBuilderBtn.setEnabled(true);
-        } catch(Exception ex) {
+        } catch(SecurityException | RemoteException ex) {
             Logger.getLogger(AdhocWizardInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -150,6 +140,7 @@ public class AdhocWizardInternalFrame extends javax.swing.JInternalFrame
 
         tableBuilderBtn.setAction(actionMap.get("tableBuilderButtonAction")); // NOI18N
         tableBuilderBtn.setText(resourceMap.getString("tableBuilderBtn.text")); // NOI18N
+        tableBuilderBtn.setToolTipText(resourceMap.getString("tableBuilderBtn.toolTipText")); // NOI18N
         tableBuilderBtn.setEnabled(false);
         tableBuilderBtn.setName("tableBuilderBtn"); // NOI18N
 
@@ -160,11 +151,11 @@ public class AdhocWizardInternalFrame extends javax.swing.JInternalFrame
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(cancelBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 204, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 209, Short.MAX_VALUE)
                 .addComponent(backBtn)
                 .addGap(81, 81, 81)
                 .addComponent(nextBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 225, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 230, Short.MAX_VALUE)
                 .addComponent(tableBuilderBtn)
                 .addContainerGap())
         );
@@ -187,7 +178,7 @@ public class AdhocWizardInternalFrame extends javax.swing.JInternalFrame
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 870, Short.MAX_VALUE)
+                    .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 868, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -255,7 +246,7 @@ public class AdhocWizardInternalFrame extends javax.swing.JInternalFrame
             //Logout sets the server reference to null, that's why we first must do the shutdown
             CanRegClientApp.getApplication().getServer().shutDownServer();
             CanRegClientApp.getApplication().logOut();
-        } catch(Exception ex) {
+        } catch(SecurityException | RemoteException ex) {
             Logger.getLogger(AdhocWizardInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
         

@@ -29,7 +29,7 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="tabbedPane" pref="870" max="32767" attributes="0"/>
+                  <Component id="tabbedPane" pref="868" max="32767" attributes="0"/>
                   <Component id="jPanel1" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -71,11 +71,11 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="cancelBtn" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="204" max="32767" attributes="0"/>
+                  <EmptySpace pref="209" max="32767" attributes="0"/>
                   <Component id="backBtn" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="81" max="-2" attributes="0"/>
                   <Component id="nextBtn" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="225" max="32767" attributes="0"/>
+                  <EmptySpace pref="230" max="32767" attributes="0"/>
                   <Component id="tableBuilderBtn" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -131,6 +131,7 @@
               <action class="canreg.client.gui.adhoc.AdhocWizardInternalFrame" id="tableBuilderButtonAction" methodName="tableBuilderButtonAction"/>
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="tableBuilderBtn.text"/>
+            <Property name="toolTipText" type="java.lang.String" resourceKey="tableBuilderBtn.toolTipText"/>
             <Property name="enabled" type="boolean" value="false"/>
             <Property name="name" type="java.lang.String" value="tableBuilderBtn" noResource="true"/>
           </Properties>
