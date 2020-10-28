@@ -119,6 +119,8 @@ public class AdhocWizardInternalFrame extends javax.swing.JInternalFrame
 
         setClosable(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setMaximizable(true);
+        setResizable(true);
         setName("Form"); // NOI18N
 
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(AdhocWizardInternalFrame.class);
