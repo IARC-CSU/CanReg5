@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2017 International Agency for Research on Cancer
+ * Copyright (C) 2008-2020 International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -1641,6 +1641,12 @@ public class CanRegDAO {
         } catch (IOException ex) {
             Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
+        // Behaviour
+        try {
+            fillDictionary(Globals.StandardVariableNames.Grade, Globals.DEFAULT_DICTIONARIES_FOLDER + "/grade.tsv");
+        } catch (IOException ex) {
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
         // Basis
         try {
             fillDictionary(Globals.StandardVariableNames.BasisDiagnosis, Globals.DEFAULT_DICTIONARIES_FOLDER + "/basis.tsv");
@@ -1661,7 +1667,7 @@ public class CanRegDAO {
 
     private synchronized static Map<Integer, Dictionary> buildDictionaryMap(Document doc) {
 
-        Map<Integer, Dictionary> dictionariesMap = new LinkedHashMap();
+        Map<Integer, Dictionary> dictionariesMap = new LinkedHashMap<Integer, Dictionary>();
 
         // NodeList dictionaries = variablesElement.getElementsByTagName(Globals.NAMESPACE + "dictionary");
         DatabaseDictionaryListElement[] dictionaries = canreg.common.Tools.getDictionaryListElements(doc, Globals.NAMESPACE);

@@ -4,47 +4,23 @@
   script.name <- sub(file.arg.name, "", 
                      initial.options[grep(file.arg.name, initial.options)])
   script.basename <- dirname(script.name)
-  
-  ## Load Rcan function
-  source(paste(sep="/", script.basename, "Rcan_core.r"))
-  
-  ## to get canreg argument list
+    ## to get canreg argument list
   Args <- commandArgs(TRUE)
-  ls_args <- canreg_args(Args)
-  
-  
-tryCatch({
-  
-  #load dependency packages
-	canreg_load_packages(c("data.table", "ggplot2", "gridExtra", "scales", "Cairo","bmp", "jpeg", "shiny.i18n", "Rcan"))
-	i18n <- Translator(translation_csvs_path  = (paste(sep="/", script.basename, "r-translations")))
-	i18n$set_translation_language(ls_args$lang)
-  
-  #merge incidence and population
-  dt_all <- csu_merge_inc_pop(
-    inc_file =ls_args$inc,
-    pop_file =ls_args$pop,
-    group_by = c("ICD10GROUP", "ICD10GROUPLABEL","ICD10GROUPCOLOR", "YEAR", "SEX"),
-    column_group_list =list(c("ICD10GROUP", "ICD10GROUPLABEL", "ICD10GROUPCOLOR"))
-  )
-  ##Prepare canreg data for ageSpecific rate
 
-  dt_all <- dt_all[ICD10GROUP != "C44",]
-  dt_all <- dt_all[ICD10GROUP != "O&U",]
-	dt_all <- canreg_ageSpecific_rate_data(dt_all)
+  tryCatch({
+    ## source function to check if update needed
+    source(paste(sep="/", script.basename, "r-sources", "Rcan_core.r"))
 
+    
+    ## load other function 
+    source(paste(sep="/", script.basename, "r-sources", "canreg_core.r"))
+    source(paste(sep="/", script.basename, "r-sources", "canreg_table.r"))
 
-	
-	##Produce output
-	canreg_output(output_type = ls_args$ft, filename = ls_args$out,landscape = FALSE,list_graph = TRUE,
-	              FUN=canreg_ageSpecific_rate_top,
-	              df_data=dt_all,logscale = ls_args$logr,nb_top = ls_args$number,
-				  plot_title = ls_args$header)
+    # init argument from canreg
+    ls_args <- canreg_args(Args)
 
-  	 #talk to canreg
-  canreg_output_cat(ls_args$ft, ls_args$filename, sex_graph=TRUE)
-  
-  
+    canreg_table_age_specific_rate_top(ls_args)
+
   	},
   
   error = function(e){

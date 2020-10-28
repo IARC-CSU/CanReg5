@@ -109,7 +109,7 @@ public class Globals {
     static public String CANREG_UPDATED_INSTRUCTIONS_LOCAL_FILE = CANREG_CLIENT_FOLDER + Globals.FILE_SEPARATOR + "CanReg5-instructions.pdf";
     static public String CANREG_LOCAL_LOCKED_RECORDS_FILE_NAME_SUFFIX = "-records.locked";
     static public String CANREG_INSTRUCTIONS_LOCAL_FILE = "CanReg5-instructions.pdf";
-    public static String CANREG_CHANGELOG_URL = "http://www.iacr.com.fr/CanReg5/changelog.txt";
+    public static String CANREG_CHANGELOG_URL = "http://www.iacr.com.fr/CanReg5/changelog.html";
     /**
      *
      */
@@ -118,8 +118,8 @@ public class Globals {
      *
      */
     static final public String TABLES_CONF_PATH = "./conf/tables";
-    static final public String R_SCRIPTS_PATH = TABLES_CONF_PATH + "/r";
-    static public String TABLES_PREVIEW_PATH = TABLES_CONF_PATH + "/previews";
+    static final public String R_SCRIPTS_PATH = TABLES_CONF_PATH + FILE_SEPARATOR + "r";
+    static public String TABLES_PREVIEW_PATH = TABLES_CONF_PATH + FILE_SEPARATOR + "previews";
     public final static String USER_TABLES_CONF_PATH = CANREG_CLIENT_FOLDER + FILE_SEPARATOR + TABLES_CONF_PATH;
     static final public String USER_R_SCRIPTS_PATH = USER_TABLES_CONF_PATH + "/r";
     static public String USER_TABLES_PREVIEW_PATH = USER_TABLES_CONF_PATH + "/previews";

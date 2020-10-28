@@ -691,6 +691,7 @@ public final class LocalSettings {
         String path = "";
         // try windows 32
         String[] foldersToTry = new String[]{
+            Globals.R_SCRIPTS_PATH + Globals.FILE_SEPARATOR + "r-installation",
             Globals.FILE_SEPARATOR + "Program Files" + Globals.FILE_SEPARATOR + "R",
             System.getenv("ProgramFilesW6432") + Globals.FILE_SEPARATOR + "R",
             System.getenv("ProgramFiles") + Globals.FILE_SEPARATOR + "R",

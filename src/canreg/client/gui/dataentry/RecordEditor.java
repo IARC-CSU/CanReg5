@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2016  International Agency for Research on Cancer
+ * Copyright (C) 2008-2020  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -71,6 +71,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
@@ -140,6 +141,9 @@ public class RecordEditor extends javax.swing.JInternalFrame
         autoFillHelper = new AutoFillHelper();
         rawDataFrames = new LinkedList<>();
 
+        
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        
         addInternalFrameListener(new InternalFrameAdapter() {
 
             @Override
@@ -161,9 +165,11 @@ public class RecordEditor extends javax.swing.JInternalFrame
 
                     if (option == JOptionPane.YES_OPTION) {
                         releaseResources();
+                        dispose();
                     }
                 } else {
                     releaseResources();
+                    dispose();
                 }
             }
         });

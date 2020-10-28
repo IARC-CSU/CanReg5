@@ -14,6 +14,7 @@
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{D9F66332-D6B4-4160-BAC8-127AB39FC443}}
+SignTool=MsSign $f
 AppName={#MyAppName}
 ; AppVersion={#MyAppVersion}
 AppVerName={#MyAppName} 1.0
@@ -24,7 +25,7 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\{#MyParentAppName}
 DefaultGroupName={#MyParentAppName}
 OutputDir={#CanReg5Dir}\dist
-; InfoBeforeFile={#CanReg5Dir}\changelog.txt
+; InfoBeforeFile={#CanReg5Dir}\changelog.rtf
 LicenseFile={#CanReg5Dir}\src\canreg\client\gui\resources\gpl-3.0-standalone.txt
 AllowNoIcons=yes
 OutputBaseFilename=CanReg5-R-Packages-Setup
@@ -45,7 +46,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
-Source: "{#CanReg5Dir}\conf\tables\r\r-packages\*"; DestDir: "{app}\conf\tables\r\r-packages"; Flags: ignoreversion
+Source: "{#CanReg5Dir}\conf\tables\r\r-packages\*"; Excludes: "r-installation\*" ; DestDir: "{app}\conf\tables\r\r-packages"; Flags: ignoreversion
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
