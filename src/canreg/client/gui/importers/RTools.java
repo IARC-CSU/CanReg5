@@ -135,7 +135,7 @@ public class RTools {
             }
             if(files == null || files[0] == null)
                 throw new RuntimeException("No output files were found after running the " + scriptFile + " script.");
-        } catch (Exception ex) {
+        } catch (IOException | InterruptedException | RuntimeException ex) {
             Logger.getLogger(RTools.class.getName()).log(Level.SEVERE, null, ex);
             BufferedInputStream errorStream = new BufferedInputStream(proc.getErrorStream());
             String errorMessage = canreg.client.analysis.Tools.convertStreamToString(errorStream);
