@@ -175,7 +175,7 @@ canreg_load_packages <- function(packages_list) {
 
   sysName <- Sys.info()[['sysname']]
 
-  timeStart<-Sys.time()
+  # timeStart<-Sys.time()
 
 
   if (sysName == "Windows") {
@@ -343,9 +343,9 @@ canreg_load_packages <- function(packages_list) {
     close(pb)
   }
 
-  timeEnd<-Sys.time()
-  difference <- difftime(timeEnd, timeStart, units='mins')
-  print(difference)
+  # timeEnd<-Sys.time()
+  # difference <- difftime(timeEnd, timeStart, units='mins')
+  # print(difference)
 
 }
 
