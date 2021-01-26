@@ -1,5 +1,5 @@
-## Bundle for CanReg5 realease 43. 2018/12/06 + I18n packages fpr translations
 
+## Bundle for CanReg5 realease 43. 2018/12/06 + I18n packages fpr translations
 
 # destination folder for zip
 destdir <- "c:/tmp"

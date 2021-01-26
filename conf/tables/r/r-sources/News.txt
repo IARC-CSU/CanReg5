@@ -1,3 +1,8 @@
+## version : 1.01
+
+Fix age-specific major site bug
+Comment print "time calculation" on package load
+
 ## version : 1.0
 
-Base version 21/10/202
+Base version 21/10/2020

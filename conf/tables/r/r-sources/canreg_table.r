@@ -1,4 +1,4 @@
-## version 1.0
+## version 1.01
 
 canreg_table_shiny <- function(ls_args)
 {
@@ -316,7 +316,7 @@ canreg_table_age_specific_rate_site <- function(ls_args)
 
   #load dependency packages
   canreg_load_packages(c("data.table", "ggplot2", "gridExtra", "scales", "Cairo","bmp", "jpeg", "shiny.i18n", "Rcan"))
-  i18n <- Translator&new(translation_csvs_path  = (paste(sep="/", script.basename, "r-translations")))
+  i18n <<- Translator$new(translation_csvs_path  = (paste(sep="/", script.basename, "r-translations")))
   i18n$set_translation_language(ls_args$lang)
   
   #merge incidence and population
