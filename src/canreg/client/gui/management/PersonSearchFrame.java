@@ -758,11 +758,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
             }
         } catch (RecordLockedException | DistributedTableDescriptionException | UnknownTableException ex) {
             Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RemoteException ex) {
-            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SecurityException ex) {
+        } catch (SQLException | RemoteException | SecurityException ex) {
             Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             setCursor(normalCursor);
