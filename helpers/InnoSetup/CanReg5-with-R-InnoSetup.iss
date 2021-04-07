@@ -7,7 +7,7 @@
 #define MyAppExeName "CanReg.exe"
 #define CanReg5Dir "C:\Users\ervikm\Documents\GitHub\CanReg5"
 #define RDir "C:\Program Files\R"
-#define Rversion "R-4.0.3"
+#define Rversion "R-4.0.5"
 #include "..\..\inno-settings.txt"
 
 [Setup]
