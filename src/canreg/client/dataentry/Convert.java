@@ -534,8 +534,9 @@ public class Convert {
                         // rebuild sequenceNumber
                         Tumour[] tumours = new Tumour[0];
                         try {
-                            tumours = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(patientID + "", false);
-                        } catch (DistributedTableDescriptionException | UnknownTableException ex) {
+                            tumours = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(patientID + "", false, null);
+                        }
+                        catch (Exception ex) {
                             Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
                         }
 
@@ -547,10 +548,10 @@ public class Convert {
                         patientRecordID = patientID + "" + tumourSequenceString;
                         Patient[] oldPatients = null;
                         try {
-                            oldPatients = CanRegClientApp.getApplication().getPatientRecordsByID((String) patientID, false);
-                        } catch (RemoteException | SecurityException | DistributedTableDescriptionException | RecordLockedException | SQLException | UnknownTableException ex) {
+                            oldPatients = CanRegClientApp.getApplication().getPatientsByPatientID((String) patientID, false, null);
+                        } catch (Exception ex) {
                             Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+                        } 
                         for (Patient oldPatient : oldPatients) {
                             if (!Tools.newRecordContainsNewInfo(patient, oldPatient, noNeedToLookAtPatientVariables)) {
                                 needToSavePatientAgain = false;
