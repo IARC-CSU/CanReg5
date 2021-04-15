@@ -42,7 +42,7 @@ public class Globals {
     /**
      *
      */
-    static public String newestVersionURLString = "http://www.iacr.com.fr/version.txt";
+    static public String newestVersionURLString = "http://www.iacr.com.fr/CanReg5/version.txt";
     /**
      *
      */
