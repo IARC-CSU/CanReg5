@@ -60,7 +60,7 @@ import javax.swing.table.DefaultTableModel;
 import org.jdesktop.application.Action;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
-import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.general.DefaultKeyedValues2DDataset;
@@ -1907,7 +1907,7 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
                     if (!file.getName().toLowerCase().endsWith("png")) { //NOI18N
                         file = new File(file.getAbsolutePath() + ".png"); //NOI18N
                     }
-                    ChartUtilities.saveChartAsPNG(file, chart, pyramidPanelHolder.getWidth(), pyramidPanelHolder.getHeight());
+                    ChartUtils.saveChartAsPNG(file, chart, pyramidPanelHolder.getWidth(), pyramidPanelHolder.getHeight());
                 } catch (IOException ex) {
                     Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }

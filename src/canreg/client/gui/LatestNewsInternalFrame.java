@@ -31,15 +31,15 @@ package canreg.client.gui;
  * @author ervikm
  */
 import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
-import com.sun.cnpi.rss.elements.Category;
-import com.sun.cnpi.rss.elements.Item;
-import com.sun.cnpi.rss.elements.Link;
-import com.sun.cnpi.rss.elements.Rss;
+//import com.sun.cnpi.rss.elements.Category;
+//import com.sun.cnpi.rss.elements.Item;
+//import com.sun.cnpi.rss.elements.Link;
+//import com.sun.cnpi.rss.elements.Rss;
+//import com.sun.cnpi.rss.parser.*;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Collection;
 import java.util.Iterator;
-import com.sun.cnpi.rss.parser.*;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -143,59 +143,59 @@ public class LatestNewsInternalFrame extends javax.swing.JInternalFrame implemen
         MyPopUpMenu.potentiallyShowPopUpMenuTextComponent(newsEditorPane, evt);
     }//GEN-LAST:event_newsEditorPaneMouseReleased
 
-    public void readRSSDocument() throws RssParserException, IOException {
-
-        // TODO: switch to ROME https://rome.dev.java.net/
-
-        RssParser parser = RssParserFactory.createDefault();
-        Rss rss = parser.parse(
-                new URL(canreg.common.Globals.CANREG_TWITTER_RSS_URL));
-        //Get all XML elements in the feed
-        StringBuilder newsStringBuilder = new StringBuilder();
-        Collection items = rss.getChannel().getItems();
-        DateFormat format = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
-        if (items != null && !items.isEmpty()) {
-            //Iterate over our main elements. Should have one for each article
-            for (Iterator i = items.iterator();
-                    i.hasNext();
-                    System.out.println()) {
-                Item item = (Item) i.next();
-                // news+=("<h2>" + item.getTitle() + "</h2><br>");
-                // System.out.println("Link: " + item.getLink());
-                String description = item.getDescription().toString();
-                // remove the canreg: from the twitter feed
-                description = description.replaceFirst("canreg:", "");
-                Link link = item.getLink();
-                String calString = "";
-                try {
-                    String date = item.getPubDate().toString();
-                    Calendar cal = canreg.common.DateHelper.parseTimestamp(date, canreg.common.Globals.TWITTER_RSS_DATE_FORMAT_STRING, null);
-                    calString = format.format(cal.getTime());
-                } catch (ParseException ex) {
-                    Logger.getLogger(LatestNewsInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                newsStringBuilder.append("<h5>").append(calString).append(": </h5>");
-                newsStringBuilder.append(description);
-                newsStringBuilder.append("<br>");
-                newsStringBuilder.append("<a href = \"").append(link.getText()).append("\">Link</a>");
-                newsStringBuilder.append("<br><br>");
-            }
-            newsEditorPane.setText(newsStringBuilder.toString());
-            newsEditorPane.setCaretPosition(0);
-        }
-
-        //Iterate over categories if we are provided with any
-        Collection categories = rss.getChannel().getCategories();
-        if (categories != null && !categories.isEmpty()) {
-            Category cat;
-            for (Iterator i = categories.iterator();
-                    i.hasNext();
-                    System.out.println("Category Domain: " + cat.getDomain())) {
-                cat = (Category) i.next();
-                System.out.println("Category: " + cat);
-            }
-
-        }
+    public void readRSSDocument() { // throws RssParserException, IOException {
+//
+//        // TODO: switch to ROME https://rome.dev.java.net/
+//
+//        RssParser parser = RssParserFactory.createDefault();
+//        Rss rss = parser.parse(
+//                new URL(canreg.common.Globals.CANREG_TWITTER_RSS_URL));
+//        //Get all XML elements in the feed
+//        StringBuilder newsStringBuilder = new StringBuilder();
+//        Collection items = rss.getChannel().getItems();
+//        DateFormat format = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
+//        if (items != null && !items.isEmpty()) {
+//            //Iterate over our main elements. Should have one for each article
+//            for (Iterator i = items.iterator();
+//                    i.hasNext();
+//                    System.out.println()) {
+//                Item item = (Item) i.next();
+//                // news+=("<h2>" + item.getTitle() + "</h2><br>");
+//                // System.out.println("Link: " + item.getLink());
+//                String description = item.getDescription().toString();
+//                // remove the canreg: from the twitter feed
+//                description = description.replaceFirst("canreg:", "");
+//                Link link = item.getLink();
+//                String calString = "";
+//                try {
+//                    String date = item.getPubDate().toString();
+//                    Calendar cal = canreg.common.DateHelper.parseTimestamp(date, canreg.common.Globals.TWITTER_RSS_DATE_FORMAT_STRING, null);
+//                    calString = format.format(cal.getTime());
+//                } catch (ParseException ex) {
+//                    Logger.getLogger(LatestNewsInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//                newsStringBuilder.append("<h5>").append(calString).append(": </h5>");
+//                newsStringBuilder.append(description);
+//                newsStringBuilder.append("<br>");
+//                newsStringBuilder.append("<a href = \"").append(link.getText()).append("\">Link</a>");
+//                newsStringBuilder.append("<br><br>");
+//            }
+//            newsEditorPane.setText(newsStringBuilder.toString());
+//            newsEditorPane.setCaretPosition(0);
+//        }
+//
+//        //Iterate over categories if we are provided with any
+//        Collection categories = rss.getChannel().getCategories();
+//        if (categories != null && !categories.isEmpty()) {
+//            Category cat;
+//            for (Iterator i = categories.iterator();
+//                    i.hasNext();
+//                    System.out.println("Category Domain: " + cat.getDomain())) {
+//                cat = (Category) i.next();
+//                System.out.println("Category: " + cat);
+//            }
+//
+//        }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -206,16 +206,16 @@ public class LatestNewsInternalFrame extends javax.swing.JInternalFrame implemen
 
     private void initContent() {
         newsEditorPane.setContentType("text/html");
-        try {
-            readRSSDocument();
-        } catch (RssParserException ex) {
-            Logger.getLogger(LatestNewsInternalFrame.class.getName()).log(Level.INFO, null, ex);
-            newsEditorPane.setText("<h2>No current news found. Please check your internet connection.</h2>");
-
-        } catch (IOException ex) {
-            newsEditorPane.setText("<h2>No current news found. Please check your internet connection.</h2>");
-            Logger.getLogger(LatestNewsInternalFrame.class.getName()).log(Level.INFO, null, ex);
-        }
+//        try {
+//            readRSSDocument();
+//        } catch (RssParserException ex) {
+//            Logger.getLogger(LatestNewsInternalFrame.class.getName()).log(Level.INFO, null, ex);
+//            newsEditorPane.setText("<h2>No current news found. Please check your internet connection.</h2>");
+//
+//        } catch (IOException ex) {
+//            newsEditorPane.setText("<h2>No current news found. Please check your internet connection.</h2>");
+//            Logger.getLogger(LatestNewsInternalFrame.class.getName()).log(Level.INFO, null, ex);
+//        }
     }
 
     @Action
