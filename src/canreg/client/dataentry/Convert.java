@@ -183,7 +183,7 @@ public class Convert {
 
             debugOut("Migrating data " + datafile);
             pconn = (ParadoxConnection) DriverManager.getConnection("jdbc:paradox:///" + filepath.replaceAll("\\\\", "/"));
-            final ParadoxTable table = TableData.listTables(pconn, datafile).get(0);
+            final ParadoxTable table = TableData.listTables(datafile, pconn).get(0);
             totalrowcount = table.getRowCount();
 
             SystemDescription sd = new SystemDescription(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + regcode + ".xml");
