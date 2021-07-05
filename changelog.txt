@@ -1,5 +1,26 @@
 # CanReg5 Changelog
 
+## 5.00.44h
+- New Features: save list of person search matches as spreadsheet.
+- Fixed link to latest version information.
+- Table builder:
+  - Add version 1.01 to use automatic update.
+  - Fix table age specific rate by site.
+  - Files renamed.
+  - Bundled R updated to 4.0.5.
+  - R packages updated.
+- Other minor fixes.
+
+## 5.00.44g
+- Table builder:
+  - Better progress bar when installing bundled R packages.
+  - Fixed bug where installing bundled R packages never finished.
+  - Table builder scripts can be updated independently of CanReg.
+  - Updated list of R packages needed.
+
+## 5.00.44f
+- CanReg can now be bundled with an installation of R and packages that are known to work. (Windows only.)
+
 ## 5.00.44e
 - Table builder is now compatible with latest version of R (4.0.3) libraries. 
 

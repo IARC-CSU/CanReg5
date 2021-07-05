@@ -6,6 +6,8 @@
 #define MyAppURL "http://www.iacr.com.fr"
 #define MyAppExeName "CanReg.exe"
 #define CanReg5Dir "C:\Users\ervikm\Documents\GitHub\CanReg5"
+#define RDir "C:\Program Files\R"
+#define Rversion "R-4.0.5"
 #include "..\..\inno-settings.txt"
 
 [Setup]
@@ -27,7 +29,7 @@ OutputDir={#CanReg5Dir}\dist
 InfoBeforeFile={#CanReg5Dir}\changelog.rtf
 LicenseFile={#CanReg5Dir}\src\canreg\client\gui\resources\gpl-3.0-standalone.txt
 AllowNoIcons=yes
-OutputBaseFilename=CanReg5-with-R-Packages-Setup
+OutputBaseFilename=CanReg5-with-R-Setup
 Compression=lzma
 SolidCompression=yes
 
@@ -45,7 +47,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 Source: "{#CanReg5Dir}\CanReg.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#CanReg5Dir}\conf\*"; Excludes: "r-installation\*" ; DestDir: "{app}\conf"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#CanReg5Dir}\conf\*"; DestDir: "{app}\conf"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#CanReg5Dir}\demo\*"; DestDir: "{app}\demo"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#CanReg5Dir}\scripts\*"; DestDir: "{app}\scripts"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#CanReg5Dir}\dist\lib\*"; DestDir: "{app}\lib"; Flags: ignoreversion recursesubdirs createallsubdirs
@@ -53,6 +55,7 @@ Source: "{#CanReg5Dir}\dist\CanReg.jar"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#CanReg5Dir}\dist\README.TXT"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#CanReg5Dir}\changelog.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#CanReg5Dir}\doc\CanReg5-Instructions\CanReg5-Instructions.pdf"; DestDir: "{app}\doc"; Flags: ignoreversion
+Source: "{#RDir}\{#Rversion}\*"; DestDir: "{app}\conf\tables\r\r-installation\{#Rversion}"; Flags: ignoreversion recursesubdirs createallsubdirs  
 ; Source: "{#CanReg5Dir}\conf\tables\r\r-packages\*"; DestDir: "{app}\conf\tables\r\r-packages"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
