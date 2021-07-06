@@ -97,11 +97,12 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="1" attributes="0">
+                  <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="lookAndFeelPanel" alignment="0" max="32767" attributes="0"/>
                           <Component id="languagePanel" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jPanel1" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -113,7 +114,9 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="languagePanel" min="-2" pref="85" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="lookAndFeelPanel" max="32767" attributes="0"/>
+                      <Component id="lookAndFeelPanel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jPanel1" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -143,7 +146,7 @@
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="dateFormatComboBox" alignment="0" pref="363" max="32767" attributes="0"/>
+                              <Component id="dateFormatComboBox" alignment="0" max="32767" attributes="0"/>
                               <Component id="languageComboBox" alignment="0" pref="0" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -171,6 +174,7 @@
                 <Component class="javax.swing.JLabel" name="languageLabel">
                   <Properties>
                     <Property name="text" type="java.lang.String" resourceKey="languageLabel.text"/>
+                    <Property name="toolTipText" type="java.lang.String" resourceKey="languageLabel.toolTipText"/>
                     <Property name="name" type="java.lang.String" value="languageLabel" noResource="true"/>
                   </Properties>
                 </Component>
@@ -229,33 +233,22 @@
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="fontNameLabel" min="-2" max="-2" attributes="0"/>
-                                      <Component id="fontSizeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="fontSizeComboBox" alignment="1" pref="449" max="32767" attributes="0"/>
-                                      <Component id="fontNameTextField" alignment="0" pref="449" max="32767" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                              </Group>
                               <Group type="102" alignment="0" attributes="0">
-                                  <Component id="showOutlineCheckBox" pref="506" max="32767" attributes="0"/>
+                                  <Component id="showOutlineCheckBox" max="32767" attributes="0"/>
                                   <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
-                                  <Component id="dataEntryLabel" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="fontNameLabel" min="-2" max="-2" attributes="0"/>
+                                      <Component id="fontSizeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="themeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  </Group>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="dataEntryVersionComboBox" pref="404" max="32767" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                              </Group>
-                              <Component id="newDataEntryVerticalSources" alignment="0" pref="524" max="32767" attributes="0"/>
-                              <Group type="102" alignment="1" attributes="0">
-                                  <Component id="dataEntryDisplayVariableLabel" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="dataEntryDisplayVariableComboBox" pref="385" max="32767" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="themeComboBox" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="fontSizeComboBox" alignment="1" max="32767" attributes="0"/>
+                                      <Component id="fontNameTextField" alignment="0" max="32767" attributes="0"/>
+                                  </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                               </Group>
                           </Group>
@@ -265,6 +258,12 @@
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="themeComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="themeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="fontNameLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="fontNameTextField" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -276,18 +275,6 @@
                           </Group>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="showOutlineCheckBox" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="dataEntryLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="dataEntryVersionComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="newDataEntryVerticalSources" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="dataEntryDisplayVariableComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="dataEntryDisplayVariableLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
                           <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
@@ -304,12 +291,14 @@
                 <Component class="javax.swing.JLabel" name="fontNameLabel">
                   <Properties>
                     <Property name="text" type="java.lang.String" resourceKey="fontNameLabel.text"/>
+                    <Property name="toolTipText" type="java.lang.String" resourceKey="fontNameLabel.toolTipText"/>
                     <Property name="name" type="java.lang.String" value="fontNameLabel" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="fontNameTextField">
                   <Properties>
                     <Property name="text" type="java.lang.String" resourceKey="fontNameTextField.text"/>
+                    <Property name="toolTipText" type="java.lang.String" resourceKey="fontNameTextField.toolTipText"/>
                     <Property name="name" type="java.lang.String" value="fontNameTextField" noResource="true"/>
                   </Properties>
                 </Component>
@@ -330,9 +319,92 @@
                 <Component class="javax.swing.JLabel" name="fontSizeLabel">
                   <Properties>
                     <Property name="text" type="java.lang.String" resourceKey="fontSizeLabel.text"/>
+                    <Property name="toolTipText" type="java.lang.String" resourceKey="fontSizeLabel.toolTipText"/>
                     <Property name="name" type="java.lang.String" value="fontSizeLabel" noResource="true"/>
                   </Properties>
                 </Component>
+                <Component class="javax.swing.JLabel" name="themeLabel">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" resourceKey="themeLabel.text"/>
+                    <Property name="toolTipText" type="java.lang.String" resourceKey="themeLabel.toolTipText"/>
+                    <Property name="name" type="java.lang.String" value="themeLabel" noResource="true"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JComboBox" name="themeComboBox">
+                  <Properties>
+                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                      <StringArray count="3">
+                        <StringItem index="0" value="System"/>
+                        <StringItem index="1" value="Light"/>
+                        <StringItem index="2" value="Dark"/>
+                      </StringArray>
+                    </Property>
+                    <Property name="toolTipText" type="java.lang.String" resourceKey="themeComboBox.toolTipText"/>
+                    <Property name="name" type="java.lang.String" value="themeComboBox" noResource="true"/>
+                  </Properties>
+                </Component>
+              </SubComponents>
+            </Container>
+            <Container class="javax.swing.JPanel" name="jPanel1">
+              <Properties>
+                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                  <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                    <TitledBorder title="User Interface (UI)">
+                      <Property name="titleX" resourceKey="jPanel1.border.title"/>
+                    </TitledBorder>
+                  </Border>
+                </Property>
+                <Property name="name" type="java.lang.String" value="jPanel1" noResource="true"/>
+              </Properties>
+
+              <Layout>
+                <DimensionLayout dim="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="newDataEntryVerticalSources" alignment="0" max="32767" attributes="0"/>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <EmptySpace min="0" pref="4" max="32767" attributes="0"/>
+                                  <Group type="103" groupAlignment="1" attributes="0">
+                                      <Group type="102" attributes="0">
+                                          <Component id="dataEntryLabel" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                                          <Component id="dataEntryVersionComboBox" min="-2" pref="402" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Group type="102" attributes="0">
+                                          <Component id="dataEntryDisplayVariableLabel" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                          <Component id="dataEntryDisplayVariableComboBox" min="-2" pref="399" max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
+                              </Group>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+                <DimensionLayout dim="1">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="dataEntryLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="dataEntryVersionComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Component id="newDataEntryVerticalSources" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="dataEntryDisplayVariableComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="dataEntryDisplayVariableLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace pref="162" max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+              </Layout>
+              <SubComponents>
                 <Component class="javax.swing.JLabel" name="dataEntryLabel">
                   <Properties>
                     <Property name="text" type="java.lang.String" resourceKey="dataEntryLabel.text"/>
@@ -407,7 +479,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="automaticBackupPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="235" max="32767" attributes="0"/>
+                      <EmptySpace pref="428" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -551,7 +623,7 @@
                       <Component id="versionPanel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="timersPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="113" max="32767" attributes="0"/>
+                      <EmptySpace pref="318" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -753,7 +825,6 @@
                     <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
                       <Format format="#0" subtype="-1" type="0"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" resourceKey="clientToServerTextField.text"/>
                     <Property name="name" type="java.lang.String" value="clientToServerTextField" noResource="true"/>
                   </Properties>
                   <Events>
@@ -765,7 +836,6 @@
                     <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
                       <Format format="#0" subtype="-1" type="0"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" resourceKey="clientSessionsCheckTextField.text"/>
                     <Property name="toolTipText" type="java.lang.String" resourceKey="clientSessionsCheckTextField.toolTipText"/>
                     <Property name="name" type="java.lang.String" value="clientSessionsCheckTextField" noResource="true"/>
                   </Properties>
@@ -809,7 +879,7 @@
                       <Component id="rPanel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="gsPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="208" max="32767" attributes="0"/>
+                      <EmptySpace pref="421" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>

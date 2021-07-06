@@ -49,7 +49,6 @@ import canreg.server.database.RecordLockedException;
 import canreg.common.database.Tumour;
 import canreg.server.CanRegLoginImpl;
 import canreg.server.management.SystemDefinitionConverter;
-import com.formdev.flatlaf.FlatLightLaf;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
@@ -705,20 +704,17 @@ public class CanRegClientApp extends SingleFrameApplication {
         }
         if (localSettings.getProperty(LocalSettings.LOOK_AND_FEEL_KEY).length() > 0) {
             try {
-                if (localSettings.getProperty(LocalSettings.LOOK_AND_FEEL_KEY).equalsIgnoreCase("System")) {
-                    UIManager.setLookAndFeel( new com.formdev.flatlaf.FlatDarkLaf() );
-//                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                } else {
-                    UIManager.setLookAndFeel(localSettings.getProperty(LocalSettings.LOOK_AND_FEEL_KEY));
+                if (localSettings.getProperty(LocalSettings.LOOK_AND_FEEL_KEY).equalsIgnoreCase("Dark")) {
+                    UIManager.setLookAndFeel( new com.formdev.flatlaf.FlatDarculaLaf() );
+                } else if (localSettings.getProperty(LocalSettings.LOOK_AND_FEEL_KEY).equalsIgnoreCase("Light")){
+                    UIManager.setLookAndFeel( new com.formdev.flatlaf.FlatIntelliJLaf() );
+                }
+                else {
+                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+//                    UIManager.setLookAndFeel(localSettings.getProperty(LocalSettings.LOOK_AND_FEEL_KEY));
                 }
                 // Locale.setDefault(localSettings.getLocale());
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.WARNING, null, ex);
-            } catch (InstantiationException ex) {
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.WARNING, null, ex);
-            } catch (IllegalAccessException ex) {
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.WARNING, null, ex);
-            } catch (UnsupportedLookAndFeelException ex) {
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
                 Logger.getLogger(CanRegClientApp.class.getName()).log(Level.WARNING, null, ex);
             }
         }

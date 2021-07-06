@@ -457,6 +457,7 @@ public final class LocalSettings {
         setProperty(REMEMBER_PASSWORD_KEY, getDefaultProperty(REMEMBER_PASSWORD_KEY));
         setProperty(USERNAME_KEY, getDefaultProperty(USERNAME_KEY));
         setProperty(PASSWORD_KEY, getDefaultProperty(PASSWORD_KEY));
+        setProperty(LOOK_AND_FEEL_KEY, getDefaultProperty(PASSWORD_KEY));
         setProperty(WORKING_DIR_PATH_KEY, getDefaultProperty(WORKING_DIR_PATH_KEY));
         setProperty(AUTO_BACKUP_KEY, getDefaultProperty(AUTO_BACKUP_KEY));
         setProperty(BACKUP_EVERY_KEY, getDefaultProperty(BACKUP_EVERY_KEY));
