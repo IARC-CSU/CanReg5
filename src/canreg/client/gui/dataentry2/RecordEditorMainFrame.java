@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2019  International Agency for Research on Cancer
+ * Copyright (C) 2008-2021 International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1777,12 +1777,12 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
         filler5 = new javax.swing.Box.Filler(new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 32767));
         showObsoleteRecordsCheckBox = new javax.swing.JCheckBox();
         filler13 = new javax.swing.Box.Filler(new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 32767));
-        saveAllButton = new javax.swing.JButton();
         filler22 = new javax.swing.Box.Filler(new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 32767));
-        productionBtn = new javax.swing.JButton();
         filler23 = new javax.swing.Box.Filler(new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 32767));
-        viewProductionRecordBtn = new javax.swing.JButton();
+        saveAllButton = new javax.swing.JButton();
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
+        productionBtn = new javax.swing.JButton();
+        viewProductionRecordBtn = new javax.swing.JButton();
         viewFullDataBtn = new javax.swing.JButton();
         filler4 = new javax.swing.Box.Filler(new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 32767));
         jButton3 = new javax.swing.JButton();
@@ -1868,14 +1868,15 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
         showObsoleteRecordsCheckBox.setFocusable(false);
         jPanel2.add(showObsoleteRecordsCheckBox);
         jPanel2.add(filler13);
+        jPanel2.add(filler22);
+        jPanel2.add(filler23);
 
         saveAllButton.setAction(actionMap.get("saveAllAction")); // NOI18N
-        saveAllButton.setBackground(new java.awt.Color(0, 0, 0));
         saveAllButton.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        saveAllButton.setForeground(new java.awt.Color(255, 255, 255));
         saveAllButton.setText(resourceMap.getString("saveAllAction.Action.text")); // NOI18N
         saveAllButton.setToolTipText(resourceMap.getString("saveAllAction.Action.shortDescription")); // NOI18N
-        saveAllButton.setContentAreaFilled(false);
+        saveAllButton.setActionCommand("      Save All      ");
+        saveAllButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 0)));
         saveAllButton.setFocusable(false);
         saveAllButton.setMaximumSize(new java.awt.Dimension(150, 23));
         saveAllButton.setOpaque(true);
@@ -1919,17 +1920,15 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
             }
         });
         jPanel2.add(saveAllButton);
-        jPanel2.add(filler22);
+        jPanel2.add(filler1);
 
         productionBtn.setAction(actionMap.get("productionButtonAction")); // NOI18N
         productionBtn.setText(resourceMap.getString("productionBtn.text")); // NOI18N
         jPanel2.add(productionBtn);
-        jPanel2.add(filler23);
 
         viewProductionRecordBtn.setAction(actionMap.get("viewProductionRecordAction")); // NOI18N
         viewProductionRecordBtn.setText(resourceMap.getString("viewProductionRecordBtn.text")); // NOI18N
         jPanel2.add(viewProductionRecordBtn);
-        jPanel2.add(filler1);
 
         viewFullDataBtn.setAction(actionMap.get("viewFullDataAction")); // NOI18N
         viewFullDataBtn.setText(resourceMap.getString("allCaseDataBtn.text")); // NOI18N
