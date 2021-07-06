@@ -49,6 +49,7 @@ import canreg.server.database.RecordLockedException;
 import canreg.common.database.Tumour;
 import canreg.server.CanRegLoginImpl;
 import canreg.server.management.SystemDefinitionConverter;
+import com.formdev.flatlaf.FlatLightLaf;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
@@ -705,7 +706,8 @@ public class CanRegClientApp extends SingleFrameApplication {
         if (localSettings.getProperty(LocalSettings.LOOK_AND_FEEL_KEY).length() > 0) {
             try {
                 if (localSettings.getProperty(LocalSettings.LOOK_AND_FEEL_KEY).equalsIgnoreCase("System")) {
-                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                    UIManager.setLookAndFeel( new com.formdev.flatlaf.FlatDarkLaf() );
+//                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                 } else {
                     UIManager.setLookAndFeel(localSettings.getProperty(LocalSettings.LOOK_AND_FEEL_KEY));
                 }

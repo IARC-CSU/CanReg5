@@ -73,9 +73,9 @@ import javax.swing.JOptionPane;
 
 import org.w3c.dom.*;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.paradox.ParadoxConnection;
-import org.paradox.metadata.ParadoxTable;
-import org.paradox.data.TableData;
+import com.googlecode.paradox.ParadoxConnection;
+import com.googlecode.paradox.metadata.ParadoxTable;
+import com.googlecode.paradox.data.TableData;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -185,7 +185,7 @@ public class Convert {
 
             debugOut("Migrating data " + datafile);
             pconn = (ParadoxConnection) DriverManager.getConnection("jdbc:paradox:///" + filepath.replaceAll("\\\\", "/"));
-            final ParadoxTable table = TableData.listTables(pconn, datafile).get(0);
+            final ParadoxTable table = TableData.listTables(datafile, pconn).get(0);
             totalrowcount = table.getRowCount();
 
             SystemDescription sd = new SystemDescription(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + regcode + ".xml");
