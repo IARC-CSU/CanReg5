@@ -165,7 +165,7 @@ public final class LocalSettings {
     /**
      *
      */
-    public static final String FONT_SIZE_MEDIUM = "Medium";    
+    public static final String FONT_SIZE_MEDIUM = "Medium";
     /**
      *
      */
@@ -176,12 +176,12 @@ public final class LocalSettings {
     public static final String FONT_SIZE_BIG = "Big";
     /**
      *
-     */    
+     */
     public static String DATE_FORMAT_KEY = "date_format_string";
     public static String DISPLAY_VARIABLE_TYPE_KEY = "display_variable_type";
-     /**
+    /**
      *
-     */ 
+     */
     public static String CLIENT_TO_SERVER_PING_KEY = "client_to_server_ping_key";
     public static String CLIENT_SESSIONS_CHECK_KEY = "client_sessions_check_key";
 
@@ -320,8 +320,8 @@ public final class LocalSettings {
                     success = false;
                 }
             }
-            return success;
         }
+        return success;
     }
 
     /**
@@ -329,13 +329,12 @@ public final class LocalSettings {
      * @return
      */
     public boolean writeSettings() {
-        if (settingsChanged = true) {
+        boolean success = false;
+        if (settingsChanged) {
             OutputStream propOutputStream = null;
-            boolean success = false;
             try {
                 propOutputStream = new FileOutputStream(settingsDir + System.getProperty("file.separator") + settingsFileName);
                 getProperties().storeToXML(propOutputStream, "CanReg5 local settings");
-
                 success = true;
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(LocalSettings.class.getName()).log(Level.SEVERE, null, ex);
@@ -354,11 +353,11 @@ public final class LocalSettings {
                         success = false;
                     }
                 }
-                return success;
             }
         } else {
-            return false;
+            success = false;
         }
+        return success;
     }
 
     /**
@@ -441,15 +440,15 @@ public final class LocalSettings {
             property = FONT_SIZE_MEDIUM;
         } else if (key.equalsIgnoreCase(DATA_ENTRY_VERSION_KEY)) {
             property = DATA_ENTRY_VERSION_NEW;
-        } else if (key.equalsIgnoreCase(DATE_FORMAT_KEY)){
+        } else if (key.equalsIgnoreCase(DATE_FORMAT_KEY)) {
             property = Globals.DATE_FORMAT_STRING;
-        } else if (key.equalsIgnoreCase(DISPLAY_VARIABLE_TYPE_KEY)){
+        } else if (key.equalsIgnoreCase(DISPLAY_VARIABLE_TYPE_KEY)) {
             property = DatabaseVariablesListElement.VariableType.FULL.toString();
         } else if (key.equalsIgnoreCase(CLIENT_TO_SERVER_PING_KEY)) {
             property = Globals.DEFAULT_CLIENT_TO_SERVER_PING;
         } else if (key.equalsIgnoreCase(CLIENT_SESSIONS_CHECK_KEY)) {
             property = Globals.DEFAULT_CLIENT_SESSIONS_CHECK_PING;
-        } 
+        }
         return property;
     }
 
@@ -518,7 +517,7 @@ public final class LocalSettings {
             String s = i.next();
             Pattern p = Pattern.compile("server\\.(\\d+)\\..*");
             Matcher m = p.matcher(s);
-            if (m.matches()) {                
+            if (m.matches()) {
                 int serverNumber = Integer.parseInt(m.group(1));
                 boolean notSeen = foundServers.add(serverNumber);
                 if (notSeen) {
@@ -643,7 +642,7 @@ public final class LocalSettings {
         }
         return isOutLineDragMode;
     }
-    
+
     public boolean isDataEntryVerticalSources() {
         boolean isDataEntryVerticalSources = false;
         String isDataEntryVerticalSourcesString = properties.getProperty(DATA_ENTRY_VERTICAL_SOURCES_KEY);
@@ -664,7 +663,7 @@ public final class LocalSettings {
             setProperty(OUTLINE_DRAG_MODE_KEY, OFF_PROPERTY);
         }
     }
-    
+
     public void setDataEntryVerticalSources(boolean dataEntryVerticalSources) {
         if (dataEntryVerticalSources) {
             setProperty(DATA_ENTRY_VERTICAL_SOURCES_KEY, ON_PROPERTY);
@@ -757,7 +756,7 @@ public final class LocalSettings {
         //
         return path;
     }
-    
+
     public String getDateFormatString() {
         String df = getProperty(DATE_FORMAT_KEY);
         // make sure that the month variable is upper case. (m is minute)
