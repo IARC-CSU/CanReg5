@@ -56,6 +56,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyVetoException;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FilenameFilter;
@@ -761,6 +762,11 @@ public final class CanRegClientView extends FrameView {
         showAndPositionInternalFrame(desktopPane, welcomeInternalFrame);
         centerInternalFrame(desktopPane, welcomeInternalFrame);
         welcomeInternalFrame.setDesktopPane(desktopPane);
+        try {
+            welcomeInternalFrame.setMaximum(true);
+        } catch (PropertyVetoException ex) {
+            Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public static void maximizeHeight(JDesktopPane desktopPane, JInternalFrame internalFrame) {
