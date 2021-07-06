@@ -75,6 +75,7 @@ public class LockFile {
                 if (in != null) {
                     in.close();
                 }
+                fis.close();
                 if (!success) {
                     locksMap = new TreeMap<>();
                 }
@@ -90,8 +91,7 @@ public class LockFile {
     }
 
     public void writeMap() {
-        try {
-            FileOutputStream fos = new FileOutputStream(lockFileName);
+        try (FileOutputStream fos = new FileOutputStream(lockFileName)){
             out = new ObjectOutputStream(fos);
             out.writeObject(locksMap);
             out.flush();
@@ -115,10 +115,12 @@ public class LockFile {
     public int getNumberOfRecordsLocked() {
         int records = 0;
         for (String key : locksMap.keySet()) {
-            if(locksMap.get(key) == null)
+            if (locksMap.get(key) == null) {
                 continue;
-            for (Integer i : locksMap.get(key)) 
+            }
+            for (Integer i : locksMap.get(key)) {
                 records++;
+            }
         }
         return records;
     }
