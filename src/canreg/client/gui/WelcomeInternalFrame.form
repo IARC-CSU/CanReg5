@@ -168,7 +168,9 @@
                     <Property name="text" type="java.lang.String" resourceKey="loginButton.text"/>
                     <Property name="toolTipText" type="java.lang.String" resourceKey="loginButton.toolTipText"/>
                     <Property name="actionCommand" type="java.lang.String" resourceKey="loginButton.actionCommand"/>
+                    <Property name="horizontalTextPosition" type="int" value="0"/>
                     <Property name="name" type="java.lang.String" value="loginButton" noResource="true"/>
+                    <Property name="verticalTextPosition" type="int" value="3"/>
                   </Properties>
                 </Component>
                 <Container class="javax.swing.JPanel" name="jPanel6">
@@ -188,7 +190,9 @@
                         </Property>
                         <Property name="toolTipText" type="java.lang.String" resourceKey="restoreBackupButton.toolTipText"/>
                         <Property name="actionCommand" type="java.lang.String" resourceKey="restoreBackupButton.actionCommand"/>
+                        <Property name="horizontalTextPosition" type="int" value="0"/>
                         <Property name="name" type="java.lang.String" value="restoreBackupButton" noResource="true"/>
+                        <Property name="verticalTextPosition" type="int" value="3"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JButton" name="adHocButton">
@@ -200,7 +204,9 @@
                         <Property name="text" type="java.lang.String" resourceKey="adHocButton.text"/>
                         <Property name="toolTipText" type="java.lang.String" resourceKey="adHocButton.toolTipText"/>
                         <Property name="actionCommand" type="java.lang.String" resourceKey="adHocButton.actionCommand"/>
+                        <Property name="horizontalTextPosition" type="int" value="0"/>
                         <Property name="name" type="java.lang.String" value="adHocButton" noResource="true"/>
+                        <Property name="verticalTextPosition" type="int" value="3"/>
                       </Properties>
                     </Component>
                   </SubComponents>

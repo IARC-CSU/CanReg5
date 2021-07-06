@@ -191,7 +191,9 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
         loginButton.setText(resourceMap.getString("loginButton.text")); // NOI18N
         loginButton.setToolTipText(resourceMap.getString("loginButton.toolTipText")); // NOI18N
         loginButton.setActionCommand(resourceMap.getString("loginButton.actionCommand")); // NOI18N
+        loginButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         loginButton.setName("loginButton"); // NOI18N
+        loginButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         buttonPanel.add(loginButton);
 
         jPanel6.setName("jPanel6"); // NOI18N
@@ -200,7 +202,9 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
         restoreBackupButton.setAction(actionMap.get("installNewSystemAction")); // NOI18N
         restoreBackupButton.setToolTipText(resourceMap.getString("restoreBackupButton.toolTipText")); // NOI18N
         restoreBackupButton.setActionCommand(resourceMap.getString("restoreBackupButton.actionCommand")); // NOI18N
+        restoreBackupButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         restoreBackupButton.setName("restoreBackupButton"); // NOI18N
+        restoreBackupButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jPanel6.add(restoreBackupButton);
 
         adHocButton.setAction(actionMap.get("adHocAnalysisAction")); // NOI18N
@@ -208,7 +212,9 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
         adHocButton.setText(resourceMap.getString("adHocButton.text")); // NOI18N
         adHocButton.setToolTipText(resourceMap.getString("adHocButton.toolTipText")); // NOI18N
         adHocButton.setActionCommand(resourceMap.getString("adHocButton.actionCommand")); // NOI18N
+        adHocButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         adHocButton.setName("adHocButton"); // NOI18N
+        adHocButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jPanel6.add(adHocButton);
 
         buttonPanel.add(jPanel6);

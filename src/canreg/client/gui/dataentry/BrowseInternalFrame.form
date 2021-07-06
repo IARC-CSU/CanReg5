@@ -93,10 +93,10 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="navigationPanel" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="rangeFilterPanel" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="buttonsPanel" alignment="0" min="-2" max="-2" attributes="1"/>
+                      <Component id="rangeFilterPanel" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="holdingOptions" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="resultPanel" max="32767" attributes="0"/>
@@ -222,12 +222,12 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="933" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="203" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="267" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
