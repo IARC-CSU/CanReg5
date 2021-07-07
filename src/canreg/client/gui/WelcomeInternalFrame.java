@@ -57,7 +57,7 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
 
         this.fv = fv;
         appInfoProperties = new Properties();
-        InputStream in = null;
+        InputStream in;
         try {
             //
             // load properties file

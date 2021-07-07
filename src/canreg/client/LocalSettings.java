@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2017 International Agency for Research on Cancer
+ * Copyright (C) 2008-2021 International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -53,31 +53,31 @@ public final class LocalSettings {
     /**
      *
      */
-    public static String LAST_SERVER_ID_KEY = "last_server_id";
+    public static final String LAST_SERVER_ID_KEY = "last_server_id";
     /**
      *
      */
-    public static String IMPORT_PATH_KEY = "import_path";
+    public static final String IMPORT_PATH_KEY = "import_path";
     /**
      *
      */
-    public static String USERNAME_KEY = "username";
+    public static final String USERNAME_KEY = "username";
     /**
      *
      */
-    public static String PASSWORD_KEY = "password";
+    public static final String PASSWORD_KEY = "password"; //NOSONAR
     /**
      *
      */
-    public static String LOCALE_KEY = "locale";
+    public static final String LOCALE_KEY = "locale";
     /**
      *
      */
-    public static String REMEMBER_PASSWORD_KEY = "remember_password";
+    public static final String REMEMBER_PASSWORD_KEY = "remember_password";
     /**
      *
      */
-    public static String OUTLINE_DRAG_MODE_KEY = "outline_drag_mode";
+    public static final String OUTLINE_DRAG_MODE_KEY = "outline_drag_mode";
     /**
      *
      */
@@ -87,7 +87,7 @@ public final class LocalSettings {
     /**
      *
      */
-    public static String DATA_ENTRY_VERTICAL_SOURCES_KEY = "data_entry_vertical_sources";
+    public static final String DATA_ENTRY_VERTICAL_SOURCES_KEY = "data_entry_vertical_sources";
     /**
      *
      */
@@ -95,57 +95,57 @@ public final class LocalSettings {
     /**
      *
      */
-    public static String WORKING_DIR_PATH_KEY = TABLES_PATH_KEY;
+    public static final String WORKING_DIR_PATH_KEY = TABLES_PATH_KEY;
     /**
      *
      */
-    public static String AUTO_START_SERVER_KEY = "auto_start_server";
+    public static final String AUTO_START_SERVER_KEY = "auto_start_server";
     /**
      *
      */
-    public static String SINGLE_USER_MODE_KEY = "single_user";
+    public static final String SINGLE_USER_MODE_KEY = "single_user";
     /**
      *
      */
-    public static String LOOK_AND_FEEL_KEY = "look_and_feel";
+    public static final String LOOK_AND_FEEL_KEY = "look_and_feel";
     /**
      *
      */
-    public static String AUTO_BACKUP_KEY = "auto_backup";
+    public static final String AUTO_BACKUP_KEY = "auto_backup";
     /**
      *
      */
-    public static String BACKUP_EVERY_KEY = "backup_every";
+    public static final String BACKUP_EVERY_KEY = "backup_every";
     // Property names
     /**
      *
      */
-    public static String YES_PROPERTY = "yes";
+    public static final String YES_PROPERTY = "yes";
     /**
      *
      */
-    public static String NO_PROPERTY = "no";
+    public static final String NO_PROPERTY = "no";
     /**
      *
      */
-    public static String ON_PROPERTY = "on";
+    public static final String ON_PROPERTY = "on";
     /**
      *
      */
-    public static String OFF_PROPERTY = "off";
+    public static final String OFF_PROPERTY = "off";
     /**
      *
      */
-    public static String TRUE_PROPERTY = "true";
+    public static final String TRUE_PROPERTY = "true";
     /**
      *
      */
-    public static String FALSE_PROPERTY = "false";
+    public static final String FALSE_PROPERTY = "false";
     /**
      *
      */
-    public static String R_PATH = "r_path";
-    public static String GS_PATH = "gs_path";
+    public static final String R_PATH = "r_path";
+    public static final String GS_PATH = "gs_path";
     /**
      *
      */
@@ -177,20 +177,20 @@ public final class LocalSettings {
     /**
      *
      */
-    public static String DATE_FORMAT_KEY = "date_format_string";
-    public static String DISPLAY_VARIABLE_TYPE_KEY = "display_variable_type";
+    public static final String DATE_FORMAT_KEY = "date_format_string";
+    public static final String DISPLAY_VARIABLE_TYPE_KEY = "display_variable_type";
     /**
      *
      */
-    public static String CLIENT_TO_SERVER_PING_KEY = "client_to_server_ping_key";
-    public static String CLIENT_SESSIONS_CHECK_KEY = "client_sessions_check_key";
+    public static final String CLIENT_TO_SERVER_PING_KEY = "client_to_server_ping_key";
+    public static final String CLIENT_SESSIONS_CHECK_KEY = "client_sessions_check_key";
 
     /**
      *
      * @param localSettingsFileName
-     * @throws java.io.IOException
+     * 
      */
-    public LocalSettings(String localSettingsFileName) throws IOException {
+    public LocalSettings(String localSettingsFileName) { 
         this.settingsFileName = localSettingsFileName;
         // set (and create) settings directory
         settingsDir = setCanRegClientSettingsDir();
@@ -293,14 +293,12 @@ public final class LocalSettings {
     }
 
     private boolean loadSettings() {
-        InputStream propInputStream = null;
         settingsChanged = false;
-        boolean success = false;
-        try {
-            propInputStream = new FileInputStream(settingsDir + System.getProperty("file.separator") + settingsFileName);
+        boolean success;
+        try (InputStream propInputStream = new FileInputStream(settingsDir + System.getProperty("file.separator") + settingsFileName)){ //NOSONAR
+             
             setProperties(new Properties());
             getProperties().loadFromXML(propInputStream);
-            propInputStream.close();
             success = true;
         } catch (InvalidPropertiesFormatException ex) {
             Logger.getLogger(LocalSettings.class.getName()).log(Level.SEVERE, null, ex);
@@ -311,16 +309,7 @@ public final class LocalSettings {
         } catch (IOException ex) {
             Logger.getLogger(LocalSettings.class.getName()).log(Level.SEVERE, null, ex);
             success = false;
-        } finally {
-            if (propInputStream != null) {
-                try {
-                    propInputStream.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(LocalSettings.class.getName()).log(Level.INFO, null, ex);
-                    success = false;
-                }
-            }
-        }
+        } 
         return success;
     }
 
@@ -574,12 +563,7 @@ public final class LocalSettings {
             namesArray[j] = sd.next().toString();
             j++;
         }
-
-        if (i > 0) {
-            return namesArray;
-        } else {
-            return null;
-        }
+        return namesArray;
     }
 
     /**
@@ -697,11 +681,11 @@ public final class LocalSettings {
             System.getenv("ProgramFiles") + Globals.FILE_SEPARATOR + "R",
             System.getenv("ProgramFiles(x86)") + Globals.FILE_SEPARATOR + "R"
         };
-        File folder = null;
+        File folder;
         long lastModified = 0;
         for (String folderToTry : foldersToTry) {
             folder = new File(folderToTry);
-            if (folder != null && folder.exists()) {
+            if (folder.exists()) {
                 File[] files = folder.listFiles();
                 // find the newest R installation
                 for (File thisFile : files) {
@@ -729,11 +713,11 @@ public final class LocalSettings {
             System.getenv("ProgramFiles") + Globals.FILE_SEPARATOR + "gs",
             System.getenv("ProgramFiles(x86)") + Globals.FILE_SEPARATOR + "gs"
         };
-        File folder = null;
+        File folder;
         long lastModified = 0;
         for (String folderToTry : foldersToTry) {
             folder = new File(folderToTry);
-            if (folder != null && folder.exists()) {
+            if (folder.exists()) {
                 File[] files = folder.listFiles();
                 // find the newest gs installation
                 for (File thisFile : files) {
@@ -762,16 +746,16 @@ public final class LocalSettings {
         String df = getProperty(DATE_FORMAT_KEY);
         // make sure that the month variable is upper case. (m is minute)
         // Ref: https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
-        df = df.replaceAll("m", "M");
+        df = df.replace("m", "M");
         return df;
     }
 
     public DatabaseVariablesListElement.VariableType getDisplayVariableType() {
-        String dvt_s = getProperty(DISPLAY_VARIABLE_TYPE_KEY).toUpperCase();
-        DatabaseVariablesListElement.VariableType dvt_e = DatabaseVariablesListElement.VariableType.valueOf(dvt_s);
-        if (dvt_e == null) {
-            dvt_e = DatabaseVariablesListElement.VariableType.valueOf(getDefaultProperty(DISPLAY_VARIABLE_TYPE_KEY));
+        String dvtS = getProperty(DISPLAY_VARIABLE_TYPE_KEY).toUpperCase();
+        DatabaseVariablesListElement.VariableType dvtE = DatabaseVariablesListElement.VariableType.valueOf(dvtS);
+        if (dvtE == null) {
+            dvtE = DatabaseVariablesListElement.VariableType.valueOf(getDefaultProperty(DISPLAY_VARIABLE_TYPE_KEY));
         }
-        return dvt_e;
+        return dvtE;
     }
 }

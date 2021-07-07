@@ -434,7 +434,7 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
         usernameTextField.setText(localSettings.getProperty(LocalSettings.USERNAME_KEY));
         // Load the server list
         String[] serverNames = localSettings.getServerNames();
-        if (serverNames != null) {
+        if (serverNames.length > 0) {
             canRegSystemComboBox.setModel(new javax.swing.DefaultComboBoxModel(localSettings.getServerDescriptions().toArray()));
             String lastServerIDString = localSettings.getProperty(LocalSettings.LAST_SERVER_ID_KEY);
             if (lastServerIDString != null && lastServerIDString.trim().length() > 0) {
