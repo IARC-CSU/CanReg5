@@ -51,6 +51,9 @@ import java.util.logging.Logger;
  */
 public class UserManagerNew {
 
+    /**
+     *
+     */
     static public String DEFAULT_PASS_FILENAME = "Passwords.properties";
     static public String DEFAULT_LEVELS_FILENAME = "Levels.properties";        
 
@@ -67,15 +70,11 @@ public class UserManagerNew {
         
         clientSessionsMap = new ConcurrentHashMap<>();
         
-        try {
-            checkAliveClients = Executors.newSingleThreadScheduledExecutor();
-            LocalSettings localSettings = new LocalSettings("settings.xml");
-//            te falta que estos jtextfield solo acepten integers. Fijate en el codigo del jewel en la caja de texto de los channels
-            Integer seconds = Integer.parseInt(localSettings.getProperty(LocalSettings.CLIENT_SESSIONS_CHECK_KEY));
-            checkAliveClients.scheduleAtFixedRate(new CheckClientSessionAlive(), 0, seconds, TimeUnit.SECONDS);
-        } catch (IOException ex) {
-            Logger.getLogger(UserManagerNew.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        checkAliveClients = Executors.newSingleThreadScheduledExecutor();
+        LocalSettings localSettings = new LocalSettings("settings.xml");
+        //            te falta que estos jtextfield solo acepten integers. Fijate en el codigo del jewel en la caja de texto de los channels
+        Integer seconds = Integer.parseInt(localSettings.getProperty(LocalSettings.CLIENT_SESSIONS_CHECK_KEY));
+        checkAliveClients.scheduleAtFixedRate(new CheckClientSessionAlive(), 0, seconds, TimeUnit.SECONDS);
     }
 
     public int getNumberOfUsersLoggedIn() {
