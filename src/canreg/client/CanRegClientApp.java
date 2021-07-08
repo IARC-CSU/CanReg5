@@ -115,7 +115,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     /**
      *
      */
-    private boolean loggedIn = false;
+    public boolean loggedIn = false;
     private CanRegClientView canRegClientView;
     private Document doc;
     private Map<Integer, Dictionary> dictionary;
