@@ -21,6 +21,7 @@
 package canreg.common.qualitycontrol;
 
 import canreg.common.DatabaseVariablesListElement;
+import canreg.common.Globals;
 import canreg.common.PersonSearchVariable;
 import canreg.common.Soundex;
 import canreg.common.database.Patient;
@@ -33,7 +34,7 @@ import java.util.Map;
  * The default person search module
  * @author ervikm
  * based on code from DEPedits by Andy Cooke 2008
- * 
+ *
  */
 public class DefaultPersonSearch implements PersonSearcher, Serializable {
 
@@ -52,7 +53,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
     // private Caverphone caverphone = new Caverphone();
 
     /**
-     * 
+     *
      * @param variablesInDB
      */
     public DefaultPersonSearch(DatabaseVariablesListElement[] variablesInDB) {
@@ -63,7 +64,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public synchronized PersonSearchVariable[] getPersonSearchVariables() {
@@ -71,7 +72,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
     }
 
     /**
-     * 
+     *
      * @param personSearchVariables
      */
     @Override
@@ -107,8 +108,21 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
         }
     }
 
+    public Object[] getPatientVariables(Patient patient, String patientRecordIDvariableName) {
+        if (variableNames == null) {
+            throw (new NullPointerException());
+        }
+        Object[] result = new Object[variableNames.length + 1];
+        for (int link = 0; link < variableNames.length; ++link) {
+            result[link] = patient.getVariable(variableNames[link]);
+        }
+        // Add the patient record id at the end
+        result[variableNames.length] = patient.getVariable(patientRecordIDvariableName);
+        return result;
+    }
+
     /**
-     * 
+     *
      * @param patient1
      * @param patient2
      * @return
@@ -191,6 +205,88 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
         return TotalScore;
     }
 
+    /**
+     *
+     * @param patient1
+     * @param patient2
+     * @return
+     */
+    public synchronized float compareDataOnly(Object[] patient1, Object[] patient2) {
+        if (variableNames == null) {
+            throw (new NullPointerException());
+        }
+        float similarity = comparePatientsDataOnly(patient1, patient2);
+        float perCent = 100 * similarity / maximumTotalScore; // scale 0 to max
+        //DEPeditsInst.Warning ("PerCent:"+DEPeditsInst.FloatToStr(PerCent,1));
+        return perCent;
+    }
+
+    private float comparePatientsDataOnly(Object[] patient1, Object[] patient2) {
+        int similarity = 0;
+        float totalScore = 0;
+        String patient1data;
+        String patient2data;
+        DatabaseVariablesListElement dbvle;
+        String varibleType;
+        CompareAlgorithms compareAlgorithm;
+
+        for (int link = 0; link < variableNames.length; ++link) {
+            dbvle = variablesInDBMap.get(variableNames[link]);
+            String unknownCode = null;
+            if (dbvle.getUnknownCode() != null) {
+                unknownCode = dbvle.getUnknownCode().toString();
+            }
+
+            Object patient1dataObject = patient1[link];
+            Object patient2dataObject = patient2[link];
+
+            if (patient1dataObject != null && patient2dataObject != null) {
+
+                patient1data = patient1dataObject.toString();
+                patient2data = patient2dataObject.toString();
+
+                compareAlgorithm = searchVariables[link].getCompareAlgorithm();
+
+                if (patient1data.trim().length() == 0 || patient2data.trim().length() == 0) {
+                    similarity = missing;
+                } else if (patient1data.equals(unknownCode)) {
+                    similarity = missing;
+                } else if (patient2data.equals(unknownCode)) {
+                    similarity = missing;
+                } else if (compareAlgorithm.equals(CompareAlgorithms.code)) {
+                    similarity = compareCodes(patient1data, patient2data);
+                } else if (compareAlgorithm.equals(CompareAlgorithms.alpha)) {
+                    similarity = compareText(patient1data, patient2data);
+                } else if (compareAlgorithm.equals(CompareAlgorithms.date)) {
+                    similarity = compareDate(patient1data, patient2data);
+                } else if (compareAlgorithm.equals(CompareAlgorithms.number)) {
+                    similarity = compareNumber(patient1data, patient2data);
+                } else if (compareAlgorithm.equals(CompareAlgorithms.soundex)) {
+                    similarity = compareSoundex(patient1data, patient2data);
+                } else {
+                    similarity = compareText(patient1data, patient2data);
+                }
+
+                float score;
+                if (similarity == missing) {
+                    score = 0;
+                } else {
+                    float dis = discPower[link];
+                    float rel = reliability[link];
+                    float pres = presence[link];
+                    float weigth = variableWeights[link];
+                    score = scoreFunction(dis, rel, pres, similarity, weigth);
+                }
+                // String s = LinkField1[link]+", "+LinkField2[link]+"  Sim:"+Integer.toString(Similarity)+"  Score:"+undup.FloatToStr(Score, 1);
+                // DEPeditsInst.Warning (s);
+                // similDisp[link] = Similarity;
+                // scoreDisp[link] = score;
+                totalScore += score;
+            }
+        }
+
+        return totalScore;
+    }
     private int compareCodes(String s1, String s2) {
         // called from Compare
         // finds how many common chars in same positions in s1 and s2
@@ -406,14 +502,14 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
         //------------------------------------------
 
         /*****  25% error returns 0
-        
-        eg  Age 62, 64
-        Diff = 2 , Max = 64
-        score = (1 - 4 * 2 / 64) * 100 = 87
-        
-        eg  Age 40, 35
-        Diff = 5 , Max = 40
-        score = (1 - 4 * 5 / 40) * 100 = 50
+
+         eg  Age 62, 64
+         Diff = 2 , Max = 64
+         score = (1 - 4 * 2 / 64) * 100 = 87
+
+         eg  Age 40, 35
+         Diff = 5 , Max = 40
+         score = (1 - 4 * 5 / 40) * 100 = 50
          ***************************/
         if (s1.equals(s2)) {
             return 100;
@@ -445,7 +541,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
         float Score = sim * weigth; // 2012
         return Score;
     }
-    
+
 //    private float scoreFunction(float dis, float rel, float pres, float sim, float weigth) {
 //        float Score = (sim / 5) * (2 + 4 * rel + 3 * dis) - 60 * rel - 20; // 2007
 //        //float	Score = (sim / 6) * (2 +4*rel +3*dis + rel*dis) - 6*rel -2;	//	20/08/2003
@@ -453,7 +549,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
 //    }
 
     /**
-     * 
+     *
      * @return
      */
     @Override
@@ -462,7 +558,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
     }
 
     /**
-     * 
+     *
      * @param threshold
      */
     @Override
