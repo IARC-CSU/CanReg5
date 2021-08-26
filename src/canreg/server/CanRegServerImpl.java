@@ -836,81 +836,41 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             } else {
                 // Object[][] rowData = retrieveRows(idString, startRow, endRow);
                 Object[][] rowData = globalPersonSearchHandler.getPatientRecordIDsWithinRange();
+                if (patientsData == null) {
+                 /*
+                    read all users 1 time in database and keep only the data corresponding to the variables selected
+                    on the duplicate Person Search Panel
+                */
 
-
-                if(auditImprove == null) {
-                    for (int row = startRow; row < endRow && row < rowData.length; row++) {
-                        int patientIDA = (Integer) rowData[row][0];
-                        Patient patientA = (Patient) getPatient(patientIDA);
-                        // Map<String, Float> patientIDScoreMap = performPersonSearch(patientA, searcher, globalPersonSearchHandler.getDistributedTableDescription());
-                        Map<String, Float> patientIDScoreMap = performPersonSearch(patientA, searcher, globalPersonSearchHandler.getAllPatientRecordIDs());
-                        if (patientIDScoreMap.size() > 0) {
-                            patientIDScorePatientIDMap.put((String) patientA.getVariable(patientRecordIDvariableName), patientIDScoreMap);
+                    patientsData = new HashMap<>(rowData.length);
+                    try {
+                        for (Object[] r : rowData) {
+                            int patientID = (Integer) r[0];
+                            // all selected data are on the variable patientsData
+                            try {
+                                patientsData.put(patientID,
+                                    ((DefaultPersonSearch) searcher)
+                                        .getPatientVariables((Patient) getPatient(patientID),
+                                            patientRecordIDvariableName));
+                            } catch (RecordLockedException ex) {
+                                Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                         }
+                    } catch (RemoteException | SecurityException ex) {
+                        Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } else {
-                    if(auditImprove.equals("patients")) {
-                        if(patients == null) {
-                            // AUDIT: improve = read all users 1 time only
-                            patients = new HashMap<>(rowData.length);
-                            try {
-                                for (Object[] r : rowData) {
-                                    int patientID = (Integer) r[0];
-                                    try {
-                                        patients.put(patientID, (Patient) getPatient(patientID));
-                                    } catch (RecordLockedException ex) {
-                                        Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
-                                    }
-                                }
-                            } catch (RemoteException | SecurityException ex) {
-                                Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                            LOG.info("Patients: " + patients.size());
-                        }
+                }
 
-                        for (int row = startRow; row < endRow && row < rowData.length; row++) {
-                            int patientIDA = (Integer) rowData[row][0];
-                            Patient patientA = patients.get(patientIDA);
-                            if(patientA != null) {
-                                // Map<String, Float> patientIDScoreMap = performPersonSearch(patientA, searcher, globalPersonSearchHandler.getDistributedTableDescription());
-                                Map<String, Float> patientIDScoreMap = performPersonSearch(patientA, searcher, globalPersonSearchHandler.getAllPatientRecordIDs(), patients);
-                                if (patientIDScoreMap.size() > 0) {
-                                    patientIDScorePatientIDMap.put((String) patientA.getVariable(patientRecordIDvariableName), patientIDScoreMap);
-                                }
-                            }
+                for (int row = startRow; row < endRow && row < rowData.length; row++) {
+                    int patientIDA = (Integer) rowData[row][0];
+                    Object[] patientAData = patientsData.get(patientIDA);
+                    if (patientAData != null) {
+                        Map<String, Float> patientIDScoreMap = performPersonSearchDataOnly(patientIDA,
+                            patientAData, searcher,
+                            patientsData, globalPersonSearchHandler.getAllPatientRecordIDs());
+                        if (patientIDScoreMap.size() > 0) {
+                            patientIDScorePatientIDMap.put(patientAData[5].toString(), patientIDScoreMap);
                         }
-                    } else {
-                        // patientsData only
-                        if(patientsData == null) {
-                            // AUDIT: improve = read all users 1 time only and keep only a few data
-                            patientsData = new HashMap<>(rowData.length);
-                            try {
-                                for (Object[] r : rowData) {
-                                    int patientID = (Integer) r[0];
-                                    try {
-                                        patientsData.put(patientID, ((DefaultPersonSearch) searcher).getPatientVariables((Patient) getPatient(patientID), patientRecordIDvariableName));
-                                    } catch (RecordLockedException ex) {
-                                        Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
-                                    }
-                                }
-                            } catch (RemoteException | SecurityException ex) {
-                                Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                            LOG.info("Patients: " + patientsData.size());
-                        }
-
-                        for (int row = startRow; row < endRow && row < rowData.length; row++) {
-                            int patientIDA = (Integer) rowData[row][0];
-                            Object[] patientAData = patientsData.get(patientIDA);
-                            if(patientAData != null) {
-                                Map<String, Float> patientIDScoreMap = performPersonSearchDataOnly(patientIDA, patientAData, searcher,
-                                    patientsData, globalPersonSearchHandler.getAllPatientRecordIDs());
-                                if (patientIDScoreMap.size() > 0) {
-                                    patientIDScorePatientIDMap.put(patientAData[5].toString(), patientIDScoreMap);
-                                }
-                            }
-                        }
-
                     }
                 }
             }
@@ -931,7 +891,6 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
 
     /**
      *
-     * @param idString
      */
     @Override
     public synchronized void interuptGlobalPersonSearch(String idString) {
@@ -940,14 +899,10 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
 
     /**
      *
-     * @param patient
-     * @param searcher
-     * @return
-     * @throws java.rmi.RemoteException
-     * @throws java.lang.SecurityException
      */
     @Override
-    public synchronized Map<String, Float> performPersonSearch(Patient patient, PersonSearcher searcher) throws RemoteException, SecurityException {
+    public synchronized Map<String, Float> performPersonSearch(Patient patient, PersonSearcher searcher)
+        throws RemoteException, SecurityException {
         DatabaseFilter filter = new DatabaseFilter();
         filter.setQueryType(DatabaseFilter.QueryType.PERSON_SEARCH);
         DistributedTableDescription dataDescription;
@@ -955,15 +910,19 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         if (searcher == null) {
             if (personSearcher == null) {
                 personSearcher = new DefaultPersonSearch(
-                        Tools.getVariableListElements(systemDescription.getSystemDescriptionDocument(), Globals.NAMESPACE));
-                PersonSearchVariable[] searchVariables = Tools.getPersonSearchVariables(systemDescription.getSystemDescriptionDocument(), Globals.NAMESPACE);
+                    Tools.getVariableListElements(systemDescription.getSystemDescriptionDocument(), Globals.NAMESPACE));
+                PersonSearchVariable[] searchVariables = Tools
+                    .getPersonSearchVariables(systemDescription.getSystemDescriptionDocument(), Globals.NAMESPACE);
                 personSearcher.setSearchVariables(searchVariables);
-                personSearcher.setThreshold(Tools.getPersonSearchMinimumMatch(systemDescription.getSystemDescriptionDocument(), Globals.NAMESPACE));
+                personSearcher.setThreshold(Tools
+                    .getPersonSearchMinimumMatch(systemDescription.getSystemDescriptionDocument(), Globals.NAMESPACE));
             }
             searcher = personSearcher;
         }
         try {
-            dataDescription = currentDAO.getDistributedTableDescriptionAndInitiateDatabaseQuery(filter, Globals.PATIENT_TABLE_NAME, currentDAO.generateResultSetID());
+            dataDescription = currentDAO
+                .getDistributedTableDescriptionAndInitiateDatabaseQuery(filter, Globals.PATIENT_TABLE_NAME,
+                    currentDAO.generateResultSetID());
             Object[][] rowData = retrieveRows(dataDescription.getResultSetID(), 0, dataDescription.getRowCount() - 1);
             patientIDScoreMap = performPersonSearch(patient, searcher, rowData);
             releaseResultSet(dataDescription.getResultSetID());
@@ -973,7 +932,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         return patientIDScoreMap;
     }
 
-    private Map<String, Float> performPersonSearch(Patient patient, PersonSearcher searcher, Object[][] rowData) throws RemoteException, SecurityException {
+    private Map<String, Float> performPersonSearch(Patient patient, PersonSearcher searcher, Object[][] rowData)
+        throws RemoteException, SecurityException {
         Map<String, Float> patientIDScoreMap = new TreeMap<>();
 
         Patient patientB;
@@ -1012,33 +972,15 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         return patientIDScoreMap;
     }
 
-    private Map<String, Float> performPersonSearch(Patient patient, PersonSearcher searcher, Object[][] rowData,
-        Map<Integer, Patient> patients) {
-        Map<String, Float> patientIDScoreMap = new TreeMap<>();
-        Patient patientB;
-        Object patientIDAObject = patient.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
-        int patientIDA;
-        if (patientIDAObject != null) {
-            patientIDA = (Integer) patientIDAObject;
-        } else {
-            patientIDA = -1;
-        }
-        float threshold = searcher.getThreshold();
-        for (Object[] r : rowData) {
-            int patientIDB = (Integer) r[0];
-            if (patientIDB != patientIDA) {
-                patientB = patients.get(patientIDB);
-                if(patientB != null) {
-                    float score = searcher.compare(patient, patientB);      // AUDIT perf dupli search :read 1 by 1?
-                    if (score > threshold) {
-                        patientIDScoreMap.put((String) patientB.getVariable(patientRecordIDvariableName), score);
-                    }
-                }
-            }
-        }
-        return patientIDScoreMap;
-    }
-
+    /**
+     * Compute the PatientId Score for each couple patient and add it to the patientIDScoreMap if score > threshold
+     *
+     * @param patientIDA id of the patient to be compare against the other patient
+     * @param patient patient to be compare against the other patient
+     * @param searcher contains the selected variables for the comparison
+     * @param patientsData saved data from the database
+     * @param rowData map that contains all the patients'id
+     */
     private Map<String, Float> performPersonSearchDataOnly(int patientIDA, Object[] patient, PersonSearcher searcher,
         Map<Integer, Object[]> patientsData, Object[][] rowData) {
         Map<String, Float> patientIDScoreMap = new TreeMap<>();
@@ -1048,8 +990,10 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             int patientIDB = (Integer) r[0];
             if (patientIDB != patientIDA) {
                 patientB = patientsData.get(patientIDB);
-                if(patientB != null) {
-                    float score = ((DefaultPersonSearch) searcher).compareDataOnly(patient, patientB);      // AUDIT perf dupli search :read 1 by 1?
+
+                if (patientB != null) {
+                    //compute the score between the two patients
+                    float score = ((DefaultPersonSearch) searcher).compareDataOnly(patient, patientB);
                     if (score > threshold) {
                         patientIDScoreMap.put(patientB[5].toString(), score);
                     }

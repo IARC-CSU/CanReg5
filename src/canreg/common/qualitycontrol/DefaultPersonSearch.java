@@ -25,9 +25,13 @@ import canreg.common.Globals;
 import canreg.common.PersonSearchVariable;
 import canreg.common.Soundex;
 import canreg.common.database.Patient;
+import canreg.server.CanRegServerImpl;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 //import org.apache.commons.codec.language.*;
 
 /**
@@ -51,6 +55,8 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
     // private Soundex soundex = new Soundex();
     // private DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
     // private Caverphone caverphone = new Caverphone();
+    private static final Logger LOG = Logger.getLogger(DefaultPersonSearch.class.getName());
+
 
     /**
      *
@@ -227,7 +233,6 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
         String patient1data;
         String patient2data;
         DatabaseVariablesListElement dbvle;
-        String varibleType;
         CompareAlgorithms compareAlgorithm;
 
         for (int link = 0; link < variableNames.length; ++link) {
