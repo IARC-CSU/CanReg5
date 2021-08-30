@@ -80,9 +80,9 @@ import org.apache.commons.csv.CSVPrinter;
  *
  * @author morten
  */
-public class PersonSearchFrame extends JInternalFrame implements ActionListener {
-    private static final Logger LOG = Logger.getLogger(PersonSearchFrame.class.getName());
+public class PersonSearchFrame extends javax.swing.JInternalFrame implements ActionListener {
 
+    private static final Logger LOG = Logger.getLogger(PersonSearchFrame.class.getName());
     private final PersonSearchListener listener;
     private Task duplicateSearchTask;
     private JDesktopPane desktopPane;
@@ -116,7 +116,7 @@ public class PersonSearchFrame extends JInternalFrame implements ActionListener 
         resultTableModel = new DefaultTableModel(new String[]{java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/PersonSearchFrame").getString("PATIENT A RECORD ID"), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/PersonSearchFrame").getString("PATIENT B RECORD ID"), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/PersonSearchFrame").getString("MATCH %")}, 0) {
 
             Class[] types = new Class[]{
-                String.class, String.class, Float.class
+                java.lang.String.class, java.lang.String.class, java.lang.Float.class
             };
             boolean[] canEdit = new boolean[]{
                 false, false, false
@@ -137,7 +137,7 @@ public class PersonSearchFrame extends JInternalFrame implements ActionListener 
         initComponents();
         listener = new PersonSearchListener();
         listener.setActionListener(this);
-        doc = CanRegClientApp.getApplication().getDatabseDescription();
+        doc = canreg.client.CanRegClientApp.getApplication().getDatabseDescription();
         personSearchVariablesPanel1.setDoc(doc);
         // personSearchVariablesPanel1.setSearcher(searcher);
         resultTable.getTableHeader().setReorderingAllowed(false);
@@ -198,18 +198,17 @@ public class PersonSearchFrame extends JInternalFrame implements ActionListener 
         matchesFoundTextField = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        personSearchVariablesPanel1 = new PersonSearchVariablesPanel();
+        personSearchVariablesPanel1 = new canreg.client.gui.management.PersonSearchVariablesPanel();
         resultPanel = new javax.swing.JPanel();
         resultScrollPane = new javax.swing.JScrollPane();
-        resultTable = new JTable();
+        resultTable = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
 
         setClosable(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setMaximizable(true);
         setResizable(true);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(
-            CanRegClientApp.class).getContext().getResourceMap(PersonSearchFrame.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(PersonSearchFrame.class);
         setTitle(resourceMap.getString("Form.title")); // NOI18N
         setFrameIcon(resourceMap.getIcon("Form.frameIcon")); // NOI18N
         setName("Form"); // NOI18N
@@ -265,7 +264,7 @@ public class PersonSearchFrame extends JInternalFrame implements ActionListener 
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(CanRegClientApp.class).getContext().getActionMap(PersonSearchFrame.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(PersonSearchFrame.class, this);
         performButton.setAction(actionMap.get("performDuplicateSearch")); // NOI18N
         performButton.setText(resourceMap.getString("performButton.text")); // NOI18N
         performButton.setName("performButton"); // NOI18N
@@ -446,8 +445,7 @@ public class PersonSearchFrame extends JInternalFrame implements ActionListener 
         while (resultTableModel.getRowCount() > 0) {
             resultTableModel.removeRow(0);
         }
-        duplicateSearchTask = new PerformDuplicateSearchTask(org.jdesktop.application.Application.getInstance(
-            CanRegClientApp.class));
+        duplicateSearchTask = new PerformDuplicateSearchTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
         performButton.setEnabled(false);
         interruptButton.setEnabled(true);
         DefaultPersonSearch searcher = personSearchVariablesPanel1.getSearcher();
@@ -471,7 +469,7 @@ public class PersonSearchFrame extends JInternalFrame implements ActionListener 
         return duplicateSearchTask;
     }
 
-    private class PerformDuplicateSearchTask extends Task<Object, Void> {
+    private class PerformDuplicateSearchTask extends org.jdesktop.application.Task<Object, Void> {
 
         PerformDuplicateSearchTask(org.jdesktop.application.Application app) {
             super(app);
@@ -496,7 +494,6 @@ public class PersonSearchFrame extends JInternalFrame implements ActionListener 
                 if (result != null) {
                     recordsTested += Globals.GLOBAL_PERSON_SEARCH_STEP_SIZE;
                 }
-                int nb = 0;
                 while (result != null) {
                     recordsTestedTextField.setText(recordsTested + "");
                     if (result.size() > 0) {
@@ -512,23 +509,24 @@ public class PersonSearchFrame extends JInternalFrame implements ActionListener 
                             }
                         }
                         matchesFoundTextField.setText(matchesFound + "");
-                        long now = System.currentTimeMillis();
-                        if(now - start > 60_000) {
-                            LOG.info("processed: " + nb);
-                            start = now;
-                        }
+
                         // TODO: Write to file
                     }
                     result = CanRegClientApp.getApplication().nextStepGlobalPersonSearch(personSearchHandlerID, null);
                     if (result != null) {
                         recordsTested += Globals.GLOBAL_PERSON_SEARCH_STEP_SIZE;
+                        if(recordsTested %1000 == 0 ){
+                            long now = System.currentTimeMillis();
+                            LOG.info(() ->" [records tested] : " + recordsTested  + " & [match found] : " + matchesFound
+                                + " [time elapsed] : "+(now-start)/1000+" sec");
+                        }
                     }
-                    nb++;
                 }
             } catch (SecurityException | RemoteException | DistributedTableDescriptionException | RecordLockedException | SQLException | UnknownTableException ex) {
                 Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
-            LOG.log(Level.INFO, "finished");
+            LOG.log(Level.INFO, () ->" duplicate search finished : [records tested] :"  + recordsTested  +
+                " & [match found] : " + matchesFound);
             return null;  // return your result
         }
 
@@ -559,14 +557,14 @@ public class PersonSearchFrame extends JInternalFrame implements ActionListener 
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField matchesFoundTextField;
     private javax.swing.JButton performButton;
-    private PersonSearchVariablesPanel personSearchVariablesPanel1;
+    private canreg.client.gui.management.PersonSearchVariablesPanel personSearchVariablesPanel1;
     private javax.swing.JTextField rangeEndTextField;
     private javax.swing.JTextField rangeStartTextField;
     private javax.swing.JTextField recordsInRangeField;
     private javax.swing.JTextField recordsTestedTextField;
     private javax.swing.JPanel resultPanel;
     private javax.swing.JScrollPane resultScrollPane;
-    private JTable resultTable;
+    private javax.swing.JTable resultTable;
     // End of variables declaration//GEN-END:variables
 
     @Override
