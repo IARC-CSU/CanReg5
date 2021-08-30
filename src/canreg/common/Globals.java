@@ -268,6 +268,7 @@ public class Globals {
     public static String DD_FILE_VARIABLES_FILE = "/canreg/common/ruby/export_format_canreg5.tsv";
     public static final String DEFAULT_CLIENT_TO_SERVER_PING = "20";
     public static final String DEFAULT_CLIENT_SESSIONS_CHECK_PING = "45";
+    public static String DEFAULT_LOOK_AND_FEEL = "System";
 
     /**
      *
