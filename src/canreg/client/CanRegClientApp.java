@@ -125,7 +125,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     private Converter converter;
     private Properties appInfoProperties;
     private String canRegSystemVersionString;
-    private TreeMap<String, Set<Integer>> locksMap;
+    private Map<String, Set<Integer>> locksMap;
     private LockFile lockFile;
 
     public void changePassword(String encrypted) throws SecurityException, RemoteException {
