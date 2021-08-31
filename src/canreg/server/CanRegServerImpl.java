@@ -83,6 +83,7 @@ import org.w3c.dom.Document;
  */
 public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServerInterface {
 
+    private static final Logger LOG = Logger.getLogger(CanRegServerImpl.class.getName());
     private static boolean debug = true;
 
     private NetworkServerControl dbServer;
@@ -99,6 +100,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
 
     private CanRegDAO currentDAO;
     private HashMap<String, CanRegDAO> registriesDAOs;
+    private Map<Integer, Object[]> patientsData;
 
     /**
      *
@@ -806,12 +808,16 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     /**
-     *
-     * @param idString
-     * @return
-     * @throws SecurityException
-     * @throws RemoteException
-     * @throws canreg.server.database.RecordLockedException
+     * Find the duplicate present in the selected row of the database using a collection of variables
+     * selected before the search.
+     * A score is compute between each row and a duplicate is found only if the score is superior to threeshold
+     * This function return a map of all the duplicate found in the computed sample
+
+     * @param idString id of the current operation in the server
+     * @throws SecurityException security exception
+     * @throws RemoteException remote exception
+     * @throws RecordLockedException if the fonction is locked
+     * @return patientIDScorePatientIDMap
      */
     @Override
     public synchronized Map<String, Map<String, Float>> nextStepGlobalPersonSearch(String idString) throws SecurityException, RemoteException, RecordLockedException {
@@ -830,13 +836,38 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             } else {
                 // Object[][] rowData = retrieveRows(idString, startRow, endRow);
                 Object[][] rowData = globalPersonSearchHandler.getPatientRecordIDsWithinRange();
+                if (patientsData == null) {
+                    //read all users one time in database and keep only the data corresponding to the variables selected
+                    // on the duplicate Person Search Panel
+                    patientsData = new HashMap<>(rowData.length);
+                    try {
+                        for (Object[] r : rowData) {
+                            int patientID = (Integer) r[0];
+                            // all selected data from the database are on the variable patientsData
+                            try {
+                                patientsData.put(patientID,
+                                    ((DefaultPersonSearch) searcher)
+                                        .getPatientVariables((Patient) getPatient(patientID),
+                                            patientRecordIDvariableName));
+                            } catch (RecordLockedException ex) {
+                                LOG.log(Level.SEVERE,null,ex);
+                            }
+                        }
+                    } catch (RemoteException | SecurityException ex) {
+                        LOG.log(Level.SEVERE,null,ex);
+                    }
+                }
+                //  read all the stored data in memory to compute the patientIDScorePatientIDMap
                 for (int row = startRow; row < endRow && row < rowData.length; row++) {
                     int patientIDA = (Integer) rowData[row][0];
-                    Patient patientA = (Patient) getPatient(patientIDA);
+                    Object[] patientAData = patientsData.get(patientIDA);
                     // Map<String, Float> patientIDScoreMap = performPersonSearch(patientA, searcher, globalPersonSearchHandler.getDistributedTableDescription());
-                    Map<String, Float> patientIDScoreMap = performPersonSearch(patientA, searcher, globalPersonSearchHandler.getAllPatientRecordIDs());
-                    if (patientIDScoreMap.size() > 0) {
-                        patientIDScorePatientIDMap.put((String) patientA.getVariable(patientRecordIDvariableName), patientIDScoreMap);
+
+                    if (patientAData != null) {
+                        Map<String, Float> patientIDScoreMap = performPersonSearchDataOnly(patientIDA, patientAData, searcher, patientsData, globalPersonSearchHandler.getAllPatientRecordIDs());
+                        if (patientIDScoreMap.size() > 0) {
+                            patientIDScorePatientIDMap.put(patientAData[5].toString(), patientIDScoreMap);
+                        }
                     }
                 }
             }
@@ -895,6 +926,37 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             releaseResultSet(dataDescription.getResultSetID());
         } catch (SQLException | UnknownTableException | DistributedTableDescriptionException ex) {
             Logger.getLogger(DefaultPersonSearch.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return patientIDScoreMap;
+    }
+
+    /**
+     * Compute the PatientId Score for each couple patient and add it to the patientIDScoreMap if score > threshold
+     *
+     * @param patientIDA id of the patient A (to be compare against the other patient)
+     * @param patient  the information of the patientA
+     * @param searcher all the information about the duplicate search parameters
+     * @param patientsData selected variables of each patient of the database
+     * @param rowData map that contains all the temporary patient'Ids
+     */
+    private Map<String, Float> performPersonSearchDataOnly(int patientIDA, Object[] patient, PersonSearcher searcher,
+        Map<Integer, Object[]> patientsData, Object[][] rowData) {
+        Map<String, Float> patientIDScoreMap = new TreeMap<>();
+        Object[] patientB;
+        float threshold = searcher.getThreshold();
+        for (Object[] r : rowData) {
+            int patientIDB = (Integer) r[0];
+            if (patientIDB != patientIDA) {
+                patientB = patientsData.get(patientIDB);
+
+                if (patientB != null) {
+                    //compute the score between the two patients
+                    float score = ((DefaultPersonSearch) searcher).compareDataOnly(patient, patientB);
+                    if (score > threshold) {
+                        patientIDScoreMap.put(patientB[5].toString(), score);
+                    }
+                }
+            }
         }
         return patientIDScoreMap;
     }

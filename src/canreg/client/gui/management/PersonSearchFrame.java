@@ -82,6 +82,7 @@ import org.apache.commons.csv.CSVPrinter;
  */
 public class PersonSearchFrame extends javax.swing.JInternalFrame implements ActionListener {
 
+    private static final Logger LOG = Logger.getLogger(PersonSearchFrame.class.getName());
     private final PersonSearchListener listener;
     private Task duplicateSearchTask;
     private JDesktopPane desktopPane;
@@ -487,6 +488,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
             matchesFound = 0;
             recordsTestedTextField.setText(recordsTested + "");
             matchesFoundTextField.setText(matchesFound + "");
+            long start = System.currentTimeMillis();
             try {
                 result = CanRegClientApp.getApplication().nextStepGlobalPersonSearch(personSearchHandlerID, null);
                 if (result != null) {
@@ -513,11 +515,18 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                     result = CanRegClientApp.getApplication().nextStepGlobalPersonSearch(personSearchHandlerID, null);
                     if (result != null) {
                         recordsTested += Globals.GLOBAL_PERSON_SEARCH_STEP_SIZE;
+                        if(recordsTested %1000 == 0 ){
+                            long now = System.currentTimeMillis();
+                            LOG.info(() ->" [records tested] : " + recordsTested  + " & [match found] : " + matchesFound
+                                + " [time elapsed] : "+(now-start)/1000+" sec");
+                        }
                     }
                 }
             } catch (SecurityException | RemoteException | DistributedTableDescriptionException | RecordLockedException | SQLException | UnknownTableException ex) {
                 Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
+            LOG.log(Level.INFO, () ->" duplicate search finished : [records tested] :"  + recordsTested  +
+                " & [match found] : " + matchesFound);
             return null;  // return your result
         }
 
