@@ -773,7 +773,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         DistributedTableDescription dataDescription;
         GlobalPersonSearchHandler gpsh = new GlobalPersonSearchHandler();
         String resultSetID = null;
-
+        boolean isOK = false;
         try {
             if (searcher == null) {
                 searcher = personSearcher;
@@ -783,8 +783,9 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             filter.setQueryType(DatabaseFilter.QueryType.PERSON_SEARCH);
 
             dataDescription = getDistributedTableDescription(filter, Globals.PATIENT_TABLE_NAME);
-            gpsh.setAllPatientRecordIDs(retrieveRows(dataDescription.getResultSetID(), 0, dataDescription.getRowCount()));
-            releaseResultSet(dataDescription.getResultSetID());
+            resultSetID = dataDescription.getResultSetID();
+            gpsh.setAllPatientRecordIDs(retrieveRows(resultSetID, 0, dataDescription.getRowCount()));
+            releaseResultSet(resultSetID);
             DatabaseIndexesListElement dbile = new DatabaseIndexesListElement(null);
             dbile.setDatabaseTableName(Globals.PATIENT_TABLE_NAME);
             filter.setRangeDatabaseIndexedListElement(dbile);
@@ -801,8 +802,14 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
 
             activePersonSearchers.put(resultSetID, gpsh);
             // releaseResultSet(resultSetID);
+            isOK = true;
         } catch (SQLException | UnknownTableException | DistributedTableDescriptionException ex) {
             Logger.getLogger(DefaultPersonSearch.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        finally {
+            if(! isOK){
+                releaseNotNullResultSet(resultSetID);
+            }
         }
         return resultSetID;
     }
@@ -909,6 +916,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         filter.setQueryType(DatabaseFilter.QueryType.PERSON_SEARCH);
         DistributedTableDescription dataDescription;
         Map<String, Float> patientIDScoreMap = null;
+        String resultSetID = null;
         if (searcher == null) {
             if (personSearcher == null) {
                 personSearcher = new DefaultPersonSearch(
@@ -921,11 +929,16 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         }
         try {
             dataDescription = currentDAO.getDistributedTableDescriptionAndInitiateDatabaseQuery(filter, Globals.PATIENT_TABLE_NAME, currentDAO.generateResultSetID());
-            Object[][] rowData = retrieveRows(dataDescription.getResultSetID(), 0, dataDescription.getRowCount() - 1);
+            resultSetID = dataDescription.getResultSetID();
+            Object[][] rowData = retrieveRows(resultSetID, 0, dataDescription.getRowCount() - 1);
             patientIDScoreMap = performPersonSearch(patient, searcher, rowData);
-            releaseResultSet(dataDescription.getResultSetID());
+            releaseResultSet(resultSetID);
+            // Set the resultSetID to null after release of the resultSet to avoid another release in the finally
+            resultSetID = null;
         } catch (SQLException | UnknownTableException | DistributedTableDescriptionException ex) {
             Logger.getLogger(DefaultPersonSearch.class.getName()).log(Level.SEVERE, null, ex);
+        }finally {
+            releaseNotNullResultSet(resultSetID);
         }
         return patientIDScoreMap;
     }
@@ -1205,4 +1218,14 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         return super.hashCode();
     }
 
+    // Method to release the ResultSet in finally block if the ResultSetID is not null 
+    private void releaseNotNullResultSet(String resultSetID) throws RemoteException{
+        try {
+            if(resultSetID != null){
+                releaseResultSet(resultSetID);
+            }
+        }catch (SQLException ex){
+            LOG.log(Level.SEVERE,"Sql error in the release of the ResultSet with resultSetID : "+ resultSetID,ex);
+        }
+    }
 }
