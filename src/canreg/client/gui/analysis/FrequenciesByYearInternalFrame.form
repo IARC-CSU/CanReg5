@@ -30,21 +30,21 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <Component id="rangeFilterPanel" min="-2" pref="407" max="-2" attributes="0"/>
+              <Component id="rangeFilterPanel" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="saveTableButton" min="-2" pref="115" max="-2" attributes="0"/>
+                      <Component id="saveTableButton" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="printTableButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="popOutTableButton" max="32767" attributes="0"/>
+                      <Component id="popOutTableButton" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="variablesChooserPanel" alignment="0" pref="0" max="32767" attributes="0"/>
+                  <Component id="variablesChooserPanel" alignment="1" min="-2" pref="467" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
-          <Component id="resultPanel" alignment="0" max="32767" attributes="0"/>
+          <Component id="resultPanel" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -98,12 +98,12 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="resultScrollPane" alignment="1" max="32767" attributes="0"/>
+              <Component id="resultScrollPane" alignment="1" pref="1069" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="resultScrollPane" alignment="1" pref="204" max="32767" attributes="0"/>
+              <Component id="resultScrollPane" alignment="1" pref="336" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
