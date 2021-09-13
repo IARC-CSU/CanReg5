@@ -23,6 +23,8 @@ import canreg.common.Globals;
 import java.net.MalformedURLException;
 import java.rmi.RemoteException;
 import java.rmi.server.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.security.auth.*;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
@@ -35,10 +37,11 @@ public class CanRegLoginImpl extends UnicastRemoteObject
         implements CanRegLoginInterface {
 
     private CanRegServerInterface theServer;
+    private static final Logger LOG = Logger.getLogger(CanRegServerImpl.class.getName());
 
-    /**
+    /** Launch the server mode with custom properties to increase the server security 
      * 
-     * @param server
+     * @param server server instance
      * @throws java.rmi.RemoteException
      * @throws java.net.MalformedURLException
      */
@@ -46,16 +49,28 @@ public class CanRegLoginImpl extends UnicastRemoteObject
             throws RemoteException, MalformedURLException {
         // Prevent JAVA to use a random port.
         super(1099);
-        
+        LOG.log(Level.INFO,"Launching the server mode");
+        // set custom java security properties
         System.setProperty("java.security.auth.login.config", Globals.LOGIN_FILENAME);
         System.setProperty("java.security.policy", Globals.POLICY_FILENAME);
+        System.setProperty("java.rmi.server.useCodebaseOnly", "true");
         this.theServer = server;
     }
-
+    
+    /** Launch the application with the single mode user with custom properties to increase the server security  
+     * 
+     * @param serverCode string : code after the url inn the login GUI
+     * @param isAdHocDB boolean : enable or not the in-memory database
+     * @throws RemoteException a remote exception 
+     */
     public CanRegLoginImpl(String serverCode, boolean isAdHocDB)
-            throws RemoteException, MalformedURLException {
+            throws RemoteException {
+        LOG.log(Level.INFO,"Launching single user mode");
+        
+        // set custom java security properties
         System.setProperty("java.security.auth.login.config", Globals.LOGIN_FILENAME);
         System.setProperty("java.security.policy", Globals.POLICY_FILENAME);
+        System.setProperty("java.rmi.server.useCodebaseOnly", "true");
         theServer = new CanRegServerImpl(serverCode, isAdHocDB);
     }
 
