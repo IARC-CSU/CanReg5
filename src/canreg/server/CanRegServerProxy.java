@@ -457,6 +457,12 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
         theServer.pingRemote(remoteClientHashCode);
     }    
     
+    //not use in our case
+    @Override
+    public boolean checkPassword(String username, char[] password) throws RemoteException {
+        return false;
+    }
+    
     @Override
     public int hashCode() {
         return super.hashCode();

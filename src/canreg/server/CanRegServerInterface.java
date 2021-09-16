@@ -45,6 +45,7 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import javax.security.auth.login.LoginException;
 import org.w3c.dom.Document;
 
 /**
@@ -524,4 +525,6 @@ public interface CanRegServerInterface extends Remote {
      * @throws Exception 
      */
     public void pingRemote(Integer remoteClientHashCode) throws RemoteException, Exception;
+
+    public boolean checkPassword(String username, char[] password) throws RemoteException, LoginException;
 }

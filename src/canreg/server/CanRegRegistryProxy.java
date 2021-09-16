@@ -48,6 +48,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.security.auth.Subject;
+import javax.security.auth.login.LoginContext;
+import javax.security.auth.login.LoginException;
 import org.w3c.dom.Document;
 
 /**
@@ -573,8 +575,21 @@ public class CanRegRegistryProxy implements CanRegServerInterface, Serializable 
         //pingRemote's parameter is not needed here, hashCode() is supplied instead.
         serverProxy.pingRemote(remoteClientHashCode);
         resetRegistryDB();
-    }  
-    
+    }
+
+    @Override
+    public boolean checkPassword(String username, char[] password) throws RemoteException {
+        boolean validPassword = false;
+        try {
+            LoginContext lc = new LoginContext("CanRegLogin", new RemoteCallbackHandler(username, password));
+            lc.login();
+            validPassword = true;
+        } catch (LoginException ex) {
+            Logger.getLogger(CanRegLoginImpl.class.getName()).log(Level.WARNING,"Error in the current password" );
+        }
+        return validPassword;
+    }
+
     @Override
     public int hashCode() {
         return serverProxy.hashCode();

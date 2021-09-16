@@ -139,6 +139,11 @@ public class CanRegClientApp extends SingleFrameApplication {
         }
     }
 
+    public boolean checkPassword(String username,char [] password)
+        throws SecurityException, RemoteException, LoginException {
+             return mainServer.checkPassword(username,password);
+        }
+        
     public boolean deletePopulationDataset(int populationDatasetID, CanRegServerInterface server)
             throws SQLException, SecurityException, RemoteException {
         if(server == null)

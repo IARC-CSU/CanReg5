@@ -60,6 +60,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.security.auth.login.LoginException;
 import org.apache.derby.drda.NetworkServerControl;
 import java.net.InetAddress;
 import java.text.SimpleDateFormat;
@@ -1217,7 +1218,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     public int hashCode() {
         return super.hashCode();
     }
-
+    
     // Method to release the ResultSet in finally block if the ResultSetID is not null 
     private void releaseNotNullResultSet(String resultSetID) throws RemoteException{
         try {
@@ -1227,5 +1228,10 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         }catch (SQLException ex){
             LOG.log(Level.SEVERE,"Sql error in the release of the ResultSet with resultSetID : "+ resultSetID,ex);
         }
+    }
+    //not used in our case
+    @Override
+    public boolean checkPassword(String username, char[] password) throws java.rmi.RemoteException, LoginException {
+        return false;
     }
 }
