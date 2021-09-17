@@ -35,6 +35,7 @@ import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.nio.charset.Charset;
+import java.util.Base64;
 import java.util.LinkedList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -1256,5 +1257,12 @@ public class Tools {
         if (!folder.delete())
           return false;
         return true;
+    }
+    public static String encodeUsername(String username) throws SecurityException {
+        String encodedUsername = Base64.getEncoder().encodeToString(username.getBytes(StandardCharsets.UTF_8));
+        String encoded1 = encodedUsername.replace('+', '-');
+        String encoded2 = encoded1.replace('/', '_');
+        String encoded3 = encoded2.replace('=', '.');
+        return encoded3;
     }
 }

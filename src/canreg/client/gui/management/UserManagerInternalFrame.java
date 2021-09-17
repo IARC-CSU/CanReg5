@@ -52,6 +52,7 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
 
     private List<User> users;
     private DefaultListModel usersListModel;
+    private LocalSettings localSettings;
 
     /** Creates new form UserManagerInternalFrame */
     public UserManagerInternalFrame() {
@@ -699,7 +700,7 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
                     try {
                         canreg.client.CanRegClientApp.getApplication().changePassword(encrypted);
                     JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("PASSWORD CHANGED."));
-                    } catch (SecurityException | RemoteException ex) {
+                } catch (SecurityException | RemoteException ex) {
                         Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 } catch (SystemUnavailableException ex) {

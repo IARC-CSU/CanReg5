@@ -187,7 +187,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     public void saveUser(User user) throws SQLException, RemoteException, SecurityException {
         mainServer.saveUser(user);
     }
-
+    
     private DatabaseRecord getRecordByID(String recordID, String tableName, boolean lock, CanRegServerInterface server)
             throws SQLException, SecurityException, RecordLockedException, 
                    UnknownTableException, DistributedTableDescriptionException, RemoteException {
