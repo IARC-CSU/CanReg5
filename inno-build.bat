@@ -9,6 +9,7 @@ set zx=%zippath%\7z.exe
 pandoc changelog.txt -f markdown -t rtf -s -o changelog.rtf
 pandoc changelog.txt -f markdown -t html --metadata title="CanReg5 Changelog" -H helpers\pandoc\pandoc.html -s -o changelog.html
 REM if not exist %isx% set errormsg=%isx% not found && goto errorhandler
+cp changelog.html dist\web
 %isx% "%iwz%"
 %isx% "%iwz-r%"
 %isx% "%iwz-w-r%"

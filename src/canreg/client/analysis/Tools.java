@@ -57,7 +57,7 @@ import java.util.logging.Logger;
 import org.apache.batik.dom.GenericDOMImplementation;
 import org.apache.batik.svggen.SVGGraphics2D;
 import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PiePlot;
@@ -258,7 +258,7 @@ public class Tools {
                 Tools.exportChartAsCSV(chart, file);
                 break;
             default:
-                ChartUtilities.saveChartAsPNG(file, chart, 1000, 1000);
+                ChartUtils.saveChartAsPNG(file, chart, 1000, 1000);
                 break;
         }
         return fileName;
