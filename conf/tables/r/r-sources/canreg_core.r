@@ -1,4 +1,4 @@
-## version : 1.0
+## version : 1.10
 
 
 canreg_output_cat <- function(ft, filename,sex_graph=FALSE, list_graph=FALSE) {
@@ -1948,6 +1948,33 @@ canreg_bar_plot <- function(dt,
   
   return(csu_plot)
   
+}
+
+canreg_child_table <-function(df_data,
+                               var_top = "asr",
+                               var_bar = "cancer_label",
+                               group_by = "SEX",
+                               landscape = FALSE,
+                               list_graph = FALSE,
+                               canreg_header=NULL,
+                               return_data = FALSE,
+                               plot_caption= NULL)
+{
+
+   table_iccc <- canreg_iccc_table(df_data)
+   age_label <- table_iccc$age_label_order
+   dt_report <- table_iccc$dt
+
+   setnames(dt_report,"CSU_C.0", paste0("cases_", age_label[1] ))
+   setnames(dt_report,"CSU_C.1", paste0("cases_", age_label[2] ))
+   setnames(dt_report,"CSU_C.2", paste0("cases_", age_label[3] ))
+   setnames(dt_report,"ratio","ratio_MF")
+   setnames(dt_report,"age_crude.0", paste0("crude_", age_label[1] ))
+   setnames(dt_report,"age_crude.1", paste0("crude_", age_label[2] ))
+   setnames(dt_report,"age_crude.2", paste0("crude_", age_label[3] ))
+   return(dt_report)
+
+
 }
 
 
