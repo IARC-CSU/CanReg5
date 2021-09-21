@@ -22,7 +22,7 @@
 package canreg.common;
 
 import canreg.exceptions.SystemUnavailableException;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 // Removed proprietory imports
@@ -36,48 +36,33 @@ import java.security.NoSuchAlgorithmException;
 public final class PasswordService
 {
   private static PasswordService instance;
-
-  private PasswordService()
-  {
-  }
-
-  /**
-   * 
-   * @param plaintext
-   * @return
-   * @throws canreg.exceptions.SystemUnavailableException
-   */
-  public synchronized String encrypt(String plaintext) throws SystemUnavailableException
-  {
-    MessageDigest md = null;
-    try
-    {
-      md = MessageDigest.getInstance("SHA"); //step 2
-    }
-    catch(NoSuchAlgorithmException e)
-    {
-      throw new SystemUnavailableException(e.getMessage());
-    }
-    try
-    {
-      md.update(plaintext.getBytes("UTF-8")); //step 3
-    }
-    catch(UnsupportedEncodingException e)
-    {
-      throw new SystemUnavailableException(e.getMessage());
-    }
-
-    byte raw[] = md.digest(); //step 4
-    // Old way:
-    // String hash = (new BASE64Encoder()).encode(raw); //step 5
-    // new way:
-    String hash = hexEncode(raw);    
-    return hash; //step 6
-  }
   
   /**
+   * Method to hash the password with a SHA-256 encrypting method 
    * 
-   * @return
+   * @param plaintext :the password to be hashed
+   * @return generatedPassword : the password hashed with SHA-256
+   * @throws canreg.exceptions.SystemUnavailableException
+   */
+  public synchronized String encrypt(String plaintext, String method) throws SystemUnavailableException {
+    MessageDigest md = null;
+    try {
+      if (method.equalsIgnoreCase("SHA-256")) {
+        md = MessageDigest.getInstance(method); //step 2 for password hashes with SHA-256
+      } else if (method.equalsIgnoreCase("SHA")) {
+        md = MessageDigest.getInstance(method); //step 2 for password hashes with SHA
+      }
+      md.update(plaintext.getBytes(StandardCharsets.UTF_8)); //step 3 add the salt for the password hashing
+    } catch (NoSuchAlgorithmException e) {
+      throw new SystemUnavailableException(e.getMessage());
+    }
+    byte[] raw = md.digest(); //step 4
+    return hexEncode(raw); //step 5
+  }
+  
+  /** return an instance of the PasswordService 
+   * 
+   * @return instance 
    */
   public static synchronized PasswordService getInstance() //step 1
   {
