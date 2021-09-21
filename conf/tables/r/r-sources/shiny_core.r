@@ -899,19 +899,13 @@ canreg_shiny_plot <- function(dt_plot,input,session, download = FALSE,slide=FALS
   
 }
 
-canreg_shiny_table <- function(dt_table, input, session,download = FALSE,slide=FALSE, file = NULL) {
+canreg_shiny_table <- function(dt_table, input, session,download = FALSE, file = NULL) {
 
 	if  (!is.null(input$select_table)) {
   
 		if (download) {
 			table_number <- input$select_table
-			if (slide) {
-				ls_args$header  <- ""
-				output_type <- "png"
-			}
-    		else {
-      			output_type <- input$select_format
-    		}
+      output_type <- input$select_format
   		}
 		else {
 			table_number <- isolate(input$select_table)
@@ -929,7 +923,7 @@ canreg_shiny_table <- function(dt_table, input, session,download = FALSE,slide=F
 					
 			}
 			else {
-				canreg_child_table(df_data=dt_table)
+				canreg_child_table(df_data=dt_table, TRUE)
 							
 			}
 		}
