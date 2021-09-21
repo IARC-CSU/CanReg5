@@ -1963,13 +1963,17 @@ canreg_child_table <-function(df_data,
    age_label <- table_iccc$age_label_order
    dt_report <- table_iccc$dt
 
-   setnames(dt_report,"CSU_C.0", paste0("cases_", age_label[1] ))
-   setnames(dt_report,"CSU_C.1", paste0("cases_", age_label[2] ))
-   setnames(dt_report,"CSU_C.2", paste0("cases_", age_label[3] ))
-   setnames(dt_report,"ratio","ratio_MF")
-   setnames(dt_report,"age_crude.0", paste0("crude_", age_label[1] ))
-   setnames(dt_report,"age_crude.1", paste0("crude_", age_label[2] ))
-   setnames(dt_report,"age_crude.2", paste0("crude_", age_label[3] ))
+   setnames(dt_report,"ICCC_code", "ICCC code")
+   setnames(dt_report,"ICCC_label", "ICCC label")
+   setnames(dt_report,"CSU_C.0", paste0(age_label[1], " years old: cases"))
+   setnames(dt_report,"CSU_C.1", paste0(age_label[2], " years old: cases"))
+   setnames(dt_report,"CSU_C.2", paste0(age_label[3], " years old: cases"))
+   setnames(dt_report,"ratio","ratio M/F")
+   setnames(dt_report,"age_crude.0", paste0(age_label[1], " years old: rate per million"))
+   setnames(dt_report,"age_crude.1", paste0(age_label[2], " years old: rate per million"))
+   setnames(dt_report,"age_crude.2", paste0(age_label[3], " years old: rate per million"))
+   setnames(dt_report,"crude", "Crude rate per million")
+   setnames(dt_report,"asr", "ASR per million")
    return(dt_report)
 
 
