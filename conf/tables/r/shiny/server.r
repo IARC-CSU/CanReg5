@@ -500,16 +500,20 @@ shinyServer(function(input, output, session) {
   })
 
    #Render table
-  output$table <-  renderTable({ 
+  output$table <-  renderTable(
+  	{ 
 
-  	# dt_all_table()
-    if (!is.null(dt_all()))  {
-      
-      canreg_shiny_table(dt_all(), input,session,  FALSE)
-	  	
-    }
-    
-  })
+	  	# dt_all_table()
+	    if (!is.null(dt_all()))  {
+	      
+	      canreg_shiny_table(dt_all(), input,session,  FALSE)
+		  	
+	    }
+    },
+  	striped=TRUE,
+    hover = TRUE,
+    align = "ccrrrrrrrrrrr"
+  )
   
   #Download file
   output$downloadFile <- 
