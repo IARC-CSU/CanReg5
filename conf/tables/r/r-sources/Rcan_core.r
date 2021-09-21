@@ -1,4 +1,4 @@
-## version : 1.01
+## version : 1.1
 
 canreg_error_log <- function(e,filename,out,Args,inc,pop) {
 
