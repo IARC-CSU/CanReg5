@@ -1,4 +1,4 @@
-## version 1.10
+## version 1.1
 
 canreg_table_shiny <- function(ls_args)
 {

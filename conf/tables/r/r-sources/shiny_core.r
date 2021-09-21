@@ -1,4 +1,4 @@
-## version : 1.0
+## version : 1.1
 
 canreg_shiny_data <- function(input, session) {
   
