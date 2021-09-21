@@ -1,7 +1,11 @@
 
 
 div#plot{
-	height:600px!important
+  height:600px!important
+}
+
+div#table{
+  height:600px!important
 }
 
 div#plot img{

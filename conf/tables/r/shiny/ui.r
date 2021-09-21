@@ -33,7 +33,8 @@ ui <- dashboardPage(
 			tags$div(class="subHeader", checked=NA,
 			         tags$p("Export Graph")
 			),
-			selectInput("select_format", "Format", as.list(c( "pdf","tiff","png", "svg", "ps","csv"))),
+			uiOutput("UI_select_format"),
+			# selectInput("select_format", "Format", as.list(c( "pdf","tiff","png", "svg", "ps","csv"))),
 			
 			textInput("text_filename", "Filename", "CanReg5_graph"),
 			
@@ -95,6 +96,9 @@ ui <- dashboardPage(
 	      ),
 	  fluidRow(
 	      plotOutput("plot", height ="600px")
+	   ),
+	  fluidRow(id="table",style="display: none;",
+	       tableOutput("table")
 	   ),
 	  fluidRow(id="report_option",style="display: none;",
 	  	

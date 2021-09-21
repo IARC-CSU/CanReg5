@@ -300,6 +300,11 @@ canreg_shiny_data <- function(input, session) {
 
 
 			}
+		}
+		else if (table_number == 13){
+
+			dt_temp <- copy(dt_iccc)
+
 		}	
 	}
  
@@ -331,7 +336,7 @@ canreg_shiny_plot <- function(dt_plot,input,session, download = FALSE,slide=FALS
 			}
 			
 		}
-		
+
 	
 		
 		if ( table_number == 1) {
@@ -889,11 +894,49 @@ canreg_shiny_plot <- function(dt_plot,input,session, download = FALSE,slide=FALS
 		
 		}
 
+
   }
   
 }
 
+canreg_shiny_table <- function(dt_table, input, session,download = FALSE,slide=FALSE, file = NULL) {
 
+	if  (!is.null(input$select_table)) {
+  
+		if (download) {
+			table_number <- input$select_table
+			if (slide) {
+				ls_args$header  <- ""
+				output_type <- "png"
+			}
+    		else {
+      			output_type <- input$select_format
+    		}
+  		}
+		else {
+			table_number <- isolate(input$select_table)
+			
+		}
+
+		if ( table_number == 13) {
+
+			if (download) {
+
+
+			canreg_output(output_type = output_type, filename = file,landscape = TRUE,list_graph = FALSE,
+                FUN=canreg_child_table,
+                df_data=dt_table)
+					
+			}
+			else {
+				canreg_child_table(df_data=dt_table)
+							
+			}
+		}
+	}
+
+
+}
 
 #create a new function to print the graph and return data (adapt to canreg_output function)
 canreg_ageSpecific <- function(dt_plot,plot_subtitle="",logscale=FALSE, landscape = TRUE,list_graph = FALSE, return_data = FALSE) {

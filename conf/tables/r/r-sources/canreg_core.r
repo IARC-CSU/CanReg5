@@ -674,31 +674,32 @@ canreg_report_top_cancer_text <- function(dt_report, percent_equal=5, sex_select
 }
 
 canreg_iccc_table <- function(dt,var_cases="CASES", var_py = "COUNT") {
-  
-  setnames(dt, var_cases, "CSU_C") 
-  setnames(dt, var_py, "CSU_P")
-  setkeyv(dt, c("AGE_GROUP", "AGE_GROUP_LABEL", "ICCC_order"))
 
-  age_label_order <- as.character(unique(dt$AGE_GROUP_LABEL))
-  dt[,c("AGE_GROUP_LABEL", "AGE_GROUP_SIZE"):= NULL]
+  dt_temp <- copy(dt)
+  setnames(dt_temp, var_cases, "CSU_C") 
+  setnames(dt_temp, var_py, "CSU_P")
+  setkeyv(dt_temp, c("AGE_GROUP", "AGE_GROUP_LABEL", "ICCC_order"))
+
+  age_label_order <- as.character(unique(dt_temp$AGE_GROUP_LABEL))
+  dt_temp[,c("AGE_GROUP_LABEL", "AGE_GROUP_SIZE"):= NULL]
 
 
-  dt_cancer_total <- dt[,list( CSU_C=sum(CSU_C)), by=c("CSU_P", "AGE_GROUP", "REFERENCE_COUNT", "SEX")]
+  dt_cancer_total <- dt_temp[,list( CSU_C=sum(CSU_C)), by=c("CSU_P", "AGE_GROUP", "REFERENCE_COUNT", "SEX")]
   dt_cancer_total[, ICCC_code:=""]
   dt_cancer_total[, ICCC_label:="All"]
   dt_cancer_total[, ICCC_order:=100]
-  dt <- rbind(dt, dt_cancer_total)
+  dt_temp <- rbind(dt_temp, dt_cancer_total)
 
-  dt_crude <- dt[,list(crude=(sum(CSU_C)/sum(CSU_P)*1000000)), by=c("ICCC_code")]
+  dt_crude <- dt_temp[,list(crude=(sum(CSU_C)/sum(CSU_P)*1000000)), by=c("ICCC_code")]
 
-  dt_sex <- dt[,list(CSU_C=sum(CSU_C)), by=c("ICCC_code", "SEX")]
+  dt_sex <- dt_temp[,list(CSU_C=sum(CSU_C)), by=c("ICCC_code", "SEX")]
   dt_sex <- reshape(dt_sex, timevar = "SEX",idvar = c("ICCC_code"), direction = "wide")
   dt_sex[, ratio:=CSU_C.1/CSU_C.2]
   dt_sex[is.infinite(ratio), ratio:=0]
   dt_sex[,c("CSU_C.1", "CSU_C.2"):= NULL]
 
 
-  dt_temp <-  dt[,list( CSU_C=sum(CSU_C),CSU_P=sum(CSU_P)), by=c("AGE_GROUP", "REFERENCE_COUNT", "ICCC_code", "ICCC_label")]
+  dt_temp <-  dt_temp[,list( CSU_C=sum(CSU_C),CSU_P=sum(CSU_P)), by=c("AGE_GROUP", "REFERENCE_COUNT", "ICCC_code", "ICCC_label")]
   dt_asr<- as.data.table(Rcan:::core.csu_asr(df_data =dt_temp, var_age ="AGE_GROUP",var_cases = "CSU_C", var_py = "CSU_P",
                                group_by = c("ICCC_code"),
                                db_rate = 1000000,
@@ -716,26 +717,26 @@ canreg_iccc_table <- function(dt,var_cases="CASES", var_py = "COUNT") {
   dt_temp[, age_crude:= CSU_C/CSU_P*1000000]
   dt_temp[,c("REFERENCE_COUNT", "CSU_P"):= NULL]
   dt_temp <- reshape(dt_temp, timevar = "AGE_GROUP",idvar = c("ICCC_code", "ICCC_label"), direction = "wide")
-  dt <- merge(dt_temp, dt_asr, by=c("ICCC_code"))
+  dt_temp <- merge(dt_temp, dt_asr, by=c("ICCC_code"))
 
 
-  dt[,CSU_C.0:=sprintf("%.0f",CSU_C.0)]
-  dt[,CSU_C.1:=sprintf("%.0f",CSU_C.1)]
-  dt[,CSU_C.2:=sprintf("%.0f",CSU_C.2)]
-  dt[,total_cases:=sprintf("%.0f",total_cases)]
-  dt[,ratio:=sprintf("%.1f",ratio)]
-  dt[,frequence:=sprintf("%.1f",frequence)]
-  dt[,age_crude.0:=sprintf("%.1f",age_crude.0)]
-  dt[,age_crude.1:=sprintf("%.1f",age_crude.1)]
-  dt[,age_crude.2:=sprintf("%.1f",age_crude.2)]
-  dt[,crude:=sprintf("%.1f",crude)]
-  dt[,asr:=sprintf("%.1f",asr)]
+  dt_temp[,CSU_C.0:=sprintf("%.0f",CSU_C.0)]
+  dt_temp[,CSU_C.1:=sprintf("%.0f",CSU_C.1)]
+  dt_temp[,CSU_C.2:=sprintf("%.0f",CSU_C.2)]
+  dt_temp[,total_cases:=sprintf("%.0f",total_cases)]
+  dt_temp[,ratio:=sprintf("%.1f",ratio)]
+  dt_temp[,frequence:=sprintf("%.1f",frequence)]
+  dt_temp[,age_crude.0:=sprintf("%.1f",age_crude.0)]
+  dt_temp[,age_crude.1:=sprintf("%.1f",age_crude.1)]
+  dt_temp[,age_crude.2:=sprintf("%.1f",age_crude.2)]
+  dt_temp[,crude:=sprintf("%.1f",crude)]
+  dt_temp[,asr:=sprintf("%.1f",asr)]
 
 
 
-  setcolorder(dt, c("ICCC_code", "ICCC_label", "CSU_C.0", "CSU_C.1", "CSU_C.2", "total_cases","ratio","frequence", "age_crude.0","age_crude.1","age_crude.2", "crude", "asr"))
+  setcolorder(dt_temp, c("ICCC_code", "ICCC_label", "CSU_C.0", "CSU_C.1", "CSU_C.2", "total_cases","ratio","frequence", "age_crude.0","age_crude.1","age_crude.2", "crude", "asr"))
   
-  return(list(dt=dt, age_label_order=age_label_order))
+  return(list(dt=dt_temp, age_label_order=age_label_order))
 }
 
 
@@ -1951,9 +1952,6 @@ canreg_bar_plot <- function(dt,
 }
 
 canreg_child_table <-function(df_data,
-                               var_top = "asr",
-                               var_bar = "cancer_label",
-                               group_by = "SEX",
                                landscape = FALSE,
                                list_graph = FALSE,
                                canreg_header=NULL,
