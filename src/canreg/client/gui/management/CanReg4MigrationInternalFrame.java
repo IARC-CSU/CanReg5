@@ -36,6 +36,7 @@ import canreg.client.gui.importers.ImportOptions;
 
 import java.io.*;
 import java.io.File;
+import java.util.Properties;
 import java.util.Random;
 import java.util.Map;
 import java.util.LinkedList;
@@ -89,7 +90,6 @@ public class CanReg4MigrationInternalFrame extends javax.swing.JInternalFrame {
     private LocalSettings localSettings;
     private JFileChooser chooser;
     private final String DEF_FILE_EXTENSION = "DEF";
-    private final char[] password = {'e', 'r', 'v', 'i', 'k'};
     private DatabaseVariablesListElement[] variablesInDB;
     private List<VariableMappingPanel> panelList;
     private GlobalToolBox globalToolBox;
@@ -670,7 +670,12 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
                     publish(new Progress(Component.LOG, "Login to CanReg5 System.\n"));
                     String canregSystem = null;
                     try {
-                        canregSystem = CanRegClientApp.getApplication().loginDirect(regcode, "morten", password, false);
+                        Properties properties =  canreg.common.DefaultConfigFileUtils.readConfigFile();
+                        canregSystem = CanRegClientApp.getApplication().loginDirect(
+                            regcode,
+                            properties.getProperty("username"),
+                            properties.getProperty("password").toCharArray(),
+                            false);
                         // Closing WelcomeInternalFrame
                         JDesktopPane jdp = new JDesktopPane();
                         jdp = CanRegClientApp.getApplication().getDeskTopPane();
