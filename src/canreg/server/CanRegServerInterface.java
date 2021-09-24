@@ -496,9 +496,20 @@ public interface CanRegServerInterface extends Remote {
 
     public void shutDownServer() throws RemoteException, SecurityException;
 
+    // Set a password to the database 
     public boolean setDBPassword(char[] newPasswordArray, char[] oldPasswordArray, 
                                  String encryptionAlgorithm, String encryptionKeyLength)
             throws RemoteException, SecurityException;
+// check if the current database
+
+    /**
+     * check if the current database is encrypted by a password
+     * @param registryCode  the reregistry code
+     * @return
+     * @throws RemoteException
+     * @throws SecurityException
+     */
+    public boolean checkDatabaseEncryption(String registryCode) throws RemoteException, SecurityException;
 
     public String getCanRegRegistryCode() throws RemoteException, SecurityException;
 

@@ -21,6 +21,7 @@ package canreg.server;
 
 import canreg.common.DatabaseFilter;
 import canreg.common.DatabaseIndexesListElement;
+import canreg.common.DefaultConfigFileUtils;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
 import canreg.common.Globals.UserRightLevels;
@@ -97,6 +98,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     private String patientRecordIDvariableName;
     private GlobalToolBox serverToolbox;
     private TrayIcon trayIcon;
+    private DefaultConfigFileUtils defaultConfigFileUtils;
 
     private CanRegDAO currentDAO;
     private HashMap<String, CanRegDAO> registriesDAOs;
@@ -1108,10 +1110,29 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         boolean success = false;
         try {
             success = currentDAO.encryptDatabase(newPasswordArray, oldPasswordArray, encryptionAlgorithm, encryptionKeyLength);
+            // if the  password database is removed after having been set 
+            if (newPasswordArray.length == 0) {
+                defaultConfigFileUtils.updateConfigFileProperties(getCanRegRegistryCode(), "false");
+            } else {
+                //if the password is present 
+                defaultConfigFileUtils.updateConfigFileProperties(this.getCanRegRegistryCode(), "true");
+            }
         } catch (SQLException ex) {
             Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return success;
+    }
+
+    @Override
+    public boolean checkDatabaseEncryption(String registryCode) throws RemoteException, SecurityException {
+        File file = new File(Globals.CANREG_CONFIG_DATABASE);
+        if (file.exists()) {
+            Properties properties = defaultConfigFileUtils.readConfigFile();
+            return Boolean.parseBoolean(properties.getProperty(registryCode));
+        }else {
+            defaultConfigFileUtils.writeDefaultConfigFile(registryCode,"false");
+            return false;
+        }
     }
 
     @Override

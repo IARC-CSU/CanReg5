@@ -393,6 +393,11 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     }
 
     @Override
+    public boolean checkDatabaseEncryption(String registryCode) throws RemoteException, SecurityException {
+        return theServer.checkDatabaseEncryption(registryCode);
+    }
+
+    @Override
     public String getCanRegRegistryCode() throws RemoteException, SecurityException {
         checkPermission("getSystemCode");
         return theServer.getCanRegRegistryCode();

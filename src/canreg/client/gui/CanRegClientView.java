@@ -1002,9 +1002,19 @@ public final class CanRegClientView extends FrameView {
         @Override
         protected Object doInBackground() {
             boolean success = false;
+            boolean isDBEncrypted = false;
             try {
-                CanRegClientApp.getApplication().startDatabaseServer();
-                success = true;
+                isDBEncrypted = CanRegClientApp.getApplication().checkDatabaseEncryption();
+                if(isDBEncrypted){
+                    CanRegClientApp.getApplication().startDatabaseServer();
+                    success = true;
+                }else {
+                    JOptionPane.showConfirmDialog(
+                        null,
+                        "Please set an encryption password to start the database",
+                        "Message", JOptionPane.DEFAULT_OPTION);
+                    
+                }
             } catch (RemoteException ex) {
                 Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
                 success = false;
