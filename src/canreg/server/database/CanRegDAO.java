@@ -19,7 +19,6 @@
  */
 package canreg.server.database;
 
-import canreg.client.CanRegClientApp;
 import canreg.common.database.User;
 import canreg.common.database.Patient;
 import canreg.common.database.PopulationDatasetsEntry;
@@ -476,7 +475,7 @@ public class CanRegDAO {
             returnRecord = null;
         }
         if (returnRecord != null && lock) {
-            lockRecord(recordID, tableName);
+            checkAndLockRecord(recordID, tableName);
         }
         return returnRecord;
     }
@@ -1698,11 +1697,9 @@ public class CanRegDAO {
         Patient record = null;
         ResultSetMetaData metadata;
         // we are allowed to read a record that is locked...
-        if (lock && isRecordLocked(recordID, Globals.PATIENT_TABLE_NAME)) {
+        if (lock && checkAndLockRecord(recordID, Globals.PATIENT_TABLE_NAME)) {
             throw new RecordLockedException();
-        } else if (lock) {
-            lockRecord(recordID, Globals.PATIENT_TABLE_NAME);
-        }
+        } 
         try {
             stmtGetPatient.clearParameters();
             stmtGetPatient.setInt(1, recordID);
@@ -1758,10 +1755,8 @@ public class CanRegDAO {
     private synchronized Tumour getTumour(int recordID, boolean lock) throws RecordLockedException {
         Tumour record = null;
         ResultSetMetaData metadata;
-        if (lock && isRecordLocked(recordID, Globals.TUMOUR_TABLE_NAME)) {
+        if (lock && checkAndLockRecord(recordID, Globals.TUMOUR_TABLE_NAME)) {
             throw new RecordLockedException();
-        } else if (lock) {
-            lockRecord(recordID, Globals.TUMOUR_TABLE_NAME);
         }
         try {
             stmtGetTumour.clearParameters();
@@ -1847,10 +1842,8 @@ public class CanRegDAO {
     private synchronized Source getSource(int recordID, boolean lock) throws RecordLockedException {
         Source record = null;
         ResultSetMetaData metadata;
-        if (lock && isRecordLocked(recordID, Globals.SOURCE_TABLE_NAME)) {
+        if (lock && checkAndLockRecord(recordID, Globals.SOURCE_TABLE_NAME)) {
             throw new RecordLockedException();
-        } else if (lock) {
-            lockRecord(recordID, Globals.SOURCE_TABLE_NAME);
         }
         try {
             stmtGetSource.clearParameters();
@@ -2270,14 +2263,29 @@ public class CanRegDAO {
             lockSet.remove(recordID);
         }
     }
-
-    private synchronized void lockRecord(int recordID, String tableName) {
-        Set lockSet = locksMap.get(tableName);
+    
+    /**
+     * Method that check if a record in a table is already lock 
+     * and lock it if it's not the case
+     * 
+     * @param recordID the id of the record 
+     * @param tableName name of  the table in the database
+     * @return  true if the record was already locked, else false
+     */
+    private synchronized boolean checkAndLockRecord(int recordID, String tableName) {
+        boolean wasLocked = false;
+        Set<Integer> lockSet = locksMap.get(tableName);
+        // if the wasLocked set is null create a new wasLocked set
         if (lockSet == null) {
-            lockSet = new TreeSet<Integer>();
+            lockSet = new TreeSet<>();
             locksMap.put(tableName, lockSet);
+        } else {
+            wasLocked = lockSet.contains(recordID);
         }
-        lockSet.add(recordID);
+        if(!wasLocked){
+            lockSet.add(recordID);
+        }
+        return wasLocked;
     }
 
     private synchronized boolean isRecordLocked(int recordID, String tableName) {
