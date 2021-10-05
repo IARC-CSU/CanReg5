@@ -46,7 +46,10 @@ public class ServerLauncher {
         // int port = Globals.RMI_PORT;
         boolean success = false;
         CanRegServerInterface server = null;
-
+        Logger.getLogger(ServerLauncher.class.getName()).log(Level.INFO, "starting the server");
+        System.setProperty("java.security.auth.login.config", Globals.LOGIN_FILENAME);
+        System.setProperty("java.security.policy", Globals.POLICY_FILENAME);
+        System.setProperty("java.rmi.server.useCodebaseOnly", "true");
         // try to create the registry if needed
         try {
             LocateRegistry.createRegistry(port);
@@ -56,8 +59,6 @@ public class ServerLauncher {
         }
 
         try {
-            System.setProperty("java.security.auth.login.config", Globals.LOGIN_FILENAME);
-            System.setProperty("java.security.policy", Globals.POLICY_FILENAME);
             String rmiAddresse = "rmi://" + systemURL + ":" + port + "/CanRegLogin" + systemCode;
 
             // assume already bound

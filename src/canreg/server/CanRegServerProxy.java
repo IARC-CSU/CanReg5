@@ -97,6 +97,7 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
 
     @Override
     public void setUserPassword(String username, String password) throws RemoteException, SecurityException {
+        checkPermission("setUserPassword");
         RMILoginPrincipal principal = (RMILoginPrincipal) theUser.getPrincipals().toArray()[0];
         username = principal.getName();
         theServer.setUserPassword(username, password);
