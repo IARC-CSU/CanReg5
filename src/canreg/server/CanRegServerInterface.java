@@ -526,5 +526,13 @@ public interface CanRegServerInterface extends Remote {
      */
     public void pingRemote(Integer remoteClientHashCode) throws RemoteException, Exception;
 
-    public boolean checkPassword(String username, char[] password) throws RemoteException, LoginException;
+    /**
+     * Check if the encrypted password is equal to the password stored in database for the user 
+     * 
+     * @param username username of the user 
+     * @param encryptedPassword encrypted password of the user 
+     * @return boolean 
+     * @throws RemoteException 
+     */
+    public boolean checkPassword(String username, String encryptedPassword) throws RemoteException;
 }

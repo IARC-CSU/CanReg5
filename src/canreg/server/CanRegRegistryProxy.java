@@ -578,16 +578,8 @@ public class CanRegRegistryProxy implements CanRegServerInterface, Serializable 
     }
 
     @Override
-    public boolean checkPassword(String username, char[] password) throws RemoteException {
-        boolean validPassword = false;
-        try {
-            LoginContext lc = new LoginContext("CanRegLogin", new RemoteCallbackHandler(username, password));
-            lc.login();
-            validPassword = true;
-        } catch (LoginException ex) {
-            Logger.getLogger(CanRegLoginImpl.class.getName()).log(Level.WARNING,"Error in the current password" );
-        }
-        return validPassword;
+    public boolean checkPassword(String username, String encryptedPassword) throws RemoteException {
+       return serverProxy.checkPassword(username,encryptedPassword);
     }
 
     @Override

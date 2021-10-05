@@ -25,11 +25,9 @@
  */
 package canreg.client.gui.management;
 
-import canreg.client.CanRegClientApp;
 import canreg.common.Globals;
 import canreg.common.PasswordService;
 import canreg.exceptions.SystemUnavailableException;
-import canreg.server.CanRegLoginImpl;
 import canreg.server.database.RecordLockedException;
 import canreg.common.database.User;
 import java.rmi.RemoteException;
@@ -667,9 +665,19 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
         }
     }
 
+    
+    /**
+     * Change the current password using the GUI interface. The password can be changed only if the current password is
+     * right. The confirmpassword and  confirmNewpassword also needs to be equals. 
+     * @throws RemoteException a remote exception
+     * @throws LoginException an issue in the login
+     * @throws SystemUnavailableException  a system exception
+     */
     @Action
-    public void changePasswordAction() throws RemoteException,LoginException {
-        boolean validPassword = canreg.client.CanRegClientApp.getApplication().checkPassword(usernameField.getText(), currentPasswordField.getPassword());
+    public void changePasswordAction() throws RemoteException, LoginException, SystemUnavailableException {
+
+        String oldencryptedpassword = PasswordService.getInstance().encrypt(new String(currentPasswordField.getPassword()));
+        boolean validPassword = canreg.client.CanRegClientApp.getApplication().checkPassword(usernameField.getText(), oldencryptedpassword);
         if(validPassword) {
             // are the fields empty?
             if (newPasswordField.getPassword().length == 0 && confirmNewPasswordField.getPassword().length == 0) {

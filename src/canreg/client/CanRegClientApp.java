@@ -139,9 +139,18 @@ public class CanRegClientApp extends SingleFrameApplication {
         }
     }
 
-    public boolean checkPassword(String username,char [] password)
-        throws SecurityException, RemoteException, LoginException {
-             return mainServer.checkPassword(username,password);
+    /**
+     * Check if the hashed password correspond to the password in the database
+     * 
+     * @param username username
+     * @param hashedPassword password of the user
+     * @return boolean true if the password is right else false
+     * @throws SecurityException a security exception
+     * @throws RemoteException a remote exception
+     */
+    public boolean checkPassword(String username,String hashedPassword)
+        throws SecurityException, RemoteException {
+             return mainServer.checkPassword(username,hashedPassword);
         }
         
     public boolean deletePopulationDataset(int populationDatasetID, CanRegServerInterface server)
