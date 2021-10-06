@@ -67,7 +67,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="passwordPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="206" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="146" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -91,35 +91,56 @@
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="changePasswordButton" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Group type="102" alignment="1" attributes="0">
+                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  <Component id="changePasswordButton" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="confirmNewPasswordLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="newPasswordLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                                          <Component id="confirmNewPasswordLabel" alignment="0" max="32767" attributes="0"/>
+                                          <Component id="newPasswordLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="oldPasswordLabel" alignment="0" max="32767" attributes="0"/>
+                                      </Group>
+                                      <Component id="usernameLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="newPasswordField" alignment="0" pref="288" max="32767" attributes="1"/>
-                                      <Component id="confirmNewPasswordField" alignment="1" pref="288" max="32767" attributes="1"/>
+                                      <Component id="confirmNewPasswordField" pref="276" max="32767" attributes="1"/>
+                                      <Component id="currentPasswordField" alignment="1" max="32767" attributes="0"/>
+                                      <Component id="newPasswordField" max="32767" attributes="1"/>
+                                      <Component id="usernameField" alignment="0" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
+                          <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
+                          <EmptySpace pref="23" max="32767" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="usernameLabel" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="usernameField" alignment="1" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="oldPasswordLabel" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="currentPasswordField" alignment="1" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="newPasswordLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="newPasswordField" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="confirmNewPasswordLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="confirmNewPasswordField" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="confirmNewPasswordLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
                           <Component id="changePasswordButton" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -138,12 +159,6 @@
                     <Property name="name" type="java.lang.String" value="confirmNewPasswordLabel" noResource="true"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JPasswordField" name="newPasswordField">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="newPasswordField.text"/>
-                    <Property name="name" type="java.lang.String" value="newPasswordField" noResource="true"/>
-                  </Properties>
-                </Component>
                 <Component class="javax.swing.JPasswordField" name="confirmNewPasswordField">
                   <Properties>
                     <Property name="text" type="java.lang.String" resourceKey="confirmNewPasswordField.text"/>
@@ -158,6 +173,36 @@
                     <Property name="text" type="java.lang.String" resourceKey="changePasswordButton.text"/>
                     <Property name="toolTipText" type="java.lang.String" resourceKey="changePasswordButton.toolTipText"/>
                     <Property name="name" type="java.lang.String" value="changePasswordButton" noResource="true"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="oldPasswordLabel">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" resourceKey="oldPasswordLabel.text"/>
+                    <Property name="name" type="java.lang.String" value="oldPasswordLabel" noResource="true"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JPasswordField" name="currentPasswordField">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" resourceKey="currentPasswordField.text"/>
+                    <Property name="name" type="java.lang.String" value="currentPasswordField" noResource="true"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="usernameLabel">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" resourceKey="usernameLabel.text"/>
+                    <Property name="name" type="java.lang.String" value="usernameLabel" noResource="true"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JPasswordField" name="newPasswordField">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" resourceKey="newPasswordField.text"/>
+                    <Property name="name" type="java.lang.String" value="newPasswordField" noResource="true"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JFormattedTextField" name="usernameField">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" resourceKey="usernameField.text"/>
+                    <Property name="name" type="java.lang.String" value="usernameField" noResource="true"/>
                   </Properties>
                 </Component>
               </SubComponents>

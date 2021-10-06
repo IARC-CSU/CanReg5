@@ -45,6 +45,7 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import javax.security.auth.login.LoginException;
 import org.w3c.dom.Document;
 
 /**
@@ -524,4 +525,14 @@ public interface CanRegServerInterface extends Remote {
      * @throws Exception 
      */
     public void pingRemote(Integer remoteClientHashCode) throws RemoteException, Exception;
+
+    /**
+     * Check if the encrypted password is equal to the password stored in database for the user 
+     * 
+     * @param username username of the user 
+     * @param encryptedPassword encrypted password of the user 
+     * @return boolean 
+     * @throws RemoteException 
+     */
+    public boolean checkPassword(String username, String encryptedPassword) throws RemoteException;
 }
