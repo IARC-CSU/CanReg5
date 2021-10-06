@@ -1218,7 +1218,6 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         return super.hashCode();
     }
     
-    @Override
     // Method to release the ResultSet in finally block if the ResultSetID is not null 
     private void releaseNotNullResultSet(String resultSetID) throws RemoteException{
         try {
@@ -1230,6 +1229,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         }
     }
     //not used in our case
+    @Override
     public boolean checkPassword(String username, String encryptedPassword) throws java.rmi.RemoteException {
         boolean validPassword = false;
         for (User user : listUsers()) {
