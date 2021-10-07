@@ -21,9 +21,9 @@
 package canreg.server.management;
 
 import canreg.client.LocalSettings;
-import canreg.common.database.User;
-import canreg.server.*;
 import canreg.common.Globals;
+import canreg.common.database.User;
+import canreg.server.CanRegLoginModule;
 import canreg.server.database.CanRegDAO;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -31,6 +31,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -306,5 +309,38 @@ public class UserManagerNew {
             for(Integer session : sessionsToRemove)
                 userLoggedOut(session);
         }
+    }
+
+    public boolean checkPasswordReminderFile(String username) {
+
+        String encryptedUsername = encodeUsername(username);
+        File file = new File(Globals.CANREG_SERVER_FOLDER + Globals.FILE_SEPARATOR + encryptedUsername);
+        return file.exists();
+    }
+
+    public void createFileReminder(String username) throws IOException {
+
+        String encryptedUsername = encodeUsername(username);
+        File reminderFile = new File(Globals.CANREG_SERVER_FOLDER + Globals.FILE_SEPARATOR + encryptedUsername);
+        if (!reminderFile.exists()) {
+            Files.createFile(reminderFile.toPath());
+        }
+    }
+
+    public void deleteFileReminder(String username) throws IOException {
+
+        String encryptedUsername = encodeUsername(username);
+        File reminderFile = new File(Globals.CANREG_SERVER_FOLDER + Globals.FILE_SEPARATOR + encryptedUsername);
+        if (reminderFile.exists()) {
+            Files.deleteIfExists(reminderFile.toPath());
+        }
+    }
+
+    private static String encodeUsername(String username) {
+        String encodedUsername = Base64.getEncoder().encodeToString(username.getBytes(StandardCharsets.UTF_8));
+        String encoded1 = encodedUsername.replace('+', '-');
+        String encoded2 = encoded1.replace('/', '_');
+        String encoded3 = encoded2.replace('=', '.');
+        return encoded3;
     }
 }

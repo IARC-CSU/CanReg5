@@ -1214,6 +1214,23 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     @Override
+    public boolean checkFileReminder(String username) {
+        return userManager.checkPasswordReminderFile(username);
+    }
+
+    @Override
+    public void createFileReminder(String username) throws IOException {
+        userManager.createFileReminder(username);
+
+    }
+
+    @Override
+    public void deleteFileReminder(String username) throws IOException {
+        userManager.deleteFileReminder(username);
+
+    }
+
+    @Override
     public int hashCode() {
         return super.hashCode();
     }

@@ -45,7 +45,6 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import javax.security.auth.login.LoginException;
 import org.w3c.dom.Document;
 
 /**
@@ -535,4 +534,32 @@ public interface CanRegServerInterface extends Remote {
      * @throws RemoteException 
      */
     public boolean checkPassword(String username, String encryptedPassword) throws RemoteException;
+
+    /**
+     * check if the file reminder present in the .CanRegServer exist.
+     * @param username  user name
+     * @return true or false
+     * @throws RemoteException RMI exception 
+     */
+    public boolean checkFileReminder(String username)throws RemoteException;
+
+    /**
+     * Create the file reminder in the .CanRegServer folder. 
+     * @param username  user name
+     * @throws IOException 
+     * @throws RemoteException
+     */
+    public void createFileReminder(String username)throws IOException,RemoteException;
+
+    /**
+     * Delete the file reminder in the .CanRegServer folder.
+     *
+     * @param username  user name
+     * @throws IOException
+     * @throws RemoteException
+     */
+    public void deleteFileReminder(String username)throws IOException,RemoteException;
+    
+    
+    
 }

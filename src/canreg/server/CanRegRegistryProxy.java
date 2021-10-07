@@ -38,18 +38,13 @@ import canreg.server.database.UnknownTableException;
 import canreg.server.management.SystemDescription;
 import java.io.IOException;
 import java.io.Serializable;
-import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.security.auth.Subject;
-import javax.security.auth.login.LoginContext;
-import javax.security.auth.login.LoginException;
 import org.w3c.dom.Document;
 
 /**
@@ -580,6 +575,20 @@ public class CanRegRegistryProxy implements CanRegServerInterface, Serializable 
     @Override
     public boolean checkPassword(String username, String encryptedPassword) throws RemoteException {
        return serverProxy.checkPassword(username,encryptedPassword);
+    }
+    @Override
+    public boolean checkFileReminder(String username) throws RemoteException {
+        return serverProxy.checkFileReminder(username);
+    }
+
+    @Override
+    public void createFileReminder(String username) throws IOException{
+        serverProxy.createFileReminder(username);
+    }
+
+    @Override
+    public void deleteFileReminder(String username) throws IOException {
+        serverProxy.deleteFileReminder(username);
     }
 
     @Override

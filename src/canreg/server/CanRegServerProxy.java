@@ -19,21 +19,21 @@
  */
 package canreg.server;
 
-import canreg.common.database.User;
-import canreg.common.cachingtableapi.DistributedTableDescription;
-import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.common.DatabaseFilter;
 import canreg.common.Globals.UserRightLevels;
-import canreg.common.qualitycontrol.PersonSearcher;
-import canreg.server.database.CanRegDAO;
+import canreg.common.cachingtableapi.DistributedTableDescription;
+import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.common.database.DatabaseRecord;
 import canreg.common.database.Dictionary;
 import canreg.common.database.DictionaryEntry;
 import canreg.common.database.NameSexRecord;
 import canreg.common.database.Patient;
 import canreg.common.database.PopulationDataset;
-import canreg.server.database.RecordLockedException;
 import canreg.common.database.Tumour;
+import canreg.common.database.User;
+import canreg.common.qualitycontrol.PersonSearcher;
+import canreg.server.database.CanRegDAO;
+import canreg.server.database.RecordLockedException;
 import canreg.server.database.UnknownTableException;
 import canreg.server.management.SystemDescription;
 import canreg.server.security.ValidateMethodCall;
@@ -455,8 +455,23 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     public void pingRemote(Integer remoteClientHashCode) 
             throws RemoteException, Exception {
         theServer.pingRemote(remoteClientHashCode);
-    }    
-    
+    }
+
+    @Override
+    public boolean checkFileReminder(String username) throws RemoteException {
+        return theServer.checkFileReminder(username);
+    }
+
+    @Override
+    public void createFileReminder(String username) throws IOException {
+        theServer.createFileReminder(username);
+    }
+
+    @Override
+    public void deleteFileReminder(String username) throws IOException {
+        theServer.deleteFileReminder(username);
+    }
+
     @Override
     public boolean checkPassword(String username, String encryptedPassword) throws RemoteException {
         checkPermission("checkPassword");

@@ -25,11 +25,13 @@
  */
 package canreg.client.gui.management;
 
+import canreg.client.CanRegClientApp;
 import canreg.common.Globals;
 import canreg.common.PasswordService;
 import canreg.exceptions.SystemUnavailableException;
 import canreg.server.database.RecordLockedException;
 import canreg.common.database.User;
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -52,7 +54,6 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
 
     private List<User> users;
     private DefaultListModel usersListModel;
-    private LocalSettings localSettings;
 
     /** Creates new form UserManagerInternalFrame */
     public UserManagerInternalFrame() {
@@ -598,6 +599,7 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
             String encrypted = PasswordService.getInstance().encrypt(user.getUserName());
             user.setPassword(encrypted.toCharArray());
             canreg.client.CanRegClientApp.getApplication().saveUser(user);
+            CanRegClientApp.getApplication().createFileReminder(user.getUserName());
             JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("USER ADDED. TEMPORARY PASSWORD IS ") + userName + ".");
         } catch (SystemUnavailableException | SQLException | RemoteException | SecurityException ex) {
             Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -699,8 +701,10 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
                     passwordString = null;
                     try {
                         canreg.client.CanRegClientApp.getApplication().changePassword(encrypted);
-                    JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("PASSWORD CHANGED."));
-                } catch (SecurityException | RemoteException ex) {
+                    JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle
+                        ("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("PASSWORD CHANGED."));
+                    CanRegClientApp.getApplication().deleteFileReminder(usernameField.getText());
+                } catch (SecurityException | IOException  ex) {
                         Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 } catch (SystemUnavailableException ex) {
@@ -765,6 +769,7 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
             String encrypted = PasswordService.getInstance().encrypt(user.getUserName());
             user.setPassword(encrypted.toCharArray());
             canreg.client.CanRegClientApp.getApplication().saveUser(user);
+            CanRegClientApp.getApplication().createFileReminder(user.getUserName());
             JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("PASSWORD_RESET") + "\n" + java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("TEMPORARY_PASSWORD_IS_") + user.getUserName() + ".");
         } catch (SystemUnavailableException | SQLException | RemoteException | SecurityException ex) {
             Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -785,6 +790,7 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
         if (okToDelete && id > 0) {
             try {
                 canreg.client.CanRegClientApp.getApplication().deleteRecord(id, Globals.USERS_TABLE_NAME, null);
+                CanRegClientApp.getApplication().deleteFileReminder(user.getUserName());
             } catch (SQLException | RecordLockedException | SecurityException | RemoteException ex) {
                 Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             }

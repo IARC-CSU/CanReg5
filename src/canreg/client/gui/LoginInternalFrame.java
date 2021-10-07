@@ -31,11 +31,9 @@ import canreg.client.ServerDescription;
 import canreg.client.gui.tools.WaitFrame;
 import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 import canreg.common.Globals;
-import canreg.common.Tools;
 import canreg.exceptions.WrongCanRegVersionException;
 import java.awt.Cursor;
 import java.beans.PropertyChangeSupport;
-import java.io.File;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
@@ -964,11 +962,9 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
          * Show a dialog window after login if the user password was reset by the supervisor
          */
         public void showPasswordChangeReminder() {
-
             String currentUsername = localSettings.getProperty(LocalSettings.USERNAME_KEY);
-            String encryptedUsername = Tools.encodeUsername(currentUsername);
-            File file = new File(Globals.CANREG_SERVER_FOLDER+Globals.FILE_SEPARATOR+encryptedUsername);
-            if (file.exists()) {
+            boolean fileReminderExist = CanRegClientApp.getApplication().checkPasswordReminder(currentUsername);
+            if (fileReminderExist) {
                 JOptionPane.showConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(),
                     java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame")
                         .getString("REMIND_PASSWORD_RESET"),

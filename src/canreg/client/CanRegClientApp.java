@@ -19,8 +19,6 @@
  */
 package canreg.client;
 
-import canreg.common.cachingtableapi.DistributedTableDescription;
-import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.client.dataentry.Relation;
 import canreg.client.gui.CanRegClientView;
 import canreg.client.gui.importers.ImportOptions;
@@ -28,26 +26,28 @@ import canreg.client.gui.tools.UITools;
 import canreg.common.DatabaseFilter;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
+import canreg.common.cachingtableapi.DistributedTableDescription;
+import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.common.conversions.ConversionResult;
 import canreg.common.conversions.Converter;
-import canreg.common.qualitycontrol.CheckResult;
-import canreg.common.qualitycontrol.Checker;
-import canreg.common.qualitycontrol.PersonSearcher;
-import canreg.exceptions.WrongCanRegVersionException;
-import canreg.server.CanRegLoginInterface;
-import canreg.server.CanRegServerInterface;
-import canreg.server.DatabaseStats;
-import canreg.server.database.UnknownTableException;
-import canreg.common.database.User;
 import canreg.common.database.DatabaseRecord;
 import canreg.common.database.Dictionary;
 import canreg.common.database.DictionaryEntry;
 import canreg.common.database.NameSexRecord;
 import canreg.common.database.Patient;
 import canreg.common.database.PopulationDataset;
-import canreg.server.database.RecordLockedException;
 import canreg.common.database.Tumour;
+import canreg.common.database.User;
+import canreg.common.qualitycontrol.CheckResult;
+import canreg.common.qualitycontrol.Checker;
+import canreg.common.qualitycontrol.PersonSearcher;
+import canreg.exceptions.WrongCanRegVersionException;
 import canreg.server.CanRegLoginImpl;
+import canreg.server.CanRegLoginInterface;
+import canreg.server.CanRegServerInterface;
+import canreg.server.DatabaseStats;
+import canreg.server.database.RecordLockedException;
+import canreg.server.database.UnknownTableException;
 import canreg.server.management.SystemDefinitionConverter;
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -1881,6 +1881,47 @@ public class CanRegClientApp extends SingleFrameApplication {
         }
     }
 
+    /**
+     *  Check if the password reminder file exists in the .CanRegServer 
+      * @param username name of the user 
+     * @return  bolean true if the file exists else false
+     */    
+    public boolean checkPasswordReminder(String username)  {
+        try {
+            return this.mainServer.checkFileReminder(username);
+        } catch (RemoteException e) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE,"Unable to check the file reminder for user :"+ username, e);
+        }
+        return false;
+    }
+
+    /**
+     * Create a file which title is the encoded username. The file is created only when a supervisor
+     * reset the password of a user 
+     * @param username user name 
+     */
+    public void createFileReminder(String username) {
+        try {
+            this.mainServer.createFileReminder(username);
+        } catch (IOException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName())
+                .log(Level.SEVERE,"Unable to create the file reminder for user :"+ username, ex);
+        }
+    }
+
+    /**
+     * Delete the file which title is the encoded username. The file is deleted when the user change his password
+     * or when his account is deleted
+     * @param username
+     */
+    public void deleteFileReminder(String username) {
+        try {
+            this.mainServer.deleteFileReminder(username);
+        } catch (IOException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName())
+                .log(Level.SEVERE,"Unable to delete the file reminder for user :"+ username, ex);
+        }
+    }
     
     private class PingToServer implements Runnable {
         @Override
