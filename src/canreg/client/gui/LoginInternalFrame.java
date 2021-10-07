@@ -41,7 +41,6 @@ import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -955,6 +954,23 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
                         + "\nPlease make sure you have entered the correct username and password.", 
                         java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("ERROR"), 
                         JOptionPane.ERROR_MESSAGE);
+            }
+            showPasswordChangeReminder();
+        }
+
+        /**
+         * Show a dialog window after login if the user password was reset by the supervisor
+         */
+        public void showPasswordChangeReminder() {
+            String currentUsername = localSettings.getProperty(LocalSettings.USERNAME_KEY);
+            boolean fileReminderExist = CanRegClientApp.getApplication().checkPasswordReminder(currentUsername);
+            if (fileReminderExist) {
+                JOptionPane.showConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(),
+                    java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame")
+                        .getString("REMIND_PASSWORD_RESET"),
+                    java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame")
+                        .getString("REMIND_PASSWORD_RESET_TITLE"),
+                    JOptionPane.DEFAULT_OPTION);
             }
         }
     }

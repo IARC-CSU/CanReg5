@@ -21,9 +21,9 @@
 package canreg.server.management;
 
 import canreg.client.LocalSettings;
-import canreg.common.database.User;
-import canreg.server.*;
 import canreg.common.Globals;
+import canreg.common.database.User;
+import canreg.server.CanRegLoginModule;
 import canreg.server.database.CanRegDAO;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -31,6 +31,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -306,5 +309,44 @@ public class UserManagerNew {
             for(Integer session : sessionsToRemove)
                 userLoggedOut(session);
         }
+    }
+
+    public boolean checkPasswordReminderFile(String username) {
+        File file = getFileReminder(username);
+        return file.exists();
+    }
+
+    public void createFileReminder(String username) {
+        File reminderFile = getFileReminder(username);
+        try {
+            if (!reminderFile.exists()) {
+                Files.createFile(reminderFile.toPath());
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(UserManagerNew.class.getName()).log(Level.SEVERE,
+                "Unable to create the file : " + reminderFile.toPath(), ex);
+        }
+    }
+
+    public void deleteFileReminder(String username) {
+        File reminderFile = getFileReminder(username);
+        try {
+            Files.deleteIfExists(reminderFile.toPath());
+        } catch (IOException ex) {
+            Logger.getLogger(UserManagerNew.class.getName()).log(Level.SEVERE,
+                "Unable to delete the file : " + reminderFile.toPath(), ex);
+        }
+    }
+
+    private File getFileReminder(String username) {
+        String encryptedUsername = encodeUsername(username);
+        return new File(Globals.CANREG_SERVER_FOLDER + Globals.FILE_SEPARATOR + encryptedUsername);
+    }
+
+    private String encodeUsername(String username) {
+        return Base64.getEncoder().encodeToString(username.getBytes(StandardCharsets.UTF_8))
+            .replace('+', '-')
+            .replace('/', '_')
+            .replace('=', '.');
     }
 }
