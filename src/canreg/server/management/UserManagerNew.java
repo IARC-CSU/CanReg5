@@ -312,35 +312,41 @@ public class UserManagerNew {
     }
 
     public boolean checkPasswordReminderFile(String username) {
-
-        String encryptedUsername = encodeUsername(username);
-        File file = new File(Globals.CANREG_SERVER_FOLDER + Globals.FILE_SEPARATOR + encryptedUsername);
+        File file = getFileReminder(username);
         return file.exists();
     }
 
-    public void createFileReminder(String username) throws IOException {
-
-        String encryptedUsername = encodeUsername(username);
-        File reminderFile = new File(Globals.CANREG_SERVER_FOLDER + Globals.FILE_SEPARATOR + encryptedUsername);
-        if (!reminderFile.exists()) {
-            Files.createFile(reminderFile.toPath());
+    public void createFileReminder(String username) {
+        File reminderFile = getFileReminder(username);
+        try {
+            if (!reminderFile.exists()) {
+                Files.createFile(reminderFile.toPath());
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(UserManagerNew.class.getName()).log(Level.SEVERE,
+                "Unable to create the file : " + reminderFile.toPath(), ex);
         }
     }
 
-    public void deleteFileReminder(String username) throws IOException {
-
-        String encryptedUsername = encodeUsername(username);
-        File reminderFile = new File(Globals.CANREG_SERVER_FOLDER + Globals.FILE_SEPARATOR + encryptedUsername);
-        if (reminderFile.exists()) {
+    public void deleteFileReminder(String username) {
+        File reminderFile = getFileReminder(username);
+        try {
             Files.deleteIfExists(reminderFile.toPath());
+        } catch (IOException ex) {
+            Logger.getLogger(UserManagerNew.class.getName()).log(Level.SEVERE,
+                "Unable to delete the file : " + reminderFile.toPath(), ex);
         }
     }
 
-    private static String encodeUsername(String username) {
-        String encodedUsername = Base64.getEncoder().encodeToString(username.getBytes(StandardCharsets.UTF_8));
-        String encoded1 = encodedUsername.replace('+', '-');
-        String encoded2 = encoded1.replace('/', '_');
-        String encoded3 = encoded2.replace('=', '.');
-        return encoded3;
+    private File getFileReminder(String username) {
+        String encryptedUsername = encodeUsername(username);
+        return new File(Globals.CANREG_SERVER_FOLDER + Globals.FILE_SEPARATOR + encryptedUsername);
+    }
+
+    private String encodeUsername(String username) {
+        return Base64.getEncoder().encodeToString(username.getBytes(StandardCharsets.UTF_8))
+            .replace('+', '-')
+            .replace('/', '_')
+            .replace('=', '.');
     }
 }

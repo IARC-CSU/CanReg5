@@ -350,9 +350,9 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     }
 
     @Override
-    public int saveUser(User user) throws RemoteException, SecurityException {
+    public int saveUser(User user,boolean addPasswordReminder) throws RemoteException, SecurityException {
         checkPermission("saveUser");
-        return theServer.saveUser(user);
+        return theServer.saveUser(user,addPasswordReminder);
     }
 
     @Override
@@ -459,16 +459,13 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
 
     @Override
     public boolean checkFileReminder(String username) throws RemoteException {
+        checkPermission("checkFileReminder");
         return theServer.checkFileReminder(username);
     }
-
+    
     @Override
-    public void createFileReminder(String username) throws IOException {
-        theServer.createFileReminder(username);
-    }
-
-    @Override
-    public void deleteFileReminder(String username) throws IOException {
+    public void deleteFileReminder(String username) throws RemoteException {
+        checkPermission("deleteFileReminder");
         theServer.deleteFileReminder(username);
     }
 

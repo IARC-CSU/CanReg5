@@ -598,8 +598,7 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
         try {
             String encrypted = PasswordService.getInstance().encrypt(user.getUserName());
             user.setPassword(encrypted.toCharArray());
-            canreg.client.CanRegClientApp.getApplication().saveUser(user);
-            CanRegClientApp.getApplication().createFileReminder(user.getUserName());
+            canreg.client.CanRegClientApp.getApplication().saveUser(user,true);
             JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("USER ADDED. TEMPORARY PASSWORD IS ") + userName + ".");
         } catch (SystemUnavailableException | SQLException | RemoteException | SecurityException ex) {
             Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -703,7 +702,6 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
                         canreg.client.CanRegClientApp.getApplication().changePassword(encrypted);
                     JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle
                         ("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("PASSWORD CHANGED."));
-                    CanRegClientApp.getApplication().deleteFileReminder(usernameField.getText());
                 } catch (SecurityException | IOException  ex) {
                         Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -753,7 +751,7 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
         user.setEmail(emailTextField.getText());
         user.setRealName(realNameTextField.getText());
         try {
-            canreg.client.CanRegClientApp.getApplication().saveUser(user);
+            canreg.client.CanRegClientApp.getApplication().saveUser(user,false);
             JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("USER UPDATED."));
         } catch (SQLException | RemoteException | SecurityException ex) {
             Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -768,8 +766,7 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
         try {
             String encrypted = PasswordService.getInstance().encrypt(user.getUserName());
             user.setPassword(encrypted.toCharArray());
-            canreg.client.CanRegClientApp.getApplication().saveUser(user);
-            CanRegClientApp.getApplication().createFileReminder(user.getUserName());
+            canreg.client.CanRegClientApp.getApplication().saveUser(user,true);
             JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("PASSWORD_RESET") + "\n" + java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("TEMPORARY_PASSWORD_IS_") + user.getUserName() + ".");
         } catch (SystemUnavailableException | SQLException | RemoteException | SecurityException ex) {
             Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);

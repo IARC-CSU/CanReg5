@@ -438,9 +438,9 @@ public class CanRegRegistryProxy implements CanRegServerInterface, Serializable 
     }
 
     @Override
-    public int saveUser(User user) throws RemoteException, SecurityException {
+    public int saveUser(User user,boolean addPasswordReminder) throws RemoteException, SecurityException {
         changeRegistryDB(registryCode);
-        int toReturn = serverProxy.saveUser(user);
+        int toReturn = serverProxy.saveUser(user,addPasswordReminder);
         resetRegistryDB();
         return toReturn;
     }
@@ -580,14 +580,9 @@ public class CanRegRegistryProxy implements CanRegServerInterface, Serializable 
     public boolean checkFileReminder(String username) throws RemoteException {
         return serverProxy.checkFileReminder(username);
     }
-
+    
     @Override
-    public void createFileReminder(String username) throws IOException{
-        serverProxy.createFileReminder(username);
-    }
-
-    @Override
-    public void deleteFileReminder(String username) throws IOException {
+    public void deleteFileReminder(String username)throws RemoteException{
         serverProxy.deleteFileReminder(username);
     }
 

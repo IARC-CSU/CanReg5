@@ -195,9 +195,10 @@ public interface CanRegServerInterface extends Remote {
             throws RemoteException, SecurityException;
 
     /**
+     * Change the password corresponding to the username. The password can only be changed by the user itself.
      * 
-     * @param username
-     * @param password
+     * @param username username
+     * @param password password to change
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
@@ -251,13 +252,15 @@ public interface CanRegServerInterface extends Remote {
     public List<User> listUsers() throws RemoteException, SecurityException;
 
     /**
-     *
-     * @param user
+     * save the user in the database and in the .CanRegServer folder
+     * 
+     * @param user user name
+     * @param addPasswordReminder allow to create a file to remind the user to change his password
      * @return
      * @throws RemoteException
      * @throws SecurityException
      */
-    public int saveUser(User user) throws RemoteException, SecurityException;
+    public int saveUser(User user,boolean addPasswordReminder) throws RemoteException, SecurityException;
 
     /**
      * User logs in
@@ -541,16 +544,8 @@ public interface CanRegServerInterface extends Remote {
      * @return true or false
      * @throws RemoteException RMI exception 
      */
-    public boolean checkFileReminder(String username)throws RemoteException;
-
-    /**
-     * Create the file reminder in the .CanRegServer folder. 
-     * @param username  user name
-     * @throws IOException 
-     * @throws RemoteException
-     */
-    public void createFileReminder(String username)throws IOException,RemoteException;
-
+    public boolean checkFileReminder(String username) throws RemoteException;
+    
     /**
      * Delete the file reminder in the .CanRegServer folder.
      *
@@ -558,7 +553,7 @@ public interface CanRegServerInterface extends Remote {
      * @throws IOException
      * @throws RemoteException
      */
-    public void deleteFileReminder(String username)throws IOException,RemoteException;
+    public void deleteFileReminder(String username) throws RemoteException;
     
     
     

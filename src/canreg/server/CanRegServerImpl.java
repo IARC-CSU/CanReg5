@@ -349,9 +349,10 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     /**
+     * Change the password corresponding to the username. The password can only be changed by the user itself.
      *
-     * @param username
-     * @param password
+     * @param username username
+     * @param password password to change
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
@@ -360,7 +361,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         for (User user : listUsers()) {
             if (user.getUserName().equalsIgnoreCase(username)) {
                 user.setPassword(password.toCharArray());
-                saveUser(user);
+                saveUser(user,false);
+                userManager.deleteFileReminder(user.getUserName());
             }
         }
     }
@@ -1062,9 +1064,12 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      * @throws SecurityException
      */
     @Override
-    public synchronized int saveUser(User user) throws RemoteException, SecurityException {
+    public synchronized int saveUser(User user, boolean addPasswordReminder) throws RemoteException, SecurityException {
         int id = currentDAO.saveUser(user);
         userManager.writePasswordsToFile();
+        if (addPasswordReminder) {
+            userManager.createFileReminder(user.getUserName());
+        }
         return id;
     }
 
@@ -1219,15 +1224,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     @Override
-    public void createFileReminder(String username) throws IOException {
-        userManager.createFileReminder(username);
-
-    }
-
-    @Override
-    public void deleteFileReminder(String username) throws IOException {
+    public void deleteFileReminder(String username) throws RemoteException {
         userManager.deleteFileReminder(username);
-
     }
 
     @Override

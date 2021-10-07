@@ -184,8 +184,8 @@ public class CanRegClientApp extends SingleFrameApplication {
         return (Tumour) getRecordByID(requestedPatientRecordID, Globals.TUMOUR_TABLE_NAME, lock, server);
     }
 
-    public void saveUser(User user) throws SQLException, RemoteException, SecurityException {
-        mainServer.saveUser(user);
+    public void saveUser(User user,boolean addFileReminder) throws SQLException, RemoteException, SecurityException {
+        mainServer.saveUser(user,addFileReminder);
     }
     
     private DatabaseRecord getRecordByID(String recordID, String tableName, boolean lock, CanRegServerInterface server)
@@ -1889,24 +1889,11 @@ public class CanRegClientApp extends SingleFrameApplication {
     public boolean checkPasswordReminder(String username)  {
         try {
             return this.mainServer.checkFileReminder(username);
-        } catch (RemoteException e) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE,"Unable to check the file reminder for user :"+ username, e);
+        } catch (RemoteException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName())
+                .log(Level.SEVERE,"Unable to connect to the RMI", ex);
         }
         return false;
-    }
-
-    /**
-     * Create a file which title is the encoded username. The file is created only when a supervisor
-     * reset the password of a user 
-     * @param username user name 
-     */
-    public void createFileReminder(String username) {
-        try {
-            this.mainServer.createFileReminder(username);
-        } catch (IOException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName())
-                .log(Level.SEVERE,"Unable to create the file reminder for user :"+ username, ex);
-        }
     }
 
     /**
@@ -1917,9 +1904,9 @@ public class CanRegClientApp extends SingleFrameApplication {
     public void deleteFileReminder(String username) {
         try {
             this.mainServer.deleteFileReminder(username);
-        } catch (IOException ex) {
+        } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName())
-                .log(Level.SEVERE,"Unable to delete the file reminder for user :"+ username, ex);
+                .log(Level.SEVERE,"Unable to connect to the RMI", ex);
         }
     }
     
