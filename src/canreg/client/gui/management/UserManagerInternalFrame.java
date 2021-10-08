@@ -596,7 +596,7 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
         user.setEmail("");
         user.setUserRightLevel(Globals.UserRightLevels.ANALYST);
         try {
-            String encrypted = PasswordService.getInstance().encrypt(user.getUserName());
+            String encrypted = PasswordService.getInstance().encrypt(user.getUserName(),"SHA-256");
             user.setPassword(encrypted.toCharArray());
             canreg.client.CanRegClientApp.getApplication().saveUser(user,true);
             JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("USER ADDED. TEMPORARY PASSWORD IS ") + userName + ".");
@@ -678,9 +678,12 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
     @Action
     public void changePasswordAction() throws RemoteException, LoginException, SystemUnavailableException {
 
-        String oldencryptedpassword = PasswordService.getInstance().encrypt(new String(currentPasswordField.getPassword()));
-        boolean validPassword = canreg.client.CanRegClientApp.getApplication().checkPassword(usernameField.getText(), oldencryptedpassword);
-        if(validPassword) {
+        String oldencryptedpasswordSHA = PasswordService.getInstance()
+            .encrypt(new String(currentPasswordField.getPassword()), "SHA");
+        String oldencryptedpasswordSHA256 = PasswordService.getInstance()
+            .encrypt(new String(currentPasswordField.getPassword()), "SHA-256");
+        
+        if(isValidPassword(oldencryptedpasswordSHA) || isValidPassword(oldencryptedpasswordSHA256)) {
             // are the fields empty?
             if (newPasswordField.getPassword().length == 0 && confirmNewPasswordField.getPassword().length == 0) {
                 int answer = JOptionPane.showInternalConfirmDialog(
@@ -696,8 +699,7 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
             if (Arrays.equals(newPasswordField.getPassword(), confirmNewPasswordField.getPassword())) {
                 String passwordString = new String(newPasswordField.getPassword());
                 try {
-                    String encrypted = PasswordService.getInstance().encrypt(passwordString);
-                    passwordString = null;
+                String encrypted = PasswordService.getInstance().encrypt(passwordString,"SHA-256");
                     try {
                         canreg.client.CanRegClientApp.getApplication().changePassword(encrypted);
                     JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle
@@ -723,6 +725,10 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
                 return;
             }
         }
+    }
+
+    private boolean isValidPassword(String oldencryptedpassword) throws RemoteException {
+        return CanRegClientApp.getApplication().checkPassword(usernameField.getText(), oldencryptedpassword);
     }
 
     private void refreshLockedRecordsList() {
@@ -764,7 +770,8 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
     public void resetPasswordAction() {
         User user = (User) usersList.getSelectedValue();
         try {
-            String encrypted = PasswordService.getInstance().encrypt(user.getUserName());
+           String encrypted = PasswordService.getInstance().encrypt(user.getUserName(),"SHA-256");
+
             user.setPassword(encrypted.toCharArray());
             canreg.client.CanRegClientApp.getApplication().saveUser(user,true);
             JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("PASSWORD_RESET") + "\n" + java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("TEMPORARY_PASSWORD_IS_") + user.getUserName() + ".");

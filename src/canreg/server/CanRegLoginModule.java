@@ -147,9 +147,15 @@ public class CanRegLoginModule implements LoginModule {
         }
 
         try {
-            // debugOut("user entered password: " + PasswordService.getInstance().encrypt(passwordString) );
-
-            if ((realPassword == null) || !realPassword.equals(PasswordService.getInstance().encrypt(passwordString))) {
+            boolean validPassword;
+            //debugOut("user entered password SHA-256: " + PasswordService.getInstance().encrypt(passwordString,"SHA-256"));
+            //debugOut("user entered password SHA : " + PasswordService.getInstance().encrypt(passwordString,"SHA"));
+            if (realPassword.length() == 40){
+                validPassword = realPassword.equals(PasswordService.getInstance().encrypt(passwordString,"SHA"));
+            }else {
+                validPassword = realPassword.equals(PasswordService.getInstance().encrypt(passwordString,"SHA-256"));
+            }
+            if (!validPassword) {
                 {
                     // debugOut("Password does not match: " + realPassword + " " + passwordString + "\n");
                     return false;
