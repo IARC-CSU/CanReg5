@@ -143,6 +143,9 @@ public class CanRegLoginModule implements LoginModule {
 
         } catch (java.io.IOException e) {
             debugOut("File error: " + Globals.PASS_FILENAME + "\n");
+        }
+        // used if the stored password is null 
+        if(realPassword == null){
             return false;
         }
 
