@@ -37,9 +37,11 @@ import java.beans.PropertyChangeSupport;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -429,7 +431,9 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
         boolean rememberPassword = rememberPasswordBooleanString.equalsIgnoreCase(LocalSettings.TRUE_PROPERTY);
         rememberPasswordCheckBox.setSelected(rememberPassword);
         if (rememberPassword) {
-            passwordField.setText(localSettings.getProperty(LocalSettings.PASSWORD_KEY));
+            String encodedPassword = localSettings.getProperty(LocalSettings.PASSWORD_KEY);
+            String password = new String(Base64.getDecoder().decode(encodedPassword), StandardCharsets.UTF_8);
+            passwordField.setText(password);
         }
         usernameTextField.setText(localSettings.getProperty(LocalSettings.USERNAME_KEY));
         // Load the server list
@@ -473,7 +477,8 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
         // Should CanReg remember the password?
         if (rememberPasswordCheckBox.isSelected()) {
             localSettings.setProperty(LocalSettings.REMEMBER_PASSWORD_KEY, LocalSettings.TRUE_PROPERTY);
-            localSettings.setProperty(LocalSettings.PASSWORD_KEY, new String(passwordField.getPassword()));
+            String password = Base64.getEncoder().encodeToString(new String(passwordField.getPassword()).getBytes(StandardCharsets.UTF_8));
+            localSettings.setProperty(LocalSettings.PASSWORD_KEY,password);
         } else {
             localSettings.setProperty(LocalSettings.REMEMBER_PASSWORD_KEY, LocalSettings.FALSE_PROPERTY);
             localSettings.setProperty(LocalSettings.PASSWORD_KEY, "");
