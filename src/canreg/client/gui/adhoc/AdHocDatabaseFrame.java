@@ -26,7 +26,6 @@ import canreg.common.Globals;
 import java.awt.Cursor;
 import java.io.File;
 import java.nio.file.Files;
-import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -247,11 +246,7 @@ public class AdHocDatabaseFrame extends javax.swing.JInternalFrame {
             }
 
             try {
-               Properties properties =  canreg.common.DefaultConfigFileUtils.readConfigFile();
-                CanRegClientApp.getApplication().loginDirect(adhocRegCode,
-                    properties.getProperty("username"),
-                    properties.getProperty("password").toCharArray(),
-                    true);
+                CanRegClientApp.getApplication().loginDirect(adhocRegCode, "morten", new char[]{'e', 'r', 'v', 'i', 'k'}, true);
                 return SUCCESS;
             } catch(Exception ex) {
                 Logger.getLogger(AdHocDatabaseFrame.class.getName()).log(Level.SEVERE, null, ex);
