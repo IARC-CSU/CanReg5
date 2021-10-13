@@ -1011,8 +1011,9 @@ public final class CanRegClientView extends FrameView {
                 }else {
                     JOptionPane.showConfirmDialog(
                         null,
-                        "Please set an encryption password to start the database",
+                        java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("PLEASE SET AN ENCRYPTION PASSWORD"),
                         "Message", JOptionPane.DEFAULT_OPTION);
+
                     
                 }
             } catch (RemoteException ex) {

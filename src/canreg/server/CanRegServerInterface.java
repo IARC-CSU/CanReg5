@@ -504,10 +504,10 @@ public interface CanRegServerInterface extends Remote {
 
     /**
      * check if the current database is encrypted by a password
-     * @param registryCode  the reregistry code
-     * @return
-     * @throws RemoteException
-     * @throws SecurityException
+     * @param registryCode  the registry code
+     * @return a boolean true if the password is encrypted else false
+     * @throws RemoteException Remote Exception
+     * @throws SecurityException Security Exception
      */
     public boolean checkDatabaseEncryption(String registryCode) throws RemoteException, SecurityException;
 

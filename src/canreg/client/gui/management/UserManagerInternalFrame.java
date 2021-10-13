@@ -36,7 +36,6 @@ import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
@@ -849,7 +848,6 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
         if (Arrays.equals(
                 newDBPasswordField.getPassword(),
                 confirmNewDBPasswordField.getPassword())) {
-            
             return new ChangeDBPasswordActionTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
         } else {
             JOptionPane.showInternalMessageDialog(databasePasswordPanel, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("PASSWORDS DO NOT MATCH."));

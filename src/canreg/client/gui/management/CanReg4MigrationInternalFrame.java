@@ -36,7 +36,6 @@ import canreg.client.gui.importers.ImportOptions;
 
 import java.io.*;
 import java.io.File;
-import java.util.Properties;
 import java.util.Random;
 import java.util.Map;
 import java.util.LinkedList;

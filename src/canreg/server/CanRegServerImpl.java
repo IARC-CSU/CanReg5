@@ -125,7 +125,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     private void initialize(String registryCode, boolean isAdHocDB) throws RemoteException {
         registriesDAOs = new HashMap<>();
         defaultRegistryCode = registryCode;
-
+        defaultConfigFileUtils = new DefaultConfigFileUtils();
         Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.INFO, "Java version: {0}", System.getProperty("java.version"));
 
         // If we can we add a tray icon to show that the CanReg server is running.
@@ -1110,12 +1110,14 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         boolean success = false;
         try {
             success = currentDAO.encryptDatabase(newPasswordArray, oldPasswordArray, encryptionAlgorithm, encryptionKeyLength);
-            // if the  password database is removed after having been set 
-            if (newPasswordArray.length == 0) {
-                defaultConfigFileUtils.updateConfigFileProperties(getCanRegRegistryCode(), "false");
-            } else {
-                //if the password is present 
-                defaultConfigFileUtils.updateConfigFileProperties(this.getCanRegRegistryCode(), "true");
+            if(success){
+                if (newPasswordArray.length > 0) {
+                    // create or change a password
+                    defaultConfigFileUtils.updateConfigFileProperties(getCanRegRegistryCode(), "true");
+                } else{
+                    // the database password is removed after having been set
+                    defaultConfigFileUtils.updateConfigFileProperties(getCanRegRegistryCode(), "false");
+                }
             }
         } catch (SQLException ex) {
             Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -1128,11 +1130,9 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         File file = new File(Globals.CANREG_CONFIG_DATABASE);
         if (file.exists()) {
             Properties properties = defaultConfigFileUtils.readConfigFile();
-            return Boolean.parseBoolean(properties.getProperty(registryCode));
-        }else {
-            defaultConfigFileUtils.writeDefaultConfigFile(registryCode,"false");
-            return false;
+            return properties!= null && Boolean.parseBoolean(properties.getProperty(registryCode));
         }
+        return false;
     }
 
     @Override
