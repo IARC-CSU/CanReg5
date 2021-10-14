@@ -1909,6 +1909,20 @@ public class CanRegClientApp extends SingleFrameApplication {
                 .log(Level.SEVERE,"Unable to connect to the RMI", ex);
         }
     }
+
+    /**
+     *  check if the database password is already set. 
+      * @return
+     */
+    public boolean checkDatabaseEncryption() {
+        try {
+            return mainServer.checkDatabaseEncryption(mainServer.getCanRegRegistryCode());
+        } catch (RemoteException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName())
+                .log(Level.SEVERE, "Unable to check the databases encryption", ex);
+            return false;
+        }
+    }
     
     private class PingToServer implements Runnable {
         @Override

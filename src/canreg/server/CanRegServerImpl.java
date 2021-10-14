@@ -21,6 +21,7 @@ package canreg.server;
 
 import canreg.common.DatabaseFilter;
 import canreg.common.DatabaseIndexesListElement;
+import canreg.common.DefaultConfigFileUtils;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
 import canreg.common.Globals.UserRightLevels;
@@ -97,6 +98,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     private String patientRecordIDvariableName;
     private GlobalToolBox serverToolbox;
     private TrayIcon trayIcon;
+    private DefaultConfigFileUtils defaultConfigFileUtils;
 
     private CanRegDAO currentDAO;
     private HashMap<String, CanRegDAO> registriesDAOs;
@@ -123,7 +125,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     private void initialize(String registryCode, boolean isAdHocDB) throws RemoteException {
         registriesDAOs = new HashMap<>();
         defaultRegistryCode = registryCode;
-
+        defaultConfigFileUtils = new DefaultConfigFileUtils();
         Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.INFO, "Java version: {0}", System.getProperty("java.version"));
 
         // If we can we add a tray icon to show that the CanReg server is running.
@@ -1108,10 +1110,29 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         boolean success = false;
         try {
             success = currentDAO.encryptDatabase(newPasswordArray, oldPasswordArray, encryptionAlgorithm, encryptionKeyLength);
+            if(success){
+                if (newPasswordArray.length > 0) {
+                    // create or change a password
+                    defaultConfigFileUtils.updateConfigFileProperties(getCanRegRegistryCode(), "true");
+                } else{
+                    // the database password is removed after having been set
+                    defaultConfigFileUtils.updateConfigFileProperties(getCanRegRegistryCode(), "false");
+                }
+            }
         } catch (SQLException ex) {
             Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return success;
+    }
+
+    @Override
+    public boolean checkDatabaseEncryption(String registryCode) throws RemoteException, SecurityException {
+        File file = new File(Globals.CANREG_CONFIG_DATABASE);
+        if (file.exists()) {
+            Properties properties = defaultConfigFileUtils.readConfigFile();
+            return properties!= null && Boolean.parseBoolean(properties.getProperty(registryCode));
+        }
+        return false;
     }
 
     @Override

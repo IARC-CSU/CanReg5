@@ -491,6 +491,11 @@ public class CanRegRegistryProxy implements CanRegServerInterface, Serializable 
         resetRegistryDB();
         return toReturn;
     }
+    //check if the password is set  
+    @Override
+    public boolean checkDatabaseEncryption(String registryCode) throws RemoteException, SecurityException {
+        return serverProxy.checkDatabaseEncryption(registryCode);
+    }
 
     @Override
     public String getCanRegRegistryCode() throws RemoteException, SecurityException {
