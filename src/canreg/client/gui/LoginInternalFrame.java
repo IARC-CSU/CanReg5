@@ -431,8 +431,13 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
         boolean rememberPassword = rememberPasswordBooleanString.equalsIgnoreCase(LocalSettings.TRUE_PROPERTY);
         rememberPasswordCheckBox.setSelected(rememberPassword);
         if (rememberPassword) {
-            String encodedPassword = localSettings.getProperty(LocalSettings.PASSWORD_KEY);
-            String password = new String(Base64.getDecoder().decode(encodedPassword), StandardCharsets.UTF_8);
+            String storedPassword = localSettings.getProperty(LocalSettings.PASSWORD_KEY);
+            String password;
+            try {
+                 password = new String(Base64.getDecoder().decode(storedPassword), StandardCharsets.UTF_8);
+            }catch (IllegalArgumentException ex){
+                 password = storedPassword;
+            }
             passwordField.setText(password);
         }
         usernameTextField.setText(localSettings.getProperty(LocalSettings.USERNAME_KEY));
