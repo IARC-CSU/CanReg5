@@ -475,6 +475,23 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     }
 
     @Override
+    public void openTransaction() throws RemoteException {
+        theServer.openTransaction();
+        
+    }
+
+    @Override
+    public void rollbackTransaction() throws RemoteException {
+        theServer.rollbackTransaction();
+    }
+
+    @Override
+    public void commitTransaction() throws RemoteException {
+        theServer.commitTransaction();
+
+    }
+
+    @Override
     public boolean checkPassword(String username, String encryptedPassword) throws RemoteException {
         checkPermission("checkPassword");
         return theServer.checkPassword(username, encryptedPassword);

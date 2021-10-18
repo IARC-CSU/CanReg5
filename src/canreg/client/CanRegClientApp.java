@@ -1897,6 +1897,29 @@ public class CanRegClientApp extends SingleFrameApplication {
             return false;
         }
     }
+
+    /**
+     * Init the transaction from here all records
+     * will be save if there is no issue 
+     */
+    public void openTransaction() throws RemoteException {
+            mainServer.openTransaction();
+    }
+
+    /**
+     * If there is an SaveRecordException no record will change in the database
+     */
+    public void rollbackTransaction() throws RemoteException {
+            mainServer.rollbackTransaction();
+    }
+
+    /**
+     * End of the transaction all record are send to the database
+     * 
+     */
+    public void commitTransaction() throws RemoteException {
+            mainServer.commitTransaction();
+    }
     
     private class PingToServer implements Runnable {
         @Override
