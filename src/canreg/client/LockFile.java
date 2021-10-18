@@ -27,6 +27,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Level;
@@ -48,56 +49,50 @@ public class LockFile {
         loadMap();
     }
 
-    public TreeMap<String, Set<Integer>> getMap() {
+    /**
+     *
+     * @return
+     */
+    public Map<String, Set<Integer>> getMap() {
         return locksMap;
     }
 
     private void loadMap() {
-        FileInputStream fis;
-        ObjectInputStream in = null;
+        File file = new File(lockFileName);
+        boolean nf;
         try {
-            new File(lockFileName).createNewFile();
-            fis = new FileInputStream(lockFileName);
-            boolean success = false;
-            try {
-                in = new ObjectInputStream(fis);
-                locksMap = (TreeMap<String, Set<Integer>>) in.readObject();
-                success = true;
-            } catch (NullPointerException ex) {
-                Logger.getLogger(LockFile.class.getName()).log(Level.INFO, null, ex);
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(LockFile.class.getName()).log(Level.INFO, null, ex);
-            } catch (java.io.EOFException ex) {
-                Logger.getLogger(LockFile.class.getName()).log(Level.INFO, null, ex);
-            } catch (java.io.StreamCorruptedException ex) {
-                Logger.getLogger(LockFile.class.getName()).log(Level.INFO, null, ex);
-            } finally {
-                if (in != null) {
-                    in.close();
+            nf = file.createNewFile();
+            if (nf) {
+                try (FileInputStream fis = new FileInputStream(lockFileName)) {
+                    boolean success = false;
+                    try (ObjectInputStream in = new ObjectInputStream(fis)) {
+                        locksMap = (TreeMap<String, Set<Integer>>) in.readObject();
+                        success = true;
+                    } catch (NullPointerException | ClassNotFoundException | java.io.EOFException | java.io.StreamCorruptedException ex) {
+                        Logger.getLogger(LockFile.class.getName()).log(Level.INFO, null, ex);
+                    } finally {
+                        if (!success) {
+                            locksMap = new TreeMap<>();
+                        }
+                    }
+                } catch (IOException ex) {
+                    Logger.getLogger(LockFile.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                fis.close();
-                if (!success) {
+                if (locksMap == null) {
                     locksMap = new TreeMap<>();
                 }
             }
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(LockFile.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(LockFile.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        if (locksMap == null) {
-            locksMap = new TreeMap<>();
         }
     }
 
     public void writeMap() {
-        try (FileOutputStream fos = new FileOutputStream(lockFileName)){
+        try (FileOutputStream fos = new FileOutputStream(lockFileName)) {
             out = new ObjectOutputStream(fos);
             out.writeObject(locksMap);
             out.flush();
             out.close();
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(LockFile.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(LockFile.class.getName()).log(Level.SEVERE, null, ex);
         }

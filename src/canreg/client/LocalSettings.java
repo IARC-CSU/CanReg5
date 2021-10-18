@@ -216,13 +216,13 @@ public final class LocalSettings {
      * @param port
      * @param code
      * @return
-     */
+     */ 
     public int addServerToServerList(String name, String url, int port, String code) {
         boolean found = false;
         int i = 0;
 
         while (!found) {
-            found = getProperty("server." + (i++) + ".name").equals("");
+            found = getProperty("server." + (i++) + ".name").equals(""); //NOSONAR
         }
         // step one back
         i -= 1;
@@ -236,16 +236,6 @@ public final class LocalSettings {
         return i;
     }
 
-    /*
-     public String[] getLanguageList() {
-     String list[] = new String[Globals.LANGUAGES_AVAILABLE.length];
-     for (int i = 0; i < list.length; i++) {
-     Locale locale = new Locale(Globals.LANGUAGES_AVAILABLE[i]);
-     list[i] = locale.getDisplayLanguage();
-     }
-     return list;
-     }
-     */
     /**
      *
      * @return
@@ -295,21 +285,14 @@ public final class LocalSettings {
     private boolean loadSettings() {
         settingsChanged = false;
         boolean success;
-        try (InputStream propInputStream = new FileInputStream(settingsDir + System.getProperty("file.separator") + settingsFileName)){ //NOSONAR
-             
+        try (InputStream propInputStream = new FileInputStream(settingsDir + System.getProperty("file.separator") + settingsFileName)){      //NOSONAR        
             setProperties(new Properties());
             getProperties().loadFromXML(propInputStream);
             success = true;
-        } catch (InvalidPropertiesFormatException ex) {
-            Logger.getLogger(LocalSettings.class.getName()).log(Level.SEVERE, null, ex);
-            success = false;
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(LocalSettings.class.getName()).log(Level.INFO, null, ex);
-            success = false;
         } catch (IOException ex) {
             Logger.getLogger(LocalSettings.class.getName()).log(Level.SEVERE, null, ex);
             success = false;
-        } 
+        }
         return success;
     }
 
@@ -318,31 +301,15 @@ public final class LocalSettings {
      * @return
      */
     public boolean writeSettings() {
-        boolean success = false;
+        boolean success;
         if (settingsChanged) {
-            OutputStream propOutputStream = null;
-            try {
-                propOutputStream = new FileOutputStream(settingsDir + System.getProperty("file.separator") + settingsFileName);
+            try (OutputStream propOutputStream = new FileOutputStream(settingsDir + System.getProperty("file.separator") + settingsFileName)){
                 getProperties().storeToXML(propOutputStream, "CanReg5 local settings");
                 success = true;
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(LocalSettings.class.getName()).log(Level.SEVERE, null, ex);
-                success = false;
             } catch (IOException ex) {
                 Logger.getLogger(LocalSettings.class.getName()).log(Level.SEVERE, null, ex);
                 success = false;
-            } finally {
-                if (propOutputStream != null) {
-                    try {
-                        propOutputStream.flush();
-                        propOutputStream.close();
-                        settingsChanged = false;
-                    } catch (IOException ex) {
-                        Logger.getLogger(LocalSettings.class.getName()).log(Level.SEVERE, null, ex);
-                        success = false;
-                    }
-                }
-            }
+            } 
         } else {
             success = false;
         }
@@ -355,11 +322,6 @@ public final class LocalSettings {
      * @param string
      */
     public void setProperty(String key, String string) {
-        // Not sure why this didn't work, but OK... 
-//        String property = properties.getProperty(key);
-//        if (property != null && !string.trim().equalsIgnoreCase(property)) {
-//            settingsChanged = true;
-//        }
         properties.setProperty(key, string);
         settingsChanged = true;
     }
@@ -405,16 +367,12 @@ public final class LocalSettings {
             property = "";
         } else if (key.equalsIgnoreCase(LOCALE_KEY)) {
             property = Locale.getDefault().getLanguage();
-            // turkish small i capitalizes to big i with dot, which we don't support yet, so we default it to english...
-            //if (property.equalsIgnoreCase("tr")) {
-            //    property = Locale.ENGLISH.getLanguage();
-            //}
         } else if (key.equalsIgnoreCase(REMEMBER_PASSWORD_KEY)) {
             property = FALSE_PROPERTY;
         } else if (key.equalsIgnoreCase(WORKING_DIR_PATH_KEY)) {
-            property = System.getProperty("user.home", ".") + System.getProperty("file.separator") + "CanReg";
+            property = System.getProperty("user.home", ".") + System.getProperty("file.separator") + "CanReg";  //NOSONAR
         } else if (key.equalsIgnoreCase(LOOK_AND_FEEL_KEY)) {
-            property = "System";
+            property = Globals.DEFAULT_LOOK_AND_FEEL;
         } else if (key.equalsIgnoreCase(AUTO_BACKUP_KEY)) {
             property = TRUE_PROPERTY;
         } else if (key.equalsIgnoreCase(BACKUP_EVERY_KEY)) {
@@ -494,14 +452,14 @@ public final class LocalSettings {
      *
      * @return
      */
-    public LinkedList<ServerDescription> getServerDescriptions() {
-        LinkedList<ServerDescription> serverList = new LinkedList();
+    public List<ServerDescription> getServerDescriptions() {
+        LinkedList<ServerDescription> serverList = new LinkedList<>();
         Set<String> set = properties.stringPropertyNames();
 
         // First we find all strings mentioning server in our properties
         // ie. server.0.name
         Iterator<String> i = set.iterator();
-        Set foundServers = new HashSet();
+        Set<Integer> foundServers = new HashSet<>();
 
         while (i.hasNext()) {
             String s = i.next();
@@ -525,7 +483,7 @@ public final class LocalSettings {
     }
 
     private LinkedList<ServerDescription> removeDuplicateServers(List<ServerDescription> servers) {
-        HashMap<String, ServerDescription> serverStringRepresentationMap = new HashMap<String, ServerDescription>();
+        HashMap<String, ServerDescription> serverStringRepresentationMap = new HashMap<>();
         for (ServerDescription server : servers) {
             String stringRep = server.getUrl() + ":" + server.getPort() + "/" + server.getCode();
             ServerDescription otherServer = serverStringRepresentationMap.get(stringRep);
@@ -539,7 +497,7 @@ public final class LocalSettings {
                 serverStringRepresentationMap.put(stringRep, server);
             }
         }
-        return new LinkedList(serverStringRepresentationMap.values());
+        return new LinkedList<>(serverStringRepresentationMap.values());
     }
 
     /**
@@ -572,7 +530,7 @@ public final class LocalSettings {
      * @return
      */
     public ServerDescription getServerDescription(int serverID) {
-        LinkedList<ServerDescription> serverList = getServerDescriptions();
+        List<ServerDescription> serverList = getServerDescriptions();
         ServerDescription sd = null;
         boolean found = false;
         int i = 0;
@@ -704,7 +662,7 @@ public final class LocalSettings {
         return path;
     }
 
-    private String tryToFindGSInstalltionOnWindows() {
+    private String tryToFindGSInstalltionOnWindows() { // NOSONAR
         String path = "";
         // try windows 32
         String[] foldersToTry = new String[]{
