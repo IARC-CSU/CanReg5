@@ -20,6 +20,7 @@
 package canreg.client.gui;
 
 import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.Globals;
 import java.io.IOException;
 import java.io.InputStream;
@@ -59,6 +60,7 @@ public class CanRegClientAboutBox extends javax.swing.JDialog implements Hyperli
             aboutEditorPane.addHyperlinkListener(this);
         } catch (IOException ex) {
             Logger.getLogger(CanRegClientAboutBox.class.getName()).log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
     }
 
@@ -127,6 +129,7 @@ public class CanRegClientAboutBox extends javax.swing.JDialog implements Hyperli
         catch (Exception e)
         {
             Logger.getLogger(CanRegClientAboutBox.class.getName()).log(Level.INFO, "Problem setting about page", e);
+            new TechnicalError().errorDialog();
         }
 
         versionLabel.setFont(versionLabel.getFont().deriveFont(versionLabel.getFont().getStyle() | java.awt.Font.BOLD));

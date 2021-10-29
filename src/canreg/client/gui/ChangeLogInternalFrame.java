@@ -31,6 +31,7 @@ package canreg.client.gui;
  * @author ervikm
  */
 import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.Globals;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -164,6 +165,7 @@ public class ChangeLogInternalFrame extends javax.swing.JInternalFrame implement
                 canreg.common.Tools.browse(event.getURL().toString());
             } catch (IOException ex) {
                 Logger.getLogger(ChangeLogInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
         }
     }

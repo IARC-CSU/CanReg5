@@ -30,6 +30,7 @@ import canreg.client.LocalSettings;
 import canreg.client.ServerDescription;
 import canreg.client.gui.tools.WaitFrame;
 import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.Globals;
 import canreg.exceptions.WrongCanRegVersionException;
 import java.awt.Cursor;
@@ -554,10 +555,9 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
             Date date = null;
             try {
                 date = CanRegClientApp.getApplication().getDateOfLastBackUp();
-            } catch (SecurityException ex) {
+            } catch (SecurityException | RemoteException ex) {
                 Logger.getLogger(LoginInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (RemoteException ex) {
-                Logger.getLogger(LoginInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
             if (maxDiffString != null) {
                 if (date != null) {
@@ -743,6 +743,7 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
                 result = CanRegClientApp.getApplication().performBackup();
             } catch (RemoteException ex) {
                 Logger.getLogger(LoginInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
             return result;
         }
@@ -938,7 +939,7 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
             }
             return "Failed";
         }
-
+        
         @Override
         protected void succeeded(Object resultObject) {
             waitFrame.dispose();
