@@ -21,6 +21,7 @@ package canreg.client.analysis;
 
 import canreg.client.analysis.TableBuilderInterface.ChartType;
 import canreg.client.analysis.TableBuilderInterface.FileTypes;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.Globals;
 import canreg.common.database.IncompatiblePopulationDataSetException;
 import canreg.common.database.PopulationDataset;
@@ -51,6 +52,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -169,21 +171,20 @@ public class Tools {
         System.out.println(rff.getScript());
 
         try {
-            File tempFile = File.createTempFile("script", ".r");
-            // generatedFiles.add(tempFile.getPath());
+        File tempFile = File.createTempFile("script", ".r");
+        // generatedFiles.add(tempFile.getPath());
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
                     new FileOutputStream(tempFile), "UTF8"));
             writer.append(rff.getScript());
             writer.close();
             Tools.callR(tempFile.getAbsolutePath(), rpath, fileName + "-report.txt");
-        } catch (TableErrorException ex) {
+        } catch (TableErrorException | IOException ex) {
             Logger.getLogger(TopNChartTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(TopNChartTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
         return generatedFiles;
-    }
-
+        }
+        
     public static JFreeChart generateJChart(
             Collection<CancerCasesCount> casesCounts,
             String fileName,
@@ -547,16 +548,17 @@ public class Tools {
             }
         } catch (InterruptedException ex) {
             Logger.getLogger(RTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         } catch (java.util.NoSuchElementException ex) {
             Logger.getLogger(RTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
             if (pr != null) {
                 BufferedInputStream errorStream = new BufferedInputStream(pr.getErrorStream());
                 String errorMessage = convertStreamToString(errorStream);
-                System.out.println(errorMessage);
                 throw new TableErrorException("R says:\n \"" + errorMessage + "\"");
             }
         } catch (IOException ex) {
             Logger.getLogger(Tools.class.getName()).log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         } finally {
             if (pr != null) {
                 System.out.println(pr.exitValue());

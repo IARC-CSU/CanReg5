@@ -21,7 +21,7 @@ package canreg.client.analysis;
 
 import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
-import canreg.client.analysis.TableBuilderInterface.FileTypes;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.Globals;
 import canreg.common.Globals.StandardVariableNames;
 import canreg.common.database.IncompatiblePopulationDataSetException;
@@ -208,12 +208,13 @@ public class RTableBuilder implements TableBuilderInterface {
                         }
                     }
                 } catch (InterruptedException ex) {
-                    Logger.getLogger(RTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(RTableBuilder.class.getName()).log(Level.SEVERE, "Error while building R", ex);
+                    new TechnicalError().errorDialog();
                 } catch (java.util.NoSuchElementException ex) {
-                    Logger.getLogger(RTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
                     BufferedInputStream errorStream = new BufferedInputStream(pr.getErrorStream());
                     String errorMessage = Tools.convertStreamToString(errorStream);
-                    System.out.println(errorMessage);
+                    Logger.getLogger(RTableBuilder.class.getName()).log(Level.SEVERE,
+                        "Error while building R : "+errorMessage, ex);
                     throw new TableErrorException("R says:\n \"" + errorMessage + "\"");
                 } finally {
                     System.out.println(pr.exitValue());
@@ -221,9 +222,11 @@ public class RTableBuilder implements TableBuilderInterface {
             }
 
         } catch (IOException ex) {
-            Logger.getLogger(RTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(RTableBuilder.class.getName()).log(Level.SEVERE, "", ex);
+            new TechnicalError().errorDialog();
         } catch (IncompatiblePopulationDataSetException ex) {
-            Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.WARNING, null, ex);
+            Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.WARNING,
+                "Incompatibility  in the population dataset", ex);
             throw new NotCompatibleDataException();
         }
 

@@ -104,6 +104,7 @@ public class FixedWidthFileWriter implements FileWriterInterface {
                         fe.substring_length = Integer.parseInt(matcher.group(3));
                     }
                 } catch (IllegalArgumentException iae) {
+                    // no logging for that part
                     // then just a code
                     // fe.variable = matcher.group(1);
                 }
@@ -120,7 +121,8 @@ public class FixedWidthFileWriter implements FileWriterInterface {
             // outFileName = fileName;
             outFile = new BufferedWriter(new FileWriter(fileName));
         } catch (IOException ex) {
-            Logger.getLogger(FixedWidthFileWriter.class.getName()).log(Level.WARNING, null, ex);
+            Logger.getLogger(FixedWidthFileWriter.class.getName()).
+                log(Level.SEVERE,"Error: Unable to set the output file: " + fileName, ex);
             return false;
         }
         return true;
@@ -172,7 +174,8 @@ public class FixedWidthFileWriter implements FileWriterInterface {
             outFile.write(line.toString());
             outFile.newLine();
         } catch (IOException ex) {
-            Logger.getLogger(FixedWidthFileWriter.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FixedWidthFileWriter.class.getName()).
+                log(Level.SEVERE,"Error: unable to write in the output file: ", ex);
             return false;
         }
         return true;

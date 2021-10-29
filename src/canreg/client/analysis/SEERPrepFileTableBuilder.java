@@ -19,7 +19,7 @@
  */
 package canreg.client.analysis;
 
-import canreg.client.analysis.TableBuilderInterface.FileTypes;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.Globals;
 import canreg.common.Globals.StandardVariableNames;
 import canreg.common.database.AgeGroupStructure;
@@ -277,7 +277,8 @@ public class SEERPrepFileTableBuilder implements TableBuilderInterface {
             filesCreated.add(ddFileName);
 
         } catch (IOException ex) {
-            Logger.getLogger(SEERPrepFileTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SEERPrepFileTableBuilder.class.getName()).log(Level.SEVERE, "Error while creating or filling the report",ex);
+            new TechnicalError().errorDialog();
         } catch (IncompatiblePopulationDataSetException ex) {
             Logger.getLogger(SEERPrepFileTableBuilder.class.getName()).log(Level.WARNING, null, ex);
             throw new NotCompatibleDataException();

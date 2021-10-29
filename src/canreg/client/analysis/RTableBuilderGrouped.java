@@ -21,7 +21,7 @@ package canreg.client.analysis;
 
 import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
-import canreg.client.analysis.TableBuilderInterface.FileTypes;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.Globals;
 import canreg.common.Globals.StandardVariableNames;
 import canreg.common.database.PopulationDataset;
@@ -283,7 +283,8 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
                         }
                         outLine.delete(0, outLine.length());
                     } catch (NumberFormatException nfe) {
-                        Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.WARNING, null, nfe);
+                        Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.WARNING," Number Format Exception while building the R table", nfe);
+                        new TechnicalError().errorDialog();
                     }
                 }
                 incoutput.flush();
@@ -354,24 +355,29 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
                             }
                         }
                     } catch (InterruptedException ex) {
-                        Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.SEVERE,"Method interrupted" 
+                            + "while waiting for the command list to complete " , ex);
+                        new TechnicalError().errorDialog();
                     } catch (java.util.NoSuchElementException ex) {
-                        Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.SEVERE, " element being requested does not exist.", ex);
                         BufferedInputStream errorStream = new BufferedInputStream(pr.getErrorStream());
                         String errorMessage = convertStreamToString(errorStream);
-                        System.out.println(errorMessage);
+                        Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.SEVERE,
+                            " Error in the stream : "+ errorMessage);
                         throw new TableErrorException("R says:\n" + errorMessage);
                     } finally {
-                        System.out.println(pr.exitValue());
-                        // Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.INFO, null, pr.exitValue());
+                        Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.INFO,
+                            "Exiting with return code : "+ pr.exitValue());
                     }
                 }
             }
 
         } catch (IOException ex) {
-            Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.SEVERE, "Error while creating or filling a file ", ex);
+            new TechnicalError().errorDialog();
         } catch (IncompatiblePopulationDataSetException ex) {
-            Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.WARNING, null, ex);
+            Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.WARNING, "Error in the population," 
+                + " dataset : some data are incorrect ", ex);
             throw new NotCompatibleDataException();
         }
 
