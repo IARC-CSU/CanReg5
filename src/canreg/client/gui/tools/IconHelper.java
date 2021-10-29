@@ -21,6 +21,8 @@
 
 package canreg.client.gui.tools;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 
 /**
@@ -36,7 +38,7 @@ public class IconHelper {
         if (imgURL != null) {
             return new ImageIcon(imgURL, description);
         } else {
-            System.err.println("Couldn't find file: " + path);
+            Logger.getLogger(ExcelAdapter.class.getName()).log(Level.SEVERE,"Couldn't find file: " + path);
             return null;
         }
     }
