@@ -359,7 +359,7 @@ private void codeTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
      * @param value
      */
     @Override
-    public synchronized void setValue(String value) {
+    public synchronized void setValue(String value){
         codeTextField.setText(value);
         try {
             lookUpAndSetDescription();
@@ -374,7 +374,6 @@ private void codeTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         categoryTextField.setText("");
         if (codeTextField.getText().trim().length() > 0) {
             if (possibleValuesMap != null) {
-                try {
                     if (dictionary.isCompoundDictionary() && codeTextField.getText().length() >= dictionary.getCodeLength()) {
                         categoryTextField.setText(possibleValuesMap.get(
                                 codeTextField.getText().substring(0, dictionary.getCodeLength())).getDescription());
@@ -386,9 +385,6 @@ private void codeTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                     } else {
                         descriptionTextField.setText(possibleValuesMap.get(codeTextField.getText()).getDescription());
                     }
-                } catch (NullPointerException e) {
-                    throw e;
-                }
             }
         }
     }
