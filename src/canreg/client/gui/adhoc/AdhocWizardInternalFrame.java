@@ -26,6 +26,7 @@ import canreg.client.gui.analysis.TableBuilderInternalFrame;
 import canreg.client.gui.dataentry.BrowseInternalFrame;
 import canreg.client.gui.dataentry.PDSChooserInternalFrame;
 import canreg.client.gui.importers.ImportFilesView;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.server.CanRegServerInterface;
 import java.rmi.RemoteException;
 import java.util.ResourceBundle;
@@ -93,6 +94,7 @@ public class AdhocWizardInternalFrame extends javax.swing.JInternalFrame
                 tableBuilderBtn.setEnabled(true);
         } catch(SecurityException | RemoteException ex) {
             Logger.getLogger(AdhocWizardInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
     }
     
