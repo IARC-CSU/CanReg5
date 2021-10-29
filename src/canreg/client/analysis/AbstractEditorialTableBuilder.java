@@ -21,6 +21,7 @@ package canreg.client.analysis;
 
 import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.Globals;
 import canreg.common.Globals.StandardVariableNames;
 import canreg.common.database.PopulationDataset;
@@ -283,6 +284,7 @@ public abstract class AbstractEditorialTableBuilder implements TableBuilderInter
         } catch (IOException iee) {
             Logger.getLogger(AbstractEditorialTableBuilder.class.getName()).log(Level.SEVERE,
                 "Somethings wrong with the file " + isr.toString(), iee);
+            new TechnicalError().errorDialog();
         }
 //        if (tmpString!=null)
 //            elements.add(tmpString);
@@ -435,6 +437,7 @@ public abstract class AbstractEditorialTableBuilder implements TableBuilderInter
         } catch (NumberFormatException nfe) {
             Logger.getLogger(AbstractEditorialTableBuilder.class.getName()).log(Level.SEVERE, 
                 "Faulty registry number", nfe);
+            new TechnicalError().errorDialog();
         }
         return cn;
     }
@@ -665,6 +668,7 @@ public abstract class AbstractEditorialTableBuilder implements TableBuilderInter
         } catch (IOException e) {
             Logger.getLogger(AbstractEditorialTableBuilder.class.getName()).log(Level.SEVERE,
                 "FileOut error", e);
+            new TechnicalError().errorDialog();
         }
     }
 
@@ -920,7 +924,9 @@ public abstract class AbstractEditorialTableBuilder implements TableBuilderInter
                 line = br.readLine();
             }
         } catch (IOException ioe) {
-            Logger.getLogger(AbstractEditorialTableBuilder.class.getName()).log(Level.SEVERE, "Include file error", ioe);
+            Logger.getLogger(AbstractEditorialTableBuilder.class.getName()).log(Level.SEVERE,
+                "Include file error", ioe);
+            new TechnicalError().errorDialog();
         }
     }
 

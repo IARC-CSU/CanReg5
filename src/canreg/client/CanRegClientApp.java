@@ -23,6 +23,7 @@ import canreg.client.dataentry.Relation;
 import canreg.client.gui.CanRegClientView;
 import canreg.client.gui.importers.ImportOptions;
 import canreg.client.gui.tools.UITools;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.DatabaseFilter;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
@@ -326,6 +327,7 @@ public class CanRegClientApp extends SingleFrameApplication {
                         users = listUsersLoggedIn().length - 1;
                     } catch (SecurityException | RemoteException ex) {
                         Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+                        new TechnicalError().errorDialog();
                     }
                     int numberOfRecordsOpen = numberOfRecordsOpen();
                     if (numberOfRecordsOpen > 0) {
@@ -346,6 +348,7 @@ public class CanRegClientApp extends SingleFrameApplication {
                         logOut();
                     } catch (RemoteException ex) {
                         Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+                        new TechnicalError().errorDialog();
                     }
                 }
                 if (isCanregServerRunningInThisThread() && mainServer != null) {
@@ -353,6 +356,7 @@ public class CanRegClientApp extends SingleFrameApplication {
                         mainServer.shutDownServer();
                     } catch (RemoteException | SecurityException ex) {
                         Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+                        new TechnicalError().errorDialog();
                     }
                 }
             }
@@ -400,6 +404,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             Logger.getLogger("canreg").setLevel(Level.parse(Globals.LOG_LEVEL));
         } catch (IOException | SecurityException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
 
         splashMessage(java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("LOADING USER SETTINGS..."), 40);
@@ -425,6 +430,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             sysName = loginServer.getRegistryName();
         } catch (NotBoundException | RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         } catch (MalformedURLException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.INFO, null, ex);
         }
@@ -715,6 +721,7 @@ public class CanRegClientApp extends SingleFrameApplication {
                 // Locale.setDefault(localSettings.getLocale());
             } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
                 Logger.getLogger(CanRegClientApp.class.getName()).log(Level.WARNING, null, ex);
+                new TechnicalError().errorDialog();
             }
         }
     }
@@ -830,6 +837,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             datsuccess = canreg.client.dataentry.Convert.convertData(task, filepath, datafile, regcode);
         } catch (Exception ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
         return datsuccess;
     }
@@ -869,6 +877,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             // TODO if canreg server is running in this thread - shut it down...
         } catch (SecurityException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
     }
 
@@ -897,6 +906,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             lockFile.closeMap();
         } catch (SecurityException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
     }
 
@@ -913,6 +923,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             canRegClientView.setHoldingDBsList(this.mainServer.getHoldingDBsList());
         } catch(Exception ex) {
             Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
     }
 
@@ -932,6 +943,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             handlePotentialDisconnect(ex);
         } catch (SecurityException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
         // For now all users are supervisors
         // return Globals.UserRightLevels.SUPERVISOR;
@@ -1294,6 +1306,7 @@ public class CanRegClientApp extends SingleFrameApplication {
                 } catch (RecordLockedException recordLockedException) {
                     Logger.getLogger(CanRegClientApp.class.getName()).log(Level.WARNING, "Tumour record " + id + " already locked?", recordLockedException);
 //                    throw recordLockedException;
+                    new TechnicalError().errorDialog();
                 } catch (RemoteException ex) {
                     Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
                     if (!handlePotentialDisconnect(ex)) {
@@ -1359,6 +1372,7 @@ public class CanRegClientApp extends SingleFrameApplication {
                     tumourToReturn = records[0];
                 } catch (java.lang.ArrayIndexOutOfBoundsException aiobe) {
                     Logger.getLogger(CanRegClientApp.class.getName()).log(Level.WARNING, "Tumour record " + id + " already locked?", aiobe);
+                    new TechnicalError().errorDialog();
                 }
             }
         } else {
@@ -1386,53 +1400,12 @@ public class CanRegClientApp extends SingleFrameApplication {
                         "com.jgoodies.looks.plastic.Plastic3DLookAndFeel");
             }
             UIManager.setLookAndFeel("com.jgoodies.looks.plastic.Plastic3DLookAndFeel");
-        } catch (ClassNotFoundException t) {
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException t) {
             try {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            } catch (ClassNotFoundException ex) {
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
                 Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (InstantiationException ex) {
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IllegalAccessException ex) {
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (UnsupportedLookAndFeelException ex) {
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } catch (IllegalAccessException t) {
-            try {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (InstantiationException ex) {
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IllegalAccessException ex) {
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (UnsupportedLookAndFeelException ex) {
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } catch (InstantiationException t) {
-            try {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (InstantiationException ex) {
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IllegalAccessException ex) {
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (UnsupportedLookAndFeelException ex) {
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } catch (UnsupportedLookAndFeelException t) {
-            try {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (InstantiationException ex) {
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IllegalAccessException ex) {
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (UnsupportedLookAndFeelException ex) {
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
         }
     }
@@ -1617,6 +1590,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         } catch (Exception ex) {
             // TODO: stop throwing general exceptions...
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
         return null;
     }
@@ -1675,8 +1649,8 @@ public class CanRegClientApp extends SingleFrameApplication {
                 }
                 sdc.convertAndSaveInSystemFolder(args[1]);
             } catch (FileNotFoundException ex) {
-                System.out.println(args[1] + " not found. " + ex);
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, args[1] + " not found. " + ex, ex);
+                new TechnicalError().errorDialog();
             }
         } else {
             splashMessage(java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("STARTING..."), 10);
@@ -1698,6 +1672,7 @@ public class CanRegClientApp extends SingleFrameApplication {
                     }
                 } catch (java.awt.HeadlessException he) {
                     Logger.getLogger(CanRegClientApp.class.getName()).log(Level.INFO, null, he);
+                    new TechnicalError().errorDialog();
                 }
                 try {
                     canreg.common.ServerLauncher.start(Globals.DEFAULT_SERVER_ADDRESS, args[0], Globals.DEFAULT_PORT);
@@ -1707,6 +1682,7 @@ public class CanRegClientApp extends SingleFrameApplication {
                     JOptionPane.showMessageDialog(null, java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("CANREG SERVER ") + args[0] + java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString(" LAUNCHED."));
                 } catch (AlreadyBoundException ex) {
                     Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+                    new TechnicalError().errorDialog();
                 }
             } else {
                 launch(CanRegClientApp.class, args);
@@ -1809,6 +1785,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             }
         } catch (java.awt.HeadlessException he) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.INFO, null, he);
+            new TechnicalError().errorDialog();
         }
     }
 
@@ -1892,6 +1869,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName())
                 .log(Level.SEVERE,"Unable to connect to the RMI", ex);
+            new TechnicalError().errorDialog();
         }
         return false;
     }
@@ -1907,6 +1885,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         } catch (RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName())
                 .log(Level.SEVERE,"Unable to connect to the RMI", ex);
+            new TechnicalError().errorDialog();
         }
     }
 
@@ -1931,10 +1910,9 @@ public class CanRegClientApp extends SingleFrameApplication {
                 //pingRemote's parameter is not needed here
                 if(mainServer != null)
                     mainServer.pingRemote(mainServer.hashCode());
-            } catch (RemoteException ex) {
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
             } catch (Exception ex) {
                 Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
         }
     }

@@ -19,10 +19,10 @@
  */
 package canreg.client;
 
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.Globals;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -70,6 +70,7 @@ public class LockFile {
                         success = true;
                     } catch (NullPointerException | ClassNotFoundException | java.io.EOFException | java.io.StreamCorruptedException ex) {
                         Logger.getLogger(LockFile.class.getName()).log(Level.INFO, null, ex);
+                        new TechnicalError().errorDialog();
                     } finally {
                         if (!success) {
                             locksMap = new TreeMap<>();
@@ -77,6 +78,7 @@ public class LockFile {
                     }
                 } catch (IOException ex) {
                     Logger.getLogger(LockFile.class.getName()).log(Level.SEVERE, null, ex);
+                    new TechnicalError().errorDialog();
                 }
                 if (locksMap == null) {
                     locksMap = new TreeMap<>();
@@ -84,6 +86,7 @@ public class LockFile {
             }
         } catch (IOException ex) {
             Logger.getLogger(LockFile.class.getName()).log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
     }
 
@@ -95,6 +98,7 @@ public class LockFile {
             out.close();
         } catch (IOException ex) {
             Logger.getLogger(LockFile.class.getName()).log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
     }
 
@@ -104,6 +108,7 @@ public class LockFile {
             out.close();
         } catch (IOException ex) {
             Logger.getLogger(LockFile.class.getName()).log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
     }
 
