@@ -19,6 +19,7 @@
  */
 package canreg.client.gui.importers;
 
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.database.Patient;
 import canreg.common.database.Tools;
 import canreg.common.database.Tumour;
@@ -274,10 +275,9 @@ public class Import {
                         Tumour[] tumours = new Tumour[0];
                         try {
                             tumours = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(patientID + "", false, server);
-                        } catch (DistributedTableDescriptionException ex) {
+                        } catch (DistributedTableDescriptionException | UnknownTableException ex) {
                             Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (UnknownTableException ex) {
-                            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                            new TechnicalError().errorDialog();
                         }
 
                         tumourSequenceString = (tumours.length + 1) + "";
@@ -289,18 +289,9 @@ public class Import {
                         Patient[] oldPatients = null;
                         try {
                             oldPatients = CanRegClientApp.getApplication().getPatientsByPatientID((String) patientID, false, server);
-                        } catch (RemoteException ex) {
+                        } catch (RemoteException | SecurityException | UnknownTableException | RecordLockedException | SQLException | DistributedTableDescriptionException ex) {
                             Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (SecurityException ex) {
-                            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (DistributedTableDescriptionException ex) {
-                            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (RecordLockedException ex) {
-                            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (SQLException ex) {
-                            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (UnknownTableException ex) {
-                            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                            new TechnicalError().errorDialog();
                         }
                         for (Patient oldPatient : oldPatients) {
                             if (!Tools.newRecordContainsNewInfo(patient, oldPatient, noNeedToLookAtPatientVariables)) {
@@ -417,6 +408,7 @@ public class Import {
                     parser.close();
                 } catch (IOException ex) {
                     Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                    new TechnicalError().errorDialog();
                 }
             }
         }
@@ -580,6 +572,7 @@ public class Import {
                 reportWriter = new BufferedWriter(new FileWriter(io.getReportFileName()));
             } catch (IOException ex) {
                 Logger.getLogger(Import.class.getName()).log(Level.WARNING, null, ex);
+                new TechnicalError().errorDialog();
             }
         }
         boolean success = false;
@@ -893,6 +886,7 @@ public class Import {
                     parser.close();
                 } catch (IOException ex) {
                     Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                    new TechnicalError().errorDialog();
                 }
             }
             try {
@@ -900,6 +894,7 @@ public class Import {
                 reportWriter.close();
             } catch (IOException ex) {
                 Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
             
             files = null;
@@ -931,6 +926,7 @@ public class Import {
             oldPatientRecord = CanRegClientApp.getApplication().getPatientRecord(patientRecordID, false, server);
         } catch(NullPointerException ex1) {
             //Patient not found in DB.
+            Logger.getLogger(Import.class.getName()).log(Level.WARNING,"Patient not found in DB" , ex1);
         }
         /*catch (Exception ex) {
             Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
@@ -1025,6 +1021,7 @@ public class Import {
             oldTumourRecord = CanRegClientApp.getApplication().getTumourRecordBasedOnTumourID(tumourID, false, server);
         } catch(NullPointerException ex1) {
             //Patient not found in DB.
+            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Patient not found in DB", ex1);
         }
         /*catch (Exception ex) {
             Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
@@ -1063,6 +1060,7 @@ public class Import {
             patient = CanRegClientApp.getApplication().getPatientRecord(patientRecordID, false, server);
         } catch(NullPointerException ex1) {
             //Patient not found in DB.
+            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Patient not found in DB", ex1);
         }
         /*catch (Exception ex) {
             Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
@@ -1199,6 +1197,7 @@ public class Import {
             tumour = CanRegClientApp.getApplication().getTumourRecordBasedOnTumourID(tumourID, false, server);
         } catch (NullPointerException ex1) {
             //Patient not found in DB.
+            Logger.getLogger(Import.class.getName()).log(Level.SEVERE,"Patient not found in DB", ex1);
         }
         /*catch (Exception ex) {
             Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
