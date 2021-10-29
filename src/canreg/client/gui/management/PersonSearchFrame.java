@@ -25,6 +25,7 @@
 package canreg.client.gui.management;
 
 import canreg.client.gui.*;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.server.database.RecordLockedException;
 import canreg.server.database.UnknownTableException;
 import canreg.common.cachingtableapi.DistributedTableDescription;
@@ -461,10 +462,9 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
             }
             personSearchHandlerID = CanRegClientApp.getApplication().initiateGlobalDuplicateSearch(
                     searcher, rangeStart, rangeEnd, null);
-        } catch (SecurityException ex) {
+        } catch (SecurityException | RemoteException ex) {
             Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RemoteException ex) {
-            Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
         return duplicateSearchTask;
     }
@@ -524,6 +524,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                 }
             } catch (SecurityException | RemoteException | DistributedTableDescriptionException | RecordLockedException | SQLException | UnknownTableException ex) {
                 Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
             LOG.log(Level.INFO, () ->" duplicate search finished : [records tested] :"  + recordsTested  +
                 " & [match found] : " + matchesFound);
@@ -595,6 +596,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                 // interruptButton.setEnabled(false);
             } catch (SecurityException | RemoteException ex) {
                 Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
         }
     }
@@ -645,6 +647,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                     CanRegClientView.showAndPositionInternalFrame(desktopPane, cpif);
                 } catch (SQLException | RecordLockedException | UnknownTableException | DistributedTableDescriptionException | RemoteException | SecurityException ex) {
                     Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    new TechnicalError().errorDialog();
                 }
             }
         }
@@ -665,6 +668,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                     editPatientID("" + target.getValueAt(rowNumber, columnNumber));
                 } catch (SecurityException ex) {
                     Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    new TechnicalError().errorDialog();
                 }
             }
         }
@@ -770,8 +774,10 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
             }
         } catch (RecordLockedException | DistributedTableDescriptionException | UnknownTableException ex) {
             Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         } catch (SQLException | RemoteException | SecurityException ex) {
             Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         } finally {
             setCursor(normalCursor);
         }
@@ -835,6 +841,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                     Tools.openFile(fileName);
                 } catch (IOException ex) {
                     Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    new TechnicalError().errorDialog();
                 }
             } else {
                 JOptionPane.showMessageDialog(desktopPane, "Something went wrong while writing to: " + fileName, "Error", JOptionPane.ERROR_MESSAGE);

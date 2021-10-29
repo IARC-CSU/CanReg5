@@ -29,6 +29,8 @@ import canreg.common.PersonSearchVariable;
 import canreg.common.qualitycontrol.PersonSearcher.CompareAlgorithms;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.jdesktop.application.Action;
 
 /**
@@ -97,6 +99,7 @@ public class PersonSearchVariablePanel extends javax.swing.JPanel {
         try {
             weight = Float.parseFloat(weightTextField.getText());
         } catch (NumberFormatException nfe) {
+            Logger.getLogger(PersonSearchVariablePanel.class.getName()).log(Level.WARNING, null, nfe);
         }
         return weight;
     }
@@ -253,6 +256,7 @@ public class PersonSearchVariablePanel extends javax.swing.JPanel {
         try {
             discPower = Float.parseFloat(discPowerTextField.getText());
         } catch (NumberFormatException nfe) {
+            Logger.getLogger(PersonSearchVariablePanel.class.getName()).log(Level.WARNING, null, nfe);
         }
         return discPower;
     }

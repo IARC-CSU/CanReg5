@@ -28,6 +28,7 @@ package canreg.client.gui.management;
 import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
 import canreg.client.gui.CanRegClientView;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.Globals;
 import canreg.server.management.SystemDefinitionConverter;
 import java.io.File;
@@ -234,6 +235,7 @@ public class CanReg4SystemConverterInternalFrame extends javax.swing.JInternalFr
                 // changeFile();
             } catch (IOException ex) {
                 Logger.getLogger(CanReg4SystemConverterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
         }
     }
@@ -275,12 +277,9 @@ public class CanReg4SystemConverterInternalFrame extends javax.swing.JInternalFr
                 edvif.loadSystemDefinition(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + codeField.getText() + ".xml");
                 edvif.setDesktopPane(dtp);
                 CanRegClientView.showAndPositionInternalFrame(dtp, edvif);
-            } catch (ParserConfigurationException ex) {
+            } catch (ParserConfigurationException | SAXException | IOException ex) {
                 Logger.getLogger(CanReg4SystemConverterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SAXException ex) {
-                Logger.getLogger(CanReg4SystemConverterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(CanReg4SystemConverterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
 
             this.dispose();

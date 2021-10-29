@@ -26,6 +26,7 @@
 package canreg.client.gui.management;
 
 import canreg.client.CanRegClientApp;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.database.NameSexRecord;
 import canreg.server.database.RecordLockedException;
 import java.io.BufferedReader;
@@ -198,14 +199,13 @@ public class FirstNameSexInternalFrame extends javax.swing.JInternalFrame {
                 FileReader fileReader = new FileReader(canreg.common.Tools.getTempFileFromURL(nameSexFileURL));
                 br = new BufferedReader(fileReader);
                 line = br.readLine();
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(FirstNameSexInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
                 Logger.getLogger(FirstNameSexInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
         }
         
-        @Override protected Object doInBackground() throws SecurityException, RemoteException, IOException, SQLException, RecordLockedException {
+        @Override protected Object doInBackground() throws SecurityException, IOException, SQLException, RecordLockedException {
             // Your Task's code here.  This method runs
             // on a background thread, so don't reference
             // the Swing GUI from here.
@@ -238,6 +238,7 @@ public class FirstNameSexInternalFrame extends javax.swing.JInternalFrame {
                
             } catch (IOException ex) {
                 Logger.getLogger(FirstNameSexInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
         }
     }
@@ -269,10 +270,9 @@ public class FirstNameSexInternalFrame extends javax.swing.JInternalFrame {
                     femaleHeader+names[1]+"\n"+
                     unisexHeader+names[2]);
             namesTextArea.setCaretPosition(0);
-        } catch (SecurityException ex) {
+        } catch (SecurityException | RemoteException ex) {
             Logger.getLogger(FirstNameSexInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RemoteException ex) {
-            Logger.getLogger(FirstNameSexInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
     }
     

@@ -26,6 +26,7 @@
 package canreg.client.gui.management;
 
 import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.Globals;
 import canreg.common.Tools;
 import java.awt.Cursor;
@@ -205,8 +206,8 @@ public class BackUpInternalFrame extends javax.swing.JInternalFrame {
             try {
                 Tools.openFile(Globals.CANREG_BACKUP_FOLDER);
             } catch (IOException ex) {
-                // TODO display warning...
                 Logger.getLogger(BackUpInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
         }
     }
