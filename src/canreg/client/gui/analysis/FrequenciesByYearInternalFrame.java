@@ -25,6 +25,7 @@
  */
 package canreg.client.gui.analysis;
 
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.cachingtableapi.DistributedTableDescription;
 import canreg.common.cachingtableapi.DistributedTableModel;
 import canreg.client.CanRegClientApp;
@@ -331,6 +332,7 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
                         tableDataSource = new DistributedTableDataSourceClient(tableDatadescription, null);
                     } catch (DistributedTableDescriptionException ex) {
                         Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        new TechnicalError().errorDialog();
                     }
                     Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
                 }
@@ -355,6 +357,7 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
                         resultPanel.setVisible(true);
                     } catch (DistributedTableDescriptionException ex) {
                         Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        new TechnicalError().errorDialog();
                     }
                 }
 
@@ -459,9 +462,10 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
                 }
                 jpm.add(line);
             }
-        } catch (Exception ex) {
+        } catch (UnknownTableException | SQLException | DistributedTableDescriptionException | RemoteException ex) {
             Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } 
+            new TechnicalError().errorDialog();
+        }
 
         int cases = (Integer) tableModel.getValueAt(rowNumber, tableColumnModel.getColumnIndex("CASES"));
         if (MAX_ENTRIES_DISPLAYED_ON_RIGHT_CLICK < cases) {
@@ -499,10 +503,14 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
             if (!resultTable.print(JTable.PrintMode.NORMAL,
                     new MessageFormat(java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/FrequenciesByYearInternalFrame").getString("CANREG_FREQUENCIES_BY_YEAR") + " - " + rangeFilterPanel.getFilter()),
                     null)) {
-                System.err.println(java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/FrequenciesByYearInternalFrame").getString("USER CANCELLED PRINTING"));
+                Logger.getLogger(FrequenciesByYearInternalFrame.class.getName())
+                    .log(Level.SEVERE,java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/FrequenciesByYearInternalFrame").getString("USER CANCELLED PRINTING"));
+                new TechnicalError().errorDialog();
             }
         } catch (java.awt.print.PrinterException e) {
-            System.err.format(java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/FrequenciesByYearInternalFrame").getString("CANNOT PRINT %S%N"), e.getMessage());
+            Logger.getLogger(FrequenciesByYearInternalFrame.class.getName())
+                .log(Level.SEVERE,java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/FrequenciesByYearInternalFrame").getString("CANNOT PRINT %S%N"),e);
+            new TechnicalError().errorDialog();
         }
     }
 
@@ -637,8 +645,8 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
             csvPrinter.flush();
 
         } catch (IOException ex) {
-            // JOptionPane.showMessageDialog(this, "File NOT written.\n" + ex.getLocalizedMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
             Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "File NOT written.\n" + ex.getLocalizedMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
         } finally {
             try {
                 if (writer != null) {
@@ -681,6 +689,7 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
                     }
                 } catch (IOException ex) {
                     Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    new TechnicalError().errorDialog();
                 }
             } else {
                 // cancelled
@@ -736,6 +745,7 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
                 }
             } catch (IOException ex) {
                 Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
             resultScrollPane.setVisible(true);
         }
