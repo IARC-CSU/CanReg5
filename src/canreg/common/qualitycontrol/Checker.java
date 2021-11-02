@@ -30,6 +30,8 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -37,6 +39,8 @@ import java.util.TreeMap;
  */
 public class Checker {
 
+    
+    private static final Logger LOGGER = Logger.getLogger(Checker.class.getName());
     private LinkedList<DatabaseVariablesListElement> standardVariables;
 
     /**
@@ -235,7 +239,7 @@ public class Checker {
                 set.add(standardVariable);
             } catch (IllegalArgumentException iae) {
                 // This should have been detected earlier...
-                System.out.println("Invalid standard variable name");
+               LOGGER.log(Level.SEVERE,"Invalid standard variable name",iae);
             }
         }
         return set;

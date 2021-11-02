@@ -2,6 +2,8 @@ package canreg.common.cachingtableapi;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Class that is responsible for retrieving the data for the table from
@@ -9,6 +11,8 @@ import java.util.HashMap;
  * @author Jeremy Dickson, 2003.
  */
 public class DistributedTableClientCache implements Serializable {
+    
+    private static final Logger LOGGER = Logger.getLogger(DistributedTableClientCache.class.getName());
     //THE MAXIMUM SIZE OF THE CACHE
     private int maximumCacheSize = -1;    
     //THE NUMBER OF ROWS THAT ARE RETRIEVED AT A TIME
@@ -118,7 +122,7 @@ public class DistributedTableClientCache implements Serializable {
                         toIndex = tableDescription.getRowCount();
                     }
                 } catch (NullPointerException ex) {
-                    ex.printStackTrace();
+                   LOGGER.log(Level.SEVERE,null,ex);
                 }
             } //USER IS ASCENDING THE TABLE
             else {
