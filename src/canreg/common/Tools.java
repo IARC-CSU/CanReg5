@@ -585,7 +585,7 @@ public class Tools {
             }
 
         } catch (IOException ioe) {
-            System.err.println("I/O Error - " + ioe);
+            LOGGER.log(Level.SEVERE,"I/O Error - " + ioe,ioe);
         }
         return contents.toString();
     }
@@ -603,7 +603,7 @@ public class Tools {
             url = new URL(urlString);
             contents = getFileFromURL(url);
         } catch (MalformedURLException mue) {
-            System.err.println("Invalid URL");
+            LOGGER.log(Level.SEVERE, "Invalid URL", mue);
         }
         return contents;
     }
