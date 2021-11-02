@@ -43,7 +43,8 @@ import org.jdesktop.application.Task;
  * @author  ervikm
  */
 public class RestoreInternalFrame extends javax.swing.JInternalFrame {
-
+    
+    private static final Logger LOGGER = Logger.getLogger(RestoreInternalFrame.class.getName());
     /** Creates new form RestoreInternalFrame */
     public RestoreInternalFrame() {
         initComponents();
@@ -147,7 +148,7 @@ public class RestoreInternalFrame extends javax.swing.JInternalFrame {
                 folderNameTextField.setText(chooser.getSelectedFile().getCanonicalPath());
                 // changeFile();
             } catch (IOException ex) {
-                Logger.getLogger(RestoreInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 new TechnicalError().errorDialog();
             }
         }
@@ -194,10 +195,10 @@ public class RestoreInternalFrame extends javax.swing.JInternalFrame {
                 try {
                 success = canreg.client.CanRegClientApp.getApplication().restoreBackup(folderName);
             } catch (SecurityException ex) {
-                Logger.getLogger(RestoreInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 return "security exception";
             } catch (RemoteException ex) {
-                Logger.getLogger(RestoreInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 return "remote exception";
             }
             else {

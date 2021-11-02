@@ -84,6 +84,7 @@ public class Tools {
      *
      */
     public static int DONT_COUNT = -999;
+    private static final Logger LOGGER = Logger.getLogger(Tools.class.getName());
 
     public static String getChartData(JFreeChart chart, String separatingCharacter, boolean quotesOn) {
 
@@ -179,7 +180,7 @@ public class Tools {
             writer.close();
             Tools.callR(tempFile.getAbsolutePath(), rpath, fileName + "-report.txt");
         } catch (TableErrorException | IOException ex) {
-            Logger.getLogger(TopNChartTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
             new TechnicalError().errorDialog();
         }
         return generatedFiles;
@@ -535,7 +536,7 @@ public class Tools {
             BufferedInputStream is = new BufferedInputStream(new FileInputStream(reportFileName));
             // convert the output to a string
             String theString = convertStreamToString(is);
-            Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.INFO, "Messages from R: \n{0}", theString);
+            LOGGER.log(Level.INFO, "Messages from R: \n{0}", theString);
             // System.out.println(theString);
             // and add all to the list of files to return
             for (String fileName : theString.split("\n")) {
@@ -547,17 +548,17 @@ public class Tools {
                 }
             }
         } catch (InterruptedException ex) {
-            Logger.getLogger(RTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             new TechnicalError().errorDialog();
         } catch (java.util.NoSuchElementException ex) {
-            Logger.getLogger(RTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             if (pr != null) {
                 BufferedInputStream errorStream = new BufferedInputStream(pr.getErrorStream());
                 String errorMessage = convertStreamToString(errorStream);
                 throw new TableErrorException("R says:\n \"" + errorMessage + "\"");
             }
         } catch (IOException ex) {
-            Logger.getLogger(Tools.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             new TechnicalError().errorDialog();
         } finally {
             if (pr != null) {
@@ -589,7 +590,7 @@ public class Tools {
                 plot.setSectionPaint(plot.getDataset().getKey(i), color);
             } catch (java.lang.IndexOutOfBoundsException ex) {
                 // not data for all the categories - that is fine
-                Logger.getLogger(TopNChartTableBuilder.class.getName()).log(Level.INFO, null, ex);
+               LOGGER.log(Level.INFO, null, ex);
             }
         }
     }

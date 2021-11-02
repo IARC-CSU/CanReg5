@@ -73,6 +73,7 @@ import org.w3c.dom.Document;
  */
 public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame implements ActionListener {
 
+    private static final Logger LOGGER = Logger.getLogger(PDSEditorInternalFrame.class.getName());
     private FastFilterInternalFrame filterWizardInternalFrame;
     private final JDesktopPane dtp;
     private Document doc;
@@ -186,7 +187,7 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
                 if (pdse.getAgeGroup() < pdsTableData.length && pdse.getSex() <= 2) {
                     pdsTableData[pdse.getAgeGroup()][pdse.getSex() - 1] = pdse.getCount();
                 } else {
-                    Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.WARNING, "{0}{1} {2}", new Object[]{java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("OUTSIDE_SKOPE:_"), pdse.getAgeGroup(), pdse.getSex()});
+                    LOGGER.log(Level.WARNING, "{0}{1} {2}", new Object[]{java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("OUTSIDE_SKOPE:_"), pdse.getAgeGroup(), pdse.getSex()});
                 }
             }
         }
@@ -1517,7 +1518,7 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
             try {
                 filterWizardInternalFrame.setSelected(true);
             } catch (PropertyVetoException ex) {
-                Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
             }
         } else {
             filterWizardInternalFrame.setTextPane("");
@@ -1543,7 +1544,7 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
         try {
             dateChooser.setDate(new SimpleDateFormat(Globals.DATE_FORMAT_STRING).parse("20000701"));
         } catch (ParseException ex) {
-            Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         standardPopulationComboBox.setModel(new javax.swing.DefaultComboBoxModel(referencePopulations));
         refreshPopulationDataSetTable();
@@ -1583,13 +1584,13 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
                 try {
                     CanRegClientApp.getApplication().deletePopulationDataset(pds.getPopulationDatasetID(), null);
                 } catch (SQLException ex) {
-                    Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
                 }
                 CanRegClientApp.getApplication().saveNewPopulationDataset(pds, null);
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("SUCCESSFULLY_UPDATED_PDS:_") + pds.getPopulationDatasetName() + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("PDS_SAVED."), JOptionPane.INFORMATION_MESSAGE);
             }
         } catch (SecurityException | RemoteException ex) {
-            Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         if (listener != null) {
             listener.actionPerformed(new ActionEvent(this, 1, "refresh"));
@@ -1628,10 +1629,10 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
                     count = Integer.parseInt(s);
                 } catch (java.lang.NullPointerException npe) {
                     count = 0;
-                    Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.WARNING, "Missing value in the pds...");
+                    LOGGER.log(Level.WARNING, "Missing value in the pds...");
                 } catch (java.lang.NumberFormatException nfe) {
                     count = 0;
-                    Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.WARNING, "Error in the pds...");
+                    LOGGER.log(Level.WARNING, "Error in the pds...");
                 }
                 pds.addAgeGroup(new PopulationDatasetsEntry(ageGroup, sex + 1, count));
                 System.out.println((sex + 1) + " - " + ageGroup + ": " + count);
@@ -1707,7 +1708,7 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
                     listener.actionPerformed(new ActionEvent(this, 1, "refresh"));
                 }
             } catch (SQLException | RemoteException | SecurityException ex) {
-                Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -1910,7 +1911,7 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
                     }
                     ChartUtils.saveChartAsPNG(file, chart, pyramidPanelHolder.getWidth(), pyramidPanelHolder.getHeight());
                 } catch (IOException ex) {
-                    Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
                 }
             }
         }
@@ -1958,7 +1959,7 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
                     }
                     canreg.client.analysis.Tools.exportChartAsSVG(chart, new Rectangle(pyramidPanelHolder.getWidth(), pyramidPanelHolder.getHeight()), file);
                 } catch (IOException ex) {
-                    Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
                     new TechnicalError().errorDialog();
                 }
             }
@@ -1993,7 +1994,7 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
                 Integer.parseInt(potentialYear);
                 dateChooser.setDate(new SimpleDateFormat(Globals.DATE_FORMAT_STRING).parse(potentialYear + "0701"));
             } catch (ParseException ex) {
-                Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -2031,7 +2032,7 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
                 canreg.common.database.Tools.writePopulationDatasetToJSON(pds, fileName);
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("SUCCESSFULLY_SAVED_PDS_TO_FILE:_") + fileName + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/PDSEditorInternalFrame").getString("PDS_SAVED."), JOptionPane.INFORMATION_MESSAGE);
             } catch (IOException ex) {
-                Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
             }
         }
     }

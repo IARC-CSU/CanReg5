@@ -1286,7 +1286,7 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                         }
                     }
                 }
-                // Logger.getLogger(RecordEditorMainFrame.class.getName()).log(Level.INFO, result.toString());
+                // LOGGER.log(Level.INFO, result.toString());
             }
 
             if (worstResultCodeFound != CheckResult.ResultCode.Invalid && worstResultCodeFound != CheckResult.ResultCode.Missing) {

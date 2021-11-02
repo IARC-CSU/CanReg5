@@ -87,7 +87,8 @@ import org.jfree.chart.JFreeChart;
  * @author ervikm
  */
 public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
-
+    
+    private static final Logger LOGGER = Logger.getLogger(TableBuilderInternalFrame.class.getName());
     private Map<Integer, PopulationDataset> populationDatasetsMap;
     private PopulationDataset[] populationDatasetsArray;
     private LinkedList<LabelAndComboBoxJPanel> populationDatasetChooserPanels;
@@ -814,7 +815,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                                 tble.getName());
                         previewImageLabel.setIcon(icon);
                     } catch (IOException e) {
-                        Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, e);
+                        LOGGER.log(Level.SEVERE, null, e);
                     }
                 }
             }
@@ -871,7 +872,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                 }
             } catch (FileNotFoundException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage());
-                Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
             }
         } else {
             descriptionTextPane.setText("");
@@ -1044,7 +1045,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
             
             populatePopulationDataSetChooser();
         } catch (SecurityException | RemoteException ex) {
-            Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             new TechnicalError().errorDialog();
         }
 
@@ -1129,7 +1130,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                 // tableTypeLinkedList.add(etle);
                 listModel.addElement(etle);
             } catch (FileNotFoundException ex) {
-                Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 new TechnicalError().errorDialog();
             }
         });
@@ -1149,7 +1150,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
             try {
                 tableBuilder = TableBuilderFactory.getTableBuilder(tble);
             } catch (FileNotFoundException ex) {
-                Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 new TechnicalError().errorDialog();
             }
         }
@@ -1194,7 +1195,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                             localSettings.setProperty(LocalSettings.TABLES_PATH_KEY, chooser.getSelectedFile().getParentFile().getCanonicalPath());
                             fileName = chooser.getSelectedFile().getAbsolutePath();
                         } catch (IOException ex) {
-                            Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                            LOGGER.log(Level.SEVERE, null, ex);
                         }
                     } else {
                         // cancelled
@@ -1318,7 +1319,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                                     canreg.common.Tools.openFile(resultFileName);
                                 } catch (IOException ex) {
                                     JOptionPane.showMessageDialog(this, "Unable to open: " + resultFileName + "\n" + ex.getLocalizedMessage());
-                                    Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                                    LOGGER.log(Level.SEVERE, null, ex);
                                 }
                             });
                         }
@@ -1338,12 +1339,12 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                 } catch (SQLException ex) {
                     setCursor(normalCursor);
                     JOptionPane.showMessageDialog(this, "Something wrong with the SQL query: \n" + ex.getLocalizedMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                    Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
                 } catch (RemoteException | SecurityException | NotCompatibleDataException | DistributedTableDescriptionException | UnknownTableException ex) {
-                    Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
                 } catch (TableErrorException ex) {
                     setCursor(normalCursor);
-                    Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
                     JOptionPane.showMessageDialog(
                             this, "Something went wrong while building the table: \n" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 } finally {

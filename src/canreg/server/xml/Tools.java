@@ -20,6 +20,7 @@
 
 package canreg.server.xml;
 
+import canreg.server.database.QueryGenerator;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -50,6 +51,9 @@ import org.w3c.dom.NodeList;
  * @author ervikm
  */
 public class Tools {
+
+    private static final Logger LOGGER = Logger.getLogger(Tools.class.getName());
+
 
     // This only works for unique XML 
     /**
@@ -112,11 +116,11 @@ public class Tools {
 
         } catch (TransformerConfigurationException e) {
             // this is fatal, just dump the stack and throw a runtime exception
-            Logger.getLogger(Tools.class.getName()).log(Level.SEVERE, null, e);
+            LOGGER.log(Level.SEVERE, null, e);
             throw new RuntimeException(e);
         } catch (TransformerException e) {
             // this is fatal, just dump the stack and throw a runtime exception
-            Logger.getLogger(Tools.class.getName()).log(Level.SEVERE, null, e);
+            LOGGER.log(Level.SEVERE, null, e);
             throw new RuntimeException(e);
         } catch (NullPointerException npe) {
             try {
@@ -126,15 +130,15 @@ public class Tools {
                     result.getWriter().close();
                 }
             } catch (IOException ex) {
-                Logger.getLogger(Tools.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
             }
-            Logger.getLogger(Tools.class.getName()).log(Level.SEVERE, null, npe);
+            LOGGER.log(Level.SEVERE, null, npe);
             throw new RuntimeException(npe);
         } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(Tools.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             throw new RuntimeException(ex);
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(Tools.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             throw new RuntimeException(ex);
         } finally {
             try {
@@ -143,7 +147,7 @@ public class Tools {
                     result.getWriter().close();
                 }
             } catch (IOException ex) {
-                Logger.getLogger(Tools.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -180,7 +184,7 @@ public class Tools {
                 path = "file://" + path;
                 url = new URL(path);
             } catch (MalformedURLException e) {
-                Logger.getLogger(Tools.class.getName()).log(Level.INFO, "Cannot create url for: " + fileName, e);
+                LOGGER.log(Level.INFO, "Cannot create url for: " + fileName, e);
                 System.exit(0);
             }
         }

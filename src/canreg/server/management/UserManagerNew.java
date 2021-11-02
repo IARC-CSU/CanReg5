@@ -54,6 +54,7 @@ import java.util.logging.Logger;
  */
 public class UserManagerNew {
 
+    private static final Logger LOGGER = Logger.getLogger(UserManagerNew.class.getName());
     /**
      *
      */
@@ -122,10 +123,10 @@ public class UserManagerNew {
             passwords.storeToXML(propOutputStream, "Passwords");
             success = true;
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(UserManagerNew.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             success = false;
         } catch (IOException ex) {
-            Logger.getLogger(UserManagerNew.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             success = false;
         } finally {
             if (propOutputStream != null) {
@@ -133,7 +134,7 @@ public class UserManagerNew {
                     propOutputStream.flush();
                     propOutputStream.close();
                 } catch (IOException ex) {
-                    Logger.getLogger(UserManagerNew.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
                     success = false;
                 }
             }
@@ -159,10 +160,10 @@ public class UserManagerNew {
             levels.storeToXML(propOutputStream, "Levels");
             success = true;
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(UserManagerNew.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             success = false;
         } catch (IOException ex) {
-            Logger.getLogger(UserManagerNew.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             success = false;
         } finally {
             if (propOutputStream != null) {
@@ -170,7 +171,7 @@ public class UserManagerNew {
                     propOutputStream.flush();
                     propOutputStream.close();
                 } catch (IOException ex) {
-                    Logger.getLogger(UserManagerNew.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
                     success = false;
                 }
             }
@@ -200,13 +201,13 @@ public class UserManagerNew {
                 if (password != null) {
                     user.setPassword(password.toCharArray());
                 } else {
-                    Logger.getLogger(UserManagerNew.class.getName()).log(Level.SEVERE, null, "Password and user rights doesn't match...");
+                    LOGGER.log(Level.SEVERE, null, "Password and user rights doesn't match...");
                 }
                 users.add(user);
             }
 
         } catch (IOException ex) {
-            Logger.getLogger(UserManagerNew.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         return users;
     }
@@ -323,7 +324,7 @@ public class UserManagerNew {
                 Files.createFile(reminderFile.toPath());
             }
         } catch (IOException ex) {
-            Logger.getLogger(UserManagerNew.class.getName()).log(Level.SEVERE,
+            LOGGER.log(Level.SEVERE,
                 "Unable to create the file : " + reminderFile.toPath(), ex);
         }
     }
@@ -333,7 +334,7 @@ public class UserManagerNew {
         try {
             Files.deleteIfExists(reminderFile.toPath());
         } catch (IOException ex) {
-            Logger.getLogger(UserManagerNew.class.getName()).log(Level.SEVERE,
+            LOGGER.log(Level.SEVERE,
                 "Unable to delete the file : " + reminderFile.toPath(), ex);
         }
     }

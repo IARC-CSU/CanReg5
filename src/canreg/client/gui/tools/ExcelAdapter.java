@@ -18,6 +18,7 @@ import java.util.*;
  */
 public class ExcelAdapter implements ActionListener {
 
+    private static final Logger LOGGER = Logger.getLogger(ExcelAdapter.class.getName());
     private String rowstring, value;
     private Clipboard system;
     private StringSelection stsel;
@@ -113,7 +114,7 @@ public class ExcelAdapter implements ActionListener {
                     }
                 }
             } catch (UnsupportedFlavorException | IOException ex) {
-                Logger.getLogger(ExcelAdapter.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 new TechnicalError().errorDialog();
             }
 

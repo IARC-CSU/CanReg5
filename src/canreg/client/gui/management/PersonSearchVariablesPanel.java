@@ -46,6 +46,7 @@ import org.w3c.dom.Document;
  */
 public class PersonSearchVariablesPanel extends javax.swing.JPanel implements ActionListener {
 
+    private static final Logger LOGGER = Logger.getLogger(PersonSearchVariablesPanel.class.getName());
     private Document doc;
     private DatabaseVariablesListElement[] variablesInDB;
     private LinkedList<PersonSearchVariablePanel> personSearchVariablePanelList;
@@ -109,7 +110,7 @@ public class PersonSearchVariablesPanel extends javax.swing.JPanel implements Ac
             try {
                 threshold = Float.parseFloat(thresholdTextField.getText());
             } catch (NumberFormatException nfe) {
-                Logger.getLogger(PersonSearchVariablesPanel.class.getName()).log(Level.WARNING, null, nfe);
+                LOGGER.log(Level.WARNING, null, nfe);
             }
             newPersonSearch.setThreshold(threshold);
         }

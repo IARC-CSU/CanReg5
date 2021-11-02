@@ -66,6 +66,8 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
     private JDesktopPane desktopPane;
     private LocalSettings localSettings;
     String canRegSystemName;
+    private static final Logger LOGGER = Logger.getLogger(LoginInternalFrame.class.getName());
+
     /**
      * 
      */
@@ -556,7 +558,7 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
             try {
                 date = CanRegClientApp.getApplication().getDateOfLastBackUp();
             } catch (SecurityException | RemoteException ex) {
-                Logger.getLogger(LoginInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+               LOGGER.log(Level.SEVERE, null, ex);
                 new TechnicalError().errorDialog();
             }
             if (maxDiffString != null) {
@@ -642,7 +644,7 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
      */
     private static void debugOut(String msg) {
         if (debug) {
-            Logger.getLogger(LoginInternalFrame.class.getName()).log(Level.INFO, msg);
+           LOGGER.log(Level.INFO, msg);
         }
     }
 
@@ -689,7 +691,7 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
                 }
             } catch (AlreadyBoundException ex) {
                 result = "running";
-                Logger.getLogger(LoginInternalFrame.class.getName()).log(Level.INFO, null, ex);
+               LOGGER.log(Level.INFO, null, ex);
             }
             // Return your result... 
             return result;
@@ -742,7 +744,7 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
             try {
                 result = CanRegClientApp.getApplication().performBackup();
             } catch (RemoteException ex) {
-                Logger.getLogger(LoginInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+               LOGGER.log(Level.SEVERE, null, ex);
                 new TechnicalError().errorDialog();
             }
             return result;
@@ -829,7 +831,7 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
             JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("<HTML>THE IP ADDRESS OF <B>") + addr.getHostName() + java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("</B> IS <B>") + addr.getHostAddress() + java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("</B>.</HTML>"), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("MESSAGE"), JOptionPane.INFORMATION_MESSAGE);
         } catch (UnknownHostException ex) {
             JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("<HTML>CANNOT FIND THE IP ADDRESS OF <B>") + serverURLTextField.getText() + java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("</B>.</HTML>"), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("MESSAGE"), JOptionPane.ERROR_MESSAGE);
-            Logger.getLogger(LoginInternalFrame.class.getName()).log(Level.WARNING, null, ex);
+           LOGGER.log(Level.WARNING, null, ex);
         }
     }
 

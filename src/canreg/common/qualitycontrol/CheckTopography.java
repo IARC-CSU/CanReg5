@@ -37,6 +37,8 @@ import java.util.logging.Logger;
  * @author ervikm
  */
 public class CheckTopography extends CheckInterface {
+    
+    private static final Logger LOGGER = Logger.getLogger(CheckTopography.class.getName());
 
     /**
      * 
@@ -70,11 +72,11 @@ public class CheckTopography extends CheckInterface {
         try {
             topographyICD10Map = LookUpLoader.load(resourceStream, codeLength);
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(CheckTopography.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(CheckTopography.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         } catch (URISyntaxException ex) {
-            Logger.getLogger(CheckTopography.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
     }
 

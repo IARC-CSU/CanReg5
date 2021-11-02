@@ -35,6 +35,7 @@ import org.jdesktop.application.Action;
 public class CanRegClientAboutBox extends javax.swing.JDialog implements HyperlinkListener {
 
     private Properties appInfoProperties;
+    private static final Logger LOGGER = Logger.getLogger(CanRegClientAboutBox.class.getName());
 
     /**
      * 
@@ -59,7 +60,7 @@ public class CanRegClientAboutBox extends javax.swing.JDialog implements Hyperli
             getRootPane().setDefaultButton(closeButton);
             aboutEditorPane.addHyperlinkListener(this);
         } catch (IOException ex) {
-            Logger.getLogger(CanRegClientAboutBox.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             new TechnicalError().errorDialog();
         }
     }
@@ -128,7 +129,7 @@ public class CanRegClientAboutBox extends javax.swing.JDialog implements Hyperli
         }
         catch (Exception e)
         {
-            Logger.getLogger(CanRegClientAboutBox.class.getName()).log(Level.INFO, "Problem setting about page", e);
+            LOGGER.log(Level.INFO, "Problem setting about page", e);
             new TechnicalError().errorDialog();
         }
 
@@ -228,7 +229,7 @@ private void homepageLabelMouseClick(java.awt.event.MouseEvent evt) {//GEN-FIRST
     try {
         canreg.common.Tools.browse(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientAboutBox").getString("http://canreg.iarc.fr/"));
     } catch (IOException ex) {
-        Logger.getLogger(CanRegClientAboutBox.class.getName()).log(Level.SEVERE, null, ex);
+        LOGGER.log(Level.SEVERE, null, ex);
     }
 }//GEN-LAST:event_homepageLabelMouseClick
 
@@ -251,7 +252,7 @@ private void aboutEditorPaneMousePressed(java.awt.event.MouseEvent evt) {//GEN-F
             try {
                 canreg.common.Tools.browse(event.getURL().toString());
             } catch (IOException ex) {
-                Logger.getLogger(CanRegClientAboutBox.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
             }
         }
     }

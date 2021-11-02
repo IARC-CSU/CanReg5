@@ -66,7 +66,7 @@ public class PreviewFilePanel extends javax.swing.JPanel {
     private ActionListener listener;
     public static final String FILE_CHANGED_ACTION = "file_changed";
     public static final String SEPARATING_CHARACTER_CHANGED_ACTION = "separating_character_changed";
-    
+    private static final Logger LOGGER = Logger.getLogger(PreviewFilePanel.class.getName());
 
 
     public PreviewFilePanel() {
@@ -327,7 +327,7 @@ public class PreviewFilePanel extends javax.swing.JPanel {
                 fileNameTextField.setText(chooser.getSelectedFile().getCanonicalPath());
                 changeFile();
             } catch (IOException ex) {
-                Logger.getLogger(PreviewFilePanel.class.getName()).log(Level.SEVERE, null, ex);
+               LOGGER.log(Level.SEVERE, null, ex);
             new TechnicalError().errorDialog();
             }
         }
@@ -378,9 +378,9 @@ public class PreviewFilePanel extends javax.swing.JPanel {
         } catch (FileNotFoundException fileNotFoundException) {
             JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(),
                 java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportView").getString("COULD_NOT_PREVIEW_FILE:") + " \'" + fileNameTextField.getText().trim() + "\'.", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportView").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
-            Logger.getLogger(PreviewFilePanel.class.getName()).log(Level.SEVERE, null, fileNotFoundException);
+           LOGGER.log(Level.SEVERE, null, fileNotFoundException);
         } catch (IOException ex) {
-            Logger.getLogger(PreviewFilePanel.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
             new TechnicalError().errorDialog();
         } finally {
             try {
@@ -388,7 +388,7 @@ public class PreviewFilePanel extends javax.swing.JPanel {
                     br.close();
                 }
             } catch (IOException ex) {
-                Logger.getLogger(PreviewFilePanel.class.getName()).log(Level.SEVERE, null, ex);
+               LOGGER.log(Level.SEVERE, null, ex);
                 new TechnicalError().errorDialog();
             }
         }
@@ -400,7 +400,7 @@ public class PreviewFilePanel extends javax.swing.JPanel {
         try {
             encoding = Tools.detectCharacterCodingOfFile(fileNameTextField.getText());
         } catch (IOException ex) {
-            Logger.getLogger(PreviewFilePanel.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
             new TechnicalError().errorDialog();
         }
         if (encoding != null) {
@@ -446,7 +446,7 @@ public class PreviewFilePanel extends javax.swing.JPanel {
                 listener.actionPerformed(new ActionEvent(this, 0, FILE_CHANGED_ACTION));
                 numberOfRecordsTextField.setText("" + (canreg.common.Tools.numberOfLinesInFile(inFile.getCanonicalPath()) - 1));
             } catch (IOException ex) {
-                Logger.getLogger(PreviewFilePanel.class.getName()).log(Level.SEVERE, null, ex);
+               LOGGER.log(Level.SEVERE, null, ex);
                 new TechnicalError().errorDialog();
             }
         } else {

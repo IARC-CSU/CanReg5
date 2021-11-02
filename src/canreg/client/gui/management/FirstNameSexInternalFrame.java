@@ -50,6 +50,7 @@ import org.jdesktop.application.Task;
  */
 public class FirstNameSexInternalFrame extends javax.swing.JInternalFrame {
 
+    private static final Logger LOGGER = Logger.getLogger(FirstNameSexInternalFrame.class.getName());
     /** Creates new form FirstNameSexInternalFrame */
     public FirstNameSexInternalFrame() {
         initComponents();
@@ -200,7 +201,7 @@ public class FirstNameSexInternalFrame extends javax.swing.JInternalFrame {
                 br = new BufferedReader(fileReader);
                 line = br.readLine();
             } catch (IOException ex) {
-                Logger.getLogger(FirstNameSexInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 new TechnicalError().errorDialog();
             }
         }
@@ -237,7 +238,7 @@ public class FirstNameSexInternalFrame extends javax.swing.JInternalFrame {
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/FirstNameSexInternalFrame").getString("SUCCESSFULLY_RESTORED_DEFAULT_DATABASE"), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/FirstNameSexInternalFrame").getString("DATABASE_OF_NAMES_RESTORED."), JOptionPane.INFORMATION_MESSAGE);
                
             } catch (IOException ex) {
-                Logger.getLogger(FirstNameSexInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 new TechnicalError().errorDialog();
             }
         }
@@ -271,7 +272,7 @@ public class FirstNameSexInternalFrame extends javax.swing.JInternalFrame {
                     unisexHeader+names[2]);
             namesTextArea.setCaretPosition(0);
         } catch (SecurityException | RemoteException ex) {
-            Logger.getLogger(FirstNameSexInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             new TechnicalError().errorDialog();
         }
     }

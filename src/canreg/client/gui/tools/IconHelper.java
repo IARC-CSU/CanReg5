@@ -30,6 +30,8 @@ import javax.swing.ImageIcon;
  * @author ervikm
  */
 public class IconHelper {
+    private static final Logger LOGGER = Logger.getLogger(IconHelper.class.getName());
+
 
     /** Returns an ImageIcon, or null if the path was invalid. */
     protected ImageIcon createImageIcon(String path,
@@ -38,7 +40,7 @@ public class IconHelper {
         if (imgURL != null) {
             return new ImageIcon(imgURL, description);
         } else {
-            Logger.getLogger(ExcelAdapter.class.getName()).log(Level.SEVERE,"Couldn't find file: " + path);
+            LOGGER.log(Level.SEVERE,"Couldn't find file: " + path);
             return null;
         }
     }

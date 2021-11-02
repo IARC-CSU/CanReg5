@@ -38,6 +38,7 @@ import javax.swing.JTextField;
  */
 public class DateVariableEditorPanel extends VariableEditorPanel {
 
+    private static final Logger LOGGER = Logger.getLogger(DateVariableEditorPanel.class.getName());
     private com.toedter.calendar.JDateChooser dateChooser;
     private JTextField dateField;
     
@@ -127,15 +128,13 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
                 } else 
                     codeTextField.setText(value);                
             } catch (ParseException ex) {
-                Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
             } catch (NumberFormatException numberFormatException) {
-                Logger.getLogger(DateVariableEditorPanel.class.getName())
-                        .log(Level.WARNING, java.util.ResourceBundle
+                LOGGER.log(Level.WARNING, java.util.ResourceBundle
                                 .getBundle("canreg/client/gui/dataentry2/components/resources/VariableEditorPanel")
                                 .getString("VALUE: ") + value, numberFormatException);
             } catch (IllegalArgumentException | StringIndexOutOfBoundsException ex) {
-                Logger.getLogger(DateVariableEditorPanel.class.getName())
-                        .log(Level.WARNING, java.util.ResourceBundle
+                LOGGER.log(Level.WARNING, java.util.ResourceBundle
                                 .getBundle("canreg/client/gui/dataentry2/components/resources/VariableEditorPanel")
                                 .getString("VALUE: ") + value, ex);
             }
@@ -153,10 +152,9 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
                 if (tempCalendar != null) 
                     valueObjectString = DateHelper.parseGregorianCalendarCanRegToDateString(tempCalendar, Globals.DATE_FORMAT_STRING);                
             } catch (ParseException ex) {
-                Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
             } catch (IllegalArgumentException ex) {
-                Logger.getLogger(DateVariableEditorPanel.class.getName())
-                        .log(Level.WARNING, java.util.ResourceBundle
+                LOGGER.log(Level.WARNING, java.util.ResourceBundle
                                 .getBundle("canreg/client/gui/dataentry2/components/resources/VariableEditorPanel")
                                 .getString("VALUE: ") + valueString + 
                                 java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/components/resources/VariableEditorPanel")

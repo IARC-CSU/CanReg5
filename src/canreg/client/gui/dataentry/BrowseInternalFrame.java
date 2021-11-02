@@ -84,6 +84,7 @@ import org.jdesktop.application.Task;
  */
 public class BrowseInternalFrame extends javax.swing.JInternalFrame implements ActionListener {
 
+    private static final Logger LOGGER = Logger.getLogger(BrowseInternalFrame.class.getName());
     private final JDesktopPane dtp;
     private DistributedTableDescription tableDatadescription;
     private DistributedTableDataSourceClient tableDataSource;
@@ -463,9 +464,9 @@ private void browserClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRS
      try {
      CanRegClientApp.getApplication().releaseResultSet(tableDatadescription.getResultSetID());
      } catch (SecurityException ex) {
-     Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+     LOGGER.log(Level.SEVERE, null, ex);
      } catch (RemoteException ex) {
-     Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+     LOGGER.log(Level.SEVERE, null, ex);
      }
      }
      */
@@ -542,9 +543,9 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
             try {
                 CanRegClientApp.getApplication().releaseResultSet(tableDatadescription.getResultSetID(), server);
             } catch (SecurityException ex) {
-                Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+               LOGGER.log(Level.SEVERE, null, ex);
             } catch (RemoteException | SQLException ex) {
-                Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 new TechnicalError().errorDialog();
             }
         }
@@ -601,7 +602,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
             // setProgress(0, 0, 4);
             setMessage(java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("INITIATING QUERY..."));
             // setProgress(1, 0, 4);
-            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
+            LOGGER.log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
         }
 
         @Override
@@ -611,19 +612,19 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                 newTableDatadescription = 
                         canreg.client.CanRegClientApp.getApplication().getDistributedTableDescription(filter, tableName, server);
             } catch (UnknownTableException ex) {
-                Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 result = "Unknown table " + ex.getMessage();
             } catch (DistributedTableDescriptionException ex) {
-                Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 result = "Not valid " + ex.getMessage();
             } catch (SQLException ex) {
-                Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 result = "Not valid " + ex.getMessage();
             } catch (RemoteException ex) {
-                Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 result = "Remote exception ";
             } catch (SecurityException ex) {
-                Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 result = "Security exception ";
                 // } catch (InterruptedException ignore) {
                 //    result = "Ignore";
@@ -643,7 +644,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                     try {
                         CanRegClientApp.getApplication().releaseResultSet(tableDatadescription.getResultSetID(), server);
                     } catch (SecurityException | RemoteException | SQLException ex) {
-                        Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        LOGGER.log(Level.SEVERE, null, ex);
                     }
                     tableDataSource = null;
                 }
@@ -651,26 +652,26 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                 tableDatadescription = newTableDatadescription;
                 // highlightedColumnNumber = Tools.findInArray(tableDatadescription.getColumnNames(), sortByVariableName);
 
-                Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
+                LOGGER.log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
 
                 if (tableDatadescription != null) {
                     try {
                         tableDataSource = new DistributedTableDataSourceClient(tableDatadescription, server);
                     } catch (DistributedTableDescriptionException ex) {
-                        Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        LOGGER.log(Level.SEVERE, null, ex);
                         new TechnicalError().errorDialog();
                     }
-                    Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
+                    LOGGER.log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
                 }
 
                 if (tableDataSource != null) {
                     try {
                         tableDataModel = new DistributedTableModel(tableDataSource);
                     } catch (DistributedTableDescriptionException ex) {
-                        Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        LOGGER.log(Level.SEVERE, null, ex);
                     }
                     // tableDataModel = new PagingTableModel(tableDataSource);
-                    Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
+                    LOGGER.log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
                     // setProgress(2, 0, 4);
                 }
 
@@ -686,7 +687,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                 tableColumnModel = new XTableColumnModel();
                 resultTable.setColumnModel(tableColumnModel);
                 resultTable.createDefaultColumnsFromModel();
-                Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
+                LOGGER.log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
 
                 // setProgress(4, 0, 4);
                 setMessage("Finished");
@@ -704,7 +705,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                         + result.toString().substring("Not valid".length()),
                         java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             } else {
-                Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, result);
+                LOGGER.log(Level.SEVERE, null, result);
             }
             Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
             setCursor(normalCursor);
@@ -830,7 +831,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                     CanRegClientApp.getApplication().saveRecord(tumour, server);
                     set.add(tumour);
                 } else {
-                    Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, "Patient record not saved properly?");
+                    LOGGER.log(Level.SEVERE, "Patient record not saved properly?");
                 }
             }
 
@@ -844,9 +845,9 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
             CanRegClientView.maximizeHeight(dtp, (JInternalFrame)recordEditor);
         } catch (RecordLockedException ex) {
             JOptionPane.showMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("RECORD IS ALREADY BEING EDITED..."), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
-            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.INFO, null, ex);
+            LOGGER.log(Level.INFO, null, ex);
         } catch (Exception ex) {
-            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         } finally {
             setCursor(normalCursor);
         }
@@ -914,9 +915,9 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
             }
         } catch (RecordLockedException ex) {
             JOptionPane.showMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("RECORD IS ALREADY BEING EDITED..."), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
-            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
-            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             new TechnicalError().errorDialog();
         } 
     }
@@ -1059,7 +1060,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                     
                     return true;
                 } catch(Exception ex) {
-                    Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
                     JOptionPane.showMessageDialog(null, browseResourceMap.getString("ERROR IMPORTING "), "ERROR", JOptionPane.ERROR_MESSAGE);
                 } finally {
                     if(refreshTask == null)

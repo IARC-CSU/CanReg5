@@ -83,7 +83,8 @@ import org.jdesktop.application.Task;
  * @author morten
  */
 public class ExportReportInternalFrame extends javax.swing.JInternalFrame implements ActionListener {
-
+    
+    private static final Logger LOGGER = Logger.getLogger(ExportReportInternalFrame.class.getName());
     private JDesktopPane dtp;
     private DistributedTableDescription tableDatadescription;
     private DistributedTableDataSourceClient tableDataSource;
@@ -517,7 +518,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
             // setProgress(0, 0, 4);
             setMessage("Initiating query...");
             // setProgress(1, 0, 4);
-            Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
+            LOGGER.log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
         }
 
         @Override
@@ -526,21 +527,21 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
             try {
                 newTableDatadescription = canreg.client.CanRegClientApp.getApplication().getDistributedTableDescription(filter, tableName, null);
             } catch (SQLException ex) {
-                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 result = "Not valid";
             } catch (RemoteException ex) {
-                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 result = "Remote exception";
             } catch (SecurityException ex) {
-                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 result = "Security exception";
                 // } catch (InterruptedException ignore) {
                 //     result = "Ignore";
             } catch (DistributedTableDescriptionException ex) {
-                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 result = "Not OK";
             } catch (UnknownTableException ex) {
-                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 result = "Not OK";
             }
 
@@ -561,34 +562,34 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                         CanRegClientApp.getApplication().releaseResultSet(tableDatadescription.getResultSetID(), null);
                         tableDataSource = null;
                     } catch (SecurityException |RemoteException | SQLException ex) {
-                        Logger.getLogger(FrequenciesByYearInternalFrame.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+                        LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
                         new TechnicalError().errorDialog();
                     }
                 }
 
                 tableDatadescription = newTableDatadescription;
 
-                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
+                LOGGER.log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
 
                 if (tableDatadescription != null) {
                     try {
                         tableDataSource = new DistributedTableDataSourceClient(tableDatadescription, null);
                     } catch (DistributedTableDescriptionException ex) {
-                        Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        LOGGER.log(Level.SEVERE, null, ex);
                         new TechnicalError().errorDialog();
                     }
-                    Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
+                    LOGGER.log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
                 }
 
                 if (tableDataSource != null) {
                     try {
                         tableDataModel = new DistributedTableModel(tableDataSource);
                     } catch (DistributedTableDescriptionException ex) {
-                        Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        LOGGER.log(Level.SEVERE, null, ex);
                         new TechnicalError().errorDialog();
                     }
                     // tableDataModel = new PagingTableModel(tableDataSource);
-                    Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
+                    LOGGER.log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
                     // setProgress(2, 0, 4);
                 }
 
@@ -603,7 +604,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                 tableColumnModel = new XTableColumnModel();
                 resultTable.setColumnModel(tableColumnModel);
                 resultTable.createDefaultColumnsFromModel();
-                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
+                LOGGER.log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
 
                 // setProgress(4, 0, 4);
                 setMessage("Finished");
@@ -619,7 +620,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
             } else if (result.equals("Not valid")) {
                 JOptionPane.showInternalMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/ExportReportInternalFrame").getString("NOT_A_VALID_FILTER"), "Error", JOptionPane.ERROR_MESSAGE);
             } else {
-                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, result);
+                LOGGER.log(Level.SEVERE, null, result);
             }
             Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
             setCursor(normalCursor);
@@ -719,7 +720,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                     }
                 }
             } catch (IOException ex) {
-                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 new TechnicalError().errorDialog();
             }
         } else {
@@ -805,9 +806,9 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                         }
                     }
                     System.out.println("Max number of Sources: " + maxNumberOfSourcesPerTumour);
-                    //Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.INFO, null, "Max number of Sources: "+ maxNumberOfSourcesPerTumour);
+                    //LOGGER.log(Level.INFO, null, "Max number of Sources: "+ maxNumberOfSourcesPerTumour);
                 } catch (RemoteException | SecurityException ex) {
-                    Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
                     new TechnicalError().errorDialog();
                 }
             }
@@ -884,7 +885,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                 csvPrinter = new CSVPrinter(bw, csvFormat);
 
             } catch (IOException ex) {
-                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 new TechnicalError().errorDialog();
             }
 
@@ -934,10 +935,10 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                                         value = DateHelper.parseGregorianCalendarCanRegToDateString(gregorianCanRegCalendar, (String) dateFormatComboBox.getSelectedItem());
                                     }
                                 } catch (ParseException ex) {
-                                    Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                                    LOGGER.log(Level.SEVERE, null, ex);
                                     new TechnicalError().errorDialog();
                                 } catch (IllegalArgumentException ex) {
-                                    Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.WARNING, "Value: " + value, ex);
+                                    LOGGER.log(Level.WARNING, "Value: " + value, ex);
                                 }
                             }
                             if (value == null) {
@@ -955,7 +956,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                                     category = dvle.getDictionary().getDictionaryEntries().get(code.substring(0, categoryLength)).getDescription();
                                 }
                             } catch (NullPointerException npe) {
-                                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, npe);
+                                LOGGER.log(Level.SEVERE, null, npe);
                                 new TechnicalError().errorDialog();
                             }
                             line.add(category);
@@ -970,7 +971,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                                     description = dvle.getDictionary().getDictionaryEntries().get(code).getDescription();
                                 }
                             } catch (NullPointerException npe) {
-                                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, npe);
+                                LOGGER.log(Level.SEVERE, null, npe);
                                 new TechnicalError().errorDialog();
                             }
                             line.add(description);
@@ -996,7 +997,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                                     }
                                 }
                             } catch (DistributedTableDescriptionException | RecordLockedException | UnknownTableException | SecurityException | RemoteException | SQLException ex) {
-                                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                                LOGGER.log(Level.SEVERE, null, ex);
                                 new TechnicalError().errorDialog();
                             } finally {
                                 for (; numberOfSourcesWritten < maxNumberOfSourcesPerTumour;) {
@@ -1021,7 +1022,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                 }
 
             } catch (IOException ex) {
-                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 new TechnicalError().errorDialog();
             }
             return true;  // return your result
@@ -1053,7 +1054,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                 }
 
             } catch (IOException ex) {
-                Logger.getLogger(ExportReportInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 new TechnicalError().errorDialog();
             }
 

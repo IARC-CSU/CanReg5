@@ -86,6 +86,7 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
     private final String[] rScriptsArguments;
     private String[] icd10GroupColors;
     private boolean writeColors = true;
+    private static final Logger LOGGER = Logger.getLogger(RTableBuilderGrouped.class.getName());
 
     public RTableBuilderGrouped(String configFileName) throws FileNotFoundException {
         this.unknownAgeInt = Globals.DEFAULT_UNKNOWN_AGE_CODE;
@@ -283,7 +284,7 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
                         }
                         outLine.delete(0, outLine.length());
                     } catch (NumberFormatException nfe) {
-                        Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.WARNING," Number Format Exception while building the R table", nfe);
+                        LOGGER.log(Level.WARNING," Number Format Exception while building the R table", nfe);
                         new TechnicalError().errorDialog();
                     }
                 }
@@ -342,7 +343,7 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
                         pr.waitFor();
                         // convert the output to a string
                         String theString = convertStreamToString(is);
-                        Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.INFO, "Messages from R: \n{0}", theString);
+                        LOGGER.log(Level.INFO, "Messages from R: \n{0}", theString);
                         // System.out.println(theString.split("\\r?\\n").length);
                         // and add all to the list of files to return
                         for (String fileName : theString.split("\\r?\\n")) {
@@ -355,28 +356,28 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
                             }
                         }
                     } catch (InterruptedException ex) {
-                        Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.SEVERE,"Method interrupted" 
+                        LOGGER.log(Level.SEVERE,"Method interrupted" 
                             + "while waiting for the command list to complete " , ex);
                         new TechnicalError().errorDialog();
                     } catch (java.util.NoSuchElementException ex) {
-                        Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.SEVERE, " element being requested does not exist.", ex);
+                        LOGGER.log(Level.SEVERE, " element being requested does not exist.", ex);
                         BufferedInputStream errorStream = new BufferedInputStream(pr.getErrorStream());
                         String errorMessage = convertStreamToString(errorStream);
-                        Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.SEVERE,
+                        LOGGER.log(Level.SEVERE,
                             " Error in the stream : "+ errorMessage);
                         throw new TableErrorException("R says:\n" + errorMessage);
                     } finally {
-                        Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.INFO,
+                        LOGGER.log(Level.INFO,
                             "Exiting with return code : "+ pr.exitValue());
                     }
                 }
             }
 
         } catch (IOException ex) {
-            Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.SEVERE, "Error while creating or filling a file ", ex);
+            LOGGER.log(Level.SEVERE, "Error while creating or filling a file ", ex);
             new TechnicalError().errorDialog();
         } catch (IncompatiblePopulationDataSetException ex) {
-            Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.WARNING, "Error in the population," 
+            LOGGER.log(Level.WARNING, "Error in the population," 
                 + " dataset : some data are incorrect ", ex);
             throw new NotCompatibleDataException();
         }

@@ -45,6 +45,7 @@ import org.jdesktop.application.Action;
 public class AdhocWizardInternalFrame extends javax.swing.JInternalFrame
                                       /*implements ActionListener*/ {
 
+    private static final Logger LOGGER = Logger.getLogger(AdhocWizardInternalFrame.class.getName());
     private ResourceBundle resourceMap = java.util.ResourceBundle.getBundle("canreg/client/gui/adhoc/resources/AdhocWizardInternalFrame");
     private ImportFilesView importFilesFrame;
     private BrowseInternalFrame browseFrame;
@@ -93,7 +94,7 @@ public class AdhocWizardInternalFrame extends javax.swing.JInternalFrame
             if(populationFrame.getJList().getModel().getElementAt(0) != null)
                 tableBuilderBtn.setEnabled(true);
         } catch(SecurityException | RemoteException ex) {
-            Logger.getLogger(AdhocWizardInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             new TechnicalError().errorDialog();
         }
     }
@@ -249,7 +250,7 @@ public class AdhocWizardInternalFrame extends javax.swing.JInternalFrame
             CanRegClientApp.getApplication().getServer().shutDownServer();
             CanRegClientApp.getApplication().logOut();
         } catch(SecurityException | RemoteException ex) {
-            Logger.getLogger(AdhocWizardInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         
         super.dispose();

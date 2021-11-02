@@ -26,7 +26,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DescriptionReader {
-
+    private static final Logger LOGGER = Logger.getLogger(DescriptionReader.class.getName());
+    
     public static int extractInteger(String word) {
         int n = 0;
         String temp = new String();
@@ -54,8 +55,7 @@ public class DescriptionReader {
                 c = file.read();
             }
         } catch (IOException e) {
-            Logger.getLogger(DescriptionReader.class.getName()).
-                log(Level.SEVERE, "File Error -  while reading a word." , e);
+            LOGGER.log(Level.SEVERE, "File Error -  while reading a word." , e);
         }
         return str;
     }
@@ -88,8 +88,7 @@ public class DescriptionReader {
                 c = file.read();
             }
         } catch (IOException e) {
-            Logger.getLogger(DescriptionReader.class.getName()).
-                log(Level.SEVERE, "File Error -  while reading a word." , e);
+            LOGGER.log(Level.SEVERE, "File Error -  while reading a word." , e);
         }
         //System.out.println(str);
         return str;
@@ -103,8 +102,7 @@ public class DescriptionReader {
                 c = file.read();
             }
         } catch (IOException e) {
-            Logger.getLogger(DescriptionReader.class.getName()).log(Level.SEVERE, 
-                "File Error -  while removing whites.",e);
+            LOGGER.log(Level.SEVERE, "File Error -  while removing whites.",e);
         }
         return c;
     }

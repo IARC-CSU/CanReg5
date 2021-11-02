@@ -39,6 +39,7 @@ import org.jdesktop.application.Action;
  */
 public class PersonSearchVariablePanel extends javax.swing.JPanel {
 
+    private static final Logger LOGGER = Logger.getLogger(PersonSearchVariable.class.getName());
     private ActionListener listener;
 
     /** Creates new form PersonSearchVariablePanel */
@@ -99,7 +100,7 @@ public class PersonSearchVariablePanel extends javax.swing.JPanel {
         try {
             weight = Float.parseFloat(weightTextField.getText());
         } catch (NumberFormatException nfe) {
-            Logger.getLogger(PersonSearchVariablePanel.class.getName()).log(Level.WARNING, null, nfe);
+            LOGGER.log(Level.WARNING, null, nfe);
         }
         return weight;
     }
@@ -256,7 +257,7 @@ public class PersonSearchVariablePanel extends javax.swing.JPanel {
         try {
             discPower = Float.parseFloat(discPowerTextField.getText());
         } catch (NumberFormatException nfe) {
-            Logger.getLogger(PersonSearchVariablePanel.class.getName()).log(Level.WARNING, null, nfe);
+            LOGGER.log(Level.WARNING, null, nfe);
         }
         return discPower;
     }

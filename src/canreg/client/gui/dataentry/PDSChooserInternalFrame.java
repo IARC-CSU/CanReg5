@@ -48,6 +48,7 @@ import org.jdesktop.application.Action;
  */
 public class PDSChooserInternalFrame extends javax.swing.JInternalFrame implements ActionListener {
 
+    private static final Logger LOGGER = Logger.getLogger(PDSChooserInternalFrame.class.getName());
     Map<Integer, PopulationDataset> populationDatasetsMap;
     PopulationDataset[] populationDatasets;
     PopulationDataset[] worldPopulationDatasets;
@@ -348,7 +349,7 @@ public class PDSChooserInternalFrame extends javax.swing.JInternalFrame implemen
                 if(adHocFrame != null)
                     adHocFrame.notifyPopulationListChanged();
             } catch (SecurityException | RemoteException ex) {
-                Logger.getLogger(PDSChooserInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -412,7 +413,7 @@ public class PDSChooserInternalFrame extends javax.swing.JInternalFrame implemen
                 populationDatasetEditorInternalFrame.setPopulationDataset(tempPDS);
                 CanRegClientView.showAndPositionInternalFrame(dtp, populationDatasetEditorInternalFrame);
             } catch (IOException ex) {
-                Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
             }
         }
     }

@@ -50,6 +50,7 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
     private FrameView fv;
     private Properties appInfoProperties;
     private JDialog aboutBox;
+    private static final Logger LOGGER = Logger.getLogger(WelcomeInternalFrame.class.getName());
 
     /** Creates new form WelcomeInternalFrame
      * @param fv 
@@ -79,7 +80,7 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
             versionString += " (" + appInfoProperties.getProperty("program.BUILDDATE") + ")";
             versionLabel.setText(versionLabel.getText() + " " + versionString);
         } catch (IOException ex) {
-            Logger.getLogger(WelcomeInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             new TechnicalError().errorDialog();
         }
     }
