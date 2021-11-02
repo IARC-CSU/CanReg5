@@ -29,6 +29,7 @@ package canreg.client.gui.importers;
 import canreg.client.gui.components.VariableMappingPanel;
 import canreg.client.LocalSettings;
 import canreg.client.CanRegClientApp;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.client.dataentry.Relation;
 import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
@@ -151,6 +152,7 @@ public class ImportView extends javax.swing.JInternalFrame {
             // autodetectFileEncodingAction();
         } catch (IOException ex) {
             Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
     }
 
@@ -704,6 +706,7 @@ public class ImportView extends javax.swing.JInternalFrame {
                 changeFile();
             } catch (IOException ex) {
                 Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
         }
     }
@@ -798,12 +801,9 @@ public class ImportView extends javax.swing.JInternalFrame {
             try {
                 // Calls the client app import action with the file parameters provided,
                 success = CanRegClientApp.getApplication().importFile(this, doc, buildMap(), inFile, buildImportOptions());
-            } catch (SecurityException ex) {
+            } catch (SecurityException | RecordLockedException | RemoteException ex) {
                 Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (RecordLockedException ex) {
-                Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (RemoteException ex) {
-                Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             } catch (SQLException ex) {
                 Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
                 success = false;
@@ -859,17 +859,20 @@ public class ImportView extends javax.swing.JInternalFrame {
 
             } catch (RemoteException ex) {
                 Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportView").getString("COULD_NOT_OPEN_FILE:_") + "\'" + fileNameTextField.getText().trim() + "\'.", java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportView").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             } catch (IOException ex) {
                 Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             } finally {
                 needToRebuildVariableMap = false;
                 try {
                     br.close();
                 } catch (IOException ex) {
                     Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+                    new TechnicalError().errorDialog();
                 }
 
             }
@@ -1021,6 +1024,7 @@ public class ImportView extends javax.swing.JInternalFrame {
                 }
             } catch (IOException ex) {
                 Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
         }
     }

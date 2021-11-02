@@ -36,14 +36,8 @@ import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 //import com.sun.cnpi.rss.elements.Link;
 //import com.sun.cnpi.rss.elements.Rss;
 //import com.sun.cnpi.rss.parser.*;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import java.io.IOException;
-import java.text.ParseException;
-import java.util.Collection;
-import java.util.Iterator;
-import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.HyperlinkEvent;
@@ -230,6 +224,7 @@ public class LatestNewsInternalFrame extends javax.swing.JInternalFrame implemen
                 canreg.common.Tools.browse(event.getURL().toString());
             } catch (IOException ex) {
                 Logger.getLogger(LatestNewsInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
         }
     }

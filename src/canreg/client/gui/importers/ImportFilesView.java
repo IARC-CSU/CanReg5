@@ -27,6 +27,7 @@ package canreg.client.gui.importers;
 
 import canreg.client.LocalSettings;
 import canreg.client.CanRegClientApp;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.client.dataentry.Relation;
 import canreg.client.gui.components.PreviewFilePanel;
@@ -741,6 +742,7 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
             localSettings.setProperty("import_path", chooser.getCurrentDirectory().getCanonicalPath());
         } catch (IOException ex) {
             Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
 
         localSettings.writeSettings();
@@ -1046,11 +1048,13 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
             }
         } catch (RemoteException ex) {
             Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not open file: \'" + patientInFile.getPath() + "\'.", "Error", JOptionPane.ERROR_MESSAGE);
         } catch (IOException ex) {
             Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         } finally {
             needToRebuildVariableMap = false;
             try {
@@ -1059,6 +1063,7 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
                 }
             } catch (IOException ex) {
                 Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
         }
     }
@@ -1225,6 +1230,7 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
                 // changeFile();
             } catch (IOException ex) {
                 Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
             reportFileNameSet = true;
         }

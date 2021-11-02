@@ -23,6 +23,7 @@ package canreg.client.dataentry;
 
 import canreg.client.gui.importers.ImportOptions;
 import canreg.client.gui.importers.Import;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.Globals;
 import canreg.client.CanRegClientApp;
 import canreg.client.gui.importers.ImportView;
@@ -30,7 +31,6 @@ import canreg.server.management.SystemDescription;
 import canreg.server.CanRegServerInterface;
 import canreg.server.database.*;
 import canreg.common.DatabaseVariablesListElement;
-import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.common.conversions.ConversionResult;
 import canreg.common.conversions.Converter;
 import canreg.common.database.NameSexRecord;
@@ -141,6 +141,7 @@ public class Convert {
             success = true;
         } catch (SQLException | IOException | NumberFormatException | ParserConfigurationException | DOMException | SAXException ex) {
             Logger.getLogger(Convert.class.getName()).log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
         return success;
     }
@@ -167,6 +168,7 @@ public class Convert {
             txt_bw.write("\n");
         } catch (SQLException | IOException | NumberFormatException ex) {
             Logger.getLogger(Convert.class.getName()).log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
     }
 
@@ -272,6 +274,7 @@ public class Convert {
             success = true;
         } catch (SQLException | IOException ex) {
             Logger.getLogger(Convert.class.getName()).log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
         success = success && (rowsImported == totalrowcount);
         return success;
@@ -331,6 +334,7 @@ public class Convert {
                         dictionaryString = new String();
                     } catch (RemoteException ex) {
                         Logger.getLogger(Convert.class.getName()).log(Level.SEVERE, null, ex);
+                        new TechnicalError().errorDialog();
                     }
                 }
                 // Read next line
@@ -349,6 +353,7 @@ public class Convert {
             Logger.getLogger(ImportView.class.getName()).log(Level.WARNING, null, fileNotFoundException);
         } catch (IOException ex) {
             Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         } catch (NumberFormatException nfe) {
             JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportCompleteDictionaryInternalFrame").getString("SOMETHING_WRONG_WITH_THE_DICTIONARY:_") + "\'" + file + "\'.", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportCompleteDictionaryInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             Logger.getLogger(ImportView.class.getName()).log(Level.WARNING, null, nfe);
@@ -357,6 +362,7 @@ public class Convert {
                 br.close();
             } catch (IOException ex) {
                 Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
         }
         return allErrors;  // return your result
@@ -462,6 +468,7 @@ public class Convert {
                                 tumour.setVariable(rel.getDatabaseVariableName(), StringEscapeUtils.unescapeCsv(csvRecord.get(rel.getFileColumnNumber())));
                             }
                         } else {
+                            new TechnicalError().errorDialog();
                             Logger.getLogger(Import.class.getName()).log(Level.INFO, "Something wrong with tumour part of line " + numberOfLinesRead + ".", new Exception("Error in line: " + numberOfLinesRead + ". Can't find field: " + rel.getDatabaseVariableName()));
                         }
                     }
@@ -488,6 +495,7 @@ public class Convert {
                             }
                         } else {
                             Logger.getLogger(Import.class.getName()).log(Level.INFO, "Something wrong with source part of line " + numberOfLinesRead + ".", new Exception("Error in line: " + numberOfLinesRead + ". Can't find field: " + rel.getDatabaseVariableName()));
+                            new TechnicalError().errorDialog();
                         }
 
                     }
@@ -538,6 +546,7 @@ public class Convert {
                         }
                         catch (Exception ex) {
                             Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                            new TechnicalError().errorDialog();
                         }
 
                         tumourSequenceString = (tumours.length + 1) + "";
@@ -551,6 +560,7 @@ public class Convert {
                             oldPatients = CanRegClientApp.getApplication().getPatientsByPatientID((String) patientID, false, null);
                         } catch (Exception ex) {
                             Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                            new TechnicalError().errorDialog();
                         } 
                         for (Patient oldPatient : oldPatients) {
                             if (!Tools.newRecordContainsNewInfo(patient, oldPatient, noNeedToLookAtPatientVariables)) {
@@ -657,6 +667,7 @@ public class Convert {
                     parser.close();
                 } catch (IOException ex) {
                     Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                    new TechnicalError().errorDialog();
                 }
             }
         }

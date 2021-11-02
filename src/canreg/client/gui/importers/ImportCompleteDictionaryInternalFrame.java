@@ -29,6 +29,7 @@ import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
 import canreg.client.gui.dataentry.EditDictionaryInternalFrame;
 import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
 import canreg.common.Tools;
@@ -303,6 +304,7 @@ private void previewTextAreaMouseReleased(java.awt.event.MouseEvent evt) {//GEN-
                 autoDetectFileCoding();
             } catch (IOException ex) {
                 Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
         }
     }
@@ -335,6 +337,7 @@ private void previewTextAreaMouseReleased(java.awt.event.MouseEvent evt) {//GEN-
             Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, fileNotFoundException);
         } catch (IOException ex) {
             Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         } finally {
             try {
                 if (br != null) {
@@ -342,6 +345,7 @@ private void previewTextAreaMouseReleased(java.awt.event.MouseEvent evt) {//GEN-
                 }
             } catch (IOException ex) {
                 Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
         }
     }
@@ -436,6 +440,7 @@ private void previewTextAreaMouseReleased(java.awt.event.MouseEvent evt) {//GEN-
                             dictionaryString = new String();
                         } catch (RemoteException ex) {
                             Logger.getLogger(EditDictionaryInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                            new TechnicalError().errorDialog();
                         }
                     }
                     // Read next line 
@@ -453,6 +458,7 @@ private void previewTextAreaMouseReleased(java.awt.event.MouseEvent evt) {//GEN-
                 Logger.getLogger(ImportView.class.getName()).log(Level.WARNING, null, fileNotFoundException);
             } catch (IOException ex) {
                 Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             } catch (NumberFormatException nfe) {
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportCompleteDictionaryInternalFrame").getString("SOMETHING_WRONG_WITH_THE_DICTIONARY:_") + "\'" + fileNameTextField.getText().trim() + "\'.", java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportCompleteDictionaryInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
                 Logger.getLogger(ImportView.class.getName()).log(Level.WARNING, null, nfe);
@@ -463,6 +469,7 @@ private void previewTextAreaMouseReleased(java.awt.event.MouseEvent evt) {//GEN-
                     }
                 } catch (IOException ex) {
                     Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+                    new TechnicalError().errorDialog();
                 }
             }
             return allErrors;  // return your result

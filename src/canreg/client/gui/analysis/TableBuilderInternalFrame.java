@@ -26,6 +26,7 @@
 package canreg.client.gui.analysis;
 
 import canreg.client.analysis.TableBuilderInterface.FileTypes;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.cachingtableapi.DistributedTableDescription;
 import canreg.client.CanRegClientApp;
 import canreg.client.DistributedTableDataSourceClient;
@@ -1044,6 +1045,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
             populatePopulationDataSetChooser();
         } catch (SecurityException | RemoteException ex) {
             Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
 
         //get table builder engines
@@ -1128,6 +1130,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                 listModel.addElement(etle);
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
         });
         tableTypeList.setModel(listModel);
@@ -1147,6 +1150,7 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                 tableBuilder = TableBuilderFactory.getTableBuilder(tble);
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(TableBuilderInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
         }
 

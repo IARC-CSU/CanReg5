@@ -1,5 +1,6 @@
 package canreg.client.gui.tools;
 
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.logging.Level;
@@ -111,10 +112,9 @@ public class ExcelAdapter implements ActionListener {
                         // System.out.println("Putting " + value + "at row=" + startRow + i + "column=" + startCol + j);
                     }
                 }
-            } catch (UnsupportedFlavorException ex) {
+            } catch (UnsupportedFlavorException | IOException ex) {
                 Logger.getLogger(ExcelAdapter.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(ExcelAdapter.class.getName()).log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
 
         }

@@ -151,10 +151,8 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
                 }
             } catch (ParseException ex) {
                 Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (NumberFormatException numberFormatException) {
+            } catch (IllegalArgumentException | StringIndexOutOfBoundsException numberFormatException) {
                 Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.WARNING, java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("VALUE: ") + value, numberFormatException);
-            } catch (IllegalArgumentException | StringIndexOutOfBoundsException ex) {
-                Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.WARNING, java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("VALUE: ") + value, ex);
             }
         }
 

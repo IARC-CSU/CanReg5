@@ -22,6 +22,8 @@ package canreg.client.analysis;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DescriptionReader {
 
@@ -52,7 +54,8 @@ public class DescriptionReader {
                 c = file.read();
             }
         } catch (IOException e) {
-            System.out.println("File Error -  while reading a word.");
+            Logger.getLogger(DescriptionReader.class.getName()).
+                log(Level.SEVERE, "File Error -  while reading a word." , e);
         }
         return str;
     }
@@ -85,7 +88,8 @@ public class DescriptionReader {
                 c = file.read();
             }
         } catch (IOException e) {
-            System.out.println("File Error -  while reading a word.");
+            Logger.getLogger(DescriptionReader.class.getName()).
+                log(Level.SEVERE, "File Error -  while reading a word." , e);
         }
         //System.out.println(str);
         return str;
@@ -99,7 +103,8 @@ public class DescriptionReader {
                 c = file.read();
             }
         } catch (IOException e) {
-            System.out.println("File Error -  while removing whites.");
+            Logger.getLogger(DescriptionReader.class.getName()).log(Level.SEVERE, 
+                "File Error -  while removing whites.",e);
         }
         return c;
     }

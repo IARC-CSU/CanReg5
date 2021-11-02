@@ -21,6 +21,7 @@ package canreg.client.analysis;
 
 import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.Globals;
 import canreg.common.Globals.StandardVariableNames;
 import canreg.common.database.PopulationDataset;
@@ -33,6 +34,8 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.text.NumberFormat;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public abstract class AbstractEditorialTableBuilder implements TableBuilderInterface {
 
@@ -279,7 +282,9 @@ public abstract class AbstractEditorialTableBuilder implements TableBuilderInter
             }
             elements.add(tmpString);
         } catch (IOException iee) {
-            System.out.println("Somethings wrong with the file " + isr.toString());
+            Logger.getLogger(AbstractEditorialTableBuilder.class.getName()).log(Level.SEVERE,
+                "Somethings wrong with the file " + isr.toString(), iee);
+            new TechnicalError().errorDialog();
         }
 //        if (tmpString!=null)
 //            elements.add(tmpString);
@@ -297,8 +302,8 @@ public abstract class AbstractEditorialTableBuilder implements TableBuilderInter
             FieldDescriptionReader fdr = new FieldDescriptionReader();
             return FieldDescriptionReader.readFile(descriptionFile);
         } catch (IOException e) {
-            System.out.println("Description-File " + descriptionFileName
-                    + " not found.");
+            Logger.getLogger(AbstractEditorialTableBuilder.class.getName()).log(Level.SEVERE,
+                "Description-File {0} not found.",descriptionFileName);
             return null;
         }
     }
@@ -430,7 +435,9 @@ public abstract class AbstractEditorialTableBuilder implements TableBuilderInter
         try {
             cn = Integer.parseInt(registryNumber.substring(0, 1));
         } catch (NumberFormatException nfe) {
-            System.out.println("Faulty registry number...");
+            Logger.getLogger(AbstractEditorialTableBuilder.class.getName()).log(Level.SEVERE, 
+                "Faulty registry number", nfe);
+            new TechnicalError().errorDialog();
         }
         return cn;
     }
@@ -463,7 +470,8 @@ public abstract class AbstractEditorialTableBuilder implements TableBuilderInter
                 tmpInfoArray = breakDownFile(separatingCharacter, isr);
             }
         } catch (IOException ioe) {
-            System.out.println("Dictionary-file error...");
+            Logger.getLogger(AbstractEditorialTableBuilder.class.getName()).log(Level.SEVERE,
+                "Dictionary-file error", ioe);
             return null;
         }
         return infoArray;
@@ -658,7 +666,9 @@ public abstract class AbstractEditorialTableBuilder implements TableBuilderInter
                     + " LT 20 " + (Y - H) + " LT CP fill\n");
             pf.write("0 SG\n");
         } catch (IOException e) {
-            System.out.println("FileOut error... " + e);
+            Logger.getLogger(AbstractEditorialTableBuilder.class.getName()).log(Level.SEVERE,
+                "FileOut error", e);
+            new TechnicalError().errorDialog();
         }
     }
 
@@ -914,7 +924,9 @@ public abstract class AbstractEditorialTableBuilder implements TableBuilderInter
                 line = br.readLine();
             }
         } catch (IOException ioe) {
-            System.out.println("Include file error...");
+            Logger.getLogger(AbstractEditorialTableBuilder.class.getName()).log(Level.SEVERE,
+                "Include file error", ioe);
+            new TechnicalError().errorDialog();
         }
     }
 

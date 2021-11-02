@@ -71,9 +71,7 @@ class AutoFillHelper {
                         incDate = DateHelper.parseDateStringToGregorianCalendarCanReg(incValue.toString(), Globals.DATE_FORMAT_STRING);
                         int age = (int) DateHelper.yearsBetween(birthDate, incDate);
                         code = age;
-                    } catch (ParseException ex) {
-                        Logger.getLogger(AutoFillHelper.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (IllegalArgumentException ex) {
+                    } catch (ParseException | IllegalArgumentException ex) {
                         Logger.getLogger(AutoFillHelper.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (NullPointerException nex) {
                         code = dvle.getUnknownCode();

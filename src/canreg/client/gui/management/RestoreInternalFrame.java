@@ -27,6 +27,7 @@
 package canreg.client.gui.management;
 
 import canreg.client.CanRegClientApp;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.Globals;
 import java.io.IOException;
 import java.rmi.RemoteException;
@@ -147,6 +148,7 @@ public class RestoreInternalFrame extends javax.swing.JInternalFrame {
                 // changeFile();
             } catch (IOException ex) {
                 Logger.getLogger(RestoreInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
         }
     }

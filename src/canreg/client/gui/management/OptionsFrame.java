@@ -27,7 +27,7 @@ package canreg.client.gui.management;
 import canreg.client.gui.*;
 import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
-import static canreg.client.LocalSettings.CLIENT_SESSIONS_CHECK_KEY;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.Globals;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
@@ -78,6 +78,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
             initValues();
         } catch (IOException ex) {
             Logger.getLogger(OptionsFrame.class.getName()).log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
     }
 
@@ -881,12 +882,12 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
             if (backUpDate != null) {
                 backUpPerformedTextField.setText(DateFormat.getDateInstance().format(backUpDate));
             }
-        } catch (SecurityException ex) {
+        } catch (SecurityException | RemoteException ex) {
             Logger.getLogger(OptionsFrame.class.getName()).log(Level.INFO, null, ex);
-        } catch (RemoteException ex) {
-            Logger.getLogger(OptionsFrame.class.getName()).log(Level.INFO, null, ex);
+            new TechnicalError().errorDialog();
+
         }
-        
+
         String backUpEvery = localSettings.getProperty(LocalSettings.BACKUP_EVERY_KEY);
         numberOfDaysTextField.setText(backUpEvery);
         automaticbackupCheckBox.setSelected(localSettings.isAutoBackup());
@@ -1003,6 +1004,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
             canreg.common.Tools.browse(Globals.downloadCanRegURL);
         } catch (IOException ex) {
             Logger.getLogger(OptionsFrame.class.getName()).log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
     }
 

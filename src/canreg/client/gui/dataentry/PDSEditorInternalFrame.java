@@ -29,6 +29,7 @@ import canreg.client.gui.CanRegClientView;
 import canreg.client.gui.components.FastFilterInternalFrame;
 import canreg.client.gui.tools.ExcelAdapter;
 import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.Globals;
 import canreg.common.Tools;
 import canreg.common.database.AgeGroupStructure;
@@ -1958,6 +1959,7 @@ private void dateChooserMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRS
                     canreg.client.analysis.Tools.exportChartAsSVG(chart, new Rectangle(pyramidPanelHolder.getWidth(), pyramidPanelHolder.getHeight()), file);
                 } catch (IOException ex) {
                     Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    new TechnicalError().errorDialog();
                 }
             }
         }
