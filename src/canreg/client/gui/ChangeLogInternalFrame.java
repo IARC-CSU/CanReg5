@@ -42,6 +42,8 @@ import org.jdesktop.application.Action;
 
 public class ChangeLogInternalFrame extends javax.swing.JInternalFrame implements HyperlinkListener {
 
+    private static final Logger LOGGER = Logger.getLogger(ChangeLogInternalFrame.class.getName());
+
     /** Creates new form LatestNewsInternalFrame */
     public ChangeLogInternalFrame() {
         initComponents();
@@ -164,7 +166,7 @@ public class ChangeLogInternalFrame extends javax.swing.JInternalFrame implement
             try {
                 canreg.common.Tools.browse(event.getURL().toString());
             } catch (IOException ex) {
-                Logger.getLogger(ChangeLogInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 new TechnicalError().errorDialog();
             }
         }

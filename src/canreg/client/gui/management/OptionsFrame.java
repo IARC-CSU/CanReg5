@@ -52,7 +52,8 @@ import org.jdesktop.application.Action;
  * @author  morten
  */
 public class OptionsFrame extends javax.swing.JInternalFrame {
-
+    
+    private static final Logger LOGGER = Logger.getLogger(OptionsFrame.class.getName());
     private CanRegClientView crcv;
     private LocalSettings localSettings;
     private Locale[] locales;
@@ -77,7 +78,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
             initComponents();
             initValues();
         } catch (IOException ex) {
-            Logger.getLogger(OptionsFrame.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             new TechnicalError().errorDialog();
         }
     }
@@ -883,7 +884,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
                 backUpPerformedTextField.setText(DateFormat.getDateInstance().format(backUpDate));
             }
         } catch (SecurityException | RemoteException ex) {
-            Logger.getLogger(OptionsFrame.class.getName()).log(Level.INFO, null, ex);
+            LOGGER.log(Level.INFO, null, ex);
             new TechnicalError().errorDialog();
 
         }
@@ -1003,7 +1004,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         try {
             canreg.common.Tools.browse(Globals.downloadCanRegURL);
         } catch (IOException ex) {
-            Logger.getLogger(OptionsFrame.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             new TechnicalError().errorDialog();
         }
     }

@@ -96,6 +96,7 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
     private CountType countType = CountType.CASES;
     private boolean includeOther = false;
     private int unknownAgeCode = Globals.DEFAULT_UNKNOWN_AGE_CODE;
+    private static final Logger LOGGER = Logger.getLogger(TopNChartTableBuilder.class.getName());
 
     public TopNChartTableBuilder() {
         ChartTheme chartTheme = new StandardChartTheme("sansserif");
@@ -256,7 +257,7 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
                         try {
                             adjustedCases = 100.0 * (periodPop.getReferencePopulationForAgeGroupIndex(sex, periodPop.getAgeGroupIndex(age)) * numberOfCases) / periodPop.getAgeGroupCount(sex, periodPop.getAgeGroupIndex(age));
                         } catch (IncompatiblePopulationDataSetException ex) {
-                            Logger.getLogger(TopNChartTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                            LOGGER.log(Level.SEVERE, null, ex);
                         }
                     } else if (countType == CountType.CUM64) {
                         if (age < 65) {
@@ -400,7 +401,7 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
                     try {
                         generatedFiles.add(Tools.writeJChartToFile(charts[sexNumber], file, fileType));
                     } catch (IOException | DocumentException ex) {
-                        Logger.getLogger(TopNChartTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                        LOGGER.log(Level.SEVERE, null, ex);
                         new TechnicalError().errorDialog();
                     }
                 }

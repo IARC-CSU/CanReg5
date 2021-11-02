@@ -182,7 +182,7 @@ public final class LocalSettings {
      */
     public static final String CLIENT_TO_SERVER_PING_KEY = "client_to_server_ping_key";
     public static final String CLIENT_SESSIONS_CHECK_KEY = "client_sessions_check_key";
-
+    private static final Logger LOGGER = Logger.getLogger(LocalSettings.class.getName());
     /**
      *
      * @param localSettingsFileName
@@ -288,7 +288,7 @@ public final class LocalSettings {
             getProperties().loadFromXML(propInputStream);
             success = true;
         } catch (IOException ex) {
-            Logger.getLogger(LocalSettings.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
             success = false;
         }
         return success;
@@ -305,7 +305,7 @@ public final class LocalSettings {
                 getProperties().storeToXML(propOutputStream, "CanReg5 local settings");
                 success = true;
             } catch (IOException ex) {
-                Logger.getLogger(LocalSettings.class.getName()).log(Level.SEVERE, null, ex);
+               LOGGER.log(Level.SEVERE, null, ex);
                 success = false;
             } 
         } else {

@@ -76,6 +76,7 @@ import org.w3c.dom.Document;
  */
 public class RecordEditorPanel extends javax.swing.JPanel implements ActionListener, Cloneable, PropertyChangeListener {
 
+    private static final Logger LOGGER = Logger.getLogger(RecordEditorPanel.class.getName());
     private DatabaseRecord databaseRecord;
     private Document doc;
     private panelTypes panelType;
@@ -330,7 +331,7 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
                     date = dateFormat.parse(updateDate);
                 } catch (ParseException ex) {
                     date = null;
-                    Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.INFO, null, ex);
+                    LOGGER.log(Level.INFO, null, ex);
                 }
                 if (date != null) {
                     Calendar todayCal = new GregorianCalendarCanReg();
@@ -1099,12 +1100,12 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
                 } else {
                     databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), "0");
                     // JOptionPane.showInternalMessageDialog(this, "Record status dictionary entries missing.");
-                    Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.WARNING, "Warning! Record status dictionary entries missing.");
+                    LOGGER.log(Level.WARNING, "Warning! Record status dictionary entries missing.");
                 }
             } else {
                 databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), "0");
                 // JOptionPane.showInternalMessageDialog(this, "Record status dictionary entries missing.");
-                Logger.getLogger(RecordEditorPanel.class.getName()).log(Level.WARNING, "Warning! Record status dictionary entries missing.");
+                LOGGER.log(Level.WARNING, "Warning! Record status dictionary entries missing.");
             }
         }
         if (obsoleteFlagVariableListElement != null) {

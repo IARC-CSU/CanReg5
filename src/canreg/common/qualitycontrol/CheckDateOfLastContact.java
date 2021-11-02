@@ -38,6 +38,9 @@ import java.util.logging.Logger;
  */
 public class CheckDateOfLastContact extends CheckInterface {
 
+    private static final Logger LOGGER = Logger.getLogger(CheckDateOfLastContact.class.getName());
+
+
     /**
      *
      */
@@ -99,13 +102,13 @@ public class CheckDateOfLastContact extends CheckInterface {
             incidenceDateCode = variables.get(Globals.StandardVariableNames.IncidenceDate).toString();
             incidenceDate = DateHelper.parseDateStringToGregorianCalendarCanReg(incidenceDateCode, Globals.DATE_FORMAT_STRING);
         } catch (ParseException ex) {
-            Logger.getLogger(CheckDateOfLastContact.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         } catch (NumberFormatException numberFormatException) {
             result.setResultCode(CheckResult.ResultCode.Invalid);
             result.setMessage("Not a number");
             return result;
         } catch (IllegalArgumentException ex) {
-            Logger.getLogger(CheckDateOfLastContact.class.getName()).log(Level.WARNING, "Dates: " + birthDateCode + ", " + incidenceDate, ex);
+            LOGGER.log(Level.WARNING, "Dates: " + birthDateCode + ", " + incidenceDate, ex);
         } catch (NullPointerException nullPointerException) {
             result.setResultCode(CheckResult.ResultCode.Missing);
             result.setMessage("Missing variable(s) needed.");

@@ -37,6 +37,7 @@ import java.util.logging.Logger;
  */
 public class RTools {
     
+    private static final Logger LOGGER = Logger.getLogger(RTools.class.getName());
     /**
      * Converts file paths with system specific file separators (i.e. "\" for Windows)
      * to universal file separator ("//"). This way R scripts can locate files in any
@@ -104,7 +105,7 @@ public class RTools {
             proc.waitFor();
             // convert the output to a string
             String theString = canreg.client.analysis.Tools.convertStreamToString(inputStr);
-//            Logger.getLogger(RTools.class.getName()).log(Level.INFO, "Messages from R: \n{0}", theString);            
+//            LOGGER.log(Level.INFO, "Messages from R: \n{0}", theString);            
             
             if(theString.contains("-outFile")){
                 for (String fileName : theString.split("\\r?\\n")) {
@@ -136,7 +137,7 @@ public class RTools {
             if(files == null || files[0] == null)
                 throw new RuntimeException("No output files were found after running the " + scriptFile + " script.");
         } catch (IOException | InterruptedException | RuntimeException ex) {
-            Logger.getLogger(RTools.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             BufferedInputStream errorStream = new BufferedInputStream(proc.getErrorStream());
             String errorMessage = canreg.client.analysis.Tools.convertStreamToString(errorStream);
             System.out.println(errorMessage);

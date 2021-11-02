@@ -37,7 +37,8 @@ import java.util.logging.Logger;
  * 
  */
 public class DefaultPersonSearch implements PersonSearcher, Serializable {
-
+    
+    private static final Logger LOGGER = Logger.getLogger(PersonSearcher.class.getName());
     private String[] variableNames;
     static final int missing = -1;  // flag to say variable value missing
     private float[] discPower;
@@ -51,7 +52,6 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
     // private Soundex soundex = new Soundex();
     // private DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
     // private Caverphone caverphone = new Caverphone();
-    private static final Logger LOG = Logger.getLogger(DefaultPersonSearch.class.getName());
 
     /**
      * 

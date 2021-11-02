@@ -42,7 +42,8 @@ import org.jdesktop.application.Task;
  * @author  morten
  */
 public class BackUpInternalFrame extends javax.swing.JInternalFrame {
-
+    
+    private static final Logger LOGGER = Logger.getLogger(BackUpInternalFrame.class.getName());
     String backupPath;
 
     /** Creates new form BackUpInternalFrame */
@@ -178,7 +179,7 @@ public class BackUpInternalFrame extends javax.swing.JInternalFrame {
             try {
                 backupPath = canreg.client.CanRegClientApp.getApplication().performBackup();
             } catch (RemoteException ex) {
-                Logger.getLogger(BackUpInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 return "Error:\n" + ex.getLocalizedMessage();
             }
             return null;
@@ -206,7 +207,7 @@ public class BackUpInternalFrame extends javax.swing.JInternalFrame {
             try {
                 Tools.openFile(Globals.CANREG_BACKUP_FOLDER);
             } catch (IOException ex) {
-                Logger.getLogger(BackUpInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 new TechnicalError().errorDialog();
             }
         }

@@ -55,6 +55,8 @@ import javax.swing.event.DocumentListener;
  * @author  ervikm
  */
 public class VariableEditorPanel extends javax.swing.JPanel implements ActionListener, VariableEditorPanelInterface {
+    
+    private static final Logger LOGGER = Logger.getLogger(VariableEditorPanel.class.getName());
 
     /**
      * 
@@ -412,7 +414,7 @@ private void codeTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                     valueObject = Integer.parseInt(valueString.trim());
                 } catch (NumberFormatException numberFormatException) {
                     // valueObject = -1;
-                    Logger.getLogger(VariableEditorPanel.class.getName()).log(Level.WARNING, databaseListElement.getShortName() + " " + valueString, numberFormatException);
+                   LOGGER.log(Level.WARNING, databaseListElement.getShortName() + " " + valueString, numberFormatException);
                 }
             } else {
                 valueObject = null;

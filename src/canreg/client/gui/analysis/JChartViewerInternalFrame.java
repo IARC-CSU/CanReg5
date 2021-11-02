@@ -25,8 +25,9 @@ import org.jfree.chart.JFreeChart;
  *
  * @author ErvikM
  */
-public class JChartViewerInternalFrame extends javax.swing.JInternalFrame {
-
+public class JChartViewerInternalFrame extends javax.swing.JInternalFrame { 
+    
+    private static final Logger LOGGER = Logger.getLogger(JChartViewerInternalFrame.class.getName());
     private ChartPanel chartPanel;
     private JFreeChart chart;
 
@@ -146,7 +147,7 @@ public class JChartViewerInternalFrame extends javax.swing.JInternalFrame {
                     }
                     canreg.client.analysis.Tools.exportChartAsSVG(chart, new Rectangle(chartPanel.getWidth(), chartPanel.getHeight()), file);
                 } catch (IOException ex) {
-                    Logger.getLogger(JChartViewerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
                     new TechnicalError().errorDialog();
                 }
             }
@@ -179,7 +180,7 @@ public class JChartViewerInternalFrame extends javax.swing.JInternalFrame {
                     }
                     canreg.client.analysis.Tools.exportChartAsPDF(chart, new Rectangle(chartPanel.getWidth(), chartPanel.getHeight()), file);
                 } catch (IOException | DocumentException ex) {
-                    Logger.getLogger(JChartViewerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
                     new TechnicalError().errorDialog();
                 }
             }

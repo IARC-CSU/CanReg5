@@ -49,6 +49,7 @@ public class FixedWidthFileWriter implements FileWriterInterface {
     private Pattern pattern = Pattern.compile("([^\\[\\]]*)\\[?([0-9]*),?([0-9]*)\\]?");
     private LinkedList<FileElement> fileElementList = new LinkedList<FileElement>();
     private boolean isPopulationFile;
+    private static final Logger LOGGER = Logger.getLogger(FixedWidthFileWriter.class.getName());
 
     public FixedWidthFileWriter(int lineLength) throws FileNotFoundException, IOException {
         this(null, lineLength, false);
@@ -121,8 +122,7 @@ public class FixedWidthFileWriter implements FileWriterInterface {
             // outFileName = fileName;
             outFile = new BufferedWriter(new FileWriter(fileName));
         } catch (IOException ex) {
-            Logger.getLogger(FixedWidthFileWriter.class.getName()).
-                log(Level.SEVERE,"Error: Unable to set the output file: " + fileName, ex);
+            LOGGER.log(Level.SEVERE,"Error: Unable to set the output file: " + fileName, ex);
             return false;
         }
         return true;
@@ -174,8 +174,7 @@ public class FixedWidthFileWriter implements FileWriterInterface {
             outFile.write(line.toString());
             outFile.newLine();
         } catch (IOException ex) {
-            Logger.getLogger(FixedWidthFileWriter.class.getName()).
-                log(Level.SEVERE,"Error: unable to write in the output file: ", ex);
+           LOGGER.log(Level.SEVERE,"Error: unable to write in the output file: ", ex);
             return false;
         }
         return true;

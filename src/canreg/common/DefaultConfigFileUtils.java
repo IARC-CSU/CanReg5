@@ -16,6 +16,8 @@ import java.util.logging.Logger;
  */
 public class DefaultConfigFileUtils {
     
+    private static final Logger LOGGER = Logger.getLogger(DefaultConfigFileUtils.class.getName());
+    
     /**
      * Update or create the file database.properties in the .CanRegServer.
      * The file is created if it doesn't exist.
@@ -37,7 +39,7 @@ public class DefaultConfigFileUtils {
                 properties.setProperty(registryCode, value);
                 properties.storeToXML(propOutputStream, "properties");
             } catch (IOException ex) {
-                Logger.getLogger(DefaultConfigFileUtils.class.getName()).log(Level.SEVERE, "Error while updating"
+                LOGGER.log(Level.SEVERE, "Error while updating"
                     + " the default file database.properties", ex);
             }
         }
@@ -52,7 +54,7 @@ public class DefaultConfigFileUtils {
         try(FileInputStream propInputStream = new FileInputStream(Globals.CANREG_CONFIG_DATABASE)) {
             properties.loadFromXML(propInputStream);
         } catch (IOException ex) {
-            Logger.getLogger(DefaultConfigFileUtils.class.getName()).log(Level.SEVERE, "Error while reading"
+            LOGGER.log(Level.SEVERE, "Error while reading"
                 + " the default file database.properties", ex);
             return null;
         }

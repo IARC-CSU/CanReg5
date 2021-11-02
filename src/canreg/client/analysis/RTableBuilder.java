@@ -55,6 +55,7 @@ public class RTableBuilder implements TableBuilderInterface {
     private String[] rScriptsArguments;
     private final String R_SCRIPTS_ARGUMENTS = "r_scripts_arguments";
     private int unknownAgeCode = Globals.DEFAULT_UNKNOWN_AGE_CODE;
+    private static final Logger LOGGER = Logger.getLogger(RTableBuilder.class.getName());
 
     public RTableBuilder(String configFileName) throws FileNotFoundException {
         localSettings = CanRegClientApp.getApplication().getLocalSettings();
@@ -195,7 +196,7 @@ public class RTableBuilder implements TableBuilderInterface {
                     pr.waitFor();
                     // convert the output to a string
                     String theString = Tools.convertStreamToString(is);
-                    Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.INFO, "Messages from R: \n{0}", theString);
+                    LOGGER.log(Level.INFO, "Messages from R: \n{0}", theString);
                     // System.out.println(theString);  
                     // and add all to the list of files to return
                     for (String fileName : theString.split("\\r?\\n")) {
@@ -208,12 +209,12 @@ public class RTableBuilder implements TableBuilderInterface {
                         }
                     }
                 } catch (InterruptedException ex) {
-                    Logger.getLogger(RTableBuilder.class.getName()).log(Level.SEVERE, "Error while building R", ex);
+                    LOGGER.log(Level.SEVERE, "Error while building R", ex);
                     new TechnicalError().errorDialog();
                 } catch (java.util.NoSuchElementException ex) {
                     BufferedInputStream errorStream = new BufferedInputStream(pr.getErrorStream());
                     String errorMessage = Tools.convertStreamToString(errorStream);
-                    Logger.getLogger(RTableBuilder.class.getName()).log(Level.SEVERE,
+                    LOGGER.log(Level.SEVERE,
                         "Error while building R : "+errorMessage, ex);
                     throw new TableErrorException("R says:\n \"" + errorMessage + "\"");
                 } finally {
@@ -222,10 +223,10 @@ public class RTableBuilder implements TableBuilderInterface {
             }
 
         } catch (IOException ex) {
-            Logger.getLogger(RTableBuilder.class.getName()).log(Level.SEVERE, "", ex);
+            LOGGER.log(Level.SEVERE, "", ex);
             new TechnicalError().errorDialog();
         } catch (IncompatiblePopulationDataSetException ex) {
-            Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.WARNING,
+            LOGGER.log(Level.WARNING,
                 "Incompatibility  in the population dataset", ex);
             throw new NotCompatibleDataException();
         }

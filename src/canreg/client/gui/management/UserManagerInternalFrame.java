@@ -53,6 +53,7 @@ import javax.security.auth.login.LoginException;
  */
 public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
 
+    private static final Logger LOGGER = Logger.getLogger(UserManagerInternalFrame.class.getName());
     private List<User> users;
     private DefaultListModel usersListModel;
 
@@ -602,7 +603,7 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
             canreg.client.CanRegClientApp.getApplication().saveUser(user,true);
             JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("USER ADDED. TEMPORARY PASSWORD IS ") + userName + ".");
         } catch (SystemUnavailableException | SQLException | RemoteException | SecurityException ex) {
-            Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             new TechnicalError().errorDialog();
         }
         refreshUsersList();
@@ -665,7 +666,7 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
             }
             usersList.setModel(usersListModel);
         } catch (SecurityException | RemoteException ex) {
-            Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             new TechnicalError().errorDialog();
         }
     }
@@ -708,11 +709,11 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
                     JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle
                         ("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("PASSWORD CHANGED."));
                 } catch (SecurityException | IOException  ex) {
-                        Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        LOGGER.log(Level.SEVERE, null, ex);
                         new TechnicalError().errorDialog();
                     }
                 } catch (SystemUnavailableException ex) {
-                    Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
                     new TechnicalError().errorDialog();
                 }
             } else {
@@ -765,7 +766,7 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
             canreg.client.CanRegClientApp.getApplication().saveUser(user,false);
             JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("USER UPDATED."));
         } catch (SQLException | RemoteException | SecurityException ex) {
-            Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             new TechnicalError().errorDialog();
         }
         refreshUsersList();
@@ -782,7 +783,7 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
             canreg.client.CanRegClientApp.getApplication().saveUser(user,true);
             JOptionPane.showInternalMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("PASSWORD_RESET") + "\n" + java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/UserManagerInternalFrame").getString("TEMPORARY_PASSWORD_IS_") + user.getUserName() + ".");
         } catch (SystemUnavailableException | SQLException | RemoteException | SecurityException ex) {
-            Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             new TechnicalError().errorDialog();
         }
     }
@@ -803,7 +804,7 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
                 canreg.client.CanRegClientApp.getApplication().deleteRecord(id, Globals.USERS_TABLE_NAME, null);
                 CanRegClientApp.getApplication().deleteFileReminder(user.getUserName());
             } catch (SQLException | RecordLockedException | SecurityException | RemoteException ex) {
-                Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 new TechnicalError().errorDialog();
             }
         }
@@ -894,7 +895,7 @@ public class UserManagerInternalFrame extends javax.swing.JInternalFrame {
             catch (SecurityException | RemoteException ex) {
                 // TODO i18n
                 JOptionPane.showInternalMessageDialog(databasePasswordPanel, "Something went wrong during password change.\n" + ex.getLocalizedMessage() +"\nPlease restart CanReg5.", "Password not changed.", JOptionPane.WARNING_MESSAGE);
-                Logger.getLogger(UserManagerInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
             }
             return success;  // return your result
         }

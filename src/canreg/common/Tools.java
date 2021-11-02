@@ -66,7 +66,8 @@ import org.apache.commons.csv.CSVRecord;
  * @author ervikm
  */
 public class Tools {
-
+    
+    private static final Logger LOGGER = Logger.getLogger(Tools.class.getName());
     /**
      * 
      * @param objects
@@ -104,7 +105,7 @@ public class Tools {
                         if (pointer < line.length()) {
                             tmpChar = line.charAt(pointer);
                         } else {
-                            Logger.getLogger(Tools.class.getName()).log(Level.WARNING, "Warning! Unclosed quote.");
+                            LOGGER.log(Level.WARNING, "Warning! Unclosed quote.");
                         }
                     }
                 } else {
@@ -738,7 +739,7 @@ public class Tools {
             System.out.println("Current dir : " + dir1.getCanonicalPath());
             //System.out.println ("Parent  dir : " + dir2.getCanonicalPath());
         } catch (IOException ex) {
-            Logger.getLogger(Tools.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
     }
 
@@ -958,7 +959,7 @@ public class Tools {
 //                        map.put(iarcStdVarb, variable.getDatabaseVariableName());
 //                    }
 //                } catch (java.lang.IllegalArgumentException ex) {
-//                    Logger.getLogger(Tools.class.getName()).log(Level.WARNING, "{0} is not a standard variable name...", stdNameString);
+//                    LOGGER.log(Level.WARNING, "{0} is not a standard variable name...", stdNameString);
 //                }
 //            }
 //        }
@@ -1102,7 +1103,7 @@ public class Tools {
             if(out != null) {
                 try { out.close(); }
                 catch(IOException ex) {
-                    Logger.getLogger(Tools.class.getName()).log(Level.WARNING, null, ex);
+                    LOGGER.log(Level.WARNING, null, ex);
                 }   
             }
         }
@@ -1131,7 +1132,7 @@ public class Tools {
             if(in != null) {
                 try { in.close(); }
                 catch(IOException ex) {
-                    Logger.getLogger(Tools.class.getName()).log(Level.WARNING, null, ex);
+                    LOGGER.log(Level.WARNING, null, ex);
                 } 
             }
         }
@@ -1229,7 +1230,7 @@ public class Tools {
             if( ! newTemp.createNewFile())
                 throw new IOException("Temp file could not be created in source directory.");
         } catch(IOException ex) {
-            Logger.getLogger(Tools.class.getName()).log(Level.WARNING, null, ex);
+            LOGGER.log(Level.WARNING, null, ex);
             newTemp = File.createTempFile(getFileNameWithoutExtension(newTemp), 
                                           getFileExtension(newTemp));
         }

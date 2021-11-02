@@ -39,6 +39,7 @@ import javax.security.auth.login.LoginException;
  */
 public class CanRegLoginModule implements LoginModule {
 
+    private static final Logger LOGGER = Logger.getLogger(CanRegLoginModule.class.getName());
     private final boolean debug = Globals.DEBUG;
 
     // validation objects
@@ -87,7 +88,7 @@ public class CanRegLoginModule implements LoginModule {
      */
     private void debugOut(String msg) {
         if (debug) {
-            Logger.getLogger(CanRegLoginModule.class.getName()).log(Level.INFO, msg);
+            LOGGER.log(Level.INFO, msg);
         }
     }
 

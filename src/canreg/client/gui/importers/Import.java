@@ -84,6 +84,7 @@ import org.apache.commons.lang.StringEscapeUtils;
  */
 public class Import {
 
+    private static final Logger LOGGER = Logger.getLogger(Import.class.getName());
     private static final String namespace = Globals.NAMESPACE;
     private static final boolean debug = Globals.DEBUG;
     public static String FINISHED = "finished";
@@ -140,7 +141,7 @@ public class Import {
 //            FileInputStream fis = new FileInputStream(file);
             //           BufferedReader bsr = new BufferedReader(new InputStreamReader(fis, io.getFileCharset()));
 
-            // Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding {0}");
+            // LOGGER.log(Level.CONFIG, "Name of the character encoding {0}");
             int numberOfRecordsInFile = canreg.common.Tools.numberOfLinesInFile(file.getAbsolutePath());
 
             if (linesToRead > 0) {
@@ -172,7 +173,7 @@ public class Import {
                                     try {
                                         patient.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(csvRecord.get(rel.getFileColumnNumber())));
                                     } catch (NumberFormatException ex) {
-                                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Number format error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
+                                        LOGGER.log(Level.SEVERE, "Number format error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
                                         success = false;
                                     }
                                 }
@@ -180,7 +181,7 @@ public class Import {
                                 patient.setVariable(rel.getDatabaseVariableName(), StringEscapeUtils.unescapeCsv(csvRecord.get(rel.getFileColumnNumber())));
                             }
                         } else {
-                            Logger.getLogger(Import.class.getName()).log(Level.INFO, "Something wrong with patient part of line " + numberOfLinesRead + ".", new Exception("Error in line: " + numberOfLinesRead + ". Can't find field: " + rel.getDatabaseVariableName()));
+                            LOGGER.log(Level.INFO, "Something wrong with patient part of line " + numberOfLinesRead + ".", new Exception("Error in line: " + numberOfLinesRead + ". Can't find field: " + rel.getDatabaseVariableName()));
                         }
                     }
                 }
@@ -196,7 +197,7 @@ public class Import {
                                     try {
                                         tumour.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(csvRecord.get(rel.getFileColumnNumber())));
                                     } catch (NumberFormatException ex) {
-                                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Number format error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
+                                        LOGGER.log(Level.SEVERE, "Number format error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
                                         success = false;
                                     }
                                 }
@@ -204,7 +205,7 @@ public class Import {
                                 tumour.setVariable(rel.getDatabaseVariableName(), StringEscapeUtils.unescapeCsv(csvRecord.get(rel.getFileColumnNumber())));
                             }
                         } else {
-                            Logger.getLogger(Import.class.getName()).log(Level.INFO, "Something wrong with tumour part of line " + numberOfLinesRead + ".", new Exception("Error in line: " + numberOfLinesRead + ". Can't find field: " + rel.getDatabaseVariableName()));
+                            LOGGER.log(Level.INFO, "Something wrong with tumour part of line " + numberOfLinesRead + ".", new Exception("Error in line: " + numberOfLinesRead + ". Can't find field: " + rel.getDatabaseVariableName()));
                         }
                     }
                 }
@@ -220,7 +221,7 @@ public class Import {
                                     try {
                                         source.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(csvRecord.get(rel.getFileColumnNumber())));
                                     } catch (NumberFormatException ex) {
-                                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Number format error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
+                                        LOGGER.log(Level.SEVERE, "Number format error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
                                         success = false;
                                     }
                                 }
@@ -228,7 +229,7 @@ public class Import {
                                 source.setVariable(rel.getDatabaseVariableName(), StringEscapeUtils.unescapeCsv(csvRecord.get(rel.getFileColumnNumber())));
                             }
                         } else {
-                            Logger.getLogger(Import.class.getName()).log(Level.INFO, "Something wrong with source part of line " + numberOfLinesRead + ".", new Exception("Error in line: " + numberOfLinesRead + ". Can't find field: " + rel.getDatabaseVariableName()));
+                            LOGGER.log(Level.INFO, "Something wrong with source part of line " + numberOfLinesRead + ".", new Exception("Error in line: " + numberOfLinesRead + ". Can't find field: " + rel.getDatabaseVariableName()));
                         }
 
                     }
@@ -276,7 +277,7 @@ public class Import {
                         try {
                             tumours = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(patientID + "", false, server);
                         } catch (DistributedTableDescriptionException | UnknownTableException ex) {
-                            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                            LOGGER.log(Level.SEVERE, null, ex);
                             new TechnicalError().errorDialog();
                         }
 
@@ -290,7 +291,7 @@ public class Import {
                         try {
                             oldPatients = CanRegClientApp.getApplication().getPatientsByPatientID((String) patientID, false, server);
                         } catch (RemoteException | SecurityException | UnknownTableException | RecordLockedException | SQLException | DistributedTableDescriptionException ex) {
-                            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                            LOGGER.log(Level.SEVERE, null, ex);
                             new TechnicalError().errorDialog();
                         }
                         for (Patient oldPatient : oldPatients) {
@@ -397,17 +398,17 @@ public class Import {
             }
             success = true;
         } catch (IOException | NumberFormatException | IndexOutOfBoundsException | SQLException ex) {
-            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
+            LOGGER.log(Level.SEVERE, "Error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
             success = false;
         } catch (InterruptedException ex) {
-            Logger.getLogger(Import.class.getName()).log(Level.INFO, "Interupted on line: " + (numberOfLinesRead + 1) + ". ", ex);
+            LOGGER.log(Level.INFO, "Interupted on line: " + (numberOfLinesRead + 1) + ". ", ex);
             success = true;
         } finally {
             if (parser != null) {
                 try {
                     parser.close();
                 } catch (IOException ex) {
-                    Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
                     new TechnicalError().errorDialog();
                 }
             }
@@ -571,7 +572,7 @@ public class Import {
             try {
                 reportWriter = new BufferedWriter(new FileWriter(io.getReportFileName()));
             } catch (IOException ex) {
-                Logger.getLogger(Import.class.getName()).log(Level.WARNING, null, ex);
+                LOGGER.log(Level.WARNING, null, ex);
                 new TechnicalError().errorDialog();
             }
         }
@@ -600,7 +601,7 @@ public class Import {
                 patientFIS = new FileInputStream(files[0]);
                 InputStreamReader patientISR = new InputStreamReader(patientFIS, io.getFileCharsets()[0]);
 
-                Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding {0}", patientISR.getEncoding());
+                LOGGER.log(Level.CONFIG, "Name of the character encoding {0}", patientISR.getEncoding());
 
                 int numberOfRecordsInFile = canreg.common.Tools.numberOfLinesInFile(files[0].getAbsolutePath());
 
@@ -634,7 +635,7 @@ public class Import {
                                     try {
                                         patient.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(csvRecord.get(rel.getFileColumnNumber())));
                                     } catch (NumberFormatException ex) {
-                                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Number format error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
+                                        LOGGER.log(Level.SEVERE, "Number format error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
                                         success = false;
                                     }
                                 }
@@ -689,7 +690,7 @@ public class Import {
                 tumourFIS = new FileInputStream(files[1]);
                 InputStreamReader tumourISR = new InputStreamReader(tumourFIS, io.getFileCharsets()[1]);
 
-                Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding {0}", tumourISR.getEncoding());
+                LOGGER.log(Level.CONFIG, "Name of the character encoding {0}", tumourISR.getEncoding());
 
                 numberOfLinesRead = 0;
 
@@ -721,7 +722,7 @@ public class Import {
                                     try {
                                         tumour.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(csvRecord.get(rel.getFileColumnNumber())));
                                     } catch (NumberFormatException ex) {
-                                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Number format error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
+                                        LOGGER.log(Level.SEVERE, "Number format error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
                                         success = false;
                                     }
                                 }
@@ -788,7 +789,7 @@ public class Import {
                 sourceFIS = new FileInputStream(files[2]);
                 InputStreamReader sourceISR = new InputStreamReader(sourceFIS, io.getFileCharsets()[2]);
 
-                Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding {0}", sourceISR.getEncoding());
+                LOGGER.log(Level.CONFIG, "Name of the character encoding {0}", sourceISR.getEncoding());
 
                 numberOfLinesRead = 0;
 
@@ -822,7 +823,7 @@ public class Import {
                                     try {
                                         source.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(csvRecord.get(rel.getFileColumnNumber())));
                                     } catch (NumberFormatException ex) {
-                                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Number format error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
+                                        LOGGER.log(Level.SEVERE, "Number format error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
                                         success = false;
                                     }
                                 }
@@ -871,13 +872,13 @@ public class Import {
             reportWriter.flush();
             success = true;
         } catch (IOException ex) {
-            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
+            LOGGER.log(Level.SEVERE, "Error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
             success = false;
         } catch (InterruptedException ex) {
-            Logger.getLogger(Import.class.getName()).log(Level.INFO, "Interupted on line: " + (numberOfLinesRead + 1) + ". ", ex);
+            LOGGER.log(Level.INFO, "Interupted on line: " + (numberOfLinesRead + 1) + ". ", ex);
             success = true;
         } catch (IndexOutOfBoundsException ex) {
-            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "String too short error in line: " + (numberOfLinesRead + 1 + 1) + ". ",
+            LOGGER.log(Level.SEVERE, "String too short error in line: " + (numberOfLinesRead + 1 + 1) + ". ",
                     ex);
             success = false;
         } finally {
@@ -885,7 +886,7 @@ public class Import {
                 try {
                     parser.close();
                 } catch (IOException ex) {
-                    Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
                     new TechnicalError().errorDialog();
                 }
             }
@@ -893,7 +894,7 @@ public class Import {
                 reportWriter.flush();
                 reportWriter.close();
             } catch (IOException ex) {
-                Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 new TechnicalError().errorDialog();
             }
             
@@ -926,10 +927,10 @@ public class Import {
             oldPatientRecord = CanRegClientApp.getApplication().getPatientRecord(patientRecordID, false, server);
         } catch(NullPointerException ex1) {
             //Patient not found in DB.
-            Logger.getLogger(Import.class.getName()).log(Level.WARNING,"Patient not found in DB" , ex1);
+            LOGGER.log(Level.WARNING,"Patient not found in DB" , ex1);
         }
         /*catch (Exception ex) {
-            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         } */
 
         boolean savePatient = true;
@@ -985,13 +986,13 @@ public class Import {
                         else
                             server.editPatient(patientToImport);
     //              } catch(Exception ex) {
-    //                  Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "ERROR EDITING PATIENT " + patientID, ex);
+    //                  LOGGER.log(Level.SEVERE, "ERROR EDITING PATIENT " + patientID, ex);
     //              }
                 } else {
     //              try {
                         return server.savePatient(patientToImport);
     //              } catch(Exception ex) {
-    //                  Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "ERROR SAVING PATIENT " + patientID, ex);
+    //                  LOGGER.log(Level.SEVERE, "ERROR SAVING PATIENT " + patientID, ex);
     //              }
                 }
             }
@@ -1021,10 +1022,10 @@ public class Import {
             oldTumourRecord = CanRegClientApp.getApplication().getTumourRecordBasedOnTumourID(tumourID, false, server);
         } catch(NullPointerException ex1) {
             //Patient not found in DB.
-            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Patient not found in DB", ex1);
+            LOGGER.log(Level.SEVERE, "Patient not found in DB", ex1);
         }
         /*catch (Exception ex) {
-            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         } */
 
         if (oldTumourRecord != null) {
@@ -1060,10 +1061,10 @@ public class Import {
             patient = CanRegClientApp.getApplication().getPatientRecord(patientRecordID, false, server);
         } catch(NullPointerException ex1) {
             //Patient not found in DB.
-            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Patient not found in DB", ex1);
+            LOGGER.log(Level.SEVERE, "Patient not found in DB", ex1);
         }
         /*catch (Exception ex) {
-            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         } */
 
                                 
@@ -1091,7 +1092,7 @@ public class Import {
                             }
                         }
                     }
-                    // Logger.getLogger(Import.class.getName()).log(Level.INFO, result.toString());
+                    // LOGGER.log(Level.INFO, result.toString());
                 }
                 // always generate ICD10...
                 // ConversionResult[] conversionResult = canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICD10, patient, tumour);
@@ -1168,14 +1169,14 @@ public class Import {
                         else
                             server.editTumour(tumourToImport);
 //                  } catch(Exception ex) {
-//                      Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "ERROR EDITING TUMOUR " + tumourID, ex);
+//                      LOGGER.log(Level.SEVERE, "ERROR EDITING TUMOUR " + tumourID, ex);
 //                  }
                 } // if not we save it
                 else {
 //                  try {
                         server.saveTumour(tumourToImport);
 //                  } catch(Exception ex) {
-//                       Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "ERROR SAVING TUMOUR " + tumourID, ex);
+//                       LOGGER.log(Level.SEVERE, "ERROR SAVING TUMOUR " + tumourID, ex);
 //                  }
                 }
             }
@@ -1197,10 +1198,10 @@ public class Import {
             tumour = CanRegClientApp.getApplication().getTumourRecordBasedOnTumourID(tumourID, false, server);
         } catch (NullPointerException ex1) {
             //Patient not found in DB.
-            Logger.getLogger(Import.class.getName()).log(Level.SEVERE,"Patient not found in DB", ex1);
+            LOGGER.log(Level.SEVERE,"Patient not found in DB", ex1);
         }
         /*catch (Exception ex) {
-            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         } */
 
 
@@ -1249,14 +1250,14 @@ public class Import {
                     else
                         server.editTumour(tumour);
 //              } catch(Exception ex) {
-//                  Logger.getLogger(Import.class.getName()).log(Level.SEVERE, 
+//                  LOGGER.log(Level.SEVERE, 
 //                                        "ERROR SAVING SOURCE " + sourceRecordID + 
 //                                        " ON TUMOUR " + tumour.getVariable(io.getTumourIDVariablename()),
 //                                        ex);
 //              }
             }
         } else {
-            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "No tumour with ID " +  tumourID + " was found for source ID " + sourceRecordID);
+            LOGGER.log(Level.SEVERE, "No tumour with ID " +  tumourID + " was found for source ID " + sourceRecordID);
         }
     }
     
@@ -1301,7 +1302,7 @@ public class Import {
 
     private static void debugOut(String msg) {
         if (debug) {
-            Logger.getLogger(Import.class.getName()).log(Level.INFO, msg);
+            LOGGER.log(Level.INFO, msg);
         }
     }
 

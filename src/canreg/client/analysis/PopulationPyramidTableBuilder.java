@@ -52,7 +52,7 @@ public class PopulationPyramidTableBuilder extends AbstractEditorialTableBuilder
     private String[] sexLabel;
     private Globals.StandardVariableNames[] variablesNeeded = null;
     private String populationString;
-    
+    private static final Logger LOGGER = Logger.getLogger(PopulationPyramidTableBuilder.class.getName());
     public PopulationPyramidTableBuilder() {
         super();
         fileTypesGenerated = new FileTypes[]{FileTypes.ps};
@@ -298,8 +298,7 @@ public class PopulationPyramidTableBuilder extends AbstractEditorialTableBuilder
             fw.close();
 
         } catch (IOException e) {
-            Logger.getLogger(PopulationPyramidTableBuilder.class.getName()).
-                log(Level.SEVERE,"Error while writing PS-file",e);
+            LOGGER.log(Level.SEVERE,"Error while writing PS-file",e);
             new TechnicalError().errorDialog();
         }
 

@@ -89,6 +89,7 @@ public class CasesByAgeGroupChartTableBuilder implements TableBuilderInterface, 
     private LocalSettings localSettings;
     private String rpath;
     private int unknownAgeInt = Globals.DEFAULT_UNKNOWN_AGE_CODE;
+    private static final Logger LOGGER = Logger.getLogger(CasesByAgeGroupChartTableBuilder.class.getName());
 
     public CasesByAgeGroupChartTableBuilder() {
         ChartTheme chartTheme = new StandardChartTheme("sansserif");
@@ -247,7 +248,7 @@ public class CasesByAgeGroupChartTableBuilder implements TableBuilderInterface, 
             //            try {
             //                addPopulationDataSetToAgeGroup(pop, ag);
             //            } catch (IncompatiblePopulationDataSetException ex) {
-            //                Logger.getLogger(CasesByAgeGroupChartTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
+            //                LOGGER.log(Level.SEVERE, null, ex);
             //            }
             //        }
             //    }
@@ -294,8 +295,7 @@ public class CasesByAgeGroupChartTableBuilder implements TableBuilderInterface, 
                     try {
                         generatedFiles.add(Tools.writeJChartToFile(charts[sexNumber], file, fileType));
                     } catch (IOException | DocumentException ex) {
-                        Logger.getLogger(TopNChartTableBuilder.class.getName()).log(Level.SEVERE,
-                            "Error: Unable to add/ build chart to file: "+ fileName, ex);
+                        LOGGER.log(Level.SEVERE,"Error: Unable to add/ build chart to file: "+ fileName, ex);
                         JOptionPane.showInternalMessageDialog(null,
                             java.util.ResourceBundle
                                 .getBundle("canreg/client/gui/dataentry2/resources/RecordEditorMainFrame")

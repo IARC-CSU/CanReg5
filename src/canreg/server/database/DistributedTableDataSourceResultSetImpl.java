@@ -34,6 +34,7 @@ import java.util.logging.Logger;
 
 public class DistributedTableDataSourceResultSetImpl implements DistributedTableDataSource, Serializable {
 
+    private static final Logger LOGGER = Logger.getLogger(DistributedTableDataSourceResultSetImpl.class.getName());
     DistributedTableDescription distributedTableDescription;
     ResultSet resultSet;
     int columnCount;
@@ -111,11 +112,11 @@ public class DistributedTableDataSourceResultSetImpl implements DistributedTable
                 if (!hasMore) {
                     // set pointer to first so that we can keep using resultset
                     resultSet.first();
-                    // Logger.getLogger(DistributedTableDataSourceResultSetImpl.class.getName()).log(Level.INFO, "last record reached");
+                    // LOGGER.log(Level.INFO, "last record reached");
                 }
             }
         } catch (SQLException ex) {
-            Logger.getLogger(DistributedTableDataSourceResultSetImpl.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             throw new DistributedTableDescriptionException(ex.getMessage());
         }
         Object[][] rowsArray = new Object[rows.size()][columnCount];
@@ -249,7 +250,7 @@ public class DistributedTableDataSourceResultSetImpl implements DistributedTable
         try {
             return Class.forName(cname);
         } catch (ClassNotFoundException cnfe) {
-            Logger.getLogger(DistributedTableDataSourceResultSetImpl.class.getName()).log(Level.SEVERE, null, cnfe);
+            LOGGER.log(Level.SEVERE, null, cnfe);
             return Object.class;
         }
 

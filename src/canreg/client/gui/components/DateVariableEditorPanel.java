@@ -39,6 +39,7 @@ import javax.swing.JTextField;
  */
 public class DateVariableEditorPanel extends VariableEditorPanel {
 
+    private static final Logger LOGGER = Logger.getLogger(DateVariableEditorPanel.class.getName());
     private com.toedter.calendar.JDateChooser dateChooser;
     private JTextField dateField;
 
@@ -150,9 +151,9 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
                     codeTextField.setText(value);
                 }
             } catch (ParseException ex) {
-                Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
             } catch (IllegalArgumentException | StringIndexOutOfBoundsException numberFormatException) {
-                Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.WARNING, java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("VALUE: ") + value, numberFormatException);
+                LOGGER.log(Level.WARNING, java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("VALUE: ") + value, numberFormatException);
             }
         }
 
@@ -174,9 +175,9 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
                     valueObjectString = DateHelper.parseGregorianCalendarCanRegToDateString(tempCalendar, Globals.DATE_FORMAT_STRING);
                 } 
             } catch (ParseException ex) {
-                Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
             } catch (IllegalArgumentException ex) {
-                Logger.getLogger(DateVariableEditorPanel.class.getName()).log(Level.WARNING, java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("VALUE: ") + valueString + java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString(", DATE FORMAT: ") + dateChooser.getDateFormatString(), ex);
+                LOGGER.log(Level.WARNING, java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("VALUE: ") + valueString + java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString(", DATE FORMAT: ") + dateChooser.getDateFormatString(), ex);
             } finally {
                 // if the date is malformed we just return the data as is.
                 if (valueObjectString == null || valueObjectString.isEmpty()) {

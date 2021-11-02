@@ -81,6 +81,7 @@ import org.w3c.dom.Document;
  */
 public class ImportFilesView extends javax.swing.JInternalFrame implements ActionListener {
 
+    private static final Logger LOGGER = Logger.getLogger(ImportFilesView.class.getName());
     private boolean needToRebuildVariableMap = true;
     private File patientInFile;
     private File tumourInFile;
@@ -741,7 +742,7 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
         try {
             localSettings.setProperty("import_path", chooser.getCurrentDirectory().getCanonicalPath());
         } catch (IOException ex) {
-            Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             new TechnicalError().errorDialog();
         }
 
@@ -879,7 +880,7 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
                     success = CanRegClientApp.getApplication().importFiles(this, variablesMap, files, io);
                 }
             } catch(Exception ex) {
-                Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 success = false;
                 checksBar.setIndeterminate(false);
                 checksBar.setValue(0);
@@ -1047,13 +1048,13 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
                 sourceVariablesAssociationPanel.initializeVariableMappingPanel(map, sourceVariablesInDB, lineElements);
             }
         } catch (RemoteException ex) {
-            Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             new TechnicalError().errorDialog();
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not open file: \'" + patientInFile.getPath() + "\'.", "Error", JOptionPane.ERROR_MESSAGE);
         } catch (IOException ex) {
-            Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             new TechnicalError().errorDialog();
         } finally {
             needToRebuildVariableMap = false;
@@ -1062,7 +1063,7 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
                     br.close();
                 }
             } catch (IOException ex) {
-                Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 new TechnicalError().errorDialog();
             }
         }
@@ -1229,7 +1230,7 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
                 reportFileNameTextField.setText(chooser.getSelectedFile().getCanonicalPath());
                 // changeFile();
             } catch (IOException ex) {
-                Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 new TechnicalError().errorDialog();
             }
             reportFileNameSet = true;

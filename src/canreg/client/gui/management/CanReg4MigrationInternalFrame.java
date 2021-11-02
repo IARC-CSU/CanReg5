@@ -73,6 +73,7 @@ import org.jdesktop.application.Action;
 
 public class CanReg4MigrationInternalFrame extends javax.swing.JInternalFrame {
 
+    private static final Logger LOGGER = Logger.getLogger(CanReg4MigrationInternalFrame.class.getName());
     public static boolean isPaused;
     private static final String namespace = "ns3:";
     private final JDesktopPane desktopPane;
@@ -418,7 +419,7 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
             edvif.setDesktopPane(desktopPane);
             CanRegClientView.showAndPositionInternalFrame(desktopPane, edvif);
         } catch (IOException | ParserConfigurationException | SAXException ex) {
-            Logger.getLogger(CanReg4SystemConverterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             new TechnicalError().errorDialog();
         }
 
@@ -430,7 +431,7 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
                     try {
                         CanRegClientApp.getApplication().logOut();
                     } catch (RemoteException ex) {
-                        Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        LOGGER.log(Level.SEVERE, null, ex);
                         new TechnicalError().errorDialog();
                     }
                 }
@@ -449,7 +450,7 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
                         canreg.common.Tools.fileCopy(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + regcode + ".xml",
                                 Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + regcode + i + ".xml");
                     } catch (IOException ex) {
-                        Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        LOGGER.log(Level.SEVERE, null, ex);
                         new TechnicalError().errorDialog();
                     }
                 }
@@ -518,17 +519,17 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
             } catch (InterruptedException ex) {
                 doneButton.setEnabled(true);
                 cancelButton.setEnabled(false);
-                Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 publish(new Progress(Component.LOG, "Migration failed with " + ex.getCause()));
                 JOptionPane.showConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Migration failed.", "Migration failed.", JOptionPane.PLAIN_MESSAGE);
             } catch (java.util.concurrent.ExecutionException ex) {
                 doneButton.setEnabled(true);
                 cancelButton.setEnabled(false);
-                Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 publish(new Progress(Component.LOG, "Migration failed with " + ex.getCause()));
                 JOptionPane.showConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Migration failed.", "Migration failed.", JOptionPane.PLAIN_MESSAGE);
             } catch (java.util.concurrent.CancellationException ex) {
-                Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 publish(new Progress(Component.LOG, "Migration cancelled.\n"));
             }
         }
@@ -622,7 +623,7 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
                 try {
                     migrate(subtask);
                 } catch (InterruptedException ie) {
-                    Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ie);
+                    LOGGER.log(Level.SEVERE, null, ie);
                     return "Interrupted with " + ie;
                 }
                 publish(new Progress(Component.TOTAL, 100 * subtask / lengthOfTask));
@@ -644,7 +645,7 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
                     try {
                         Thread.sleep(500);
                     } catch (InterruptedException ie) {
-                        Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ie);
+                        LOGGER.log(Level.SEVERE, null, ie);
                         return;
                     }
                     continue;
@@ -685,7 +686,7 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
                             }
                         }
                     } catch (LoginException | NotBoundException | MalformedURLException | UnknownHostException | WrongCanRegVersionException | RemoteException ex) {
-                        Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        LOGGER.log(Level.SEVERE, null, ex);
                         new TechnicalError().errorDialog();
                     }
                     if (canregSystem != null) {
@@ -716,7 +717,7 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
                     try {
                         dataimport_status = CanRegClientApp.getApplication().importCRFile(cTask, doc, buildMap(), inFile, buildImportOptions());
                     } catch (SQLException | RecordLockedException | RemoteException ex) {
-                        Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        LOGGER.log(Level.SEVERE, null, ex);
                         new TechnicalError().errorDialog();
                     }
                 }
@@ -808,7 +809,7 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
                                     sdc.convertAndSaveInSystemFolder(defpath);
                                     publish("\"" + WordUtils.capitalize(sdc.getRegistryName().toLowerCase()) + "\"\n");
                                 } catch (IOException ex) {
-                                    Logger.getLogger(CanReg4SystemConverterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                                    LOGGER.log(Level.SEVERE, null, ex);
                                     new TechnicalError().errorDialog();
                                 }
                                 registryCodes.add(sdc.getServerCode());
@@ -849,7 +850,7 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
                     //regSelectButton.setEnabled(true);
                 }
             } catch (Exception ex) {
-                Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 new TechnicalError().errorDialog();
             }
             ssdTask = null;
@@ -890,7 +891,7 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
                 sysDefTextField.setText(chooser.getSelectedFile().getCanonicalPath());
                 defname = sysDefTextField.getText();
             } catch (IOException ex) {
-                Logger.getLogger(CanReg4SystemConverterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 new TechnicalError().errorDialog();
             }
         }
@@ -936,7 +937,7 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
                     status = true;
                 }
             } catch (FileNotFoundException ex) {
-                Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 new TechnicalError().errorDialog();
             }
             return status;  // return your result
@@ -965,7 +966,7 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
                     //regSelectButton.setEnabled(true);
                 }
             } catch (Exception ex) {
-                Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 new TechnicalError().errorDialog();
             }
             ssdTask = null;
@@ -1077,7 +1078,7 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
                 //variablesPanel.revalidate();
                 //variablesPanel.repaint();
             } catch (IOException ex) {
-                Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 new TechnicalError().errorDialog();
                 // JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportView").getString("COULD_NOT_OPEN_FILE:_") + "\'" + fileNameTextField.getText().trim() + "\'.", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportView").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             } finally {
@@ -1085,7 +1086,7 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
                 try {
                     br.close();
                 } catch (IOException ex) {
-                    Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
                     new TechnicalError().errorDialog();
                 }
 
@@ -1146,7 +1147,7 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
      */
     private static void debugOut(String msg) {
         if (debug) {
-            Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.INFO, msg);
+            LOGGER.log(Level.INFO, msg);
         }
     }
 

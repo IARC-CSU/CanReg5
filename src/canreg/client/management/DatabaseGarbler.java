@@ -51,6 +51,7 @@ import org.w3c.dom.Document;
  */
 public class DatabaseGarbler {
 
+    private static final Logger LOGGER = Logger.getLogger(DatabaseGarbler.class.getName());
     private Map<String, Integer> firstNames;
     private Document doc;
     private Map<StandardVariableNames, DatabaseVariablesListElement> standardVariablesMap;
@@ -131,7 +132,7 @@ public class DatabaseGarbler {
                         try {
                             patients1 = CanRegClientApp.getApplication().getPatientsByPatientID((String) patient1.getVariable(patientIDVariableListElement.getDatabaseVariableName()), true, null);
                         } catch (DistributedTableDescriptionException ex) {
-                            Logger.getLogger(DatabaseGarbler.class.getName()).log(Level.SEVERE, null, ex);
+                            LOGGER.log(Level.SEVERE, null, ex);
                         }
 
                         // draw random firstname - of the same sex
@@ -158,7 +159,7 @@ public class DatabaseGarbler {
                                     newBirthDateString = DateHelper.parseGregorianCalendarCanRegToDateString(birthDateCalendar, Globals.DATE_FORMAT_STRING);
                                 }
                             } catch (ParseException | IllegalArgumentException ex) {
-                                Logger.getLogger(DatabaseGarbler.class.getName()).log(Level.SEVERE, null, ex);
+                                LOGGER.log(Level.SEVERE, null, ex);
                                 new TechnicalError().errorDialog();
                             }
                         }
@@ -235,7 +236,7 @@ public class DatabaseGarbler {
                             }
 
                         } catch (Exception ex) {
-                            Logger.getLogger(DatabaseGarbler.class.getName()).log(Level.SEVERE, null, ex);
+                            LOGGER.log(Level.SEVERE, null, ex);
                             new TechnicalError().errorDialog();
                         } 
 
@@ -258,7 +259,7 @@ public class DatabaseGarbler {
 
                     }
                 } catch (RecordLockedException ex) {
-                    Logger.getLogger(DatabaseGarbler.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
                     new TechnicalError().errorDialog();
                 }
             }
@@ -269,7 +270,7 @@ public class DatabaseGarbler {
             //
             //
         } catch (Exception ex) {
-            Logger.getLogger(DatabaseGarbler.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             new TechnicalError().errorDialog();
         } 
     }

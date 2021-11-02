@@ -74,6 +74,7 @@ import org.w3c.dom.Document;
  */
 public class ComparePatientsInternalFrame extends javax.swing.JInternalFrame {
 
+    private static final Logger LOGGER = Logger.getLogger(ComparePatientsInternalFrame.class.getName());
     private List<Pair<Patient, Tumour[]>> recordSets;
     private Pair<Patient, Tumour[]> mainRecord;
     private TableModel tableModel;
@@ -437,9 +438,9 @@ public class ComparePatientsInternalFrame extends javax.swing.JInternalFrame {
             }
         } catch (RecordLockedException ex) {
             JOptionPane.showMessageDialog(rootPane, "Record already open.", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
-            Logger.getLogger(ComparePatientsInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         } catch (DistributedTableDescriptionException | SecurityException | RemoteException | SQLException | UnknownTableException ex) {
-            Logger.getLogger(ComparePatientsInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             new TechnicalError().errorDialog();
         } finally {
             setCursor(normalCursor);

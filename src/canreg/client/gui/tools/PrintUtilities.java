@@ -36,6 +36,7 @@ import java.util.logging.Logger;
  * @author ervikm
  */
 public class PrintUtilities implements Printable {
+  private static final Logger LOGGER = Logger.getLogger(PrintUtilities.class.getName());
   private Component componentToBePrinted;
 
   /**
@@ -64,7 +65,7 @@ public class PrintUtilities implements Printable {
       try {
         printJob.print();
       } catch(PrinterException pe) {
-          Logger.getLogger(PrintUtilities.class.getName()).log(Level.INFO, "Error printing: " + pe, pe);
+          LOGGER.log(Level.INFO, "Error printing: " + pe, pe);
       }
   }
 
