@@ -414,7 +414,7 @@ private void codeTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                     valueObject = Integer.parseInt(valueString.trim());
                 } catch (NumberFormatException numberFormatException) {
                     // valueObject = -1;
-                   LOGGER.log(Level.WARNING, databaseListElement.getShortName() + " " + valueString, numberFormatException);
+                    LOGGER.log(Level.WARNING,String.format("%s %s",databaseListElement.getShortName(),valueString), numberFormatException);
                 }
             } else {
                 valueObject = null;

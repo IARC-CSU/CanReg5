@@ -356,19 +356,16 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
                             }
                         }
                     } catch (InterruptedException ex) {
-                        LOGGER.log(Level.SEVERE,"Method interrupted" 
-                            + "while waiting for the command list to complete " , ex);
+                        LOGGER.log(Level.SEVERE,"Method interrupted while waiting for the command list to complete " , ex);
                         new TechnicalError().errorDialog();
                     } catch (java.util.NoSuchElementException ex) {
                         LOGGER.log(Level.SEVERE, " element being requested does not exist.", ex);
                         BufferedInputStream errorStream = new BufferedInputStream(pr.getErrorStream());
                         String errorMessage = convertStreamToString(errorStream);
-                        LOGGER.log(Level.SEVERE,
-                            " Error in the stream : "+ errorMessage);
+                        LOGGER.log(Level.SEVERE," Error in the stream : {0}",errorMessage);
                         throw new TableErrorException("R says:\n" + errorMessage);
                     } finally {
-                        LOGGER.log(Level.INFO,
-                            "Exiting with return code : "+ pr.exitValue());
+                        LOGGER.log(Level.INFO,"Exiting with return code : {0} ", pr.exitValue());
                     }
                 }
             }
@@ -377,8 +374,7 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
             LOGGER.log(Level.SEVERE, "Error while creating or filling a file ", ex);
             new TechnicalError().errorDialog();
         } catch (IncompatiblePopulationDataSetException ex) {
-            LOGGER.log(Level.WARNING, "Error in the population," 
-                + " dataset : some data are incorrect ", ex);
+            LOGGER.log(Level.WARNING, "Error in the population, dataset : some data are incorrect ", ex);
             throw new NotCompatibleDataException();
         }
 

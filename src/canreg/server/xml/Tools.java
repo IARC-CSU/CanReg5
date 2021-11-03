@@ -184,7 +184,7 @@ public class Tools {
                 path = "file://" + path;
                 url = new URL(path);
             } catch (MalformedURLException e) {
-                LOGGER.log(Level.INFO, "Cannot create url for: " + fileName, e);
+                LOGGER.log(Level.INFO, String.format("Cannot create url for: %s",fileName), e);
                 System.exit(0);
             }
         }

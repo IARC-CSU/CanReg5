@@ -75,7 +75,7 @@ public class PagingTableModel extends AbstractTableModel {
         int pageIndex = row - dataOffset;
         if (pageIndex < 0 || pageIndex >= page.size()) {
             // not loaded
-            LOGGER.log(Level.INFO, "{0} free memory.\nobject at {1} isn''t loaded yet", new Object[]{Runtime.getRuntime().freeMemory(), row});
+            LOGGER.log(Level.INFO, "{0} free memory.\nobject at {1} isn't loaded yet", new Object[]{Runtime.getRuntime().freeMemory(), row});
             schedule(row);
             return "..";
         }
@@ -123,7 +123,7 @@ public class PagingTableModel extends AbstractTableModel {
             try {
                 dataObject = tableDataSource.retrieveRows(startOffset, startOffset + length);
             } catch (DistributedTableDescriptionException ex) {
-                LOGGER.log(Level.WARNING, "error retrieving page at " + startOffset + ": aborting \n" + ex.getMessage(), ex);
+                LOGGER.log(Level.WARNING,String.format("error retrieving page at %s : aborting \n",ex.getMessage()), ex);
                 pending.remove(seg);
                 return;
             }

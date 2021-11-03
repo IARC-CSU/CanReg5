@@ -214,8 +214,7 @@ public class RTableBuilder implements TableBuilderInterface {
                 } catch (java.util.NoSuchElementException ex) {
                     BufferedInputStream errorStream = new BufferedInputStream(pr.getErrorStream());
                     String errorMessage = Tools.convertStreamToString(errorStream);
-                    LOGGER.log(Level.SEVERE,
-                        "Error while building R : "+errorMessage, ex);
+                    LOGGER.log(Level.SEVERE, String.format("Error while building R : %s",errorMessage), ex);
                     throw new TableErrorException("R says:\n \"" + errorMessage + "\"");
                 } finally {
                     System.out.println(pr.exitValue());

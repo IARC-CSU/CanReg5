@@ -161,8 +161,7 @@ public class VariableEditorPanel extends javax.swing.JPanel
                 try {
                     valueObject = Integer.parseInt(valueString.trim());
                 } catch (NumberFormatException numberFormatException) {
-                    LOGGER.log(Level.WARNING, databaseListElement.getShortName() 
-                                 + " " + valueString, numberFormatException);
+                    LOGGER.log(Level.WARNING, String.format("%s %s",databaseListElement.getShortName(),valueString), numberFormatException);
                 }
             } else 
                 valueObject = null;            

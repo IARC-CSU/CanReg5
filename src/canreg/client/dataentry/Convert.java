@@ -328,7 +328,7 @@ public class Convert {
                         Map<Integer, String> errors = canreg.client.dataentry.DictionaryHelper.testDictionary(null, dictionaryString);
                         if (errors.size() > 0) {
                             allErrors.put(dictionaryID, errors);
-                           LOGGER.log(Level.WARNING, errors.size() + " errors in dictionary: " + dictionaryID, new Exception());
+                            LOGGER.log(Level.WARNING, String.format(" %d errors in dictionary: %d ",errors.size(),dictionaryID), new Exception());
                         } else {
                             canreg.client.dataentry.DictionaryHelper.replaceDictionary(dictionaryID, dictionaryString, CanRegClientApp.getApplication());
                         }
@@ -436,7 +436,7 @@ public class Convert {
                                     try {
                                         patient.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(csvRecord.get(rel.getFileColumnNumber())));
                                     } catch (NumberFormatException ex) {
-                                        LOGGER.log(Level.SEVERE, "Number format error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
+                                        LOGGER.log(Level.SEVERE,String.format("Number format error in line: %d.",numberOfLinesRead + 1 + 1), ex);
                                         success = false;
                                     }
                                 }
@@ -444,7 +444,7 @@ public class Convert {
                                 patient.setVariable(rel.getDatabaseVariableName(), StringEscapeUtils.unescapeCsv(csvRecord.get(rel.getFileColumnNumber())));
                             }
                         } else {
-                            LOGGER.log(Level.INFO, "Something wrong with patient part of line " + numberOfLinesRead + ".", new Exception("Error in line: " + numberOfLinesRead + ". Can't find field: " + rel.getDatabaseVariableName()));
+                            LOGGER.log(Level.INFO, String.format("Something wrong with patient part of line : %d.",numberOfLinesRead), new Exception(String.format("Error in line: %d. Can't find field: %s",numberOfLinesRead,rel.getDatabaseVariableName())));
                         }
                     }
                 }
@@ -461,7 +461,7 @@ public class Convert {
                                     try {
                                         tumour.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(csvRecord.get(rel.getFileColumnNumber())));
                                     } catch (NumberFormatException ex) {
-                                        LOGGER.log(Level.SEVERE, "Number format error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
+                                        LOGGER.log(Level.SEVERE, String.format("Number format error in line: %d. ",numberOfLinesRead + 1 + 1), ex);
                                         success = false;
                                     }
                                 }
@@ -470,7 +470,7 @@ public class Convert {
                             }
                         } else {
                             new TechnicalError().errorDialog();
-                            LOGGER.log(Level.INFO, "Something wrong with tumour part of line " + numberOfLinesRead + ".", new Exception("Error in line: " + numberOfLinesRead + ". Can't find field: " + rel.getDatabaseVariableName()));
+                            LOGGER.log(Level.INFO,String.format("Something wrong with tumour part of line %d.",numberOfLinesRead), new Exception(String.format("Error in line: %d. Can't find field: %s",numberOfLinesRead,rel.getDatabaseVariableName())));
                         }
                     }
                 }
@@ -487,7 +487,7 @@ public class Convert {
                                     try {
                                         source.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(csvRecord.get(rel.getFileColumnNumber())));
                                     } catch (NumberFormatException ex) {
-                                        LOGGER.log(Level.SEVERE, "Number format error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
+                                        LOGGER.log(Level.SEVERE, String.format("Number format error in line: %d.", numberOfLinesRead + 1 + 1), ex);
                                         success = false;
                                     }
                                 }
@@ -495,7 +495,7 @@ public class Convert {
                                 source.setVariable(rel.getDatabaseVariableName(), StringEscapeUtils.unescapeCsv(csvRecord.get(rel.getFileColumnNumber())));
                             }
                         } else {
-                            LOGGER.log(Level.INFO, "Something wrong with source part of line " + numberOfLinesRead + ".", new Exception("Error in line: " + numberOfLinesRead + ". Can't find field: " + rel.getDatabaseVariableName()));
+                            LOGGER.log(Level.INFO, String.format("Something wrong with source part of line %d.",numberOfLinesRead), new Exception("Error in line: " + numberOfLinesRead + ". Can't find field: " + rel.getDatabaseVariableName()));
                             new TechnicalError().errorDialog();
                         }
 
@@ -657,10 +657,10 @@ public class Convert {
             task.firePropertyChange("finished", null, null);
             success = true;
         } catch (IOException | NumberFormatException | IndexOutOfBoundsException | SQLException ex) {
-            LOGGER.log(Level.SEVERE, "Error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
+            LOGGER.log(Level.SEVERE,String.format("Error in line: %d.",numberOfLinesRead + 1 + 1), ex);
             success = false;
         } catch (InterruptedException ex) {
-            LOGGER.log(Level.INFO, "Interupted on line: " + (numberOfLinesRead + 1) + ". ", ex);
+            LOGGER.log(Level.INFO, String.format("Interupted on line: %d.", numberOfLinesRead + 1), ex);
             success = true;
         } finally {
             if (parser != null) {

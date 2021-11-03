@@ -153,7 +153,7 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
             } catch (ParseException ex) {
                 LOGGER.log(Level.SEVERE, null, ex);
             } catch (IllegalArgumentException | StringIndexOutOfBoundsException numberFormatException) {
-                LOGGER.log(Level.WARNING, java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("VALUE: ") + value, numberFormatException);
+                LOGGER.log(Level.WARNING, String.format("%s : %s",java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("VALUE: "),value), numberFormatException);
             }
         }
 
@@ -177,7 +177,7 @@ public class DateVariableEditorPanel extends VariableEditorPanel {
             } catch (ParseException ex) {
                 LOGGER.log(Level.SEVERE, null, ex);
             } catch (IllegalArgumentException ex) {
-                LOGGER.log(Level.WARNING, java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("VALUE: ") + valueString + java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString(", DATE FORMAT: ") + dateChooser.getDateFormatString(), ex);
+                LOGGER.log(Level.WARNING,String.format("%s %s %s %s",java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString("VALUE: "),valueString,java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/VariableEditorPanel").getString(", DATE FORMAT: "),dateChooser.getDateFormatString()), ex);
             } finally {
                 // if the date is malformed we just return the data as is.
                 if (valueObjectString == null || valueObjectString.isEmpty()) {

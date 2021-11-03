@@ -434,7 +434,7 @@ private void previewTextAreaMouseReleased(java.awt.event.MouseEvent evt) {//GEN-
                             Map<Integer, String> errors = canreg.client.dataentry.DictionaryHelper.testDictionary(null, dictionaryString);
                             if (errors.size() > 0) {
                                 allErrors.put(dictionaryID, errors);
-                                LOGGER.log(Level.WARNING, errors.size() + " errors in dictionary: " + dictionaryID, new Exception());
+                                LOGGER.log(Level.WARNING, String.format("%d errors in dictionary: %d",errors.size(),dictionaryID), new Exception());
                             } else {
                                 canreg.client.dataentry.DictionaryHelper.replaceDictionary(dictionaryID, dictionaryString, CanRegClientApp.getApplication());
                             }

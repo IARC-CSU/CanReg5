@@ -40,7 +40,7 @@ public class IconHelper {
         if (imgURL != null) {
             return new ImageIcon(imgURL, description);
         } else {
-            LOGGER.log(Level.SEVERE,"Couldn't find file: " + path);
+            LOGGER.log(Level.SEVERE,"Couldn't find file: {0}",path);
             return null;
         }
     }

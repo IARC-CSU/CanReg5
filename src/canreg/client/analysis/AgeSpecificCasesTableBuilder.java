@@ -353,7 +353,7 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
                         }
                     }
                 } catch (NumberFormatException nfe) {
-                    LOGGER.log(Level.WARNING, "Error While building the table :" + nfe.getMessage(), nfe);
+                    LOGGER.log(Level.WARNING, String.format("Error While building the table: %s", nfe.getMessage()), nfe);
                 }
                 // Read next line
             }
@@ -550,9 +550,9 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
                         System.out.println(java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder").getString("WRITING TO ") + tabReportFileName);
                         reportFileWriter = new OutputStreamWriter(new FileOutputStream(tabReportFileName), "UTF-8");
                     } catch (IOException ioe) {
-                        LOGGER.log(Level.SEVERE, 
-                                java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder")
-                                    .getString("ERROR IN REPORTFILE: ") + tabReportFileName, ioe);
+                        LOGGER.log(Level.SEVERE,
+                            String.format("%s %s",java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder")
+                            .getString("ERROR IN REPORTFILE: "),tabReportFileName),ioe);
                         java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder")
                             .getString("ERROR IN REPORTFILE.");
                         reportFileWriter = new OutputStreamWriter(System.out);
@@ -614,8 +614,7 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
                         csvOut.flush();
                         csvOut.close();
                     } catch (IOException ex) {
-                        LOGGER.log(Level.SEVERE,
-                                "Error while closing the the CSV file with cause:"+ ex.getMessage(),ex);
+                        LOGGER.log(Level.SEVERE,String.format("Error while closing the the CSV file with cause: %s", ex.getMessage()),ex);
                         new TechnicalError().errorDialog();
                     }
                     generatedFiles.add(tabReportFileName);
@@ -934,7 +933,7 @@ public class AgeSpecificCasesTableBuilder extends AbstractEditorialTableBuilder 
                     System.out.println("Wrote " + psFileName + ".");
                     fw.close();
                 } catch (IOException ioe) {
-                    LOGGER.log(Level.SEVERE, "Error while writing  the file", ioe);
+                    LOGGER.log(Level.SEVERE, "Error while writing the file", ioe);
                     java.util.ResourceBundle
                         .getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder")
                         .getString("ERROR IN REPORTFILE.");

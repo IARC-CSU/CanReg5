@@ -324,8 +324,7 @@ public class UserManagerNew {
                 Files.createFile(reminderFile.toPath());
             }
         } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE,
-                "Unable to create the file : " + reminderFile.toPath(), ex);
+            LOGGER.log(Level.SEVERE, String.format("Unable to create the file : %s", reminderFile.toPath()), ex);
         }
     }
 
@@ -334,8 +333,7 @@ public class UserManagerNew {
         try {
             Files.deleteIfExists(reminderFile.toPath());
         } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE,
-                "Unable to delete the file : " + reminderFile.toPath(), ex);
+            LOGGER.log(Level.SEVERE,String.format("Unable to delete the file : %s",reminderFile.toPath()), ex);
         }
     }
 
