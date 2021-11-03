@@ -295,7 +295,7 @@ public class CasesByAgeGroupChartTableBuilder implements TableBuilderInterface, 
                     try {
                         generatedFiles.add(Tools.writeJChartToFile(charts[sexNumber], file, fileType));
                     } catch (IOException | DocumentException ex) {
-                        LOGGER.log(Level.SEVERE,"Error: Unable to add/ build chart to file: "+ fileName, ex);
+                        LOGGER.log(Level.SEVERE,String.format("Error: Unable to add/ build chart to file : %s",fileName), ex);
                         JOptionPane.showInternalMessageDialog(null,
                             java.util.ResourceBundle
                                 .getBundle("canreg/client/gui/dataentry2/resources/RecordEditorMainFrame")

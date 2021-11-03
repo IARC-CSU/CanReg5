@@ -173,7 +173,7 @@ public class Import {
                                     try {
                                         patient.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(csvRecord.get(rel.getFileColumnNumber())));
                                     } catch (NumberFormatException ex) {
-                                        LOGGER.log(Level.SEVERE, "Number format error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
+                                        LOGGER.log(Level.SEVERE, String.format("Number format error in line: %d.",numberOfLinesRead + 1 + 1) , ex);
                                         success = false;
                                     }
                                 }
@@ -181,7 +181,7 @@ public class Import {
                                 patient.setVariable(rel.getDatabaseVariableName(), StringEscapeUtils.unescapeCsv(csvRecord.get(rel.getFileColumnNumber())));
                             }
                         } else {
-                            LOGGER.log(Level.INFO, "Something wrong with patient part of line " + numberOfLinesRead + ".", new Exception("Error in line: " + numberOfLinesRead + ". Can't find field: " + rel.getDatabaseVariableName()));
+                            LOGGER.log(Level.INFO,String.format("Something wrong with patient part of line %d .",numberOfLinesRead), new Exception(String.format("Error in line: %d. Can't find field: %s",numberOfLinesRead,rel.getDatabaseVariableName())));
                         }
                     }
                 }
@@ -197,7 +197,7 @@ public class Import {
                                     try {
                                         tumour.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(csvRecord.get(rel.getFileColumnNumber())));
                                     } catch (NumberFormatException ex) {
-                                        LOGGER.log(Level.SEVERE, "Number format error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
+                                        LOGGER.log(Level.SEVERE, String.format("Number format error in line: %d .",numberOfLinesRead + 1 + 1), ex);
                                         success = false;
                                     }
                                 }
@@ -205,7 +205,7 @@ public class Import {
                                 tumour.setVariable(rel.getDatabaseVariableName(), StringEscapeUtils.unescapeCsv(csvRecord.get(rel.getFileColumnNumber())));
                             }
                         } else {
-                            LOGGER.log(Level.INFO, "Something wrong with tumour part of line " + numberOfLinesRead + ".", new Exception("Error in line: " + numberOfLinesRead + ". Can't find field: " + rel.getDatabaseVariableName()));
+                            LOGGER.log(Level.INFO,String.format("Something wrong with tumour part of line : %d.",numberOfLinesRead), new Exception(String.format("Error in line: %d.  Can't find field: %s",numberOfLinesRead,rel.getDatabaseVariableName())));
                         }
                     }
                 }
@@ -221,7 +221,7 @@ public class Import {
                                     try {
                                         source.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(csvRecord.get(rel.getFileColumnNumber())));
                                     } catch (NumberFormatException ex) {
-                                        LOGGER.log(Level.SEVERE, "Number format error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
+                                        LOGGER.log(Level.SEVERE,String.format("Number format error in line: %d .",numberOfLinesRead + 1 + 1), ex);
                                         success = false;
                                     }
                                 }
@@ -229,7 +229,7 @@ public class Import {
                                 source.setVariable(rel.getDatabaseVariableName(), StringEscapeUtils.unescapeCsv(csvRecord.get(rel.getFileColumnNumber())));
                             }
                         } else {
-                            LOGGER.log(Level.INFO, "Something wrong with source part of line " + numberOfLinesRead + ".", new Exception("Error in line: " + numberOfLinesRead + ". Can't find field: " + rel.getDatabaseVariableName()));
+                            LOGGER.log(Level.INFO, String.format("Something wrong with source part of line  %d.",numberOfLinesRead), new Exception(String.format("Error in line: %d. Can't find field: %s.",numberOfLinesRead,rel.getDatabaseVariableName())));
                         }
 
                     }
@@ -398,10 +398,10 @@ public class Import {
             }
             success = true;
         } catch (IOException | NumberFormatException | IndexOutOfBoundsException | SQLException ex) {
-            LOGGER.log(Level.SEVERE, "Error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
+            LOGGER.log(Level.SEVERE, String.format("Error in line: %d.",numberOfLinesRead + 1 + 1) , ex);
             success = false;
         } catch (InterruptedException ex) {
-            LOGGER.log(Level.INFO, "Interupted on line: " + (numberOfLinesRead + 1) + ". ", ex);
+            LOGGER.log(Level.INFO, String.format("Interupted on line: %d.",numberOfLinesRead + 1) , ex);
             success = true;
         } finally {
             if (parser != null) {
@@ -635,7 +635,7 @@ public class Import {
                                     try {
                                         patient.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(csvRecord.get(rel.getFileColumnNumber())));
                                     } catch (NumberFormatException ex) {
-                                        LOGGER.log(Level.SEVERE, "Number format error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
+                                        LOGGER.log(Level.SEVERE, String.format("Number format error in line: %d",numberOfLinesRead + 1 + 1), ex);
                                         success = false;
                                     }
                                 }
@@ -722,7 +722,7 @@ public class Import {
                                     try {
                                         tumour.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(csvRecord.get(rel.getFileColumnNumber())));
                                     } catch (NumberFormatException ex) {
-                                        LOGGER.log(Level.SEVERE, "Number format error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
+                                        LOGGER.log(Level.SEVERE, String.format("Number format error in line: %d",numberOfLinesRead + 1 + 1), ex);
                                         success = false;
                                     }
                                 }
@@ -823,7 +823,7 @@ public class Import {
                                     try {
                                         source.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(csvRecord.get(rel.getFileColumnNumber())));
                                     } catch (NumberFormatException ex) {
-                                        LOGGER.log(Level.SEVERE, "Number format error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
+                                        LOGGER.log(Level.SEVERE, String.format("Number format error in line: %d",numberOfLinesRead + 1 + 1), ex);
                                         success = false;
                                     }
                                 }
@@ -872,14 +872,13 @@ public class Import {
             reportWriter.flush();
             success = true;
         } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, "Error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
+            LOGGER.log(Level.SEVERE, String.format("Error in line: %d",numberOfLinesRead + 1 + 1), ex);
             success = false;
         } catch (InterruptedException ex) {
-            LOGGER.log(Level.INFO, "Interupted on line: " + (numberOfLinesRead + 1) + ". ", ex);
+            LOGGER.log(Level.INFO, String.format("Interupted on line : %d",numberOfLinesRead + 1), ex);
             success = true;
         } catch (IndexOutOfBoundsException ex) {
-            LOGGER.log(Level.SEVERE, "String too short error in line: " + (numberOfLinesRead + 1 + 1) + ". ",
-                    ex);
+            LOGGER.log(Level.SEVERE, String.format("String too short error in line: %d",numberOfLinesRead + 1 + 1), ex);
             success = false;
         } finally {
             if (parser != null) {
@@ -1257,7 +1256,7 @@ public class Import {
 //              }
             }
         } else {
-            LOGGER.log(Level.SEVERE, "No tumour with ID " +  tumourID + " was found for source ID " + sourceRecordID);
+            LOGGER.log(Level.SEVERE, "No tumour with ID {0} was found for source ID {1}",new Object[]{tumourID,sourceRecordID});
         }
     }
     

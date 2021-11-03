@@ -1261,7 +1261,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
                 releaseResultSet(resultSetID);
             }
         }catch (SQLException ex){
-            LOGGER.log(Level.SEVERE,"Sql error in the release of the ResultSet with resultSetID : "+ resultSetID,ex);
+            LOGGER.log(Level.SEVERE,String.format("Sql error in the release of the ResultSet with resultSetID : %s", resultSetID),ex);
         }
     }
     //not used in our case

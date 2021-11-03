@@ -39,8 +39,7 @@ public class DefaultConfigFileUtils {
                 properties.setProperty(registryCode, value);
                 properties.storeToXML(propOutputStream, "properties");
             } catch (IOException ex) {
-                LOGGER.log(Level.SEVERE, "Error while updating"
-                    + " the default file database.properties", ex);
+                LOGGER.log(Level.SEVERE, "Error while updating the default file database.properties", ex);
             }
         }
     }
@@ -54,8 +53,7 @@ public class DefaultConfigFileUtils {
         try(FileInputStream propInputStream = new FileInputStream(Globals.CANREG_CONFIG_DATABASE)) {
             properties.loadFromXML(propInputStream);
         } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, "Error while reading"
-                + " the default file database.properties", ex);
+            LOGGER.log(Level.SEVERE, "Error while reading the default file database.properties", ex);
             return null;
         }
         return properties;

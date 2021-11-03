@@ -805,8 +805,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                             sourceVariableNames.add(dbvle.getDatabaseVariableName());
                         }
                     }
-                    System.out.println("Max number of Sources: " + maxNumberOfSourcesPerTumour);
-                    //LOGGER.log(Level.INFO, null, "Max number of Sources: "+ maxNumberOfSourcesPerTumour);
+                    LOGGER.log(Level.INFO, null,String.format("Max number of Sources: %d",maxNumberOfSourcesPerTumour));
                 } catch (RemoteException | SecurityException ex) {
                     LOGGER.log(Level.SEVERE, null, ex);
                     new TechnicalError().errorDialog();
@@ -938,7 +937,7 @@ public class ExportReportInternalFrame extends javax.swing.JInternalFrame implem
                                     LOGGER.log(Level.SEVERE, null, ex);
                                     new TechnicalError().errorDialog();
                                 } catch (IllegalArgumentException ex) {
-                                    LOGGER.log(Level.WARNING, "Value: " + value, ex);
+                                    LOGGER.log(Level.WARNING,String.format("Value: %s",value), ex);
                                 }
                             }
                             if (value == null) {

@@ -585,7 +585,7 @@ public class Tools {
             }
 
         } catch (IOException ioe) {
-            LOGGER.log(Level.SEVERE,"I/O Error - " + ioe,ioe);
+            LOGGER.log(Level.SEVERE,String.format("I/O Error - %s",ioe),ioe);
         }
         return contents.toString();
     }

@@ -112,7 +112,7 @@ public class CheckAgeIncidenceDateBirthDate extends CheckInterface {
             result.setMessage("Not a number");
             return result;
         } catch (IllegalArgumentException ex) {
-            LOGGER.log(Level.WARNING, "Dates: " + birthDateCode + ", " + incidenceDate, ex);
+            LOGGER.log(Level.WARNING, String.format("Dates : %s , %s",birthDate,incidenceDate), ex);
             result.setResultCode(CheckResult.ResultCode.Invalid);
             result.setMessage("Not a number");
             return result;

@@ -283,7 +283,7 @@ public abstract class AbstractEditorialTableBuilder implements TableBuilderInter
             }
             elements.add(tmpString);
         } catch (IOException iee) {
-            LOGGER.log(Level.SEVERE,"Somethings wrong with the file " + isr.toString(), iee);
+            LOGGER.log(Level.SEVERE,String.format("Somethings wrong with the file %s .", isr), iee);
             new TechnicalError().errorDialog();
         }
 //        if (tmpString!=null)
@@ -302,7 +302,7 @@ public abstract class AbstractEditorialTableBuilder implements TableBuilderInter
             FieldDescriptionReader fdr = new FieldDescriptionReader();
             return FieldDescriptionReader.readFile(descriptionFile);
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE,"Description-File {0} not found.",descriptionFileName);
+            LOGGER.log(Level.SEVERE,"Description-File {0} not found.", descriptionFileName);
             return null;
         }
     }

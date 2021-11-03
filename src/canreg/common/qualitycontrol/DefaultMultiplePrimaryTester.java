@@ -270,7 +270,7 @@ public class DefaultMultiplePrimaryTester implements MultiplePrimaryTesterInterf
         try {
             topog = Integer.parseInt(topogStrTemp) / 10;
         } catch (NumberFormatException nfe) {
-            LOGGER.log(Level.SEVERE,topogStrTemp + " does not start with a number or a C",nfe);
+            LOGGER.log(Level.SEVERE, String.format("%s does not start with a number or a C",topogStrTemp),nfe);
             return 0;
         }
         int topogGroup = 0;

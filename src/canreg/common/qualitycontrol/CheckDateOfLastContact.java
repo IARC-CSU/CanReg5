@@ -108,7 +108,7 @@ public class CheckDateOfLastContact extends CheckInterface {
             result.setMessage("Not a number");
             return result;
         } catch (IllegalArgumentException ex) {
-            LOGGER.log(Level.WARNING, "Dates: " + birthDateCode + ", " + incidenceDate, ex);
+            LOGGER.log(Level.WARNING, String.format("Dates : %s , %s",birthDateCode,incidenceDate), ex);
         } catch (NullPointerException nullPointerException) {
             result.setResultCode(CheckResult.ResultCode.Missing);
             result.setMessage("Missing variable(s) needed.");

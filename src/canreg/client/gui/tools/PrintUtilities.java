@@ -65,7 +65,7 @@ public class PrintUtilities implements Printable {
       try {
         printJob.print();
       } catch(PrinterException pe) {
-          LOGGER.log(Level.INFO, "Error printing: " + pe, pe);
+        LOGGER.log(Level.INFO, String.format("Error printing: %s", pe), pe);
       }
   }
 

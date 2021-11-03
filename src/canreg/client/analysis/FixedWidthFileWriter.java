@@ -122,7 +122,7 @@ public class FixedWidthFileWriter implements FileWriterInterface {
             // outFileName = fileName;
             outFile = new BufferedWriter(new FileWriter(fileName));
         } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE,"Error: Unable to set the output file: " + fileName, ex);
+            LOGGER.log(Level.SEVERE,String.format("Error: Unable to set the output file: %s",fileName), ex);
             return false;
         }
         return true;

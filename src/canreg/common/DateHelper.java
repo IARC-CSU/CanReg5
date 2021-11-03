@@ -151,7 +151,7 @@ public class DateHelper {
                 dateString = setDay(dateString, dateFormatString, format.format(calendar.get(Calendar.DAY_OF_MONTH)));
             }
         } catch (IllegalArgumentException iae) {
-            LOGGER.log(Level.SEVERE,iae + ": " + calendar,iae);
+            LOGGER.log(Level.SEVERE, String.format(("%s : %s"),iae,calendar),iae);
         }
         return dateString;
     }

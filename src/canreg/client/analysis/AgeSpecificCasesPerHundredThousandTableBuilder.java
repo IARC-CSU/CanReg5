@@ -659,9 +659,7 @@ public class AgeSpecificCasesPerHundredThousandTableBuilder extends AbstractEdit
                         System.out.println(java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder").getString("WRITING TO ") + tabReportFileName);
                         reportFileWriter = new OutputStreamWriter(new FileOutputStream(tabReportFileName), "UTF-8");
                     } catch (IOException ioe) {
-                        LOGGER.log(Level.WARNING,
-                                java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder")
-                                    .getString("ERROR IN REPORTFILE: ") + tabReportFileName,ioe);
+                        LOGGER.log(Level.WARNING, String.format("%s %s", java.util.ResourceBundle.getBundle("canreg/client/analysis/resources/AgeSpecificCasesPerHundredThousandTableBuilder").getString("ERROR IN REPORTFILE:"),tabReportFileName),ioe);
                         reportFileWriter = new OutputStreamWriter(System.out);
                     }
                     // reportStream = new PrintStream(tabReportFileName);

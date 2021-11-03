@@ -1305,7 +1305,7 @@ public class CanRegClientApp extends SingleFrameApplication {
                 try {
                     records[j] = (Tumour) getRecord(id, lookUpTableName, lock, server);
                 } catch (RecordLockedException recordLockedException) {
-                   LOGGER.log(Level.WARNING, "Tumour record " + id + " already locked?", recordLockedException);
+                   LOGGER.log(Level.WARNING,String.format("Tumour record  %d already locked ?",id), recordLockedException);
 //                    throw recordLockedException;
                     new TechnicalError().errorDialog();
                 } catch (RemoteException ex) {
@@ -1372,7 +1372,7 @@ public class CanRegClientApp extends SingleFrameApplication {
                 try {
                     tumourToReturn = records[0];
                 } catch (java.lang.ArrayIndexOutOfBoundsException aiobe) {
-                   LOGGER.log(Level.WARNING, "Tumour record " + id + " already locked?", aiobe);
+                    LOGGER.log(Level.WARNING,String.format("Tumour record %d already locked ?",id), aiobe);
                     new TechnicalError().errorDialog();
                 }
             }
@@ -1650,7 +1650,7 @@ public class CanRegClientApp extends SingleFrameApplication {
                 }
                 sdc.convertAndSaveInSystemFolder(args[1]);
             } catch (FileNotFoundException ex) {
-               LOGGER.log(Level.SEVERE, args[1] + " not found. " + ex, ex);
+                LOGGER.log(Level.SEVERE,String.format(" %s not found. %s", args[1], ex), ex);
                 new TechnicalError().errorDialog();
             }
         } else {
