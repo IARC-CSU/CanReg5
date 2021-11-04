@@ -1219,10 +1219,10 @@ public class CanRegDAO {
 
         } catch (java.sql.SQLIntegrityConstraintViolationException sqle) {
             // System.out.println(nameSexRecord.getName());
-            // LOGGER.log(Level.SEVERE, null, sqle);
+             LOGGER.log(Level.SEVERE,String.format(" Error : an integrity constraint has been violated for nameSexRecord : %s",nameSexRecord.getName()), sqle);
         } catch (SQLException sqle) {
             System.out.println(nameSexRecord.getName());
-            LOGGER.log(Level.SEVERE, null, sqle);
+            LOGGER.log(Level.SEVERE, String.format("SQL error : for nameSexRecord : %s",nameSexRecord.getName()), sqle);
         }
         return id;
     }

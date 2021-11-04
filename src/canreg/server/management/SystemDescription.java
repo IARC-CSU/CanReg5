@@ -155,6 +155,7 @@ public final class SystemDescription implements Serializable {
                         region = Globals.REGIONS[regionID];
                     } catch (NumberFormatException nfe) {
                         // not a number
+                        LOGGER.log(Level.WARNING,"Error in number",nfe);
                     }
                 }
             }
@@ -276,6 +277,7 @@ public final class SystemDescription implements Serializable {
                         dateFormat = canreg4dateFormats[i];
                     } catch (NumberFormatException nfe) {
                         // do nothing
+                        LOGGER.log(Level.WARNING,"Error in number",nfe);
                     }
                 }
             }

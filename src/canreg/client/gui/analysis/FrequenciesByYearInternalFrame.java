@@ -505,7 +505,6 @@ public class FrequenciesByYearInternalFrame extends javax.swing.JInternalFrame i
                     new MessageFormat(java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/FrequenciesByYearInternalFrame").getString("CANREG_FREQUENCIES_BY_YEAR") + " - " + rangeFilterPanel.getFilter()),
                     null)) {
                 LOGGER.log(Level.SEVERE,java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/FrequenciesByYearInternalFrame").getString("USER CANCELLED PRINTING"));
-                new TechnicalError().errorDialog();
             }
         } catch (java.awt.print.PrinterException e) {
             LOGGER.log(Level.SEVERE,java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/FrequenciesByYearInternalFrame").getString("CANNOT PRINT %S%N"),e);

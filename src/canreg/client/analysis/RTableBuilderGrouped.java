@@ -285,7 +285,6 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
                         outLine.delete(0, outLine.length());
                     } catch (NumberFormatException nfe) {
                         LOGGER.log(Level.WARNING," Number Format Exception while building the R table", nfe);
-                        new TechnicalError().errorDialog();
                     }
                 }
                 incoutput.flush();

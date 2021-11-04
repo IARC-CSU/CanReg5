@@ -235,7 +235,7 @@ public class SystemDefinitionConverter {
                 sdc.convertAndSaveInSystemFolder(args[0]);
             } catch (FileNotFoundException ex) {
                 System.out.println(args[0] + " not found. " + ex);
-                LOGGER.log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, String.format( "%s not found in error : %s",args[0],ex), ex);
             }
         }
     }
@@ -805,10 +805,9 @@ public class SystemDefinitionConverter {
             }
             // TODO put the groups in the right order...
 
-        } catch (EOFException e) {
-            // Nothing to do
         } catch (IOException e) {
             // Nothing to do
+            LOGGER.log(Level.SEVERE,"Error : End of file reached",e);
         } finally {
             dataStream.close();
         }

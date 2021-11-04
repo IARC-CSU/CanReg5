@@ -659,7 +659,6 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                         tableDataSource = new DistributedTableDataSourceClient(tableDatadescription, server);
                     } catch (DistributedTableDescriptionException ex) {
                         LOGGER.log(Level.SEVERE, null, ex);
-                        new TechnicalError().errorDialog();
                     }
                     LOGGER.log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
                 }
@@ -918,7 +917,6 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
             LOGGER.log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
-            new TechnicalError().errorDialog();
         } 
     }
 
@@ -1101,7 +1099,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                 canreg.client.CanRegClientApp.getApplication().releaseRecord(id, tableName, server);
                 success = canreg.client.CanRegClientApp.getApplication().deleteRecord(id, tableName, server);
             } catch (Exception ex) {
-                Logger.getLogger(canreg.client.gui.dataentry.BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+               LOGGER.log(Level.SEVERE, null, ex);
                 new TechnicalError().errorDialog();
             }
         }
@@ -1124,7 +1122,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
             this.dispose();
             canreg.client.CanRegClientApp.getApplication().refreshHoldingDBsList();
         } catch(Exception ex) {
-            Logger.getLogger(canreg.client.gui.dataentry.BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
     }
 }

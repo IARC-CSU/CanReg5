@@ -722,7 +722,6 @@ public class CanRegClientApp extends SingleFrameApplication {
                 // Locale.setDefault(localSettings.getLocale());
             } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
                LOGGER.log(Level.WARNING, null, ex);
-                new TechnicalError().errorDialog();
             }
         }
     }
@@ -1307,7 +1306,6 @@ public class CanRegClientApp extends SingleFrameApplication {
                 } catch (RecordLockedException recordLockedException) {
                    LOGGER.log(Level.WARNING,String.format("Tumour record  %d already locked ?",id), recordLockedException);
 //                    throw recordLockedException;
-                    new TechnicalError().errorDialog();
                 } catch (RemoteException ex) {
                    LOGGER.log(Level.SEVERE, null, ex);
                     if (!handlePotentialDisconnect(ex)) {
@@ -1373,7 +1371,6 @@ public class CanRegClientApp extends SingleFrameApplication {
                     tumourToReturn = records[0];
                 } catch (java.lang.ArrayIndexOutOfBoundsException aiobe) {
                     LOGGER.log(Level.WARNING,String.format("Tumour record %d already locked ?",id), aiobe);
-                    new TechnicalError().errorDialog();
                 }
             }
         } else {
