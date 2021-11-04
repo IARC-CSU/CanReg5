@@ -93,7 +93,7 @@ import org.w3c.dom.Document;
  */
 public class RecordEditorMainFrame extends javax.swing.JInternalFrame
         implements ActionListener, RecordEditor {
-
+    private static final Logger LOGGER = Logger.getLogger(RecordEditorMainFrame.class.getName());
     public static final String CHANGED = "changed";
     public static final String CHECKS = "checks";
     public static final String DELETE = "delete";
@@ -216,7 +216,7 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                     canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.PATIENT_TABLE_NAME, server);
                 }
             } catch (RemoteException | SecurityException ex) {
-                Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 new TechnicalError().errorDialog();
             }
         }
@@ -234,7 +234,7 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                         canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.SOURCE_TABLE_NAME, server);
                     }
                 } catch (RemoteException | SecurityException ex) {
-                    Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
                     new TechnicalError().errorDialog();
                 }
             }
@@ -245,7 +245,7 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                     canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.TUMOUR_TABLE_NAME, server);
                 }
             } catch (RemoteException | SecurityException ex) {
-                Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 new TechnicalError().errorDialog();
             }
         }
@@ -524,7 +524,7 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
 //                        .getPatientsByPatientID(productionPatient.getVariableAsString(patientIDVariable), true, null);
             }
         } catch(Exception ex) {
-            Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.WARNING, null, ex);
+            LOGGER.log(Level.WARNING, null, ex);
             this.viewProductionRecordBtn.setVisible(false);
         }
     }
@@ -806,7 +806,7 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
             try {
                 this.setSelected(true);
             } catch (PropertyVetoException ex) {
-                Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.WARNING, null, ex);
+                LOGGER.log(Level.WARNING, null, ex);
             }
         } else if (source instanceof RecordEditorPanel) {
             RecordEditorPanel recordEditorPanel = (RecordEditorPanel) source;
@@ -1022,13 +1022,13 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                     changePatientID();
                 }
             } catch (canreg.server.database.RecordLockedException ex) {
-                Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 JOptionPane.showInternalMessageDialog(this,
                         java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorMainFrame").getString("RECORD_LOCKED"),
                         java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorMainFrame").getString("RECORD_LOCKED"),
                         JOptionPane.WARNING_MESSAGE);
             } catch (Exception ex) {
-                Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 new TechnicalError().errorDialog();
             }
         } else {
@@ -1046,7 +1046,7 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                     canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.PATIENT_TABLE_NAME, server);
                 }
             } catch (RemoteException | SecurityException ex) {
-                Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 new TechnicalError().errorDialog();
             }
         }
@@ -1064,7 +1064,7 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                         canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.SOURCE_TABLE_NAME, server);
                     }
                 } catch (RemoteException | SecurityException ex) {
-                    Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
                     new TechnicalError().errorDialog();
                 }
             }
@@ -1075,7 +1075,7 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                     canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.TUMOUR_TABLE_NAME, server);
                 }
             } catch (RemoteException | SecurityException ex) {
-                Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 new TechnicalError().errorDialog();
             }
         }
@@ -1201,9 +1201,7 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                             tumour.prepareToSaveRecord();
                             this.saveRecord(tumour);
                         } catch (SaveRecordException ex) {
-                            Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName())
-                                    .log(Level.SEVERE, null, ex.getLocalizedMessage());
-                            
+                            LOGGER.log(Level.SEVERE, null, ex.getLocalizedMessage());
                         }
                     }
                 }
@@ -1432,7 +1430,7 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
             } //Bubble all exceptions all the way to saveAllAction(), so all JOptionPanes
             //are handled from there.
             catch (Exception ex) {
-                Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 throw new SaveRecordException(ex.getLocalizedMessage());
             }
         }
@@ -1457,7 +1455,7 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                 try {
                     patientDatabaseRecord = CanRegClientApp.getApplication().getPatientRecord(requestedPatientRecordID, false, server);
                 } catch(Exception ex) {
-                    Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
                     new TechnicalError().errorDialog();
                 }
             }
@@ -1473,7 +1471,7 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                                 java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorMainFrame")
                                         .getString("RECORD MOVED."));
                     } catch (Exception ex) {
-                        Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        LOGGER.log(Level.SEVERE, null, ex);
                         new TechnicalError().errorDialog();
                     }
                     tumourRecordEditorPanel.refreshDatabaseRecord(tumourDatabaseRecord, false);
@@ -1583,7 +1581,7 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                                     + java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorMainFrame")
                                             .getString(", SCORE: ") + map.get(prid) + "%\n";
                         } catch (Exception ex) {
-                            Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                            LOGGER.log(Level.SEVERE, null, ex);
                             new TechnicalError().errorDialog();
                         }
                     }
@@ -1601,7 +1599,7 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                 // recordEditorPanel.setPersonSearchStatus();
             }
         } catch (Exception ex) {
-            Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             new TechnicalError().errorDialog();
         } finally {
             Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
@@ -1646,9 +1644,9 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                 JOptionPane.showInternalMessageDialog(this,
                         java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorMainFrame")
                                 .getString("THIS RECORD HAS OTHER RECORDS ASSIGNED TO IT.PLEASE DELETE OR MOVE THOSE FIRST."));
-                Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.WARNING, null, ex);
+                LOGGER.log(Level.WARNING, null, ex);
             } catch (Exception ex) {
-                Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 new TechnicalError().errorDialog();
             }
         }
@@ -1683,7 +1681,7 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
         try {
             canreg.common.Tools.openFile(fileName);
         } catch (IOException ex) {
-            Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             new TechnicalError().errorDialog();
         }
     }

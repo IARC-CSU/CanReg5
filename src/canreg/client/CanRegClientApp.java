@@ -401,8 +401,8 @@ public class CanRegClientApp extends SingleFrameApplication {
         try {
             splashMessage(java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("INITIALIZING LOGGER..."), 20);
             Handler fh = new FileHandler(Globals.LOGFILE_PATTERN);
-            Logger.getLogger("").addHandler(fh);
-            Logger.getLogger("canreg").setLevel(Level.parse(Globals.LOG_LEVEL));
+            LOGGER.addHandler(fh);
+            LOGGER.setLevel(Level.parse(Globals.LOG_LEVEL));
         } catch (IOException | SecurityException ex) {
            LOGGER.log(Level.SEVERE, null, ex);
             new TechnicalError().errorDialog();

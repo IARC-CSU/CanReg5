@@ -21,7 +21,7 @@ import static org.junit.Assert.*;
  * @author ErvikM
  */
 public class FixedWidthFileWriterTest {
-    
+    private static final Logger LOGGER = Logger.getLogger(FixedWidthFileWriterTest.class.getName());
     public FixedWidthFileWriterTest() {
     }
 
@@ -52,9 +52,9 @@ public class FixedWidthFileWriterTest {
         try {
             instance = new FixedWidthFileWriter(1946);
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(FixedWidthFileWriterTest.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(FixedWidthFileWriterTest.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         boolean expResult = false;
         boolean result = instance.setOutputFileName("test");
