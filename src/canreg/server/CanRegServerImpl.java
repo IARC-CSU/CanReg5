@@ -1250,6 +1250,33 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     @Override
+    public void openTransaction() throws RemoteException {
+        try {
+            currentDAO.openTransaction();
+        }catch (SQLException ex){
+            throw new RemoteException("Exception in openTransaction : "+ ex.getMessage(),ex);
+        }
+    }
+
+    @Override
+    public void rollbackTransaction() throws RemoteException  {
+        try {
+            currentDAO.rollbackTransaction();
+        } catch (SQLException ex){
+            throw new RemoteException("Exception in rollbackTransaction : "+ ex.getMessage(),ex);
+        }
+    }
+
+    @Override
+    public void commitTransaction() throws RemoteException  {
+        try {
+            currentDAO.commitTransaction();
+        }catch (SQLException ex){
+            throw new RemoteException("Exception in commitTransaction : "+ ex.getMessage(),ex);
+        }
+    }
+
+    @Override
     public int hashCode() {
         return super.hashCode();
     }

@@ -789,6 +789,43 @@ public class CanRegDAO {
         return isConnected;
     }
 
+    /**
+     * Begin the transaction
+     * from here all records will be save if there is no issue
+     *
+     * @throws SQLException SQLException
+     */
+    public void openTransaction() throws SQLException {
+        if (dbConnection == null) {
+            dbConnection = DriverManager.getConnection(getDatabaseUrl(), dbProperties);
+        }
+        dbConnection.setAutoCommit(false);
+    }
+
+    /**
+     *  If there is an exception all record will be rollback
+     *  
+     * @throws SQLException SQLException
+     */
+    public void rollbackTransaction() throws SQLException {
+        if (dbConnection != null) {
+            dbConnection.rollback();
+            dbConnection.setAutoCommit(true);
+        }
+    }
+
+    /**
+     * If there no exception all record will be saved in the database
+     * 
+     * @throws SQLException SQLException
+     */
+    public void commitTransaction() throws SQLException {
+        if (dbConnection != null) {
+            dbConnection.commit();
+            dbConnection.setAutoCommit(true);
+        }
+    }
+
     public boolean connectWithBootPassword(char[] passwordArray) throws RemoteException, SQLException {
         String password = new String(passwordArray);
         dbProperties.setProperty("bootPassword", password);

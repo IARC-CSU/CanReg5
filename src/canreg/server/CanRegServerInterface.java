@@ -561,11 +561,26 @@ public interface CanRegServerInterface extends Remote {
      * Delete the file reminder in the .CanRegServer folder.
      *
      * @param username  user name
-     * @throws IOException
-     * @throws RemoteException
+     * @throws RemoteException RemoteException
      */
     public void deleteFileReminder(String username) throws RemoteException;
-    
-    
-    
+
+    /**
+     * Create a new transaction to be saved in the database
+     * 
+     * @throws RemoteException RemoteException
+     */
+    public void openTransaction() throws RemoteException;
+
+    /**
+     * Rollback of the transaction if an exception occurred 
+     *  @throws RemoteException RemoteException
+     */
+    public void rollbackTransaction() throws RemoteException;
+
+    /**
+     *  Commit all the records hold by the transaction if there was no exception 
+     * @throws RemoteException RemoteException
+     */
+    public void commitTransaction() throws RemoteException;
 }
