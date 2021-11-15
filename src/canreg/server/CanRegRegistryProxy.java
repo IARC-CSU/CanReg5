@@ -592,6 +592,21 @@ public class CanRegRegistryProxy implements CanRegServerInterface, Serializable 
     }
 
     @Override
+    public void openTransaction() throws RemoteException {
+        serverProxy.openTransaction();
+    }
+
+    @Override
+    public void rollbackTransaction() throws RemoteException {
+        serverProxy.rollbackTransaction();
+    }
+
+    @Override
+    public void commitTransaction() throws RemoteException {
+        serverProxy.commitTransaction();
+    }
+
+    @Override
     public int hashCode() {
         return serverProxy.hashCode();
     }

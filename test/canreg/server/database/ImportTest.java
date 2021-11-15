@@ -5,6 +5,7 @@
 
 package canreg.server.database;
 
+import canreg.client.gui.CanRegClientView;
 import canreg.client.gui.importers.Import;
 import canreg.server.CanRegServerImpl;
 import canreg.server.CanRegServerInterface;
@@ -25,6 +26,7 @@ import org.w3c.dom.Document;
  * @author ervikm
  */
 public class ImportTest {
+    private static final Logger LOGGER = Logger.getLogger(ImportTest.class.getName());
 
     public ImportTest() {
     }
@@ -65,7 +67,7 @@ public class ImportTest {
             
             // fail("The test case is a prototype.");
         } catch (RemoteException ex) {
-            Logger.getLogger(ImportTest.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
         }
     }
     

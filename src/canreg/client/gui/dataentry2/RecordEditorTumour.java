@@ -78,7 +78,8 @@ import org.w3c.dom.Document;
  */
 public class RecordEditorTumour extends javax.swing.JPanel 
         implements RecordEditorPanel, ActionListener, Cloneable, PropertyChangeListener {
-   
+
+    private static final Logger LOGGER = Logger.getLogger(RecordEditorTumour.class.getName());
     private DatabaseRecord databaseRecord;
     private Document doc;
     private final panelTypes panelType = panelTypes.TUMOUR;
@@ -181,12 +182,12 @@ public class RecordEditorTumour extends javax.swing.JPanel
                 else {
                     databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), "0");
                     // JOptionPane.showInternalMessageDialog(this, "Record status dictionary entries missing.");
-                    Logger.getLogger(RecordEditorTumour.class.getName()).log(Level.WARNING, "Warning! Record status dictionary entries missing.");
+                    LOGGER.log(Level.WARNING, "Warning! Record status dictionary entries missing.");
                 }
             } else {
                 databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), "0");
                 // JOptionPane.showInternalMessageDialog(this, "Record status dictionary entries missing.");
-                Logger.getLogger(RecordEditorTumour.class.getName()).log(Level.WARNING, "Warning! Record status dictionary entries missing.");
+                LOGGER.log(Level.WARNING, "Warning! Record status dictionary entries missing.");
             }
         }
         if (obsoleteFlagVariableListElement != null) {
@@ -699,7 +700,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
                     date = dateFormat.parse(updateDate);
                 } catch (ParseException ex) {
                     date = null;
-                    Logger.getLogger(RecordEditorTumour.class.getName()).log(Level.INFO, null, ex);
+                    LOGGER.log(Level.INFO, null, ex);
                 }
                 if (date != null) {
                     Calendar todayCal = new GregorianCalendarCanReg();

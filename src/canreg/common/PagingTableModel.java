@@ -17,6 +17,7 @@ import javax.swing.table.AbstractTableModel;
  */
 public class PagingTableModel extends AbstractTableModel {
 
+    private static final Logger LOGGER = Logger.getLogger(PagingTableModel.class.getName());
     private static final int MAX_PAGE_SIZE = 80;
     //private static final int LATENCY_MILLIS = 1500;
     private int dataOffset = 0;
@@ -74,13 +75,13 @@ public class PagingTableModel extends AbstractTableModel {
         int pageIndex = row - dataOffset;
         if (pageIndex < 0 || pageIndex >= page.size()) {
             // not loaded
-            Logger.getLogger(PagingTableModel.class.getName()).log(Level.INFO, "{0} free memory.\nobject at {1} isn''t loaded yet", new Object[]{Runtime.getRuntime().freeMemory(), row});
+            LOGGER.log(Level.INFO, "{0} free memory.\nobject at {1} isn't loaded yet", new Object[]{Runtime.getRuntime().freeMemory(), row});
             schedule(row);
             return "..";
         }
         Object rowObject = page.get(pageIndex)[col];
         // for this simulation just return the whole rowObject
-        Logger.getLogger(PagingTableModel.class.getName()).log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
+        LOGGER.log(Level.INFO, "{0} free memory.", Runtime.getRuntime().freeMemory());
         return rowObject;
     }
 
@@ -122,7 +123,7 @@ public class PagingTableModel extends AbstractTableModel {
             try {
                 dataObject = tableDataSource.retrieveRows(startOffset, startOffset + length);
             } catch (DistributedTableDescriptionException ex) {
-                Logger.getLogger(PagingTableModel.class.getName()).log(Level.WARNING, "error retrieving page at " + startOffset + ": aborting \n" + ex.getMessage(), ex);
+                LOGGER.log(Level.WARNING,String.format("error retrieving page at %s : aborting \n",ex.getMessage()), ex);
                 pending.remove(seg);
                 return;
             }
@@ -132,7 +133,7 @@ public class PagingTableModel extends AbstractTableModel {
             }
             // done loading -- make available on the event dispatch thread
             SwingUtilities.invokeLater(() -> {
-                Logger.getLogger(PagingTableModel.class.getName()).log(Level.WARNING, "** loaded {0} through {1}", new Object[]{startOffset, startOffset + length - 1});
+                LOGGER.log(Level.WARNING, "** loaded {0} through {1}", new Object[]{startOffset, startOffset + length - 1});
                 setData(startOffset, page);
                 pending.remove(seg);
             });

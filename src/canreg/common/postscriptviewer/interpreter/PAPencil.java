@@ -16,10 +16,14 @@ import java.util.*;
 import java.awt.*;
 import java.awt.geom.*;
 import java.awt.font.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class PAPencil extends Object {
 
+
+    private static final Logger LOGGER = Logger.getLogger(PAPencil.class.getName());
     static private final String RCSID = "$Id: PAPencil.java,v 1.2 1998/01/21 18:07:01 uweh Exp $";
 
     static protected class State extends Object implements Cloneable {
@@ -358,6 +362,7 @@ public class PAPencil extends Object {
 	    this.rlineto(0, height);
 	    this.rlineto(-width, 0);
 	} catch(PainterException e){
+        LOGGER.log(Level.SEVERE,null,e);
 	}
 	this.closepath();
     }

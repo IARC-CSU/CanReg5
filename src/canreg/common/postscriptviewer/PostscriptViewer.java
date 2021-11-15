@@ -21,6 +21,8 @@ import java.net.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.border.*;
 
@@ -36,7 +38,8 @@ import javax.swing.border.*;
  * @author Uwe Hoffmann
  */
 public class PostscriptViewer extends JApplet implements ActionListener, Runnable {
-
+    
+    private static final Logger LOGGER = Logger.getLogger(PostscriptViewer.class.getName());
     static String postscriptFiles[] = { 
             "parrot.ps", "tiger.ps", "golfer.ps", "nozzle.ps", 
             "columbia.ps", "butterfly.ps", 
@@ -103,7 +106,9 @@ public class PostscriptViewer extends JApplet implements ActionListener, Runnabl
                 if (theFile != null) {
                     try {
                         url = theFile.toURL();
-                    } catch (Exception ex) { ex.printStackTrace(); }
+                    } catch (Exception ex) { 
+                       LOGGER.log(Level.SEVERE,null,ex);
+                    }
                 }
             }
         } else {
@@ -145,10 +150,8 @@ public class PostscriptViewer extends JApplet implements ActionListener, Runnabl
                 InputStream inputStream = url.openStream();
                 context.draw(inputStream);	
                 inputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (PainterException e) {
-                e.printStackTrace();
+            } catch (IOException | PainterException e) {
+                LOGGER.log(Level.SEVERE,null,e);
             }
         }
 

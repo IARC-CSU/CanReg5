@@ -37,7 +37,7 @@ public class CanRegLoginImpl extends UnicastRemoteObject
         implements CanRegLoginInterface {
 
     private CanRegServerInterface theServer;
-    private static final Logger LOG = Logger.getLogger(CanRegServerImpl.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(CanRegServerImpl.class.getName());
 
     /** Launch the server mode with custom properties to increase the server security 
      * 
@@ -49,7 +49,7 @@ public class CanRegLoginImpl extends UnicastRemoteObject
             throws RemoteException, MalformedURLException {
         // Prevent JAVA to use a random port.
         super(1099);
-        LOG.log(Level.INFO,"Launching the server mode");
+        LOGGER.log(Level.INFO,"Launching the server mode");
         // set custom java security properties
         System.setProperty("java.security.auth.login.config", Globals.LOGIN_FILENAME);
         System.setProperty("java.security.policy", Globals.POLICY_FILENAME);
@@ -65,7 +65,7 @@ public class CanRegLoginImpl extends UnicastRemoteObject
      */
     public CanRegLoginImpl(String serverCode, boolean isAdHocDB)
             throws RemoteException {
-        LOG.log(Level.INFO,"Launching single user mode");
+        LOGGER.log(Level.INFO,"Launching single user mode");
         
         // set custom java security properties
         System.setProperty("java.security.auth.login.config", Globals.LOGIN_FILENAME);

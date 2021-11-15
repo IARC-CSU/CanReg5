@@ -42,6 +42,7 @@ import java.util.logging.Logger;
  */
 public final class SystemSettings {
 
+    private static final Logger LOGGER = Logger.getLogger(SystemSettings.class.getName());
     // Programming related
     private String settingsFileName;
     private String settingsDir;
@@ -123,20 +124,20 @@ public final class SystemSettings {
             propInputStream.close();
             success = true;
         } catch (InvalidPropertiesFormatException ex) {
-            Logger.getLogger(SystemSettings.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             success = false;
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(SystemSettings.class.getName()).log(Level.INFO, null, ex);
+            LOGGER.log(Level.INFO, null, ex);
             success = false;
         } catch (IOException ex) {
-            Logger.getLogger(SystemSettings.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             success = false;
         } finally {
             if (propInputStream != null) {
                 try {
                     propInputStream.close();
                 } catch (IOException ex) {
-                    Logger.getLogger(SystemSettings.class.getName()).log(Level.INFO, null, ex);
+                    LOGGER.log(Level.INFO, null, ex);
                     success = false;
                 }
             }
@@ -157,10 +158,10 @@ public final class SystemSettings {
                 getProperties().storeToXML(propOutputStream, "CanReg5 system settings");
                 success = true;
             } catch (FileNotFoundException ex) {
-                Logger.getLogger(SystemSettings.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 success = false;
             } catch (IOException ex) {
-                Logger.getLogger(SystemSettings.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 success = false;
             } finally {
                 if (propOutputStream != null) {
@@ -169,7 +170,7 @@ public final class SystemSettings {
                         propOutputStream.close();
                         settingsChanged = false;
                     } catch (IOException ex) {
-                        Logger.getLogger(SystemSettings.class.getName()).log(Level.SEVERE, null, ex);
+                        LOGGER.log(Level.SEVERE, null, ex);
                         success = false;
                     }
                 }
@@ -284,7 +285,7 @@ public final class SystemSettings {
                 date = dateFormat.parse(dateString);
             } catch (ParseException ex) {
                 date = null;
-                Logger.getLogger(SystemSettings.class.getName()).log(Level.INFO, null, ex);
+                LOGGER.log(Level.INFO, null, ex);
             }
         }
         return date;

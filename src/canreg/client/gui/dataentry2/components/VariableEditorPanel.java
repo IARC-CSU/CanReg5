@@ -40,7 +40,8 @@ import javax.swing.event.DocumentListener;
  */
 public class VariableEditorPanel extends javax.swing.JPanel 
         implements ActionListener, VariableEditorPanelInterface {
-   
+
+    private static final Logger LOGGER = Logger.getLogger(VariableEditorPanel.class.getName());
     protected DatabaseVariablesListElement databaseListElement;  
     protected int maxLength;   
     Object initialValue = null;
@@ -160,9 +161,7 @@ public class VariableEditorPanel extends javax.swing.JPanel
                 try {
                     valueObject = Integer.parseInt(valueString.trim());
                 } catch (NumberFormatException numberFormatException) {
-                    Logger.getLogger(VariableEditorPanel.class.getName())
-                            .log(Level.WARNING, databaseListElement.getShortName() 
-                                 + " " + valueString, numberFormatException);
+                    LOGGER.log(Level.WARNING, String.format("%s %s",databaseListElement.getShortName(),valueString), numberFormatException);
                 }
             } else 
                 valueObject = null;            
@@ -246,8 +245,7 @@ public class VariableEditorPanel extends javax.swing.JPanel
                 listener.actionPerformed(new ActionEvent(this, 0, CHANGED_STRING));
             }
         } catch(NullPointerException ne) {
-            Logger.getLogger(VariableEditorPanel.class.getName())
-                    .log(Level.WARNING, "Warning! NPE in VariableEditorPanel.checkForChanges()", ne);
+            LOGGER.log(Level.WARNING, "Warning! NPE in VariableEditorPanel.checkForChanges()", ne);
         }
     }
     

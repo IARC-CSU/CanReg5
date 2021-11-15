@@ -72,7 +72,8 @@ public class RecordEditorPatient extends javax.swing.JPanel
                                             ActionListener,
                                             Cloneable,
                                             PropertyChangeListener {
-
+    
+    private static final Logger LOGGER = Logger.getLogger(RecordEditorPatient.class.getName());
     private DatabaseRecord databaseRecord;
     private Document doc;
     private Map<Integer, Dictionary> dictionary;
@@ -328,7 +329,7 @@ public class RecordEditorPatient extends javax.swing.JPanel
                     date = dateFormat.parse(updateDate);
                 } catch (ParseException ex) {
                     date = null;
-                    Logger.getLogger(RecordEditorPatient.class.getName()).log(Level.INFO, null, ex);
+                    LOGGER.log(Level.INFO, null, ex);
                 }
                 if (date != null) {
                     Calendar todayCal = new GregorianCalendarCanReg();
@@ -431,11 +432,11 @@ public class RecordEditorPatient extends javax.swing.JPanel
         if (recordStatusVariableListElement != null) {
 //            if (recordStatusVariableListElement != null && recordStatusVariableListElement.getUseDictionary() != null) {                                
 //                databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), "0");
-//                Logger.getLogger(RecordEditorPatient.class.getName()).log(Level.WARNING, 
+//                LOGGER.log(Level.WARNING, 
 //                                 "Warning! Record status dictionary entries missing.");
 //            } else {
                 databaseRecord.setVariable(recordStatusVariableListElement.getDatabaseVariableName(), "0");
-//                Logger.getLogger(RecordEditorPatient.class.getName()).log(Level.WARNING, 
+//                LOGGER.log(Level.WARNING, 
 //                                 "Warning! Record status dictionary entries missing.");
 //            }
         }

@@ -67,9 +67,11 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
     private JFileChooser chooser;
     private LocalSettings localSettings;
     private String path;
+    private static final Logger LOGGER = Logger.getLogger(EditDictionaryInternalFrame.class.getName());
 
 
-    
+
+
     public EditDictionaryInternalFrame(JDesktopPane dtp) {
         this.desktopPane = dtp;
         localSettings = CanRegClientApp.getApplication().getLocalSettings();
@@ -293,7 +295,7 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
                 
                 canreg.common.Tools.writeDictionaryToFileUTF8(file, dictionariesInDB);
             } catch (IOException ex) {
-                Logger.getLogger(EditDictionaryInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
             } finally {
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/EditDictionaryInternalFrame").getString("SUCCESSFULLY_WROTE_DICTIONARIES")+": " + fileName, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/EditDictionaryInternalFrame").getString("DICTIONARIES_SUCCESSFULLY_WRITTEN"), JOptionPane.INFORMATION_MESSAGE);
             }
@@ -366,7 +368,7 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
                 try {
                     canreg.client.dataentry.DictionaryHelper.replaceDictionary(dictionaryID, dictionaryString, CanRegClientApp.getApplication());
                 } catch (RemoteException ex) {
-                    Logger.getLogger(EditDictionaryInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
                 }
             } else {
                 return "Error.";
@@ -383,9 +385,9 @@ public class EditDictionaryInternalFrame extends javax.swing.JInternalFrame {
                 try {
                     CanRegClientApp.getApplication().refreshDictionary();
                 } catch (SecurityException ex) {
-                    Logger.getLogger(EditDictionaryInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
                 } catch (RemoteException ex) {
-                    Logger.getLogger(EditDictionaryInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
                 }
             }
             dictionaryString = null;

@@ -38,6 +38,7 @@ import java.util.logging.Logger;
  */
 public class ConversionICDO3toICD10 implements ConversionInterface {
 
+    private static final Logger LOGGER = Logger.getLogger(ConversionICDO3toICD10.class.getName());
     private static final ConversionName conversionName = ConversionName.ICDO3toICD10;
     private static final StandardVariableNames[] variablesNeeded = new StandardVariableNames[]{
         StandardVariableNames.Sex,
@@ -85,11 +86,11 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
             topographyRule8Map = RulesLoader.load(this.getClass().getResourceAsStream(topographyRule8FileResource), topographyRule8CodeLength);
             topographyRule9Map = RulesLoader.load(this.getClass().getResourceAsStream(topographyRule9FileResource), topographyRule9CodeLength);
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(ConversionICDO3toICD10.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(ConversionICDO3toICD10.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         } catch (URISyntaxException ex) {
-            Logger.getLogger(ConversionICDO3toICD10.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
     }
 
@@ -325,13 +326,13 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
         // rule and pos are determined by Behaviour
         //------------------------------------------
         if (rule == 0 || rule > 5) {
-            Logger.getLogger(ConversionICDO3toICD10.class.getName()).log(Level.WARNING, "ERROR : ICD10 Rule invalid (O3_10clas.java)");
+            LOGGER.log(Level.WARNING, "ERROR : ICD10 Rule invalid (O3_10clas.java)");
             return;
         } else if (O3_10TLookLine == null) {
-            Logger.getLogger(ConversionICDO3toICD10.class.getName()).log(Level.WARNING, "ERROR : O3_10TLookLine doesn't exist");
+            LOGGER.log(Level.WARNING, "ERROR : O3_10TLookLine doesn't exist");
             return;
         } else if (O3_10TLookLine.length() < 20) {
-            Logger.getLogger(ConversionICDO3toICD10.class.getName()).log(Level.WARNING, "ERROR : O3_10TLookLine too short");
+            LOGGER.log(Level.WARNING, "ERROR : O3_10TLookLine too short");
             return;
         }
 

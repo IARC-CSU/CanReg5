@@ -29,6 +29,7 @@ import canreg.client.CanRegClientApp;
 import canreg.client.dataentry.PopulationDataSetHelper;
 import canreg.client.gui.CanRegClientView;
 import canreg.client.gui.dataentry.PDSEditorInternalFrame;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.Globals;
 import canreg.common.database.PopulationDataset;
 import java.io.File;
@@ -51,6 +52,7 @@ import org.jdesktop.application.Action;
  */
 public class CanReg4PDSImporterInternalFrame extends javax.swing.JInternalFrame {
 
+    private static final Logger LOGGER = Logger.getLogger(CanReg4PDSImporterInternalFrame.class.getName());
     private JFileChooser chooser;
     private JDesktopPane dtp;
     private PopulationDataset[] worldPopulations;
@@ -209,7 +211,8 @@ public class CanReg4PDSImporterInternalFrame extends javax.swing.JInternalFrame 
                 fileNameTextField.setText(chooser.getSelectedFile().getCanonicalPath());
             // changeFile();
             } catch (IOException ex) {
-                Logger.getLogger(CanReg4PDSImporterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
         }
     }
@@ -239,10 +242,11 @@ public class CanReg4PDSImporterInternalFrame extends javax.swing.JInternalFrame 
 
             this.dispose();
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(CanReg4PDSImporterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4PDSImporterInternalFrame").getString("COULD NOT OPEN FILE:") + fileNameTextField.getText().trim() + java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4PDSImporterInternalFrame").getString("."), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4PDSImporterInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
         } catch (IOException ex) {
-            Logger.getLogger(CanReg4PDSImporterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables

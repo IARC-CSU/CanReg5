@@ -29,6 +29,7 @@ package canreg.client.gui.importers;
 import canreg.client.gui.components.VariableMappingPanel;
 import canreg.client.LocalSettings;
 import canreg.client.CanRegClientApp;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.client.dataentry.Relation;
 import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
@@ -82,6 +83,7 @@ import org.w3c.dom.Document;
  */
 public class ImportView extends javax.swing.JInternalFrame {
 
+    private static final Logger LOGGER = Logger.getLogger(ImportView.class.getName());
     private boolean needToRebuildVariableMap = true;
     private File inFile;
     private final Document doc;
@@ -150,7 +152,8 @@ public class ImportView extends javax.swing.JInternalFrame {
             numberOfRecordsTextField.setText("" + (canreg.common.Tools.numberOfLinesInFile(inFile.getAbsolutePath()) - 1));
             // autodetectFileEncodingAction();
         } catch (IOException ex) {
-            Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
     }
 
@@ -703,7 +706,8 @@ public class ImportView extends javax.swing.JInternalFrame {
                 fileNameTextField.setText(chooser.getSelectedFile().getCanonicalPath());
                 changeFile();
             } catch (IOException ex) {
-                Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
         }
     }
@@ -798,14 +802,11 @@ public class ImportView extends javax.swing.JInternalFrame {
             try {
                 // Calls the client app import action with the file parameters provided,
                 success = CanRegClientApp.getApplication().importFile(this, doc, buildMap(), inFile, buildImportOptions());
-            } catch (SecurityException ex) {
-                Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (RecordLockedException ex) {
-                Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (RemoteException ex) {
-                Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SecurityException | RecordLockedException | RemoteException ex) {
+                LOGGER.log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             } catch (SQLException ex) {
-                Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 success = false;
             }
             return success;  // return your result
@@ -858,18 +859,21 @@ public class ImportView extends javax.swing.JInternalFrame {
                 variablesPanel.repaint();
 
             } catch (RemoteException ex) {
-                Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             } catch (FileNotFoundException ex) {
-                Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportView").getString("COULD_NOT_OPEN_FILE:_") + "\'" + fileNameTextField.getText().trim() + "\'.", java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportView").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             } catch (IOException ex) {
-                Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             } finally {
                 needToRebuildVariableMap = false;
                 try {
                     br.close();
                 } catch (IOException ex) {
-                    Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
+                    new TechnicalError().errorDialog();
                 }
 
             }
@@ -1010,17 +1014,18 @@ public class ImportView extends javax.swing.JInternalFrame {
             previewTable.setModel(new DefaultTableModel(data, columnNames));
         } catch (FileNotFoundException fileNotFoundException) {
             JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportView").getString("COULD_NOT_PREVIEW_FILE:") + " \'" + fileNameTextField.getText().trim() + "\'.", java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportView").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
-            Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, fileNotFoundException);
+            LOGGER.log(Level.SEVERE, null, fileNotFoundException);
         } catch (IOException ex) {
             JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportView").getString("COULD_NOT_PREVIEW_FILE:") + " \'" + fileNameTextField.getText().trim() + "\'.", java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportView").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
-            Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if (br != null) {
                     br.close();
                 }
             } catch (IOException ex) {
-                Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
         }
     }

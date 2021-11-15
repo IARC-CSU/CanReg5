@@ -21,8 +21,8 @@ package canreg.client.analysis;
 
 import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
-import canreg.client.analysis.TableBuilderInterface.FileTypes;
 import canreg.client.analysis.Tools.KeyCancerGroupsEnum;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.Globals;
 import canreg.common.Globals.StandardVariableNames;
 import canreg.common.database.IncompatiblePopulationDataSetException;
@@ -96,6 +96,7 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
     private CountType countType = CountType.CASES;
     private boolean includeOther = false;
     private int unknownAgeCode = Globals.DEFAULT_UNKNOWN_AGE_CODE;
+    private static final Logger LOGGER = Logger.getLogger(TopNChartTableBuilder.class.getName());
 
     public TopNChartTableBuilder() {
         ChartTheme chartTheme = new StandardChartTheme("sansserif");
@@ -256,7 +257,7 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
                         try {
                             adjustedCases = 100.0 * (periodPop.getReferencePopulationForAgeGroupIndex(sex, periodPop.getAgeGroupIndex(age)) * numberOfCases) / periodPop.getAgeGroupCount(sex, periodPop.getAgeGroupIndex(age));
                         } catch (IncompatiblePopulationDataSetException ex) {
-                            Logger.getLogger(TopNChartTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                            LOGGER.log(Level.SEVERE, null, ex);
                         }
                     } else if (countType == CountType.CUM64) {
                         if (age < 65) {
@@ -386,7 +387,7 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
                         && !fileType.equals(FileTypes.jchart)
                         && !fileType.equals(FileTypes.csv)) {
                     String header = "Top 10 by " + countType + ", \n" + tableHeader + ", " + TableBuilderInterface.sexLabel[sexNumber];
-                    generatedFiles.addAll(Tools.generateRChart(casesCounts, fileName, header, fileType, chartType, includeOther, restCount, rpath, true, "Site"));
+                        generatedFiles.addAll(Tools.generateRChart(casesCounts, fileName, header, fileType, chartType, includeOther, restCount, rpath, true, "Site"));
                 } else {
                     double allCount = countArray[allCancerGroupsIndex][sexNumber];
                     Color color;
@@ -399,10 +400,9 @@ public class TopNChartTableBuilder implements TableBuilderInterface, JChartTable
                     charts[sexNumber] = Tools.generateJChart(casesCounts, fileName, header, fileType, chartType, includeOther, legendOn, restCount, allCount, color, "Site");
                     try {
                         generatedFiles.add(Tools.writeJChartToFile(charts[sexNumber], file, fileType));
-                    } catch (IOException ex) {
-                        Logger.getLogger(TopNChartTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (DocumentException ex) {
-                        Logger.getLogger(TopNChartTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IOException | DocumentException ex) {
+                        LOGGER.log(Level.SEVERE, null, ex);
+                        new TechnicalError().errorDialog();
                     }
                 }
             }

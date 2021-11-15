@@ -25,6 +25,7 @@
 package canreg.client.gui.management;
 
 import canreg.client.gui.*;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.server.database.RecordLockedException;
 import canreg.server.database.UnknownTableException;
 import canreg.common.cachingtableapi.DistributedTableDescription;
@@ -82,7 +83,7 @@ import org.apache.commons.csv.CSVPrinter;
  */
 public class PersonSearchFrame extends javax.swing.JInternalFrame implements ActionListener {
 
-    private static final Logger LOG = Logger.getLogger(PersonSearchFrame.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(PersonSearchFrame.class.getName());
     private final PersonSearchListener listener;
     private Task duplicateSearchTask;
     private JDesktopPane desktopPane;
@@ -461,10 +462,9 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
             }
             personSearchHandlerID = CanRegClientApp.getApplication().initiateGlobalDuplicateSearch(
                     searcher, rangeStart, rangeEnd, null);
-        } catch (SecurityException ex) {
-            Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RemoteException ex) {
-            Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SecurityException | RemoteException ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
         return duplicateSearchTask;
     }
@@ -517,15 +517,16 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                         recordsTested += Globals.GLOBAL_PERSON_SEARCH_STEP_SIZE;
                         if(recordsTested %1000 == 0 ){
                             long now = System.currentTimeMillis();
-                            LOG.info(() ->" [records tested] : " + recordsTested  + " & [match found] : " + matchesFound
+                            LOGGER.info(() ->" [records tested] : " + recordsTested  + " & [match found] : " + matchesFound
                                 + " [time elapsed] : "+(now-start)/1000+" sec");
                         }
                     }
                 }
             } catch (SecurityException | RemoteException | DistributedTableDescriptionException | RecordLockedException | SQLException | UnknownTableException ex) {
-                Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
-            LOG.log(Level.INFO, () ->" duplicate search finished : [records tested] :"  + recordsTested  +
+            LOGGER.log(Level.INFO, () ->" duplicate search finished : [records tested] :"  + recordsTested  +
                 " & [match found] : " + matchesFound);
             return null;  // return your result
         }
@@ -570,7 +571,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
-        Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.INFO, command);
+        LOGGER.log(Level.INFO, command);
         if (command.startsWith("range")) {
             recordsInRangeField.setText(command.substring(6));
         }
@@ -594,7 +595,8 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                 // performButton.setEnabled(true);
                 // interruptButton.setEnabled(false);
             } catch (SecurityException | RemoteException ex) {
-                Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
         }
     }
@@ -644,7 +646,8 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                     }
                     CanRegClientView.showAndPositionInternalFrame(desktopPane, cpif);
                 } catch (SQLException | RecordLockedException | UnknownTableException | DistributedTableDescriptionException | RemoteException | SecurityException ex) {
-                    Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
+                    new TechnicalError().errorDialog();
                 }
             }
         }
@@ -664,7 +667,8 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
 //                  patient = CanRegClientApp.getApplication().getPatientRecord("" + model.getValueAt(rowNumber, columnNumber), false);
                     editPatientID("" + target.getValueAt(rowNumber, columnNumber));
                 } catch (SecurityException ex) {
-                    Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
+                    new TechnicalError().errorDialog();
                 }
             }
         }
@@ -769,9 +773,11 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                 JOptionPane.showMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("RECORD_NOT_FOUND"), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             }
         } catch (RecordLockedException | DistributedTableDescriptionException | UnknownTableException ex) {
-            Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         } catch (SQLException | RemoteException | SecurityException ex) {
-            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         } finally {
             setCursor(normalCursor);
         }
@@ -825,7 +831,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                 }
 
             } catch (IOException ex) {
-                Logger.getLogger(InstallNewSystemInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 success = false;
             }
             if (success) {
@@ -834,7 +840,8 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                 try {
                     Tools.openFile(fileName);
                 } catch (IOException ex) {
-                    Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
+                    new TechnicalError().errorDialog();
                 }
             } else {
                 JOptionPane.showMessageDialog(desktopPane, "Something went wrong while writing to: " + fileName, "Error", JOptionPane.ERROR_MESSAGE);

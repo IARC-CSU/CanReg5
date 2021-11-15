@@ -84,7 +84,7 @@ import org.w3c.dom.Document;
  */
 public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServerInterface {
 
-    private static final Logger LOG = Logger.getLogger(CanRegServerImpl.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(CanRegServerImpl.class.getName());
     private static boolean debug = true;
 
     private NetworkServerControl dbServer;
@@ -126,7 +126,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         registriesDAOs = new HashMap<>();
         defaultRegistryCode = registryCode;
         defaultConfigFileUtils = new DefaultConfigFileUtils();
-        Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.INFO, "Java version: {0}", System.getProperty("java.version"));
+        LOGGER.log(Level.INFO, "Java version: {0}", System.getProperty("java.version"));
 
         // If we can we add a tray icon to show that the CanReg server is running.
         if (SystemTray.isSupported()) {
@@ -139,7 +139,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
                 try {
                     tray.add(trayIcon);
                 } catch (AWTException ex) {
-                    Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
                 }
             }
         }
@@ -158,7 +158,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             appInfoProperties.load(in);
             in.close();
         } catch (IOException ex) {
-            Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
 
         // Step one load the system definition...
@@ -173,7 +173,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         try {
             systemSettings = new SystemSettings(registryCode + "settings.xml");
         } catch (IOException ex) {
-            Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         setTrayIconToolTip("CanReg5 server " + registryCode + " database initialized...");
 
@@ -236,7 +236,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
                         dao = new CanRegDAO(sysDesc.getRegistryCode(), sysDesc.getSystemDescriptionDocument(), holding);
                         connected = dao.connectWithBootPassword(password.toCharArray());
                     } catch (RemoteException | SQLException ex1) {
-                        Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex1);
+                        LOGGER.log(Level.SEVERE, null, ex1);
                         throw new RuntimeException(ex1);
                     }
                 }
@@ -244,7 +244,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
                 throw new RuntimeException(ex);
             }
         } catch (RemoteException ex) {
-            Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             throw ex;
         }
 
@@ -299,7 +299,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             dbServer = new NetworkServerControl(InetAddress.getByName("localhost"), 1528);
             dbServer.start(null);
         } catch (Exception ex) {
-            Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
     }
 
@@ -314,7 +314,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
                 dbServer.shutdown();
             }
         } catch (Exception ex) {
-            Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
     }
 
@@ -439,7 +439,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
 
     private void debugOut(String msg) {
         if (debug) {
-            Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.INFO, msg);
+            LOGGER.log(Level.INFO, msg);
         }
     }
     // add and remove records
@@ -550,7 +550,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         try {
             addr = InetAddress.getLocalHost();
         } catch (UnknownHostException ex) {
-            Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         return addr;
     }
@@ -669,7 +669,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         try {
             rows = currentDAO.retrieveRows(resultSetID, from, to);
         } catch (DistributedTableDescriptionException ex) {
-            Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             throw new RemoteException("Retrieve rows failed: " + ex.getMessage());
         }
         return rows;
@@ -808,7 +808,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             // releaseResultSet(resultSetID);
             isOK = true;
         } catch (SQLException | UnknownTableException | DistributedTableDescriptionException ex) {
-            Logger.getLogger(DefaultPersonSearch.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         finally {
             if(! isOK){
@@ -861,11 +861,11 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
                                         .getPatientVariables((Patient) getPatient(patientID),
                                             patientRecordIDvariableName));
                             } catch (RecordLockedException ex) {
-                                LOG.log(Level.SEVERE,null,ex);
+                                LOGGER.log(Level.SEVERE,null,ex);
                             }
                         }
                     } catch (RemoteException | SecurityException ex) {
-                        LOG.log(Level.SEVERE,null,ex);
+                        LOGGER.log(Level.SEVERE,null,ex);
                     }
                 }
                 //  read all the stored data in memory to compute the patientIDScorePatientIDMap
@@ -893,7 +893,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             releaseResultSet(idString);
             activePersonSearchers.remove(idString);
         } catch (SQLException | RemoteException | SecurityException ex) {
-            Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
     }
 
@@ -940,7 +940,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             // Set the resultSetID to null after release of the resultSet to avoid another release in the finally
             resultSetID = null;
         } catch (SQLException | UnknownTableException | DistributedTableDescriptionException ex) {
-            Logger.getLogger(DefaultPersonSearch.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }finally {
             releaseNotNullResultSet(resultSetID);
         }
@@ -1007,12 +1007,12 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
                             // debugOut("Not found " + patientB.getVariable(patientRecordIDvariableName) + " " + score);
                         }
                     } catch (RecordLockedException ex) {
-                        Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+                        LOGGER.log(Level.SEVERE, null, ex);
                     }
                 }
             }
         } catch (RemoteException | SecurityException ex) {
-            Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         return patientIDScoreMap;
     }
@@ -1120,7 +1120,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
                 }
             }
         } catch (SQLException ex) {
-            Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         return success;
     }
@@ -1250,6 +1250,33 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     @Override
+    public void openTransaction() throws RemoteException {
+        try {
+            currentDAO.openTransaction();
+        }catch (SQLException ex){
+            throw new RemoteException("Exception in openTransaction : "+ ex.getMessage(),ex);
+        }
+    }
+
+    @Override
+    public void rollbackTransaction() throws RemoteException  {
+        try {
+            currentDAO.rollbackTransaction();
+        } catch (SQLException ex){
+            throw new RemoteException("Exception in rollbackTransaction : "+ ex.getMessage(),ex);
+        }
+    }
+
+    @Override
+    public void commitTransaction() throws RemoteException  {
+        try {
+            currentDAO.commitTransaction();
+        }catch (SQLException ex){
+            throw new RemoteException("Exception in commitTransaction : "+ ex.getMessage(),ex);
+        }
+    }
+
+    @Override
     public int hashCode() {
         return super.hashCode();
     }
@@ -1261,7 +1288,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
                 releaseResultSet(resultSetID);
             }
         }catch (SQLException ex){
-            LOG.log(Level.SEVERE,"Sql error in the release of the ResultSet with resultSetID : "+ resultSetID,ex);
+            LOGGER.log(Level.SEVERE,String.format("Sql error in the release of the ResultSet with resultSetID : %s", resultSetID),ex);
         }
     }
     //not used in our case

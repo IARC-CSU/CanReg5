@@ -36,14 +36,8 @@ import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 //import com.sun.cnpi.rss.elements.Link;
 //import com.sun.cnpi.rss.elements.Rss;
 //import com.sun.cnpi.rss.parser.*;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import java.io.IOException;
-import java.text.ParseException;
-import java.util.Collection;
-import java.util.Iterator;
-import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.HyperlinkEvent;
@@ -51,6 +45,7 @@ import javax.swing.event.HyperlinkListener;
 import org.jdesktop.application.Action;
 
 public class LatestNewsInternalFrame extends javax.swing.JInternalFrame implements HyperlinkListener {
+    private static final Logger LOGGER = Logger.getLogger(LatestNewsInternalFrame.class.getName());
 
     /** Creates new form LatestNewsInternalFrame */
     public LatestNewsInternalFrame() {
@@ -172,7 +167,7 @@ public class LatestNewsInternalFrame extends javax.swing.JInternalFrame implemen
 //                    Calendar cal = canreg.common.DateHelper.parseTimestamp(date, canreg.common.Globals.TWITTER_RSS_DATE_FORMAT_STRING, null);
 //                    calString = format.format(cal.getTime());
 //                } catch (ParseException ex) {
-//                    Logger.getLogger(LatestNewsInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+//                    LOGGER.log(Level.SEVERE, null, ex);
 //                }
 //                newsStringBuilder.append("<h5>").append(calString).append(": </h5>");
 //                newsStringBuilder.append(description);
@@ -209,12 +204,12 @@ public class LatestNewsInternalFrame extends javax.swing.JInternalFrame implemen
 //        try {
 //            readRSSDocument();
 //        } catch (RssParserException ex) {
-//            Logger.getLogger(LatestNewsInternalFrame.class.getName()).log(Level.INFO, null, ex);
+//            LOGGER.log(Level.INFO, null, ex);
 //            newsEditorPane.setText("<h2>No current news found. Please check your internet connection.</h2>");
 //
 //        } catch (IOException ex) {
 //            newsEditorPane.setText("<h2>No current news found. Please check your internet connection.</h2>");
-//            Logger.getLogger(LatestNewsInternalFrame.class.getName()).log(Level.INFO, null, ex);
+//            LOGGER.log(Level.INFO, null, ex);
 //        }
     }
 
@@ -229,7 +224,8 @@ public class LatestNewsInternalFrame extends javax.swing.JInternalFrame implemen
             try {
                 canreg.common.Tools.browse(event.getURL().toString());
             } catch (IOException ex) {
-                Logger.getLogger(LatestNewsInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
         }
     }
