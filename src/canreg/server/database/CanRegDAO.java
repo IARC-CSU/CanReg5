@@ -40,8 +40,6 @@ import canreg.common.database.Source;
 import canreg.common.database.Tumour;
 import canreg.common.database.User;
 import canreg.server.DatabaseStats;
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -721,8 +719,8 @@ public class CanRegDAO {
     public DataSource initDataSource() throws SQLException {
         if (dataSource == null) {
             String dbUrl = getDatabaseUrl();
-            HikariConfig hikariConfig = PoolConnection.getHikariConfig(dbUrl, hikaryProperties);
-            dataSource = new HikariDataSource(hikariConfig);
+            dataSource = PoolConnection.DbDatasource(dbUrl,hikaryProperties);
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.INFO,hikaryProperties.toString());
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.INFO,
                 " No DataSource is available. Creating a new one.");
         }
@@ -735,7 +733,6 @@ public class CanRegDAO {
      * @throws SQLException SQLException
      */
     public Connection getDbConnection() throws SQLException {
-        
         Connection Connection = initDataSource().getConnection();
         Logger.getLogger(CanRegDAO.class.getName()).log(Level.INFO, "JavaDB Version: {0}",
             Connection.getMetaData().getDatabaseProductVersion());
@@ -824,12 +821,17 @@ public class CanRegDAO {
         } else {
             // Encrypt database
             // http://db.apache.org/derby/docs/10.4/devguide/cdevcsecure866716.html
-            
+
             hikaryProperties.setProperty("dataEncryption", "true");
             hikaryProperties.setProperty("encryptionKeyLength", encryptionKeyLength);
             hikaryProperties.setProperty("encryptionAlgorithm", encryptionAlgorithm + "/" + defaultFeedbackMode + "/" + defaultPadding);
             String password = new String(newPasswordArray);
             hikaryProperties.setProperty("bootPassword", password);
+            String url =  getDatabaseUrl()+";create=true;dataEncryption=true;encryptionAlgorithm=Blowfish/CBC/NoPadding;bootPassword="+password;
+            
+            try(Connection connection = getConnectionWithCustomUrl(url)) {
+                connection.isValid(2);
+            }
         }
         hikaryProperties.remove("bootPassword");
         hikaryProperties.remove("newBootPassword");
@@ -844,9 +846,7 @@ public class CanRegDAO {
     }
 
     private Connection getConnectionWithCustomUrl(String dbUrl) throws SQLException {
-        HikariConfig hikariConfig = PoolConnection.getHikariConfig(dbUrl, hikaryProperties);
-        hikariConfig.setJdbcUrl(dbUrl);
-        dataSource = new HikariDataSource(hikariConfig);
+        dataSource = PoolConnection.DbDatasource(dbUrl,hikaryProperties);
         return dataSource.getConnection();
     }
 
