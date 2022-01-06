@@ -733,20 +733,29 @@ public class CanRegDAO {
      * @throws SQLException SQLException
      */
     public Connection getDbConnection() throws SQLException {
-        Connection Connection = initDataSource().getConnection();
-        Logger.getLogger(CanRegDAO.class.getName()).log(Level.INFO, "JavaDB Version: {0}",
-            Connection.getMetaData().getDatabaseProductVersion());
-        return Connection;
+        return initDataSource().getConnection();
     }
     
     public boolean connect() throws SQLException, RemoteException {
-        
+
+        // First check the connection alone
+        try(Connection connection = getDbConnection()) {
+            debugOut("Connection successful");
+            Logger.getLogger(CanRegDAO.class.getName()).log(Level.INFO, "JavaDB Version: {0}",
+                    connection.getMetaData().getDatabaseProductVersion());
+        } catch (SQLException ex) {
+            // reset the datasource now to have a chance to change it
+            this.dataSource = null;
+            // Important: throw an SQLException
+            throw ex;
+        }
+
         try(Connection connection = getDbConnection()) {
             /* We don't use tumour record ID...
              stmtGetHighestTumourRecordID = dbConnection.prepareStatement(strGetHighestTumourRecordID);
              */
 
-            isConnected = connection != null;
+            isConnected = connection != null && connection.isValid(2);
 
             // Consider moving this function...
             if (isConnected && !tableOfDictionariesFilled) {
@@ -772,10 +781,9 @@ public class CanRegDAO {
 
     public boolean connectWithBootPassword(char[] passwordArray) throws RemoteException, SQLException {
         String password = new String(passwordArray);
-        hikaryProperties.setProperty("bootPassword", password);
-        boolean success = connect();
-        hikaryProperties.remove("bootPassword");
-        return success;
+        // Store bootPassword
+        bootPassword = password;
+        return connect();
     }
 
     public boolean encryptDatabase(char[] newPasswordArray, char[] oldPasswordArray,
@@ -822,13 +830,13 @@ public class CanRegDAO {
             // Encrypt database
             // http://db.apache.org/derby/docs/10.4/devguide/cdevcsecure866716.html
 
-            hikaryProperties.setProperty("dataEncryption", "true");
-            hikaryProperties.setProperty("encryptionKeyLength", encryptionKeyLength);
-            hikaryProperties.setProperty("encryptionAlgorithm", encryptionAlgorithm + "/" + defaultFeedbackMode + "/" + defaultPadding);
+            //hikaryProperties.setProperty("dataEncryption", "true");
+            //hikaryProperties.setProperty("encryptionKeyLength", encryptionKeyLength);
+            //hikaryProperties.setProperty("encryptionAlgorithm", encryptionAlgorithm + "/" + defaultFeedbackMode + "/" + defaultPadding);
             String password = new String(newPasswordArray);
-            hikaryProperties.setProperty("bootPassword", password);
-            String url =  getDatabaseUrl()+";create=true;dataEncryption=true;encryptionAlgorithm=Blowfish/CBC/NoPadding;bootPassword="+password;
-            
+            //hikaryProperties.setProperty("bootPassword", password);
+            String url =  getDatabaseUrl()+";create=true;dataEncryption=true;encryptionKeyLength="+encryptionKeyLength+";"+ "encryptionAlgorithm="+encryptionAlgorithm+ "/"+ defaultFeedbackMode+"/"+ defaultPadding+";"+ "bootPassword="+password + ";user=morten;" + "password=ervik";
+
             try(Connection connection = getConnectionWithCustomUrl(url)) {
                 connection.isValid(2);
             }
@@ -884,6 +892,9 @@ public class CanRegDAO {
 
     public String getDatabaseUrl() {
         String dbUrl = hikaryProperties.getProperty("derby.url") + getRegistryCode();
+        if(bootPassword != null) {
+            dbUrl = dbUrl + ";bootPassword="+bootPassword;
+        }
         return dbUrl;
     }
 
@@ -2146,6 +2157,7 @@ public class CanRegDAO {
         }
     }
     private Properties hikaryProperties;
+    private String bootPassword = null;
     private boolean isConnected;
     private final String registryCode;
     private final Document doc;

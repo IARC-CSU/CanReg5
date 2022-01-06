@@ -222,9 +222,10 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             dao = new CanRegDAO(sysDesc.getRegistryCode(), sysDesc.getSystemDescriptionDocument(), holding);
             connected = dao.connect();
         } catch (SQLException ex) {
-            // System.out.println(ex.getCause());
-            // System.out.println("Error-code: " + ex.getErrorCode());
-            //  System.out.println("SQL-state:" + ex.getSQLState());
+            System.out.println("ERROR ***");
+             System.out.println(ex.getCause());
+             System.out.println("Error-code: " + ex.getErrorCode());
+             System.out.println("SQL-state:" + ex.getSQLState());
             // If we reach this step and get a SQLexception - try with password
             JPasswordField pf = new JPasswordField();
             int okCxl = JOptionPane.showConfirmDialog(null, pf, "Please enter the database boot password",
