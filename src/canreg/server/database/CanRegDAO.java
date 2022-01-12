@@ -20,22 +20,54 @@
 package canreg.server.database;
 
 import canreg.client.CanRegClientApp;
-import canreg.common.*;
+import canreg.common.database.User;
+import canreg.common.database.Patient;
+import canreg.common.database.PopulationDatasetsEntry;
+import canreg.common.database.Tumour;
+import canreg.common.database.PopulationDataset;
+import canreg.common.database.Source;
+import canreg.common.database.NameSexRecord;
+import canreg.common.database.Dictionary;
+import canreg.common.database.DictionaryEntry;
+import canreg.common.database.AgeGroupStructure;
+import canreg.common.database.DatabaseRecord;
+import canreg.common.DatabaseDictionaryListElement;
 import canreg.common.cachingtableapi.DistributedTableDataSource;
 import canreg.common.cachingtableapi.DistributedTableDescription;
 import canreg.common.cachingtableapi.DistributedTableDescriptionException;
-import canreg.common.database.Dictionary;
-import canreg.common.database.*;
+import canreg.common.DatabaseFilter;
+import canreg.common.DatabaseVariablesListElement;
+import canreg.common.GlobalToolBox;
+import canreg.common.Globals;
 import canreg.server.DatabaseStats;
-import org.w3c.dom.Document;
-
-import javax.sql.DataSource;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.rmi.RemoteException;
-import java.sql.*;
-import java.util.*;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.w3c.dom.*;
+
+import javax.sql.DataSource;
 
 /**
  *
@@ -50,7 +82,6 @@ public class CanRegDAO {
     StringBuilder getterStringBuilder = new StringBuilder();
     StringBuilder filterStringBuilder = new StringBuilder();
     private DataSource dataSource;
-    Map<String, Connection> keepConnectionUntilResultSetRelease;
 
     /**
      *
@@ -72,7 +103,6 @@ public class CanRegDAO {
 
         locksMap = new TreeMap<String, Set<Integer>>();
         dataSource = null;
-        keepConnectionUntilResultSetRelease = new LinkedHashMap<>();
 
         debugOut(canreg.server.xml.Tools.getTextContent(
                 new String[]{ns + "canreg", ns + "general", ns + "registry_name"}, doc));
@@ -399,12 +429,12 @@ public class CanRegDAO {
         throws SQLException, UnknownTableException, DistributedTableDescriptionException {
         // distributedDataSources.remove(theUser);
         // ResultSet result;
-        
-        Connection connection = getDbConnection();
+        Statement statement = dbConnection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        // int rowCount = 0;
         DistributedTableDataSource dataSource;
-        Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY); 
-            // int rowCount = 0;
+
             activeStatements.put(resultSetID, statement);
+            
             if (null == filter.getQueryType()) {
                 dataSource = initiateTableQuery(filter, statement, tableName);
             } else // Is this a person search query?
@@ -424,8 +454,6 @@ public class CanRegDAO {
                 }
             }
         distributedDataSources.put(resultSetID, dataSource);
-        //The connection stays open until the ResultSet is released
-        keepConnectionUntilResultSetRelease.put(resultSetID,connection);
         activeStatements.remove(resultSetID);
         dataSource.getTableDescription().setResultSetID(resultSetID);
         return dataSource.getTableDescription();
@@ -442,8 +470,6 @@ public class CanRegDAO {
         if (dataSource != null) {
             dataSource.releaseResultSet();
         }
-        //Close the connection previously open in the getDistributedTableDescriptionAndInitiateDatabaseQuery
-        keepConnectionUntilResultSetRelease.get(resultSetID).close();
         distributedDataSources.remove(resultSetID);
     }
 
@@ -471,9 +497,8 @@ public class CanRegDAO {
      */
     public synchronized String performBackup() {
         String path = null;
-        try(Connection connection = getDbConnection();) {
-            path = canreg.server.database.derby.Backup.backUpDatabase(connection,
-                Globals.CANREG_BACKUP_FOLDER + Globals.FILE_SEPARATOR + getRegistryCode());
+        try {
+            path = canreg.server.database.derby.Backup.backUpDatabase(dbConnection, Globals.CANREG_BACKUP_FOLDER + Globals.FILE_SEPARATOR + getRegistryCode());
             canreg.server.xml.Tools.writeXmlFile(doc, path + Globals.FILE_SEPARATOR + getRegistryCode() + ".xml");
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, null, ex);
@@ -526,10 +551,12 @@ public class CanRegDAO {
         return props;
     }
 
-    private synchronized boolean createTables(Connection connection) {
+    private synchronized boolean createTables(Connection dbConnection) {
         boolean bCreatedTables = false;
+        Statement statement;
+        try {
+            statement = dbConnection.createStatement();
        
-        try(Statement statement = connection.createStatement()) {
             // Dynamic creation of tables
             statement.execute(QueryGenerator.strCreateVariableTable(Globals.TUMOUR_TABLE_NAME, doc));
             statement.execute(QueryGenerator.strCreateVariableTable(Globals.PATIENT_TABLE_NAME, doc));
@@ -583,8 +610,8 @@ public class CanRegDAO {
 
     private boolean createDatabase() {
         boolean bCreated = false;
-        // No bootpassword when creating the database
-        String dbUrl = getDatabaseUrl(null);
+        dbConnection = null;
+        String dbUrl = getDatabaseUrl();
         dbProperties.put("create", "true");
 
         // testing the case insensitivity
@@ -594,8 +621,9 @@ public class CanRegDAO {
         // Should this be moved to an option? I guess not...
         dbProperties.put("collation", "TERRITORY_BASED:PRIMARY");
 
-        try(Connection connection = DriverManager.getConnection(dbUrl, dbProperties)) {
-            bCreated = createTables(connection);
+        try {
+            dbConnection = DriverManager.getConnection(dbUrl, dbProperties);
+            bCreated = createTables(dbConnection);
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, null, ex);
         }
@@ -613,9 +641,9 @@ public class CanRegDAO {
         boolean bRestored = false, shutdownSuccess = false;
         SQLException ex = null;
         String dbUrl = getDatabaseUrl();
-        Connection dbConnection = null;
+
         try {
-            // TODO : close pool
+            dbConnection.close(); // Close current connection.
             dbProperties.put("shutdown", "true");
             dbConnection = DriverManager.getConnection(dbUrl, dbProperties);
         } catch (SQLException e) {
@@ -628,14 +656,6 @@ public class CanRegDAO {
         }
         if (!shutdownSuccess) {
             dbProperties.remove("shutdown");
-            try {
-                if (dbConnection != null && !dbConnection.isClosed()){
-                    // Close current connection. if exists
-                    dbConnection.close(); 
-                }
-            } catch (SQLException e) {
-                // do nothing
-            }
             LOGGER.log(Level.SEVERE, null, ex);
             // ((DonMan) parent).signalError("Error during shutdown for RESTORE: ", ex,
             //        "in: DonDao.restore", false);
@@ -643,6 +663,7 @@ public class CanRegDAO {
         }
         try {
             dbProperties.remove("shutdown");
+            dbConnection.close(); // Close current connection.
 
             // check to see if there is a database already - rename it
             File databaseFolder = new File(Globals.CANREG_SERVER_DATABASE_FOLDER + Globals.FILE_SEPARATOR + getRegistryCode());
@@ -664,7 +685,6 @@ public class CanRegDAO {
             dbProperties.put("restoreFrom", path + "/" + getRegistryCode());
             dbConnection = DriverManager.getConnection(dbUrl,dbProperties);
             bRestored = true;
-            dbConnection.close();
         } catch (SQLException ex2) {
             LOGGER.log(Level.SEVERE, null, ex2);
             //((DonMan) parent).signalError("Error during RESTORE: ", e,
@@ -715,25 +735,23 @@ public class CanRegDAO {
     }
     
     public boolean connect() throws SQLException, RemoteException {
-
-        // First check the connection alone
-        try(Connection connection = getDbConnection()) {
+        String dbUrl = getDatabaseUrl();
+        try {
+            dbConnection = DriverManager.getConnection(dbUrl, dbProperties);
             debugOut("Connection successful");
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.INFO, "JavaDB Version: {0}",
-                    connection.getMetaData().getDatabaseProductVersion());
+            LOGGER.log(Level.INFO, "JavaDB Version: {0}", dbConnection.getMetaData().getDatabaseProductVersion());
         } catch (SQLException ex) {
-            // reset the datasource now to have a chance to change it
-            this.dataSource = null;
-            // Important: throw an SQLException
+            // Important: throw an SQLException here, in cas the DB is encrypted
             throw ex;
         }
 
-        try(Connection connection = getDbConnection()) {
+
+        try {
             /* We don't use tumour record ID...
              stmtGetHighestTumourRecordID = dbConnection.prepareStatement(strGetHighestTumourRecordID);
              */
 
-            isConnected = connection != null && connection.isValid(2);
+            isConnected = dbConnection != null;
 
             // Consider moving this function...
             if (isConnected && !tableOfDictionariesFilled) {
@@ -745,7 +763,7 @@ public class CanRegDAO {
             }
 
             // test
-            debugOut("Cocuou from the database connection...\nVersion: " + connection.getMetaData().getDatabaseProductVersion());
+            debugOut("database connection OK\nVersion: " + dbConnection.getMetaData().getDatabaseProductVersion());
             debugOut("Next patient ID = " + getNextPatientID());
         } catch (SQLException ex) {
             debugOut("SQLerror... ");
@@ -759,9 +777,13 @@ public class CanRegDAO {
 
     public boolean connectWithBootPassword(char[] passwordArray) throws RemoteException, SQLException {
         String password = new String(passwordArray);
-        // Store bootPassword
-        bootPassword = password;
-        return connect();
+        dbProperties.setProperty("bootPassword", password);
+        boolean success = connect();
+        if(success) {
+            this.bootPassword = password;
+        }
+        dbProperties.remove("bootPassword");
+        return success;
     }
 
     public boolean encryptDatabase(char[] newPasswordArray, char[] oldPasswordArray,
@@ -780,8 +802,8 @@ public class CanRegDAO {
             String newPassword = new String(newPasswordArray);
             String command = "CALL SYSCS_UTIL.SYSCS_SET_DATABASE_PROPERTY("
                     + "\'bootPassword\', \'" + oldPassword + " , " + newPassword + "\')";
-            try (Connection connection = getDbConnection();
-                Statement statement = connection.createStatement()){
+            try {
+                Statement statement = dbConnection.createStatement(); 
                 statement.execute(command);
                 return true;
             } catch (SQLException ex) {
@@ -791,33 +813,34 @@ public class CanRegDAO {
         } else if (newPasswordArray.length == 0) {
             // remove password
             String oldPassword = new String(oldPasswordArray);
-            // TOD: remove ? dbProperties.setProperty("bootPassword", oldPassword);
-            String dbUrl = getDatabaseUrl() + ";bootPassword= " + oldPassword + ";upgrade=true";
-            try( Connection connection = getConnectionWithCustomUrl(dbUrl)) {
+            dbProperties.setProperty("bootPassword", oldPassword);
+            try {
+                disconnect();
                 // side effect of removing password is that we have to upgrade the database version
-                if(connection.isValid(1)){  
-                    dbProperties.setProperty("decryptDatabase", "true");
-                    connection.commit();
-                    return true;
-                }
+                dbConnection = DriverManager.getConnection(getDatabaseUrl() + ";bootPassword= " + oldPassword + ";upgrade=true", dbProperties);
+                disconnect();
             } catch (SQLException ex) {
                 LOGGER.log(Level.SEVERE, null, ex);
                 return false;
             }
+            dbProperties.setProperty("decryptDatabase", "true");
+            Connection conn = DriverManager.getConnection(getDatabaseUrl(), dbProperties);
+            conn.commit();
+            bootPassword = null;
+            
         } else {
             // Encrypt database
             // http://db.apache.org/derby/docs/10.4/devguide/cdevcsecure866716.html
-
-            //hikaryProperties.setProperty("dataEncryption", "true");
-            //hikaryProperties.setProperty("encryptionKeyLength", encryptionKeyLength);
-            //hikaryProperties.setProperty("encryptionAlgorithm", encryptionAlgorithm + "/" + defaultFeedbackMode + "/" + defaultPadding);
-            String password = new String(newPasswordArray);
-            //hikaryProperties.setProperty("bootPassword", password);
-            String url =  getDatabaseUrl()+";create=true;dataEncryption=true;encryptionKeyLength="+encryptionKeyLength+";"+ "encryptionAlgorithm="+encryptionAlgorithm+ "/"+ defaultFeedbackMode+"/"+ defaultPadding+";"+ "bootPassword="+password + ";user=morten;" + "password=ervik";
-
-            try(Connection connection = getConnectionWithCustomUrl(url)) {
-                connection.isValid(2);
+            try {
+                disconnect();
+            } catch (SQLException ex) {
+                LOGGER.log(Level.SEVERE, null, ex);
             }
+            dbProperties.setProperty("dataEncryption", "true");
+            dbProperties.setProperty("encryptionKeyLength", encryptionKeyLength);
+            dbProperties.setProperty("encryptionAlgorithm", encryptionAlgorithm + "/" + defaultFeedbackMode + "/" + defaultPadding);
+            String password = new String(newPasswordArray);
+            dbProperties.setProperty("bootPassword", password);
         }
         dbProperties.remove("bootPassword");
         dbProperties.remove("newBootPassword");
@@ -839,13 +862,11 @@ public class CanRegDAO {
     public boolean disconnect() throws SQLException {
         boolean shutdownSuccess = false;
         if (isConnected) {
+            String dbUrl = getDatabaseUrl();
             try{
-                Connection connection = getDbConnection();
-                if(!connection.isClosed()){
-                    connection.close();
-                }
+                dbConnection.close(); // Close current connection.
                 dbProperties.put("shutdown", "true");
-                connection = getDbConnection();
+                dbConnection = DriverManager.getConnection(dbUrl, dbProperties);
             } catch (SQLException e) {
                 if (e.getSQLState().equals("08006")) {
                     shutdownSuccess = true; // single db.
@@ -2085,9 +2106,9 @@ public class CanRegDAO {
     }
 
     protected synchronized void dropAndRebuildUsersTable() {
-        try(Connection connection = getDbConnection();
-            Statement statement = connection.createStatement())
-        {
+        try {
+            Statement statement;
+            statement = dbConnection.createStatement();
             statement.execute("DROP TABLE " + Globals.SCHEMA_NAME + ".USERS");
             statement.execute(QueryGenerator.strCreateUsersTable());
         } catch (SQLException ex) {
@@ -2142,6 +2163,7 @@ public class CanRegDAO {
             LOGGER.log(Level.INFO, msg);
         }
     }
+    private Connection dbConnection;
     private Properties dbProperties;
     private String bootPassword = null;
     private boolean isConnected;
@@ -2249,6 +2271,7 @@ public class CanRegDAO {
             String tumourIDSourceTableVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourIDSourceTable.toString()).getDatabaseVariableName();
             for (Source source : sources) {
                 source.setVariable(tumourIDSourceTableVariableName, tumourID);
+                // FIXME: connection is not used
                 try(Connection connection = getDbConnection() ) {
                     saveSource(source);
                 } catch (RecordLockedException ex) {
@@ -2598,10 +2621,8 @@ public class CanRegDAO {
     }
 
     public boolean dropAndRebuildKeys() throws SQLException {
-        try( Connection connection = getDbConnection();
-            Statement statement = connection.createStatement()) {
-            return dropAndRebuildKeys(statement);
-        }
+        Statement statement = dbConnection.createStatement();
+        return dropAndRebuildKeys(statement);
     }
 
     private boolean dropAndRebuildKeys(Statement statement) throws SQLException {
@@ -2678,33 +2699,30 @@ public class CanRegDAO {
     public boolean addColumnToTable(String columnName, String columnType, String table) throws SQLException {
         boolean success = false;
 
-        try(Connection connection = getDbConnection();
-            Statement statement = connection.createStatement()) {
-            statement.execute(QueryGenerator.strAddColumnToTable(columnName, columnType, table));
-            success = true;
-        }
+        Statement statement = dbConnection.createStatement();
+        statement.execute(QueryGenerator.strAddColumnToTable(columnName, columnType, table));
+        success = true;
+
         return success;
     }
 
     public boolean setColumnDataType(String columnName, String columnType, String table) throws SQLException {
         boolean success;
 
-        try(Connection connection = getDbConnection();
-            Statement statement = connection.createStatement()) {
-            statement.execute(QueryGenerator.strSetColumnDataType(columnName, columnType, table));
-            success = true;
-        }
+        Statement statement = dbConnection.createStatement();
+        statement.execute(QueryGenerator.strSetColumnDataType(columnName, columnType, table));
+        success = true;
+
         return success;
     }
 
     public boolean dropColumnFromTable(String columnName, String table) throws SQLException {
         boolean success;
-        try(Connection connection = getDbConnection();            
-            Statement statement = connection.createStatement()) 
-        {
-            statement.execute(QueryGenerator.strDropColumnFromTable(columnName, table));
+
+        Statement statement = dbConnection.createStatement();
+        statement.execute(QueryGenerator.strDropColumnFromTable(columnName, table));
             success = true;
-        }
+
         return success;
     }
 
@@ -2713,11 +2731,10 @@ public class CanRegDAO {
     }
 
     void upgrade() throws SQLException, RemoteException {
-        String customDbUrl = getDatabaseUrl() + ";upgrade=true";
-        try(Connection connection = getConnectionWithCustomUrl(customDbUrl)) {
-            LOGGER.log(Level.INFO, "JavaDB Version: {0}", connection.getMetaData().getDatabaseProductVersion());
-        } catch (SQLException ex) {
-           LOGGER.log(Level.SEVERE,"Error in the upgrade connection",ex);
-        }
+        // disconnect();
+        dbConnection = DriverManager.getConnection(getDatabaseUrl() + ";upgrade=true", dbProperties);
+        LOGGER.log(Level.INFO, "JavaDB Version: {0}", dbConnection.getMetaData().getDatabaseProductVersion());
+        // disconnect();
+        // connect();
     }
 }
