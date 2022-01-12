@@ -65,7 +65,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.w3c.dom.*;
+import org.w3c.dom.Document;
 
 import javax.sql.DataSource;
 
@@ -81,14 +81,59 @@ public class CanRegDAO {
     StringBuilder counterStringBuilder = new StringBuilder();
     StringBuilder getterStringBuilder = new StringBuilder();
     StringBuilder filterStringBuilder = new StringBuilder();
-    private DataSource dataSource;
+    
+    /** 
+     * The dataSource is used only for access to a remote database (localhost and port), <br> 
+     * on a Canreg server with the database server started (NetworkServerControl), <br>
+     * and with multiple connections (pool).<br>
+     * <br>
+     * It must remain null on Canreg5 Server 
+     * = use the unique connection dbConnection on the server.<br>
+     * (an embedded connection must be unique and connot be handled in a pool,
+     * and a remote connection cannot work if the NetworkServerControl is not started automatically)
+     */
+    private DataSource dbDatasource;
 
     /**
-     *
-     * @param registryCode
-     * @param doc
+     * Constructor for local dao on Canreg server.
+     * @param registryCode registry code
+     * @param doc doc
+     * @param holding true if holding db
      */
     public CanRegDAO(String registryCode, Document doc, boolean holding) {
+        this(doc, registryCode, holding);
+        setDBSystemDir();
+        dbProperties = loadDBProperties();
+        if (!dbExists()) {
+            createDatabase();
+            tableOfDictionariesFilled = false;
+            tableOfPopulationDataSets = false;
+        }
+        // In this local mode, dbDatasource must be null
+        dbDatasource = null;
+    }
+    
+    /**
+     * Constructor for a remote dao.
+     * @param registryCode registry code
+     * @param doc doc
+     * @param databaseProperties database properties with user, password, bootPassword if required, pool properties...            
+     */
+    public CanRegDAO(String registryCode, Document doc, Properties databaseProperties) {
+        this(doc, registryCode, false);
+        dbProperties = databaseProperties;
+        this.bootPassword = databaseProperties.getProperty("bootPassword");
+        // Initialize the datasource
+        initDataSource(databaseProperties);
+    }
+    
+    /**
+     * Constructor
+     * @param doc doc
+     * @param registryCode registry code
+     * @param holding true if holding db
+     */
+    private CanRegDAO(Document doc, String registryCode, boolean holding) {
         this.doc = doc;
 
         this.registryCode = registryCode;
@@ -102,7 +147,6 @@ public class CanRegDAO {
         dictionaryMap = buildDictionaryMap(doc);
 
         locksMap = new TreeMap<String, Set<Integer>>();
-        dataSource = null;
 
         debugOut(canreg.server.xml.Tools.getTextContent(
                 new String[]{ns + "canreg", ns + "general", ns + "registry_name"}, doc));
@@ -134,13 +178,54 @@ public class CanRegDAO {
         /* We don't use tumour record ID...
          strGetHighestTumourRecordID = QueryGenerator.strGetHighestTumourRecordID(globalToolBox);
          */
-        setDBSystemDir();
-        dbProperties = loadDBProperties();
-        if (!dbExists()) {
-            createDatabase();
-            tableOfDictionariesFilled = false;
-            tableOfPopulationDataSets = false;
+    }
+
+    /**
+     * Wrap the unique connection.<br>
+     * See DbConnectionWrapper
+     * @param connection new connection
+     * @return DbConnectionWrapper
+     */
+    private DbConnectionWrapper wrapUniqueConnection(Connection connection) {
+        return new DbConnectionWrapper(connection);
+    }
+
+    /**
+     * Open the unique connection (embedded) and sets dbConnection.
+     * @param dbUrl database url
+     * @throws SQLException SQLException
+     */
+    private void openUniqueConnection(String dbUrl) throws SQLException {
+        dbConnection = wrapUniqueConnection(DriverManager.getConnection(dbUrl, dbProperties));
+    }
+
+    /** Get the connection from the dataSource
+     *
+     * @return a connection 
+     * @throws SQLException SQLException
+     */
+    public Connection getDbConnection() throws SQLException {
+        if(dbDatasource == null) {
+            // Unique embedded connection on Canreg server
+            return dbConnection;
         }
+        // create a new connection for a remote access
+        return dbDatasource.getConnection();
+    }
+
+    /**
+     * Create a datasource with a connection pool FOR REMOTE ACCESS only.<br> 
+     * The Connection pool allows handling simultaneous multiple connection from the server to the database
+     * each connection is treated separately.
+     *
+     * @return a data source
+     * @param databaseProperties database properties with user, password, bootPassword if required, pool properties... 
+     */
+    public DataSource initDataSource(Properties databaseProperties) {
+        String dbUrl = getDatabaseUrl();
+        dbDatasource = PoolConnection.DbDatasource(dbUrl, databaseProperties);
+        LOGGER.log(Level.INFO, "DataSource created\n" + databaseProperties.toString());
+        return dbDatasource;
     }
 
     public synchronized Map<Integer, Dictionary> getDictionary() {
@@ -622,7 +707,7 @@ public class CanRegDAO {
         dbProperties.put("collation", "TERRITORY_BASED:PRIMARY");
 
         try {
-            dbConnection = DriverManager.getConnection(dbUrl, dbProperties);
+            openUniqueConnection(dbUrl);
             bCreated = createTables(dbConnection);
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, null, ex);
@@ -643,9 +728,9 @@ public class CanRegDAO {
         String dbUrl = getDatabaseUrl();
 
         try {
-            dbConnection.close(); // Close current connection.
+            dbConnection.trulyClose(); // Close current connection.
             dbProperties.put("shutdown", "true");
-            dbConnection = DriverManager.getConnection(dbUrl, dbProperties);
+            openUniqueConnection(dbUrl);
         } catch (SQLException e) {
             if (e.getSQLState().equals("08006")) {
                 shutdownSuccess = true; // single db.
@@ -663,7 +748,7 @@ public class CanRegDAO {
         }
         try {
             dbProperties.remove("shutdown");
-            dbConnection.close(); // Close current connection.
+            dbConnection.trulyClose(); // Close current connection.
 
             // check to see if there is a database already - rename it
             File databaseFolder = new File(Globals.CANREG_SERVER_DATABASE_FOLDER + Globals.FILE_SEPARATOR + getRegistryCode());
@@ -683,7 +768,7 @@ public class CanRegDAO {
                 }
             }
             dbProperties.put("restoreFrom", path + "/" + getRegistryCode());
-            dbConnection = DriverManager.getConnection(dbUrl,dbProperties);
+            openUniqueConnection(dbUrl);
             bRestored = true;
         } catch (SQLException ex2) {
             LOGGER.log(Level.SEVERE, null, ex2);
@@ -706,38 +791,10 @@ public class CanRegDAO {
         }
     }
     
-    /**
-     * Create a connection to the database with a datasource. 
-     * The HikariDataSource allows handling simultaneous multiple connection from the server to the database
-     * each connection is treated separately
-     *
-     * @return a data source
-     * @throws SQLException SQLException
-     */
-    public DataSource initDataSource() throws SQLException {
-        if (dataSource == null) {
-            String dbUrl = getDatabaseUrl();
-            dataSource = PoolConnection.DbDatasource(dbUrl, dbProperties);
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.INFO, dbProperties.toString());
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.INFO,
-                " No DataSource is available. Creating a new one.");
-        }
-        return dataSource;
-    }
-
-    /** Get the connection from the dataSource
-     * 
-      * @return a connection 
-     * @throws SQLException SQLException
-     */
-    public Connection getDbConnection() throws SQLException {
-        return initDataSource().getConnection();
-    }
-    
     public boolean connect() throws SQLException, RemoteException {
         String dbUrl = getDatabaseUrl();
         try {
-            dbConnection = DriverManager.getConnection(dbUrl, dbProperties);
+            openUniqueConnection(dbUrl);
             debugOut("Connection successful");
             LOGGER.log(Level.INFO, "JavaDB Version: {0}", dbConnection.getMetaData().getDatabaseProductVersion());
         } catch (SQLException ex) {
@@ -817,7 +874,8 @@ public class CanRegDAO {
             try {
                 disconnect();
                 // side effect of removing password is that we have to upgrade the database version
-                dbConnection = DriverManager.getConnection(getDatabaseUrl() + ";bootPassword= " + oldPassword + ";upgrade=true", dbProperties);
+                openUniqueConnection(getDatabaseUrl() 
+                        + ";bootPassword= " + oldPassword + ";upgrade=true");
                 disconnect();
             } catch (SQLException ex) {
                 LOGGER.log(Level.SEVERE, null, ex);
@@ -854,19 +912,14 @@ public class CanRegDAO {
         return success;
     }
 
-    private Connection getConnectionWithCustomUrl(String dbUrl) throws SQLException {
-        dataSource = PoolConnection.DbDatasource(dbUrl, dbProperties);
-        return dataSource.getConnection();
-    }
-
     public boolean disconnect() throws SQLException {
         boolean shutdownSuccess = false;
         if (isConnected) {
             String dbUrl = getDatabaseUrl();
             try{
-                dbConnection.close(); // Close current connection.
+                dbConnection.trulyClose(); // Close current connection.
                 dbProperties.put("shutdown", "true");
-                dbConnection = DriverManager.getConnection(dbUrl, dbProperties);
+                openUniqueConnection(dbUrl);
             } catch (SQLException e) {
                 if (e.getSQLState().equals("08006")) {
                     shutdownSuccess = true; // single db.
@@ -2163,7 +2216,7 @@ public class CanRegDAO {
             LOGGER.log(Level.INFO, msg);
         }
     }
-    private Connection dbConnection;
+    private DbConnectionWrapper dbConnection;
     private Properties dbProperties;
     private String bootPassword = null;
     private boolean isConnected;
@@ -2732,7 +2785,7 @@ public class CanRegDAO {
 
     void upgrade() throws SQLException, RemoteException {
         // disconnect();
-        dbConnection = DriverManager.getConnection(getDatabaseUrl() + ";upgrade=true", dbProperties);
+        openUniqueConnection(getDatabaseUrl() + ";upgrade=true");
         LOGGER.log(Level.INFO, "JavaDB Version: {0}", dbConnection.getMetaData().getDatabaseProductVersion());
         // disconnect();
         // connect();
