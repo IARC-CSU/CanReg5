@@ -196,7 +196,8 @@ public final class LocalSettings {
         // Initialize properties
         properties = new Properties();
         // Try to load the settings file
-        boolean settingsLoaded = loadSettings();
+        boolean settingsLoaded = loadSettings(
+                new File(settingsDir + System.getProperty("file.separator") + settingsFileName));
 
         if (!settingsLoaded) {
             // If not possible to load the settings - get the default ones
@@ -207,6 +208,23 @@ public final class LocalSettings {
         writeSettings();
     }
 
+    /**
+     * Constructor for a remote use as a library (DO NOT USE in Canreg server).
+     * @param localSettingsFile localSettingsFile
+     */
+    public LocalSettings(File localSettingsFile) {
+        this.settingsFileName = localSettingsFile.getAbsolutePath();
+        settingsDir = localSettingsFile.getParent();
+        // Initialize properties
+        properties = new Properties();
+        // Try to load the settings file
+        boolean settingsLoaded = loadSettings(localSettingsFile);
+
+        if (!settingsLoaded) {
+            throw new RuntimeException("Impossible to load the settings: " + localSettingsFile);
+        }
+        
+    }
     /**
      *
      * @param name
@@ -280,10 +298,10 @@ public final class LocalSettings {
         setProperty(LOCALE_KEY, localeCode);
     }
 
-    private boolean loadSettings() {
+    private boolean loadSettings(File file) {
         settingsChanged = false;
         boolean success;
-        try (InputStream propInputStream = new FileInputStream(settingsDir + System.getProperty("file.separator") + settingsFileName)){      //NOSONAR        
+        try (InputStream propInputStream = new FileInputStream(file)){      //NOSONAR        
             setProperties(new Properties());
             getProperties().loadFromXML(propInputStream);
             success = true;

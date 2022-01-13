@@ -68,6 +68,9 @@ import org.apache.commons.csv.CSVRecord;
 public class Tools {
     
     private static final Logger LOGGER = Logger.getLogger(Tools.class.getName());
+    
+    /** Static storage of the local settings. */
+    private static LocalSettings localSettings;
     /**
      * 
      * @param objects
@@ -210,19 +213,23 @@ public class Tools {
     }
 
     /**
-     * 
-     * @param doc
-     * @param namespace
-     * @param dictionaryMap
-     * @param groupsMap
-     * @return
+     * getVariableListElements.
+     * @param doc doc 
+     * @param namespace namespace
+     * @param dictionaryMap dictionaryMap
+     * @param groupsMap groupsMap
+     * @return array of DatabaseVariablesListElement
      */
-    public static DatabaseVariablesListElement[] getVariableListElements(Document doc, String namespace, TreeMap<String, DatabaseDictionaryListElement> dictionaryMap, TreeMap<String, DatabaseGroupsListElement> groupsMap) {
+    public static DatabaseVariablesListElement[] getVariableListElements(Document doc, String namespace, 
+            TreeMap<String, DatabaseDictionaryListElement> dictionaryMap, TreeMap<String, 
+            DatabaseGroupsListElement> groupsMap) {
         if (doc == null) {
             return new DatabaseVariablesListElement[0];
         }
-        LocalSettings localSettings = CanRegClientApp.getApplication().getLocalSettings();
-                
+        if(localSettings == null) {
+            localSettings = CanRegClientApp.getApplication().getLocalSettings();
+        }
+
         String dateFormatString = localSettings.getDateFormatString();
         DatabaseVariablesListElement.VariableType displayVariableType = localSettings.getDisplayVariableType();
 
@@ -1257,5 +1264,23 @@ public class Tools {
         if (!folder.delete())
           return false;
         return true;
+    }
+
+    /**
+     * Setter localSettings.
+     *
+     * @param localSettings localSettings.
+     */
+    public static void setLocalSettings(LocalSettings localSettings) {
+        Tools.localSettings = localSettings;
+    }
+
+    /**
+     * Getter localSettings.
+     *
+     * @return localSettings localSettings.
+     */
+    public static LocalSettings getLocalSettings() {
+        return localSettings;
     }
 }
