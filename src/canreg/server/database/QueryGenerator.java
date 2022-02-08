@@ -398,6 +398,7 @@ public class QueryGenerator {
         // add an unique identifier
         // commands.add("ALTER TABLE APP.TUMOUR DROP UNIQUE (" + canreg.common.Tools.toUpperCaseStandardized(databaseVariableName) + ")");
 
+        // FIXME: fails for holding db
         commands.add("ALTER TABLE APP.TUMOUR ADD UNIQUE (" + canreg.common.Tools.toUpperCaseStandardized(databaseVariableName) + ")");
         // create primary key
         commands.add("ALTER TABLE APP.TUMOUR ADD PRIMARY KEY ( " + Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME + " , " + canreg.common.Tools.toUpperCaseStandardized(databaseVariableName) + ") ");
@@ -409,6 +410,7 @@ public class QueryGenerator {
         // drop the current primary key
         commands.add("ALTER TABLE APP.SOURCE DROP PRIMARY KEY");
         // add an unique identifier
+        // FIXME: fails for holding db
         commands.add("ALTER TABLE APP.SOURCE ADD UNIQUE (" + canreg.common.Tools.toUpperCaseStandardized(databaseVariableName) + ")");
 
         commands.add("ALTER TABLE APP.SOURCE ALTER COLUMN " + canreg.common.Tools.toUpperCaseStandardized(databaseVariableName) + "  NOT NULL");
