@@ -19,7 +19,6 @@
  */
 package canreg.server.database;
 
-import canreg.client.CanRegClientApp;
 import canreg.common.database.User;
 import canreg.common.database.Patient;
 import canreg.common.database.PopulationDatasetsEntry;
@@ -381,21 +380,8 @@ public class CanRegDAO {
             Statement queryStatement = connection.createStatement()) {
             ResultSet results = queryStatement.executeQuery("SELECT * FROM APP.USERS");
             while (results.next()) {
-                int id = results.getInt(1);
-                String username = results.getString(2);
-                String password = results.getString(3);
-                int userLevelIndex = results.getInt(4);
-                String email = results.getString(5);
-                String realName = results.getString(6);
-
-                User user = new User();
-                user.setID(id);
-                user.setUserName(username);
-                user.setPassword(password.toCharArray());
-                user.setUserRightLevelIndex(userLevelIndex);
-                user.setEmail(email);
-                user.setRealName(realName);
-                usersMap.put(username, user);
+                User user = buildUserFromResultSet(results);
+                usersMap.put(user.getUserName(), user);
             }
 
         } catch (SQLException sqle) {
@@ -403,6 +389,49 @@ public class CanRegDAO {
         }
         return usersMap;
     }
+
+    /**
+     * Get a user by userName
+     * @param userName the user name
+     * @return the User if found, else null
+     */
+    public synchronized User getUserByUsername(String userName) {
+        User user = null;
+        try( Connection connection = getDbConnection();
+            PreparedStatement stmtGetUser = connection.prepareStatement(strGetUserByUserName)
+            ) {
+            stmtGetUser.clearParameters();
+            stmtGetUser.setString(1, userName);
+            ResultSet results = stmtGetUser.executeQuery();
+            // Read only the first result
+            if (results.next()) {
+                user = buildUserFromResultSet(results);
+            }
+
+        } catch (SQLException sqle) {
+            LOGGER.log(Level.SEVERE, null, sqle);
+        }
+        return user;
+    }
+
+    private User buildUserFromResultSet(ResultSet results) throws SQLException {
+        int id = results.getInt(1);
+        String username = results.getString(2);
+        String password = results.getString(3);
+        int userLevelIndex = results.getInt(4);
+        String email = results.getString(5);
+        String realName = results.getString(6);
+
+        User user = new User();
+        user.setID(id);
+        user.setUserName(username);
+        user.setPassword(password.toCharArray());
+        user.setUserRightLevelIndex(userLevelIndex);
+        user.setEmail(email);
+        user.setRealName(realName);
+        return user;
+    }
+
 
     public synchronized Map<Integer, PopulationDataset> getPopulationDatasets() {
         Map<Integer, PopulationDataset> populationDatasetMap = new LinkedHashMap<>();
@@ -2305,6 +2334,8 @@ public class CanRegDAO {
     private static final String strDeletePopulationDatasetEntries
             = "DELETE FROM APP.PDSET "
             + "WHERE PDS_ID = ?";
+    private static final String strGetUserByUserName
+            = "SELECT * FROM APP.USERS WHERE username = ?";
     // The Dynamic ones
     private final String strMaxNumberOfSourcesPerTumourRecord;
     private final String strSavePatient;
