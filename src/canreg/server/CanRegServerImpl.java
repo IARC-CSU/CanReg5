@@ -272,7 +272,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      * @return "HOLDING_" + registryCode + "_" + normalizedUserName + "_" + yyyy-mm-dd
      *      or "HOLDING_" + registryCode + "_" + normalizedUserName
      */
-    public String getRegistryCodeForApiHolding(String mainRegistryCode, User apiUser, boolean withDate) {
+    public static String getRegistryCodeForApiHolding(String mainRegistryCode, User apiUser, boolean withDate) {
         String dateSuffix = "";
         if(withDate) {
             dateSuffix = new SimpleDateFormat("yyyy-MM-dd").format((Calendar.getInstance()).getTime());
