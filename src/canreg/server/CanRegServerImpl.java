@@ -75,6 +75,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
+import org.apache.commons.lang.StringUtils;
 import org.apache.derby.drda.NetworkServerControl;
 import org.w3c.dom.Document;
 
@@ -209,6 +210,76 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         // Update the tooltip now that everything is up and running...
         setTrayIconToolTip("CanReg5 server " + systemDescription.getRegistryName() + " (" + registryCode + ") running");
         displayTrayIconPopUpMessage("Server running", "CanReg5 server " + systemDescription.getRegistryName() + " (" + registryCode + ") running", MessageType.INFO);
+        
+        // Step six: create the holding DBs for the API users
+        initHoldingDbsForApiUsers(systemDescription);
+    }
+
+    /**
+     * Initialize all the databases for the users allowed to run the "rest api".
+     * @param mainSystemDescription the main system description
+     * @throws RemoteException remote exception
+     */
+    private void initHoldingDbsForApiUsers(final SystemDescription mainSystemDescription) throws RemoteException {
+        // TODO: add config to force or not the start of these databases
+        Map<String, User> usersMap = currentDAO.getUsers();
+        for(User apiUser : usersMap.values()) {
+            // TODO: read the RESTAPI role in the configuration, use ANALYST until then 
+            if(apiUser.getUserRightLevel().equals(UserRightLevels.ANALYST)) {
+                LOGGER.info("Creating holding DB for User: " + apiUser.getUserName());
+                String mainRegistryCode = getCanRegRegistryCode();
+                try {
+                    SystemDescription holdingSystemDescription = createNewApiHoldingDBSystemDescription(
+                                    mainRegistryCode, 
+                                    mainSystemDescription, 
+                                    apiUser);
+                    initDataBase(holdingSystemDescription, true);
+                } catch (IOException e) {
+                    LOGGER.log(Level.SEVERE, "Error creating holding DB for " + apiUser.getUserName(), e);
+                    // go on...
+                }
+            }
+        }
+    }
+
+    /**
+     * Create the system description for a user "rest api".
+     * @param mainRegistryCode the main registry code, like TRN
+     * @param mainSystemDescription the main system description
+     * @param apiUser the api user
+     * @return a new SystemDescription for the holding db for this api user
+     * @throws SecurityException SecurityException
+     */
+    public SystemDescription createNewApiHoldingDBSystemDescription(String mainRegistryCode, SystemDescription mainSystemDescription, User apiUser)
+            throws SecurityException {
+        SystemDescription holdingSystemDescrption = new SystemDescription(mainSystemDescription.getDescriptionFilePath());
+        File registryCodeHoldingFolder = getRegistryCodeHoldingFolder(mainRegistryCode);
+        String holdingRegistryCode = getRegistryCodeForApiHolding(mainRegistryCode, apiUser, false);
+        File holdingXmlPath = new File(registryCodeHoldingFolder, holdingRegistryCode);
+        holdingXmlPath.mkdirs();
+        File holdingXml = new File(holdingXmlPath, holdingRegistryCode + ".xml");
+        holdingSystemDescrption.setRegistryCode(holdingRegistryCode);
+        holdingSystemDescrption.setSystemDescriptionLocation(holdingXmlPath);
+        holdingSystemDescrption.saveSystemDescriptionXML(holdingXml.getAbsolutePath());
+        return holdingSystemDescrption;
+    }
+
+    /**
+     * Build the registry code for a holding db for an api user.
+     * @param mainRegistryCode main registry code like TRN
+     * @param apiUser the api user
+     * @param withDate true to add the date: _yyyy-mm-dd                 
+     * @return "HOLDING_" + registryCode + "_" + normalizedUserName + "_" + yyyy-mm-dd
+     *      or "HOLDING_" + registryCode + "_" + normalizedUserName
+     */
+    public String getRegistryCodeForApiHolding(String mainRegistryCode, User apiUser, boolean withDate) {
+        String dateSuffix = "";
+        if(withDate) {
+            dateSuffix = new SimpleDateFormat("yyyy-MM-dd").format((Calendar.getInstance()).getTime());
+        }
+        // Normalize the user name: remove spaces and quotes
+        String normalizedUserName = StringUtils.replaceChars(apiUser.getUserName().trim(), " '", "-");
+        return "HOLDING_" + mainRegistryCode + "_" + normalizedUserName + dateSuffix;
     }
 
     @Override
@@ -264,7 +335,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             sysDesc = new SystemDescription(Globals.CANREG_SERVER_ADHOC_DB_SYSTEM_DESCRIPTION_FOLDER + Globals.FILE_SEPARATOR + originalRegistryCode + ".xml");
         } else {
             if (holding) {
-                sysDesc = new SystemDescription(Globals.CANREG_SERVER_HOLDING_DB_SYSTEM_DESCRIPTION_FOLDER + Globals.FILE_SEPARATOR + originalRegistryCode
+                sysDesc = new SystemDescription(getRegistryCodeHoldingFolder(originalRegistryCode).getAbsolutePath()
                         + Globals.FILE_SEPARATOR + holdingRegistryCode + Globals.FILE_SEPARATOR + holdingRegistryCode + ".xml");
             } else {
                 sysDesc = new SystemDescription(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + originalRegistryCode + ".xml");
@@ -1147,7 +1218,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     private int getLastHoldingDBnumber(String registryCode) {
-        File holdingDir = new File(Globals.CANREG_SERVER_HOLDING_DB_SYSTEM_DESCRIPTION_FOLDER + Globals.FILE_SEPARATOR + registryCode);
+        File holdingDir = getRegistryCodeHoldingFolder(registryCode);
 
         if (!holdingDir.exists()) {
             holdingDir.mkdirs();
@@ -1170,18 +1241,27 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     @Override
     public SystemDescription createNewHoldingDB(String registryCode, SystemDescription sysDesc)
             throws RemoteException, IOException, SecurityException {
-        File registryCodeHoldingFolder = new File(Globals.CANREG_SERVER_HOLDING_DB_SYSTEM_DESCRIPTION_FOLDER + Globals.FILE_SEPARATOR + registryCode);
+        File registryCodeHoldingFolder = getRegistryCodeHoldingFolder(registryCode);
         //Include the date AND a number in the HDB system code (the user COULD do more than 1 HDB of the same xml on the same date)
         String dateStr = new SimpleDateFormat("yyyy-MM-dd").format((Calendar.getInstance()).getTime());
         int newHoldingDBNumber = this.getLastHoldingDBnumber(registryCode) + 1;
         String holdingRegistryCode = "HOLDING_" + registryCode + "_" + +newHoldingDBNumber + "_" + dateStr;
-        File holdingXmlPath = new File(registryCodeHoldingFolder.getAbsolutePath() + Globals.FILE_SEPARATOR + holdingRegistryCode);
+        File holdingXmlPath = new File(registryCodeHoldingFolder, holdingRegistryCode);
         holdingXmlPath.mkdirs();
-        File holdingXml = new File(holdingXmlPath.getAbsolutePath() + Globals.FILE_SEPARATOR + holdingRegistryCode + ".xml");
+        File holdingXml = new File(holdingXmlPath, holdingRegistryCode + ".xml");
         sysDesc.setRegistryCode(holdingRegistryCode);
         sysDesc.setSystemDescriptionLocation(holdingXmlPath);
         sysDesc.saveSystemDescriptionXML(holdingXml.getAbsolutePath());
         return sysDesc;
+    }
+
+    /**
+     * Returns the main folder for the system of a holding database: like  'xxx/.CanRegServer/Holding/TRN'  
+     * @param registryCode the registry code
+     * @return File pointing on the filesystem folder
+     */
+    private File getRegistryCodeHoldingFolder(String registryCode) {
+        return new File(Globals.CANREG_SERVER_HOLDING_DB_SYSTEM_DESCRIPTION_FOLDER, registryCode);
     }
 
     @Override
@@ -1195,8 +1275,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
 
         String originalRegistryCode = holdingRegistryCode.substring(holdingRegistryCode.indexOf("_") + 1);
         originalRegistryCode = originalRegistryCode.substring(0, originalRegistryCode.indexOf("_"));
-        File holdingDBSystemDescriptionFolder = new File(Globals.CANREG_SERVER_HOLDING_DB_SYSTEM_DESCRIPTION_FOLDER + Globals.FILE_SEPARATOR + originalRegistryCode
-                + Globals.FILE_SEPARATOR + holdingRegistryCode);
+        File holdingDBSystemDescriptionFolder = new File(
+                getRegistryCodeHoldingFolder(originalRegistryCode), holdingRegistryCode);
         if (!Tools.deleteFolderRecursively(holdingDBSystemDescriptionFolder)) {
             holdingDBSystemDescriptionFolder.deleteOnExit();
         }
@@ -1225,7 +1305,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     @Override
     public List<String> getHoldingDBsList()
             throws IOException, RemoteException, SecurityException {
-        File registryCodeHoldingFolder = new File(Globals.CANREG_SERVER_HOLDING_DB_SYSTEM_DESCRIPTION_FOLDER + Globals.FILE_SEPARATOR + this.defaultRegistryCode);
+        File registryCodeHoldingFolder = getRegistryCodeHoldingFolder(this.defaultRegistryCode);
         List<String> holdingList = new LinkedList<>();
         if (registryCodeHoldingFolder.exists()) {
             holdingList = Arrays.asList(registryCodeHoldingFolder.list());

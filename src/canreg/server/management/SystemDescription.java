@@ -49,6 +49,7 @@ public final class SystemDescription implements Serializable {
     private static final Logger LOGGER = Logger.getLogger(SystemDescription.class.getName());
     private static boolean debug = Globals.DEBUG;
     private Document doc;
+    private final String descriptionFilePath;
     // private DOMParser parser;
     private String namespace = "ns3:";
     private String[] canreg4dateFormats = new String[]{"dd/MM/yyyy", "MM/dd/yyyy", "budhist", "yyyy/MM/dd"};
@@ -64,6 +65,7 @@ public final class SystemDescription implements Serializable {
      * @param fileName
      */
     public SystemDescription(String fileName) {
+        this.descriptionFilePath = fileName;
         try {
             setSystemDescriptionXML(fileName);
             //For debuging purposes
@@ -578,5 +580,14 @@ public final class SystemDescription implements Serializable {
         element.appendChild(createElement(namespace + "prescence", variable.getPresence() + ""));
         element.appendChild(createElement(namespace + "compare_algorithm", variable.getCompareAlgorithm().toString()));
         return element;
+    }
+
+    /**
+     * Getter descriptionFileName.
+     *
+     * @return descriptionFileName descriptionFileName.
+     */
+    public String getDescriptionFilePath() {
+        return descriptionFilePath;
     }
 }
