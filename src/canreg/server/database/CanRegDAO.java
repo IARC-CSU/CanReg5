@@ -1164,6 +1164,9 @@ public class CanRegDAO {
 
             int rowCount = stmtSaveNewDictionary.executeUpdate();
             ResultSet results = stmtSaveNewDictionary.getResultSet();
+            if(results == null) {
+                results = stmtSaveNewDictionary.getGeneratedKeys();
+            }
             if (results.next()) {
                 id = results.getInt(1);
             }
@@ -1202,6 +1205,9 @@ public class CanRegDAO {
 
             int rowCount = stmtSaveNewDictionaryEntry.executeUpdate();
             ResultSet results = stmtSaveNewDictionaryEntry.getResultSet();
+            if(results == null) {
+                results = stmtSaveNewDictionaryEntry.getGeneratedKeys();
+            }
             if (results.next()) {
                 id = results.getInt(1);
             }
@@ -1275,6 +1281,9 @@ public class CanRegDAO {
 
             int rowCount = stmtSaveNewPopoulationDatasetsEntry.executeUpdate();
             ResultSet results = stmtSaveNewPopoulationDatasetsEntry.getResultSet();
+            if(results == null) {
+                results = stmtSaveNewPopoulationDatasetsEntry.getGeneratedKeys();
+            }
             if (results.next()) {
                 id = results.getInt(1);
             }
@@ -2688,7 +2697,7 @@ public class CanRegDAO {
                 System.out.println(command);
                 statement.execute(command);
             } catch (SQLException sqle) {
-                LOGGER.log(Level.WARNING, null, sqle);
+                LOGGER.log(Level.SEVERE, "Exception in : " + command, sqle);
                 success = false;
             }
         }
@@ -2700,7 +2709,7 @@ public class CanRegDAO {
                 System.out.println(command);
                 statement.execute(command);
             } catch (SQLException sqle) {
-                LOGGER.log(Level.WARNING, null, sqle);
+                LOGGER.log(Level.SEVERE, "Exception in : " + command, sqle);
                 success = false;
             }
         }
@@ -2713,7 +2722,7 @@ public class CanRegDAO {
                 System.out.println(command);
                 statement.execute(command);
             } catch (SQLException sqle) {
-                LOGGER.log(Level.WARNING, null, sqle);
+                LOGGER.log(Level.SEVERE, "Exception in : " + command, sqle);
                 success = false;
             }
         }
@@ -2728,7 +2737,7 @@ public class CanRegDAO {
                 System.out.println(command);
                 statement.execute(command);
             } catch (SQLException sqle) {
-                LOGGER.log(Level.WARNING, null, sqle);
+                LOGGER.log(Level.SEVERE, "Exception in : " + command, sqle);
                 success = false;
             }
         }
@@ -2742,7 +2751,7 @@ public class CanRegDAO {
                 System.out.println(command);
                 statement.execute(command);
             } catch (SQLException sqle) {
-                LOGGER.log(Level.WARNING, null, sqle);
+                LOGGER.log(Level.SEVERE, "Exception in : " + command, sqle);
                 success = false;
             }
         }
