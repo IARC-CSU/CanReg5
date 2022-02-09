@@ -32,6 +32,7 @@ import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.common.database.DatabaseRecord;
 import canreg.common.database.Dictionary;
 import canreg.common.database.DictionaryEntry;
+import canreg.common.database.HoldingDbCommon;
 import canreg.common.database.NameSexRecord;
 import canreg.common.database.Patient;
 import canreg.common.database.PopulationDataset;
@@ -233,6 +234,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
                                     mainRegistryCode, 
                                     mainSystemDescription, 
                                     apiUser);
+                    // Additional variables for holding db
+                    HoldingDbCommon.addVariablesForImportToHoldingDB(holdingSystemDescription);
                     initDataBase(holdingSystemDescription, true);
                 } catch (IOException e) {
                     LOGGER.log(Level.SEVERE, "Error creating holding DB for " + apiUser.getUserName(), e);
@@ -1229,11 +1232,14 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             //registryCode = ENR0
             //folder = HOLDING_ENR0_2_2019-01-21
             folder = folder.substring(folder.indexOf("_") + 1 + registryCode.length() + 1); // before substring = ENR0_2_2019-01-21
-            folder = folder.substring(0, folder.indexOf("_"));//before substring = 2_2019-01-21
-            int holdingNumber = Integer.valueOf(folder);
-            if (holdingNumber > highestNumber) {
-                highestNumber = holdingNumber;
-            }
+            int expectedEndOfNumber = folder.indexOf("_");
+            if(expectedEndOfNumber > -1) {
+                folder = folder.substring(0, expectedEndOfNumber);//before substring = 2_2019-01-21
+                int holdingNumber = Integer.valueOf(folder);
+                if (holdingNumber > highestNumber) {
+                    highestNumber = holdingNumber;
+                }
+            } // else: holding db for api user
         }
         return highestNumber;
     }
