@@ -254,7 +254,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             throws SecurityException {
         SystemDescription holdingSystemDescrption = new SystemDescription(mainSystemDescription.getDescriptionFilePath());
         File registryCodeHoldingFolder = getRegistryCodeHoldingFolder(mainRegistryCode);
-        String holdingRegistryCode = getRegistryCodeForApiHolding(mainRegistryCode, apiUser, false);
+        String holdingRegistryCode = getRegistryCodeForApiHolding(mainRegistryCode, apiUser.getUserName(), false);
         File holdingXmlPath = new File(registryCodeHoldingFolder, holdingRegistryCode);
         holdingXmlPath.mkdirs();
         File holdingXml = new File(holdingXmlPath, holdingRegistryCode + ".xml");
@@ -267,18 +267,18 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     /**
      * Build the registry code for a holding db for an api user.
      * @param mainRegistryCode main registry code like TRN
-     * @param apiUser the api user
+     * @param apiUserName the userName of the api user
      * @param withDate true to add the date: _yyyy-mm-dd                 
      * @return "HOLDING_" + registryCode + "_" + normalizedUserName + "_" + yyyy-mm-dd
      *      or "HOLDING_" + registryCode + "_" + normalizedUserName
      */
-    public static String getRegistryCodeForApiHolding(String mainRegistryCode, User apiUser, boolean withDate) {
+    public static String getRegistryCodeForApiHolding(String mainRegistryCode, String apiUserName, boolean withDate) {
         String dateSuffix = "";
         if(withDate) {
             dateSuffix = new SimpleDateFormat("yyyy-MM-dd").format((Calendar.getInstance()).getTime());
         }
         // Normalize the user name: remove spaces and quotes
-        String normalizedUserName = StringUtils.replaceChars(apiUser.getUserName().trim(), " '", "-");
+        String normalizedUserName = StringUtils.replaceChars(apiUserName.trim(), " '", "-");
         return "HOLDING_" + mainRegistryCode + "_" + normalizedUserName + dateSuffix;
     }
 
