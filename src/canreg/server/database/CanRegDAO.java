@@ -528,8 +528,26 @@ public class CanRegDAO {
     /**
      * Initialise the query to fetch the patient, tumor and sources from the database.
      * This query is used to fill the table that contains all ths 
-     * 
-     * 
+     *
+     * @param filter filter fo the SQL query
+     * @param tableName the table name
+     * @param resultSetID the ID of the resultSet
+     * @return a DistributedTableDescription
+     * @throws SQLException SQLException
+     * @throws UnknownTableException UnknownTableException
+     * @throws DistributedTableDescriptionException DistributedTableDescriptionException
+     */
+    public DistributedTableDescription getDistributedTableDescriptionAndInitiateDatabaseQuery(
+            DatabaseFilter filter, String tableName, String resultSetID)
+            throws SQLException, UnknownTableException, DistributedTableDescriptionException {
+        return getDistributedTableDescriptionAndInitiateDatabaseQuery(dbConnection, filter, tableName, resultSetID);
+    }
+    
+    /**
+     * Initialise the query to fetch the patient, tumor and sources from the database.
+     * This query is used to fill the table that contains all ths 
+     *
+     * @param connection db connection, unique or created for the current call
      * @param filter filter fo the SQL query
      * @param tableName the table name
      * @param resultSetID the ID of the resultSet
@@ -539,38 +557,39 @@ public class CanRegDAO {
      * @throws DistributedTableDescriptionException DistributedTableDescriptionException
      */
     public synchronized DistributedTableDescription getDistributedTableDescriptionAndInitiateDatabaseQuery(
-        DatabaseFilter filter, String tableName, String resultSetID)
+            Connection connection, DatabaseFilter filter, String tableName, String resultSetID)
         throws SQLException, UnknownTableException, DistributedTableDescriptionException {
         // distributedDataSources.remove(theUser);
         // ResultSet result;
-        Statement statement = dbConnection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         // int rowCount = 0;
         DistributedTableDataSource dataSource;
 
-            activeStatements.put(resultSetID, statement);
-            
-            if (null == filter.getQueryType()) {
-                dataSource = initiateTableQuery(filter, statement, tableName);
-            } else // Is this a person search query?
-            {
-                switch (filter.getQueryType()) {
-                    // Or a Frequency by year query?
-                    case PERSON_SEARCH:
-                        dataSource = initiatePersonSearchQuery(filter, statement);
-                        break;
-                    // Or a "regular" query
-                    case FREQUENCIES_BY_YEAR:
-                        dataSource = initiateFrequenciesByYearQuery(filter, statement, tableName);
-                        break;
-                    default:
-                        dataSource = initiateTableQuery(filter, statement, tableName);
-                        break;
-                }
+        activeStatements.put(resultSetID, statement);
+
+        if (null == filter.getQueryType()) {
+            dataSource = initiateTableQuery(filter, statement, tableName);
+        } else // Is this a person search query?
+        {
+            switch (filter.getQueryType()) {
+                // Or a Frequency by year query?
+                case PERSON_SEARCH:
+                    dataSource = initiatePersonSearchQuery(filter, statement);
+                    break;
+                // Or a "regular" query
+                case FREQUENCIES_BY_YEAR:
+                    dataSource = initiateFrequenciesByYearQuery(filter, statement, tableName);
+                    break;
+                default:
+                    dataSource = initiateTableQuery(filter, statement, tableName);
+                    break;
             }
+        }
         distributedDataSources.put(resultSetID, dataSource);
         activeStatements.remove(resultSetID);
         dataSource.getTableDescription().setResultSetID(resultSetID);
         return dataSource.getTableDescription();
+        
     }
 
     /**
@@ -2214,34 +2233,36 @@ public class CanRegDAO {
         filter.setFilterString(recordIDVariableName + " = '" + tumourID + "' ");
         DistributedTableDescription distributedTableDescription;
         Object[][] rows;
+        try(Connection connection = getDbConnection()) {
+            distributedTableDescription = getDistributedTableDescriptionAndInitiateDatabaseQuery(
+                    connection, filter, Globals.SOURCE_TABLE_NAME, generateResultSetID());
+            int numberOfRecords = distributedTableDescription.getRowCount();
 
-        distributedTableDescription = getDistributedTableDescriptionAndInitiateDatabaseQuery(filter, Globals.SOURCE_TABLE_NAME, generateResultSetID());
-        int numberOfRecords = distributedTableDescription.getRowCount();
+            rows = retrieveRows(distributedTableDescription.getResultSetID(), 0, numberOfRecords);
+            releaseResultSet(distributedTableDescription.getResultSetID());
 
-        rows = retrieveRows(distributedTableDescription.getResultSetID(), 0, numberOfRecords);
-        releaseResultSet(distributedTableDescription.getResultSetID());
+            Set<Source> sources = Collections.synchronizedSet(new LinkedHashSet<Source>());
 
-        Set<Source> sources = Collections.synchronizedSet(new LinkedHashSet<Source>());
+            String[] columnNames = distributedTableDescription.getColumnNames();
+            int ids[] = new int[numberOfRecords];
+            boolean found = false;
+            int idColumnNumber = 0;
 
-        String[] columnNames = distributedTableDescription.getColumnNames();
-        int ids[] = new int[numberOfRecords];
-        boolean found = false;
-        int idColumnNumber = 0;
-
-        while (!found && idColumnNumber < columnNames.length) {
-            found = columnNames[idColumnNumber++].equalsIgnoreCase(Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME);
-        }
-        if (found) {
-            idColumnNumber--;
-            Source source;
-            for (Object[] row : rows) {
-                int id = (Integer) row[idColumnNumber];
-                source = (Source) getRecord(id, Globals.SOURCE_TABLE_NAME, lock);
-                sources.add(source);
+            while (!found && idColumnNumber < columnNames.length) {
+                found = columnNames[idColumnNumber++].equalsIgnoreCase(Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME);
             }
-        }
+            if (found) {
+                idColumnNumber--;
+                Source source;
+                for (Object[] row : rows) {
+                    int id = (Integer) row[idColumnNumber];
+                    source = (Source) getRecord(id, Globals.SOURCE_TABLE_NAME, lock);
+                    sources.add(source);
+                }
+            }
 
-        return sources;
+            return sources;
+        }
     }
 
     /**
@@ -2830,4 +2851,5 @@ public class CanRegDAO {
         // disconnect();
         // connect();
     }
+
 }
