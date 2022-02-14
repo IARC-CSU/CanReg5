@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>CanReg5 local settings</comment>
+<entry key="export_data_path">target/Dataset</entry>
+<entry key="password">ZXJ2aWs=</entry>
+<entry key="display_variable_type">FULL</entry>
+<entry key="server.2.port">1000</entry>
+<entry key="date_format_string">yyyyMMdd</entry>
+<entry key="outline_drag_mode">off</entry>
+<entry key="gs_path"/>
+<entry key="username">theuser</entry>
+<entry key="r_path"/>
+<entry key="single_user">true</entry>
+<entry key="tables_path">target/CanReg</entry>
+<entry key="server.1.url">localhost</entry>
+<entry key="remember_password">true</entry>
+<entry key="font_size">Medium</entry>
+<entry key="data_entry_vertical_sources">off</entry>
+<entry key="server.0.name">Training Cancer Registry</entry>
+<entry key="server.0.code">TRN</entry>
+<entry key="client_sessions_check_key">45</entry>
+<entry key="last_server_id">2</entry>
+<entry key="server.1.name">Training Cancer Registry</entry>
+<entry key="server.1.code">TRN</entry>
+<entry key="server.2.name">Training Cancer Registry</entry>
+<entry key="server.0.url">localhost</entry>
+<entry key="server.2.code">TRN</entry>
+<entry key="import_path">target/Dataset</entry>
+<entry key="font_name">Default</entry>
+<entry key="client_to_server_ping_key">20</entry>
+<entry key="locale">en</entry>
+<entry key="auto_start_server">false</entry>
+<entry key="backup_every">7</entry>
+<entry key="server.0.port">1000</entry>
+<entry key="data_entry_version">New Version</entry>
+<entry key="auto_backup">true</entry>
+<entry key="server.2.url">localhost</entry>
+<entry key="server.1.port">1000</entry>
+</properties>
