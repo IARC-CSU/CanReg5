@@ -1159,7 +1159,7 @@ public class CanRegDAO {
         }
     }
 
-    private synchronized int saveSource(Source source) throws SQLException, RecordLockedException {
+    public synchronized int saveSource(Source source) throws SQLException, RecordLockedException {
         String sourceIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(
             Globals.StandardVariableNames.SourceRecordID.toString()).getDatabaseVariableName();
         Object sourceRecordID = source.getVariable(canreg.common.Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME);
