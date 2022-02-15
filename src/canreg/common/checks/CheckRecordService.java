@@ -5,6 +5,8 @@ import canreg.common.Globals;
 import canreg.common.database.DatabaseRecord;
 import canreg.common.database.Dictionary;
 import canreg.common.database.Patient;
+import canreg.common.database.Source;
+import canreg.common.database.Tumour;
 import canreg.server.database.CanRegDAO;
 import org.apache.commons.lang.StringUtils;
 
@@ -60,6 +62,24 @@ public class CheckRecordService {
     public List<String> checkPatient(Patient patient) {
         return checkRecord(patient, Globals.PATIENT_TABLE_NAME);
     }
+
+    /**
+     * Check tumour.
+     * @param tumour tumour to be checked
+     * @return list of messages, empty if OK
+     */
+    public List<String> checkTumour(Tumour tumour) {
+        return checkRecord(tumour, Globals.TUMOUR_TABLE_NAME);
+    }
+
+    /**
+     * Check source.
+     * @param source source to be checked
+     * @return list of messages, empty if OK
+     */
+    public List<String> checkSource(Source source) {
+        return checkRecord(source, Globals.SOURCE_TABLE_NAME);
+    }
     
     /**
      * Check record.
@@ -92,6 +112,8 @@ public class CheckRecordService {
             checkDictionaryVariable(result, variableName, variableDefinition, recordVariableValue, variableType);
 
             checkMandatoryVariable(result, variableName, variableDefinition, recordVariableValue);
+
+            checkNumber(result, variableName, recordVariableValue, variableType);
         }
 
         // Detect unknown variables
@@ -136,6 +158,13 @@ public class CheckRecordService {
             if (variableDefinition == null) {
                 result.add("unknown variable: " + variableName);
             }
+        }
+    }
+
+    private void checkNumber(List<String> result, String variableName, Object recordVariableValue, String variableType) {
+        if(Globals.VARIABLE_TYPE_NUMBER_NAME.equalsIgnoreCase(variableType)
+                && recordVariableValue != null && !(recordVariableValue instanceof Integer)) {
+            result.add("integer input is expected for variable: " + variableName);
         }
     }
 
