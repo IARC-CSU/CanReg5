@@ -4,7 +4,9 @@ import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
 import canreg.common.database.DatabaseRecord;
 import canreg.common.database.Dictionary;
+import canreg.common.database.Patient;
 import canreg.server.database.CanRegDAO;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,9 +26,9 @@ public class CheckRecordService {
     private final CanRegDAO canRegDAO;
 
     /**
-     * Map of the variables: key = variable short name lowercase, value = variable definition
+     * Map of the variables for each table: key = table name lowercase, value = map of variables for this table
      */
-    private final Map<String, DatabaseVariablesListElement> mapVariables;
+    private final Map<String, Map<String, DatabaseVariablesListElement>> mapTableVariables;
 
     /**
      * Dictionaries.
@@ -40,50 +42,101 @@ public class CheckRecordService {
      */
     public CheckRecordService(CanRegDAO canRegDAO) {
         this.canRegDAO = canRegDAO;
-        this.mapVariables = new HashMap<>();
+        this.mapTableVariables = new HashMap<>();
+        mapTableVariables.put(Globals.PATIENT_TABLE_NAME.toLowerCase(Locale.ENGLISH), new HashMap<>());
+        mapTableVariables.put(Globals.TUMOUR_TABLE_NAME.toLowerCase(Locale.ENGLISH), new HashMap<>());
+        mapTableVariables.put(Globals.SOURCE_TABLE_NAME.toLowerCase(Locale.ENGLISH), new HashMap<>());
         Arrays.stream(canRegDAO.getDatabaseVariablesList()).
-                forEach(variable -> mapVariables.put(variable.getShortName().toLowerCase(Locale.ROOT), variable));
+                forEach(variable -> mapTableVariables.get(variable.getTable().toLowerCase(Locale.ENGLISH))
+                        .put(variable.getShortName().toLowerCase(Locale.ENGLISH), variable));
 
     }
 
     /**
-     * Check record.
-     *
+     * Check patient.
+     * @param patient patient to be checked
      * @return list of messages, empty if OK
      */
-    public List<String> checkRecord(DatabaseRecord record, String tableName) {
+    public List<String> checkPatient(Patient patient) {
+        return checkRecord(patient, Globals.PATIENT_TABLE_NAME);
+    }
+    
+    /**
+     * Check record.
+     * @param dbRrecord record to be checked
+     * @param tableName name of the table                  
+     * @return list of messages, empty if OK
+     */
+    private List<String> checkRecord(DatabaseRecord dbRrecord, String tableName) {
         List<String> result = new ArrayList<>();
-        for (String variableName : record.getVariableNames()) {
-            String variableNameLowercase = variableName.toLowerCase(Locale.ROOT);
-            DatabaseVariablesListElement variableDefinition = mapVariables.get(variableNameLowercase);
-            if (variableDefinition == null) {
-                result.add("unknown variable: " + variableName);
-                continue;
-            }
-            String variableType = variableDefinition.getVariableType();
-            if (Globals.VARIABLE_TYPE_DICTIONARY_NAME.equalsIgnoreCase(variableType)) {
-                // Dictionary value
-                Dictionary dictionary = dictionaries.get(variableDefinition.getDictionaryID());
-                // We consider that the variables and the dictionaries are consistent = dictionary is not null
-                
-                Object variableValue = record.getVariable(variableName);
-                String fillInStatus = variableDefinition.getFillInStatus();
-
-                if (variableValue == null) {
-                    if(Globals.FILL_IN_STATUS_MANDATORY_STRING.equalsIgnoreCase(fillInStatus)) {
-                        result.add("variable is mandatory: " + variableName);
-                    }
-                } else {
-                    // value is not null
-                    if (!dictionary.getDictionaryEntries().containsKey(variableValue.toString())) {
-                        result.add("unknown value in dictionary " + variableName + "=" + variableValue);
-
-                    }
-                }
-            }
+        Map<String, DatabaseVariablesListElement> mapVariablesForTable =
+                mapTableVariables.get(tableName.toLowerCase(Locale.ENGLISH));
+        if (mapVariablesForTable == null) {
+            result.add("unknown table: " + tableName);
+            return result;
         }
 
+        // Build a map of the record variables with lowercase names
+        Map<String, Object> mapRecordVariables = new HashMap<>();
+        for (String variableName : dbRrecord.getVariableNames()) {
+            mapRecordVariables.put(variableName.toLowerCase(Locale.ENGLISH), dbRrecord.getVariable(variableName));
+        }
+
+        // Check every variable of the table
+        for (Map.Entry<String, DatabaseVariablesListElement> entry : mapVariablesForTable.entrySet()) {
+            String variableName = entry.getKey();
+            DatabaseVariablesListElement variableDefinition = entry.getValue();
+            Object recordVariableValue = mapRecordVariables.get(variableName);
+            String variableType = variableDefinition.getVariableType();
+
+            checkDictionaryVariable(result, variableName, variableDefinition, recordVariableValue, variableType);
+
+            checkMandatoryVariable(result, variableName, variableDefinition, recordVariableValue);
+        }
+
+        // Detect unknown variables
+        checkUnknownVariables(dbRrecord, result, mapVariablesForTable);
+
         return result;
+    }
+
+    private void checkDictionaryVariable(List<String> result, String variableName,
+                                         DatabaseVariablesListElement variableDefinition, Object recordVariableValue,
+                                         String variableType) {
+        if (Globals.VARIABLE_TYPE_DICTIONARY_NAME.equalsIgnoreCase(variableType)) {
+            // Dictionary value
+            Dictionary dictionary = dictionaries.get(variableDefinition.getDictionaryID());
+            // We consider that the variables and the dictionaries are consistent = dictionary is not null
+
+            if (recordVariableValue != null
+                    && !StringUtils.isEmpty(recordVariableValue.toString())
+                    && !dictionary.getDictionaryEntries().containsKey(recordVariableValue.toString())) {
+                // value is not null and not empty and not in dictionary
+                result.add("unknown value in dictionary " + variableName + "=" + recordVariableValue);
+            }
+        }
+    }
+
+    private void checkMandatoryVariable(List<String> result, String variableName, 
+                                        DatabaseVariablesListElement variableDefinition, Object recordVariableValue) {
+        if (recordVariableValue == null
+                || (variableDefinition.isInputString() && StringUtils.isEmpty(recordVariableValue.toString()))) {
+            String fillInStatus = variableDefinition.getFillInStatus();
+            if (Globals.FILL_IN_STATUS_MANDATORY_STRING.equalsIgnoreCase(fillInStatus)) {
+                result.add("variable is mandatory: " + variableName);
+            }
+        }
+    }
+
+    private void checkUnknownVariables(DatabaseRecord dbRecord, List<String> result, Map<String,
+            DatabaseVariablesListElement> mapVariablesForTable) {
+        for (String variableName : dbRecord.getVariableNames()) {
+            String variableNameLowercase = variableName.toLowerCase(Locale.ENGLISH);
+            DatabaseVariablesListElement variableDefinition = mapVariablesForTable.get(variableNameLowercase);
+            if (variableDefinition == null) {
+                result.add("unknown variable: " + variableName);
+            }
+        }
     }
 
     /**

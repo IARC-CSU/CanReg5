@@ -56,6 +56,9 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
     };
 
     private VariableType displayVariableType = VariableType.FULL;
+    
+    /** True if variableType is Dict or Alpha or Date or TextArea. */
+    private boolean isInputString;
 
     /**
      *
@@ -73,6 +76,7 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
         this.variableID = databaseTableVariableID;
         this.shortName = databaseVariableName;
         this.variableType = variableType;
+        updateIsInputString();
     }
 
     /**
@@ -137,6 +141,8 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
      */
     public void setVariableType(String variableType) {
         this.variableType = variableType;
+        // Update isInputString
+        updateIsInputString();
     }
 
     /**
@@ -535,5 +541,25 @@ public class DatabaseVariablesListElement implements Serializable, DatabaseEleme
                 break;
         }
         return name;
+    }
+
+    /**
+     * Getter isInputString.
+     *
+     * @return isInputString isInputString.
+     */
+    public boolean isInputString() {
+        return isInputString;
+    }
+
+    /**
+     * Update isInputString.<br>
+     * The method is private because this depends on variableType.
+     */
+    private void updateIsInputString() {
+        isInputString = Globals.VARIABLE_TYPE_DICTIONARY_NAME.equalsIgnoreCase(getVariableType()) 
+                || Globals.VARIABLE_TYPE_ALPHA_NAME.equalsIgnoreCase(getVariableType()) 
+                || Globals.VARIABLE_TYPE_DATE_NAME.equalsIgnoreCase(getVariableType()) 
+                || Globals.VARIABLE_TYPE_TEXT_AREA_NAME.equalsIgnoreCase(getVariableType());    
     }
 }
