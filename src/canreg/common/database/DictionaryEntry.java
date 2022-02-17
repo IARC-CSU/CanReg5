@@ -34,6 +34,12 @@ public class DictionaryEntry implements Serializable, Comparable {
     private boolean sortByCode = false;
 
     /**
+     * Constructor.
+     */
+    public DictionaryEntry() {
+    }
+
+    /**
      * 
      * @param dicID
      * @param code

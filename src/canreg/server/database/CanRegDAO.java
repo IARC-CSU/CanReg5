@@ -1845,7 +1845,7 @@ public class CanRegDAO {
         return bFilled;
     }
 
-    private synchronized static Map<Integer, Dictionary> buildDictionaryMap(Document doc) {
+    public synchronized static Map<Integer, Dictionary> buildDictionaryMap(Document doc) {
 
         Map<Integer, Dictionary> dictionariesMap = new LinkedHashMap<Integer, Dictionary>();
 
@@ -2852,4 +2852,12 @@ public class CanRegDAO {
         // connect();
     }
 
+    /**
+     * Getter variables.
+     *
+     * @return variables variables.
+     */
+    public DatabaseVariablesListElement[] getDatabaseVariablesList() {
+        return variables;
+    }
 }
