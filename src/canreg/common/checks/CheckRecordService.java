@@ -2,6 +2,7 @@ package canreg.common.checks;
 
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
+import canreg.common.Tools;
 import canreg.common.database.DatabaseRecord;
 import canreg.common.database.Dictionary;
 import canreg.common.database.Patient;
@@ -36,7 +37,7 @@ import java.util.stream.Collectors;
  *   - Unknown variable detected<br>
  *
  * - Does not handle the variables with "Automatic" fill: it will be done when importing in the main db<br>
- * - Builds the raw_data field, like: <br>
+ * - Builds the raw_data field, input data and missing date only, like: <br>
  * <code>
  *    <strong>REGNO: </strong>20066018 <br> 
  *    <strong>SEX: 3 (this code is not in the dictionary)</strong>
@@ -56,13 +57,10 @@ public class CheckRecordService {
             // use uuuu instead of yyyy for strict validation:
             .ofPattern("uuuuMMdd")
             .withResolverStyle(ResolverStyle.STRICT);
-    /**
-     * the dao for the service, main dao or dao for holding db.
-     */
-    private final CanRegDAO canRegDAO;
 
     /**
-     * Map of the variables for each table: key = table name lowercase, value = map of variables for this table
+     * Map of the variables for each table: key = table name, value = map of variables for this table.<br>
+     * The variable names are in lowercase, like in the DatabaseRecord.
      */
     private final Map<String, Map<String, DatabaseVariablesListElement>> mapTableVariables;
 
@@ -77,14 +75,14 @@ public class CheckRecordService {
      * @param canRegDAO the dao for the service, main dao or dao for holding db
      */
     public CheckRecordService(CanRegDAO canRegDAO) {
-        this.canRegDAO = canRegDAO;
         this.mapTableVariables = new HashMap<>();
-        mapTableVariables.put(Globals.PATIENT_TABLE_NAME.toLowerCase(Locale.ENGLISH), new TreeMap<>());
-        mapTableVariables.put(Globals.TUMOUR_TABLE_NAME.toLowerCase(Locale.ENGLISH), new TreeMap<>());
-        mapTableVariables.put(Globals.SOURCE_TABLE_NAME.toLowerCase(Locale.ENGLISH), new TreeMap<>());
+        mapTableVariables.put(Globals.PATIENT_TABLE_NAME, new TreeMap<>());
+        mapTableVariables.put(Globals.TUMOUR_TABLE_NAME, new TreeMap<>());
+        mapTableVariables.put(Globals.SOURCE_TABLE_NAME, new TreeMap<>());
         Arrays.stream(canRegDAO.getDatabaseVariablesList()).
-                forEach(variable -> mapTableVariables.get(variable.getTable().toLowerCase(Locale.ENGLISH))
-                        .put(variable.getShortName().toLowerCase(Locale.ENGLISH), variable));
+                forEach(variable -> mapTableVariables.get(variable.getTable())
+                            .put(Tools.toLowerCaseStandardized(variable.getShortName()), variable)
+                );
 
     }
 
@@ -123,13 +121,11 @@ public class CheckRecordService {
      */
     private List<CheckMessage> checkRecord(DatabaseRecord dbRecord, String tableName) {
         List<CheckMessage> checkMessages = new ArrayList<>();
-        Map<String, DatabaseVariablesListElement> mapVariablesForTable =
-                mapTableVariables.get(tableName.toLowerCase(Locale.ENGLISH));
 
-        // Build a map of the record variables with lowercase names
-        Map<String, Object> mapRecordVariables = new HashMap<>();
-        for (String variableName : dbRecord.getVariableNames()) {
-            mapRecordVariables.put(variableName.toLowerCase(Locale.ENGLISH), dbRecord.getVariable(variableName));
+        // The variable names are in lowercase in dbRecord
+        Map<String, DatabaseVariablesListElement> mapVariablesForTable = mapTableVariables.get(tableName);
+        if(mapVariablesForTable == null) {
+            throw new IllegalArgumentException("Table name is not correct: " + tableName);
         }
         StringBuilder rawData = new StringBuilder(100);
         StringBuilder formatErrors = new StringBuilder();
@@ -138,7 +134,7 @@ public class CheckRecordService {
         for (Map.Entry<String, DatabaseVariablesListElement> entry : mapVariablesForTable.entrySet()) {
             String variableName = entry.getKey();
             DatabaseVariablesListElement variableDefinition = entry.getValue();
-            Object variableValue = mapRecordVariables.get(variableName);
+            Object variableValue = dbRecord.getVariable(variableName);
             String variableType = variableDefinition.getVariableType();
             boolean isEmpty = variableValue == null || StringUtils.isEmpty(variableValue.toString());
             List<CheckMessage> variableMessages = new ArrayList<>();
@@ -229,8 +225,7 @@ public class CheckRecordService {
         for (String variableName : dbRecord.getVariableNames()) {
             if(dbRecord.getVariable(variableName) != null) {
                 // The value is not null
-                String variableNameLowercase = variableName.toLowerCase(Locale.ENGLISH);
-                DatabaseVariablesListElement variableDefinition = mapVariablesForTable.get(variableNameLowercase);
+                DatabaseVariablesListElement variableDefinition = mapVariablesForTable.get(variableName);
                 if (variableDefinition == null) {
                     // The variable is not known
                     variableMessages.add(new CheckMessage(variableName, dbRecord.getVariable(variableName),

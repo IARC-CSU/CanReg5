@@ -19,6 +19,7 @@
  */
 package canreg.server.database;
 
+import canreg.common.Tools;
 import canreg.common.database.User;
 import canreg.common.database.Patient;
 import canreg.common.database.PopulationDatasetsEntry;
@@ -150,6 +151,9 @@ public class CanRegDAO {
         debugOut(canreg.server.xml.Tools.getTextContent(
                 new String[]{ns + "canreg", ns + "general", ns + "registry_name"}, doc));
 
+        patientIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(
+                Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName();
+        
         // Prepare the SQL strings
         strSavePatient = QueryGenerator.strSavePatient(doc);
         strSaveTumour = QueryGenerator.strSaveTumour(doc);
@@ -174,6 +178,7 @@ public class CanRegDAO {
         strGetHighestPatientRecordID = QueryGenerator.strGetHighestPatientRecordID(globalToolBox);
         strGetHighestSourceRecordID = QueryGenerator.strGetHighestSourceRecordID(globalToolBox);
         strMaxNumberOfSourcesPerTumourRecord = QueryGenerator.strMaxNumberOfSourcesPerTumourRecord(globalToolBox);
+        strCountPatientByRegistryNumber = QueryGenerator.strCountPatientByRegistryNumber(patientIDVariableName);
         /* We don't use tumour record ID...
          strGetHighestTumourRecordID = QueryGenerator.strGetHighestTumourRecordID(globalToolBox);
          */
@@ -1905,6 +1910,48 @@ public class CanRegDAO {
 
         return record;
     }
+
+    /**
+     * Count the number of Patient records for the patientID of the Patient object 
+     * (usually Registry Number = "regno" column).
+     * @param patient the patient with the PatientID to be checked
+     * @return the number of patients, 0 if not found of if patientID null or blank in Patient
+     * @throws SQLException exception while runnning the query
+     */
+    public int countPatientByPatientID(Patient patient) throws SQLException {
+        DatabaseVariablesListElement patientIDVariable = 
+                globalToolBox.translateStandardVariableNameToDatabaseListElement(
+                        Globals.StandardVariableNames.PatientID.toString());
+        String patientID = (String) patient.getVariable(
+                Tools.toLowerCaseStandardized(patientIDVariable.getDatabaseVariableName()));
+        if (patientID != null && !patientID.trim().isEmpty()) {
+            return countPatientByPatientID(patientID);
+        }
+        return 0;
+    }
+    
+    /**
+     * Count the number of Patient records for a patientID (usually Registry Number = "regno" column)
+     * @param patientID the patient ID
+     * @return the number of patients
+     * @throws SQLException exception while runnning the query
+     */
+    public int countPatientByPatientID(String patientID) throws SQLException {
+        int result = 0;
+        try(Connection connection = getDbConnection();
+            PreparedStatement statement = connection.prepareStatement(strCountPatientByRegistryNumber)) {
+            statement.clearParameters();
+            statement.setString(1, patientID);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                result = resultSet.getInt(1);
+            }
+        } catch (SQLException sqle) {
+            LOGGER.log(Level.SEVERE, null, sqle);
+            throw sqle;
+        }
+        return result;        
+    }
     
     private synchronized Patient getPatientByPatientRecordID(String patientRecordID) {
         Patient record = null;
@@ -2289,6 +2336,7 @@ public class CanRegDAO {
     private boolean tableOfPopulationDataSets = true;
     private PreparedStatement stmtGetHighestTumourRecordID; // not used
     private final String ns = Globals.NAMESPACE;
+    private final String patientIDVariableName;
     private static final String strGetPatient
             = "SELECT * FROM APP.PATIENT "
             + "WHERE " + Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
@@ -2375,6 +2423,7 @@ public class CanRegDAO {
     private final String strGetHighestTumourID;
     private final String strGetHighestPatientRecordID;
     private final String strGetHighestSourceRecordID;
+    private final String strCountPatientByRegistryNumber;
     /* We don't use tumour record ID...
      private String strGetHighestTumourRecordID;
      */
@@ -2859,5 +2908,14 @@ public class CanRegDAO {
      */
     public DatabaseVariablesListElement[] getDatabaseVariablesList() {
         return variables;
+    }
+
+    /**
+     * Getter patientIDVariableName.
+     *
+     * @return patientIDVariableName patientIDVariableName.
+     */
+    public String getPatientIDVariableName() {
+        return patientIDVariableName;
     }
 }
