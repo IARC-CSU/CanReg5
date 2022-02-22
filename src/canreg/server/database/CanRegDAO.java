@@ -32,26 +32,40 @@ import canreg.common.database.DictionaryEntry;
 import canreg.common.database.AgeGroupStructure;
 import canreg.common.database.DatabaseRecord;
 import canreg.common.DatabaseDictionaryListElement;
-import canreg.common.cachingtableapi.DistributedTableDataSource;
-import canreg.common.cachingtableapi.DistributedTableDescription;
-import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.common.DatabaseFilter;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
+import canreg.common.cachingtableapi.DistributedTableDataSource;
+import canreg.common.cachingtableapi.DistributedTableDescription;
+import canreg.common.cachingtableapi.DistributedTableDescriptionException;
+import canreg.common.database.AgeGroupStructure;
+import canreg.common.database.DatabaseRecord;
+import canreg.common.database.Dictionary;
+import canreg.common.database.DictionaryEntry;
+import canreg.common.database.NameSexRecord;
+import canreg.common.database.Patient;
+import canreg.common.database.PopulationDataset;
+import canreg.common.database.PopulationDatasetsEntry;
+import canreg.common.database.Source;
+import canreg.common.database.Tumour;
+import canreg.common.database.User;
 import canreg.server.DatabaseStats;
+import org.w3c.dom.Document;
+
+import javax.sql.DataSource;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.rmi.RemoteException;
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Connection;
 import java.sql.Statement;
 import java.util.Calendar;
 import java.util.Collections;
@@ -65,9 +79,6 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.w3c.dom.Document;
-
-import javax.sql.DataSource;
 
 /**
  *
@@ -153,7 +164,7 @@ public class CanRegDAO {
 
         patientIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(
                 Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName();
-        
+
         // Prepare the SQL strings
         strSavePatient = QueryGenerator.strSavePatient(doc);
         strSaveTumour = QueryGenerator.strSaveTumour(doc);
@@ -1280,10 +1291,31 @@ public class CanRegDAO {
             dataSetID++;
         }
         populationDataSet.setPopulationDatasetID(dataSetID);
-        try(Connection connection = getDbConnection();
-            PreparedStatement stmtSaveNewPopoulationDataset = connection.prepareStatement(strSavePopoulationDataset,
-                 Statement.RETURN_GENERATED_KEYS))
-        {
+        savePopulationDataset(populationDataSet);
+        return dataSetID;
+    }
+
+    /**
+     * Update an existing population dataset.
+     *
+     * @param populationDataSet populationDataSet with populationDatasetID already set
+     * @return -1 if does not exist else return the id in input
+     */
+    public synchronized int updatePopulationDataset(PopulationDataset populationDataSet) throws SQLException {
+        Map<Integer, PopulationDataset> populationDataSets;
+        populationDataSets = getPopulationDatasets();
+
+        if (populationDataSets.get(populationDataSet.getPopulationDatasetID()) == null) {
+            return -1;
+        }
+        deletePopulationDataSet(populationDataSet.getPopulationDatasetID());
+        savePopulationDataset(populationDataSet);
+
+        return populationDataSet.getPopulationDatasetID();
+    }
+
+    private synchronized int savePopulationDataset(PopulationDataset populationDataSet) {
+        try (Connection connection = getDbConnection(); PreparedStatement stmtSaveNewPopoulationDataset = connection.prepareStatement(strSavePopoulationDataset, Statement.RETURN_GENERATED_KEYS)) {
             stmtSaveNewPopoulationDataset.clearParameters();
 
             stmtSaveNewPopoulationDataset.setInt(1, populationDataSet.getPopulationDatasetID());
@@ -1912,14 +1944,14 @@ public class CanRegDAO {
     }
 
     /**
-     * Count the number of Patient records for the patientID of the Patient object 
+     * Count the number of Patient records for the patientID of the Patient object
      * (usually Registry Number = "regno" column).
      * @param patient the patient with the PatientID to be checked
      * @return the number of patients, 0 if not found of if patientID null or blank in Patient
      * @throws SQLException exception while runnning the query
      */
     public int countPatientByPatientID(Patient patient) throws SQLException {
-        DatabaseVariablesListElement patientIDVariable = 
+        DatabaseVariablesListElement patientIDVariable =
                 globalToolBox.translateStandardVariableNameToDatabaseListElement(
                         Globals.StandardVariableNames.PatientID.toString());
         String patientID = (String) patient.getVariable(
@@ -1929,7 +1961,7 @@ public class CanRegDAO {
         }
         return 0;
     }
-    
+
     /**
      * Count the number of Patient records for a patientID (usually Registry Number = "regno" column)
      * @param patientID the patient ID
@@ -1950,9 +1982,9 @@ public class CanRegDAO {
             LOGGER.log(Level.SEVERE, null, sqle);
             throw sqle;
         }
-        return result;        
+        return result;
     }
-    
+
     private synchronized Patient getPatientByPatientRecordID(String patientRecordID) {
         Patient record = null;
         ResultSetMetaData metadata;
