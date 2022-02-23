@@ -126,12 +126,12 @@ public class CheckRecordServiceTest {
         tumour.setVariable("recs", "1");
         tumour.setVariable("addr", "74000");
         // Age is not a number object
-        tumour.setVariable("age", "89");
+        tumour.setVariable("age", "89a");
         List<CheckMessage> messages = service.checkTumour(tumour);
-        Assert.assertEquals("[{level='error', variable='age', value='89', message='this value is not an integer'}]", messages.toString());
+        Assert.assertEquals("[{level='error', variable='age', value='89a', message='this value is not an integer'}]", messages.toString());
         Assert.assertEquals("" +
                         "<strong>ADDR: </strong>74000<br>" +
-                        "<strong>AGE: </strong>89 (Error: this value is not an integer)<br>" +
+                        "<strong>AGE: </strong>89a (Error: this value is not an integer)<br>" +
                         "<strong>BAS: </strong>7<br>" +
                         "<strong>BEH: </strong>3<br>" +
                         "<strong>INCID: </strong>20010202<br>" +
@@ -142,6 +142,33 @@ public class CheckRecordServiceTest {
         Assert.assertEquals("AGE<br>", tumour.getVariable(CheckRecordService.VARIABLE_FORMAT_ERRORS));
     }
 
+    @Test
+    public void testCheckTumourAgeConvertedToNumber() {
+        Tumour tumour = new Tumour();
+        tumour.setVariable("incid", "20010202");
+        tumour.setVariable("beh", "3");
+        tumour.setVariable("mor", "8002");
+        tumour.setVariable("top", "12");
+        tumour.setVariable("bas", "7");
+        tumour.setVariable("recs", "1");
+        tumour.setVariable("addr", "74000");
+        // Age is not a number object but it can be converted
+        tumour.setVariable("age", "89");
+        List<CheckMessage> messages = service.checkTumour(tumour);
+        Assert.assertEquals("[{level='warning', variable='age', value='89', message='this value was converted to integer'}]", messages.toString());
+        Assert.assertEquals("" +
+                        "<strong>ADDR: </strong>74000<br>" +
+                        "<strong>AGE: </strong>89 (Warning: this value was converted to integer)<br>" +
+                        "<strong>BAS: </strong>7<br>" +
+                        "<strong>BEH: </strong>3<br>" +
+                        "<strong>INCID: </strong>20010202<br>" +
+                        "<strong>MOR: </strong>8002<br>" +
+                        "<strong>RECS: </strong>1<br>" +
+                        "<strong>TOP: </strong>12<br>",
+                sortRawData(tumour));
+        Assert.assertEquals("AGE<br>", tumour.getVariable(CheckRecordService.VARIABLE_FORMAT_ERRORS));
+    }
+    
     @Test
     public void testCheckTumourMissingAge() {
         Tumour tumour = new Tumour();

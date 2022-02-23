@@ -10,6 +10,7 @@ import canreg.common.database.Source;
 import canreg.common.database.Tumour;
 import canreg.server.database.CanRegDAO;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
@@ -28,31 +29,31 @@ import java.util.stream.Collectors;
  * Service to check input data. <br>
  * Report errors and warnings.<br>
  * - Errors: <br>
- *   - Dictionary variable: the value must be present in dictionary entries.<br>
- *   - Number variable: value must be an integer.<br>
- *   - Date variable: value must be yyyyMMdd.<br>
- *   - Length: the length must not exceed the column length in the table (for text variable except date).<br>
+ * - Dictionary variable: the value must be present in dictionary entries.<br>
+ * - Number variable: value must be an integer.<br>
+ * - Date variable: value must be yyyyMMdd.<br>
+ * - Length: the length must not exceed the column length in the table (for text variable except date).<br>
  * - Warnings: <br>
- *   - Mandatory variable: value must not be null or an empty string.<br>
- *   - Unknown variable detected<br>
- *
+ * - Mandatory variable: value must not be null or an empty string.<br>
+ * - Unknown variable detected<br>
+ * <p>
  * - Does not handle the variables with "Automatic" fill: it will be done when importing in the main db<br>
  * - Builds the raw_data field, input data and missing date only, like: <br>
  * <code>
- *    <strong>REGNO: </strong>20066018 <br> 
- *    <strong>SEX: 3 (this code is not in the dictionary)</strong>
- *    etc.
+ * <strong>REGNO: </strong>20066018 <br>
+ * <strong>SEX: 3 (this code is not in the dictionary)</strong>
+ * etc.
  * </code>
  * - Builds the format_errors field, like: <br>
  * <code>
- *     SEX<br> 
+ * SEX<br>
  * </code>
  */
 public class CheckRecordService {
 
     public static final String VARIABLE_RAW_DATA = "raw_data";
     public static final String VARIABLE_FORMAT_ERRORS = "format_errors";
-    
+
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter
             // use uuuu instead of yyyy for strict validation:
             .ofPattern("uuuuMMdd")
@@ -81,13 +82,14 @@ public class CheckRecordService {
         mapTableVariables.put(Globals.SOURCE_TABLE_NAME, new TreeMap<>());
         Arrays.stream(canRegDAO.getDatabaseVariablesList()).
                 forEach(variable -> mapTableVariables.get(variable.getTable())
-                            .put(Tools.toLowerCaseStandardized(variable.getShortName()), variable)
+                        .put(Tools.toLowerCaseStandardized(variable.getShortName()), variable)
                 );
 
     }
 
     /**
      * Check patient.
+     *
      * @param patient patient to be checked
      * @return list of messages, empty if OK
      */
@@ -97,6 +99,7 @@ public class CheckRecordService {
 
     /**
      * Check tumour.
+     *
      * @param tumour tumour to be checked
      * @return list of messages, empty if OK
      */
@@ -106,17 +109,19 @@ public class CheckRecordService {
 
     /**
      * Check source.
+     *
      * @param source source to be checked
      * @return list of messages, empty if OK
      */
     public List<CheckMessage> checkSource(Source source) {
         return checkRecord(source, Globals.SOURCE_TABLE_NAME);
     }
-    
+
     /**
      * Check record.
-     * @param dbRecord record to be checked
-     * @param tableName name of the table                  
+     *
+     * @param dbRecord  record to be checked
+     * @param tableName name of the table
      * @return list of messages, empty if OK
      */
     private List<CheckMessage> checkRecord(DatabaseRecord dbRecord, String tableName) {
@@ -124,12 +129,12 @@ public class CheckRecordService {
 
         // The variable names are in lowercase in dbRecord
         Map<String, DatabaseVariablesListElement> mapVariablesForTable = mapTableVariables.get(tableName);
-        if(mapVariablesForTable == null) {
+        if (mapVariablesForTable == null) {
             throw new IllegalArgumentException("Table name is not correct: " + tableName);
         }
         StringBuilder rawData = new StringBuilder(100);
         StringBuilder formatErrors = new StringBuilder();
-        
+
         // Check every variable of the table
         for (Map.Entry<String, DatabaseVariablesListElement> entry : mapVariablesForTable.entrySet()) {
             String variableName = entry.getKey();
@@ -138,23 +143,23 @@ public class CheckRecordService {
             String variableType = variableDefinition.getVariableType();
             boolean isEmpty = variableValue == null || StringUtils.isEmpty(variableValue.toString());
             List<CheckMessage> variableMessages = new ArrayList<>();
-            
-            checkDictionaryVariable(variableMessages, variableName, variableDefinition, variableValue, 
+
+            checkDictionaryVariable(variableMessages, variableName, variableDefinition, variableValue,
                     variableType, isEmpty);
 
             checkMandatoryVariable(variableMessages, variableName, variableDefinition, isEmpty);
 
-            checkNumber(variableMessages, variableName, variableValue, variableType);
+            checkNumber(variableMessages, variableName, variableValue, variableType, dbRecord);
 
             checkDate(variableMessages, variableName, variableValue, variableType, isEmpty);
-            
-            checkTextVariableLength(variableMessages, variableName, variableDefinition.getVariableLength(), 
+
+            checkTextVariableLength(variableMessages, variableName, variableDefinition.getVariableLength(),
                     variableValue, variableType, isEmpty);
 
             feedRawData(variableMessages, rawData, variableName, variableValue, isEmpty);
-            
+
             // Add the messages
-            if(!variableMessages.isEmpty()) {
+            if (!variableMessages.isEmpty()) {
                 checkMessages.addAll(variableMessages);
                 formatErrors.append(variableName.toUpperCase(Locale.ENGLISH)).append("<br>");
             }
@@ -171,15 +176,16 @@ public class CheckRecordService {
     /**
      * Feed the rawData for one variable if recordVariableValue is not null or variableMessages is not empty. <br>
      * Nothing added if no input and no error / warning for this variable.
-     * @param variableMessages the messages for the variable
-     * @param rawData the raw data to feed
-     * @param variableName the variable name
+     *
+     * @param variableMessages    the messages for the variable
+     * @param rawData             the raw data to feed
+     * @param variableName        the variable name
      * @param recordVariableValue the variable value
-     * @param isEmpty true if the value is empty
+     * @param isEmpty             true if the value is empty
      */
-    private void feedRawData(List<CheckMessage> variableMessages, StringBuilder rawData, String variableName, 
+    private void feedRawData(List<CheckMessage> variableMessages, StringBuilder rawData, String variableName,
                              Object recordVariableValue, boolean isEmpty) {
-        if(!variableMessages.isEmpty() || recordVariableValue != null) {
+        if (!variableMessages.isEmpty() || recordVariableValue != null) {
             // Add the field to the raw data
             rawData.append("<strong>").append(variableName.toUpperCase(Locale.ENGLISH)).append(": </strong>")
                     .append(isEmpty ? StringUtils.EMPTY : recordVariableValue);
@@ -203,7 +209,7 @@ public class CheckRecordService {
 
             if (!dictionary.getDictionaryEntries().containsKey(variableValue.toString())) {
                 // value is not empty and not in dictionary
-                variableMessages.add(new CheckMessage(variableName, variableValue, 
+                variableMessages.add(new CheckMessage(variableName, variableValue,
                         "this code is not in the dictionary", true));
             }
         }
@@ -212,18 +218,18 @@ public class CheckRecordService {
     private void checkMandatoryVariable(List<CheckMessage> variableMessages, String variableName,
                                         DatabaseVariablesListElement variableDefinition,
                                         boolean isEmpty) {
-        if (isEmpty 
+        if (isEmpty
                 && Globals.FILL_IN_STATUS_MANDATORY_STRING.equalsIgnoreCase(variableDefinition.getFillInStatus())) {
             variableMessages.add(new CheckMessage(variableName, StringUtils.EMPTY,
                     "this variable is mandatory", false));
-            
+
         }
     }
 
     private void checkUnknownVariables(DatabaseRecord dbRecord, List<CheckMessage> variableMessages, Map<String,
             DatabaseVariablesListElement> mapVariablesForTable) {
         for (String variableName : dbRecord.getVariableNames()) {
-            if(dbRecord.getVariable(variableName) != null) {
+            if (dbRecord.getVariable(variableName) != null) {
                 // The value is not null
                 DatabaseVariablesListElement variableDefinition = mapVariablesForTable.get(variableName);
                 if (variableDefinition == null) {
@@ -235,18 +241,28 @@ public class CheckRecordService {
         }
     }
 
-    private void checkNumber(List<CheckMessage> variableMessages, String variableName, Object variableValue, 
-                             String variableType) {
-        if(Globals.VARIABLE_TYPE_NUMBER_NAME.equalsIgnoreCase(variableType)
-                && variableValue != null && !(variableValue instanceof Integer)) {
-            variableMessages.add(new CheckMessage(variableName, variableValue,
-                    "this value is not an integer", true));
+    private void checkNumber(List<CheckMessage> variableMessages, String variableName, Object variableValue,
+                             String variableType, DatabaseRecord dbRecord) {
+        if (Globals.VARIABLE_TYPE_NUMBER_NAME.equalsIgnoreCase(variableType)
+                && variableValue != null
+                && !(variableValue instanceof Integer)) {
+            int numberValue = NumberUtils.toInt(variableValue.toString(), Integer.MIN_VALUE);
+            if (numberValue == Integer.MIN_VALUE) {
+                variableMessages.add(new CheckMessage(variableName, variableValue,
+                        "this value is not an integer", true));
+            } else {
+                variableMessages.add(new CheckMessage(variableName, variableValue,
+                        "this value was converted to integer", false));
+                // Overwrite with the integer
+                dbRecord.setVariable(variableName, numberValue);
+            }
+
         }
     }
 
-    private void checkDate(List<CheckMessage> variableMessages, String variableName, Object variableValue, 
+    private void checkDate(List<CheckMessage> variableMessages, String variableName, Object variableValue,
                            String variableType, boolean isEmpty) {
-        if(!isEmpty && Globals.VARIABLE_TYPE_DATE_NAME.equalsIgnoreCase(variableType)) {
+        if (!isEmpty && Globals.VARIABLE_TYPE_DATE_NAME.equalsIgnoreCase(variableType)) {
             String dateValue = variableValue.toString();
             // Try to parse
             try {
@@ -263,12 +279,12 @@ public class CheckRecordService {
     private void checkTextVariableLength(List<CheckMessage> variableMessages, String variableName,
                                          int variableLength, Object variableValue,
                                          String variableType, boolean isEmpty) {
-        if(!isEmpty 
+        if (!isEmpty
                 && !Globals.VARIABLE_TYPE_NUMBER_NAME.equalsIgnoreCase(variableType)
                 && !Globals.VARIABLE_TYPE_DATE_NAME.equalsIgnoreCase(variableType)
         ) {
             // Text variable (except date already checked)
-            if(!(variableValue instanceof String)) {
+            if (!(variableValue instanceof String)) {
                 variableMessages.add(new CheckMessage(variableName, variableValue,
                         "the value must be a text", true));
             } else {
