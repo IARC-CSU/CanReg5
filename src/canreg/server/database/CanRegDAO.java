@@ -164,8 +164,14 @@ public class CanRegDAO {
 
         patientIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(
                 Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName();
-        patientRecordID = globalToolBox.translateStandardVariableNameToDatabaseListElement(
+        patientRecordIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(
                 Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
+
+        tumourIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(
+                Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
+
+        sourceRecordIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(
+                Globals.StandardVariableNames.SourceRecordID.toString()).getDatabaseVariableName();
 
         // Prepare the SQL strings
         strSavePatient = QueryGenerator.strSavePatient(doc);
@@ -192,7 +198,7 @@ public class CanRegDAO {
         strGetHighestSourceRecordID = QueryGenerator.strGetHighestSourceRecordID(globalToolBox);
         strMaxNumberOfSourcesPerTumourRecord = QueryGenerator.strMaxNumberOfSourcesPerTumourRecord(globalToolBox);
         strCountPatientByRegistryNumber = QueryGenerator.strCountPatientByRegistryNumber(patientIDVariableName);
-        strCountPatientByRecordID = QueryGenerator.strCountPatientByRecordID(patientRecordID);
+        strCountPatientByRecordID = QueryGenerator.strCountPatientByRecordID(patientRecordIDVariableName);
         strCountTumourByTumourID = QueryGenerator.strCountTumourByTumourID(Globals.StandardVariableNames.TumourID.toString());
         strCountSourceByRecordID = QueryGenerator.strCountSourceByRecordID(Globals.StandardVariableNames.SourceRecordID.toString());
         /* We don't use tumour record ID...
@@ -2115,19 +2121,11 @@ public class CanRegDAO {
 
     public synchronized Patient getPatientByPatientRecordID(String patientRecordID) {
 
-        return getPatientByPatientID(patientRecordID, strGetPatientByPatientRecordID);
-    }
-
-    public synchronized Patient getPatientByPatientRegistreNum(String patientRegno) {
-
-        return getPatientByPatientID(patientRegno, strGetPatientByPatientRegno);
-    }
-    private synchronized Patient getPatientByPatientID(String patientRecordID, String str) {
         Patient record = null;
         ResultSetMetaData metadata;
         try(Connection connection = getDbConnection() ;
             PreparedStatement stmtGetPatientByPatientRecordID =
-                connection.prepareStatement(str))
+                connection.prepareStatement(strGetPatientByPatientRecordID))
         {
             stmtGetPatientByPatientRecordID.clearParameters();
             stmtGetPatientByPatientRecordID.setString(1, patientRecordID);
@@ -2505,12 +2503,13 @@ public class CanRegDAO {
     private PreparedStatement stmtGetHighestTumourRecordID; // not used
     private final String ns = Globals.NAMESPACE;
     private final String patientIDVariableName;
-    private final String patientRecordID;
+    private final String patientRecordIDVariableName;
+    private final String tumourIDVariableName;
+    private final String sourceRecordIDVariableName;
     private static final String strGetPatient
             = "SELECT * FROM APP.PATIENT "
             + "WHERE " + Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
     private static final String strGetPatientByPatientRecordID = "SELECT * FROM APP.PATIENT WHERE PATIENTRECORDID = ?";
-    private static final String strGetPatientByPatientRegno = "SELECT * FROM APP.PATIENT WHERE REGNO = ?";
     private final String strGetPatients
             = "SELECT * FROM APP.PATIENT";
     private final String strCountPatients
@@ -3093,11 +3092,25 @@ public class CanRegDAO {
     }
 
     /**
-     * Getter patientRecordID.
-     *
-     * @return patientRecordID patientRecordID.
+     * Getter patientRecordIDVariableName
+     * @return patientRecordIDVariableName patientRecordIDVariableName
      */
-    public String getPatientRecordID() {
-        return patientRecordID;
+    public String getPatientRecordIDVariableName() {
+        return patientRecordIDVariableName;
+    }
+
+    /**
+     * Getter tumourIDVariableName
+     * @return tumourIDVariableName tumourIDVariableName
+     */
+    public String getTumourIDVariableName() {
+        return tumourIDVariableName;
+    }
+    /**
+     * Getter sourceRecordIDVariableName
+     * @return sourceRecordIDVariableName sourceRecordIDVariableName
+     */
+    public String getSourceRecordIDVariableName() {
+        return sourceRecordIDVariableName;
     }
 }
