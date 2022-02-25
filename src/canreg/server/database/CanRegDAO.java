@@ -194,6 +194,7 @@ public class CanRegDAO {
         strCountPatientByRegistryNumber = QueryGenerator.strCountPatientByRegistryNumber(patientIDVariableName);
         strCountPatientByRecordID = QueryGenerator.strCountPatientByRecordID(patientRecordID);
         strCountTumourByTumourID = QueryGenerator.strCountTumourByTumourID(Globals.StandardVariableNames.TumourID.toString());
+        strCountSourceByRecordID = QueryGenerator.strCountSourceByRecordID(Globals.StandardVariableNames.SourceRecordID.toString());
         /* We don't use tumour record ID...
          strGetHighestTumourRecordID = QueryGenerator.strGetHighestTumourRecordID(globalToolBox);
          */
@@ -2030,7 +2031,7 @@ public class CanRegDAO {
     }
 
     /**
-     * Count the number of Tumour records for the tumourID of the Patient object
+     * Count the number of Tumour records for the tumourID of the tumour object
      * @param tumour the tumour with the tumourID to be checked
      * @return the number of tumours, 0 if not found of if tumourID null or blank in Tumour
      * @throws SQLException exception while runnning the query
@@ -2069,6 +2070,48 @@ public class CanRegDAO {
         }
         return result;
     }
+
+    /**
+     * Count the number of Source records for the sourceRecordID of the Source object
+     * @param source the source with the sourceRecordID to be checked
+     * @return the number of sources, 0 if not found of if sourceRecordID null or blank in Source
+     * @throws SQLException exception while runnning the query
+     */
+    public int countSourceBySourceRecordID(Source source) throws SQLException {
+        DatabaseVariablesListElement sourceRecordIDVariable =
+                globalToolBox.translateStandardVariableNameToDatabaseListElement(
+                        Globals.StandardVariableNames.SourceRecordID.toString());
+        String sourceRecordID = (String) source.getVariable(
+                Tools.toLowerCaseStandardized(sourceRecordIDVariable.getDatabaseVariableName()));
+        if (sourceRecordID != null && !sourceRecordID.trim().isEmpty()) {
+            return countSourceBySourceRecordID(sourceRecordID);
+        }
+        return 0;
+    }
+
+    /**
+     * Count the number of Source records for a sourceRecordID
+     * @param sourceRecordID the patient RecordID
+     * @return the number of sources
+     * @throws SQLException exception while runnning the query
+     */
+    public int countSourceBySourceRecordID(String sourceRecordID) throws SQLException {
+        int result = 0;
+        try(Connection connection = getDbConnection();
+            PreparedStatement statement = connection.prepareStatement(strCountSourceByRecordID)) {
+            statement.clearParameters();
+            statement.setString(1, sourceRecordID);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                result = resultSet.getInt(1);
+            }
+        } catch (SQLException sqle) {
+            LOGGER.log(Level.SEVERE, null, sqle);
+            throw sqle;
+        }
+        return result;
+    }
+
 
     public synchronized Patient getPatientByPatientRecordID(String patientRecordID) {
 
@@ -2229,7 +2272,7 @@ public class CanRegDAO {
         return record;
     }
     
-    private synchronized Source getSourceBySourceID(String sourceID) throws RecordLockedException {
+    public synchronized Source getSourceBySourceID(String sourceID) throws RecordLockedException {
         Source record = null;
         ResultSetMetaData metadata;
 
@@ -2553,6 +2596,7 @@ public class CanRegDAO {
     private final String strCountPatientByRegistryNumber;
     private final String strCountPatientByRecordID;
     private final String strCountTumourByTumourID;
+    private final String strCountSourceByRecordID;
     /* We don't use tumour record ID...
      private String strGetHighestTumourRecordID;
      */
