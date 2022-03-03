@@ -2,6 +2,7 @@ package canreg.common.checks;
 
 import canreg.client.LocalSettings;
 import canreg.common.Tools;
+import canreg.common.database.DatabaseRecord;
 import canreg.common.database.Dictionary;
 import canreg.common.database.Patient;
 import canreg.common.database.Source;
@@ -10,6 +11,7 @@ import canreg.server.database.CanRegDAO;
 import canreg.server.management.SystemDescription;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -21,16 +23,18 @@ import org.mockito.MockitoAnnotations;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 /**
  * Test of CheckRecordService.
  */
 public class CheckRecordServiceTest {
 
-    private File xmlRegistryFile = new File("demo/database/TRN.xml");
+    private File xmlRegistryFile = new File("test/canreg/test-system.xml");
     private File settingsFile = new File("test/canreg/test-settings.xml");
     private File dictionariesFile = new File("test/canreg/test-dictionaries.json");
     private CheckRecordService service;
@@ -71,10 +75,17 @@ public class CheckRecordServiceTest {
         Patient patient = new Patient();
         patient.setVariable("regno", "123");
         patient.setVariable("famn", "FamilyName");
-        patient.setVariable("birthd", "01/01/1910");
+        patient.setVariable("birthd", "19100120");
         patient.setVariable("sex", "1");
-        List<String> messages = service.checkPatient(patient);
+        List<CheckMessage> messages = service.checkPatient(patient);
         Assert.assertEquals("[]", messages.toString());
+        Assert.assertEquals("" +
+                        "<strong>BIRTHD: </strong>19100120<br>" +
+                        "<strong>FAMN: </strong>FamilyName<br>" +
+                        "<strong>REGNO: </strong>123<br>" +
+                        "<strong>SEX: </strong>1<br>",
+                sortRawData(patient));
+        Assert.assertEquals("", patient.getVariable(CheckRecordService.VARIABLE_FORMAT_ERRORS));
     }
 
     @Test
@@ -82,14 +93,26 @@ public class CheckRecordServiceTest {
         Tumour tumour = new Tumour();
         tumour.setVariable("incid", "20010202");
         tumour.setVariable("beh", "3");
-        tumour.setVariable("mor", "8211");
-        tumour.setVariable("top", "189");
+        tumour.setVariable("mor", "8002");
+        tumour.setVariable("top", "12");
         tumour.setVariable("bas", "7");
         tumour.setVariable("recs", "1");
         tumour.setVariable("addr", "74000");
         tumour.setVariable("age", 89);
-        List<String> messages = service.checkTumour(tumour);
+        List<CheckMessage> messages = service.checkTumour(tumour);
         Assert.assertEquals("[]", messages.toString());
+        Assert.assertEquals("" +
+                        "<strong>ADDR: </strong>74000<br>" +
+                        "<strong>AGE: </strong>89<br>" +
+                        "<strong>BAS: </strong>7<br>" +
+                        "<strong>BEH: </strong>3<br>" +
+                        "<strong>INCID: </strong>20010202<br>" +
+                        "<strong>MOR: </strong>8002<br>" +
+                        "<strong>RECS: </strong>1<br>" +
+                        "<strong>TOP: </strong>12<br>",
+                sortRawData(tumour));
+        Assert.assertEquals("", tumour.getVariable(CheckRecordService.VARIABLE_FORMAT_ERRORS));
+
     }
 
     @Test
@@ -97,22 +120,89 @@ public class CheckRecordServiceTest {
         Tumour tumour = new Tumour();
         tumour.setVariable("incid", "20010202");
         tumour.setVariable("beh", "3");
-        tumour.setVariable("mor", "8211");
-        tumour.setVariable("top", "189");
+        tumour.setVariable("mor", "8002");
+        tumour.setVariable("top", "12");
         tumour.setVariable("bas", "7");
         tumour.setVariable("recs", "1");
         tumour.setVariable("addr", "74000");
         // Age is not a number object
+        tumour.setVariable("age", "89a");
+        List<CheckMessage> messages = service.checkTumour(tumour);
+        Assert.assertEquals("[{level='error', variable='age', value='89a', message='this value is not an integer'}]", messages.toString());
+        Assert.assertEquals("" +
+                        "<strong>ADDR: </strong>74000<br>" +
+                        "<strong>AGE: </strong>89a (Error: this value is not an integer)<br>" +
+                        "<strong>BAS: </strong>7<br>" +
+                        "<strong>BEH: </strong>3<br>" +
+                        "<strong>INCID: </strong>20010202<br>" +
+                        "<strong>MOR: </strong>8002<br>" +
+                        "<strong>RECS: </strong>1<br>" +
+                        "<strong>TOP: </strong>12<br>",
+                sortRawData(tumour));
+        Assert.assertEquals("AGE<br>", tumour.getVariable(CheckRecordService.VARIABLE_FORMAT_ERRORS));
+    }
+
+    @Test
+    public void testCheckTumourAgeConvertedToNumber() {
+        Tumour tumour = new Tumour();
+        tumour.setVariable("incid", "20010202");
+        tumour.setVariable("beh", "3");
+        tumour.setVariable("mor", "8002");
+        tumour.setVariable("top", "12");
+        tumour.setVariable("bas", "7");
+        tumour.setVariable("recs", "1");
+        tumour.setVariable("addr", "74000");
+        // Age is not a number object but it can be converted
         tumour.setVariable("age", "89");
-        List<String> messages = service.checkTumour(tumour);
-        Assert.assertEquals("[integer input is expected for variable: age]", messages.toString());
+        List<CheckMessage> messages = service.checkTumour(tumour);
+        Assert.assertEquals("[{level='warning', variable='age', value='89', message='this value was converted to integer'}]", messages.toString());
+        Assert.assertEquals("" +
+                        "<strong>ADDR: </strong>74000<br>" +
+                        "<strong>AGE: </strong>89 (Warning: this value was converted to integer)<br>" +
+                        "<strong>BAS: </strong>7<br>" +
+                        "<strong>BEH: </strong>3<br>" +
+                        "<strong>INCID: </strong>20010202<br>" +
+                        "<strong>MOR: </strong>8002<br>" +
+                        "<strong>RECS: </strong>1<br>" +
+                        "<strong>TOP: </strong>12<br>",
+                sortRawData(tumour));
+        Assert.assertEquals("AGE<br>", tumour.getVariable(CheckRecordService.VARIABLE_FORMAT_ERRORS));
+    }
+    
+    @Test
+    public void testCheckTumourMissingAge() {
+        Tumour tumour = new Tumour();
+        tumour.setVariable("incid", "20010202");
+        tumour.setVariable("beh", "3");
+        tumour.setVariable("mor", "8002");
+        tumour.setVariable("top", "12");
+        tumour.setVariable("bas", "7");
+        tumour.setVariable("recs", "1");
+        tumour.setVariable("addr", "74000");
+        // Age is missing
+        // tumour.setVariable("age", 89);
+        List<CheckMessage> messages = service.checkTumour(tumour);
+        Assert.assertEquals("[{level='warning', variable='age', value='', message='this variable is mandatory'}]", messages.toString());
+        Assert.assertEquals("" +
+                        "<strong>ADDR: </strong>74000<br>" +
+                        "<strong>AGE: </strong> (Warning: this variable is mandatory)<br>" +
+                        "<strong>BAS: </strong>7<br>" +
+                        "<strong>BEH: </strong>3<br>" +
+                        "<strong>INCID: </strong>20010202<br>" +
+                        "<strong>MOR: </strong>8002<br>" +
+                        "<strong>RECS: </strong>1<br>" +
+                        "<strong>TOP: </strong>12<br>",
+                sortRawData(tumour));
+        Assert.assertEquals("AGE<br>", tumour.getVariable(CheckRecordService.VARIABLE_FORMAT_ERRORS));
     }
     
     @Test
     public void testCheckSourceOk() {
         Source source = new Source();
-        List<String> messages = service.checkSource(source);
+        List<CheckMessage> messages = service.checkSource(source);
         Assert.assertEquals("[]", messages.toString());
+        Assert.assertEquals("<br>", sortRawData(source));
+        Assert.assertEquals("", source.getVariable(CheckRecordService.VARIABLE_FORMAT_ERRORS));
     }
 
     @Test
@@ -120,10 +210,17 @@ public class CheckRecordServiceTest {
         Patient patient = new Patient();
         patient.setVariable("regno", "124");
         // patient.setVariable("famn", "FamilyName");
-        patient.setVariable("birthd", "01/01/1910");
+        patient.setVariable("birthd", "19100101");
         patient.setVariable("sex", "2");
-        List<String> messages = service.checkPatient(patient);
-        Assert.assertEquals("[variable is mandatory: famn]", messages.toString());
+        List<CheckMessage> messages = service.checkPatient(patient);
+        Assert.assertEquals("[{level='warning', variable='famn', value='', message='this variable is mandatory'}]", messages.toString());
+        Assert.assertEquals("" +
+                        "<strong>BIRTHD: </strong>19100101<br>" +
+                        "<strong>FAMN: </strong> (Warning: this variable is mandatory)<br>" +
+                        "<strong>REGNO: </strong>124<br>" +
+                        "<strong>SEX: </strong>2<br>",
+                sortRawData(patient));
+        Assert.assertEquals("FAMN<br>", patient.getVariable(CheckRecordService.VARIABLE_FORMAT_ERRORS));
     }
 
     @Test
@@ -131,10 +228,154 @@ public class CheckRecordServiceTest {
         Patient patient = new Patient();
         patient.setVariable("regno", "125");
         patient.setVariable("famn", "");
-        patient.setVariable("birthd", "01/01/1910");
+        patient.setVariable("birthd", "19050120");
         patient.setVariable("sex", "1");
-        List<String> messages = service.checkPatient(patient);
-        Assert.assertEquals("[variable is mandatory: famn]", messages.toString());
+        List<CheckMessage> messages = service.checkPatient(patient);
+        Assert.assertEquals("[{level='warning', variable='famn', value='', message='this variable is mandatory'}]", messages.toString());
+        Assert.assertEquals("" +
+                        "<strong>BIRTHD: </strong>19050120<br>" +
+                        "<strong>FAMN: </strong> (Warning: this variable is mandatory)<br>" +
+                        "<strong>REGNO: </strong>125<br>" +
+                        "<strong>SEX: </strong>1<br>",
+                sortRawData(patient));
+        Assert.assertEquals("FAMN<br>", patient.getVariable(CheckRecordService.VARIABLE_FORMAT_ERRORS));
+    }
+
+    @Test
+    public void testCheckRecordVariableTooLong() {
+        Patient patient = new Patient();
+        patient.setVariable("regno", "123456789");
+        patient.setVariable("famn", "FamilyName");
+        patient.setVariable("birthd", "19050120");
+        patient.setVariable("sex", "1");
+        List<CheckMessage> messages = service.checkPatient(patient);
+        Assert.assertEquals("[{level='error', variable='regno', value='123456789', message='the length 9 exceeds the maximum length 8'}]", messages.toString());
+        Assert.assertEquals("" +
+                        "<strong>BIRTHD: </strong>19050120<br>" +
+                        "<strong>FAMN: </strong>FamilyName<br>" +
+                        "<strong>REGNO: </strong>123456789 (Error: the length 9 exceeds the maximum length 8)<br>" +
+                        "<strong>SEX: </strong>1<br>",
+                sortRawData(patient));
+        Assert.assertEquals("REGNO<br>", patient.getVariable(CheckRecordService.VARIABLE_FORMAT_ERRORS));
+    }
+
+    @Test
+    public void testCheckRecordVariableDictTooLong() {
+        Patient patient = new Patient();
+        patient.setVariable("regno", "12345678");
+        patient.setVariable("famn", "FamilyName");
+        patient.setVariable("birthd", "19050120");
+        patient.setVariable("sex", "12");
+        List<CheckMessage> messages = service.checkPatient(patient);
+        Assert.assertEquals("[" +
+                "{level='error', variable='sex', value='12', message='this code is not in the dictionary'}, " +
+                "{level='error', variable='sex', value='12', message='the length 2 exceeds the maximum length 1'}" +
+                "]", messages.toString());
+        Assert.assertEquals("" +
+                        "<strong>BIRTHD: </strong>19050120<br>" +
+                        "<strong>FAMN: </strong>FamilyName<br>" +
+                        "<strong>REGNO: </strong>12345678<br>" +
+                        "<strong>SEX: </strong>12 (Error: this code is not in the dictionary, Error: the length 2 exceeds the maximum length 1)<br>",
+                sortRawData(patient));
+        Assert.assertEquals("SEX<br>", patient.getVariable(CheckRecordService.VARIABLE_FORMAT_ERRORS));
+    }
+
+    @Test
+    public void testCheckRecordDateOk() {
+        Patient patient = new Patient();
+        patient.setVariable("regno", "123");
+        patient.setVariable("famn", "FamilyName");
+        patient.setVariable("sex", "1");
+        List<CheckMessage> messages;
+
+        patient.setVariable("birthd", "19100120");
+        messages = service.checkPatient(patient);
+        Assert.assertEquals("[]", messages.toString());
+
+        // 29/02 in 1912
+        cleanAddedVariables(patient);
+        patient.setVariable("birthd", "19120229");
+        messages = service.checkPatient(patient);
+        Assert.assertEquals("[]", messages.toString());
+    }
+
+    @Test
+    public void testCheckRecordDateKo() {
+        Patient patient = new Patient();
+        patient.setVariable("regno", "125");
+        patient.setVariable("famn", "TheName");
+        patient.setVariable("sex", "1");
+        List<CheckMessage> messages;
+
+        // date with '/'
+        cleanAddedVariables(patient);
+        patient.setVariable("birthd", "1910/01/20");
+        messages = service.checkPatient(patient);
+        Assert.assertEquals("[{level='error', variable='birthd', value='1910/01/20', message='this date is not a valid date yyyyMMdd'}]", messages.toString());
+
+        // date with '-'
+        cleanAddedVariables(patient);
+        patient.setVariable("birthd", "1910-01-20");
+        messages = service.checkPatient(patient);
+        Assert.assertEquals("[{level='error', variable='birthd', value='1910-01-20', message='this date is not a valid date yyyyMMdd'}]", messages.toString());
+
+        cleanAddedVariables(patient);
+        patient.setVariable("birthd", "01/01/1910");
+        messages = service.checkPatient(patient);
+        Assert.assertEquals("[{level='error', variable='birthd', value='01/01/1910', message='this date is not a valid date yyyyMMdd'}]", messages.toString());
+
+        cleanAddedVariables(patient);
+        patient.setVariable("birthd", "19101301");
+        messages = service.checkPatient(patient);
+        Assert.assertEquals("[{level='error', variable='birthd', value='19101301', message='this date is not a valid date yyyyMMdd'}]", messages.toString());
+
+        cleanAddedVariables(patient);
+        patient.setVariable("birthd", "1910131");
+        messages = service.checkPatient(patient);
+        Assert.assertEquals("[{level='error', variable='birthd', value='1910131', message='this date is not a valid date yyyyMMdd'}]", messages.toString());
+
+        cleanAddedVariables(patient);
+        patient.setVariable("birthd", " 19101301");
+        messages = service.checkPatient(patient);
+        Assert.assertEquals("[{level='error', variable='birthd', value=' 19101301', message='this date is not a valid date yyyyMMdd'}]", messages.toString());
+
+        cleanAddedVariables(patient);
+        patient.setVariable("birthd", "19100431");
+        messages = service.checkPatient(patient);
+        Assert.assertEquals("[{level='error', variable='birthd', value='19100431', message='this date is not a valid date yyyyMMdd'}]", messages.toString());
+
+        cleanAddedVariables(patient);
+        patient.setVariable("birthd", "19090229");
+        messages = service.checkPatient(patient);
+        Assert.assertEquals("[{level='error', variable='birthd', value='19090229', message='this date is not a valid date yyyyMMdd'}]", messages.toString());
+
+    }
+
+    @Test
+    public void testCheckRecordMultipleMessages() {
+        Patient patient = new Patient();
+        patient.setVariable("regno", "125");
+        patient.setVariable("famn", "");
+        patient.setVariable("birthd", "1905-01-20");
+        patient.setVariable("sex", "3");
+        List<CheckMessage> messages = service.checkPatient(patient);
+        Assert.assertEquals("[" +
+                "{level='error', variable='birthd', value='1905-01-20', message='this date is not a valid date yyyyMMdd'}, " +
+                "{level='warning', variable='famn', value='', message='this variable is mandatory'}, " +
+                "{level='error', variable='sex', value='3', message='this code is not in the dictionary'}" +
+                "]", messages.toString());
+        Assert.assertEquals("" +
+                        "<strong>BIRTHD: </strong>1905-01-20 (Error: this date is not a valid date yyyyMMdd)<br>" +
+                        "<strong>FAMN: </strong> (Warning: this variable is mandatory)<br>" +
+                        "<strong>REGNO: </strong>125<br>" +
+                        "<strong>SEX: </strong>3 (Error: this code is not in the dictionary)<br>",
+                sortRawData(patient));
+        Assert.assertEquals("BIRTHD<br>FAMN<br>SEX<br>", patient.getVariable(CheckRecordService.VARIABLE_FORMAT_ERRORS));
+    }
+
+    private void cleanAddedVariables(DatabaseRecord databaseRecord) {
+        databaseRecord.setVariable(CheckRecordService.VARIABLE_RAW_DATA, null);
+        databaseRecord.setVariable(CheckRecordService.VARIABLE_FORMAT_ERRORS, null);
     }
 
     @Test
@@ -142,10 +383,10 @@ public class CheckRecordServiceTest {
         Patient patient = new Patient();
         patient.setVariable("regno", "126");
         patient.setVariable("famn", "FamilyName");
-        patient.setVariable("birthd", "01/01/1910");
+        patient.setVariable("birthd", "19100101");
         patient.setVariable("sex", "3");
-        List<String> messages = service.checkPatient(patient);
-        Assert.assertEquals("[unknown value in dictionary sex=3]", messages.toString());
+        List<CheckMessage> messages = service.checkPatient(patient);
+        Assert.assertEquals("[{level='error', variable='sex', value='3', message='this code is not in the dictionary'}]", messages.toString());
     }
 
     @Test
@@ -153,11 +394,11 @@ public class CheckRecordServiceTest {
         Patient patient = new Patient();
         patient.setVariable("regno", "123");
         patient.setVariable("famn", "FamilyName");
-        patient.setVariable("birthd", "01/01/1910");
+        patient.setVariable("birthd", "19100101");
         patient.setVariable("sex", "2");
         patient.setVariable("unknownVariable", "3");
-        List<String> messages = service.checkPatient(patient);
-        Assert.assertEquals("[unknown variable: unknownvariable]", messages.toString());
+        List<CheckMessage> messages = service.checkPatient(patient);
+        Assert.assertEquals("[{level='warning', variable='unknownvariable', value='3', message='unknown variable'}]", messages.toString());
     }
 
     /**
@@ -207,6 +448,16 @@ public class CheckRecordServiceTest {
                 dbProperties);
     }
 
+    private String sortRawData(DatabaseRecord databaseRecord) {
+        return Arrays.asList(
+                        StringUtils.splitByWholeSeparator(
+                                databaseRecord.getVariable(CheckRecordService.VARIABLE_RAW_DATA).toString(), "<br>"))
+                .stream()
+                .filter(s -> !s.isEmpty())
+                .sorted()
+                .collect(Collectors.joining("<br>"))
+                + "<br>";
+    }
 
 }
 

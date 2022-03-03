@@ -19,6 +19,7 @@
  */
 package canreg.server.database;
 
+import canreg.common.Tools;
 import canreg.common.database.User;
 import canreg.common.database.Patient;
 import canreg.common.database.PopulationDatasetsEntry;
@@ -31,26 +32,40 @@ import canreg.common.database.DictionaryEntry;
 import canreg.common.database.AgeGroupStructure;
 import canreg.common.database.DatabaseRecord;
 import canreg.common.DatabaseDictionaryListElement;
-import canreg.common.cachingtableapi.DistributedTableDataSource;
-import canreg.common.cachingtableapi.DistributedTableDescription;
-import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.common.DatabaseFilter;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
+import canreg.common.cachingtableapi.DistributedTableDataSource;
+import canreg.common.cachingtableapi.DistributedTableDescription;
+import canreg.common.cachingtableapi.DistributedTableDescriptionException;
+import canreg.common.database.AgeGroupStructure;
+import canreg.common.database.DatabaseRecord;
+import canreg.common.database.Dictionary;
+import canreg.common.database.DictionaryEntry;
+import canreg.common.database.NameSexRecord;
+import canreg.common.database.Patient;
+import canreg.common.database.PopulationDataset;
+import canreg.common.database.PopulationDatasetsEntry;
+import canreg.common.database.Source;
+import canreg.common.database.Tumour;
+import canreg.common.database.User;
 import canreg.server.DatabaseStats;
+import org.w3c.dom.Document;
+
+import javax.sql.DataSource;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.rmi.RemoteException;
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Connection;
 import java.sql.Statement;
 import java.util.Calendar;
 import java.util.Collections;
@@ -64,9 +79,6 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.w3c.dom.Document;
-
-import javax.sql.DataSource;
 
 /**
  *
@@ -150,6 +162,17 @@ public class CanRegDAO {
         debugOut(canreg.server.xml.Tools.getTextContent(
                 new String[]{ns + "canreg", ns + "general", ns + "registry_name"}, doc));
 
+        patientIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(
+                Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName();
+        patientRecordIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(
+                Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
+
+        tumourIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(
+                Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
+
+        sourceRecordIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(
+                Globals.StandardVariableNames.SourceRecordID.toString()).getDatabaseVariableName();
+
         // Prepare the SQL strings
         strSavePatient = QueryGenerator.strSavePatient(doc);
         strSaveTumour = QueryGenerator.strSaveTumour(doc);
@@ -174,6 +197,10 @@ public class CanRegDAO {
         strGetHighestPatientRecordID = QueryGenerator.strGetHighestPatientRecordID(globalToolBox);
         strGetHighestSourceRecordID = QueryGenerator.strGetHighestSourceRecordID(globalToolBox);
         strMaxNumberOfSourcesPerTumourRecord = QueryGenerator.strMaxNumberOfSourcesPerTumourRecord(globalToolBox);
+        strCountPatientByRegistryNumber = QueryGenerator.strCountPatientByRegistryNumber(patientIDVariableName);
+        strCountPatientByRecordID = QueryGenerator.strCountPatientByRecordID(patientRecordIDVariableName);
+        strCountTumourByTumourID = QueryGenerator.strCountTumourByTumourID(Globals.StandardVariableNames.TumourID.toString());
+        strCountSourceByRecordID = QueryGenerator.strCountSourceByRecordID(Globals.StandardVariableNames.SourceRecordID.toString());
         /* We don't use tumour record ID...
          strGetHighestTumourRecordID = QueryGenerator.strGetHighestTumourRecordID(globalToolBox);
          */
@@ -1275,10 +1302,31 @@ public class CanRegDAO {
             dataSetID++;
         }
         populationDataSet.setPopulationDatasetID(dataSetID);
-        try(Connection connection = getDbConnection();
-            PreparedStatement stmtSaveNewPopoulationDataset = connection.prepareStatement(strSavePopoulationDataset,
-                 Statement.RETURN_GENERATED_KEYS))
-        {
+        savePopulationDataset(populationDataSet);
+        return dataSetID;
+    }
+
+    /**
+     * Update an existing population dataset.
+     *
+     * @param populationDataSet populationDataSet with populationDatasetID already set
+     * @return -1 if does not exist else return the id in input
+     */
+    public synchronized int updatePopulationDataset(PopulationDataset populationDataSet) throws SQLException {
+        Map<Integer, PopulationDataset> populationDataSets;
+        populationDataSets = getPopulationDatasets();
+
+        if (populationDataSets.get(populationDataSet.getPopulationDatasetID()) == null) {
+            return -1;
+        }
+        deletePopulationDataSet(populationDataSet.getPopulationDatasetID());
+        savePopulationDataset(populationDataSet);
+
+        return populationDataSet.getPopulationDatasetID();
+    }
+
+    private synchronized int savePopulationDataset(PopulationDataset populationDataSet) {
+        try (Connection connection = getDbConnection(); PreparedStatement stmtSaveNewPopoulationDataset = connection.prepareStatement(strSavePopoulationDataset, Statement.RETURN_GENERATED_KEYS)) {
             stmtSaveNewPopoulationDataset.clearParameters();
 
             stmtSaveNewPopoulationDataset.setInt(1, populationDataSet.getPopulationDatasetID());
@@ -1905,13 +1953,179 @@ public class CanRegDAO {
 
         return record;
     }
-    
-    private synchronized Patient getPatientByPatientRecordID(String patientRecordID) {
+
+    /**
+     * Count the number of Patient records for the patientID of the Patient object
+     * (usually Registry Number = "regno" column).
+     * @param patient the patient with the PatientID to be checked
+     * @return the number of patients, 0 if not found of if patientID null or blank in Patient
+     * @throws SQLException exception while runnning the query
+     */
+    public int countPatientByPatientID(Patient patient) throws SQLException {
+        DatabaseVariablesListElement patientIDVariable =
+                globalToolBox.translateStandardVariableNameToDatabaseListElement(
+                        Globals.StandardVariableNames.PatientID.toString());
+        String patientID = (String) patient.getVariable(
+                Tools.toLowerCaseStandardized(patientIDVariable.getDatabaseVariableName()));
+        if (patientID != null && !patientID.trim().isEmpty()) {
+            return countPatientByPatientID(patientID);
+        }
+        return 0;
+    }
+
+    /**
+     * Count the number of Patient records for a patientID (usually Registry Number = "regno" column)
+     * @param patientID the patient ID
+     * @return the number of patients
+     * @throws SQLException exception while runnning the query
+     */
+    public int countPatientByPatientID(String patientID) throws SQLException {
+        int result = 0;
+        try(Connection connection = getDbConnection();
+            PreparedStatement statement = connection.prepareStatement(strCountPatientByRegistryNumber)) {
+            statement.clearParameters();
+            statement.setString(1, patientID);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                result = resultSet.getInt(1);
+            }
+        } catch (SQLException sqle) {
+            LOGGER.log(Level.SEVERE, null, sqle);
+            throw sqle;
+        }
+        return result;
+    }
+    /**
+     * Count the number of Patient records for the patientRecordID of the Patient object
+     * @param patient the patient with the patientRecordID to be checked
+     * @return the number of patients, 0 if not found of if patientRecordID null or blank in Patient
+     * @throws SQLException exception while runnning the query
+     */
+    public int countPatientByPatientRecordID(Patient patient) throws SQLException {
+        DatabaseVariablesListElement patientRecordIDVariable =
+                globalToolBox.translateStandardVariableNameToDatabaseListElement(
+                        Globals.StandardVariableNames.PatientRecordID.toString());
+        String patientRecordID = (String) patient.getVariable(
+                Tools.toLowerCaseStandardized(patientRecordIDVariable.getDatabaseVariableName()));
+        if (patientRecordID != null && !patientRecordID.trim().isEmpty()) {
+            return countPatientByPatientRecordID(patientRecordID);
+        }
+        return 0;
+    }
+
+    /**
+     * Count the number of Patient records for a patientRecordID
+     * @param patientRecordID the patient RecordID
+     * @return the number of patients
+     * @throws SQLException exception while runnning the query
+     */
+    public int countPatientByPatientRecordID(String patientRecordID) throws SQLException {
+        int result = 0;
+        try(Connection connection = getDbConnection();
+            PreparedStatement statement = connection.prepareStatement(strCountPatientByRecordID)) {
+            statement.clearParameters();
+            statement.setString(1, patientRecordID);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                result = resultSet.getInt(1);
+            }
+        } catch (SQLException sqle) {
+            LOGGER.log(Level.SEVERE, null, sqle);
+            throw sqle;
+        }
+        return result;
+    }
+
+    /**
+     * Count the number of Tumour records for the tumourID of the tumour object
+     * @param tumour the tumour with the tumourID to be checked
+     * @return the number of tumours, 0 if not found of if tumourID null or blank in Tumour
+     * @throws SQLException exception while runnning the query
+     */
+    public int countTumourByTumourID(Tumour tumour) throws SQLException {
+        DatabaseVariablesListElement tumourIDVariable =
+                globalToolBox.translateStandardVariableNameToDatabaseListElement(
+                        Globals.StandardVariableNames.TumourID.toString());
+        String tumourID = (String) tumour.getVariable(
+                Tools.toLowerCaseStandardized(tumourIDVariable.getDatabaseVariableName()));
+        if (tumourID != null && !tumourID.trim().isEmpty()) {
+            return countTumourByTumourID(tumourID);
+        }
+        return 0;
+    }
+
+    /**
+     * Count the number of Tumour records for a tumourID
+     * @param tumourID the tumour  ID
+     * @return the number of tumours
+     * @throws SQLException exception while runnning the query
+     */
+    public int countTumourByTumourID(String tumourID) throws SQLException {
+        int result = 0;
+        try(Connection connection = getDbConnection();
+            PreparedStatement statement = connection.prepareStatement(strCountTumourByTumourID)) {
+            statement.clearParameters();
+            statement.setString(1, tumourID);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                result = resultSet.getInt(1);
+            }
+        } catch (SQLException sqle) {
+            LOGGER.log(Level.SEVERE, null, sqle);
+            throw sqle;
+        }
+        return result;
+    }
+
+    /**
+     * Count the number of Source records for the sourceRecordID of the Source object
+     * @param source the source with the sourceRecordID to be checked
+     * @return the number of sources, 0 if not found of if sourceRecordID null or blank in Source
+     * @throws SQLException exception while runnning the query
+     */
+    public int countSourceBySourceRecordID(Source source) throws SQLException {
+        DatabaseVariablesListElement sourceRecordIDVariable =
+                globalToolBox.translateStandardVariableNameToDatabaseListElement(
+                        Globals.StandardVariableNames.SourceRecordID.toString());
+        String sourceRecordID = (String) source.getVariable(
+                Tools.toLowerCaseStandardized(sourceRecordIDVariable.getDatabaseVariableName()));
+        if (sourceRecordID != null && !sourceRecordID.trim().isEmpty()) {
+            return countSourceBySourceRecordID(sourceRecordID);
+        }
+        return 0;
+    }
+
+    /**
+     * Count the number of Source records for a sourceRecordID
+     * @param sourceRecordID the patient RecordID
+     * @return the number of sources
+     * @throws SQLException exception while runnning the query
+     */
+    public int countSourceBySourceRecordID(String sourceRecordID) throws SQLException {
+        int result = 0;
+        try(Connection connection = getDbConnection();
+            PreparedStatement statement = connection.prepareStatement(strCountSourceByRecordID)) {
+            statement.clearParameters();
+            statement.setString(1, sourceRecordID);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                result = resultSet.getInt(1);
+            }
+        } catch (SQLException sqle) {
+            LOGGER.log(Level.SEVERE, null, sqle);
+            throw sqle;
+        }
+        return result;
+    }
+
+
+    public synchronized Patient getPatientByPatientRecordID(String patientRecordID) {
+
         Patient record = null;
         ResultSetMetaData metadata;
         try(Connection connection = getDbConnection() ;
             PreparedStatement stmtGetPatientByPatientRecordID =
-                connection.prepareStatement(strGetPatientByPatientRecordID)) 
+                connection.prepareStatement(strGetPatientByPatientRecordID))
         {
             stmtGetPatientByPatientRecordID.clearParameters();
             stmtGetPatientByPatientRecordID.setString(1, patientRecordID);
@@ -1935,7 +2149,6 @@ public class CanRegDAO {
         
         return record;
     }
-
 
     private synchronized Tumour getTumour(int recordID, boolean lock) throws RecordLockedException {
         Tumour record = null;
@@ -1985,7 +2198,7 @@ public class CanRegDAO {
         return record;
     }
     
-    private synchronized Tumour getTumourByTumourID(String tumourID) throws RecordLockedException {
+    public synchronized Tumour getTumourByTumourID(String tumourID) throws RecordLockedException {
         Tumour record = null;
         ResultSetMetaData metadata;
 
@@ -2057,7 +2270,7 @@ public class CanRegDAO {
         return record;
     }
     
-    private synchronized Source getSourceBySourceID(String sourceID) throws RecordLockedException {
+    public synchronized Source getSourceBySourceID(String sourceID) throws RecordLockedException {
         Source record = null;
         ResultSetMetaData metadata;
 
@@ -2289,6 +2502,10 @@ public class CanRegDAO {
     private boolean tableOfPopulationDataSets = true;
     private PreparedStatement stmtGetHighestTumourRecordID; // not used
     private final String ns = Globals.NAMESPACE;
+    private final String patientIDVariableName;
+    private final String patientRecordIDVariableName;
+    private final String tumourIDVariableName;
+    private final String sourceRecordIDVariableName;
     private static final String strGetPatient
             = "SELECT * FROM APP.PATIENT "
             + "WHERE " + Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
@@ -2375,6 +2592,10 @@ public class CanRegDAO {
     private final String strGetHighestTumourID;
     private final String strGetHighestPatientRecordID;
     private final String strGetHighestSourceRecordID;
+    private final String strCountPatientByRegistryNumber;
+    private final String strCountPatientByRecordID;
+    private final String strCountTumourByTumourID;
+    private final String strCountSourceByRecordID;
     /* We don't use tumour record ID...
      private String strGetHighestTumourRecordID;
      */
@@ -2859,5 +3080,37 @@ public class CanRegDAO {
      */
     public DatabaseVariablesListElement[] getDatabaseVariablesList() {
         return variables;
+    }
+
+    /**
+     * Getter patientIDVariableName.
+     *
+     * @return patientIDVariableName patientIDVariableName.
+     */
+    public String getPatientIDVariableName() {
+        return patientIDVariableName;
+    }
+
+    /**
+     * Getter patientRecordIDVariableName
+     * @return patientRecordIDVariableName patientRecordIDVariableName
+     */
+    public String getPatientRecordIDVariableName() {
+        return patientRecordIDVariableName;
+    }
+
+    /**
+     * Getter tumourIDVariableName
+     * @return tumourIDVariableName tumourIDVariableName
+     */
+    public String getTumourIDVariableName() {
+        return tumourIDVariableName;
+    }
+    /**
+     * Getter sourceRecordIDVariableName
+     * @return sourceRecordIDVariableName sourceRecordIDVariableName
+     */
+    public String getSourceRecordIDVariableName() {
+        return sourceRecordIDVariableName;
     }
 }

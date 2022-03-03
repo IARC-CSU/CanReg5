@@ -701,12 +701,27 @@ public class QueryGenerator {
     static String strAddColumnToTable(String columnName, String columnType, String table) {
         return "ALTER TABLE APP." + table + " ADD COLUMN " + columnName.toUpperCase() + " " + columnType;
     }
-    
+
     static String strDropColumnFromTable(String columnName, String table) {
         return "ALTER TABLE APP." + table + " DROP COLUMN " + columnName.toUpperCase();
     }
 
     static String strSetColumnDataType(String columnName, String columnType, String table) {
         return "ALTER TABLE APP." + table + " ALTER "+ columnName.toUpperCase() + " SET DATA TYPE "+columnType;
+    }
+
+    static String strCountPatientByRegistryNumber(String patientIDVariableName) {
+        return "SELECT COUNT(*) FROM APP." + Globals.PATIENT_TABLE_NAME + " WHERE " + patientIDVariableName + " = ?";
+    }
+
+     static String strCountPatientByRecordID(String patientRecordID) {
+        return "SELECT COUNT(*) FROM APP." + Globals.PATIENT_TABLE_NAME + " WHERE " + patientRecordID + " = ?";
+    }
+    static String strCountTumourByTumourID(String tumourID) {
+        return "SELECT COUNT(*) FROM APP." + Globals.TUMOUR_TABLE_NAME + " WHERE " + tumourID + " = ?";
+    }
+
+    static String strCountSourceByRecordID(String sourceRecordID) {
+        return "SELECT COUNT(*) FROM APP." + Globals.SOURCE_TABLE_NAME + " WHERE " + sourceRecordID + " = ?";
     }
 }
