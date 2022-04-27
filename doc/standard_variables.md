@@ -16,6 +16,8 @@
 - ICCC (Children classification, (max) 4 characters, auto-generated)
 - AddressCode (Any number of characters/digits. (Most registries would have 2 or 3 digits long, though.))
 
+https://github.com/IARC-CSU/CanReg5/blob/fb4756de36144beb5d8c1351dad2b418a3a6b70d/src/canreg/common/Tools.java#L822
+
 ### Recommended variables
 
 - FirstName (String)
@@ -56,3 +58,7 @@
 - Source4 (Any coding is valid, deprecated)
 - Source5 (Any coding is valid, deprecated)
 - Source6 (Any coding is valid, deprecated)
+
+## References
+
+https://github.com/IARC-CSU/CanReg5/blob/a492e15a71432bf14eeda30f1b392f8f041cebe7/src/canreg/common/Globals.java#L345
