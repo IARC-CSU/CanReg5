@@ -1,5 +1,8 @@
 ## Standard variables in CanReg5
 
+### Necessary variables
+
+- Surname (String)
 - IncidenceDate (Formatted as yyyyMMdd)
 - BirthDate (Formatted as yyyyMMdd)
 - Age (2 or 3 digits (with age unknown as 99 or 999))
@@ -8,22 +11,18 @@
 - Morphology (ICD-O-3, only the 4 digits)
 - Behaviour (ICD-O-3, 1 digit)
 - BasisDiagnosis (IACR/IARC standard, 1 character)
-- PersonSearch (1 character)
-- FirstName (String)
-- Surname (String)
-- Lastcontact (Date of last contact, Formatted as yyyyMMdd)
-- Grade (ICD-O-3, 1 character)
+- Source1 (Any coding is valid)
 - ICD10 (4 characters (C or D followed by 3 characters), auto-generated)
 - ICCC (Children classification, (max) 4 characters, auto-generated)
 - AddressCode (Any number of characters/digits. (Most registries would have 2 or 3 digits long, though.))
-- Stage (Any coding is valid (as of now))
-- Source1 (Any coding is valid)
-- Source2 (Any coding is valid, deprecated)
-- Source3 (Any coding is valid, deprecated)
-- Source4 (Any coding is valid, deprecated)
-- Source5 (Any coding is valid, deprecated)
-- Source6 (Any coding is valid, deprecated)
+
+### Recommended variables
+
+- FirstName (String)
+- Lastcontact (Date of last contact, Formatted as yyyyMMdd)
 - VitalStatus (Alive or dead)
+- Grade (ICD-O-3, 1 character)
+- Stage (Any coding is valid (as of now))
 
 ### System variables
 
@@ -38,9 +37,9 @@
 - PatientRecordIDTumourTable (The ID of the patient record in the tumour table)
 - PatientUpdateDate (Formatted as yyyyMMdd)
 - TumourUpdateDate (Formatted as yyyyMMdd)
+- PersonSearch (1 character)
 - MultPrimSeq (Sequence number)
 - MultPrimTot (Total number of cancers)
-- MultPrimCode (3 characters, deprecated)
 - ObsoleteFlagTumourTable (1 character)
 - ObsoleteFlagPatientTable (1 character)
 - TumourUnduplicationStatus (1 character)
@@ -48,3 +47,12 @@
 - SourceRecordID (The ID of the source record)
 - PatientUpdatedBy (String)
 - TumourUpdatedBy (String)
+
+### Deprecated/legacy variables
+
+- MultPrimCode (3 characters, deprecated)
+- Source2 (Any coding is valid, deprecated)
+- Source3 (Any coding is valid, deprecated)
+- Source4 (Any coding is valid, deprecated)
+- Source5 (Any coding is valid, deprecated)
+- Source6 (Any coding is valid, deprecated)
