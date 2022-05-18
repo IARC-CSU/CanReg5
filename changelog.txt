@@ -1,5 +1,13 @@
 # CanReg5 Changelog
 
+## 5.00.45BETA1
+
+- Holding database (BETA)
+- Ad-hoc analysis (BETA)
+- Improved person search perfomance
+- Memory leak fixes
+
+
 ## 5.00.44h
 - New Features: save list of person search matches as spreadsheet.
 - Fixed link to latest version information.
