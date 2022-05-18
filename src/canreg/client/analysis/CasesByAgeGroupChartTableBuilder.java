@@ -21,7 +21,6 @@ package canreg.client.analysis;
 
 import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
-import canreg.client.analysis.TableBuilderInterface.FileTypes;
 import canreg.client.analysis.Tools.KeyCancerGroupsEnum;
 import canreg.common.Globals;
 import canreg.common.Globals.StandardVariableNames;
@@ -38,6 +37,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartTheme;
 import org.jfree.chart.JFreeChart;
@@ -89,6 +89,7 @@ public class CasesByAgeGroupChartTableBuilder implements TableBuilderInterface, 
     private LocalSettings localSettings;
     private String rpath;
     private int unknownAgeInt = Globals.DEFAULT_UNKNOWN_AGE_CODE;
+    private static final Logger LOGGER = Logger.getLogger(CasesByAgeGroupChartTableBuilder.class.getName());
 
     public CasesByAgeGroupChartTableBuilder() {
         ChartTheme chartTheme = new StandardChartTheme("sansserif");
@@ -247,7 +248,7 @@ public class CasesByAgeGroupChartTableBuilder implements TableBuilderInterface, 
             //            try {
             //                addPopulationDataSetToAgeGroup(pop, ag);
             //            } catch (IncompatiblePopulationDataSetException ex) {
-            //                Logger.getLogger(CasesByAgeGroupChartTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
+            //                LOGGER.log(Level.SEVERE, null, ex);
             //            }
             //        }
             //    }
@@ -280,7 +281,7 @@ public class CasesByAgeGroupChartTableBuilder implements TableBuilderInterface, 
                         && !fileType.equals(FileTypes.jchart)
                         && !fileType.equals(FileTypes.csv)) {
                     String header = tableHeader + ", \n" + TableBuilderInterface.sexLabel[sexNumber];
-                    generatedFiles.addAll(Tools.generateRChart(casesCounts, fileName, header, fileType, chartType, false, 0.0, rpath, false, "Age Group"));
+                        generatedFiles.addAll(Tools.generateRChart(casesCounts, fileName, header, fileType, chartType, false, 0.0, rpath, false, "Age Group"));
                 } else {
                     Color color;
                     if (sexNumber == 0) {
@@ -293,10 +294,16 @@ public class CasesByAgeGroupChartTableBuilder implements TableBuilderInterface, 
                     charts[sexNumber] = Tools.generateJChart(casesCounts, fileName, header, fileType, chartType, false, legendOn, 0.0, total, color, "Age Group");
                     try {
                         generatedFiles.add(Tools.writeJChartToFile(charts[sexNumber], file, fileType));
-                    } catch (IOException ex) {
-                        Logger.getLogger(TopNChartTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (DocumentException ex) {
-                        Logger.getLogger(TopNChartTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IOException | DocumentException ex) {
+                        LOGGER.log(Level.SEVERE,String.format("Error: Unable to add/ build chart to file : %s",fileName), ex);
+                        JOptionPane.showInternalMessageDialog(null,
+                            java.util.ResourceBundle
+                                .getBundle("canreg/client/gui/dataentry2/resources/RecordEditorMainFrame")
+                                .getString("TECHNICAL ERROR"),
+                            java.util.ResourceBundle
+                                .getBundle("canreg/client/gui/dataentry2/resources/RecordEditorMainFrame")
+                                .getString("FAILED"),
+                            JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }

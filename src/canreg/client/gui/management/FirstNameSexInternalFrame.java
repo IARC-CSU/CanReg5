@@ -26,6 +26,7 @@
 package canreg.client.gui.management;
 
 import canreg.client.CanRegClientApp;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.database.NameSexRecord;
 import canreg.server.database.RecordLockedException;
 import java.io.BufferedReader;
@@ -49,6 +50,7 @@ import org.jdesktop.application.Task;
  */
 public class FirstNameSexInternalFrame extends javax.swing.JInternalFrame {
 
+    private static final Logger LOGGER = Logger.getLogger(FirstNameSexInternalFrame.class.getName());
     /** Creates new form FirstNameSexInternalFrame */
     public FirstNameSexInternalFrame() {
         initComponents();
@@ -194,18 +196,17 @@ public class FirstNameSexInternalFrame extends javax.swing.JInternalFrame {
             super(app);
             URL nameSexFileURL = this.getClass().getResource("/canreg/client/gui/management/resources/namesex.tsv");
             try {
-                canreg.client.CanRegClientApp.getApplication().clearNameSexTable();
+                canreg.client.CanRegClientApp.getApplication().clearNameSexTable(null);
                 FileReader fileReader = new FileReader(canreg.common.Tools.getTempFileFromURL(nameSexFileURL));
                 br = new BufferedReader(fileReader);
                 line = br.readLine();
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(FirstNameSexInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
-                Logger.getLogger(FirstNameSexInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
         }
         
-        @Override protected Object doInBackground() throws SecurityException, RemoteException, IOException, SQLException, RecordLockedException {
+        @Override protected Object doInBackground() throws SecurityException, IOException, SQLException, RecordLockedException {
             // Your Task's code here.  This method runs
             // on a background thread, so don't reference
             // the Swing GUI from here.
@@ -220,7 +221,7 @@ public class FirstNameSexInternalFrame extends javax.swing.JInternalFrame {
                     NameSexRecord nsr = new NameSexRecord();
                     nsr.setName(name);
                     nsr.setSex(sex);
-                    canreg.client.CanRegClientApp.getApplication().saveRecord(nsr);
+                    canreg.client.CanRegClientApp.getApplication().saveRecord(nsr, null);
                 }
 
             line = br.readLine();
@@ -237,7 +238,8 @@ public class FirstNameSexInternalFrame extends javax.swing.JInternalFrame {
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/FirstNameSexInternalFrame").getString("SUCCESSFULLY_RESTORED_DEFAULT_DATABASE"), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/FirstNameSexInternalFrame").getString("DATABASE_OF_NAMES_RESTORED."), JOptionPane.INFORMATION_MESSAGE);
                
             } catch (IOException ex) {
-                Logger.getLogger(FirstNameSexInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
         }
     }
@@ -248,7 +250,7 @@ public class FirstNameSexInternalFrame extends javax.swing.JInternalFrame {
     @Action
     public void showFirstNamesBySexAction() {
         try {
-            Map<String, Integer> map = canreg.client.CanRegClientApp.getApplication().getNameSexTables();
+            Map<String, Integer> map = canreg.client.CanRegClientApp.getApplication().getNameSexTables(null);
             String[] names = new String[3];
             names[0]="";
             names[1]="";
@@ -269,10 +271,9 @@ public class FirstNameSexInternalFrame extends javax.swing.JInternalFrame {
                     femaleHeader+names[1]+"\n"+
                     unisexHeader+names[2]);
             namesTextArea.setCaretPosition(0);
-        } catch (SecurityException ex) {
-            Logger.getLogger(FirstNameSexInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RemoteException ex) {
-            Logger.getLogger(FirstNameSexInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SecurityException | RemoteException ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
     }
     

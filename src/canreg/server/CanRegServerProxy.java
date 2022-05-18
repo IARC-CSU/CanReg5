@@ -19,23 +19,25 @@
  */
 package canreg.server;
 
-import canreg.common.database.User;
-import canreg.common.cachingtableapi.DistributedTableDescription;
-import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.common.DatabaseFilter;
 import canreg.common.Globals.UserRightLevels;
-import canreg.common.qualitycontrol.PersonSearcher;
-import canreg.server.database.CanRegDAO;
+import canreg.common.cachingtableapi.DistributedTableDescription;
+import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.common.database.DatabaseRecord;
 import canreg.common.database.Dictionary;
 import canreg.common.database.DictionaryEntry;
 import canreg.common.database.NameSexRecord;
 import canreg.common.database.Patient;
 import canreg.common.database.PopulationDataset;
-import canreg.server.database.RecordLockedException;
 import canreg.common.database.Tumour;
+import canreg.common.database.User;
+import canreg.common.qualitycontrol.PersonSearcher;
+import canreg.server.database.CanRegDAO;
+import canreg.server.database.RecordLockedException;
 import canreg.server.database.UnknownTableException;
+import canreg.server.management.SystemDescription;
 import canreg.server.security.ValidateMethodCall;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -56,8 +58,7 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     private final Subject theUser;
     
     
-
-    public CanRegServerProxy(Subject user, CanRegServerInterface server) 
+    CanRegServerProxy(Subject user, CanRegServerInterface server) 
             throws RemoteException {
         // Prevent JAVA to use a random port.
         super(1099);
@@ -96,15 +97,16 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
 
     @Override
     public void setUserPassword(String username, String password) throws RemoteException, SecurityException {
+        checkPermission("setUserPassword");
         RMILoginPrincipal principal = (RMILoginPrincipal) theUser.getPrincipals().toArray()[0];
         username = principal.getName();
         theServer.setUserPassword(username, password);
     }
 
     @Override
-    public String getCanRegSystemName() throws RemoteException, SecurityException {
+    public String getCanRegRegistryName() throws RemoteException, SecurityException {
         checkPermission("getCanRegSystemName");
-        return theServer.getCanRegSystemName();
+        return theServer.getCanRegRegistryName();
     }
 
     @Override
@@ -196,7 +198,8 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     @Override
     public Map<Integer, Dictionary> getDictionary() throws RemoteException, SecurityException {
         checkPermission("getDictionary");
-        return theServer.getDictionary();
+        Map<Integer, Dictionary> map = theServer.getDictionary();
+        return map;
     }
 
     @Override
@@ -223,25 +226,43 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     }
 
     @Override
-    public void editPatient(Patient patient) throws RemoteException, SecurityException, RecordLockedException {
+    public void editPatient(Patient patient) 
+            throws SQLException, RemoteException, SecurityException, RecordLockedException {
         checkPermission("editPatient");
         theServer.editPatient(patient);
     }
-
+    
     @Override
-    public void editTumour(Tumour tumour) throws RemoteException, SecurityException, RecordLockedException {
-        checkPermission("editTumour");
-        theServer.editTumour(tumour);
+    public void editPatientFromHoldingToProduction(Patient patient)
+            throws RemoteException, SecurityException, RecordLockedException, SQLException {
+        checkPermission("editPatient");
+        theServer.editPatientFromHoldingToProduction(patient);
     }
 
     @Override
-    public Object[][] retrieveRows(String resultSetID, int from, int to) throws RemoteException, SecurityException {
+    public void editTumour(Tumour tumour) 
+            throws SQLException, RemoteException, SecurityException, RecordLockedException {
+        checkPermission("editTumour");
+        theServer.editTumour(tumour);
+    }
+    
+    @Override
+    public void editTumourFromHoldingToProduction(Tumour tumour)
+            throws SQLException, RemoteException, SecurityException, RecordLockedException {
+        checkPermission("editTumour");
+        theServer.editTumourFromHoldingToProduction(tumour);
+    }
+
+    @Override
+    public Object[][] retrieveRows(String resultSetID, int from, int to)
+            throws RemoteException, SecurityException {
         checkPermission("retrieveRows:" + resultSetID);
         return theServer.retrieveRows(resultSetID, from, to);
     }
 
     @Override
-    public void releaseResultSet(String resultSetID) throws RemoteException, SecurityException, SQLException {
+    public void releaseResultSet(String resultSetID) 
+            throws RemoteException, SecurityException, SQLException {
         checkPermission("retrieveRows:" + resultSetID);
         theServer.releaseResultSet(resultSetID);
     }
@@ -329,9 +350,9 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     }
 
     @Override
-    public int saveUser(User user) throws RemoteException, SecurityException {
+    public int saveUser(User user,boolean addPasswordReminder) throws RemoteException, SecurityException {
         checkPermission("saveUser");
-        return theServer.saveUser(user);
+        return theServer.saveUser(user,addPasswordReminder);
     }
 
     @Override
@@ -372,21 +393,112 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     }
 
     @Override
-    public String getCanRegSystemCode() throws RemoteException, SecurityException {
+    public boolean checkDatabaseEncryption(String registryCode) throws RemoteException, SecurityException {
+        return theServer.checkDatabaseEncryption(registryCode);
+    }
+
+    @Override
+    public String getCanRegRegistryCode() throws RemoteException, SecurityException {
         checkPermission("getSystemCode");
-        return theServer.getCanRegSystemCode();
+        return theServer.getCanRegRegistryCode();
     }
     
     @Override
     public String getCanRegSystemRegion() throws RemoteException, SecurityException {
         checkPermission("getSystemRegion");
         return theServer.getCanRegSystemRegion();
+    }    
+    
+    @Override
+    public SystemDescription createNewHoldingDB(String registryCode, SystemDescription sysDesc)
+            throws RemoteException, IOException, SecurityException {
+        checkPermission("createNewHoldingDB");
+        return theServer.createNewHoldingDB(registryCode, sysDesc);
+    }
+    
+    @Override
+    public void deleteHoldingDB(String holdingRegistryCode)
+            throws SQLException, RemoteException, IOException, SecurityException {
+        checkPermission("deleteHoldingDB");
+        theServer.deleteHoldingDB(holdingRegistryCode);
+    }
+    
+    @Override
+    public void changeRegistryDB(String registryCode) 
+            throws RemoteException, SecurityException {
+        checkPermission("changeRegistryDB");
+        theServer.changeRegistryDB(registryCode);
+    }
+    
+    @Override
+    public void resetRegistryDB() throws RemoteException, SecurityException {
+        checkPermission("changeRegistryDB");
+        theServer.resetRegistryDB();
+    }
+
+    @Override
+    public SystemDescription initSystemDescription(String originalRegistryCode, String holdingRegistryCode, boolean holding, boolean isAdHocDB) 
+            throws RemoteException, SecurityException {
+        checkPermission("initSystemDefinition");
+        return theServer.initSystemDescription(originalRegistryCode, holdingRegistryCode, holding, isAdHocDB);
+    }
+
+    @Override
+    public void initDataBase(SystemDescription systemDescription, boolean holding) 
+            throws RemoteException, SecurityException {
+        checkPermission("initDataBase");
+        theServer.initDataBase(systemDescription, holding);
+    }
+
+    @Override
+    public List<String> getHoldingDBsList() throws IOException, RemoteException, SecurityException {
+        checkPermission("initDataBase");
+        return theServer.getHoldingDBsList();
     }
 
     @Override
     public void pingRemote(Integer remoteClientHashCode) 
             throws RemoteException, Exception {
-        //pingRemote's parameter is not needed here, hashCode() is supplied instead.
-        theServer.pingRemote(this.hashCode());
-    }    
+        theServer.pingRemote(remoteClientHashCode);
+    }
+
+    @Override
+    public boolean checkFileReminder(String username) throws RemoteException {
+        checkPermission("checkFileReminder");
+        return theServer.checkFileReminder(username);
+    }
+    
+    @Override
+    public void deleteFileReminder(String username) throws RemoteException {
+        checkPermission("deleteFileReminder");
+        theServer.deleteFileReminder(username);
+    }
+
+    @Override
+    public void openTransaction() throws RemoteException {
+        theServer.openTransaction();
+        
+    }
+
+    @Override
+    public void rollbackTransaction() throws RemoteException {
+        theServer.rollbackTransaction();
+    }
+
+    @Override
+    public void commitTransaction() throws RemoteException {
+        theServer.commitTransaction();
+
+    }
+
+    @Override
+    public boolean checkPassword(String username, String encryptedPassword) throws RemoteException {
+        checkPermission("checkPassword");
+        return theServer.checkPassword(username, encryptedPassword);
+    }
+    
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

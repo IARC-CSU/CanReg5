@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2017 International Agency for Research on Cancer
+ * Copyright (C) 2008-2021 International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -23,14 +23,12 @@ import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.InvalidPropertiesFormatException;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -53,31 +51,31 @@ public final class LocalSettings {
     /**
      *
      */
-    public static String LAST_SERVER_ID_KEY = "last_server_id";
+    public static final String LAST_SERVER_ID_KEY = "last_server_id";
     /**
      *
      */
-    public static String IMPORT_PATH_KEY = "import_path";
+    public static final String IMPORT_PATH_KEY = "import_path";
     /**
      *
      */
-    public static String USERNAME_KEY = "username";
+    public static final String USERNAME_KEY = "username";
     /**
      *
      */
-    public static String PASSWORD_KEY = "password";
+    public static final String PASSWORD_KEY = "password"; //NOSONAR
     /**
      *
      */
-    public static String LOCALE_KEY = "locale";
+    public static final String LOCALE_KEY = "locale";
     /**
      *
      */
-    public static String REMEMBER_PASSWORD_KEY = "remember_password";
+    public static final String REMEMBER_PASSWORD_KEY = "remember_password";
     /**
      *
      */
-    public static String OUTLINE_DRAG_MODE_KEY = "outline_drag_mode";
+    public static final String OUTLINE_DRAG_MODE_KEY = "outline_drag_mode";
     /**
      *
      */
@@ -87,7 +85,7 @@ public final class LocalSettings {
     /**
      *
      */
-    public static String DATA_ENTRY_VERTICAL_SOURCES_KEY = "data_entry_vertical_sources";
+    public static final String DATA_ENTRY_VERTICAL_SOURCES_KEY = "data_entry_vertical_sources";
     /**
      *
      */
@@ -95,57 +93,57 @@ public final class LocalSettings {
     /**
      *
      */
-    public static String WORKING_DIR_PATH_KEY = TABLES_PATH_KEY;
+    public static final String WORKING_DIR_PATH_KEY = TABLES_PATH_KEY;
     /**
      *
      */
-    public static String AUTO_START_SERVER_KEY = "auto_start_server";
+    public static final String AUTO_START_SERVER_KEY = "auto_start_server";
     /**
      *
      */
-    public static String SINGLE_USER_MODE_KEY = "single_user";
+    public static final String SINGLE_USER_MODE_KEY = "single_user";
     /**
      *
      */
-    public static String LOOK_AND_FEEL_KEY = "look_and_feel";
+    public static final String LOOK_AND_FEEL_KEY = "look_and_feel";
     /**
      *
      */
-    public static String AUTO_BACKUP_KEY = "auto_backup";
+    public static final String AUTO_BACKUP_KEY = "auto_backup";
     /**
      *
      */
-    public static String BACKUP_EVERY_KEY = "backup_every";
+    public static final String BACKUP_EVERY_KEY = "backup_every";
     // Property names
     /**
      *
      */
-    public static String YES_PROPERTY = "yes";
+    public static final String YES_PROPERTY = "yes";
     /**
      *
      */
-    public static String NO_PROPERTY = "no";
+    public static final String NO_PROPERTY = "no";
     /**
      *
      */
-    public static String ON_PROPERTY = "on";
+    public static final String ON_PROPERTY = "on";
     /**
      *
      */
-    public static String OFF_PROPERTY = "off";
+    public static final String OFF_PROPERTY = "off";
     /**
      *
      */
-    public static String TRUE_PROPERTY = "true";
+    public static final String TRUE_PROPERTY = "true";
     /**
      *
      */
-    public static String FALSE_PROPERTY = "false";
+    public static final String FALSE_PROPERTY = "false";
     /**
      *
      */
-    public static String R_PATH = "r_path";
-    public static String GS_PATH = "gs_path";
+    public static final String R_PATH = "r_path";
+    public static final String GS_PATH = "gs_path";
     /**
      *
      */
@@ -165,7 +163,7 @@ public final class LocalSettings {
     /**
      *
      */
-    public static final String FONT_SIZE_MEDIUM = "Medium";    
+    public static final String FONT_SIZE_MEDIUM = "Medium";
     /**
      *
      */
@@ -176,21 +174,21 @@ public final class LocalSettings {
     public static final String FONT_SIZE_BIG = "Big";
     /**
      *
-     */    
-    public static String DATE_FORMAT_KEY = "date_format_string";
-    public static String DISPLAY_VARIABLE_TYPE_KEY = "display_variable_type";
-     /**
+     */
+    public static final String DATE_FORMAT_KEY = "date_format_string";
+    public static final String DISPLAY_VARIABLE_TYPE_KEY = "display_variable_type";
+    /**
      *
-     */ 
-    public static String CLIENT_TO_SERVER_PING_KEY = "client_to_server_ping_key";
-    public static String CLIENT_SESSIONS_CHECK_KEY = "client_sessions_check_key";
-
+     */
+    public static final String CLIENT_TO_SERVER_PING_KEY = "client_to_server_ping_key";
+    public static final String CLIENT_SESSIONS_CHECK_KEY = "client_sessions_check_key";
+    private static final Logger LOGGER = Logger.getLogger(LocalSettings.class.getName());
     /**
      *
      * @param localSettingsFileName
-     * @throws java.io.IOException
+     * 
      */
-    public LocalSettings(String localSettingsFileName) throws IOException {
+    public LocalSettings(String localSettingsFileName) { 
         this.settingsFileName = localSettingsFileName;
         // set (and create) settings directory
         settingsDir = setCanRegClientSettingsDir();
@@ -216,13 +214,13 @@ public final class LocalSettings {
      * @param port
      * @param code
      * @return
-     */
+     */ 
     public int addServerToServerList(String name, String url, int port, String code) {
         boolean found = false;
         int i = 0;
 
         while (!found) {
-            found = getProperty("server." + (i++) + ".name").equals("");
+            found = getProperty("server." + (i++) + ".name").equals(""); //NOSONAR
         }
         // step one back
         i -= 1;
@@ -236,16 +234,6 @@ public final class LocalSettings {
         return i;
     }
 
-    /*
-     public String[] getLanguageList() {
-     String list[] = new String[Globals.LANGUAGES_AVAILABLE.length];
-     for (int i = 0; i < list.length; i++) {
-     Locale locale = new Locale(Globals.LANGUAGES_AVAILABLE[i]);
-     list[i] = locale.getDisplayLanguage();
-     }
-     return list;
-     }
-     */
     /**
      *
      * @return
@@ -293,35 +281,17 @@ public final class LocalSettings {
     }
 
     private boolean loadSettings() {
-        InputStream propInputStream = null;
         settingsChanged = false;
-        boolean success = false;
-        try {
-            propInputStream = new FileInputStream(settingsDir + System.getProperty("file.separator") + settingsFileName);
+        boolean success;
+        try (InputStream propInputStream = new FileInputStream(settingsDir + System.getProperty("file.separator") + settingsFileName)){      //NOSONAR        
             setProperties(new Properties());
             getProperties().loadFromXML(propInputStream);
-            propInputStream.close();
             success = true;
-        } catch (InvalidPropertiesFormatException ex) {
-            Logger.getLogger(LocalSettings.class.getName()).log(Level.SEVERE, null, ex);
-            success = false;
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(LocalSettings.class.getName()).log(Level.INFO, null, ex);
-            success = false;
         } catch (IOException ex) {
-            Logger.getLogger(LocalSettings.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
             success = false;
-        } finally {
-            if (propInputStream != null) {
-                try {
-                    propInputStream.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(LocalSettings.class.getName()).log(Level.INFO, null, ex);
-                    success = false;
-                }
-            }
-            return success;
         }
+        return success;
     }
 
     /**
@@ -329,36 +299,19 @@ public final class LocalSettings {
      * @return
      */
     public boolean writeSettings() {
-        if (settingsChanged = true) {
-            OutputStream propOutputStream = null;
-            boolean success = false;
-            try {
-                propOutputStream = new FileOutputStream(settingsDir + System.getProperty("file.separator") + settingsFileName);
+        boolean success;
+        if (settingsChanged) {
+            try (OutputStream propOutputStream = new FileOutputStream(settingsDir + System.getProperty("file.separator") + settingsFileName)){
                 getProperties().storeToXML(propOutputStream, "CanReg5 local settings");
-
                 success = true;
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(LocalSettings.class.getName()).log(Level.SEVERE, null, ex);
-                success = false;
             } catch (IOException ex) {
-                Logger.getLogger(LocalSettings.class.getName()).log(Level.SEVERE, null, ex);
+               LOGGER.log(Level.SEVERE, null, ex);
                 success = false;
-            } finally {
-                if (propOutputStream != null) {
-                    try {
-                        propOutputStream.flush();
-                        propOutputStream.close();
-                        settingsChanged = false;
-                    } catch (IOException ex) {
-                        Logger.getLogger(LocalSettings.class.getName()).log(Level.SEVERE, null, ex);
-                        success = false;
-                    }
-                }
-                return success;
-            }
+            } 
         } else {
-            return false;
+            success = false;
         }
+        return success;
     }
 
     /**
@@ -367,11 +320,6 @@ public final class LocalSettings {
      * @param string
      */
     public void setProperty(String key, String string) {
-        // Not sure why this didn't work, but OK... 
-//        String property = properties.getProperty(key);
-//        if (property != null && !string.trim().equalsIgnoreCase(property)) {
-//            settingsChanged = true;
-//        }
         properties.setProperty(key, string);
         settingsChanged = true;
     }
@@ -417,16 +365,12 @@ public final class LocalSettings {
             property = "";
         } else if (key.equalsIgnoreCase(LOCALE_KEY)) {
             property = Locale.getDefault().getLanguage();
-            // turkish small i capitalizes to big i with dot, which we don't support yet, so we default it to english...
-            //if (property.equalsIgnoreCase("tr")) {
-            //    property = Locale.ENGLISH.getLanguage();
-            //}
         } else if (key.equalsIgnoreCase(REMEMBER_PASSWORD_KEY)) {
             property = FALSE_PROPERTY;
         } else if (key.equalsIgnoreCase(WORKING_DIR_PATH_KEY)) {
-            property = System.getProperty("user.home", ".") + System.getProperty("file.separator") + "CanReg";
+            property = System.getProperty("user.home", ".") + System.getProperty("file.separator") + "CanReg";  //NOSONAR
         } else if (key.equalsIgnoreCase(LOOK_AND_FEEL_KEY)) {
-            property = "System";
+            property = Globals.DEFAULT_LOOK_AND_FEEL;
         } else if (key.equalsIgnoreCase(AUTO_BACKUP_KEY)) {
             property = TRUE_PROPERTY;
         } else if (key.equalsIgnoreCase(BACKUP_EVERY_KEY)) {
@@ -441,15 +385,15 @@ public final class LocalSettings {
             property = FONT_SIZE_MEDIUM;
         } else if (key.equalsIgnoreCase(DATA_ENTRY_VERSION_KEY)) {
             property = DATA_ENTRY_VERSION_NEW;
-        } else if (key.equalsIgnoreCase(DATE_FORMAT_KEY)){
+        } else if (key.equalsIgnoreCase(DATE_FORMAT_KEY)) {
             property = Globals.DATE_FORMAT_STRING;
-        } else if (key.equalsIgnoreCase(DISPLAY_VARIABLE_TYPE_KEY)){
+        } else if (key.equalsIgnoreCase(DISPLAY_VARIABLE_TYPE_KEY)) {
             property = DatabaseVariablesListElement.VariableType.FULL.toString();
         } else if (key.equalsIgnoreCase(CLIENT_TO_SERVER_PING_KEY)) {
             property = Globals.DEFAULT_CLIENT_TO_SERVER_PING;
         } else if (key.equalsIgnoreCase(CLIENT_SESSIONS_CHECK_KEY)) {
             property = Globals.DEFAULT_CLIENT_SESSIONS_CHECK_PING;
-        } 
+        }
         return property;
     }
 
@@ -458,6 +402,7 @@ public final class LocalSettings {
         setProperty(REMEMBER_PASSWORD_KEY, getDefaultProperty(REMEMBER_PASSWORD_KEY));
         setProperty(USERNAME_KEY, getDefaultProperty(USERNAME_KEY));
         setProperty(PASSWORD_KEY, getDefaultProperty(PASSWORD_KEY));
+        setProperty(LOOK_AND_FEEL_KEY, getDefaultProperty(PASSWORD_KEY));
         setProperty(WORKING_DIR_PATH_KEY, getDefaultProperty(WORKING_DIR_PATH_KEY));
         setProperty(AUTO_BACKUP_KEY, getDefaultProperty(AUTO_BACKUP_KEY));
         setProperty(BACKUP_EVERY_KEY, getDefaultProperty(BACKUP_EVERY_KEY));
@@ -505,20 +450,20 @@ public final class LocalSettings {
      *
      * @return
      */
-    public LinkedList<ServerDescription> getServerDescriptions() {
-        LinkedList<ServerDescription> serverList = new LinkedList();
+    public List<ServerDescription> getServerDescriptions() {
+        LinkedList<ServerDescription> serverList = new LinkedList<>();
         Set<String> set = properties.stringPropertyNames();
 
         // First we find all strings mentioning server in our properties
         // ie. server.0.name
         Iterator<String> i = set.iterator();
-        Set foundServers = new HashSet();
+        Set<Integer> foundServers = new HashSet<>();
 
         while (i.hasNext()) {
             String s = i.next();
             Pattern p = Pattern.compile("server\\.(\\d+)\\..*");
             Matcher m = p.matcher(s);
-            if (m.matches()) {                
+            if (m.matches()) {
                 int serverNumber = Integer.parseInt(m.group(1));
                 boolean notSeen = foundServers.add(serverNumber);
                 if (notSeen) {
@@ -536,7 +481,7 @@ public final class LocalSettings {
     }
 
     private LinkedList<ServerDescription> removeDuplicateServers(List<ServerDescription> servers) {
-        HashMap<String, ServerDescription> serverStringRepresentationMap = new HashMap<String, ServerDescription>();
+        HashMap<String, ServerDescription> serverStringRepresentationMap = new HashMap<>();
         for (ServerDescription server : servers) {
             String stringRep = server.getUrl() + ":" + server.getPort() + "/" + server.getCode();
             ServerDescription otherServer = serverStringRepresentationMap.get(stringRep);
@@ -550,7 +495,7 @@ public final class LocalSettings {
                 serverStringRepresentationMap.put(stringRep, server);
             }
         }
-        return new LinkedList(serverStringRepresentationMap.values());
+        return new LinkedList<>(serverStringRepresentationMap.values());
     }
 
     /**
@@ -574,12 +519,7 @@ public final class LocalSettings {
             namesArray[j] = sd.next().toString();
             j++;
         }
-
-        if (i > 0) {
-            return namesArray;
-        } else {
-            return null;
-        }
+        return namesArray;
     }
 
     /**
@@ -588,7 +528,7 @@ public final class LocalSettings {
      * @return
      */
     public ServerDescription getServerDescription(int serverID) {
-        LinkedList<ServerDescription> serverList = getServerDescriptions();
+        List<ServerDescription> serverList = getServerDescriptions();
         ServerDescription sd = null;
         boolean found = false;
         int i = 0;
@@ -643,7 +583,7 @@ public final class LocalSettings {
         }
         return isOutLineDragMode;
     }
-    
+
     public boolean isDataEntryVerticalSources() {
         boolean isDataEntryVerticalSources = false;
         String isDataEntryVerticalSourcesString = properties.getProperty(DATA_ENTRY_VERTICAL_SOURCES_KEY);
@@ -664,7 +604,7 @@ public final class LocalSettings {
             setProperty(OUTLINE_DRAG_MODE_KEY, OFF_PROPERTY);
         }
     }
-    
+
     public void setDataEntryVerticalSources(boolean dataEntryVerticalSources) {
         if (dataEntryVerticalSources) {
             setProperty(DATA_ENTRY_VERTICAL_SOURCES_KEY, ON_PROPERTY);
@@ -697,11 +637,11 @@ public final class LocalSettings {
             System.getenv("ProgramFiles") + Globals.FILE_SEPARATOR + "R",
             System.getenv("ProgramFiles(x86)") + Globals.FILE_SEPARATOR + "R"
         };
-        File folder = null;
+        File folder;
         long lastModified = 0;
         for (String folderToTry : foldersToTry) {
             folder = new File(folderToTry);
-            if (folder != null && folder.exists()) {
+            if (folder.exists()) {
                 File[] files = folder.listFiles();
                 // find the newest R installation
                 for (File thisFile : files) {
@@ -720,7 +660,7 @@ public final class LocalSettings {
         return path;
     }
 
-    private String tryToFindGSInstalltionOnWindows() {
+    private String tryToFindGSInstalltionOnWindows() { // NOSONAR
         String path = "";
         // try windows 32
         String[] foldersToTry = new String[]{
@@ -729,11 +669,11 @@ public final class LocalSettings {
             System.getenv("ProgramFiles") + Globals.FILE_SEPARATOR + "gs",
             System.getenv("ProgramFiles(x86)") + Globals.FILE_SEPARATOR + "gs"
         };
-        File folder = null;
+        File folder;
         long lastModified = 0;
         for (String folderToTry : foldersToTry) {
             folder = new File(folderToTry);
-            if (folder != null && folder.exists()) {
+            if (folder.exists()) {
                 File[] files = folder.listFiles();
                 // find the newest gs installation
                 for (File thisFile : files) {
@@ -757,21 +697,21 @@ public final class LocalSettings {
         //
         return path;
     }
-    
+
     public String getDateFormatString() {
         String df = getProperty(DATE_FORMAT_KEY);
         // make sure that the month variable is upper case. (m is minute)
         // Ref: https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
-        df = df.replaceAll("m", "M");
+        df = df.replace("m", "M");
         return df;
     }
 
     public DatabaseVariablesListElement.VariableType getDisplayVariableType() {
-        String dvt_s = getProperty(DISPLAY_VARIABLE_TYPE_KEY).toUpperCase();
-        DatabaseVariablesListElement.VariableType dvt_e = DatabaseVariablesListElement.VariableType.valueOf(dvt_s);
-        if (dvt_e == null) {
-            dvt_e = DatabaseVariablesListElement.VariableType.valueOf(getDefaultProperty(DISPLAY_VARIABLE_TYPE_KEY));
+        String dvtS = getProperty(DISPLAY_VARIABLE_TYPE_KEY).toUpperCase();
+        DatabaseVariablesListElement.VariableType dvtE = DatabaseVariablesListElement.VariableType.valueOf(dvtS);
+        if (dvtE == null) {
+            dvtE = DatabaseVariablesListElement.VariableType.valueOf(getDefaultProperty(DISPLAY_VARIABLE_TYPE_KEY));
         }
-        return dvt_e;
+        return dvtE;
     }
 }

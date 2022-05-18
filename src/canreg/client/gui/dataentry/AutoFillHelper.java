@@ -36,7 +36,8 @@ import java.util.logging.Logger;
  * @author ervikm
  */
 class AutoFillHelper {
-
+    
+    private static final Logger LOGGER = Logger.getLogger(AutoFillHelper.class.getName());
     private GlobalToolBox globalToolBox;
 
     public void autoFill(LinkedList<DatabaseVariablesListElement> autoFillList, DatabaseRecord sourceOfActionDatabaseRecord, DatabaseRecord otherDatabaseRecord, RecordEditorPanel recordEditorPanel) {
@@ -71,10 +72,8 @@ class AutoFillHelper {
                         incDate = DateHelper.parseDateStringToGregorianCalendarCanReg(incValue.toString(), Globals.DATE_FORMAT_STRING);
                         int age = (int) DateHelper.yearsBetween(birthDate, incDate);
                         code = age;
-                    } catch (ParseException ex) {
-                        Logger.getLogger(AutoFillHelper.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (IllegalArgumentException ex) {
-                        Logger.getLogger(AutoFillHelper.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (ParseException | IllegalArgumentException ex) {
+                        LOGGER.log(Level.SEVERE, null, ex);
                     } catch (NullPointerException nex) {
                         code = dvle.getUnknownCode();
                         if (code == null) {
@@ -84,7 +83,7 @@ class AutoFillHelper {
                             }
                             code = codeString;
                         }
-                        Logger.getLogger(AutoFillHelper.class.getName()).log(Level.WARNING, null, nex);
+                        LOGGER.log(Level.WARNING, null, nex);
                     }
                 } else {
                     code = dvle.getUnknownCode();

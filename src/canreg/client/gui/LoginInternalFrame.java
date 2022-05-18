@@ -30,6 +30,7 @@ import canreg.client.LocalSettings;
 import canreg.client.ServerDescription;
 import canreg.client.gui.tools.WaitFrame;
 import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.Globals;
 import canreg.exceptions.WrongCanRegVersionException;
 import java.awt.Cursor;
@@ -37,11 +38,13 @@ import java.beans.PropertyChangeSupport;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.Base64;
 import java.util.Date;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.security.auth.login.LoginException;
@@ -63,6 +66,8 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
     private JDesktopPane desktopPane;
     private LocalSettings localSettings;
     String canRegSystemName;
+    private static final Logger LOGGER = Logger.getLogger(LoginInternalFrame.class.getName());
+
     /**
      * 
      */
@@ -429,12 +434,19 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
         boolean rememberPassword = rememberPasswordBooleanString.equalsIgnoreCase(LocalSettings.TRUE_PROPERTY);
         rememberPasswordCheckBox.setSelected(rememberPassword);
         if (rememberPassword) {
-            passwordField.setText(localSettings.getProperty(LocalSettings.PASSWORD_KEY));
+            String storedPassword = localSettings.getProperty(LocalSettings.PASSWORD_KEY);
+            String password;
+            try {
+                 password = new String(Base64.getDecoder().decode(storedPassword), StandardCharsets.UTF_8);
+            }catch (IllegalArgumentException ex){
+                 password = storedPassword;
+            }
+            passwordField.setText(password);
         }
         usernameTextField.setText(localSettings.getProperty(LocalSettings.USERNAME_KEY));
         // Load the server list
         String[] serverNames = localSettings.getServerNames();
-        if (serverNames != null) {
+        if (serverNames.length > 0) {
             canRegSystemComboBox.setModel(new javax.swing.DefaultComboBoxModel(localSettings.getServerDescriptions().toArray()));
             String lastServerIDString = localSettings.getProperty(LocalSettings.LAST_SERVER_ID_KEY);
             if (lastServerIDString != null && lastServerIDString.trim().length() > 0) {
@@ -473,14 +485,15 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
         // Should CanReg remember the password?
         if (rememberPasswordCheckBox.isSelected()) {
             localSettings.setProperty(LocalSettings.REMEMBER_PASSWORD_KEY, LocalSettings.TRUE_PROPERTY);
-            localSettings.setProperty(LocalSettings.PASSWORD_KEY, new String(passwordField.getPassword()));
+            String password = Base64.getEncoder().encodeToString(new String(passwordField.getPassword()).getBytes(StandardCharsets.UTF_8));
+            localSettings.setProperty(LocalSettings.PASSWORD_KEY,password);
         } else {
             localSettings.setProperty(LocalSettings.REMEMBER_PASSWORD_KEY, LocalSettings.FALSE_PROPERTY);
             localSettings.setProperty(LocalSettings.PASSWORD_KEY, "");
         }
         localSettings.setProperty(LocalSettings.USERNAME_KEY, usernameTextField.getText());
         // Get list of servers stored locally
-        LinkedList<ServerDescription> sds = localSettings.getServerDescriptions();
+        List<ServerDescription> sds = localSettings.getServerDescriptions();
         // If this list contains more than one entry - save it.
         if (sds.size() > 0) {
             ServerDescription sd = sds.get(canRegSystemComboBox.getSelectedIndex());
@@ -544,10 +557,9 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
             Date date = null;
             try {
                 date = CanRegClientApp.getApplication().getDateOfLastBackUp();
-            } catch (SecurityException ex) {
-                Logger.getLogger(LoginInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (RemoteException ex) {
-                Logger.getLogger(LoginInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SecurityException | RemoteException ex) {
+               LOGGER.log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
             if (maxDiffString != null) {
                 if (date != null) {
@@ -632,7 +644,7 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
      */
     private static void debugOut(String msg) {
         if (debug) {
-            Logger.getLogger(LoginInternalFrame.class.getName()).log(Level.INFO, msg);
+           LOGGER.log(Level.INFO, msg);
         }
     }
 
@@ -679,7 +691,7 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
                 }
             } catch (AlreadyBoundException ex) {
                 result = "running";
-                Logger.getLogger(LoginInternalFrame.class.getName()).log(Level.INFO, null, ex);
+               LOGGER.log(Level.INFO, null, ex);
             }
             // Return your result... 
             return result;
@@ -732,7 +744,8 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
             try {
                 result = CanRegClientApp.getApplication().performBackup();
             } catch (RemoteException ex) {
-                Logger.getLogger(LoginInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+               LOGGER.log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
             return result;
         }
@@ -818,7 +831,7 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
             JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("<HTML>THE IP ADDRESS OF <B>") + addr.getHostName() + java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("</B> IS <B>") + addr.getHostAddress() + java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("</B>.</HTML>"), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("MESSAGE"), JOptionPane.INFORMATION_MESSAGE);
         } catch (UnknownHostException ex) {
             JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("<HTML>CANNOT FIND THE IP ADDRESS OF <B>") + serverURLTextField.getText() + java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("</B>.</HTML>"), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("MESSAGE"), JOptionPane.ERROR_MESSAGE);
-            Logger.getLogger(LoginInternalFrame.class.getName()).log(Level.WARNING, null, ex);
+           LOGGER.log(Level.WARNING, null, ex);
         }
     }
 
@@ -893,7 +906,7 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
                     canRegSystemName = CanRegClientApp.getApplication().loginRMI(serverObjectString, username, password);
                 } else {
                     // testing an approach to avoid the RMI for single users
-                    canRegSystemName = CanRegClientApp.getApplication().loginDirect(code, username, password);
+                    canRegSystemName = CanRegClientApp.getApplication().loginDirect(code, username, password, false);
                 }
                 return "OK";
             } catch (LoginException loginException) {
@@ -904,6 +917,7 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("COULD_NOT_LOG_IN_TO_THE_CANREG_SERVER_ON_") + server + java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("_WITH_THE_GIVEN_CREDENTIALS.") + "\n" + nullPointerException.getLocalizedMessage(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
                 feedbackLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("ERROR"));
                 debugOut(nullPointerException.getMessage());
+                throw nullPointerException;
             } catch (NotBoundException notBoundException) {
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("COULD_NOT_LOG_IN_TO_THE_CANREG_SERVER_ON_") + server + java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("_WITH_THE_GIVEN_CREDENTIALS.") + "\n" + notBoundException.getLocalizedMessage(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
                 feedbackLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("ERROR"));
@@ -927,7 +941,7 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
             }
             return "Failed";
         }
-
+        
         @Override
         protected void succeeded(Object resultObject) {
             waitFrame.dispose();
@@ -953,6 +967,23 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
                         + "\nPlease make sure you have entered the correct username and password.", 
                         java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("ERROR"), 
                         JOptionPane.ERROR_MESSAGE);
+            }
+            showPasswordChangeReminder();
+        }
+
+        /**
+         * Show a dialog window after login if the user password was reset by the supervisor
+         */
+        public void showPasswordChangeReminder() {
+            String currentUsername = localSettings.getProperty(LocalSettings.USERNAME_KEY);
+            boolean fileReminderExist = CanRegClientApp.getApplication().checkPasswordReminder(currentUsername);
+            if (fileReminderExist) {
+                JOptionPane.showConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(),
+                    java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame")
+                        .getString("REMIND_PASSWORD_RESET"),
+                    java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame")
+                        .getString("REMIND_PASSWORD_RESET_TITLE"),
+                    JOptionPane.DEFAULT_OPTION);
             }
         }
     }

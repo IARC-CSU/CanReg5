@@ -27,6 +27,7 @@ package canreg.client.gui.components;
 
 import canreg.client.CanRegClientApp;
 import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.Globals;
 import canreg.common.Tools;
 import java.awt.event.ActionEvent;
@@ -46,6 +47,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -62,10 +65,10 @@ public class PreviewFilePanel extends javax.swing.JPanel {
     private JFileChooser chooser;
     private ActionListener listener;
     public static final String FILE_CHANGED_ACTION = "file_changed";
+    public static final String SEPARATING_CHARACTER_CHANGED_ACTION = "separating_character_changed";
+    private static final Logger LOGGER = Logger.getLogger(PreviewFilePanel.class.getName());
 
-    /**
-     * Creates new form PreviewFilePanel
-     */
+
     public PreviewFilePanel() {
         initComponents();
     }
@@ -113,6 +116,11 @@ public class PreviewFilePanel extends javax.swing.JPanel {
         chooseFilePanel.setName("chooseFilePanel"); // NOI18N
 
         fileNameTextField.setName("fileNameTextField"); // NOI18N
+        fileNameTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                fileNameTextFieldFocusLost(evt);
+            }
+        });
         fileNameTextField.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 fileNameTextFieldMousePressed(evt);
@@ -121,9 +129,15 @@ public class PreviewFilePanel extends javax.swing.JPanel {
                 fileNameTextFieldMouseReleased(evt);
             }
         });
-        fileNameTextField.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                fileNameTextFieldFocusLost(evt);
+        fileNameTextField.getDocument().addDocumentListener(new DocumentListener() {
+            public void changedUpdate(DocumentEvent e) {
+                changeFile();
+            }
+            public void removeUpdate(DocumentEvent e) {
+                changeFile();
+            }
+            public void insertUpdate(DocumentEvent e) {
+                changeFile();
             }
         });
 
@@ -250,7 +264,7 @@ public class PreviewFilePanel extends javax.swing.JPanel {
                                 .addComponent(browseButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(previewButton))
-                            .addComponent(separatingCharacterComboBox, 0, 0, Short.MAX_VALUE))))
+                            .addComponent(separatingCharacterComboBox, 0, 1, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         chooseFilePanelLayout.setVerticalGroup(
@@ -313,14 +327,13 @@ public class PreviewFilePanel extends javax.swing.JPanel {
                 fileNameTextField.setText(chooser.getSelectedFile().getCanonicalPath());
                 changeFile();
             } catch (IOException ex) {
-                Logger.getLogger(PreviewFilePanel.class.getName()).log(Level.SEVERE, null, ex);
+               LOGGER.log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
             }
         }
     }
 
-    /**
-     *
-     */
+
     @Action
     public void previewAction() {
         // show the contents of the file
@@ -363,24 +376,33 @@ public class PreviewFilePanel extends javax.swing.JPanel {
             Vector columnNames = new Vector(Arrays.asList(headers));
             previewTable.setModel(new DefaultTableModel(data, columnNames));
         } catch (FileNotFoundException fileNotFoundException) {
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportView").getString("COULD_NOT_PREVIEW_FILE:") + " \'" + fileNameTextField.getText().trim() + "\'.", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportView").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
-            Logger.getLogger(PreviewFilePanel.class.getName()).log(Level.SEVERE, null, fileNotFoundException);
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(),
+                java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportView").getString("COULD_NOT_PREVIEW_FILE:") + " \'" + fileNameTextField.getText().trim() + "\'.", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportView").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
+           LOGGER.log(Level.SEVERE, null, fileNotFoundException);
         } catch (IOException ex) {
-            Logger.getLogger(PreviewFilePanel.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         } finally {
             try {
                 if (br != null) {
                     br.close();
                 }
             } catch (IOException ex) {
-                Logger.getLogger(PreviewFilePanel.class.getName()).log(Level.SEVERE, null, ex);
+               LOGGER.log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
         }
     }
 
     @Action
-    public void autoDetectAction() throws IOException {
-        String encoding = Tools.detectCharacterCodingOfFile(fileNameTextField.getText());
+    public void autoDetectAction() {
+        String encoding = null;
+        try {
+            encoding = Tools.detectCharacterCodingOfFile(fileNameTextField.getText());
+        } catch (IOException ex) {
+           LOGGER.log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
+        }
         if (encoding != null) {
             Charset charset = Charset.forName(encoding);
             charsetsComboBox.setSelectedItem(charset);
@@ -391,6 +413,12 @@ public class PreviewFilePanel extends javax.swing.JPanel {
             // JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/PreviewFilePanel").getString("NO_ENCODING_DETECTED."), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/components/PreviewFilePanel").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
         }
     }
+    
+    @Action
+    public void comboBoxChanged() {
+        listener.actionPerformed(new ActionEvent(this, 0, SEPARATING_CHARACTER_CHANGED_ACTION));
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton autodetectButton;
     private javax.swing.JButton browseButton;
@@ -413,13 +441,13 @@ public class PreviewFilePanel extends javax.swing.JPanel {
 
     private void changeFile() {
         if (fileNameTextField.getText().trim().length() > 0) {
-            inFile = new File(fileNameTextField.getText().trim());
             try {
-                // autoDetectAction();
+                inFile = new File(fileNameTextField.getText().trim());
                 listener.actionPerformed(new ActionEvent(this, 0, FILE_CHANGED_ACTION));
                 numberOfRecordsTextField.setText("" + (canreg.common.Tools.numberOfLinesInFile(inFile.getCanonicalPath()) - 1));
             } catch (IOException ex) {
-                Logger.getLogger(PreviewFilePanel.class.getName()).log(Level.SEVERE, null, ex);
+               LOGGER.log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
         } else {
             inFile = null;
@@ -437,6 +465,10 @@ public class PreviewFilePanel extends javax.swing.JPanel {
             schar = sc.charAt(0);
         }
         return schar;
+    }
+    
+    public String getSeparatorAsString() {
+        return separatingCharacterComboBox.getSelectedItem().toString();
     }
 
     public File getInFile() {

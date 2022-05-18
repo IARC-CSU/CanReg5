@@ -20,6 +20,7 @@
 package canreg.client.gui;
 
 import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.Globals;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,6 +35,7 @@ import org.jdesktop.application.Action;
 public class CanRegClientAboutBox extends javax.swing.JDialog implements HyperlinkListener {
 
     private Properties appInfoProperties;
+    private static final Logger LOGGER = Logger.getLogger(CanRegClientAboutBox.class.getName());
 
     /**
      * 
@@ -58,7 +60,8 @@ public class CanRegClientAboutBox extends javax.swing.JDialog implements Hyperli
             getRootPane().setDefaultButton(closeButton);
             aboutEditorPane.addHyperlinkListener(this);
         } catch (IOException ex) {
-            Logger.getLogger(CanRegClientAboutBox.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
     }
 
@@ -107,8 +110,8 @@ public class CanRegClientAboutBox extends javax.swing.JDialog implements Hyperli
 
         aboutScrollPane.setName("aboutScrollPane"); // NOI18N
 
-        aboutEditorPane.setContentType(resourceMap.getString("aboutEditorPane.contentType")); // NOI18N
         aboutEditorPane.setEditable(false);
+        aboutEditorPane.setContentType(resourceMap.getString("aboutEditorPane.contentType")); // NOI18N
         aboutEditorPane.setText(resourceMap.getString("aboutEditorPane.text")); // NOI18N
         aboutEditorPane.setName("aboutEditorPane"); // NOI18N
         aboutEditorPane.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -126,7 +129,8 @@ public class CanRegClientAboutBox extends javax.swing.JDialog implements Hyperli
         }
         catch (Exception e)
         {
-            Logger.getLogger(CanRegClientAboutBox.class.getName()).log(Level.INFO, "Problem setting about page", e);
+            LOGGER.log(Level.INFO, "Problem setting about page", e);
+            new TechnicalError().errorDialog();
         }
 
         versionLabel.setFont(versionLabel.getFont().deriveFont(versionLabel.getFont().getStyle() | java.awt.Font.BOLD));
@@ -225,7 +229,7 @@ private void homepageLabelMouseClick(java.awt.event.MouseEvent evt) {//GEN-FIRST
     try {
         canreg.common.Tools.browse(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientAboutBox").getString("http://canreg.iarc.fr/"));
     } catch (IOException ex) {
-        Logger.getLogger(CanRegClientAboutBox.class.getName()).log(Level.SEVERE, null, ex);
+        LOGGER.log(Level.SEVERE, null, ex);
     }
 }//GEN-LAST:event_homepageLabelMouseClick
 
@@ -248,7 +252,7 @@ private void aboutEditorPaneMousePressed(java.awt.event.MouseEvent evt) {//GEN-F
             try {
                 canreg.common.Tools.browse(event.getURL().toString());
             } catch (IOException ex) {
-                Logger.getLogger(CanRegClientAboutBox.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
             }
         }
     }

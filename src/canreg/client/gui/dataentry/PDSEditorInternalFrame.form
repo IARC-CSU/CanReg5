@@ -741,9 +741,9 @@
                       <Layout>
                         <DimensionLayout dim="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="ageGroupjLabel" alignment="0" pref="59" max="32767" attributes="0"/>
-                              <Component id="ageGroupLabelsTable" alignment="0" pref="59" max="32767" attributes="0"/>
-                              <Component id="totalLabel" alignment="1" pref="59" max="32767" attributes="0"/>
+                              <Component id="ageGroupjLabel" alignment="0" max="32767" attributes="0"/>
+                              <Component id="ageGroupLabelsTable" alignment="0" pref="0" max="32767" attributes="0"/>
+                              <Component id="totalLabel" alignment="1" max="32767" attributes="0"/>
                           </Group>
                         </DimensionLayout>
                         <DimensionLayout dim="1">
@@ -1487,9 +1487,9 @@
                           <Layout>
                             <DimensionLayout dim="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jLabel7" alignment="0" pref="59" max="32767" attributes="0"/>
-                                  <Component id="ageGroupLabelsTable1" alignment="0" pref="59" max="32767" attributes="0"/>
-                                  <Component id="jLabel8" alignment="1" pref="59" max="32767" attributes="0"/>
+                                  <Component id="jLabel7" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="ageGroupLabelsTable1" alignment="0" pref="0" max="32767" attributes="0"/>
+                                  <Component id="jLabel8" alignment="1" max="32767" attributes="0"/>
                               </Group>
                             </DimensionLayout>
                             <DimensionLayout dim="1">

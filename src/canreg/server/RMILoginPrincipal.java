@@ -32,6 +32,7 @@ import java.util.logging.Logger;
 public class RMILoginPrincipal
    implements java.security.Principal
 {
+    private static final Logger LOGGER = Logger.getLogger(RMILoginPrincipal.class.getName());
     private static boolean DEBUG;
 
     private Globals.UserRightLevels userRightLevel;
@@ -58,7 +59,7 @@ public class RMILoginPrincipal
         }
         this.username = username;
         if( DEBUG )
-            Logger.getLogger(RMILoginPrincipal.class.getName()).log(Level.INFO, "Principal {0} successfully created.", username);
+            LOGGER.log(Level.INFO, "Principal {0} successfully created.", username);
    }
    
    /** Returns the username of the user. @return The username. */

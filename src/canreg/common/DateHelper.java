@@ -25,13 +25,16 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author ervikm
  */
 public class DateHelper {
-
+    
+    private static final Logger LOGGER = Logger.getLogger(DateHelper.class.getName());
     public static GregorianCalendarCanReg parseDateStringToGregorianCalendarCanReg(String dateString, String dateFormatString) throws ParseException, IllegalArgumentException {
 
         if (dateString.length() != dateFormatString.length()) {
@@ -148,7 +151,7 @@ public class DateHelper {
                 dateString = setDay(dateString, dateFormatString, format.format(calendar.get(Calendar.DAY_OF_MONTH)));
             }
         } catch (IllegalArgumentException iae) {
-            System.out.println(iae + ": " + calendar);
+            LOGGER.log(Level.SEVERE, String.format(("%s : %s"),iae,calendar),iae);
         }
         return dateString;
     }

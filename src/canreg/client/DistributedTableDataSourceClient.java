@@ -23,24 +23,30 @@ package canreg.client;
 import canreg.common.cachingtableapi.DistributedTableDataSource;
 import canreg.common.cachingtableapi.DistributedTableDescription;
 import canreg.common.cachingtableapi.DistributedTableDescriptionException;
+import canreg.server.CanRegServerInterface;
 import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DistributedTableDataSourceClient implements DistributedTableDataSource {
+    
     DistributedTableDescription distributedTableDescription;
     String resultSetID;
+    CanRegServerInterface server;
+    private static final Logger LOGGER = Logger.getLogger(DistributedTableDataSourceClient.class.getName());
 
-    	/**
-	 * Constructor for DemoTableDataSource.
-         * 
-         * @param distributedTableDescription
-         * @throws canreg.common.cachingtableapi.DistributedTableDescriptionException
-         */
-	public DistributedTableDataSourceClient(DistributedTableDescription distributedTableDescription) throws DistributedTableDescriptionException {
-		super();
-                this.distributedTableDescription = distributedTableDescription;
-	}
+    /**
+     * 
+     * @param distributedTableDescription
+     * @throws canreg.common.cachingtableapi.DistributedTableDescriptionException
+     */
+    public DistributedTableDataSourceClient(DistributedTableDescription distributedTableDescription, 
+                                            CanRegServerInterface server) 
+            throws DistributedTableDescriptionException {
+            super();
+            this.distributedTableDescription = distributedTableDescription;
+            this.server = server;
+    }
     
     
     @Override
@@ -57,12 +63,13 @@ public class DistributedTableDataSourceClient implements DistributedTableDataSou
     }
     
     @Override
-    public Object[][] retrieveRows(int from, int to) throws DistributedTableDescriptionException {
+    public Object[][] retrieveRows(int from, int to) 
+            throws DistributedTableDescriptionException {
         Object[][] rows;
         try {
-            rows = CanRegClientApp.getApplication().retrieveRows(distributedTableDescription.getResultSetID(), from, to);
+            rows = CanRegClientApp.getApplication().retrieveRows(distributedTableDescription.getResultSetID(), from, to, server);
         } catch (RemoteException ex) {
-            Logger.getLogger(DistributedTableDataSourceClient.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             throw new DistributedTableDescriptionException(ex.getMessage());
         }
         return rows;

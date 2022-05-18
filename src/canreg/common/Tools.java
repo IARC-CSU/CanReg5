@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2018 International Agency for Research on Cancer
+ * Copyright (C) 2008-2019 International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,8 +24,11 @@ import canreg.client.LocalSettings;
 import canreg.client.gui.tools.BareBonesBrowserLaunch;
 import canreg.client.gui.tools.ImageSelection;
 import canreg.common.Globals.StandardVariableNames;
+import canreg.common.database.Dictionary;
+import canreg.common.database.DictionaryEntry;
 import canreg.common.qualitycontrol.PersonSearcher.CompareAlgorithms;
-// import fr.iarc.cin.iarctools.Globals.IARCStandardVariableNames;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import java.awt.AWTException;
 import java.awt.Image;
 import java.awt.Robot;
@@ -38,6 +41,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import java.net.*;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -52,13 +56,18 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.mozilla.universalchardet.UniversalDetector;
 import static java.nio.file.StandardCopyOption.*;
+import java.util.Iterator;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 
 /**
  *
  * @author ervikm
  */
 public class Tools {
-
+    
+    private static final Logger LOGGER = Logger.getLogger(Tools.class.getName());
     /**
      * 
      * @param objects
@@ -96,7 +105,7 @@ public class Tools {
                         if (pointer < line.length()) {
                             tmpChar = line.charAt(pointer);
                         } else {
-                            Logger.getLogger(Tools.class.getName()).log(Level.WARNING, "Warning! Unclosed quote.");
+                            LOGGER.log(Level.WARNING, "Warning! Unclosed quote.");
                         }
                     }
                 } else {
@@ -576,7 +585,7 @@ public class Tools {
             }
 
         } catch (IOException ioe) {
-            System.err.println("I/O Error - " + ioe);
+            LOGGER.log(Level.SEVERE,String.format("I/O Error - %s",ioe),ioe);
         }
         return contents.toString();
     }
@@ -594,7 +603,7 @@ public class Tools {
             url = new URL(urlString);
             contents = getFileFromURL(url);
         } catch (MalformedURLException mue) {
-            System.err.println("Invalid URL");
+            LOGGER.log(Level.SEVERE, "Invalid URL", mue);
         }
         return contents;
     }
@@ -730,7 +739,7 @@ public class Tools {
             System.out.println("Current dir : " + dir1.getCanonicalPath());
             //System.out.println ("Parent  dir : " + dir2.getCanonicalPath());
         } catch (IOException ex) {
-            Logger.getLogger(Tools.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
     }
 
@@ -950,7 +959,7 @@ public class Tools {
 //                        map.put(iarcStdVarb, variable.getDatabaseVariableName());
 //                    }
 //                } catch (java.lang.IllegalArgumentException ex) {
-//                    Logger.getLogger(Tools.class.getName()).log(Level.WARNING, "{0} is not a standard variable name...", stdNameString);
+//                    LOGGER.log(Level.WARNING, "{0} is not a standard variable name...", stdNameString);
 //                }
 //            }
 //        }
@@ -1072,4 +1081,181 @@ public class Tools {
 //            return fileName;
 //        }
 //    }
+    
+    /**
+     * Saves an object data into a JSON file. The file will be encoded in UTF-8.
+     * @param obj object to be stored as JSON.
+     * @param jsonDestination complete path (including "fileName.json") to the location
+     * of the JSON that is being created.
+     * @throws IOException 
+     */
+    public static void objectToJSON(Object obj, File jsonDestination) 
+            throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
+        //Commented because it makes the process slower
+        // mapper.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
+        Writer out = null;
+        try {
+            out = new OutputStreamWriter(new FileOutputStream(jsonDestination), StandardCharsets.UTF_8);
+            mapper.writeValue(out, obj);
+        } finally {
+            if(out != null) {
+                try { out.close(); }
+                catch(IOException ex) {
+                    LOGGER.log(Level.WARNING, null, ex);
+                }   
+            }
+        }
+    }
+    
+    /**
+     * Reads an existent JSON file and transforms it into a Java Object. You must cast
+     * the returning object into a specific class. The JSON HAS to be encoded in UTF-8.
+     * @param jsonOrigin complete path (including "fileName.json") of the JSON file
+     * to be read.
+     * @return an object containing all the data from the JSON file.
+     * @throws IOException 
+     */
+    public static Object JSONtoObject(File jsonOrigin, Class clazz) 
+            throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
+        //Commented because it makes the process slower
+        // mapper.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
+        Reader in = null;
+        Object obj = null;
+        try {
+            in = new InputStreamReader(new FileInputStream(jsonOrigin), StandardCharsets.UTF_8);
+            obj = mapper.readValue(in, clazz);
+        } finally {
+            if(in != null) {
+                try { in.close(); }
+                catch(IOException ex) {
+                    LOGGER.log(Level.WARNING, null, ex);
+                } 
+            }
+        }
+        
+        return obj;
+    }
+    
+    /**
+     * Writes a database dictionary to a File encoded in UTF-8
+     * @param dictionaryDestination
+     * @param dictionariesInDB
+     * @return 
+     */
+    public static void writeDictionaryToFileUTF8(File dictionaryDestination, 
+                                                 DatabaseDictionaryListElement[] dictionariesInDB) 
+            throws IOException {
+        try(BufferedWriter bw = Files.newBufferedWriter(Paths.get(dictionaryDestination.getAbsolutePath()), 
+                                             StandardCharsets.UTF_8);) {
+            for (DatabaseDictionaryListElement dbdle : dictionariesInDB) {
+                bw.write("#" + dbdle.getDictionaryID() + "\t----" + dbdle.getName() + Globals.newline);
+                Dictionary dic = CanRegClientApp.getApplication().getDictionary().get(dbdle.getDictionaryID());
+                if (dic != null) {
+                    Map<String, DictionaryEntry> map = dic.getDictionaryEntries();
+                    Iterator<Map.Entry<String, DictionaryEntry>> iterator = map.entrySet().iterator();
+                    while (iterator.hasNext()) {
+                        DictionaryEntry entry = iterator.next().getValue();
+                        bw.write(entry.getCode() + "\t" + entry.getDescription() + Globals.newline);
+                    }
+                }
+                bw.write(Globals.newline);
+            }
+            bw.flush();
+        }
+    }
+    
+    /**
+     * Creates a new file encoded in UTF-8 based on an already existing file with another
+     * encoding.
+     * @param source the file to be transformed
+     * @param srcEncoding the encoding of the file to be transformed
+     * @param target the new file in UTF-8
+     * @throws IOException 
+     */
+    public static void transformFileToUTF8(File source, String srcEncoding, File target) 
+            throws IOException {
+        try (
+          BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(source), srcEncoding));
+          BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(target), StandardCharsets.UTF_8)); ) {
+              char[] buffer = new char[16384];
+              int read;
+              while ((read = br.read(buffer)) != -1)
+                  bw.write(buffer, 0, read);
+        } 
+    }
+    
+    public static String getFileExtension(File file) {
+        String extension = "";
+
+        if (file != null) {
+            String name = file.getName();
+            extension = name.substring(name.lastIndexOf("."));
+        }
+ 
+        return extension;
+    }
+    
+    public static String getFileNameWithoutExtension(File file) {
+        String name = "";
+
+        if (file != null) {
+            name = file.getName();
+            name = name.substring(0, name.lastIndexOf("."));
+        }
+ 
+        return name;
+    }
+    
+    /**
+     * 
+     * @param source
+     * @param sourceEncoding
+     * @return
+     * @throws IOException 
+     */
+    public static File createTempFileInUTF8(File source, String sourceEncoding)
+                throws IOException {
+        if(sourceEncoding == null)
+            return source;
+        
+        if(sourceEncoding.toUpperCase().contains("UTF-8"))
+            return source;
+        
+        File newTemp = new File(source.getParentFile(), "TEMP_" + source.getName());            
+        try {
+            if( ! newTemp.createNewFile())
+                throw new IOException("Temp file could not be created in source directory.");
+        } catch(IOException ex) {
+            LOGGER.log(Level.WARNING, null, ex);
+            newTemp = File.createTempFile(getFileNameWithoutExtension(newTemp), 
+                                          getFileExtension(newTemp));
+        }
+        
+        transformFileToUTF8(source, sourceEncoding, newTemp);
+        return newTemp;
+    }
+    
+    public static int getAmountOfColumnsInCSV(File csvFile, char separator, Charset fileCharset)
+            throws IOException {
+        CSVFormat format = CSVFormat.DEFAULT
+                .withFirstRecordAsHeader()
+                .withDelimiter(separator);
+        CSVParser parser = CSVParser.parse(csvFile, fileCharset, format);
+        return parser.getHeaderMap().size();
+    }
+    
+    public static boolean deleteFolderRecursively(File folder) 
+            throws IOException {
+        if (folder.isDirectory()) {
+            for (File c : folder.listFiles())
+              deleteFolderRecursively(c);
+        }
+        if (!folder.delete())
+          return false;
+        return true;
+    }
 }

@@ -21,7 +21,7 @@ package canreg.client.analysis;
 
 import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
-import canreg.client.analysis.TableBuilderInterface.FileTypes;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.Globals;
 import canreg.common.Globals.StandardVariableNames;
 import canreg.common.database.IncompatiblePopulationDataSetException;
@@ -55,6 +55,7 @@ public class RTableBuilder implements TableBuilderInterface {
     private String[] rScriptsArguments;
     private final String R_SCRIPTS_ARGUMENTS = "r_scripts_arguments";
     private int unknownAgeCode = Globals.DEFAULT_UNKNOWN_AGE_CODE;
+    private static final Logger LOGGER = Logger.getLogger(RTableBuilder.class.getName());
 
     public RTableBuilder(String configFileName) throws FileNotFoundException {
         localSettings = CanRegClientApp.getApplication().getLocalSettings();
@@ -183,7 +184,9 @@ public class RTableBuilder implements TableBuilderInterface {
                 commandList.add("-ft="       + fileType);
                 commandList.add("-lang=" + CanRegClientApp.getApplication().getLocalSettings().getLanguageCode());
                 // add the rest of the arguments
-                commandList.addAll(Arrays.asList(rScriptsArguments));
+                
+                if(rScriptsArguments != null)
+                    commandList.addAll(Arrays.asList(rScriptsArguments));
                 
                 System.out.println(commandList);
                 Process pr = rt.exec(commandList.toArray(new String[]{}));
@@ -193,7 +196,7 @@ public class RTableBuilder implements TableBuilderInterface {
                     pr.waitFor();
                     // convert the output to a string
                     String theString = Tools.convertStreamToString(is);
-                    Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.INFO, "Messages from R: \n{0}", theString);
+                    LOGGER.log(Level.INFO, "Messages from R: \n{0}", theString);
                     // System.out.println(theString);  
                     // and add all to the list of files to return
                     for (String fileName : theString.split("\\r?\\n")) {
@@ -206,12 +209,12 @@ public class RTableBuilder implements TableBuilderInterface {
                         }
                     }
                 } catch (InterruptedException ex) {
-                    Logger.getLogger(RTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, "Error while building R", ex);
+                    new TechnicalError().errorDialog();
                 } catch (java.util.NoSuchElementException ex) {
-                    Logger.getLogger(RTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
                     BufferedInputStream errorStream = new BufferedInputStream(pr.getErrorStream());
                     String errorMessage = Tools.convertStreamToString(errorStream);
-                    System.out.println(errorMessage);
+                    LOGGER.log(Level.SEVERE, String.format("Error while building R : %s",errorMessage), ex);
                     throw new TableErrorException("R says:\n \"" + errorMessage + "\"");
                 } finally {
                     System.out.println(pr.exitValue());
@@ -219,9 +222,11 @@ public class RTableBuilder implements TableBuilderInterface {
             }
 
         } catch (IOException ex) {
-            Logger.getLogger(RTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, "", ex);
+            new TechnicalError().errorDialog();
         } catch (IncompatiblePopulationDataSetException ex) {
-            Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.WARNING, null, ex);
+            LOGGER.log(Level.WARNING,
+                "Incompatibility  in the population dataset", ex);
             throw new NotCompatibleDataException();
         }
 

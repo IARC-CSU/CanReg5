@@ -38,6 +38,8 @@ import java.util.logging.Logger;
  */
 public class CheckMorphology extends CheckInterface {
 
+    private static final Logger LOGGER = Logger.getLogger(CheckMorphology.class.getName());
+
     /**
      * 
      */
@@ -67,11 +69,11 @@ public class CheckMorphology extends CheckInterface {
         try {
             morphologicalFamiliesMap = LookUpLoader.load(resourceStream, codeLength);
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(CheckMorphology.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(CheckMorphology.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         } catch (URISyntaxException ex) {
-            Logger.getLogger(CheckMorphology.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
     }
 

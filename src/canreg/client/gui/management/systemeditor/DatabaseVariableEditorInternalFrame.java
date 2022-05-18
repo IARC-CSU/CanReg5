@@ -42,6 +42,7 @@ import org.jdesktop.application.Action;
  */
 public class DatabaseVariableEditorInternalFrame extends javax.swing.JInternalFrame {
 
+    private static final Logger LOGGER = Logger.getLogger(DatabaseVariableEditorInternalFrame.class.getName());
     private ActionListener listener;
     public final static String UPDATED = "varaiable_updated";
     public final static String STANDARDVARIABLEMAPPINGCHANGED = "standard_variable_mapping_changed";
@@ -125,7 +126,7 @@ public class DatabaseVariableEditorInternalFrame extends javax.swing.JInternalFr
     @Action
     public void okAction() {
         try {
-            databaseVariableEditor.refreshDatabaseVariablesListElement();
+            databaseVariablesListElement = databaseVariableEditor.refreshDatabaseVariablesListElement();
             if (databaseVariablesListElement.getDatabaseVariableName().length() == 0) {
                 JOptionPane.showInternalMessageDialog(rootPane, "Short name can't be empty...");
             } else {
@@ -141,7 +142,7 @@ public class DatabaseVariableEditorInternalFrame extends javax.swing.JInternalFr
             }
         } catch (DatabaseVariablesListException ex) {
             JOptionPane.showInternalMessageDialog(rootPane, ex.getDatabaseVariablesListElement().getDatabaseVariableName() + " : " + ex.getError());
-            Logger.getLogger(DatabaseVariableEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
     }
 
