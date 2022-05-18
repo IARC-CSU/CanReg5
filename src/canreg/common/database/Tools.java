@@ -36,6 +36,7 @@ import java.util.logging.Logger;
  */
 public class Tools {
 
+    private static final Logger LOGGER = Logger.getLogger(Tools.class.getName());
     // Ref: http://db.apache.org/derby/docs/10.1/ref/rrefkeywords29722.html    
     private static final String[] RESERVED_WORDS_SQL = {"ADD",
         "ALL",
@@ -308,7 +309,7 @@ public class Tools {
                 = new FileWriter(path)) {
             mapper.writeValue(fw, pds);
         } catch (IOException ex) {
-            Logger.getLogger(PDSEditorInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
     }
 

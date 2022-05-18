@@ -19,6 +19,7 @@
  */
 package canreg.client.analysis;
 
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.Globals;
 import canreg.common.Globals.StandardVariableNames;
 import canreg.common.PsToPdfConverter;
@@ -32,6 +33,8 @@ import java.io.Writer;
 import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -49,7 +52,7 @@ public class PopulationPyramidTableBuilder extends AbstractEditorialTableBuilder
     private String[] sexLabel;
     private Globals.StandardVariableNames[] variablesNeeded = null;
     private String populationString;
-    
+    private static final Logger LOGGER = Logger.getLogger(PopulationPyramidTableBuilder.class.getName());
     public PopulationPyramidTableBuilder() {
         super();
         fileTypesGenerated = new FileTypes[]{FileTypes.ps};
@@ -295,7 +298,8 @@ public class PopulationPyramidTableBuilder extends AbstractEditorialTableBuilder
             fw.close();
 
         } catch (IOException e) {
-            System.out.println("Error while writing PS-file...");
+            LOGGER.log(Level.SEVERE,"Error while writing PS-file",e);
+            new TechnicalError().errorDialog();
         }
 
         if (fileType == FileTypes.pdf) {

@@ -38,6 +38,7 @@ import java.util.logging.Logger;
  */
 public class CheckSexMorphology extends CheckInterface {
 
+    private static final Logger LOGGER = Logger.getLogger(CheckSexMorphology.class.getName());
     /**
      * 
      */
@@ -78,11 +79,11 @@ public class CheckSexMorphology extends CheckInterface {
         try {
             morphologicalFamiliesMap = LookUpLoader.load(resourceStream, codeLength);
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(CheckSexMorphology.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(CheckSexMorphology.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         } catch (URISyntaxException ex) {
-            Logger.getLogger(CheckSexMorphology.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
     }
 

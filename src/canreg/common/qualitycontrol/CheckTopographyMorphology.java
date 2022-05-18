@@ -40,6 +40,7 @@ import java.util.logging.Logger;
  */
 public class CheckTopographyMorphology extends CheckInterface {
 
+    private static final Logger LOGGER = Logger.getLogger(CheckTopographyMorphology.class.getName());
     public static Map<String, String> morphologicalFamiliesMap = null;
     public static Map<String, String> lookUpMustMap = null;
     public static Map<String, String> lookUpMustNotMap = null;
@@ -243,13 +244,13 @@ public class CheckTopographyMorphology extends CheckInterface {
                 line = br.readLine();
             }
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(CheckMorphology.class.getName()).log(Level.SEVERE,
+            LOGGER.log(Level.SEVERE,
                     null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(CheckMorphology.class.getName()).log(Level.SEVERE,
+            LOGGER.log(Level.SEVERE,
                     null, ex);
         } catch (URISyntaxException ex) {
-            Logger.getLogger(CheckMorphology.class.getName()).log(Level.SEVERE,
+            LOGGER.log(Level.SEVERE,
                     null, ex);
         } finally {
             try {
@@ -257,7 +258,7 @@ public class CheckTopographyMorphology extends CheckInterface {
                     br.close();
                 }
             } catch (IOException ex) {
-                Logger.getLogger(CheckTopographyMorphology.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
             }
         }
     }

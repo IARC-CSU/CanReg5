@@ -19,32 +19,33 @@
  */
 package canreg.server;
 
-import canreg.common.database.User;
-import canreg.server.management.UserManagerNew;
-import canreg.common.cachingtableapi.DistributedTableDescription;
-import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.common.DatabaseFilter;
 import canreg.common.DatabaseIndexesListElement;
+import canreg.common.DefaultConfigFileUtils;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
 import canreg.common.Globals.UserRightLevels;
 import canreg.common.PersonSearchVariable;
 import canreg.common.Tools;
+import canreg.common.cachingtableapi.DistributedTableDescription;
+import canreg.common.cachingtableapi.DistributedTableDescriptionException;
+import canreg.common.database.DatabaseRecord;
+import canreg.common.database.Dictionary;
+import canreg.common.database.DictionaryEntry;
+import canreg.common.database.NameSexRecord;
+import canreg.common.database.Patient;
+import canreg.common.database.PopulationDataset;
+import canreg.common.database.Tumour;
+import canreg.common.database.User;
 import canreg.common.qualitycontrol.DefaultPersonSearch;
 import canreg.common.qualitycontrol.GlobalPersonSearchHandler;
 import canreg.common.qualitycontrol.PersonSearcher;
 import canreg.server.database.CanRegDAO;
-import canreg.common.database.DatabaseRecord;
-import canreg.common.database.Dictionary;
-import canreg.common.database.DictionaryEntry;
 import canreg.server.database.Migrator;
-import canreg.common.database.NameSexRecord;
-import canreg.common.database.Patient;
-import canreg.common.database.PopulationDataset;
 import canreg.server.database.RecordLockedException;
-import canreg.common.database.Tumour;
 import canreg.server.database.UnknownTableException;
 import canreg.server.management.SystemDescription;
+import canreg.server.management.UserManagerNew;
 import java.awt.AWTException;
 import java.awt.Image;
 import java.awt.SystemTray;
@@ -54,14 +55,11 @@ import java.awt.TrayIcon.MessageType;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.apache.derby.drda.NetworkServerControl;
-import java.net.InetAddress;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -73,8 +71,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
+import org.apache.derby.drda.NetworkServerControl;
 import org.w3c.dom.Document;
 
 /**
@@ -83,6 +84,7 @@ import org.w3c.dom.Document;
  */
 public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServerInterface {
 
+    private static final Logger LOGGER = Logger.getLogger(CanRegServerImpl.class.getName());
     private static boolean debug = true;
 
     private NetworkServerControl dbServer;
@@ -96,9 +98,11 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     private String patientRecordIDvariableName;
     private GlobalToolBox serverToolbox;
     private TrayIcon trayIcon;
+    private DefaultConfigFileUtils defaultConfigFileUtils;
 
     private CanRegDAO currentDAO;
     private HashMap<String, CanRegDAO> registriesDAOs;
+    private Map<Integer, Object[]> patientsData;
 
     /**
      *
@@ -121,8 +125,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     private void initialize(String registryCode, boolean isAdHocDB) throws RemoteException {
         registriesDAOs = new HashMap<>();
         defaultRegistryCode = registryCode;
-
-        Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.INFO, "Java version: {0}", System.getProperty("java.version"));
+        defaultConfigFileUtils = new DefaultConfigFileUtils();
+        LOGGER.log(Level.INFO, "Java version: {0}", System.getProperty("java.version"));
 
         // If we can we add a tray icon to show that the CanReg server is running.
         if (SystemTray.isSupported()) {
@@ -135,7 +139,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
                 try {
                     tray.add(trayIcon);
                 } catch (AWTException ex) {
-                    Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
                 }
             }
         }
@@ -154,7 +158,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             appInfoProperties.load(in);
             in.close();
         } catch (IOException ex) {
-            Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
 
         // Step one load the system definition...
@@ -169,7 +173,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         try {
             systemSettings = new SystemSettings(registryCode + "settings.xml");
         } catch (IOException ex) {
-            Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         setTrayIconToolTip("CanReg5 server " + registryCode + " database initialized...");
 
@@ -232,7 +236,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
                         dao = new CanRegDAO(sysDesc.getRegistryCode(), sysDesc.getSystemDescriptionDocument(), holding);
                         connected = dao.connectWithBootPassword(password.toCharArray());
                     } catch (RemoteException | SQLException ex1) {
-                        Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex1);
+                        LOGGER.log(Level.SEVERE, null, ex1);
                         throw new RuntimeException(ex1);
                     }
                 }
@@ -240,7 +244,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
                 throw new RuntimeException(ex);
             }
         } catch (RemoteException ex) {
-            Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             throw ex;
         }
 
@@ -295,7 +299,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             dbServer = new NetworkServerControl(InetAddress.getByName("localhost"), 1528);
             dbServer.start(null);
         } catch (Exception ex) {
-            Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
     }
 
@@ -310,7 +314,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
                 dbServer.shutdown();
             }
         } catch (Exception ex) {
-            Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
     }
 
@@ -347,9 +351,10 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     /**
+     * Change the password corresponding to the username. The password can only be changed by the user itself.
      *
-     * @param username
-     * @param password
+     * @param username username
+     * @param password password to change
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
@@ -358,7 +363,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         for (User user : listUsers()) {
             if (user.getUserName().equalsIgnoreCase(username)) {
                 user.setPassword(password.toCharArray());
-                saveUser(user);
+                saveUser(user,false);
+                userManager.deleteFileReminder(user.getUserName());
             }
         }
     }
@@ -433,7 +439,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
 
     private void debugOut(String msg) {
         if (debug) {
-            Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.INFO, msg);
+            LOGGER.log(Level.INFO, msg);
         }
     }
     // add and remove records
@@ -544,7 +550,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         try {
             addr = InetAddress.getLocalHost();
         } catch (UnknownHostException ex) {
-            Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         return addr;
     }
@@ -663,7 +669,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         try {
             rows = currentDAO.retrieveRows(resultSetID, from, to);
         } catch (DistributedTableDescriptionException ex) {
-            Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             throw new RemoteException("Retrieve rows failed: " + ex.getMessage());
         }
         return rows;
@@ -771,7 +777,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         DistributedTableDescription dataDescription;
         GlobalPersonSearchHandler gpsh = new GlobalPersonSearchHandler();
         String resultSetID = null;
-
+        boolean isOK = false;
         try {
             if (searcher == null) {
                 searcher = personSearcher;
@@ -781,8 +787,9 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             filter.setQueryType(DatabaseFilter.QueryType.PERSON_SEARCH);
 
             dataDescription = getDistributedTableDescription(filter, Globals.PATIENT_TABLE_NAME);
-            gpsh.setAllPatientRecordIDs(retrieveRows(dataDescription.getResultSetID(), 0, dataDescription.getRowCount()));
-            releaseResultSet(dataDescription.getResultSetID());
+            resultSetID = dataDescription.getResultSetID();
+            gpsh.setAllPatientRecordIDs(retrieveRows(resultSetID, 0, dataDescription.getRowCount()));
+            releaseResultSet(resultSetID);
             DatabaseIndexesListElement dbile = new DatabaseIndexesListElement(null);
             dbile.setDatabaseTableName(Globals.PATIENT_TABLE_NAME);
             filter.setRangeDatabaseIndexedListElement(dbile);
@@ -799,19 +806,29 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
 
             activePersonSearchers.put(resultSetID, gpsh);
             // releaseResultSet(resultSetID);
+            isOK = true;
         } catch (SQLException | UnknownTableException | DistributedTableDescriptionException ex) {
-            Logger.getLogger(DefaultPersonSearch.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
+        finally {
+            if(! isOK){
+                releaseNotNullResultSet(resultSetID);
+            }
         }
         return resultSetID;
     }
 
     /**
-     *
-     * @param idString
-     * @return
-     * @throws SecurityException
-     * @throws RemoteException
-     * @throws canreg.server.database.RecordLockedException
+     * Find the duplicate present in the selected row of the database using a collection of variables
+     * selected before the search.
+     * A score is compute between each row and a duplicate is found only if the score is superior to threeshold
+     * This function return a map of all the duplicate found in the computed sample
+
+     * @param idString id of the current operation in the server
+     * @throws SecurityException security exception
+     * @throws RemoteException remote exception
+     * @throws RecordLockedException if the fonction is locked
+     * @return patientIDScorePatientIDMap
      */
     @Override
     public synchronized Map<String, Map<String, Float>> nextStepGlobalPersonSearch(String idString) throws SecurityException, RemoteException, RecordLockedException {
@@ -830,13 +847,38 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             } else {
                 // Object[][] rowData = retrieveRows(idString, startRow, endRow);
                 Object[][] rowData = globalPersonSearchHandler.getPatientRecordIDsWithinRange();
+                if (patientsData == null) {
+                    //read all users one time in database and keep only the data corresponding to the variables selected
+                    // on the duplicate Person Search Panel
+                    patientsData = new HashMap<>(rowData.length);
+                    try {
+                        for (Object[] r : rowData) {
+                            int patientID = (Integer) r[0];
+                            // all selected data from the database are on the variable patientsData
+                            try {
+                                patientsData.put(patientID,
+                                    ((DefaultPersonSearch) searcher)
+                                        .getPatientVariables((Patient) getPatient(patientID),
+                                            patientRecordIDvariableName));
+                            } catch (RecordLockedException ex) {
+                                LOGGER.log(Level.SEVERE,null,ex);
+                            }
+                        }
+                    } catch (RemoteException | SecurityException ex) {
+                        LOGGER.log(Level.SEVERE,null,ex);
+                    }
+                }
+                //  read all the stored data in memory to compute the patientIDScorePatientIDMap
                 for (int row = startRow; row < endRow && row < rowData.length; row++) {
                     int patientIDA = (Integer) rowData[row][0];
-                    Patient patientA = (Patient) getPatient(patientIDA);
+                    Object[] patientAData = patientsData.get(patientIDA);
                     // Map<String, Float> patientIDScoreMap = performPersonSearch(patientA, searcher, globalPersonSearchHandler.getDistributedTableDescription());
-                    Map<String, Float> patientIDScoreMap = performPersonSearch(patientA, searcher, globalPersonSearchHandler.getAllPatientRecordIDs());
-                    if (patientIDScoreMap.size() > 0) {
-                        patientIDScorePatientIDMap.put((String) patientA.getVariable(patientRecordIDvariableName), patientIDScoreMap);
+
+                    if (patientAData != null) {
+                        Map<String, Float> patientIDScoreMap = performPersonSearchDataOnly(patientIDA, patientAData, searcher, patientsData, globalPersonSearchHandler.getAllPatientRecordIDs());
+                        if (patientIDScoreMap.size() > 0) {
+                            patientIDScorePatientIDMap.put(patientAData[5].toString(), patientIDScoreMap);
+                        }
                     }
                 }
             }
@@ -851,7 +893,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             releaseResultSet(idString);
             activePersonSearchers.remove(idString);
         } catch (SQLException | RemoteException | SecurityException ex) {
-            Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
     }
 
@@ -878,6 +920,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         filter.setQueryType(DatabaseFilter.QueryType.PERSON_SEARCH);
         DistributedTableDescription dataDescription;
         Map<String, Float> patientIDScoreMap = null;
+        String resultSetID = null;
         if (searcher == null) {
             if (personSearcher == null) {
                 personSearcher = new DefaultPersonSearch(
@@ -890,11 +933,47 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         }
         try {
             dataDescription = currentDAO.getDistributedTableDescriptionAndInitiateDatabaseQuery(filter, Globals.PATIENT_TABLE_NAME, currentDAO.generateResultSetID());
-            Object[][] rowData = retrieveRows(dataDescription.getResultSetID(), 0, dataDescription.getRowCount() - 1);
+            resultSetID = dataDescription.getResultSetID();
+            Object[][] rowData = retrieveRows(resultSetID, 0, dataDescription.getRowCount() - 1);
             patientIDScoreMap = performPersonSearch(patient, searcher, rowData);
-            releaseResultSet(dataDescription.getResultSetID());
+            releaseResultSet(resultSetID);
+            // Set the resultSetID to null after release of the resultSet to avoid another release in the finally
+            resultSetID = null;
         } catch (SQLException | UnknownTableException | DistributedTableDescriptionException ex) {
-            Logger.getLogger(DefaultPersonSearch.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
+        }finally {
+            releaseNotNullResultSet(resultSetID);
+        }
+        return patientIDScoreMap;
+    }
+
+    /**
+     * Compute the PatientId Score for each couple patient and add it to the patientIDScoreMap if score > threshold
+     *
+     * @param patientIDA id of the patient A (to be compare against the other patient)
+     * @param patient  the information of the patientA
+     * @param searcher all the information about the duplicate search parameters
+     * @param patientsData selected variables of each patient of the database
+     * @param rowData map that contains all the temporary patient'Ids
+     */
+    private Map<String, Float> performPersonSearchDataOnly(int patientIDA, Object[] patient, PersonSearcher searcher,
+        Map<Integer, Object[]> patientsData, Object[][] rowData) {
+        Map<String, Float> patientIDScoreMap = new TreeMap<>();
+        Object[] patientB;
+        float threshold = searcher.getThreshold();
+        for (Object[] r : rowData) {
+            int patientIDB = (Integer) r[0];
+            if (patientIDB != patientIDA) {
+                patientB = patientsData.get(patientIDB);
+
+                if (patientB != null) {
+                    //compute the score between the two patients
+                    float score = ((DefaultPersonSearch) searcher).compareDataOnly(patient, patientB);
+                    if (score > threshold) {
+                        patientIDScoreMap.put(patientB[5].toString(), score);
+                    }
+                }
+            }
         }
         return patientIDScoreMap;
     }
@@ -928,12 +1007,12 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
                             // debugOut("Not found " + patientB.getVariable(patientRecordIDvariableName) + " " + score);
                         }
                     } catch (RecordLockedException ex) {
-                        Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+                        LOGGER.log(Level.SEVERE, null, ex);
                     }
                 }
             }
         } catch (RemoteException | SecurityException ex) {
-            Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         return patientIDScoreMap;
     }
@@ -987,9 +1066,12 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      * @throws SecurityException
      */
     @Override
-    public synchronized int saveUser(User user) throws RemoteException, SecurityException {
+    public synchronized int saveUser(User user, boolean addPasswordReminder) throws RemoteException, SecurityException {
         int id = currentDAO.saveUser(user);
         userManager.writePasswordsToFile();
+        if (addPasswordReminder) {
+            userManager.createFileReminder(user.getUserName());
+        }
         return id;
     }
 
@@ -1028,10 +1110,29 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         boolean success = false;
         try {
             success = currentDAO.encryptDatabase(newPasswordArray, oldPasswordArray, encryptionAlgorithm, encryptionKeyLength);
+            if(success){
+                if (newPasswordArray.length > 0) {
+                    // create or change a password
+                    defaultConfigFileUtils.updateConfigFileProperties(getCanRegRegistryCode(), "true");
+                } else{
+                    // the database password is removed after having been set
+                    defaultConfigFileUtils.updateConfigFileProperties(getCanRegRegistryCode(), "false");
+                }
+            }
         } catch (SQLException ex) {
-            Logger.getLogger(CanRegServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         return success;
+    }
+
+    @Override
+    public boolean checkDatabaseEncryption(String registryCode) throws RemoteException, SecurityException {
+        File file = new File(Globals.CANREG_CONFIG_DATABASE);
+        if (file.exists()) {
+            Properties properties = defaultConfigFileUtils.readConfigFile();
+            return properties!= null && Boolean.parseBoolean(properties.getProperty(registryCode));
+        }
+        return false;
     }
 
     @Override
@@ -1139,8 +1240,67 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     @Override
+    public boolean checkFileReminder(String username) {
+        return userManager.checkPasswordReminderFile(username);
+    }
+
+    @Override
+    public void deleteFileReminder(String username) throws RemoteException {
+        userManager.deleteFileReminder(username);
+    }
+
+    @Override
+    public void openTransaction() throws RemoteException {
+        try {
+            currentDAO.openTransaction();
+        }catch (SQLException ex){
+            throw new RemoteException("Exception in openTransaction : "+ ex.getMessage(),ex);
+        }
+    }
+
+    @Override
+    public void rollbackTransaction() throws RemoteException  {
+        try {
+            currentDAO.rollbackTransaction();
+        } catch (SQLException ex){
+            throw new RemoteException("Exception in rollbackTransaction : "+ ex.getMessage(),ex);
+        }
+    }
+
+    @Override
+    public void commitTransaction() throws RemoteException  {
+        try {
+            currentDAO.commitTransaction();
+        }catch (SQLException ex){
+            throw new RemoteException("Exception in commitTransaction : "+ ex.getMessage(),ex);
+        }
+    }
+
+    @Override
     public int hashCode() {
         return super.hashCode();
     }
-
+    
+    // Method to release the ResultSet in finally block if the ResultSetID is not null 
+    private void releaseNotNullResultSet(String resultSetID) throws RemoteException{
+        try {
+            if(resultSetID != null){
+                releaseResultSet(resultSetID);
+            }
+        }catch (SQLException ex){
+            LOGGER.log(Level.SEVERE,String.format("Sql error in the release of the ResultSet with resultSetID : %s", resultSetID),ex);
+        }
+    }
+    //not used in our case
+    @Override
+    public boolean checkPassword(String username, String encryptedPassword) throws java.rmi.RemoteException {
+        boolean validPassword = false;
+        for (User user : listUsers()) {
+            if (user.getUserName().equalsIgnoreCase(username) && String.valueOf(user.getPassword()).equalsIgnoreCase(encryptedPassword)) {
+                validPassword = true;
+                break;
+            }
+        }
+        return validPassword;
+    }
 }

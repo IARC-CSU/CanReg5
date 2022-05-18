@@ -19,35 +19,36 @@
  */
 package canreg.client;
 
-import canreg.common.cachingtableapi.DistributedTableDescription;
-import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.client.dataentry.Relation;
 import canreg.client.gui.CanRegClientView;
 import canreg.client.gui.importers.ImportOptions;
 import canreg.client.gui.tools.UITools;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.DatabaseFilter;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
+import canreg.common.cachingtableapi.DistributedTableDescription;
+import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.common.conversions.ConversionResult;
 import canreg.common.conversions.Converter;
-import canreg.common.qualitycontrol.CheckResult;
-import canreg.common.qualitycontrol.Checker;
-import canreg.common.qualitycontrol.PersonSearcher;
-import canreg.exceptions.WrongCanRegVersionException;
-import canreg.server.CanRegLoginInterface;
-import canreg.server.CanRegServerInterface;
-import canreg.server.DatabaseStats;
-import canreg.server.database.UnknownTableException;
-import canreg.common.database.User;
 import canreg.common.database.DatabaseRecord;
 import canreg.common.database.Dictionary;
 import canreg.common.database.DictionaryEntry;
 import canreg.common.database.NameSexRecord;
 import canreg.common.database.Patient;
 import canreg.common.database.PopulationDataset;
-import canreg.server.database.RecordLockedException;
 import canreg.common.database.Tumour;
+import canreg.common.database.User;
+import canreg.common.qualitycontrol.CheckResult;
+import canreg.common.qualitycontrol.Checker;
+import canreg.common.qualitycontrol.PersonSearcher;
+import canreg.exceptions.WrongCanRegVersionException;
 import canreg.server.CanRegLoginImpl;
+import canreg.server.CanRegLoginInterface;
+import canreg.server.CanRegServerInterface;
+import canreg.server.DatabaseStats;
+import canreg.server.database.RecordLockedException;
+import canreg.server.database.UnknownTableException;
 import canreg.server.management.SystemDefinitionConverter;
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -127,6 +128,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     private String canRegSystemVersionString;
     private Map<String, Set<Integer>> locksMap;
     private LockFile lockFile;
+    private static final Logger LOGGER = Logger.getLogger(CanRegClientApp.class.getName());
 
     public void changePassword(String encrypted) throws SecurityException, RemoteException {
         try {
@@ -135,10 +137,24 @@ public class CanRegClientApp extends SingleFrameApplication {
             if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
         }
     }
 
+    /**
+     * Check if the hashed password correspond to the password in the database
+     * 
+     * @param username username
+     * @param hashedPassword password of the user
+     * @return boolean true if the password is right else false
+     * @throws SecurityException a security exception
+     * @throws RemoteException a remote exception
+     */
+    public boolean checkPassword(String username,String hashedPassword)
+        throws SecurityException, RemoteException {
+             return mainServer.checkPassword(username,hashedPassword);
+        }
+        
     public boolean deletePopulationDataset(int populationDatasetID, CanRegServerInterface server)
             throws SQLException, SecurityException, RemoteException {
         if(server == null)
@@ -149,7 +165,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
         }
         return false;
     }
@@ -170,10 +186,10 @@ public class CanRegClientApp extends SingleFrameApplication {
         return (Tumour) getRecordByID(requestedPatientRecordID, Globals.TUMOUR_TABLE_NAME, lock, server);
     }
 
-    public void saveUser(User user) throws SQLException, RemoteException, SecurityException {
-        mainServer.saveUser(user);
+    public void saveUser(User user,boolean addFileReminder) throws SQLException, RemoteException, SecurityException {
+        mainServer.saveUser(user,addFileReminder);
     }
-
+    
     private DatabaseRecord getRecordByID(String recordID, String tableName, boolean lock, CanRegServerInterface server)
             throws SQLException, SecurityException, RecordLockedException, 
                    UnknownTableException, DistributedTableDescriptionException, RemoteException {
@@ -221,7 +237,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             }
             return record;
         } catch (RemoteException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
             if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
@@ -248,7 +264,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
         }
     }
 
@@ -275,7 +291,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             in.close();
 
         } catch (IOException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
         } // end-try-catch
 
         canRegSystemVersionString = "";
@@ -286,7 +302,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         String versionString = canRegSystemVersionString;
         versionString += "-build" + appInfoProperties.getProperty("program.BUILDNUM");
         versionString += " (" + appInfoProperties.getProperty("program.BUILDDATE") + ")";
-        Logger.getLogger(CanRegClientApp.class.getName()).log(Level.INFO, "CanReg version: {0}", versionString);
+       LOGGER.log(Level.INFO, "CanReg version: {0}", versionString);
 
         splashMessage(java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("BUILDING GUI..."), 90);
         canRegClientView = new CanRegClientView(this);
@@ -311,7 +327,8 @@ public class CanRegClientApp extends SingleFrameApplication {
                     try {
                         users = listUsersLoggedIn().length - 1;
                     } catch (SecurityException | RemoteException ex) {
-                        Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+                       LOGGER.log(Level.SEVERE, null, ex);
+                        new TechnicalError().errorDialog();
                     }
                     int numberOfRecordsOpen = numberOfRecordsOpen();
                     if (numberOfRecordsOpen > 0) {
@@ -331,14 +348,16 @@ public class CanRegClientApp extends SingleFrameApplication {
                     try {
                         logOut();
                     } catch (RemoteException ex) {
-                        Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+                       LOGGER.log(Level.SEVERE, null, ex);
+                        new TechnicalError().errorDialog();
                     }
                 }
                 if (isCanregServerRunningInThisThread() && mainServer != null) {
                     try {
                         mainServer.shutDownServer();
                     } catch (RemoteException | SecurityException ex) {
-                        Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+                       LOGGER.log(Level.SEVERE, null, ex);
+                        new TechnicalError().errorDialog();
                     }
                 }
             }
@@ -382,10 +401,11 @@ public class CanRegClientApp extends SingleFrameApplication {
         try {
             splashMessage(java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("INITIALIZING LOGGER..."), 20);
             Handler fh = new FileHandler(Globals.LOGFILE_PATTERN);
-            Logger.getLogger("").addHandler(fh);
-            Logger.getLogger("canreg").setLevel(Level.parse(Globals.LOG_LEVEL));
+            LOGGER.addHandler(fh);
+            LOGGER.setLevel(Level.parse(Globals.LOG_LEVEL));
         } catch (IOException | SecurityException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
 
         splashMessage(java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("LOADING USER SETTINGS..."), 40);
@@ -410,9 +430,10 @@ public class CanRegClientApp extends SingleFrameApplication {
             // try to get system name
             sysName = loginServer.getRegistryName();
         } catch (NotBoundException | RemoteException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         } catch (MalformedURLException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.INFO, null, ex);
+           LOGGER.log(Level.INFO, null, ex);
         }
         return sysName;
     }
@@ -502,7 +523,7 @@ public class CanRegClientApp extends SingleFrameApplication {
                     List<String> strs = new LinkedList<>();
                     strs.add(java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("ERROR HOLDING DB"));
                     canRegClientView.setHoldingDBsList(strs);
-                    Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, "Error while trying to list holding DBs", ex);
+                   LOGGER.log(Level.SEVERE, "Error while trying to list holding DBs", ex);
                 }
             }
             
@@ -548,7 +569,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         try {
             return server.getDatabaseStats();
         } catch (RemoteException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
             if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
@@ -567,7 +588,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         try {
             return mainServer.listCurrentUsers();
         } catch (RemoteException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
             if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
@@ -582,7 +603,7 @@ public class CanRegClientApp extends SingleFrameApplication {
      */
     private static void debugOut(String msg) {
         if (debug) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.INFO, msg);
+           LOGGER.log(Level.INFO, msg);
         }
     }
 
@@ -596,7 +617,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         try {
             mainServer.startNetworkDBServer();
         } catch (RemoteException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
             if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
@@ -613,7 +634,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         try {
             mainServer.stopNetworkDBServer();
         } catch (RemoteException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
             if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
@@ -653,7 +674,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         try {
             dictionary = mainServer.getDictionary();
         } catch (RemoteException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
             if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
@@ -700,7 +721,7 @@ public class CanRegClientApp extends SingleFrameApplication {
                 }
                 // Locale.setDefault(localSettings.getLocale());
             } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.WARNING, null, ex);
+               LOGGER.log(Level.WARNING, null, ex);
             }
         }
     }
@@ -724,7 +745,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             return canreg.client.gui.importers.Import.importFile(task, doc, map, file, mainServer, io);
             //return canreg.client.dataentry.Convert.importFile(task, doc, map, file, server, io);
         } catch (RemoteException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
             if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
@@ -738,7 +759,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         try {
             return canreg.client.dataentry.Convert.importFile(task, doc, map, file, mainServer, io);
         } catch (RemoteException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
             if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
@@ -764,7 +785,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         try {
             return canreg.client.gui.importers.Import.importFiles(task, map, files, mainServer, io, false, doc);
         } catch (RemoteException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
             if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
@@ -779,7 +800,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             canRegClientView.setHoldingDBsList(mainServer.getHoldingDBsList());
             return toReturn;
         } catch (Exception ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
             if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
@@ -815,7 +836,8 @@ public class CanRegClientApp extends SingleFrameApplication {
         try {
             datsuccess = canreg.client.dataentry.Convert.convertData(task, filepath, datafile, regcode);
         } catch (Exception ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
         return datsuccess;
     }
@@ -854,7 +876,8 @@ public class CanRegClientApp extends SingleFrameApplication {
             super.quit(evt);
             // TODO if canreg server is running in this thread - shut it down...
         } catch (SecurityException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
     }
 
@@ -866,7 +889,7 @@ public class CanRegClientApp extends SingleFrameApplication {
                 try {
                     mainServer.userLoggedOut(mainServer.hashCode(), username);
                 } catch (RemoteException ex) {
-                    Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+                   LOGGER.log(Level.SEVERE, null, ex);
                     if (!handlePotentialDisconnect(ex)) {
                         throw ex;
                     }
@@ -882,7 +905,8 @@ public class CanRegClientApp extends SingleFrameApplication {
             localSettings.writeSettings();
             lockFile.closeMap();
         } catch (SecurityException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
     }
 
@@ -898,7 +922,8 @@ public class CanRegClientApp extends SingleFrameApplication {
         try {
             canRegClientView.setHoldingDBsList(this.mainServer.getHoldingDBsList());
         } catch(Exception ex) {
-            Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
     }
 
@@ -914,10 +939,11 @@ public class CanRegClientApp extends SingleFrameApplication {
             // return Globals.UserRightLevels.SUPERVISOR;
             // return Globals.UserRightLevels.SUPERVISOR;
         } catch (RemoteException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
             handlePotentialDisconnect(ex);
         } catch (SecurityException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
         // For now all users are supervisors
         // return Globals.UserRightLevels.SUPERVISOR;
@@ -933,7 +959,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         try {
             path = mainServer.performBackup();
         } catch (RemoteException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
             if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
@@ -958,7 +984,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             logOut();
             return message;
         } catch (RemoteException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
             if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
@@ -1005,7 +1031,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         try {
             return server.getDistributedTableDescription(filter, tableName);
         } catch (RemoteException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
             if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
@@ -1034,7 +1060,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             }
             return record;
         } catch (RemoteException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
             if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
@@ -1077,7 +1103,7 @@ public class CanRegClientApp extends SingleFrameApplication {
                 debugOut("Trying to save null databaseRecord.");
             }
         } catch (RemoteException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
             if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
@@ -1110,7 +1136,7 @@ public class CanRegClientApp extends SingleFrameApplication {
                 server.editTumour((Tumour) databaseRecord);
             }
         } catch (RemoteException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
             if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
@@ -1124,7 +1150,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         try {
             return server.deleteRecord(id, tableName);
         } catch (RemoteException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
             if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
@@ -1145,7 +1171,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             }
             lockFile.writeMap();
         } catch (RemoteException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
             if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
@@ -1170,7 +1196,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         try {
             return server.deleteDictionaryEntries(dictionaryID);
         } catch (RemoteException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
             if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
@@ -1185,7 +1211,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         try {
             return server.clearNameSexTable();
         } catch (RemoteException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
             if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
@@ -1200,7 +1226,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         try {
             return server.getNameSexTables();
         } catch (RemoteException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
             if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
@@ -1215,7 +1241,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         try {
             server.saveDictionaryEntry(entry);
         } catch (RemoteException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
             if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
@@ -1278,10 +1304,10 @@ public class CanRegClientApp extends SingleFrameApplication {
                 try {
                     records[j] = (Tumour) getRecord(id, lookUpTableName, lock, server);
                 } catch (RecordLockedException recordLockedException) {
-                    Logger.getLogger(CanRegClientApp.class.getName()).log(Level.WARNING, "Tumour record " + id + " already locked?", recordLockedException);
+                   LOGGER.log(Level.WARNING,String.format("Tumour record  %d already locked ?",id), recordLockedException);
 //                    throw recordLockedException;
                 } catch (RemoteException ex) {
-                    Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+                   LOGGER.log(Level.SEVERE, null, ex);
                     if (!handlePotentialDisconnect(ex)) {
                         throw ex;
                     }
@@ -1335,7 +1361,7 @@ public class CanRegClientApp extends SingleFrameApplication {
                         id = (Integer) rows[j][idColumnNumber];
                         records[j] = (Tumour) getRecord(id, lookUpTableName, lock, server);
                     } catch (RemoteException ex) {
-                        Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+                       LOGGER.log(Level.SEVERE, null, ex);
                         if (!handlePotentialDisconnect(ex)) {
                             throw ex;
                         }
@@ -1344,11 +1370,11 @@ public class CanRegClientApp extends SingleFrameApplication {
                 try {
                     tumourToReturn = records[0];
                 } catch (java.lang.ArrayIndexOutOfBoundsException aiobe) {
-                    Logger.getLogger(CanRegClientApp.class.getName()).log(Level.WARNING, "Tumour record " + id + " already locked?", aiobe);
+                    LOGGER.log(Level.WARNING,String.format("Tumour record %d already locked ?",id), aiobe);
                 }
             }
         } else {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.WARNING, "Tumour record {0} not found", idString);
+           LOGGER.log(Level.WARNING, "Tumour record {0} not found", idString);
         }
         releaseResultSet(distributedTableDescription.getResultSetID(), server);
         return tumourToReturn;
@@ -1372,53 +1398,12 @@ public class CanRegClientApp extends SingleFrameApplication {
                         "com.jgoodies.looks.plastic.Plastic3DLookAndFeel");
             }
             UIManager.setLookAndFeel("com.jgoodies.looks.plastic.Plastic3DLookAndFeel");
-        } catch (ClassNotFoundException t) {
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException t) {
             try {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (InstantiationException ex) {
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IllegalAccessException ex) {
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (UnsupportedLookAndFeelException ex) {
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } catch (IllegalAccessException t) {
-            try {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (InstantiationException ex) {
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IllegalAccessException ex) {
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (UnsupportedLookAndFeelException ex) {
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } catch (InstantiationException t) {
-            try {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (InstantiationException ex) {
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IllegalAccessException ex) {
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (UnsupportedLookAndFeelException ex) {
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } catch (UnsupportedLookAndFeelException t) {
-            try {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (InstantiationException ex) {
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IllegalAccessException ex) {
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (UnsupportedLookAndFeelException ex) {
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+               LOGGER.log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
         }
     }
@@ -1446,7 +1431,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         try {
             return server.getPopulationDatasets();
         } catch (RemoteException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
             if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
@@ -1471,7 +1456,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         try {
             return server.retrieveRows(resultSetID, from, to);
         } catch (RemoteException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
             if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
@@ -1493,7 +1478,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         try {
             server.releaseResultSet(resultSetID);
         } catch (RemoteException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
             if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
@@ -1510,7 +1495,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             try {
                 return mainServer.getDateOfLastBackUp();
             } catch (RemoteException ex) {
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+               LOGGER.log(Level.SEVERE, null, ex);
                 if (!handlePotentialDisconnect(ex)) {
                     throw ex;
                 }
@@ -1536,7 +1521,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         try {
             return server.performPersonSearch(patient, searcher);
         } catch (RemoteException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
             if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
@@ -1581,7 +1566,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         try {
             return server.initiateGlobalPersonSearch(searcher, rangeStart, rangeEnd);
         } catch (RemoteException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
             if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
@@ -1596,13 +1581,14 @@ public class CanRegClientApp extends SingleFrameApplication {
         try {
             return server.nextStepGlobalPersonSearch(idString);
         } catch (RemoteException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
             if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
         } catch (Exception ex) {
             // TODO: stop throwing general exceptions...
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
         return null;
     }
@@ -1614,7 +1600,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         try {
             server.interuptGlobalPersonSearch(idString);
         } catch (RemoteException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
             if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
@@ -1635,7 +1621,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         try {
             return server.listUsers();
         } catch (RemoteException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
             if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
@@ -1661,8 +1647,8 @@ public class CanRegClientApp extends SingleFrameApplication {
                 }
                 sdc.convertAndSaveInSystemFolder(args[1]);
             } catch (FileNotFoundException ex) {
-                System.out.println(args[1] + " not found. " + ex);
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE,String.format(" %s not found. %s", args[1], ex), ex);
+                new TechnicalError().errorDialog();
             }
         } else {
             splashMessage(java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("STARTING..."), 10);
@@ -1683,7 +1669,8 @@ public class CanRegClientApp extends SingleFrameApplication {
                         splash.update();
                     }
                 } catch (java.awt.HeadlessException he) {
-                    Logger.getLogger(CanRegClientApp.class.getName()).log(Level.INFO, null, he);
+                   LOGGER.log(Level.INFO, null, he);
+                    new TechnicalError().errorDialog();
                 }
                 try {
                     canreg.common.ServerLauncher.start(Globals.DEFAULT_SERVER_ADDRESS, args[0], Globals.DEFAULT_PORT);
@@ -1692,7 +1679,8 @@ public class CanRegClientApp extends SingleFrameApplication {
                     }
                     JOptionPane.showMessageDialog(null, java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("CANREG SERVER ") + args[0] + java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString(" LAUNCHED."));
                 } catch (AlreadyBoundException ex) {
-                    Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+                   LOGGER.log(Level.SEVERE, null, ex);
+                    new TechnicalError().errorDialog();
                 }
             } else {
                 launch(CanRegClientApp.class, args);
@@ -1755,7 +1743,7 @@ public class CanRegClientApp extends SingleFrameApplication {
             }
             return records;
         } catch (RemoteException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
             if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
@@ -1794,7 +1782,8 @@ public class CanRegClientApp extends SingleFrameApplication {
                 splash.update();
             }
         } catch (java.awt.HeadlessException he) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.INFO, null, he);
+           LOGGER.log(Level.INFO, null, he);
+            new TechnicalError().errorDialog();
         }
     }
 
@@ -1815,7 +1804,7 @@ public class CanRegClientApp extends SingleFrameApplication {
         try {
             return mainServer.setDBPassword(newPasswordArray, oldPasswordArray, encryptionAlgorithm, encryptionKeyLength);
         } catch (RemoteException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
             if (!handlePotentialDisconnect(ex)) {
                 throw ex;
             }
@@ -1867,6 +1856,70 @@ public class CanRegClientApp extends SingleFrameApplication {
         }
     }
 
+    /**
+     *  Check if the password reminder file exists in the .CanRegServer 
+      * @param username name of the user 
+     * @return  bolean true if the file exists else false
+     */    
+    public boolean checkPasswordReminder(String username)  {
+        try {
+            return this.mainServer.checkFileReminder(username);
+        } catch (RemoteException ex) {
+           LOGGER.log(Level.SEVERE,"Unable to connect to the RMI", ex);
+            new TechnicalError().errorDialog();
+        }
+        return false;
+    }
+
+    /**
+     * Delete the file which title is the encoded username. The file is deleted when the user change his password
+     * or when his account is deleted
+     * @param username
+     */
+    public void deleteFileReminder(String username) {
+        try {
+            this.mainServer.deleteFileReminder(username);
+        } catch (RemoteException ex) {
+           LOGGER.log(Level.SEVERE,"Unable to connect to the RMI", ex);
+            new TechnicalError().errorDialog();
+        }
+    }
+
+    /**
+     *  check if the database password is already set. 
+      * @return
+     */
+    public boolean checkDatabaseEncryption() {
+        try {
+            return mainServer.checkDatabaseEncryption(mainServer.getCanRegRegistryCode());
+        } catch (RemoteException ex) {
+           LOGGER.log(Level.SEVERE, "Unable to check the databases encryption", ex);
+            return false;
+        }
+    }
+
+    /**
+     * Init the transaction from here all records
+     * will be save if there is no issue 
+     */
+    public void openTransaction() throws RemoteException {
+            mainServer.openTransaction();
+    }
+
+    /**
+     * If there is an SaveRecordException no record will change in the database
+     */
+    public void rollbackTransaction() throws RemoteException {
+            mainServer.rollbackTransaction();
+    }
+
+    /**
+     * End of the transaction all record are send to the database
+     * 
+     */
+    public void commitTransaction() throws RemoteException {
+            mainServer.commitTransaction();
+    }
     
     private class PingToServer implements Runnable {
         @Override
@@ -1875,10 +1928,9 @@ public class CanRegClientApp extends SingleFrameApplication {
                 //pingRemote's parameter is not needed here
                 if(mainServer != null)
                     mainServer.pingRemote(mainServer.hashCode());
-            } catch (RemoteException ex) {
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
             } catch (Exception ex) {
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
+               LOGGER.log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
         }
     }

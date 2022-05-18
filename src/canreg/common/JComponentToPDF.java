@@ -38,6 +38,7 @@ import java.util.logging.Logger;
  */
 public class JComponentToPDF {
 
+    private static final Logger LOGGER = Logger.getLogger(JComponentToPDF.class.getName());
     private final static int inch = Toolkit.getDefaultToolkit().getScreenResolution();
     private final static float pixelToPoint = (float) 72 / (float) inch;
 
@@ -62,9 +63,9 @@ public class JComponentToPDF {
             cb.addTemplate(template, 0, 0);
             d.close();
         } catch (DocumentException ex) {
-            Logger.getLogger(JComponentToPDF.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(JComponentToPDF.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
     }
 
@@ -168,9 +169,9 @@ public class JComponentToPDF {
             // cb.addTemplate(template, 0, 0);
             d.close();
         } catch (DocumentException ex) {
-            Logger.getLogger(JComponentToPDF.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(JComponentToPDF.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
     }
 

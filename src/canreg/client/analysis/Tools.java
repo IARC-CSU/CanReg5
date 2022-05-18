@@ -21,6 +21,7 @@ package canreg.client.analysis;
 
 import canreg.client.analysis.TableBuilderInterface.ChartType;
 import canreg.client.analysis.TableBuilderInterface.FileTypes;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.Globals;
 import canreg.common.database.IncompatiblePopulationDataSetException;
 import canreg.common.database.PopulationDataset;
@@ -51,6 +52,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -82,6 +84,7 @@ public class Tools {
      *
      */
     public static int DONT_COUNT = -999;
+    private static final Logger LOGGER = Logger.getLogger(Tools.class.getName());
 
     public static String getChartData(JFreeChart chart, String separatingCharacter, boolean quotesOn) {
 
@@ -169,21 +172,20 @@ public class Tools {
         System.out.println(rff.getScript());
 
         try {
-            File tempFile = File.createTempFile("script", ".r");
-            // generatedFiles.add(tempFile.getPath());
+        File tempFile = File.createTempFile("script", ".r");
+        // generatedFiles.add(tempFile.getPath());
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
                     new FileOutputStream(tempFile), "UTF8"));
             writer.append(rff.getScript());
             writer.close();
             Tools.callR(tempFile.getAbsolutePath(), rpath, fileName + "-report.txt");
-        } catch (TableErrorException ex) {
-            Logger.getLogger(TopNChartTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(TopNChartTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (TableErrorException | IOException ex) {
+           LOGGER.log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
         return generatedFiles;
-    }
-
+        }
+        
     public static JFreeChart generateJChart(
             Collection<CancerCasesCount> casesCounts,
             String fileName,
@@ -534,7 +536,7 @@ public class Tools {
             BufferedInputStream is = new BufferedInputStream(new FileInputStream(reportFileName));
             // convert the output to a string
             String theString = convertStreamToString(is);
-            Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.INFO, "Messages from R: \n{0}", theString);
+            LOGGER.log(Level.INFO, "Messages from R: \n{0}", theString);
             // System.out.println(theString);
             // and add all to the list of files to return
             for (String fileName : theString.split("\n")) {
@@ -546,17 +548,18 @@ public class Tools {
                 }
             }
         } catch (InterruptedException ex) {
-            Logger.getLogger(RTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         } catch (java.util.NoSuchElementException ex) {
-            Logger.getLogger(RTableBuilder.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             if (pr != null) {
                 BufferedInputStream errorStream = new BufferedInputStream(pr.getErrorStream());
                 String errorMessage = convertStreamToString(errorStream);
-                System.out.println(errorMessage);
                 throw new TableErrorException("R says:\n \"" + errorMessage + "\"");
             }
         } catch (IOException ex) {
-            Logger.getLogger(Tools.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         } finally {
             if (pr != null) {
                 System.out.println(pr.exitValue());
@@ -587,7 +590,7 @@ public class Tools {
                 plot.setSectionPaint(plot.getDataset().getKey(i), color);
             } catch (java.lang.IndexOutOfBoundsException ex) {
                 // not data for all the categories - that is fine
-                Logger.getLogger(TopNChartTableBuilder.class.getName()).log(Level.INFO, null, ex);
+               LOGGER.log(Level.INFO, null, ex);
             }
         }
     }

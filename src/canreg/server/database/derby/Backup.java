@@ -33,6 +33,7 @@ import java.util.logging.Logger;
  */
 public class Backup {
 
+    private static final Logger LOGGER = Logger.getLogger(Backup.class.getName());
     /**
      * 
      * @param conn
@@ -51,7 +52,7 @@ public class Backup {
         cs.setString(1, backupdirectory);
         cs.execute();
         cs.close();
-        Logger.getLogger(Backup.class.getName()).log(Level.INFO, "Backed up database to {0}", backupdirectory);
+        LOGGER.log(Level.INFO, "Backed up database to {0}", backupdirectory);
 
         System.out.println();
         return backupdirectory;

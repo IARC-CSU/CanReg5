@@ -19,10 +19,10 @@
  */
 package canreg.client;
 
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.Globals;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -42,6 +42,7 @@ public class LockFile {
     private final String lockFileName;
     private TreeMap<String, Set<Integer>> locksMap;
     private ObjectOutputStream out = null;
+    private static final Logger LOGGER = Logger.getLogger(LockFile.class.getName());
 
     public LockFile(String identifier) {
         lockFileName = Globals.CANREG_CLIENT_FOLDER + Globals.FILE_SEPARATOR + identifier + Globals.CANREG_LOCAL_LOCKED_RECORDS_FILE_NAME_SUFFIX;
@@ -69,21 +70,24 @@ public class LockFile {
                         locksMap = (TreeMap<String, Set<Integer>>) in.readObject();
                         success = true;
                     } catch (NullPointerException | ClassNotFoundException | java.io.EOFException | java.io.StreamCorruptedException ex) {
-                        Logger.getLogger(LockFile.class.getName()).log(Level.INFO, null, ex);
+                        LOGGER.log(Level.INFO, null, ex);
+                        new TechnicalError().errorDialog();
                     } finally {
                         if (!success) {
                             locksMap = new TreeMap<>();
                         }
                     }
                 } catch (IOException ex) {
-                    Logger.getLogger(LockFile.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
+                    new TechnicalError().errorDialog();
                 }
                 if (locksMap == null) {
                     locksMap = new TreeMap<>();
                 }
             }
         } catch (IOException ex) {
-            Logger.getLogger(LockFile.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
     }
 
@@ -94,7 +98,8 @@ public class LockFile {
             out.flush();
             out.close();
         } catch (IOException ex) {
-            Logger.getLogger(LockFile.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
     }
 
@@ -103,7 +108,8 @@ public class LockFile {
             writeMap();
             out.close();
         } catch (IOException ex) {
-            Logger.getLogger(LockFile.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
     }
 

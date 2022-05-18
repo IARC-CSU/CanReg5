@@ -8,7 +8,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class PsToPdfConverter {
-
+    
+    private static final Logger LOGGER = Logger.getLogger(PsToPdfConverter.class.getName());
     private String GSC = "";
     // private String GSCARGS = " -q -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sOutputFile=";
     private final String[] GSCARGS = new String[] {"-q", "-dBATCH", "-dNOPAUSE", "-sDEVICE=pdfwrite"};
@@ -41,9 +42,9 @@ public class PsToPdfConverter {
             Process p = Runtime.getRuntime().exec(commandList.toArray(new String[]{}));
             p.waitFor();
         } catch (IOException ex) {
-            Logger.getLogger(PsToPdfConverter.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         } catch (InterruptedException ex) {
-            Logger.getLogger(PsToPdfConverter.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         } 
         return pdfFileName;
     }

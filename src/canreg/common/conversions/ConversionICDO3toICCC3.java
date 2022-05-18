@@ -33,6 +33,7 @@ import java.util.logging.Logger;
 
 public class ConversionICDO3toICCC3 implements ConversionInterface {
 
+    private static final Logger LOGGER = Logger.getLogger(ConversionICDO3toICCC3.class.getName());
     private static final ConversionName CONVERSION_NAME = ConversionName.ICDO3toICCC3;
     private static final StandardVariableNames[] VARIABLES_NEEDED = new StandardVariableNames[]{
         StandardVariableNames.Sex,
@@ -112,9 +113,9 @@ public class ConversionICDO3toICCC3 implements ConversionInterface {
                 }
             }
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(ConversionICDO3toICCC3.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(ConversionICDO3toICCC3.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
     }
 

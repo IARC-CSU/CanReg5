@@ -33,7 +33,7 @@ public class DistributedTableDataSourceClient implements DistributedTableDataSou
     DistributedTableDescription distributedTableDescription;
     String resultSetID;
     CanRegServerInterface server;
-    
+    private static final Logger LOGGER = Logger.getLogger(DistributedTableDataSourceClient.class.getName());
 
     /**
      * 
@@ -69,7 +69,7 @@ public class DistributedTableDataSourceClient implements DistributedTableDataSou
         try {
             rows = CanRegClientApp.getApplication().retrieveRows(distributedTableDescription.getResultSetID(), from, to, server);
         } catch (RemoteException ex) {
-            Logger.getLogger(DistributedTableDataSourceClient.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             throw new DistributedTableDescriptionException(ex.getMessage());
         }
         return rows;

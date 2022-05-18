@@ -92,7 +92,7 @@ canreg_table_report <- function(ls_args)
 canreg_table_child_table <- function(ls_args)
 {
   #load dependency packages
-  canreg_load_packages(c("data.table", "ggplot2", "gridExtra", "scales", "Cairo","officer","flextable", "zip", "bmp", "jpeg", "png", "shiny.i18n", "Rcan"))
+  canreg_load_packages(c("data.table", "shiny.i18n", "Rcan"))
   i18n <<- Translator$new(translation_csvs_path  = (paste(sep="/", script.basename, "r-translations")))
   i18n$set_translation_language(ls_args$lang)
 

@@ -41,6 +41,7 @@ import org.jdesktop.application.Task;
  */
 public class AdHocDatabaseFrame extends javax.swing.JInternalFrame {
 
+    private static final Logger LOGGER = Logger.getLogger(AdHocDatabaseFrame.class.getName());
     private ResourceBundle resourceMap = java.util.ResourceBundle.getBundle("canreg/client/gui/adhoc/resources/AdHocDatabaseFrame");
     private ModifyDatabaseStructureInternalFrame databaseStructureFrame;
     private JDesktopPane desktopPane;
@@ -240,7 +241,7 @@ public class AdHocDatabaseFrame extends javax.swing.JInternalFrame {
                     Files.copy(new File(Globals.ADHOC_SYSTEM_XML).toPath(), newAdhocFile.toPath());
                     databaseStructureFrame.saveXML(newAdhocFile.getAbsolutePath());
                 } catch(Exception ex) {
-                    Logger.getLogger(AdHocDatabaseFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
                     return ERROR;
                 }
             }
@@ -249,7 +250,7 @@ public class AdHocDatabaseFrame extends javax.swing.JInternalFrame {
                 CanRegClientApp.getApplication().loginDirect(adhocRegCode, "morten", new char[]{'e', 'r', 'v', 'i', 'k'}, true);
                 return SUCCESS;
             } catch(Exception ex) {
-                Logger.getLogger(AdHocDatabaseFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 return ERROR;
             }
 

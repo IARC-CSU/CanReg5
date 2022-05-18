@@ -20,12 +20,16 @@
 
 package canreg.common.qualitycontrol;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author ervikm
  */
 public class DefaultMultiplePrimaryTester implements MultiplePrimaryTesterInterface {
 
+    private static final Logger LOGGER = Logger.getLogger(DefaultMultiplePrimaryTester.class.getName());
     @Override
     public int multiplePrimaryTest(String topographyOrig, String morphologyOrig,
             String topographySim, String morphologySim) {
@@ -266,7 +270,7 @@ public class DefaultMultiplePrimaryTester implements MultiplePrimaryTesterInterf
         try {
             topog = Integer.parseInt(topogStrTemp) / 10;
         } catch (NumberFormatException nfe) {
-            System.out.println(topogStrTemp + " does not start with a number or a C");
+            LOGGER.log(Level.SEVERE, String.format("%s does not start with a number or a C",topogStrTemp),nfe);
             return 0;
         }
         int topogGroup = 0;

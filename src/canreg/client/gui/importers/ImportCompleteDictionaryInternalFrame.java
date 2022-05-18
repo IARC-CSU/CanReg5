@@ -29,6 +29,7 @@ import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
 import canreg.client.gui.dataentry.EditDictionaryInternalFrame;
 import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
 import canreg.common.Tools;
@@ -61,6 +62,7 @@ public class ImportCompleteDictionaryInternalFrame extends javax.swing.JInternal
     private final String path;
     private final JFileChooser chooser;
     private final GlobalToolBox globalToolBox;
+    private static final Logger LOGGER = Logger.getLogger(ImportCompleteDictionaryInternalFrame.class.getName());
 
     /**
      * Creates new form ImportCompleteDictionaryInternalFrame
@@ -302,7 +304,8 @@ private void previewTextAreaMouseReleased(java.awt.event.MouseEvent evt) {//GEN-
                 fileNameTextField.setText(chooser.getSelectedFile().getCanonicalPath());
                 autoDetectFileCoding();
             } catch (IOException ex) {
-                Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
         }
     }
@@ -332,16 +335,18 @@ private void previewTextAreaMouseReleased(java.awt.event.MouseEvent evt) {//GEN-
             previewPanel.setVisible(true);
         } catch (FileNotFoundException fileNotFoundException) {
             JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportCompleteDictionaryInternalFrame").getString("COULD_NOT_PREVIEW_THE_FILE:_") + "\'" + fileNameTextField.getText().trim() + "\'.", java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportCompleteDictionaryInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
-            Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, fileNotFoundException);
+            LOGGER.log(Level.SEVERE, null, fileNotFoundException);
         } catch (IOException ex) {
-            Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         } finally {
             try {
                 if (br != null) {
                     br.close();
                 }
             } catch (IOException ex) {
-                Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
         }
     }
@@ -429,13 +434,14 @@ private void previewTextAreaMouseReleased(java.awt.event.MouseEvent evt) {//GEN-
                             Map<Integer, String> errors = canreg.client.dataentry.DictionaryHelper.testDictionary(null, dictionaryString);
                             if (errors.size() > 0) {
                                 allErrors.put(dictionaryID, errors);
-                                Logger.getLogger(EditDictionaryInternalFrame.class.getName()).log(Level.WARNING, errors.size() + " errors in dictionary: " + dictionaryID, new Exception());
+                                LOGGER.log(Level.WARNING, String.format("%d errors in dictionary: %d",errors.size(),dictionaryID), new Exception());
                             } else {
                                 canreg.client.dataentry.DictionaryHelper.replaceDictionary(dictionaryID, dictionaryString, CanRegClientApp.getApplication());
                             }
                             dictionaryString = new String();
                         } catch (RemoteException ex) {
-                            Logger.getLogger(EditDictionaryInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                            LOGGER.log(Level.SEVERE, null, ex);
+                            new TechnicalError().errorDialog();
                         }
                     }
                     // Read next line 
@@ -450,19 +456,21 @@ private void previewTextAreaMouseReleased(java.awt.event.MouseEvent evt) {//GEN-
 
             } catch (FileNotFoundException fileNotFoundException) {
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportCompleteDictionaryInternalFrame").getString("COULD_NOT_PREVIEW_THE_FILE:_") + fileNameTextField.getText().trim() + "\'.", java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportCompleteDictionaryInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
-                Logger.getLogger(ImportView.class.getName()).log(Level.WARNING, null, fileNotFoundException);
+                LOGGER.log(Level.WARNING, null, fileNotFoundException);
             } catch (IOException ex) {
-                Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             } catch (NumberFormatException nfe) {
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportCompleteDictionaryInternalFrame").getString("SOMETHING_WRONG_WITH_THE_DICTIONARY:_") + "\'" + fileNameTextField.getText().trim() + "\'.", java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportCompleteDictionaryInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
-                Logger.getLogger(ImportView.class.getName()).log(Level.WARNING, null, nfe);
+                LOGGER.log(Level.WARNING, null, nfe);
             } finally {
                 try {
                     if (br != null) {
                         br.close();
                     }
                 } catch (IOException ex) {
-                    Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
+                    new TechnicalError().errorDialog();
                 }
             }
             return allErrors;  // return your result

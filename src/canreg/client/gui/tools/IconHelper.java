@@ -21,6 +21,8 @@
 
 package canreg.client.gui.tools;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 
 /**
@@ -28,6 +30,8 @@ import javax.swing.ImageIcon;
  * @author ervikm
  */
 public class IconHelper {
+    private static final Logger LOGGER = Logger.getLogger(IconHelper.class.getName());
+
 
     /** Returns an ImageIcon, or null if the path was invalid. */
     protected ImageIcon createImageIcon(String path,
@@ -36,7 +40,7 @@ public class IconHelper {
         if (imgURL != null) {
             return new ImageIcon(imgURL, description);
         } else {
-            System.err.println("Couldn't find file: " + path);
+            LOGGER.log(Level.SEVERE,"Couldn't find file: {0}",path);
             return null;
         }
     }
