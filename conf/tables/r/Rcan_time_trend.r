@@ -4,61 +4,22 @@
   script.name <- sub(file.arg.name, "", 
                      initial.options[grep(file.arg.name, initial.options)])
   script.basename <- dirname(script.name)
-  
-  ## Load Rcan function
-  source(paste(sep="/", script.basename, "Rcan_core.r"))
-  
-  ## to get canreg argument list
+    ## to get canreg argument list
   Args <- commandArgs(TRUE)
-  ls_args <- canreg_args(Args)
-  
-  
-tryCatch({
-  
-  #load dependency packages
-	canreg_load_packages(c("data.table", "ggplot2", "gridExtra", "scales", "Cairo","bmp", "jpeg", "shiny.i18n", "Rcan"))
-	i18n <- Translator(translation_csvs_path  = (paste(sep="/", script.basename, "r-translations")))
-	i18n$set_translation_language(ls_args$lang)
-  
-  #merge incidence and population
-  dt_all <- csu_merge_inc_pop(
-    inc_file =ls_args$inc,
-    pop_file =ls_args$pop,
-    group_by = c("ICD10GROUP", "ICD10GROUPLABEL","ICD10GROUPCOLOR", "YEAR", "SEX"),
-    column_group_list =list(c("ICD10GROUP", "ICD10GROUPLABEL", "ICD10GROUPCOLOR"))
-  )
-  
-  
-  year_info <- canreg_get_years(dt_all)
-  if (year_info$span < 2) {
-    stop(i18n$t("Time trend analysis need at least 2 years data"))
-  }
 
-  dt_all <- dt_all[ICD10GROUP != "O&U",]
-  dt <- canreg_ageSpecific_rate_data(dt_all, keep_ref = TRUE, keep_year = TRUE)
-  
-  ## get age group label
-  
-  canreg_age_group <- canreg_get_agegroup_label(dt, ls_args$agegroup)
-  
-  ##calcul of ASR
-  dt<- Rcan:::core.csu_asr(df_data =dt, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
-                    group_by = c("cancer_label", "SEX", "YEAR", "ICD10GROUPCOLOR"), missing_age = canreg_missing_age(dt_all),
-                    first_age = canreg_age_group$first_age+1+1,
-                    last_age= canreg_age_group$last_age+1+1,
-                    pop_base_count = "REFERENCE_COUNT",
-                    age_label_list = "AGE_GROUP_LABEL")
-  
-  
-  #produce graph
-  canreg_output(output_type = ls_args$ft, filename = ls_args$out,landscape = ls_args$landscape,list_graph = TRUE,
-                FUN=canreg_asr_trend_top,
-                dt=dt,number = ls_args$number,
-                canreg_header = ls_args$header,
-                ytitle=paste0(i18n$t("Age-standardized incidence rate per")," ", formatC(100000, format="d", big.mark=","), ", ", canreg_age_group$label))
-  
-  #talk to canreg
-  canreg_output_cat(ls_args$ft, ls_args$filename, sex_graph=TRUE)
+  tryCatch({
+    ## source function to check if update needed
+    source(paste(sep="/", script.basename, "r-sources", "Rcan_core.r"))
+
+    
+    ## load other function 
+    source(paste(sep="/", script.basename, "r-sources", "canreg_core.r"))
+    source(paste(sep="/", script.basename, "r-sources", "canreg_table.r"))
+
+    # init argument from canreg
+    ls_args <- canreg_args(Args)
+
+    canreg_table_time_trend(ls_args)
   
   
   	},

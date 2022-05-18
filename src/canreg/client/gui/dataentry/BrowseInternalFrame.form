@@ -68,11 +68,11 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="resultPanel" alignment="0" max="32767" attributes="0"/>
                       <Group type="102" alignment="1" attributes="0">
-                          <Component id="rangeFilterPanel" pref="449" max="32767" attributes="0"/>
+                          <Component id="rangeFilterPanel" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="variablesPanel" min="0" pref="0" max="32767" attributes="1"/>
-                              <Component id="navigationPanel" alignment="0" min="-2" max="-2" attributes="1"/>
+                              <Component id="navigationPanel" max="32767" attributes="1"/>
+                              <Component id="variablesPanel" max="32767" attributes="1"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="buttonsPanel" min="-2" max="-2" attributes="0"/>
@@ -93,10 +93,10 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="navigationPanel" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="rangeFilterPanel" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="buttonsPanel" min="-2" max="-2" attributes="1"/>
+                      <Component id="buttonsPanel" alignment="0" min="-2" max="-2" attributes="1"/>
+                      <Component id="rangeFilterPanel" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="holdingOptions" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="resultPanel" max="32767" attributes="0"/>
@@ -136,7 +136,7 @@
                       <Component id="editTumourNumberButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="tumourNumberTextField" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="73" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -222,12 +222,12 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="730" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="157" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="267" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -243,7 +243,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="selectAllChkBox" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="75" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="productionBtn" min="-2" pref="226" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                       <Component id="deleteHoldingBtn" min="-2" pref="226" max="-2" attributes="0"/>

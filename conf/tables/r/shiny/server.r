@@ -1,4 +1,4 @@
-
+## version : 1.1
 
 
 shinyServer(function(input, output, session) {
@@ -11,7 +11,7 @@ shinyServer(function(input, output, session) {
   })
   
 
-  source("source/shiny_core.r")
+
 
   file_data <- "data/"
   file_pptx <-paste(sep="/","slide_template", "canreg_template.pptx")
@@ -41,7 +41,8 @@ shinyServer(function(input, output, session) {
   output$UI_regtitle <- renderText({ls_args$header})
   output$directorypath <- renderText({download_dir})
 
-	
+
+
 	output$UI_select_table <- renderUI({
 	
 		table_list <- c( 
@@ -54,7 +55,8 @@ shinyServer(function(input, output, session) {
 			"Age-specific rates (Top Cancer Sites)" = 6,
 			"Age-specific rate by cancer sites" = 7,
 			"Barchart of cases by year" = 8,
-			"CI5 XI comparaison" = 12)
+			"CI5 XI comparaison" = 12,
+			"Childhood cancers table" = 13)
 			
 			if (year_info$span >= 3) {
 			
@@ -69,7 +71,24 @@ shinyServer(function(input, output, session) {
 		selectInput("select_table", NULL,selected = 4, table_list)
 
 
-	})	
+	})
+
+	output$UI_select_format <- renderUI({
+	
+		table_list <- c( "pdf","tiff","png", "svg", "ps","csv")
+		if (!is.null(input$select_table))
+		{
+			if (input$select_table %in% c(13))
+			{
+				table_list <- c( "csv")
+			}
+		}
+				
+			
+		selectInput("select_format", NULL,selected = 1, table_list)
+
+
+	})		
   
   output$UI_nbSlide <- renderUI({
     
@@ -77,29 +96,25 @@ shinyServer(function(input, output, session) {
     if (values$nb_slide == 0) {
 
       values$text <- "Slide included:"
-    } else {
+    } 
+    else {
       
       values$text <- paste0(isolate(values$text), '<br>',isolate(table$label))
       
       if (isolate(input$select_table == 7)) {
         values$text <- paste(isolate(values$text), isolate(input$selectCancerSite))
       }
-			else if (isolate(input$select_table == 11)) {
+	  	else if (isolate(input$select_table == 11)) {
         values$text <- paste(isolate(values$text), isolate(input$selectCancerSite))
       }
 			else if (isolate(input$select_table == 10)) {
-				
+			
 				if (isolate(input$checkCI)) {
-					values$text <- paste(isolate(values$text), isolate(input$selectCancerSite), "with CI")
+					values$text <- paste(isolate(values$text), "with CI")
 				}
-				else {
-					values$text <- paste(isolate(values$text), isolate(input$selectCancerSite))
 				
-				}
-			
-			
 			}
-      
+
     }
     
     tags$div(id="divSlidelist", class="mat_text", checked=NA,
@@ -253,7 +268,7 @@ shinyServer(function(input, output, session) {
 			if (input$select_table %in% c(12)) {
 				
 				
-				dt_CI5_list <- readRDS(paste0(script.basename, "/CI5_alldata.rds"))
+				dt_CI5_list <- readRDS(paste0(script.basename,"/r-sources", "/CI5_alldata.rds"))
 				registry_list <-  unique(dt_CI5_list$country_label)
 				registry_list <- as.character(registry_list)
 				selectInput("selectRegistry1",NULL, registry_list, selected = dt_CI5_label[1])
@@ -270,7 +285,7 @@ shinyServer(function(input, output, session) {
 			if (input$select_table %in% c(12)) {
 				
 				
-				dt_CI5_list <- readRDS(paste0(script.basename, "/CI5_alldata.rds"))
+				dt_CI5_list <- readRDS(paste0(script.basename,"/r-sources", "/CI5_alldata.rds"))
 				registry_list <-  unique(dt_CI5_list$country_label)
 				registry_list <- as.character(registry_list)
 				selectInput("selectRegistry2",NULL , registry_list, selected = dt_CI5_label[2])
@@ -287,7 +302,7 @@ shinyServer(function(input, output, session) {
 			if (input$select_table %in% c(12)) {
 				
 				
-				dt_CI5_list <- readRDS(paste0(script.basename, "/CI5_alldata.rds"))
+				dt_CI5_list <- readRDS(paste0(script.basename,"/r-sources", "/CI5_alldata.rds"))
 				registry_list <-  unique(dt_CI5_list$country_label)
 				registry_list <- as.character(registry_list)
 				selectInput("selectRegistry3", NULL, registry_list, selected = dt_CI5_label[3])
@@ -303,6 +318,7 @@ shinyServer(function(input, output, session) {
 
   	hide(id="report_option", anim=TRUE)
   	hide(id="fluid_test", anim=TRUE)
+  	hide(id="table", anim=TRUE)
   	show(id="plot", anim=TRUE)
   	show(id="export_menu", anim=TRUE)
 
@@ -313,7 +329,7 @@ shinyServer(function(input, output, session) {
       hide(id="export_menu", anim=TRUE)
       show(id="controls_COL1", anim=TRUE)
       hide(id="controls_COL2", anim=TRUE)
-      shiny_list_folder_content(output)
+      canreg_shiny_list_folder_content(output)
       
     }
     else if (input$select_table==1) {
@@ -322,67 +338,79 @@ shinyServer(function(input, output, session) {
       hide(id="controls_COL2", anim=TRUE)
       
     }
-		else if (input$select_table== 2) {
-				table$label <- "Barchart by age and sex"
-				show(id="controls_COL1", anim=TRUE)
-				hide(id="controls_COL2", anim=TRUE)
+	else if (input$select_table== 2) {
+			table$label <- "Barchart by age and sex"
+			show(id="controls_COL1", anim=TRUE)
+			hide(id="controls_COL2", anim=TRUE)
 
-				
-			}
-		else if (input$select_table== 3) {
-				table$label <- "Piechart by age and sex"
-				show(id="controls_COL1", anim=TRUE)
-				hide(id="controls_COL2", anim=TRUE)
-				
-			}
-		else if (input$select_table== 4) {
-			table$label <- "Barchart Top cancer both sexes"
-			show(id="controls_COL1", anim=TRUE)
-			show(id="controls_COL2", anim=TRUE)
 			
-		}
-		else if (input$select_table== 5) {
-			table$label <- "Barchart Top cancer by sexes"
-			show(id="controls_COL1", anim=TRUE)
-			show(id="controls_COL2", anim=TRUE)
-			
-		}
-		else if (input$select_table== 6) {
-			table$label <- "Age-specific trend top cancer"
-			show(id="controls_COL1", anim=TRUE)
-			show(id="controls_COL2", anim=TRUE)
-			
-		}
-		else if (input$select_table== 7) {
-			table$label <- "Age-specific trend"
-			show(id="controls_COL1", anim=TRUE)
-			show(id="controls_COL2", anim=TRUE)
-			
-		}
-		else if (input$select_table== 8) {
-			table$label <- "Barchart by year"
+	}
+	else if (input$select_table== 3) {
+			table$label <- "Piechart by age and sex"
 			show(id="controls_COL1", anim=TRUE)
 			hide(id="controls_COL2", anim=TRUE)
 			
-		}
-		else if (input$select_table== 9) {
-			table$label <- "Time trend top cancer"
-			show(id="controls_COL1", anim=TRUE)
-			show(id="controls_COL2", anim=TRUE)
-			
-		}
-		else if (input$select_table== 10) {
-			table$label <- "Estimated Annual Percentage Change"
-			show(id="controls_COL1", anim=TRUE)
-			show(id="controls_COL2", anim=TRUE)
-			
-		}
-		else if (input$select_table== 12) {
-			table$label <- "CI5 XI comparison"
-			show(id="controls_COL1", anim=TRUE)
-			hide(id="controls_COL2", anim=TRUE)
-			show(id="fluid_test", anim=TRUE)
-		}
+	}
+	else if (input$select_table== 4) {
+		table$label <- "Barchart Top cancer both sexes"
+		show(id="controls_COL1", anim=TRUE)
+		show(id="controls_COL2", anim=TRUE)
+		
+	}
+	else if (input$select_table== 5) {
+		table$label <- "Barchart Top cancer by sexes"
+		show(id="controls_COL1", anim=TRUE)
+		show(id="controls_COL2", anim=TRUE)
+		
+	}
+	else if (input$select_table== 6) {
+		table$label <- "Age-specific trend top cancer"
+		show(id="controls_COL1", anim=TRUE)
+		show(id="controls_COL2", anim=TRUE)
+		
+	}
+	else if (input$select_table== 7) {
+		table$label <- "Age-specific trend"
+		show(id="controls_COL1", anim=TRUE)
+		show(id="controls_COL2", anim=TRUE)
+		
+	}
+	else if (input$select_table== 8) {
+		table$label <- "Barchart by year"
+		show(id="controls_COL1", anim=TRUE)
+		hide(id="controls_COL2", anim=TRUE)
+		
+	}
+	else if (input$select_table== 9) {
+		table$label <- "Time trend top cancer"
+		show(id="controls_COL1", anim=TRUE)
+		show(id="controls_COL2", anim=TRUE)
+		
+	}
+	else if (input$select_table== 10) {
+		table$label <- "Estimated Annual Percentage Change"
+		show(id="controls_COL1", anim=TRUE)
+		show(id="controls_COL2", anim=TRUE)
+		
+	}
+	else if (input$select_table== 11) {
+		table$label <- "Time trends"
+		show(id="controls_COL1", anim=TRUE)
+		show(id="controls_COL2", anim=TRUE)
+	}
+	else if (input$select_table== 12) {
+		table$label <- "CI5 XI comparison"
+		show(id="controls_COL1", anim=TRUE)
+		hide(id="controls_COL2", anim=TRUE)
+		show(id="fluid_test", anim=TRUE)
+	}
+	else if (input$select_table== 13) {
+		table$label <- "Childhood cancers table"
+		hide(id="controls_COL1", anim=TRUE)
+		hide(id="controls_COL2", anim=TRUE)
+		hide(id="plot", anim=TRUE)
+		show(id="table", anim=TRUE)
+	}
   })
   
   observeEvent(values$nb_slide,{
@@ -428,8 +456,8 @@ shinyServer(function(input, output, session) {
 				isolate(progress_bar$object)$set(value = 0, message = 'Please wait:', detail = 'Calculate statistics')
 				
 
-		
-				dt_temp <- shiny_data(input, session)
+	
+				dt_temp <- canreg_shiny_data(input, session)
 			
 				if (input$select_table %in% c(4,5,9,10)) {
 					if (length(bool_rv$trigger1) != 0) {
@@ -438,24 +466,23 @@ shinyServer(function(input, output, session) {
 							}
 						}
 					}
-					
 
-			
-				
-				
 				return(dt_temp)
-				
+
 		}
 			else {
 				return(NULL)
 			}
 		
   })
+
+
   
 
   #Render plot
   output$plot <- renderPlot({ 
     
+
     progress_bar$object <- Progress$new(session, min=0, max=100)
     on.exit(progress_bar$object$close())
 
@@ -464,10 +491,22 @@ shinyServer(function(input, output, session) {
 			
       isolate(progress_bar$object)$set(value = 50,  message = 'Please wait:', detail = 'Render graph')
       
-			shiny_plot(dt_all(), input,session,  FALSE)
+			canreg_shiny_plot(dt_all(), input,session,  FALSE)
 			
 			isolate(progress_bar$object)$set(value = 100,  message = 'Please wait:', detail = 'Done')
 	  
+    }
+    
+  })
+
+   #Render table
+  output$table <-  renderTable({ 
+
+  	# dt_all_table()
+    if (!is.null(dt_all()))  {
+      
+      canreg_shiny_table(dt_all(), input,session,  FALSE)
+	  	
     }
     
   })
@@ -485,7 +524,7 @@ shinyServer(function(input, output, session) {
 				}
 				
 				#multiple file
-				bool_multiple <- multiple_output(input$select_table, bool_CI, input$select_format)
+				bool_multiple <- canreg_shiny_multiple_output(input$select_table, bool_CI, input$select_format)
 					
 				if (bool_multiple) {
 					temp <- paste0(input$text_filename, ".", "zip")
@@ -493,7 +532,6 @@ shinyServer(function(input, output, session) {
 				else {
 					temp <- paste0(input$text_filename, ".", input$select_format)
 				}
-
 				return(temp)
 	 
 	    },
@@ -503,14 +541,22 @@ shinyServer(function(input, output, session) {
 			withProgress(message = 'Download output', value = 0, {
 	      
 				file_temp <- substr(file,1, nchar(file)-nchar(input$select_format)-1)
-				shiny_plot(dt_all(),  input,session, TRUE,FALSE,file_temp)
+
+				if (input$select_table == 13)
+				{
+					canreg_shiny_table(dt_all(),  input,session, TRUE,FALSE,file_temp)
+				}
+				else {
+					canreg_shiny_plot(dt_all(),  input,session, TRUE,FALSE,file_temp)
+				}
+				
 				incProgress(1, detail = "")
 				
 				bool_CI <- FALSE
 				if (!is.null(input$checkCI)) {
 					bool_CI <- input$checkCI
 				}
-				bool_multiple <- multiple_output(input$select_table, bool_CI, input$select_format)
+				bool_multiple <- canreg_shiny_multiple_output(input$select_table, bool_CI, input$select_format)
 				
 				if (bool_multiple) {
 						
@@ -548,23 +594,26 @@ shinyServer(function(input, output, session) {
 	  withProgress(message = 'add powerpoint slide', value = 0, {
       filename <- paste0(tempdir(), "\\temp_graph",values$nb_slide+1)  
       
-			shiny_plot(dt_all(),  input,session, TRUE,TRUE,filename)
+			canreg_shiny_plot(dt_all(),  input,session, TRUE,TRUE,filename)
 			incProgress(1, detail = "")
 			
 			if (input$select_table == 1) {
-								
+							
+
 				values$doc <-  add_slide(values$doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
-				values$doc <- ph_with_text(values$doc, type = "title", str = "Population pyramid")
+				values$doc <- ph_with(values$doc, value =  "Population pyramid", location = ph_location_type(type =  "title"))
 				dims <- attr( png::readPNG (paste0(filename, ".png")), "dim" )
-				values$doc <- ph_with_img(values$doc, paste0(filename, ".png"),width=graph_width,height=graph_width*dims[1]/dims[2])
 				
+				temp_img <- external_img(src = paste0(filename, ".png"), height =graph_width*dims[1]/dims[2],width = graph_width)
+  			 values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE)
 			} 
 			else if (input$select_table==2) {
 				
 				values$doc <-  add_slide(values$doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
-				values$doc <- ph_with_text(values$doc, type = "title", str = "Number of cases by age group & sex")
+				values$doc <- ph_with(values$doc, value =  "Number of cases by age group & sex", location = ph_location_type(type =  "title"))
 				dims <- attr( png::readPNG (paste0(filename, ".png")), "dim" )
-				values$doc <- ph_with_img(values$doc, paste0(filename, ".png"),width=graph_width,height=graph_width*dims[1]/dims[2])
+				temp_img <- external_img(src = paste0(filename, ".png"), height =graph_width*dims[1]/dims[2],width = graph_width)
+  				values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE)
 				
 				
 			}
@@ -572,9 +621,10 @@ shinyServer(function(input, output, session) {
 				
 
 				values$doc <-  add_slide(values$doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
-				values$doc <- ph_with_text(values$doc, type = "title", str = "Proportion of cases by age group & sex")
+				values$doc <- ph_with(values$doc, value =  "Proportion of cases by age group & sex", location = ph_location_type(type =  "title"))
 				dims <- attr( png::readPNG (paste0(filename, ".png")), "dim" )
-				values$doc <- ph_with_img(values$doc, paste0(filename, ".png"),width=graph_width,height=graph_width*dims[1]/dims[2])
+				temp_img <- external_img(src = paste0(filename, ".png"), height =graph_width*dims[1]/dims[2],width = graph_width)
+  				values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE)
 				
 				
 			}
@@ -584,9 +634,10 @@ shinyServer(function(input, output, session) {
 				str_temp <- paste0("top ", isolate(input$slideNbTopBar), " cancers, both sexes")
 				
 				values$doc <-  add_slide(values$doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
-				values$doc <- ph_with_text(values$doc, type = "title", str = str_temp)
+				values$doc <- ph_with(values$doc, value =  str_temp, location = ph_location_type(type =  "title"))
 				dims <- attr( png::readPNG (paste0(filename, ".png")), "dim" )
-				values$doc <- ph_with_img(values$doc, paste0(filename, ".png"),width=graph_width,height=graph_width*dims[1]/dims[2])
+				temp_img <- external_img(src = paste0(filename, ".png"), height =graph_width*dims[1]/dims[2],width = graph_width)
+  				values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE)
 				
 				
 			}
@@ -596,27 +647,33 @@ shinyServer(function(input, output, session) {
 				str_temp <- paste0("top ", isolate(input$slideNbTopBar), " cancers")
 				
 				values$doc <-  add_slide(values$doc, layout="Canreg_split", master="Office Theme") ## add PPTX slide (Title + content)
-				values$doc <- ph_with_text(values$doc, type = "title", str = str_temp)
+				values$doc <- ph_with(values$doc, value =  str_temp, location = ph_location_type(type =  "title"))
 
 				dims <- attr( png::readPNG (paste0(filename, "001.png")), "dim" )
-				values$doc <- ph_with_img(values$doc, paste0(filename, "001.png"), index=1,width=graph_width_split,height=graph_width_split*dims[1]/dims[2])
-				values$doc <- ph_with_img(values$doc, paste0(filename, "002.png"), index=2,width=graph_width_split,height=graph_width_split*dims[1]/dims[2])
+				temp_img1 <- external_img(src = paste0(filename, "001.png"), height =graph_width_split*dims[1]/dims[2],width = graph_width_split)
+				temp_img2 <- external_img(src = paste0(filename, "002.png"), height =graph_width_split*dims[1]/dims[2],width = graph_width_split)
+  			values$doc <- ph_with(values$doc,value = temp_img1,location = ph_location_type(type = "body", id=1), use_loc_size =FALSE)
+  			values$doc <- ph_with(values$doc,value = temp_img2,location = ph_location_type(type = "body", id=2), use_loc_size =FALSE)
+
 				
 			}
 
 			else if (input$select_table==6) {
 
-			
-			dims <- attr( png::readPNG (paste0(filename, "001.png")), "dim" )
-
-			values$doc <-  add_slide(values$doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
-			values$doc <- ph_with_text(values$doc, type = "title", str = "Age-specific rates:\r\nMales")
-			values$doc <- ph_with_img(values$doc, paste0(filename, "001.png"), index=1,width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
-			
-			values$doc <-  add_slide(values$doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
-			values$doc <- ph_with_text(values$doc, type = "title", str = "Age-specific rates:\r\nFemales")
-			values$doc <- ph_with_img(values$doc, paste0(filename, "002.png"), index=1,width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
 				
+				dims <- attr( png::readPNG (paste0(filename, "001.png")), "dim" )
+
+				values$doc <-  add_slide(values$doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
+				values$doc <- ph_with(values$doc, value =  "Age-specific rates:\r\nMales", location = ph_location_type(type =  "title"))			
+				temp_img <- external_img(src = paste0(filename, "001.png"), height =graph_width_vertical*dims[1]/dims[2],width = graph_width_vertical)
+				values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE)
+
+				
+				values$doc <-  add_slide(values$doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
+				values$doc <- ph_with(values$doc, value =  "Age-specific rates:\r\nFemales", location = ph_location_type(type =  "title"))
+				temp_img <- external_img(src = paste0(filename, "002.png"), height =graph_width_vertical*dims[1]/dims[2],width = graph_width_vertical)
+				values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE)
+					
 			}
 			
 			else if (input$select_table==7) {
@@ -624,17 +681,18 @@ shinyServer(function(input, output, session) {
 				str_temp <- paste0("Age-specific rates:\r\n", isolate(input$selectCancerSite))
 				dims <- attr( png::readPNG (paste0(filename, ".png")), "dim" )
 				values$doc <-  add_slide(values$doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
-				values$doc <- ph_with_text(values$doc, type = "title", str = str_temp)
-				values$doc <- ph_with_img(values$doc, paste0(filename, ".png"), index=1,width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
-				
+				values$doc <- ph_with(values$doc, value =  str_temp, location = ph_location_type(type =  "title"))
+				temp_img <- external_img(src = paste0(filename, ".png"), height =graph_width_vertical*dims[1]/dims[2],width = graph_width_vertical)
+				values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE)
 				
 			}
 			else if (input$select_table==8) {
 				
 				values$doc <-  add_slide(values$doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
-				values$doc <- ph_with_text(values$doc, type = "title", str = "Number of cases by year")
+				values$doc <- ph_with(values$doc, value =  "Number of cases by year", location = ph_location_type(type =  "title"))
 				dims <- attr( png::readPNG (paste0(filename, ".png")), "dim" )
-				values$doc <- ph_with_img(values$doc, paste0(filename, ".png"),width=graph_width,height=graph_width*dims[1]/dims[2])
+				temp_img <- external_img(src = paste0(filename, ".png"), height =graph_width*dims[1]/dims[2],width = graph_width)
+  			values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE)
 				
 				
 			}
@@ -644,13 +702,17 @@ shinyServer(function(input, output, session) {
 				dims <- attr( png::readPNG (paste0(filename, "001.png")), "dim" )
 
 				values$doc <-  add_slide(values$doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
-				values$doc <- ph_with_text(values$doc, type = "title", str = "Trend in ASR:\r\nMales")
-				values$doc <- ph_with_img(values$doc, paste0(filename, "001.png"), index=1,width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
-				
+				values$doc <- ph_with(values$doc, value =  "Trend in ASR:\r\nMales", location = ph_location_type(type =  "title"))
+				temp_img <- external_img(src = paste0(filename, "001.png"), height =graph_width_vertical*dims[1]/dims[2],width = graph_width_vertical)
+				values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE)
+
+
 				values$doc <-  add_slide(values$doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
 				values$doc <- ph_with_text(values$doc, type = "title",  str = "Trend in ASR:\r\nFemales")
-				values$doc <- ph_with_img(values$doc, paste0(filename, "002.png"), index=1,width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
-				
+				temp_img <- external_img(src = paste0(filename, "002.png"), height =graph_width_vertical*dims[1]/dims[2],width = graph_width_vertical)
+				values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE)
+
+
 			}
 			else if (input$select_table==10) {
 
@@ -659,20 +721,23 @@ shinyServer(function(input, output, session) {
 					dims <- attr( png::readPNG (paste0(filename, "001.png")), "dim" )
 
 					values$doc <-  add_slide(values$doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
-					values$doc <- ph_with_text(values$doc, type = "title", str = "Estimated annual percentage change:\r\nMales")
-					values$doc <- ph_with_img(values$doc, paste0(filename, "001.png"), index=1,width=graph_width,height=graph_width*dims[1]/dims[2])
+					values$doc <- ph_with(values$doc, value =  "Estimated annual percentage change:\r\nMales", location = ph_location_type(type =  "title"))
+					temp_img <- external_img(src = paste0(filename, "001.png"), height =graph_width*dims[1]/dims[2],width = graph_width)
+					values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE)
 
 					values$doc <-  add_slide(values$doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
-					values$doc <- ph_with_text(values$doc, type = "title", str = "Estimated annual percentage change:\r\nFemales")
-					values$doc <- ph_with_img(values$doc, paste0(filename, "002.png"), index=1,width=graph_width,height=graph_width*dims[1]/dims[2])
-				
+					values$doc <- ph_with(values$doc, value =  "Estimated annual percentage change:\r\nFemales", location = ph_location_type(type =  "title"))
+					temp_img <- external_img(src = paste0(filename, "002.png"), height =graph_width*dims[1]/dims[2],width = graph_width)
+					values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE)
 				
 				}
 				else {
 					values$doc <-  add_slide(values$doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
-					values$doc <- ph_with_text(values$doc, type = "title", str = "Estimated annual percentage change")
+					values$doc <- ph_with(values$doc, value =  "Estimated annual percentage change", location = ph_location_type(type =  "title"))
 					dims <- attr( png::readPNG (paste0(filename, ".png")), "dim" )
-					values$doc <- ph_with_img(values$doc, paste0(filename, ".png"),width=graph_width,height=graph_width*dims[1]/dims[2])
+					temp_img <- external_img(src = paste0(filename, ".png"), height =graph_width*dims[1]/dims[2],width = graph_width)
+  					values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE)
+
 				}
 				
 			}
@@ -681,22 +746,78 @@ shinyServer(function(input, output, session) {
 				str_temp <- paste0("Time trends:\r\n", isolate(input$selectCancerSite))
 				dims <- attr( png::readPNG (paste0(filename, ".png")), "dim" )
 				values$doc <-  add_slide(values$doc, layout="Canreg_vertical", master="Office Theme") ## add PPTX slide (Title + content)
-				values$doc <- ph_with_text(values$doc, type = "title", str = str_temp)
-				values$doc <- ph_with_img(values$doc, paste0(filename, ".png"), index=1,width=graph_width_vertical,height=graph_width_vertical*dims[1]/dims[2])
-				
+				values$doc <- ph_with(values$doc, value =  str_temp, location = ph_location_type(type =  "title"))
+				temp_img <- external_img(src = paste0(filename, ".png"), height =graph_width_vertical*dims[1]/dims[2],width = graph_width_vertical)
+  				values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE)
 				
 			}
 			else if (input$select_table==12) {
 				
 				dims <- attr( png::readPNG (paste0(filename, ".png")), "dim" )
 				values$doc <-  add_slide(values$doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
-				values$doc <- ph_with_text(values$doc, type = "title", str = "CI5 XI comparison")
-				values$doc <- ph_with_img(values$doc, paste0(filename, ".png"), index=1,width=graph_width,height=graph_width*dims[1]/dims[2])
+				values$doc <- ph_with(values$doc, value =  "CI5 XI comparison", location = ph_location_type(type =  "title"))
+				temp_img <- external_img(src = paste0(filename, ".png"), height =graph_width*dims[1]/dims[2],width = graph_width)
+  				values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE)
 				
+			}
+			else if (input$select_table==13) {
+				
+				values$doc <-  add_slide(values$doc, layout="Canreg_basic_wide", master="Office Theme") ## add PPTX slide (Title + content)
+  			values$doc <- ph_with(values$doc, value =  "Childhood cancers (0 to 14 years)", location = ph_location_type(type =  "title"))
+  			dt_temp <- copy(dt_iccc)
+  			table_iccc <- canreg_iccc_table(dt_temp)
+  			dt_report <- table_iccc$dt
+  			age_label <- table_iccc$age_label_order
+
+  			ft <- flextable(dt_report)
+			  ft <- set_header_labels(ft, ICCC_code = "", ICCC_label = "", 
+			    CSU_C.0= age_label[1],
+			    CSU_C.1= age_label[2],
+			    CSU_C.2= age_label[3],
+			    total_cases = "All", 
+			    ratio = "M/F",
+			    frequence = "% total",
+			    age_crude.0= age_label[1],
+			    age_crude.1= age_label[2],
+			    age_crude.2= age_label[3],
+			    crude="crude",
+			    asr="ASR")
+
+			  ft <- add_header(ft, ICCC_code = "ICCC3", ICCC_label = "ICCC3", 
+			    CSU_C.0= "Number of cases",
+			    CSU_C.1= "Number of cases",
+			    CSU_C.2= "Number of cases",
+			    total_cases = "Number of cases",
+			    ratio = "Number of cases",
+			    frequence = "Number of cases",
+			    age_crude.0= "Rates per million",
+			    age_crude.1= "Rates per million",
+			    age_crude.2= "Rates per million",
+			    crude="Rates per million",
+			    asr="Rates per million",
+			    top=TRUE)
+			  
+			  ft <- width(ft, j = 1, width = 0.5)
+			  ft <- width(ft, j = 2, width = 1.7)
+			  ft <- width(ft, j = 3:13, width = 0.5)
+			  ft <- fontsize(ft, size = 10, part = "all")
+			  ft <- merge_h(ft,i=1, part="header")
+			  ft <- border(ft, i=c(1,nrow(dt_report)),border.top=fp_border(width = 1), part="body")
+			  ft <- border(ft, i=nrow(dt_report),border.bottom=fp_border(width = 1), part="body")
+			  ft <- border(ft, j=c(1,3,9),border.left=fp_border(width = 1), part="all")
+			  ft <- border(ft, j=13,border.right=fp_border(width = 1), part="all")
+			  ft <- align(ft, align="center", part="header")
+			  ft <- height(ft, height = 0.1, part="header")
+			  ft <- bg(ft, i = seq(1,nrow(dt_report),2), bg="#deebf7", part = "body")
+			  ft <- bg(ft, i = nrow(dt_report), bg="#c6dbef", part = "body")
+			  ft <- bg(ft, i = 1, bg="#c6dbef", part = "header")
+			  ft <- bg(ft, i = 2, bg="#c6dbef", part = "header")
+
+			  values$doc <- ph_with(values$doc, ft, location = ph_location(left=0.551, top=1.291))
 				
 			}
 			 
-				
+			
 			values$nb_slide <- values$nb_slide + 1
 		
 		})
@@ -721,7 +842,7 @@ shinyServer(function(input, output, session) {
 		filename =  paste0(gsub("\\W","", ls_args$label),"_",ls_args$sc,"_",gsub("\\D","", Sys.time()),"_error_log.txt"),
 		content = function(file) {
 			temp <- paste0(gsub("\\W","", ls_args$label),"_",ls_args$sc,"_",gsub("\\D","", Sys.time()),"_error_log.txt")
-			shiny_error_log(file,temp)
+			canreg_shiny_error_log(file,temp)
 		}
 	
 	)
@@ -733,7 +854,7 @@ shinyServer(function(input, output, session) {
 
 			withProgress(message = 'export shiny data', value = 0, {
 
-				shiny_export_data(paste0(tempdir(),"/shinydata.txt"))
+				canreg_shiny_export_data(paste0(tempdir(),"/shinydata.txt"))
 				incProgress(1/6, detail = "zip file")
 				zip::zipr(file, c(paste0(tempdir(),"/shinydata.txt")))
 				incProgress(1/6, detail = "")
@@ -748,7 +869,7 @@ shinyServer(function(input, output, session) {
 	
 		filename =  paste0(ls_args$sc,"_",gsub("\\D","", Sys.time()),"_data.csv"),
 		content = function(file) {
-			shiny_dwn_data(file)
+			canreg_shiny_dwn_data(file)
 		}
 	
 	)
@@ -760,7 +881,7 @@ shinyServer(function(input, output, session) {
 
 			withProgress(message = 'Download report', value = 0, {
 
-				shiny_dwn_report(file, download_dir, input$checkAnnexe)
+				canreg_shiny_dwn_report(file, download_dir, input$checkAnnexe)
 
 			})
 		}
@@ -774,14 +895,14 @@ shinyServer(function(input, output, session) {
 
 			withProgress(message = 'Download presentation', value = 0, {
 
-				shiny_dwn_slide(file, input$checkAnnexe)
+				canreg_shiny_dwn_slide(file, input$checkAnnexe)
 			})
 		}
 	
 	)
 
   
-  onevent("dblclick","directorypath", shiny_update_dwn_folder(output,values))
+  onevent("dblclick","directorypath", canreg_shiny_update_dwn_folder(output,values))
 
 
   observeEvent(input$downloadFile2,{ 
@@ -792,7 +913,7 @@ shinyServer(function(input, output, session) {
 
 			path <- download_dir
 			file_temp <- paste0(path, "/", input$text_filename)
-			shiny_plot(dt_all(),  input,session, TRUE,FALSE,file_temp)
+			canreg_shiny_plot(dt_all(),  input,session, TRUE,FALSE,file_temp)
 			incProgress(1, detail = "")
 
 
@@ -818,7 +939,7 @@ shinyServer(function(input, output, session) {
 
 		withProgress(message = 'import shiny data', value = 0, {
 
-				temp <- import_shiny_date(input$shinydata$datapath)
+				temp <- canreg_import_shiny_data(input$shinydata$datapath)
 				if(!is.null(temp)) {
 					ls_args <<- temp$ls_args
 					dt_pyramid <<- temp$dt_pyramid

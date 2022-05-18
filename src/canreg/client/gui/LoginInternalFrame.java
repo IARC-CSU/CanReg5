@@ -42,6 +42,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.security.auth.login.LoginException;
@@ -434,7 +435,7 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
         usernameTextField.setText(localSettings.getProperty(LocalSettings.USERNAME_KEY));
         // Load the server list
         String[] serverNames = localSettings.getServerNames();
-        if (serverNames != null) {
+        if (serverNames.length > 0) {
             canRegSystemComboBox.setModel(new javax.swing.DefaultComboBoxModel(localSettings.getServerDescriptions().toArray()));
             String lastServerIDString = localSettings.getProperty(LocalSettings.LAST_SERVER_ID_KEY);
             if (lastServerIDString != null && lastServerIDString.trim().length() > 0) {
@@ -480,7 +481,7 @@ public final class LoginInternalFrame extends javax.swing.JInternalFrame {
         }
         localSettings.setProperty(LocalSettings.USERNAME_KEY, usernameTextField.getText());
         // Get list of servers stored locally
-        LinkedList<ServerDescription> sds = localSettings.getServerDescriptions();
+        List<ServerDescription> sds = localSettings.getServerDescriptions();
         // If this list contains more than one entry - save it.
         if (sds.size() > 0) {
             ServerDescription sd = sds.get(canRegSystemComboBox.getSelectedIndex());

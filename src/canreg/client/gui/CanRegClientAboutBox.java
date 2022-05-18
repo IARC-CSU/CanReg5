@@ -107,8 +107,8 @@ public class CanRegClientAboutBox extends javax.swing.JDialog implements Hyperli
 
         aboutScrollPane.setName("aboutScrollPane"); // NOI18N
 
-        aboutEditorPane.setContentType(resourceMap.getString("aboutEditorPane.contentType")); // NOI18N
         aboutEditorPane.setEditable(false);
+        aboutEditorPane.setContentType(resourceMap.getString("aboutEditorPane.contentType")); // NOI18N
         aboutEditorPane.setText(resourceMap.getString("aboutEditorPane.text")); // NOI18N
         aboutEditorPane.setName("aboutEditorPane"); // NOI18N
         aboutEditorPane.addMouseListener(new java.awt.event.MouseAdapter() {

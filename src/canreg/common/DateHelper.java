@@ -76,29 +76,47 @@ public class DateHelper {
 
         boolean dateReadProperly = false;
 
-        try {
-            calendar.getTimeInMillis(); // This is just to trigger an error - if we have one latent...
-            dateReadProperly = true;
-        } catch (IllegalArgumentException iae) {
-            if ("YEAR".equalsIgnoreCase(iae.getMessage())) {
-                calendar.clear(Calendar.YEAR);
-                calendar.setUnknownYearValue(yearString);
-                // if this is what triggers the error set it to unknown
-                unknownYear = true;
-            } else if ("MONTH".equalsIgnoreCase(iae.getMessage()) || "MONTH: 1 -> 2".equalsIgnoreCase(iae.getMessage())) {
-                calendar.clear(Calendar.MONTH);
-                calendar.setUnknownMonthValue(monthString);
-                // if this is what triggers the error set it to unknown
-                unknownMonth = true;
-            } else if ("DAY_OF_MONTH".equalsIgnoreCase(iae.getMessage())) {
-                calendar.clear(Calendar.DAY_OF_MONTH);
-                calendar.setUnknownDayValue(dayString);
-                // if this is what triggers the error set it to unknown
-                unknownDay = true;
-            } else {
-                throw iae;
-            }
+        if (year == 9999) {
+            calendar.clear(Calendar.YEAR);
+            calendar.setUnknownYearValue(yearString);
+            unknownYear = true;
+        } 
+        if (month == 99 || month == 0) {
+            calendar.clear(Calendar.MONTH);
+            calendar.setUnknownMonthValue(monthString);
+            unknownMonth = true;
         }
+        if (day == 99 || day == 00 ) {
+            calendar.clear(Calendar.DAY_OF_MONTH);
+            calendar.setUnknownDayValue(dayString);
+            // if this is what triggers the error set it to unknown
+            unknownDay = true;
+        }
+        
+//        This approach only detects the first unknown, so not enough...        
+//        try {
+//            calendar.getTimeInMillis(); // This is just to trigger an error - if we have one latent...
+//            dateReadProperly = true;
+//        } catch (IllegalArgumentException iae) {
+//            if ("YEAR".equalsIgnoreCase(iae.getMessage())) {
+//                calendar.clear(Calendar.YEAR);
+//                calendar.setUnknownYearValue(yearString);
+//                // if this is what triggers the error set it to unknown
+//                unknownYear = true;
+//            } else if ("MONTH".equalsIgnoreCase(iae.getMessage()) || "MONTH: 1 -> 2".equalsIgnoreCase(iae.getMessage())) {
+//                calendar.clear(Calendar.MONTH);
+//                calendar.setUnknownMonthValue(monthString);
+//                // if this is what triggers the error set it to unknown
+//                unknownMonth = true;
+//            } else if ("DAY_OF_MONTH".equalsIgnoreCase(iae.getMessage())) {
+//                calendar.clear(Calendar.DAY_OF_MONTH);
+//                calendar.setUnknownDayValue(dayString);
+//                // if this is what triggers the error set it to unknown
+//                unknownDay = true;
+//            } else {
+//                throw iae;
+//            }
+//        }
 
         calendar.setUnknownDay(unknownDay);
         calendar.setUnkownMonth(unknownMonth);

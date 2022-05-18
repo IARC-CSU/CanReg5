@@ -56,6 +56,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyVetoException;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FilenameFilter;
@@ -761,6 +762,11 @@ public final class CanRegClientView extends FrameView {
         showAndPositionInternalFrame(desktopPane, welcomeInternalFrame);
         centerInternalFrame(desktopPane, welcomeInternalFrame);
         welcomeInternalFrame.setDesktopPane(desktopPane);
+        try {
+            welcomeInternalFrame.setMaximum(true);
+        } catch (PropertyVetoException ex) {
+            Logger.getLogger(CanRegClientView.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public static void maximizeHeight(JDesktopPane desktopPane, JInternalFrame internalFrame) {
@@ -1662,7 +1668,7 @@ public final class CanRegClientView extends FrameView {
     private class InstallRpackagesActionTask extends org.jdesktop.application.Task<Object, Void> {
 
         private BufferedInputStream is;
-        private final WaitFrame waitFrame;
+//        private final WaitFrame waitFrame;
 
         InstallRpackagesActionTask(org.jdesktop.application.Application app) {
             // Runs on the EDT.  Copy GUI state that
@@ -1670,12 +1676,12 @@ public final class CanRegClientView extends FrameView {
             // to InstallRpackagesActionTask fields, here.
             super(app);
             // feedbackLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/LoginInternalFrame").getString("LAUNCHING_SERVER..."));
-            waitFrame = new WaitFrame();
-            waitFrame.setLabel(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("INSTALLING_PACKAGES..."));
-            waitFrame.setIndeterminate(true);
-            desktopPane.add(waitFrame, javax.swing.JLayeredPane.POPUP_LAYER);
-            waitFrame.setVisible(true);
-            waitFrame.setLocation((desktopPane.getWidth() - waitFrame.getWidth()) / 2, (desktopPane.getHeight() - waitFrame.getHeight()) / 2);
+//            waitFrame = new WaitFrame();
+//            waitFrame.setLabel(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("INSTALLING_PACKAGES..."));
+//            waitFrame.setIndeterminate(true);
+//            desktopPane.add(waitFrame, javax.swing.JLayeredPane.POPUP_LAYER);
+//            waitFrame.setVisible(true);
+//            waitFrame.setLocation((desktopPane.getWidth() - waitFrame.getWidth()) / 2, (desktopPane.getHeight() - waitFrame.getHeight()) / 2);
         }
 
         @Override
@@ -1742,7 +1748,7 @@ public final class CanRegClientView extends FrameView {
 
         @Override
         protected void succeeded(Object result) {
-            waitFrame.dispose();
+//            waitFrame.dispose();
             if (result == null) 
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("R_packages_installed."), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("MESSAGE"), JOptionPane.INFORMATION_MESSAGE);
             else

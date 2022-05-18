@@ -1,6 +1,6 @@
+## version : 1.1
 
-
-shiny_data <- function(input, session) {
+canreg_shiny_data <- function(input, session) {
   
   dt_temp <- NULL
   if  (!is.null(input$select_table)) {
@@ -91,7 +91,7 @@ shiny_data <- function(input, session) {
 				
 				if (isolate(input$radioValue) == "cum") {
 					if (last_age > 15) last_age <-15
-					dt_temp <- csu_cum_risk_core(df_data =dt_temp,
+					dt_temp <- canreg_cum_risk_core(df_data =dt_temp,
 																			 var_age="AGE_GROUP", var_cases="CASES", var_py="COUNT",
 																			 group_by = c("cancer_label", "SEX"),
 																			 missing_age = canreg_missing_age(dt_temp),
@@ -131,7 +131,7 @@ shiny_data <- function(input, session) {
 				
 				if (isolate(input$radioValue) == "cum") {
 					if (last_age > 15) last_age <-15
-					dt_temp <- csu_cum_risk_core(df_data =dt_temp,
+					dt_temp <- canreg_cum_risk_core(df_data =dt_temp,
 																			 var_age="AGE_GROUP", var_cases="CASES", var_py="COUNT",
 																			 group_by = c("cancer_label", "SEX","ICD10GROUPCOLOR"),
 																			 missing_age = canreg_missing_age(dt_temp),
@@ -285,8 +285,8 @@ shiny_data <- function(input, session) {
 				dt_temp <- dt_temp[ICD10GROUP != "O&U",]
 				dt_temp <- canreg_ageSpecific_rate_data(dt_temp, keep_ref = TRUE)
 
-				dt_CI5_data <- canreg_import_CI5_data(dt_temp, paste0(script.basename, "/CI5_alldata.rds"))
-				dt_temp <- shiny_merge_CI5_registry(dt_temp,dt_CI5_data, registry_region = ls_args$sr, registry_label = ls_args$header, number=40 )
+				dt_CI5_data <- canreg_import_CI5_data(dt_temp, paste0(script.basename, "/r-sources","/CI5_alldata.rds"))
+				dt_temp <- canreg_shiny_merge_CI5_registry(dt_temp,dt_CI5_data, registry_region = ls_args$sr, registry_label = ls_args$header, number=40 )
 				
 				dt_temp <- dt_temp[country_label %in% registry_selection, ]
 				setkeyv(dt_temp, c("CSU_RANK", "SEX","asr"))
@@ -300,6 +300,11 @@ shiny_data <- function(input, session) {
 
 
 			}
+		}
+		else if (table_number == 13){
+
+			dt_temp <- copy(dt_iccc)
+
 		}	
 	}
  
@@ -310,7 +315,7 @@ shiny_data <- function(input, session) {
 
 
 
-shiny_plot <- function(dt_plot,input,session, download = FALSE,slide=FALSE, file = NULL) {
+canreg_shiny_plot <- function(dt_plot,input,session, download = FALSE,slide=FALSE, file = NULL) {
   
 	if  (!is.null(input$select_table)) {
   
@@ -331,7 +336,7 @@ shiny_plot <- function(dt_plot,input,session, download = FALSE,slide=FALSE, file
 			}
 			
 		}
-		
+
 	
 		
 		if ( table_number == 1) {
@@ -610,7 +615,6 @@ shiny_plot <- function(dt_plot,input,session, download = FALSE,slide=FALSE, file
 			if (!is.null( input$selectCancerSite) & !is.null(input$radioLog)) {
 			
 				bool_log <- (input$radioLog == "log")
-				color_trend <- c("Male" = "#2c7bb6", "Female" = "#b62ca1")
 				dt_plot <- dt_plot[cancer_label == input$selectCancerSite,]
 				
 				 if (download) {
@@ -619,8 +623,7 @@ shiny_plot <- function(dt_plot,input,session, download = FALSE,slide=FALSE, file
 								FUN=canreg_ageSpecific,
 								dt_plot=dt_plot,
 								logscale = bool_log,
-								plot_subtitle = isolate(input$selectCancerSite),
-								color_trend = color_trend
+								plot_subtitle = isolate(input$selectCancerSite)
 								)
 							
 				}
@@ -630,8 +633,7 @@ shiny_plot <- function(dt_plot,input,session, download = FALSE,slide=FALSE, file
 					canreg_ageSpecific(
 								dt_plot=dt_plot,
 								logscale = bool_log,
-								plot_subtitle = isolate(input$selectCancerSite),
-								color_trend = color_trend
+								plot_subtitle = isolate(input$selectCancerSite)
 								)
 								
 				}
@@ -874,7 +876,7 @@ shiny_plot <- function(dt_plot,input,session, download = FALSE,slide=FALSE, file
 				if (download) {
 				 
 					canreg_output(output_type = output_type, filename =file,landscape = TRUE,list_graph = FALSE,
-								FUN=shiny_bar_CI5_compare,
+								FUN=canreg_shiny_bar_CI5_compare,
 								dt=dt_plot,
 								xtitle = xtitle,
 		                		text_size_factor=1.1)
@@ -882,7 +884,7 @@ shiny_plot <- function(dt_plot,input,session, download = FALSE,slide=FALSE, file
 				}
 				else {
 					
-					shiny_bar_CI5_compare(
+					canreg_shiny_bar_CI5_compare(
 						dt=dt_plot,
 						xtitle = xtitle,
                 		text_size_factor=1.2)
@@ -892,14 +894,52 @@ shiny_plot <- function(dt_plot,input,session, download = FALSE,slide=FALSE, file
 		
 		}
 
+
   }
   
 }
 
+canreg_shiny_table <- function(dt_table, input, session,download = FALSE,slide=FALSE, file = NULL) {
 
+	if  (!is.null(input$select_table)) {
+  
+		if (download) {
+			table_number <- input$select_table
+			if (slide) {
+				ls_args$header  <- ""
+				output_type <- "png"
+			}
+    		else {
+      			output_type <- input$select_format
+    		}
+  		}
+		else {
+			table_number <- isolate(input$select_table)
+			
+		}
+
+		if ( table_number == 13) {
+
+			if (download) {
+
+
+			canreg_output(output_type = output_type, filename = file,landscape = TRUE,list_graph = FALSE,
+                FUN=canreg_child_table,
+                df_data=dt_table)
+					
+			}
+			else {
+				canreg_child_table(df_data=dt_table)
+							
+			}
+		}
+	}
+
+
+}
 
 #create a new function to print the graph and return data (adapt to canreg_output function)
-canreg_ageSpecific <- function(dt_plot,color_trend,plot_subtitle="",logscale=FALSE, landscape = TRUE,list_graph = FALSE, return_data = FALSE) {
+canreg_ageSpecific <- function(dt_plot,plot_subtitle="",logscale=FALSE, landscape = TRUE,list_graph = FALSE, return_data = FALSE) {
 	
 	if (return_data) {
 		
@@ -918,6 +958,26 @@ canreg_ageSpecific <- function(dt_plot,color_trend,plot_subtitle="",logscale=FAL
 		stop() 
 		
 	} 
+
+	color_trend <- c("#2c7bb6","#b62ca1")
+
+	if (length(unique(dt_plot$SEX)) > 1)
+	{
+		temp_level <- c(i18n$t(levels(dt_plot$SEX)[1]),i18n$t(levels(dt_plot$SEX)[2]))
+		dt_plot$SEX <- factor(dt_plot$SEX,labels = temp_level)
+
+
+	}
+	else
+	{
+		 dt_plot$SEX <- droplevels(dt_plot$SEX)
+		 temp_level <- c(i18n$t(levels(dt_plot$SEX)[1]))
+		 dt_plot$SEX <- factor(dt_plot$SEX,labels = temp_level) 
+
+	}
+
+
+
 		
 	plot<- Rcan:::core.csu_ageSpecific(dt_plot,
 		var_age        ="AGE_GROUP",
@@ -931,7 +991,7 @@ canreg_ageSpecific <- function(dt_plot,color_trend,plot_subtitle="",logscale=FAL
 		age_label_list = unique(dt_plot[["AGE_GROUP_LABEL"]]),
 		xtitle         = i18n$t("Age at diagnosis"),
 		ytitle         = i18n$t("Age-specific incidence rate per"),
-		label_group_by = c(i18n$t("Male"),i18n$t("Female"))
+		label_group_by = temp_level
  		 )$csu_plot
 		
 	print(plot)
@@ -962,8 +1022,20 @@ canreg_asr_trend <- function(dt_plot,
   }
 
 
-   temp_level <- c(i18n$t(levels(dt_plot$SEX)[1]),i18n$t(levels(dt_plot$SEX)[2]))
-   dt_plot$SEX <- factor(dt_plot$SEX,labels = temp_level) 
+   if (length(unique(dt_plot$SEX)) > 1)
+   {
+   	 temp_level <- c(i18n$t(levels(dt_plot$SEX)[1]),i18n$t(levels(dt_plot$SEX)[2]))
+   	 dt_plot$SEX <- factor(dt_plot$SEX,labels = temp_level) 
+   }
+   else 
+   {
+   	 dt_plot$SEX <- droplevels(dt_plot$SEX)
+   	 temp_level <- c(i18n$t(levels(dt_plot$SEX)[1]))
+   	 dt_plot$SEX <- factor(dt_plot$SEX,labels = temp_level) 
+
+   }
+
+  
 
    color_trend <- c("#2c7bb6", "#b62ca1")
     
@@ -986,7 +1058,7 @@ canreg_asr_trend <- function(dt_plot,
 #shiny function for CI5 comparison
 
 
-shiny_bar_CI5_compare <- function(dt,group_by = "SEX", landscape = TRUE,list_graph=FALSE,
+canreg_shiny_bar_CI5_compare <- function(dt,group_by = "SEX", landscape = TRUE,list_graph=FALSE,
                                         xtitle = "",digit  =  1,text_size_factor =1.5,
                                         return_data  =  FALSE) 
 {
@@ -1009,7 +1081,7 @@ shiny_bar_CI5_compare <- function(dt,group_by = "SEX", landscape = TRUE,list_gra
   dt[["country_label"]] <-Rcan:::core.csu_legend_wrapper(dt[["country_label"]], 14)
   dt[,country_label:=factor(country_label, levels=country_label)]
       
-  temp <- csu_bar_plot(dt=dt, 
+  temp <- canreg_bar_plot(dt=dt, 
                  var_top="asr",
                  var_bar="country_label",
                  plot_title = unique(dt$cancer_label),
@@ -1034,7 +1106,7 @@ shiny_bar_CI5_compare <- function(dt,group_by = "SEX", landscape = TRUE,list_gra
 }
 
 
-shiny_merge_CI5_registry <- function(dt, dt_CI5, registry_region, registry_label, number=5) {
+canreg_shiny_merge_CI5_registry <- function(dt, dt_CI5, registry_region, registry_label, number=5) {
   
   ##calcul of ASR for canreg
   dt<- Rcan:::core.csu_asr(df_data =dt, var_age ="AGE_GROUP",var_cases = "CASES", var_py = "COUNT",
@@ -1077,7 +1149,7 @@ shiny_merge_CI5_registry <- function(dt, dt_CI5, registry_region, registry_label
 
 										
 #function for multiple file download output_type
-multiple_output <- function(table_number, bool_ci, output_format) {
+canreg_shiny_multiple_output <- function(table_number, bool_ci, output_format) {
 	
 	bool_temp <- FALSE
 	if (output_format %in% c("png", "tiff", "svg")) {
@@ -1094,7 +1166,7 @@ multiple_output <- function(table_number, bool_ci, output_format) {
 }                                        
 										
 
-shiny_error_log <- function(log_file,filename) {
+canreg_shiny_error_log <- function(log_file,filename) {
 
   if (exists("pb")) {
     close(pb)
@@ -1155,7 +1227,7 @@ shiny_error_log <- function(log_file,filename) {
 }
 
 
-shiny_export_data <- function(log_file) {
+canreg_shiny_export_data <- function(log_file) {
 
 
   
@@ -1199,7 +1271,7 @@ shiny_export_data <- function(log_file) {
 
 
 
-import_shiny_date <- function(zipfile) {
+canreg_import_shiny_data <- function(zipfile) {
 
   incProgress(0, detail = "Unzip file")
   unzip(zipfile, exdir=tempdir())
@@ -1317,7 +1389,7 @@ import_shiny_date <- function(zipfile) {
 
 }
 
-shiny_dwn_data <- function(log_file) {
+canreg_shiny_dwn_data <- function(log_file) {
 
 	dt_temp <- copy(dt_base)
 	dt_temp[, ICD10GROUPLABEL := NULL]
@@ -1328,7 +1400,7 @@ shiny_dwn_data <- function(log_file) {
 
 }
 
-shiny_dwn_report <- function(log_file, directory_path, ann) {
+canreg_shiny_dwn_report <- function(log_file, directory_path, ann) {
 
 	
 
@@ -1356,7 +1428,7 @@ shiny_dwn_report <- function(log_file, directory_path, ann) {
 	incProgress(0, detail = "create docx")
 
 	doc <- read_docx(paste(sep="/", script.basename,"slide_template", "template.docx"))
-	doc <- rcan_report(doc, report_path, dt_base , ls_args,ann=ann, shiny=TRUE )
+	doc <- canreg_report(doc, report_path, dt_base , ls_args,ann=ann, shiny=TRUE )
 	
   print(doc, log_file)
   
@@ -1364,7 +1436,7 @@ shiny_dwn_report <- function(log_file, directory_path, ann) {
 
 }
 
-shiny_dwn_slide <- function(log_file, ann) {
+canreg_shiny_dwn_slide <- function(log_file, ann) {
 
 
 	ls_args$out <- tempdir()
@@ -1372,7 +1444,7 @@ shiny_dwn_slide <- function(log_file, ann) {
 	incProgress(0, detail = "create docx")
 
 	doc <- read_pptx(path=paste(sep="/", script.basename,"slide_template", "canreg_template.pptx"))
-	doc <- rcan_slide(doc, dt_base , ls_args, ann=ann, shiny=TRUE)
+	doc <- canreg_slide(doc, dt_base , ls_args, ann=ann, shiny=TRUE)
 	
   print(doc, log_file)
   
@@ -1380,7 +1452,7 @@ shiny_dwn_slide <- function(log_file, ann) {
 
 }
 
-shiny_update_dwn_folder <- function(output,values) {
+canreg_shiny_update_dwn_folder <- function(output,values) {
 
 	download_dir <<- choose.dir(download_dir)
 	if (is.na(download_dir)) {
@@ -1389,16 +1461,16 @@ shiny_update_dwn_folder <- function(output,values) {
 	else {
 		output$directorypath <- renderText({download_dir})
 	}
-	shiny_list_folder_content(output)
+	canreg_shiny_list_folder_content(output)
 
 }
 
-shiny_list_folder_content <- function(output) {
+canreg_shiny_list_folder_content <- function(output) {
 
 	path <- download_dir
 
 	if (is.na(path)) {
-		output$reportHTML <- renderUI({shiny_report_info(path, TRUE)})
+		output$reportHTML <- renderUI({canreg_shiny_report_info(path, TRUE)})
 	}
 	else {
 		
@@ -1410,11 +1482,11 @@ shiny_list_folder_content <- function(output) {
 
 		if(!file_test("-d",report_source)) {
 			temp_path <- report_source
-			output$reportHTML <- renderUI({shiny_report_info(temp_path, TRUE)})
+			output$reportHTML <- renderUI({canreg_shiny_report_info(temp_path, TRUE)})
 			report_source <- paste0(script.basename,"/report_text")
 		}
 		else {
-			output$reportHTML <- renderUI({shiny_report_info(report_source, FALSE)})
+			output$reportHTML <- renderUI({canreg_shiny_report_info(report_source, FALSE)})
 		}
 
 		#temp <- as.data.frame(list.files(report_source))
@@ -1425,7 +1497,7 @@ shiny_list_folder_content <- function(output) {
 
 }
 
-shiny_report_info <- function (path, new=TRUE) {
+canreg_shiny_report_info <- function (path, new=TRUE) {
 	
 	if (is.na(path)) {
 		text <- tags$p("There is no folder selected, the template files cannot be modified")

@@ -13,6 +13,7 @@
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{B8398F6C-55C8-40CC-9053-DBBA21741E39}
+SignTool=MsSign $f
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
@@ -23,7 +24,7 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 OutputDir={#CanReg5Dir}\dist
-InfoBeforeFile={#CanReg5Dir}\changelog.txt
+InfoBeforeFile={#CanReg5Dir}\changelog.rtf
 LicenseFile={#CanReg5Dir}\src\canreg\client\gui\resources\gpl-3.0-standalone.txt
 AllowNoIcons=yes
 OutputBaseFilename=CanReg5-with-R-Packages-Setup
@@ -44,7 +45,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 Source: "{#CanReg5Dir}\CanReg.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#CanReg5Dir}\conf\*"; DestDir: "{app}\conf"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#CanReg5Dir}\conf\*"; Excludes: "r-installation\*" ; DestDir: "{app}\conf"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#CanReg5Dir}\demo\*"; DestDir: "{app}\demo"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#CanReg5Dir}\scripts\*"; DestDir: "{app}\scripts"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#CanReg5Dir}\dist\lib\*"; DestDir: "{app}\lib"; Flags: ignoreversion recursesubdirs createallsubdirs

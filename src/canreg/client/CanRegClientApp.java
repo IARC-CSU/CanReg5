@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2018  International Agency for Research on Cancer
+ * Copyright (C) 2008-2021  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -125,7 +125,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     private Converter converter;
     private Properties appInfoProperties;
     private String canRegSystemVersionString;
-    private TreeMap<String, Set<Integer>> locksMap;
+    private Map<String, Set<Integer>> locksMap;
     private LockFile lockFile;
 
     public void changePassword(String encrypted) throws SecurityException, RemoteException {
@@ -233,6 +233,7 @@ public class CanRegClientApp extends SingleFrameApplication {
      * Save a new population dataset on the server
      *
      * @param pds Population Data Set to save
+     * @param server
      * @throws java.lang.SecurityException
      * @throws java.rmi.RemoteException
      */
@@ -309,9 +310,7 @@ public class CanRegClientApp extends SingleFrameApplication {
                     int users = 0;
                     try {
                         users = listUsersLoggedIn().length - 1;
-                    } catch (SecurityException ex) {
-                        Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (RemoteException ex) {
+                    } catch (SecurityException | RemoteException ex) {
                         Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     int numberOfRecordsOpen = numberOfRecordsOpen();
@@ -338,9 +337,7 @@ public class CanRegClientApp extends SingleFrameApplication {
                 if (isCanregServerRunningInThisThread() && mainServer != null) {
                     try {
                         mainServer.shutDownServer();
-                    } catch (RemoteException ex) {
-                        Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (SecurityException ex) {
+                    } catch (RemoteException | SecurityException ex) {
                         Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
@@ -380,8 +377,6 @@ public class CanRegClientApp extends SingleFrameApplication {
      * Initialize the application
      */
     public static void init() {
-        // Testing the environment - disabled
-        // canreg.common.Tools.testEnvironment();
 
         // Initialize logger
         try {
@@ -389,20 +384,13 @@ public class CanRegClientApp extends SingleFrameApplication {
             Handler fh = new FileHandler(Globals.LOGFILE_PATTERN);
             Logger.getLogger("").addHandler(fh);
             Logger.getLogger("canreg").setLevel(Level.parse(Globals.LOG_LEVEL));
-        } catch (IOException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SecurityException ex) {
+        } catch (IOException | SecurityException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        try {
-            splashMessage(java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("LOADING USER SETTINGS..."), 40);
-            // Initialize the user settings
-            localSettings = new LocalSettings("settings.xml");
-        } catch (IOException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        // Locale.setDefault(localSettings.getLocale());
+        splashMessage(java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("LOADING USER SETTINGS..."), 40);
+        // Initialize the user settings
+        localSettings = new LocalSettings("settings.xml");
     }
 
     /**
@@ -413,7 +401,7 @@ public class CanRegClientApp extends SingleFrameApplication {
      */
     public String testConnection(String serverObjectString) {
         debugOut("testing the connecting to server=" + serverObjectString + ".");
-        CanRegLoginInterface loginServer = null;
+        CanRegLoginInterface loginServer;
         String sysName = null;
         try {
             //authenticate credentials
@@ -421,13 +409,10 @@ public class CanRegClientApp extends SingleFrameApplication {
             //login object received
             // try to get system name
             sysName = loginServer.getRegistryName();
-        } catch (NotBoundException ex) {
+        } catch (NotBoundException | RemoteException ex) {
             Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RemoteException ex) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (MalformedURLException e) {
-            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.INFO, null, e);
-            // System.exit(0);
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(CanRegClientApp.class.getName()).log(Level.INFO, null, ex);
         }
         return sysName;
     }
@@ -704,19 +689,17 @@ public class CanRegClientApp extends SingleFrameApplication {
         }
         if (localSettings.getProperty(LocalSettings.LOOK_AND_FEEL_KEY).length() > 0) {
             try {
-                if (localSettings.getProperty(LocalSettings.LOOK_AND_FEEL_KEY).equalsIgnoreCase("System")) {
+                if (localSettings.getProperty(LocalSettings.LOOK_AND_FEEL_KEY).equalsIgnoreCase("Dark")) {
+                    UIManager.setLookAndFeel( new com.formdev.flatlaf.FlatDarculaLaf() );
+                } else if (localSettings.getProperty(LocalSettings.LOOK_AND_FEEL_KEY).equalsIgnoreCase("Light")){
+                    UIManager.setLookAndFeel( new com.formdev.flatlaf.FlatIntelliJLaf() );
+                }
+                else {
                     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                } else {
-                    UIManager.setLookAndFeel(localSettings.getProperty(LocalSettings.LOOK_AND_FEEL_KEY));
+//                    UIManager.setLookAndFeel(localSettings.getProperty(LocalSettings.LOOK_AND_FEEL_KEY));
                 }
                 // Locale.setDefault(localSettings.getLocale());
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.WARNING, null, ex);
-            } catch (InstantiationException ex) {
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.WARNING, null, ex);
-            } catch (IllegalAccessException ex) {
-                Logger.getLogger(CanRegClientApp.class.getName()).log(Level.WARNING, null, ex);
-            } catch (UnsupportedLookAndFeelException ex) {
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
                 Logger.getLogger(CanRegClientApp.class.getName()).log(Level.WARNING, null, ex);
             }
         }

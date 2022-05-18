@@ -134,6 +134,9 @@ public class ChangeLogInternalFrame extends javax.swing.JInternalFrame implement
 
     private void readChangelog() {
         String changelog = canreg.common.Tools.getFileFromURL(Globals.CANREG_CHANGELOG_URL);
+        if(Globals.CANREG_CHANGELOG_URL.endsWith("html")){
+            editorPane.setContentType("text/html");
+        }
         editorPane.setText(changelog);
         editorPane.setCaretPosition(0);
     }
