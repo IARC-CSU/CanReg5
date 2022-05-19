@@ -33,7 +33,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 public class QueryGenerator {
-
+    
+    private static final Logger LOGGER = Logger.getLogger(QueryGenerator.class.getName());
     static final boolean debug = true;
     static final String namespace = "ns3:";
 
@@ -580,13 +581,13 @@ public class QueryGenerator {
     private static String strEditRecord(Document doc, String tableName) {
 
         String recordIDVariableName = "ID";
-        if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
+        if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME))
             recordIDVariableName = Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME;
-        } else if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
+        else if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) 
             recordIDVariableName = Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME;
-        } else if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
+        else if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) 
             recordIDVariableName = Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME;
-        }
+        
 
         String variableNamesPart = "UPDATE " + Globals.SCHEMA_NAME + "."
                 + canreg.common.Tools.toUpperCaseStandardized(tableName);
@@ -608,13 +609,16 @@ public class QueryGenerator {
             String variableType = element.getElementsByTagName(namespace + "variable_type").item(0).getTextContent();
             if (!"Meta".equalsIgnoreCase(variableType)) {
                 if (tableNameDB.equalsIgnoreCase(tableName)) {
+                    String shortName = canreg.common.Tools
+                            .toUpperCaseStandardized(element.getElementsByTagName(namespace + "short_name").item(0).getTextContent());
+                    
                     if (first) {
                         first = false;
                     } else {
                         variableNamesPart += "\n, ";
                     }
-                    variableNamesPart += "\""
-                            + canreg.common.Tools.toUpperCaseStandardized(element.getElementsByTagName(namespace + "short_name").item(0).getTextContent()) + "\" = ?";
+
+                    variableNamesPart += "\"" + shortName + "\" = ?";
                 }
             }
         }
@@ -683,7 +687,7 @@ public class QueryGenerator {
 
     private static void debugOut(String msg) {
         if (debug) {
-            Logger.getLogger(QueryGenerator.class.getName()).log(Level.INFO, msg);
+            LOGGER.log(Level.INFO, msg);
         }
     }
 

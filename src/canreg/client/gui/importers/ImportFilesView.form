@@ -52,8 +52,8 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="tabbedPane" pref="395" max="32767" attributes="0"/>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="tabbedPane" pref="509" max="32767" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="nextButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="cancelButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -194,20 +194,20 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="1" attributes="0">
+                  <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="jScrollPane1" alignment="0" pref="591" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jPanel2" alignment="0" max="32767" attributes="0"/>
                           <Group type="102" alignment="1" attributes="0">
+                              <Component id="jPanel7" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="discrepanciesPanel" min="-2" max="-2" attributes="1"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="maxLinesPanel" min="-2" max="-2" attributes="1"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jPanel7" max="32767" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                               <Component id="importButton" min="-2" max="-2" attributes="0"/>
                           </Group>
+                          <Component id="jPanel1" alignment="0" pref="630" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -218,16 +218,16 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="importButton" max="32767" attributes="1"/>
                           <Component id="maxLinesPanel" alignment="0" max="32767" attributes="1"/>
                           <Component id="discrepanciesPanel" alignment="0" max="32767" attributes="1"/>
-                          <Component id="jPanel7" alignment="0" max="32767" attributes="1"/>
+                          <Component id="importButton" alignment="0" max="32767" attributes="1"/>
+                          <Component id="jPanel7" alignment="0" min="-2" max="-2" attributes="1"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Component id="jPanel1" min="-2" pref="181" max="-2" attributes="0"/>
+                      <EmptySpace pref="68" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -274,6 +274,7 @@
                           <Component id="updateRadioButton" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="overwriteRadioButton" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -282,6 +283,7 @@
                 <Component class="javax.swing.JRadioButton" name="rejectRadioButton">
                   <Properties>
                     <Property name="text" type="java.lang.String" resourceKey="rejectRadioButton.text"/>
+                    <Property name="enabled" type="boolean" value="false"/>
                     <Property name="name" type="java.lang.String" value="rejectRadioButton" noResource="true"/>
                   </Properties>
                 </Component>
@@ -289,12 +291,14 @@
                   <Properties>
                     <Property name="selected" type="boolean" value="true"/>
                     <Property name="text" type="java.lang.String" resourceKey="updateRadioButton.text"/>
+                    <Property name="enabled" type="boolean" value="false"/>
                     <Property name="name" type="java.lang.String" value="updateRadioButton" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JRadioButton" name="overwriteRadioButton">
                   <Properties>
                     <Property name="text" type="java.lang.String" resourceKey="overwriteRadioButton.text"/>
+                    <Property name="enabled" type="boolean" value="false"/>
                     <Property name="name" type="java.lang.String" value="overwriteRadioButton" noResource="true"/>
                   </Properties>
                 </Component>
@@ -304,7 +308,9 @@
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="CanReg data"/>
+                    <TitledBorder title="Options">
+                      <Property name="titleX" resourceKey="jPanel7.border.title"/>
+                    </TitledBorder>
                   </Border>
                 </Property>
                 <Property name="name" type="java.lang.String" value="jPanel7" noResource="true"/>
@@ -316,23 +322,28 @@
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="doChecksCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="personSearchCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="queryNewNameCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="formatChecksCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="holdingDBCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="doChecksCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="143" max="32767" attributes="0"/>
+                          <EmptySpace pref="137" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="doChecksCheckBox" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="holdingDBCheckBox" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
                           <Component id="personSearchCheckBox" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
                           <Component id="queryNewNameCheckBox" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="14" max="32767" attributes="0"/>
+                          <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
+                          <Component id="formatChecksCheckBox" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
+                          <Component id="doChecksCheckBox" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -363,6 +374,25 @@
                     <Property name="enabled" type="boolean" value="false"/>
                     <Property name="name" type="java.lang.String" value="queryNewNameCheckBox" noResource="true"/>
                   </Properties>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="formatChecksCheckBox">
+                  <Properties>
+                    <Property name="selected" type="boolean" value="true"/>
+                    <Property name="text" type="java.lang.String" resourceKey="formatChecksCheckBox.text"/>
+                    <Property name="toolTipText" type="java.lang.String" resourceKey="formatChecksCheckBox.toolTipText"/>
+                    <Property name="name" type="java.lang.String" value="formatChecksCheckBox" noResource="true"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="holdingDBCheckBox">
+                  <Properties>
+                    <Property name="selected" type="boolean" value="true"/>
+                    <Property name="text" type="java.lang.String" resourceKey="holdingDBCheckBox.text"/>
+                    <Property name="toolTipText" type="java.lang.String" resourceKey="holdingDBCheckBox.toolTipText"/>
+                    <Property name="name" type="java.lang.String" value="holdingDBCheckBox" noResource="true"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="holdingDBCheckBoxActionPerformed"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>
@@ -395,7 +425,7 @@
                           <Component id="maxLinesTextField" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="testOnlyCheckBox" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="31" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -438,7 +468,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="fileLabel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="reportFileNameTextField" pref="478" max="32767" attributes="0"/>
+                          <Component id="reportFileNameTextField" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="browseButton" min="-2" max="-2" attributes="1"/>
                       </Group>
@@ -484,29 +514,57 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+            <Container class="javax.swing.JPanel" name="jPanel1">
               <Properties>
-                <Property name="name" type="java.lang.String" value="jScrollPane1" noResource="true"/>
+                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                  <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                    <TitledBorder title="Progress">
+                      <Property name="titleX" resourceKey="jPanel1.border.title"/>
+                    </TitledBorder>
+                  </Border>
+                </Property>
+                <Property name="name" type="java.lang.String" value="jPanel1" noResource="true"/>
+                <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                  <Dimension value="[625, 159]"/>
+                </Property>
               </Properties>
 
-              <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+              <Layout>
+                <DimensionLayout dim="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jPanel3" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+                <DimensionLayout dim="1">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <EmptySpace min="0" pref="158" max="32767" attributes="0"/>
+                      <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
+                              <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace pref="23" max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+              </Layout>
               <SubComponents>
-                <Container class="javax.swing.JPanel" name="jPanel1">
+                <Container class="javax.swing.JPanel" name="jPanel3">
                   <Properties>
-                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                      <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                        <TitledBorder title="Progress">
-                          <Property name="titleX" resourceKey="jPanel1.border.title"/>
-                        </TitledBorder>
-                      </Border>
-                    </Property>
-                    <Property name="name" type="java.lang.String" value="jPanel1" noResource="true"/>
+                    <Property name="name" type="java.lang.String" value="jPanel3" noResource="true"/>
                   </Properties>
 
                   <Layout>
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
+                          <Group type="102" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="1" attributes="0">
                                   <Component id="patientsLabel" alignment="1" min="-2" max="-2" attributes="0"/>
@@ -514,22 +572,30 @@
                                   <Component id="recordLabel" alignment="1" min="-2" max="-2" attributes="0"/>
                                   <Component id="sourcesLabel" alignment="1" min="-2" max="-2" attributes="0"/>
                                   <Component id="overallLabel" min="-2" max="-2" attributes="0"/>
+                                  <Component id="checksLabel" alignment="1" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="sourcesProgressBar" alignment="0" pref="504" max="32767" attributes="1"/>
-                                  <Component id="tumoursProgressBar" alignment="1" pref="504" max="32767" attributes="1"/>
-                                  <Component id="patientsProgressBar" alignment="0" pref="504" max="32767" attributes="0"/>
-                                  <Component id="progressBar" alignment="0" pref="504" max="32767" attributes="1"/>
-                                  <Component id="recordProgressBar" alignment="0" pref="504" max="32767" attributes="0"/>
+                                  <Component id="checksBar" pref="536" max="32767" attributes="1"/>
+                                  <Component id="recordProgressBar" max="32767" attributes="0"/>
+                                  <Component id="progressBar" alignment="1" max="32767" attributes="1"/>
+                                  <Component id="sourcesProgressBar" alignment="0" max="32767" attributes="1"/>
+                                  <Component id="tumoursProgressBar" max="32767" attributes="1"/>
+                                  <Component id="patientsProgressBar" alignment="0" max="32767" attributes="0"/>
                               </Group>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="checksLabel" min="-2" pref="14" max="-2" attributes="0"/>
+                                  <Component id="checksBar" min="-2" pref="12" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="recordLabel" min="-2" max="-2" attributes="0"/>
                                   <Component id="recordProgressBar" min="-2" max="-2" attributes="0"/>
@@ -554,16 +620,12 @@
                                   <Component id="overallLabel" min="-2" pref="14" max="-2" attributes="0"/>
                                   <Component id="progressBar" min="-2" max="-2" attributes="0"/>
                               </Group>
+                              <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
                   </Layout>
                   <SubComponents>
-                    <Component class="javax.swing.JProgressBar" name="progressBar">
-                      <Properties>
-                        <Property name="name" type="java.lang.String" value="progressBar" noResource="true"/>
-                      </Properties>
-                    </Component>
                     <Component class="javax.swing.JLabel" name="overallLabel">
                       <Properties>
                         <Property name="text" type="java.lang.String" resourceKey="overallLabel.text"/>
@@ -588,6 +650,18 @@
                         <Property name="name" type="java.lang.String" value="tumoursLabel" noResource="true"/>
                       </Properties>
                     </Component>
+                    <Component class="javax.swing.JLabel" name="sourcesLabel">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" resourceKey="sourcesLabel.text"/>
+                        <Property name="name" type="java.lang.String" value="sourcesLabel" noResource="true"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="checksLabel">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" resourceKey="checksLabel.text"/>
+                        <Property name="name" type="java.lang.String" value="checksLabel" noResource="true"/>
+                      </Properties>
+                    </Component>
                     <Component class="javax.swing.JProgressBar" name="recordProgressBar">
                       <Properties>
                         <Property name="name" type="java.lang.String" value="recordProgressBar" noResource="true"/>
@@ -608,10 +682,14 @@
                         <Property name="name" type="java.lang.String" value="sourcesProgressBar" noResource="true"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JLabel" name="sourcesLabel">
+                    <Component class="javax.swing.JProgressBar" name="progressBar">
                       <Properties>
-                        <Property name="text" type="java.lang.String" resourceKey="sourcesLabel.text"/>
-                        <Property name="name" type="java.lang.String" value="sourcesLabel" noResource="true"/>
+                        <Property name="name" type="java.lang.String" value="progressBar" noResource="true"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JProgressBar" name="checksBar">
+                      <Properties>
+                        <Property name="name" type="java.lang.String" value="checksBar" noResource="true"/>
                       </Properties>
                     </Component>
                   </SubComponents>

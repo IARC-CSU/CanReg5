@@ -35,6 +35,7 @@ import java.util.logging.Logger;
  */
 public class ServerLauncher {
 
+    private static final Logger LOGGER = Logger.getLogger(ServerLauncher.class.getName());
     /**
      * @param systemCode 
      * @param port 
@@ -46,18 +47,19 @@ public class ServerLauncher {
         // int port = Globals.RMI_PORT;
         boolean success = false;
         CanRegServerInterface server = null;
-
+        LOGGER.log(Level.INFO, "starting the server");
+        System.setProperty("java.security.auth.login.config", Globals.LOGIN_FILENAME);
+        System.setProperty("java.security.policy", Globals.POLICY_FILENAME);
+        System.setProperty("java.rmi.server.useCodebaseOnly", "true");
         // try to create the registry if needed
         try {
             LocateRegistry.createRegistry(port);
         } catch (RemoteException ex) {
             // if it is already running with another server that's fine
-            Logger.getLogger(ServerLauncher.class.getName()).log(Level.WARNING, null, ex);
+            LOGGER.log(Level.WARNING, null, ex);
         }
 
         try {
-            System.setProperty("java.security.auth.login.config", Globals.LOGIN_FILENAME);
-            System.setProperty("java.security.policy", Globals.POLICY_FILENAME);
             String rmiAddresse = "rmi://" + systemURL + ":" + port + "/CanRegLogin" + systemCode;
 
             // assume already bound
@@ -67,37 +69,37 @@ public class ServerLauncher {
                 // Check to see if service is already bound
                 Naming.lookup(rmiAddresse);
             } catch (NotBoundException ex) {
-                // Logger.getLogger(ServerLauncher.class.getName()).log(Level.INFO, null, ex);
+                // LOGGER.log(Level.INFO, null, ex);
                 alreadyBound = false;
             }
             
             if (!alreadyBound) {
-                server = new CanRegServerImpl(systemCode);
+                server = new CanRegServerImpl(systemCode, false);
                 CanRegLoginInterface service = new CanRegLoginImpl(server);
                 Naming.bind(rmiAddresse, service);
                 success = true;
             }
 
         } catch (MalformedURLException ex) {
-            Logger.getLogger(ServerLauncher.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             success = false;
         } catch (AlreadyBoundException ex) {
-            Logger.getLogger(ServerLauncher.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             success = false;
             if (server != null) {
                 try {
                     server.shutDownServer();
                 } catch (RemoteException ex1) {
-                    Logger.getLogger(ServerLauncher.class.getName()).log(Level.SEVERE, null, ex1);
+                    LOGGER.log(Level.SEVERE, null, ex1);
                 } catch (SecurityException ex1) {
-                    Logger.getLogger(ServerLauncher.class.getName()).log(Level.SEVERE, null, ex1);
+                    LOGGER.log(Level.SEVERE, null, ex1);
                 } finally {
                     return success;
                 }
             }
             success = false;
         } catch (RemoteException ex) {
-            Logger.getLogger(ServerLauncher.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             success = false;
         }
         return success;
@@ -113,7 +115,7 @@ public class ServerLauncher {
                 start("localhost", args[0], 1199);
             }
         } catch (AlreadyBoundException ex) {
-            Logger.getLogger(ServerLauncher.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
     }
 }

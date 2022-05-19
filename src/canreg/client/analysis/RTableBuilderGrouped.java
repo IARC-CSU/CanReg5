@@ -21,7 +21,7 @@ package canreg.client.analysis;
 
 import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
-import canreg.client.analysis.TableBuilderInterface.FileTypes;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.Globals;
 import canreg.common.Globals.StandardVariableNames;
 import canreg.common.database.PopulationDataset;
@@ -86,6 +86,7 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
     private final String[] rScriptsArguments;
     private String[] icd10GroupColors;
     private boolean writeColors = true;
+    private static final Logger LOGGER = Logger.getLogger(RTableBuilderGrouped.class.getName());
 
     public RTableBuilderGrouped(String configFileName) throws FileNotFoundException {
         this.unknownAgeInt = Globals.DEFAULT_UNKNOWN_AGE_CODE;
@@ -283,7 +284,7 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
                         }
                         outLine.delete(0, outLine.length());
                     } catch (NumberFormatException nfe) {
-                        Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.WARNING, null, nfe);
+                        LOGGER.log(Level.WARNING," Number Format Exception while building the R table", nfe);
                     }
                 }
                 incoutput.flush();
@@ -317,8 +318,8 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
                 commandList.add("-label=" + canreg.common.Tools.combine(tableLabel, "|"));
                 commandList.add("-header=" + tableHeader);
                 commandList.add("-ft=" + fileType);
-                commandList.add("-sc=" + CanRegClientApp.getApplication().getSystemCode());
-                commandList.add("-sr=" + CanRegClientApp.getApplication().getSystemRegion());
+                commandList.add("-sc=" + CanRegClientApp.getApplication().getSystemCode(null));
+                commandList.add("-sr=" + CanRegClientApp.getApplication().getSystemRegion(null));
                 commandList.add("-lang=" + language);
                 // add the rest of the arguments
                 commandList.addAll(Arrays.asList(rScriptsArguments));
@@ -341,7 +342,7 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
                         pr.waitFor();
                         // convert the output to a string
                         String theString = convertStreamToString(is);
-                        Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.INFO, "Messages from R: \n{0}", theString);
+                        LOGGER.log(Level.INFO, "Messages from R: \n{0}", theString);
                         // System.out.println(theString.split("\\r?\\n").length);
                         // and add all to the list of files to return
                         for (String fileName : theString.split("\\r?\\n")) {
@@ -354,24 +355,25 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
                             }
                         }
                     } catch (InterruptedException ex) {
-                        Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.SEVERE, null, ex);
+                        LOGGER.log(Level.SEVERE,"Method interrupted while waiting for the command list to complete " , ex);
+                        new TechnicalError().errorDialog();
                     } catch (java.util.NoSuchElementException ex) {
-                        Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.SEVERE, null, ex);
+                        LOGGER.log(Level.SEVERE, " element being requested does not exist.", ex);
                         BufferedInputStream errorStream = new BufferedInputStream(pr.getErrorStream());
                         String errorMessage = convertStreamToString(errorStream);
-                        System.out.println(errorMessage);
+                        LOGGER.log(Level.SEVERE," Error in the stream : {0}",errorMessage);
                         throw new TableErrorException("R says:\n" + errorMessage);
                     } finally {
-                        System.out.println(pr.exitValue());
-                        // Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.INFO, null, pr.exitValue());
+                        LOGGER.log(Level.INFO,"Exiting with return code : {0} ", pr.exitValue());
                     }
                 }
             }
 
         } catch (IOException ex) {
-            Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, "Error while creating or filling a file ", ex);
+            new TechnicalError().errorDialog();
         } catch (IncompatiblePopulationDataSetException ex) {
-            Logger.getLogger(RTableBuilderGrouped.class.getName()).log(Level.WARNING, null, ex);
+            LOGGER.log(Level.WARNING, "Error in the population, dataset : some data are incorrect ", ex);
             throw new NotCompatibleDataException();
         }
 

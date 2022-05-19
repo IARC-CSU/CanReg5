@@ -27,7 +27,7 @@ package canreg.client.gui.management;
 import canreg.client.gui.*;
 import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
-import static canreg.client.LocalSettings.CLIENT_SESSIONS_CHECK_KEY;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.Globals;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
@@ -52,7 +52,8 @@ import org.jdesktop.application.Action;
  * @author  morten
  */
 public class OptionsFrame extends javax.swing.JInternalFrame {
-
+    
+    private static final Logger LOGGER = Logger.getLogger(OptionsFrame.class.getName());
     private CanRegClientView crcv;
     private LocalSettings localSettings;
     private Locale[] locales;
@@ -77,7 +78,8 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
             initComponents();
             initValues();
         } catch (IOException ex) {
-            Logger.getLogger(OptionsFrame.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
     }
 
@@ -104,6 +106,9 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         fontNameTextField = new javax.swing.JTextField();
         fontSizeComboBox = new javax.swing.JComboBox();
         fontSizeLabel = new javax.swing.JLabel();
+        themeLabel = new javax.swing.JLabel();
+        themeComboBox = new javax.swing.JComboBox();
+        jPanel1 = new javax.swing.JPanel();
         dataEntryLabel = new javax.swing.JLabel();
         dataEntryVersionComboBox = new javax.swing.JComboBox();
         newDataEntryVerticalSources = new javax.swing.JCheckBox();
@@ -170,6 +175,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         languagePanel.setName("languagePanel"); // NOI18N
 
         languageLabel.setText(resourceMap.getString("languageLabel.text")); // NOI18N
+        languageLabel.setToolTipText(resourceMap.getString("languageLabel.toolTipText")); // NOI18N
         languageLabel.setName("languageLabel"); // NOI18N
 
         languageComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "English", "Arabic", "Spanish", "Persian" }));
@@ -200,7 +206,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
                     .addComponent(languageLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(languagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(dateFormatComboBox, 0, 363, Short.MAX_VALUE)
+                    .addComponent(dateFormatComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(languageComboBox, 0, 1, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -226,9 +232,11 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         showOutlineCheckBox.setName("showOutlineCheckBox"); // NOI18N
 
         fontNameLabel.setText(resourceMap.getString("fontNameLabel.text")); // NOI18N
+        fontNameLabel.setToolTipText(resourceMap.getString("fontNameLabel.toolTipText")); // NOI18N
         fontNameLabel.setName("fontNameLabel"); // NOI18N
 
         fontNameTextField.setText(resourceMap.getString("fontNameTextField.text")); // NOI18N
+        fontNameTextField.setToolTipText(resourceMap.getString("fontNameTextField.toolTipText")); // NOI18N
         fontNameTextField.setName("fontNameTextField"); // NOI18N
 
         fontSizeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Small", "Medium", "Big" }));
@@ -237,7 +245,61 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         fontSizeComboBox.setName("fontSizeComboBox"); // NOI18N
 
         fontSizeLabel.setText(resourceMap.getString("fontSizeLabel.text")); // NOI18N
+        fontSizeLabel.setToolTipText(resourceMap.getString("fontSizeLabel.toolTipText")); // NOI18N
         fontSizeLabel.setName("fontSizeLabel"); // NOI18N
+
+        themeLabel.setText(resourceMap.getString("themeLabel.text")); // NOI18N
+        themeLabel.setToolTipText(resourceMap.getString("themeLabel.toolTipText")); // NOI18N
+        themeLabel.setName("themeLabel"); // NOI18N
+
+        themeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "System", "Light", "Dark" }));
+        themeComboBox.setToolTipText(resourceMap.getString("themeComboBox.toolTipText")); // NOI18N
+        themeComboBox.setName("themeComboBox"); // NOI18N
+
+        javax.swing.GroupLayout lookAndFeelPanelLayout = new javax.swing.GroupLayout(lookAndFeelPanel);
+        lookAndFeelPanel.setLayout(lookAndFeelPanelLayout);
+        lookAndFeelPanelLayout.setHorizontalGroup(
+            lookAndFeelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(lookAndFeelPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(lookAndFeelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(lookAndFeelPanelLayout.createSequentialGroup()
+                        .addComponent(showOutlineCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(18, 18, 18))
+                    .addGroup(lookAndFeelPanelLayout.createSequentialGroup()
+                        .addGroup(lookAndFeelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(fontNameLabel)
+                            .addComponent(fontSizeLabel)
+                            .addComponent(themeLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(lookAndFeelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(themeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(fontSizeComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(fontNameTextField))
+                        .addContainerGap())))
+        );
+        lookAndFeelPanelLayout.setVerticalGroup(
+            lookAndFeelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(lookAndFeelPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(lookAndFeelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(themeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(themeLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(lookAndFeelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(fontNameLabel)
+                    .addComponent(fontNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(lookAndFeelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(fontSizeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(fontSizeLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(showOutlineCheckBox)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel1.border.title"))); // NOI18N
+        jPanel1.setName("jPanel1"); // NOI18N
 
         dataEntryLabel.setText(resourceMap.getString("dataEntryLabel.text")); // NOI18N
         dataEntryLabel.setName("dataEntryLabel"); // NOI18N
@@ -255,57 +317,38 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         dataEntryDisplayVariableComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "FULL", "SHORT", "ENGLISH", "STANDARD" }));
         dataEntryDisplayVariableComboBox.setName("dataEntryDisplayVariableComboBox"); // NOI18N
 
-        javax.swing.GroupLayout lookAndFeelPanelLayout = new javax.swing.GroupLayout(lookAndFeelPanel);
-        lookAndFeelPanel.setLayout(lookAndFeelPanelLayout);
-        lookAndFeelPanelLayout.setHorizontalGroup(
-            lookAndFeelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(lookAndFeelPanelLayout.createSequentialGroup()
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(lookAndFeelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(lookAndFeelPanelLayout.createSequentialGroup()
-                        .addGroup(lookAndFeelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(fontNameLabel)
-                            .addComponent(fontSizeLabel))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(lookAndFeelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(fontSizeComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, 449, Short.MAX_VALUE)
-                            .addComponent(fontNameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE))
-                        .addContainerGap())
-                    .addGroup(lookAndFeelPanelLayout.createSequentialGroup()
-                        .addComponent(showOutlineCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, 506, Short.MAX_VALUE)
-                        .addGap(18, 18, 18))
-                    .addGroup(lookAndFeelPanelLayout.createSequentialGroup()
-                        .addComponent(dataEntryLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dataEntryVersionComboBox, 0, 404, Short.MAX_VALUE)
-                        .addContainerGap())
-                    .addComponent(newDataEntryVerticalSources, javax.swing.GroupLayout.DEFAULT_SIZE, 524, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, lookAndFeelPanelLayout.createSequentialGroup()
-                        .addComponent(dataEntryDisplayVariableLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dataEntryDisplayVariableComboBox, 0, 385, Short.MAX_VALUE)
-                        .addContainerGap())))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(newDataEntryVerticalSources, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 4, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(dataEntryLabel)
+                                .addGap(18, 18, 18)
+                                .addComponent(dataEntryVersionComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 402, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(dataEntryDisplayVariableLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(dataEntryDisplayVariableComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 399, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap())
         );
-        lookAndFeelPanelLayout.setVerticalGroup(
-            lookAndFeelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(lookAndFeelPanelLayout.createSequentialGroup()
-                .addGroup(lookAndFeelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(fontNameLabel)
-                    .addComponent(fontNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(lookAndFeelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(fontSizeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(fontSizeLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(showOutlineCheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(lookAndFeelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(dataEntryLabel)
                     .addComponent(dataEntryVersionComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(newDataEntryVerticalSources)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(lookAndFeelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(dataEntryDisplayVariableComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(dataEntryDisplayVariableLabel))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -315,11 +358,12 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         generalPanel.setLayout(generalPanelLayout);
         generalPanelLayout.setHorizontalGroup(
             generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, generalPanelLayout.createSequentialGroup()
+            .addGroup(generalPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lookAndFeelPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(languagePanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lookAndFeelPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(languagePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         generalPanelLayout.setVerticalGroup(
@@ -328,8 +372,10 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addComponent(languagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lookAndFeelPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(lookAndFeelPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab(resourceMap.getString("generalPanel.TabConstraints.tabTitle"), generalPanel); // NOI18N
@@ -414,7 +460,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
             .addGroup(systemPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(automaticBackupPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(235, Short.MAX_VALUE))
+                .addContainerGap(280, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab(resourceMap.getString("systemPanel.TabConstraints.tabTitle"), systemPanel); // NOI18N
@@ -510,7 +556,6 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         clientSessionsCheckLabel.setName("clientSessionsCheckLabel"); // NOI18N
 
         clientToServerTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
-        clientToServerTextField.setText(resourceMap.getString("clientToServerTextField.text")); // NOI18N
         clientToServerTextField.setName("clientToServerTextField"); // NOI18N
         clientToServerTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -519,7 +564,6 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         });
 
         clientSessionsCheckTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
-        clientSessionsCheckTextField.setText(resourceMap.getString("clientSessionsCheckTextField.text")); // NOI18N
         clientSessionsCheckTextField.setToolTipText(resourceMap.getString("clientSessionsCheckTextField.toolTipText")); // NOI18N
         clientSessionsCheckTextField.setName("clientSessionsCheckTextField"); // NOI18N
         clientSessionsCheckTextField.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -574,7 +618,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
                 .addComponent(versionPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(timersPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(113, Short.MAX_VALUE))
+                .addContainerGap(170, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab(resourceMap.getString("advancedPanel.TabConstraints.tabTitle"), advancedPanel); // NOI18N
@@ -665,7 +709,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
                 .addComponent(rPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(gsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(208, Short.MAX_VALUE))
+                .addContainerGap(273, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab(resourceMap.getString("pathsPanel.TabConstraints.tabTitle"), pathsPanel); // NOI18N
@@ -764,6 +808,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JComboBox languageComboBox;
     private javax.swing.JLabel languageLabel;
     private javax.swing.JLabel languageLabel1;
@@ -781,6 +826,8 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
     private javax.swing.JCheckBox showOutlineCheckBox;
     private javax.swing.JPanel systemPanel;
     private javax.swing.JTabbedPane tabbedPane;
+    private javax.swing.JComboBox themeComboBox;
+    private javax.swing.JLabel themeLabel;
     private javax.swing.JPanel timersPanel;
     private javax.swing.JLabel versionInstalledLabel;
     private javax.swing.JTextField versionInstalledTextField;
@@ -836,12 +883,12 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
             if (backUpDate != null) {
                 backUpPerformedTextField.setText(DateFormat.getDateInstance().format(backUpDate));
             }
-        } catch (SecurityException ex) {
-            Logger.getLogger(OptionsFrame.class.getName()).log(Level.INFO, null, ex);
-        } catch (RemoteException ex) {
-            Logger.getLogger(OptionsFrame.class.getName()).log(Level.INFO, null, ex);
+        } catch (SecurityException | RemoteException ex) {
+            LOGGER.log(Level.INFO, null, ex);
+            new TechnicalError().errorDialog();
+
         }
-        
+
         String backUpEvery = localSettings.getProperty(LocalSettings.BACKUP_EVERY_KEY);
         numberOfDaysTextField.setText(backUpEvery);
         automaticbackupCheckBox.setSelected(localSettings.isAutoBackup());
@@ -874,6 +921,9 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         
         clientToServerTextField.setText(localSettings.getProperty(LocalSettings.CLIENT_TO_SERVER_PING_KEY));
         clientSessionsCheckTextField.setText(localSettings.getProperty(LocalSettings.CLIENT_SESSIONS_CHECK_KEY));
+        
+        String theme = localSettings.getProperty(LocalSettings.LOOK_AND_FEEL_KEY);
+        themeComboBox.setSelectedItem(theme);
     }
 
     private String getNewestVersionNumber() {
@@ -940,6 +990,8 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         localSettings.setProperty(LocalSettings.CLIENT_TO_SERVER_PING_KEY, clientToServerTextField.getText());
         localSettings.setProperty(LocalSettings.CLIENT_SESSIONS_CHECK_KEY, clientSessionsCheckTextField.getText());
         
+        localSettings.setProperty(LocalSettings.LOOK_AND_FEEL_KEY, themeComboBox.getSelectedItem().toString());
+        
         // write settings to file
         localSettings.writeSettings();
     }
@@ -952,7 +1004,8 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         try {
             canreg.common.Tools.browse(Globals.downloadCanRegURL);
         } catch (IOException ex) {
-            Logger.getLogger(OptionsFrame.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
     }
 

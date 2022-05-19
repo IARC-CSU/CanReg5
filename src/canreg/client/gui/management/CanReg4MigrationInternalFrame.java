@@ -24,18 +24,22 @@ package canreg.client.gui.management;
 
 import canreg.client.gui.CanRegClientView;
 import canreg.client.CanRegClientApp;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.Globals;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.GlobalToolBox;
 import canreg.client.LocalSettings;
+import canreg.server.database.RecordLockedException;
 import canreg.server.management.SystemDefinitionConverter;
 import canreg.exceptions.WrongCanRegVersionException;
 import canreg.client.dataentry.Relation;
 import canreg.client.gui.components.VariableMappingPanel;
-import canreg.client.dataentry.ImportOptions;
+import canreg.client.gui.importers.ImportOptions;
 
 import java.io.*;
 import java.io.File;
+import java.net.UnknownHostException;
+import java.sql.SQLException;
 import java.util.Random;
 import java.util.Map;
 import java.util.LinkedList;
@@ -69,6 +73,7 @@ import org.jdesktop.application.Action;
 
 public class CanReg4MigrationInternalFrame extends javax.swing.JInternalFrame {
 
+    private static final Logger LOGGER = Logger.getLogger(CanReg4MigrationInternalFrame.class.getName());
     public static boolean isPaused;
     private static final String namespace = "ns3:";
     private final JDesktopPane desktopPane;
@@ -413,12 +418,9 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
             edvif.loadSystemDefinition(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + regcode + ".xml");
             edvif.setDesktopPane(desktopPane);
             CanRegClientView.showAndPositionInternalFrame(desktopPane, edvif);
-        } catch (IOException ex) {
-            Logger.getLogger(CanReg4SystemConverterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ParserConfigurationException ex) {
-            Logger.getLogger(CanReg4SystemConverterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SAXException ex) {
-            Logger.getLogger(CanReg4SystemConverterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException | ParserConfigurationException | SAXException ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
 
         edvif.saveButton.addActionListener(new ActionListener() {
@@ -429,7 +431,8 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
                     try {
                         CanRegClientApp.getApplication().logOut();
                     } catch (RemoteException ex) {
-                        Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        LOGGER.log(Level.SEVERE, null, ex);
+                        new TechnicalError().errorDialog();
                     }
                 }
                 //check to see if there is a database already - rename it
@@ -447,7 +450,8 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
                         canreg.common.Tools.fileCopy(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + regcode + ".xml",
                                 Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + regcode + i + ".xml");
                     } catch (IOException ex) {
-                        Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        LOGGER.log(Level.SEVERE, null, ex);
+                        new TechnicalError().errorDialog();
                     }
                 }
                 ProgressBar.setStringPainted(true);
@@ -515,17 +519,17 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
             } catch (InterruptedException ex) {
                 doneButton.setEnabled(true);
                 cancelButton.setEnabled(false);
-                Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 publish(new Progress(Component.LOG, "Migration failed with " + ex.getCause()));
                 JOptionPane.showConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Migration failed.", "Migration failed.", JOptionPane.PLAIN_MESSAGE);
             } catch (java.util.concurrent.ExecutionException ex) {
                 doneButton.setEnabled(true);
                 cancelButton.setEnabled(false);
-                Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 publish(new Progress(Component.LOG, "Migration failed with " + ex.getCause()));
                 JOptionPane.showConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Migration failed.", "Migration failed.", JOptionPane.PLAIN_MESSAGE);
             } catch (java.util.concurrent.CancellationException ex) {
-                Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 publish(new Progress(Component.LOG, "Migration cancelled.\n"));
             }
         }
@@ -619,7 +623,7 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
                 try {
                     migrate(subtask);
                 } catch (InterruptedException ie) {
-                    Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ie);
+                    LOGGER.log(Level.SEVERE, null, ie);
                     return "Interrupted with " + ie;
                 }
                 publish(new Progress(Component.TOTAL, 100 * subtask / lengthOfTask));
@@ -641,7 +645,7 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
                     try {
                         Thread.sleep(500);
                     } catch (InterruptedException ie) {
-                        Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ie);
+                        LOGGER.log(Level.SEVERE, null, ie);
                         return;
                     }
                     continue;
@@ -670,7 +674,7 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
                     publish(new Progress(Component.LOG, "Login to CanReg5 System.\n"));
                     String canregSystem = null;
                     try {
-                        canregSystem = CanRegClientApp.getApplication().loginDirect(regcode, "morten", password);
+                        canregSystem = CanRegClientApp.getApplication().loginDirect(regcode, "morten", password, false);
                         // Closing WelcomeInternalFrame
                         JDesktopPane jdp = new JDesktopPane();
                         jdp = CanRegClientApp.getApplication().getDeskTopPane();
@@ -681,18 +685,9 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
                                 jf.dispose();
                             }
                         }
-                    } catch (LoginException ex) {
-                        Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (NotBoundException ex) {
-                        Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (MalformedURLException ex) {
-                        Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (RemoteException ex) {
-                        Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (java.net.UnknownHostException ex) {
-                        Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (WrongCanRegVersionException ex) {
-                        Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (LoginException | NotBoundException | MalformedURLException | UnknownHostException | WrongCanRegVersionException | RemoteException ex) {
+                        LOGGER.log(Level.SEVERE, null, ex);
+                        new TechnicalError().errorDialog();
                     }
                     if (canregSystem != null) {
                         JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/CanReg4MigrationInternalFrame").getString("SUCCESSFULLY_LOGIN"), "Login", JOptionPane.INFORMATION_MESSAGE);
@@ -721,12 +716,9 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
 
                     try {
                         dataimport_status = CanRegClientApp.getApplication().importCRFile(cTask, doc, buildMap(), inFile, buildImportOptions());
-                    } catch (java.sql.SQLException ex) {
-                        Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (canreg.server.database.RecordLockedException ex) {
-                        Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (RemoteException ex) {
-                        Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (SQLException | RecordLockedException | RemoteException ex) {
+                        LOGGER.log(Level.SEVERE, null, ex);
+                        new TechnicalError().errorDialog();
                     }
                 }
 
@@ -817,7 +809,8 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
                                     sdc.convertAndSaveInSystemFolder(defpath);
                                     publish("\"" + WordUtils.capitalize(sdc.getRegistryName().toLowerCase()) + "\"\n");
                                 } catch (IOException ex) {
-                                    Logger.getLogger(CanReg4SystemConverterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                                    LOGGER.log(Level.SEVERE, null, ex);
+                                    new TechnicalError().errorDialog();
                                 }
                                 registryCodes.add(sdc.getServerCode());
                                 deflist.add(defpath);
@@ -857,7 +850,8 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
                     //regSelectButton.setEnabled(true);
                 }
             } catch (Exception ex) {
-                Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
             ssdTask = null;
         }
@@ -897,7 +891,8 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
                 sysDefTextField.setText(chooser.getSelectedFile().getCanonicalPath());
                 defname = sysDefTextField.getText();
             } catch (IOException ex) {
-                Logger.getLogger(CanReg4SystemConverterInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
         }
         BrowseDefActionTask bTask = new BrowseDefActionTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class), defname);
@@ -942,7 +937,8 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
                     status = true;
                 }
             } catch (FileNotFoundException ex) {
-                Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
             return status;  // return your result
         }
@@ -970,7 +966,8 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
                     //regSelectButton.setEnabled(true);
                 }
             } catch (Exception ex) {
-                Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
             ssdTask = null;
         }
@@ -1080,19 +1077,17 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
 
                 //variablesPanel.revalidate();
                 //variablesPanel.repaint();
-            } catch (RemoteException ex) {
-                Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-                // JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportView").getString("COULD_NOT_OPEN_FILE:_") + "\'" + fileNameTextField.getText().trim() + "\'.", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportView").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             } catch (IOException ex) {
-                Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
+                // JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportView").getString("COULD_NOT_OPEN_FILE:_") + "\'" + fileNameTextField.getText().trim() + "\'.", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportView").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             } finally {
                 needToRebuildVariableMap = false;
                 try {
                     br.close();
                 } catch (IOException ex) {
-                    Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
+                    new TechnicalError().errorDialog();
                 }
 
             }
@@ -1152,7 +1147,7 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
      */
     private static void debugOut(String msg) {
         if (debug) {
-            Logger.getLogger(CanReg4MigrationInternalFrame.class.getName()).log(Level.INFO, msg);
+            LOGGER.log(Level.INFO, msg);
         }
     }
 

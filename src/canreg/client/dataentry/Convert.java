@@ -21,14 +21,16 @@
  */
 package canreg.client.dataentry;
 
+import canreg.client.gui.importers.ImportOptions;
+import canreg.client.gui.importers.Import;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.Globals;
 import canreg.client.CanRegClientApp;
-import canreg.client.gui.dataentry.ImportView;
+import canreg.client.gui.importers.ImportView;
 import canreg.server.management.SystemDescription;
 import canreg.server.CanRegServerInterface;
 import canreg.server.database.*;
 import canreg.common.DatabaseVariablesListElement;
-import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.common.conversions.ConversionResult;
 import canreg.common.conversions.Converter;
 import canreg.common.database.NameSexRecord;
@@ -87,6 +89,7 @@ public class Convert {
     static FileWriter txt_fw, csv_fw;
     static BufferedWriter txt_bw, csv_bw;
     static ParadoxConnection pconn;
+    private static final Logger LOGGER = Logger.getLogger(Convert.class.getName());
 
     public static boolean convertDictionary(canreg.client.gui.management.CanReg4MigrationInternalFrame.MigrationTask task, String filepath, String dictionaryfile, String regcode) {
         Connection conn = null;
@@ -138,7 +141,8 @@ public class Convert {
             txt_bw.close();
             success = true;
         } catch (SQLException | IOException | NumberFormatException | ParserConfigurationException | DOMException | SAXException ex) {
-            Logger.getLogger(Convert.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
         return success;
     }
@@ -164,7 +168,8 @@ public class Convert {
             }
             txt_bw.write("\n");
         } catch (SQLException | IOException | NumberFormatException ex) {
-            Logger.getLogger(Convert.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
     }
 
@@ -269,7 +274,8 @@ public class Convert {
             printer.close();
             success = true;
         } catch (SQLException | IOException ex) {
-            Logger.getLogger(Convert.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
         success = success && (rowsImported == totalrowcount);
         return success;
@@ -322,13 +328,14 @@ public class Convert {
                         Map<Integer, String> errors = canreg.client.dataentry.DictionaryHelper.testDictionary(null, dictionaryString);
                         if (errors.size() > 0) {
                             allErrors.put(dictionaryID, errors);
-                            Logger.getLogger(Convert.class.getName()).log(Level.WARNING, errors.size() + " errors in dictionary: " + dictionaryID, new Exception());
+                            LOGGER.log(Level.WARNING, String.format(" %d errors in dictionary: %d ",errors.size(),dictionaryID), new Exception());
                         } else {
                             canreg.client.dataentry.DictionaryHelper.replaceDictionary(dictionaryID, dictionaryString, CanRegClientApp.getApplication());
                         }
                         dictionaryString = new String();
                     } catch (RemoteException ex) {
-                        Logger.getLogger(Convert.class.getName()).log(Level.SEVERE, null, ex);
+                       LOGGER.log(Level.SEVERE, null, ex);
+                        new TechnicalError().errorDialog();
                     }
                 }
                 // Read next line
@@ -344,23 +351,28 @@ public class Convert {
 
         } catch (FileNotFoundException fileNotFoundException) {
             JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportCompleteDictionaryInternalFrame").getString("COULD_NOT_PREVIEW_THE_FILE:_") + file + "\'.", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportCompleteDictionaryInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
-            Logger.getLogger(ImportView.class.getName()).log(Level.WARNING, null, fileNotFoundException);
+            LOGGER.log(Level.WARNING, null, fileNotFoundException);
         } catch (IOException ex) {
-            Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         } catch (NumberFormatException nfe) {
             JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportCompleteDictionaryInternalFrame").getString("SOMETHING_WRONG_WITH_THE_DICTIONARY:_") + "\'" + file + "\'.", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportCompleteDictionaryInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
-            Logger.getLogger(ImportView.class.getName()).log(Level.WARNING, null, nfe);
+            LOGGER.log(Level.WARNING, null, nfe);
         } finally {
             try {
                 br.close();
             } catch (IOException ex) {
-                Logger.getLogger(ImportView.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
         }
         return allErrors;  // return your result
     }
 
-    public static boolean importFile(canreg.client.gui.management.CanReg4MigrationInternalFrame.MigrationTask task, Document doc, List<canreg.client.dataentry.Relation> map, File file, CanRegServerInterface server, ImportOptions io) throws SQLException, RemoteException, SecurityException, RecordLockedException {
+    public static boolean importFile(canreg.client.gui.management.CanReg4MigrationInternalFrame.MigrationTask task,
+                                     Document doc, List<canreg.client.dataentry.Relation> map, File file, 
+                                     CanRegServerInterface server, ImportOptions io) 
+            throws SQLException, RemoteException, SecurityException, RecordLockedException {
         boolean success = false;
 
         Set<String> noNeedToLookAtPatientVariables = new TreeSet<>();
@@ -380,7 +392,7 @@ public class Convert {
         Map<String, Integer> nameSexTable = server.getNameSexTables();
 
         try {
-            // Logger.getLogger(Import.class.getName()).log(Level.CONFIG, "Name of the character encoding {0}");
+            // LOGGER.log(Level.CONFIG, "Name of the character encoding {0}");
 
             int numberOfRecordsInFile = canreg.common.Tools.numberOfLinesInFile(file.getAbsolutePath());
 
@@ -424,7 +436,7 @@ public class Convert {
                                     try {
                                         patient.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(csvRecord.get(rel.getFileColumnNumber())));
                                     } catch (NumberFormatException ex) {
-                                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Number format error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
+                                        LOGGER.log(Level.SEVERE,String.format("Number format error in line: %d.",numberOfLinesRead + 1 + 1), ex);
                                         success = false;
                                     }
                                 }
@@ -432,7 +444,7 @@ public class Convert {
                                 patient.setVariable(rel.getDatabaseVariableName(), StringEscapeUtils.unescapeCsv(csvRecord.get(rel.getFileColumnNumber())));
                             }
                         } else {
-                            Logger.getLogger(Import.class.getName()).log(Level.INFO, "Something wrong with patient part of line " + numberOfLinesRead + ".", new Exception("Error in line: " + numberOfLinesRead + ". Can't find field: " + rel.getDatabaseVariableName()));
+                            LOGGER.log(Level.INFO, String.format("Something wrong with patient part of line : %d.",numberOfLinesRead), new Exception(String.format("Error in line: %d. Can't find field: %s",numberOfLinesRead,rel.getDatabaseVariableName())));
                         }
                     }
                 }
@@ -449,7 +461,7 @@ public class Convert {
                                     try {
                                         tumour.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(csvRecord.get(rel.getFileColumnNumber())));
                                     } catch (NumberFormatException ex) {
-                                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Number format error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
+                                        LOGGER.log(Level.SEVERE, String.format("Number format error in line: %d. ",numberOfLinesRead + 1 + 1), ex);
                                         success = false;
                                     }
                                 }
@@ -457,7 +469,8 @@ public class Convert {
                                 tumour.setVariable(rel.getDatabaseVariableName(), StringEscapeUtils.unescapeCsv(csvRecord.get(rel.getFileColumnNumber())));
                             }
                         } else {
-                            Logger.getLogger(Import.class.getName()).log(Level.INFO, "Something wrong with tumour part of line " + numberOfLinesRead + ".", new Exception("Error in line: " + numberOfLinesRead + ". Can't find field: " + rel.getDatabaseVariableName()));
+                            new TechnicalError().errorDialog();
+                            LOGGER.log(Level.INFO,String.format("Something wrong with tumour part of line %d.",numberOfLinesRead), new Exception(String.format("Error in line: %d. Can't find field: %s",numberOfLinesRead,rel.getDatabaseVariableName())));
                         }
                     }
                 }
@@ -474,7 +487,7 @@ public class Convert {
                                     try {
                                         source.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(csvRecord.get(rel.getFileColumnNumber())));
                                     } catch (NumberFormatException ex) {
-                                        Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Number format error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
+                                        LOGGER.log(Level.SEVERE, String.format("Number format error in line: %d.", numberOfLinesRead + 1 + 1), ex);
                                         success = false;
                                     }
                                 }
@@ -482,7 +495,8 @@ public class Convert {
                                 source.setVariable(rel.getDatabaseVariableName(), StringEscapeUtils.unescapeCsv(csvRecord.get(rel.getFileColumnNumber())));
                             }
                         } else {
-                            Logger.getLogger(Import.class.getName()).log(Level.INFO, "Something wrong with source part of line " + numberOfLinesRead + ".", new Exception("Error in line: " + numberOfLinesRead + ". Can't find field: " + rel.getDatabaseVariableName()));
+                            LOGGER.log(Level.INFO, String.format("Something wrong with source part of line %d.",numberOfLinesRead), new Exception("Error in line: " + numberOfLinesRead + ". Can't find field: " + rel.getDatabaseVariableName()));
+                            new TechnicalError().errorDialog();
                         }
 
                     }
@@ -529,9 +543,11 @@ public class Convert {
                         // rebuild sequenceNumber
                         Tumour[] tumours = new Tumour[0];
                         try {
-                            tumours = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(patientID + "", false);
-                        } catch (DistributedTableDescriptionException | UnknownTableException ex) {
-                            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                            tumours = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(patientID + "", false, null);
+                        }
+                        catch (Exception ex) {
+                            LOGGER.log(Level.SEVERE, null, ex);
+                            new TechnicalError().errorDialog();
                         }
 
                         tumourSequenceString = (tumours.length + 1) + "";
@@ -542,10 +558,11 @@ public class Convert {
                         patientRecordID = patientID + "" + tumourSequenceString;
                         Patient[] oldPatients = null;
                         try {
-                            oldPatients = CanRegClientApp.getApplication().getPatientRecordsByID((String) patientID, false);
-                        } catch (RemoteException | SecurityException | DistributedTableDescriptionException | RecordLockedException | SQLException | UnknownTableException ex) {
-                            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+                            oldPatients = CanRegClientApp.getApplication().getPatientsByPatientID((String) patientID, false, null);
+                        } catch (Exception ex) {
+                            LOGGER.log(Level.SEVERE, null, ex);
+                            new TechnicalError().errorDialog();
+                        } 
                         for (Patient oldPatient : oldPatients) {
                             if (!Tools.newRecordContainsNewInfo(patient, oldPatient, noNeedToLookAtPatientVariables)) {
                                 needToSavePatientAgain = false;
@@ -640,17 +657,18 @@ public class Convert {
             task.firePropertyChange("finished", null, null);
             success = true;
         } catch (IOException | NumberFormatException | IndexOutOfBoundsException | SQLException ex) {
-            Logger.getLogger(Import.class.getName()).log(Level.SEVERE, "Error in line: " + (numberOfLinesRead + 1 + 1) + ". ", ex);
+            LOGGER.log(Level.SEVERE,String.format("Error in line: %d.",numberOfLinesRead + 1 + 1), ex);
             success = false;
         } catch (InterruptedException ex) {
-            Logger.getLogger(Import.class.getName()).log(Level.INFO, "Interupted on line: " + (numberOfLinesRead + 1) + ". ", ex);
+            LOGGER.log(Level.INFO, String.format("Interupted on line: %d.", numberOfLinesRead + 1), ex);
             success = true;
         } finally {
             if (parser != null) {
                 try {
                     parser.close();
                 } catch (IOException ex) {
-                    Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
+                    new TechnicalError().errorDialog();
                 }
             }
         }
@@ -675,7 +693,7 @@ public class Convert {
      */
     private static void debugOut(String msg) {
         if (debug) {
-            Logger.getLogger(Convert.class.getName()).log(Level.INFO, msg);
+           LOGGER.log(Level.INFO, msg);
         }
     }
 

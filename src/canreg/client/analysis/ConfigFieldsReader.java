@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2017  International Agency for Research on Cancer
+ * Copyright (C) 2008-2021  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,6 @@
  *
  * @author Morten Johannes Ervik, CSU/IARC, ervikm@iarc.fr
  */
-
 package canreg.client.analysis;
 
 import java.io.FileReader;
@@ -28,10 +27,11 @@ public class ConfigFieldsReader extends DescriptionReader {
     public static LinkedList<ConfigFields> readFile(FileReader file) {
         String lastWord = readWord(file);
         String word = null;
-        LinkedList<ConfigFields> li = new LinkedList<ConfigFields>();
+        LinkedList<ConfigFields> li = new LinkedList<>();
         if (!lastWord.equals("EOF")) {
             word = readWord(file);
-        } while (!word.equals("EOF")) {
+        }
+        while (word != null && !word.equals("EOF")) {
             if (word.equals("{")) {
                 li.add(readConfig(lastWord, file));
             }
@@ -42,17 +42,17 @@ public class ConfigFieldsReader extends DescriptionReader {
     }
 
     private static ConfigFields readConfig(String fieldName,
-                                   FileReader file) {
+            FileReader file) {
         ConfigFields fieldDesc = new ConfigFields(
                 fieldName);
         String word;
         boolean end = false;
         while (!end) {
             word = readWord(file);
-            if (word.equals("{")) {
-                // Do nothing
-            } else if (word.equals("}") || word.equals("EOF")) {
+            if (word == null || "}".equals(word) || "EOF".equals(word)) {
                 end = true;
+            } else if (word.equals("{")) {
+                // Do nothing
             } else if (word.equals("")) {
                 // Do nothing
             } else {
@@ -71,7 +71,7 @@ public class ConfigFieldsReader extends DescriptionReader {
             cf = list.get(m++);
             found = cf.getFieldName().equals(name);
         }
-        if (found) {
+        if (found && cf != null) {
             Object[] oa = cf.getListOfValues().toArray();
             sa = new String[oa.length];
             for (int n = 0; n < oa.length; n++) {

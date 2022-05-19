@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2017  International Agency for Research on Cancer
+ * Copyright (C) 2008-2021  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,9 @@
 package canreg.client.gui;
 
 import canreg.client.CanRegClientApp;
+import canreg.client.gui.adhoc.AdHocDatabaseFrame;
 import canreg.client.gui.management.InstallNewSystemInternalFrame;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.Globals;
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,6 +50,7 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
     private FrameView fv;
     private Properties appInfoProperties;
     private JDialog aboutBox;
+    private static final Logger LOGGER = Logger.getLogger(WelcomeInternalFrame.class.getName());
 
     /** Creates new form WelcomeInternalFrame
      * @param fv 
@@ -56,7 +59,7 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
 
         this.fv = fv;
         appInfoProperties = new Properties();
-        InputStream in = null;
+        InputStream in;
         try {
             //
             // load properties file
@@ -77,7 +80,8 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
             versionString += " (" + appInfoProperties.getProperty("program.BUILDDATE") + ")";
             versionLabel.setText(versionLabel.getText() + " " + versionString);
         } catch (IOException ex) {
-            Logger.getLogger(WelcomeInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
     }
 
@@ -99,7 +103,9 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
         jPanel5 = new javax.swing.JPanel();
         buttonPanel = new javax.swing.JPanel();
         loginButton = new javax.swing.JButton();
+        jPanel6 = new javax.swing.JPanel();
         restoreBackupButton = new javax.swing.JButton();
+        adHocButton = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         versionLabel = new javax.swing.JLabel();
@@ -127,18 +133,19 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
         mainPanel.setLayout(new java.awt.GridLayout(1, 2, 0, 11));
 
         jPanel1.setName("jPanel1"); // NOI18N
-        jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.PAGE_AXIS));
+        jPanel1.setLayout(new java.awt.GridLayout(1, 2));
 
         jPanel4.setName("jPanel4"); // NOI18N
+        jPanel4.setLayout(new java.awt.GridLayout(2, 1));
 
         logoButton.setIcon(resourceMap.getIcon("logoButton.icon")); // NOI18N
         logoButton.setBorder(null);
         logoButton.setBorderPainted(false);
         logoButton.setContentAreaFilled(false);
         logoButton.setFocusable(false);
-        logoButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        logoButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         logoButton.setName("logoButton"); // NOI18N
-        logoButton.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        jPanel4.add(logoButton);
 
         jPanel2.setName("jPanel2"); // NOI18N
 
@@ -160,41 +167,22 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(aboutScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addComponent(aboutScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(aboutScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)
+            .addComponent(aboutScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE)
         );
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(logoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(logoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        jPanel4.add(jPanel2);
 
         jPanel1.add(jPanel4);
 
         mainPanel.add(jPanel1);
 
         jPanel5.setName("jPanel5"); // NOI18N
+        jPanel5.setPreferredSize(new java.awt.Dimension(767, 400));
+        jPanel5.setLayout(new java.awt.GridLayout(1, 1));
 
         buttonPanel.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         buttonPanel.setName("buttonPanel"); // NOI18N
@@ -206,33 +194,35 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
         loginButton.setText(resourceMap.getString("loginButton.text")); // NOI18N
         loginButton.setToolTipText(resourceMap.getString("loginButton.toolTipText")); // NOI18N
         loginButton.setActionCommand(resourceMap.getString("loginButton.actionCommand")); // NOI18N
+        loginButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         loginButton.setName("loginButton"); // NOI18N
+        loginButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         buttonPanel.add(loginButton);
+
+        jPanel6.setName("jPanel6"); // NOI18N
+        jPanel6.setLayout(new java.awt.GridLayout());
 
         restoreBackupButton.setAction(actionMap.get("installNewSystemAction")); // NOI18N
         restoreBackupButton.setToolTipText(resourceMap.getString("restoreBackupButton.toolTipText")); // NOI18N
         restoreBackupButton.setActionCommand(resourceMap.getString("restoreBackupButton.actionCommand")); // NOI18N
+        restoreBackupButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         restoreBackupButton.setName("restoreBackupButton"); // NOI18N
-        buttonPanel.add(restoreBackupButton);
+        restoreBackupButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jPanel6.add(restoreBackupButton);
 
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 311, Short.MAX_VALUE)
-            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                    .addComponent(buttonPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
-                    .addContainerGap()))
-        );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 381, Short.MAX_VALUE)
-            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(buttonPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)))
-        );
+        adHocButton.setAction(actionMap.get("adHocAnalysisAction")); // NOI18N
+        adHocButton.setIcon(resourceMap.getIcon("adHocButton.icon")); // NOI18N
+        adHocButton.setText(resourceMap.getString("adHocButton.text")); // NOI18N
+        adHocButton.setToolTipText(resourceMap.getString("adHocButton.toolTipText")); // NOI18N
+        adHocButton.setActionCommand(resourceMap.getString("adHocButton.actionCommand")); // NOI18N
+        adHocButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        adHocButton.setName("adHocButton"); // NOI18N
+        adHocButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jPanel6.add(adHocButton);
+
+        buttonPanel.add(jPanel6);
+
+        jPanel5.add(buttonPanel);
 
         mainPanel.add(jPanel5);
 
@@ -261,7 +251,7 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
                 .addComponent(versionLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
-                .addContainerGap(510, Short.MAX_VALUE))
+                .addContainerGap(768, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -293,9 +283,7 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
         CanRegClientApp.getApplication().show(aboutBox);
     }//GEN-LAST:event_jLabel1MouseClicked
 
-    /**
-     * 
-     */
+    
     @Action
     public void showLoginFrame() {
         this.dispose();
@@ -306,17 +294,12 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
         loginInternalFrame.setVisible(true);
     }
 
-    /**
-     * 
-     * @param dtp
-     */
+    
     public void setDesktopPane(JDesktopPane dtp) {
         desktopPane = dtp;
     }
 
-    /**
-     * 
-     */
+    
     @Action
     public void installNewSystemAction() {
         InstallNewSystemInternalFrame internalFrame = new InstallNewSystemInternalFrame();
@@ -326,9 +309,21 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
         internalFrame.setVisible(true);
         this.dispose();
     }
+
+    @Action
+    public void adHocAnalysisAction() {
+        AdHocDatabaseFrame internalFrame = new AdHocDatabaseFrame(desktopPane);
+        desktopPane.add(internalFrame, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        internalFrame.setLocation(desktopPane.getWidth() / 2 - internalFrame.getWidth() / 2, desktopPane.getHeight() / 2 - internalFrame.getHeight() / 2);
+        internalFrame.setVisible(true);
+        this.dispose();
+    }
+    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JEditorPane aboutEditorPane;
     private javax.swing.JScrollPane aboutScrollPane;
+    private javax.swing.JButton adHocButton;
     private javax.swing.JPanel buttonPanel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
@@ -336,6 +331,7 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JButton loginButton;
     private javax.swing.JButton logoButton;
     private javax.swing.JPanel mainPanel;

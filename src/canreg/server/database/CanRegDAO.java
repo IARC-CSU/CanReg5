@@ -71,17 +71,24 @@ import org.w3c.dom.*;
  * @author ervikm (based on code by John O'Conner)
  */
 public class CanRegDAO {
-
+    
+    private static final Logger LOGGER = Logger.getLogger(CanRegDAO.class.getName());
     private static final boolean debug = false;
     private final DatabaseVariablesListElement[] variables;
     StringBuilder counterStringBuilder = new StringBuilder();
     StringBuilder getterStringBuilder = new StringBuilder();
     StringBuilder filterStringBuilder = new StringBuilder();
 
-    public CanRegDAO(String systemCode, Document doc) {
+
+    /**
+     *
+     * @param registryCode
+     * @param doc
+     */
+    public CanRegDAO(String registryCode, Document doc, boolean holding) {
         this.doc = doc;
 
-        this.systemCode = systemCode;
+        this.registryCode = registryCode;
 
         globalToolBox = new GlobalToolBox(doc);
 
@@ -126,6 +133,7 @@ public class CanRegDAO {
          strGetHighestTumourRecordID = QueryGenerator.strGetHighestTumourRecordID(globalToolBox);
          */
         setDBSystemDir();
+        
         dbProperties = loadDBProperties();
         String driverName = dbProperties.getProperty("derby.driver");
         loadDatabaseDriver(driverName);
@@ -160,7 +168,7 @@ public class CanRegDAO {
                 dic.addDictionaryEntry(code, new DictionaryEntry(id, code, desc));
             }
         } catch (SQLException sqle) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
+            LOGGER.log(Level.SEVERE, null, sqle);
         }
         return dictionaryMap;
     }
@@ -182,7 +190,7 @@ public class CanRegDAO {
             }
 
         } catch (SQLException sqle) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
+            LOGGER.log(Level.SEVERE, null, sqle);
         }
         return nameSexMap;
     }
@@ -200,7 +208,7 @@ public class CanRegDAO {
                 debugOut(query);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         return value;
     }
@@ -212,7 +220,7 @@ public class CanRegDAO {
             queryStatement = dbConnection.createStatement();
             boolean result = queryStatement.execute(query);
         } catch (SQLException ex) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         try {
             String query = "INSERT INTO " + Globals.SCHEMA_NAME + ".SYSTEM (LOOKUP, VALUE) VALUES ('" + lookup + "', '" + value + "')";
@@ -220,7 +228,7 @@ public class CanRegDAO {
             queryStatement = dbConnection.createStatement();
             boolean result = queryStatement.execute(query);
         } catch (SQLException ex) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
     }
 
@@ -258,7 +266,7 @@ public class CanRegDAO {
                 }
             }
         } catch (SQLException ex) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
 
         return ID;
@@ -284,7 +292,7 @@ public class CanRegDAO {
             }
 
         } catch (SQLException ex) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         return ID;
     }
@@ -315,7 +323,7 @@ public class CanRegDAO {
             }
 
         } catch (SQLException sqle) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
+            LOGGER.log(Level.SEVERE, null, sqle);
         }
         return usersMap;
     }
@@ -363,7 +371,7 @@ public class CanRegDAO {
             }
 
         } catch (SQLException sqle) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
+            LOGGER.log(Level.SEVERE, null, sqle);
         }
 
         for (PopulationDataset popset : populationDatasetMap.values()) {
@@ -394,7 +402,7 @@ public class CanRegDAO {
             }
 
         } catch (SQLException sqle) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
+            LOGGER.log(Level.SEVERE, null, sqle);
         }
 
         return populationDatasetMap;
@@ -412,6 +420,7 @@ public class CanRegDAO {
         }
         return resultSetID;
     }
+
 
     public synchronized DistributedTableDescription getDistributedTableDescriptionAndInitiateDatabaseQuery(DatabaseFilter filter, String tableName, String resultSetID)
             throws SQLException, UnknownTableException, DistributedTableDescriptionException {
@@ -467,7 +476,7 @@ public class CanRegDAO {
             returnRecord = null;
         }
         if (returnRecord != null && lock) {
-            lockRecord(recordID, tableName);
+            checkAndLockRecord(recordID, tableName);
         }
         return returnRecord;
     }
@@ -480,13 +489,14 @@ public class CanRegDAO {
     public synchronized String performBackup() {
         String path = null;
         try {
-            path = canreg.server.database.derby.Backup.backUpDatabase(dbConnection, Globals.CANREG_BACKUP_FOLDER + Globals.FILE_SEPARATOR + getSystemCode());
-            canreg.server.xml.Tools.writeXmlFile(doc, path + Globals.FILE_SEPARATOR + getSystemCode() + ".xml");
+            path = canreg.server.database.derby.Backup.backUpDatabase(dbConnection, Globals.CANREG_BACKUP_FOLDER + Globals.FILE_SEPARATOR + getRegistryCode());
+            canreg.server.xml.Tools.writeXmlFile(doc, path + Globals.FILE_SEPARATOR + getRegistryCode() + ".xml");
         } catch (SQLException ex) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         return path;
     }
+
 
     public Object[][] retrieveRows(String resultSetID, int from, int to) throws DistributedTableDescriptionException {
         DistributedTableDataSource ts = distributedDataSources.get(resultSetID);
@@ -510,7 +520,7 @@ public class CanRegDAO {
         return bExists;
     }
 
-    private void setDBSystemDir() {
+    private void setDBSystemDir() {     
         // decide on the db system directory
         String systemDir = Globals.CANREG_SERVER_DATABASE_FOLDER;
         System.setProperty("derby.system.home", systemDir);
@@ -525,7 +535,7 @@ public class CanRegDAO {
         try {
             Class.forName(driverName);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
     }
 
@@ -536,7 +546,7 @@ public class CanRegDAO {
         try {
             dbProperties.load(dbPropInputStream);
         } catch (IOException ex) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         return dbProperties;
     }
@@ -592,7 +602,7 @@ public class CanRegDAO {
             }
             bCreatedTables = true;
         } catch (SQLException ex) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
 
         return bCreatedTables;
@@ -615,7 +625,7 @@ public class CanRegDAO {
             dbConnection = DriverManager.getConnection(dbUrl, dbProperties);
             bCreated = createTables(dbConnection);
         } catch (SQLException ex) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         dbProperties.remove("create");
         return bCreated;
@@ -646,7 +656,7 @@ public class CanRegDAO {
         }
         if (!shutdownSuccess) {
             dbProperties.remove("shutdown");
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             // ((DonMan) parent).signalError("Error during shutdown for RESTORE: ", ex,
             //        "in: DonDao.restore", false);
             return "shutdown failed";
@@ -656,27 +666,27 @@ public class CanRegDAO {
             dbConnection.close(); // Close current connection.
 
             // check to see if there is a database already - rename it
-            File databaseFolder = new File(Globals.CANREG_SERVER_DATABASE_FOLDER + Globals.FILE_SEPARATOR + getSystemCode());
+            File databaseFolder = new File(Globals.CANREG_SERVER_DATABASE_FOLDER + Globals.FILE_SEPARATOR + getRegistryCode());
             if (databaseFolder.exists()) {
                 int i = 0;
                 File folder2 = databaseFolder;
                 while (folder2.exists()) {
                     i++;
-                    folder2 = new File(Globals.CANREG_SERVER_DATABASE_FOLDER + Globals.FILE_SEPARATOR + getSystemCode() + i);
+                    folder2 = new File(Globals.CANREG_SERVER_DATABASE_FOLDER + Globals.FILE_SEPARATOR + getRegistryCode() + i);
                 }
                 databaseFolder.renameTo(folder2);
                 try {
-                    canreg.common.Tools.fileCopy(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + getSystemCode() + ".xml",
-                            Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + getSystemCode() + i + ".xml");
+                    canreg.common.Tools.fileCopy(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + getRegistryCode() + ".xml",
+                            Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + getRegistryCode() + i + ".xml");
                 } catch (IOException ex1) {
-                    Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex1);
+                    LOGGER.log(Level.SEVERE, null, ex1);
                 }
             }
-            dbProperties.put("restoreFrom", path + "/" + getSystemCode());
+            dbProperties.put("restoreFrom", path + "/" + getRegistryCode());
             dbConnection = DriverManager.getConnection(dbUrl, dbProperties);
             bRestored = true;
         } catch (SQLException ex2) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex2);
+            LOGGER.log(Level.SEVERE, null, ex2);
             //((DonMan) parent).signalError("Error during RESTORE: ", e,
             //       "in: DonDao.restore", false);
         }
@@ -685,10 +695,10 @@ public class CanRegDAO {
         if (bRestored) {
             try {
                 // install the xml
-                canreg.common.Tools.fileCopy(path + Globals.FILE_SEPARATOR + getSystemCode() + ".xml",
-                        Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + getSystemCode() + ".xml");
+                canreg.common.Tools.fileCopy(path + Globals.FILE_SEPARATOR + getRegistryCode() + ".xml",
+                        Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER + Globals.FILE_SEPARATOR + getRegistryCode() + ".xml");
             } catch (IOException ex1) {
-                Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex1);
+                LOGGER.log(Level.SEVERE, null, ex1);
             }
             return "success";
         } else {
@@ -700,7 +710,7 @@ public class CanRegDAO {
         String dbUrl = getDatabaseUrl();
         try {
             dbConnection = DriverManager.getConnection(dbUrl, dbProperties);
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.INFO, "JavaDB Version: {0}", dbConnection.getMetaData().getDatabaseProductVersion());
+            LOGGER.log(Level.INFO, "JavaDB Version: {0}", dbConnection.getMetaData().getDatabaseProductVersion());
         } catch (SQLException ex) {
             throw ex;
         }
@@ -726,6 +736,7 @@ public class CanRegDAO {
             stmtDeletePopoulationDatasetEntries = dbConnection.prepareStatement(strDeletePopulationDatasetEntries);
             //stmtUpdateExistingPatient = dbConnection.prepareStatement(strUpdatePatient);
             stmtGetPatient = dbConnection.prepareStatement(strGetPatient);
+            stmtGetPatientByPatientRecordID = dbConnection.prepareStatement(strGetPatientByPatientRecordID);
             stmtGetPatients = dbConnection.prepareStatement(strGetPatients);
             stmtGetSources = dbConnection.prepareStatement(strGetSources);
             stmtGetPatientsAndTumours = dbConnection.prepareStatement(strGetPatientsAndTumours);
@@ -739,9 +750,11 @@ public class CanRegDAO {
              stmtGetHighestTumourRecordID = dbConnection.prepareStatement(strGetHighestTumourRecordID);
              */
             stmtGetTumour = dbConnection.prepareStatement(strGetTumour);
+            stmtGetTumourByTumourID = dbConnection.prepareStatement(strGetTumourByTumourID);
             stmtGetTumours = dbConnection.prepareStatement(strGetTumours);
 
             stmtGetSource = dbConnection.prepareStatement(strGetSource);
+            stmtGetSourceBySourceID = dbConnection.prepareStatement(strGetSourceBySourceID);
 
             stmtDeleteTumourRecord = dbConnection.prepareStatement(strDeleteTumourRecord);
             stmtDeletePatientRecord = dbConnection.prepareStatement(strDeletePatientRecord);
@@ -768,12 +781,49 @@ public class CanRegDAO {
             debugOut("Next patient ID = " + getNextPatientID());
         } catch (SQLException ex) {
             debugOut("SQLerror... ");
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             isConnected = false;
             // CanRegDAO now throws database mismatch exceptions if the database structure doesn't match the prepared queries.
             throw new RemoteException("Database description mismatch... \n" + ex.getLocalizedMessage());
         }
         return isConnected;
+    }
+
+    /**
+     * Begin the transaction
+     * from here all records will be save if there is no issue
+     *
+     * @throws SQLException SQLException
+     */
+    public void openTransaction() throws SQLException {
+        if (dbConnection == null) {
+            dbConnection = DriverManager.getConnection(getDatabaseUrl(), dbProperties);
+        }
+        dbConnection.setAutoCommit(false);
+    }
+
+    /**
+     *  If there is an exception all record will be rollback
+     *  
+     * @throws SQLException SQLException
+     */
+    public void rollbackTransaction() throws SQLException {
+        if (dbConnection != null) {
+            dbConnection.rollback();
+            dbConnection.setAutoCommit(true);
+        }
+    }
+
+    /**
+     * If there no exception all record will be saved in the database
+     * 
+     * @throws SQLException SQLException
+     */
+    public void commitTransaction() throws SQLException {
+        if (dbConnection != null) {
+            dbConnection.commit();
+            dbConnection.setAutoCommit(true);
+        }
     }
 
     public boolean connectWithBootPassword(char[] passwordArray) throws RemoteException, SQLException {
@@ -813,7 +863,7 @@ public class CanRegDAO {
                 dbConnection = DriverManager.getConnection(getDatabaseUrl() + ";bootPassword= " + oldPassword + ";upgrade=true", dbProperties);
                 disconnect();
             } catch (SQLException ex) {
-                Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
             }
 
             dbProperties.setProperty("decryptDatabase", "true");
@@ -826,7 +876,7 @@ public class CanRegDAO {
             try {
                 disconnect();
             } catch (SQLException ex) {
-                Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
             }
             dbProperties.setProperty("dataEncryption", "true");
             dbProperties.setProperty("encryptionKeyLength", encryptionKeyLength);
@@ -858,7 +908,7 @@ public class CanRegDAO {
                 if (e.getSQLState().equals("08006")) {
                     shutdownSuccess = true; // single db.
                 } else {
-                    Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, e);
+                    LOGGER.log(Level.SEVERE, null, e);
                     throw e;
                 }
             }
@@ -872,12 +922,12 @@ public class CanRegDAO {
      * @return String location of the database
      */
     public String getDatabaseLocation() {
-        String dbLocation = System.getProperty("derby.system.home") + "/" + getSystemCode();
+        String dbLocation = System.getProperty("derby.system.home") + "/" + getRegistryCode();
         return dbLocation;
     }
 
     public String getDatabaseUrl() {
-        String dbUrl = dbProperties.getProperty("derby.url") + getSystemCode();
+        String dbUrl = dbProperties.getProperty("derby.url") + getRegistryCode();
         return dbUrl;
     }
 
@@ -1015,9 +1065,9 @@ public class CanRegDAO {
 //        try {
 //            deleteSources(tumourID);
 //        } catch (DistributedTableDescriptionException ex) {
-//            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+//            LOGGER.log(Level.SEVERE, null, ex);
 //        } catch (UnknownTableException ex) {
-//            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+//            LOGGER.log(Level.SEVERE, null, ex);
 //        }
         // save each of the source records
         saveSources(tumourID, sources);
@@ -1027,10 +1077,14 @@ public class CanRegDAO {
 
     private synchronized int saveSource(Source source) throws SQLException, RecordLockedException {
         String sourceIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.SourceRecordID.toString()).getDatabaseVariableName();
-        Object sourceID = source.getVariable(sourceIDVariableName);
         Object sourceRecordID = source.getVariable(canreg.common.Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME);
         int id = -1;
-        if (sourceID == null || sourceID.toString().trim().length() == 0) {
+
+        String sourceID = source.getVariableAsString(sourceIDVariableName);
+        if(sourceID != null && sourceID.contains("@H"))
+            sourceID = "";
+        
+        if (sourceID == null || sourceID.trim().length() == 0) {
             String tumourIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourIDSourceTable.toString()).getDatabaseVariableName();
             String tumourID = (String) source.getVariable(tumourIDVariableName);
             sourceID = getNextSourceID(tumourID);
@@ -1039,7 +1093,7 @@ public class CanRegDAO {
         } else if (sourceRecordID == null || sourceRecordID.toString().trim().length() == 0) {
             id = saveRecord(Globals.SOURCE_TABLE_NAME, source, stmtSaveNewSource);
         } else {
-            boolean success = editRecord(Globals.SOURCE_TABLE_NAME, source, stmtEditSource);
+            boolean success = editRecord(Globals.SOURCE_TABLE_NAME, source, stmtEditSource, canreg.common.Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME);
             if (success) {
                 sourceRecordID = source.getVariable(canreg.common.Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME);
                 id = (int) sourceRecordID;
@@ -1069,7 +1123,7 @@ public class CanRegDAO {
             }
 
         } catch (SQLException sqle) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
+            LOGGER.log(Level.SEVERE, null, sqle);
         }
         return id;
     }
@@ -1105,7 +1159,7 @@ public class CanRegDAO {
             }
 
         } catch (SQLException sqle) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
+            LOGGER.log(Level.SEVERE, null, sqle);
         }
         return id;
     }
@@ -1149,7 +1203,7 @@ public class CanRegDAO {
             }
 
         } catch (SQLException sqle) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
+            LOGGER.log(Level.SEVERE, null, sqle);
         }
         return populationDataSet.getPopulationDatasetID();
 
@@ -1172,7 +1226,7 @@ public class CanRegDAO {
             }
 
         } catch (SQLException sqle) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
+            LOGGER.log(Level.SEVERE, null, sqle);
         }
         return id;
     }
@@ -1185,7 +1239,7 @@ public class CanRegDAO {
                 stmtDeleteNameSexRecord.setString(1, nameSexRecord.getName());
                 stmtDeleteNameSexRecord.executeUpdate();
             } catch (SQLException ex) {
-                Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
             }
         }
         try {
@@ -1202,10 +1256,10 @@ public class CanRegDAO {
 
         } catch (java.sql.SQLIntegrityConstraintViolationException sqle) {
             // System.out.println(nameSexRecord.getName());
-            // Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
+             LOGGER.log(Level.SEVERE,String.format(" Error : an integrity constraint has been violated for nameSexRecord : %s",nameSexRecord.getName()), sqle);
         } catch (SQLException sqle) {
             System.out.println(nameSexRecord.getName());
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
+            LOGGER.log(Level.SEVERE, String.format("SQL error : for nameSexRecord : %s",nameSexRecord.getName()), sqle);
         }
         return id;
     }
@@ -1219,7 +1273,7 @@ public class CanRegDAO {
             success = true;
 
         } catch (SQLException sqle) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
+            LOGGER.log(Level.SEVERE, null, sqle);
         }
         return success;
     }
@@ -1234,7 +1288,7 @@ public class CanRegDAO {
             success = true;
 
         } catch (SQLException sqle) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
+            LOGGER.log(Level.SEVERE, null, sqle);
         }
         return success;
     }
@@ -1250,7 +1304,7 @@ public class CanRegDAO {
             stmtDeletePatientRecord.executeUpdate();
             success = true;
         } catch (SQLException sqle) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
+            LOGGER.log(Level.SEVERE, null, sqle);
         }
         return success;
     }
@@ -1266,7 +1320,7 @@ public class CanRegDAO {
             stmtDeleteTumourRecord.executeUpdate();
             success = true;
         } catch (SQLException sqle) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
+            LOGGER.log(Level.SEVERE, null, sqle);
         }
         return success;
     }
@@ -1282,7 +1336,7 @@ public class CanRegDAO {
             stmtDeleteSourceRecord.executeUpdate();
             success = true;
         } catch (SQLException sqle) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
+            LOGGER.log(Level.SEVERE, null, sqle);
         }
         return success;
     }
@@ -1324,21 +1378,62 @@ public class CanRegDAO {
             stmtDeletePopoulationDataset.executeUpdate();
             success = true;
         } catch (SQLException sqle) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
+            LOGGER.log(Level.SEVERE, null, sqle);
         }
         return success;
     }
 
-    public synchronized boolean editPatient(Patient patient) throws RecordLockedException {
-        return editRecord("Patient", patient, stmtEditPatient);
+    /**
+     *
+     * @param patient
+     * @param fromHoldingToProduction
+     * @return
+     * @throws RecordLockedException
+     * @throws java.sql.SQLException
+     */
+    public synchronized boolean editPatient(Patient patient, boolean fromHoldingToProduction) 
+            throws RecordLockedException, SQLException {
+        if(fromHoldingToProduction)
+            return editRecord(Globals.PATIENT_TABLE_NAME, patient, stmtEditPatient, 
+                    Globals.StandardVariableNames.PatientRecordID.toString());
+        else
+            return editRecord(Globals.PATIENT_TABLE_NAME, patient, stmtEditPatient, 
+                    Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
     }
 
-    public synchronized boolean editTumour(Tumour tumour) throws RecordLockedException {
-        return editRecord("Tumour", tumour, stmtEditTumour);
+    /**
+     *
+     * @param tumour
+     * @param fromHoldingToProduction
+     * @return
+     * @throws RecordLockedException
+     * @throws java.sql.SQLException
+     */
+    public synchronized boolean editTumour(Tumour tumour, boolean fromHoldingToProduction)
+            throws RecordLockedException, SQLException {
+        if(fromHoldingToProduction)
+            return editRecord(Globals.TUMOUR_TABLE_NAME, tumour, stmtEditTumour, 
+                    Globals.StandardVariableNames.TumourID.toString());
+        else
+            return editRecord(Globals.TUMOUR_TABLE_NAME, tumour, stmtEditTumour, 
+                    Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME);
     }
 
-    public synchronized boolean editSource(Source source) throws RecordLockedException {
-        return editRecord("Source", source, stmtEditSource);
+    /**
+     *
+     * @param source
+     * @param fromHoldingToProduction
+     * @return
+     * @throws RecordLockedException
+     */
+    public synchronized boolean editSource(Source source, boolean fromHoldingToProduction)
+            throws RecordLockedException, SQLException {
+        if(fromHoldingToProduction)
+            return editRecord(Globals.SOURCE_TABLE_NAME, source, stmtEditSource,
+                    Globals.StandardVariableNames.SourceRecordID.toString());
+        else
+            return editRecord(Globals.SOURCE_TABLE_NAME, source, stmtEditSource, 
+                    Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME);
     }
 
     /**
@@ -1349,8 +1444,9 @@ public class CanRegDAO {
      * @return
      * @throws RecordLockedException
      */
-    private synchronized boolean editRecord(String tableName, DatabaseRecord record, PreparedStatement stmtEditRecord)
-            throws RecordLockedException {
+    private synchronized boolean editRecord(String tableName, DatabaseRecord record, 
+                                            PreparedStatement stmtEditRecord, String idRecordVariable) 
+            throws RecordLockedException, SQLException, SecurityException {
         boolean bEdited = false;
         try {
             stmtEditRecord.clearParameters();
@@ -1358,16 +1454,27 @@ public class CanRegDAO {
             int variableNumber = 0;
 
             for (DatabaseVariablesListElement variable : variables) {
+//                if(variable.getDatabaseVariableName().equalsIgnoreCase(idRecordVariable))
+//                    continue;
+                
                 String tableNameDB = variable.getDatabaseTableName();
                 if (tableNameDB.equalsIgnoreCase(tableName)) {
                     variableNumber++;
                     String variableType = variable.getVariableType();
+                    int variableLength = variable.getVariableLength();
                     Object obj = record.getVariable(variable.getDatabaseVariableName());
-                    if (variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_ALPHA_NAME) || variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_ASIAN_TEXT_NAME) || variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_DICTIONARY_NAME) || variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_DATE_NAME) || variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_TEXT_AREA_NAME)) {
+                    if (variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_ALPHA_NAME) ||
+                        variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_ASIAN_TEXT_NAME) ||
+                        variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_DICTIONARY_NAME) ||
+                        variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_DATE_NAME) ||
+                        variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_TEXT_AREA_NAME)) {
                         if (obj != null) {
                             try {
                                 String strObj = obj.toString();
                                 if (strObj.length() > 0) {
+                                    if (variableLength > 0 && strObj.length() > variableLength) {
+                                        strObj = strObj.substring(0, variableLength);
+                                    }
                                     stmtEditRecord.setString(variableNumber, strObj);
                                 } else {
                                     stmtEditRecord.setString(variableNumber, "");
@@ -1378,7 +1485,7 @@ public class CanRegDAO {
                             } catch (java.lang.ClassCastException cce) {
                                 debugOut("Cast to String Error. Type:" + variableType + ", Value: " + obj + ", Variable Number: " + variableNumber);
                                 throw cce;
-                            }
+                            } 
                         } else {
                             stmtEditRecord.setString(variableNumber, "");
                         }
@@ -1400,8 +1507,8 @@ public class CanRegDAO {
                     }
                 }
             }
-            // add the ID
-            String idString = "id";
+            
+            String idString = null;
             if (record instanceof Patient) {
                 idString = Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME;
             } else if (record instanceof Tumour) {
@@ -1409,12 +1516,41 @@ public class CanRegDAO {
             } else if (record instanceof Source) {
                 idString = Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME;
             }
-            int idInt = (Integer) record.getVariable(idString);
-            stmtEditRecord.setInt(variableNumber + 1, idInt);
-            if (isRecordLocked(idInt, tableName)) {
-                throw new RecordLockedException();
+            
+            Integer idInt = null;
+            if( ! idString.equalsIgnoreCase(idRecordVariable)) {
+                if(record instanceof Patient) {
+                    String patientIDVariableName = globalToolBox
+                            .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString())
+                            .getDatabaseVariableName();
+                    String patientRecordID = record.getVariableAsString(patientIDVariableName);
+                    Patient patient = getPatientByPatientRecordID(patientRecordID);
+                    idInt = (Integer) patient.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
+                } else if(record instanceof Tumour) {
+                    String tumourIDVariableName = globalToolBox
+                            .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString())
+                            .getDatabaseVariableName();
+                    String tumourID = record.getVariableAsString(tumourIDVariableName);
+                    Tumour tumour = getTumourByTumourID(tumourID);
+                    idInt = (Integer) tumour.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME);
+                } else if(record instanceof Source) {
+                    String sourceIDVariableName = globalToolBox
+                            .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.SourceRecordID.toString())
+                            .getDatabaseVariableName();
+                    String sourceID = record.getVariableAsString(sourceIDVariableName);
+                    Source source = getSourceBySourceID(sourceID);
+                    idInt = (Integer) source.getVariable(Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME);
+                }                 
+            } else {
+                idInt = (Integer) record.getVariable(idString);
             }
-            int rowCount = stmtEditRecord.executeUpdate();
+            
+            if (isRecordLocked(idInt, tableName)) 
+                throw new RecordLockedException();
+                
+            stmtEditRecord.setInt(variableNumber + 1, idInt);            
+            
+            int rowCount = stmtEditRecord.executeUpdate();  
 
             // If this is a tumour we save the sources...
             if (record instanceof Tumour) {
@@ -1426,9 +1562,9 @@ public class CanRegDAO {
 //                try {
 //                    deleteSources(tumourID);
 //                } catch (DistributedTableDescriptionException ex) {
-//                    Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+//                    LOGGER.log(Level.SEVERE, null, ex);
 //                } catch (UnknownTableException ex) {
-//                    Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+//                    LOGGER.log(Level.SEVERE, null, ex);
 //                }
                 // save each of the source records
                 saveSources(tumourID, sources);
@@ -1437,7 +1573,11 @@ public class CanRegDAO {
             bEdited = true;
 
         } catch (SQLException sqle) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
+            LOGGER.log(Level.SEVERE, null, sqle);
+            throw sqle;
+        } catch(Exception ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+            throw new RuntimeException(ex);
         }
 
         return bEdited;
@@ -1504,25 +1644,25 @@ public class CanRegDAO {
         try {
             fillDictionary(Globals.StandardVariableNames.TumourRecordStatus, Globals.DEFAULT_DICTIONARIES_FOLDER + "/recordstatus.tsv");
         } catch (IOException ex) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         // Check status
         try {
             fillDictionary(Globals.StandardVariableNames.CheckStatus, Globals.DEFAULT_DICTIONARIES_FOLDER + "/checkstatus.tsv");
         } catch (IOException ex) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         // Person search
         try {
             fillDictionary(Globals.StandardVariableNames.PersonSearch, Globals.DEFAULT_DICTIONARIES_FOLDER + "/mpstatus.tsv");
         } catch (IOException ex) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         // Topography
         try {
             fillDictionary(Globals.StandardVariableNames.Topography, Globals.DEFAULT_DICTIONARIES_FOLDER + "/topography.tsv");
         } catch (IOException ex) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         // Morphology
         try {
@@ -1530,31 +1670,31 @@ public class CanRegDAO {
             // TODO -- autofill five character morphologies as well...
             // fillDictionary(Globals.StandardVariableNames.Morphology, Globals.DEFAULT_DICTIONARIES_FOLDER + "/morphology5.tsv");
         } catch (IOException ex) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         // Behaviour
         try {
             fillDictionary(Globals.StandardVariableNames.Behaviour, Globals.DEFAULT_DICTIONARIES_FOLDER + "/behaviour.tsv");
         } catch (IOException ex) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         // Behaviour
         try {
             fillDictionary(Globals.StandardVariableNames.Grade, Globals.DEFAULT_DICTIONARIES_FOLDER + "/grade.tsv");
         } catch (IOException ex) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         // Basis
         try {
             fillDictionary(Globals.StandardVariableNames.BasisDiagnosis, Globals.DEFAULT_DICTIONARIES_FOLDER + "/basis.tsv");
         } catch (IOException ex) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         // Sex
         try {
             fillDictionary(Globals.StandardVariableNames.Sex, Globals.DEFAULT_DICTIONARIES_FOLDER + "/sex.tsv");
         } catch (IOException ex) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
 
         bFilled = true;
@@ -1590,15 +1730,14 @@ public class CanRegDAO {
         return dictionariesMap;
     }
 
+
     private synchronized Patient getPatient(int recordID, boolean lock) throws RecordLockedException {
         Patient record = null;
         ResultSetMetaData metadata;
         // we are allowed to read a record that is locked...
-        if (lock && isRecordLocked(recordID, Globals.PATIENT_TABLE_NAME)) {
+        if (lock && checkAndLockRecord(recordID, Globals.PATIENT_TABLE_NAME)) {
             throw new RecordLockedException();
-        } else if (lock) {
-            lockRecord(recordID, Globals.PATIENT_TABLE_NAME);
-        }
+        } 
         try {
             stmtGetPatient.clearParameters();
             stmtGetPatient.setInt(1, recordID);
@@ -1617,19 +1756,45 @@ public class CanRegDAO {
             }
             result = null;
         } catch (SQLException sqle) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
+            LOGGER.log(Level.SEVERE, null, sqle);
         }
 
         return record;
     }
+    
+    private synchronized Patient getPatientByPatientRecordID(String patientRecordID) {
+        Patient record = null;
+        ResultSetMetaData metadata;
+        try {
+            stmtGetPatientByPatientRecordID.clearParameters();
+            stmtGetPatientByPatientRecordID.setString(1, patientRecordID);
+            ResultSet result = stmtGetPatientByPatientRecordID.executeQuery();
+            metadata = result.getMetaData();
+            int numberOfColumns = metadata.getColumnCount();
+            if (result.next()) {
+                record = new Patient();
+                for (int i = 1; i <= numberOfColumns; i++) {
+                    if (metadata.getColumnType(i) == java.sql.Types.VARCHAR) {
+                        record.setVariable(metadata.getColumnName(i), result.getString(metadata.getColumnName(i)));
+                    } else if (metadata.getColumnType(i) == java.sql.Types.INTEGER) {
+                        record.setVariable(metadata.getColumnName(i), result.getInt(metadata.getColumnName(i)));
+                    }
+                }
+            }
+            result = null;
+        } catch (SQLException sqle) {
+            LOGGER.log(Level.SEVERE, null, sqle);
+        }        
+        
+        return record;
+    }
+
 
     private synchronized Tumour getTumour(int recordID, boolean lock) throws RecordLockedException {
         Tumour record = null;
         ResultSetMetaData metadata;
-        if (lock && isRecordLocked(recordID, Globals.TUMOUR_TABLE_NAME)) {
+        if (lock && checkAndLockRecord(recordID, Globals.TUMOUR_TABLE_NAME)) {
             throw new RecordLockedException();
-        } else if (lock) {
-            lockRecord(recordID, Globals.TUMOUR_TABLE_NAME);
         }
         try {
             stmtGetTumour.clearParameters();
@@ -1658,16 +1823,56 @@ public class CanRegDAO {
                 // We don't lock the sources...
                 sources = getSourcesByTumourID(tumourID, false);
             } catch (DistributedTableDescriptionException ex) {
-                Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
             } catch (UnknownTableException ex) {
-                Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
             }
 
             record.setSources(sources);
             result = null;
 
         } catch (SQLException sqle) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
+            LOGGER.log(Level.SEVERE, null, sqle);
+        }
+        return record;
+    }
+    
+    private synchronized Tumour getTumourByTumourID(String tumourID) throws RecordLockedException {
+        Tumour record = null;
+        ResultSetMetaData metadata;
+
+        try {
+            stmtGetTumourByTumourID.clearParameters();
+            stmtGetTumourByTumourID.setString(1, tumourID);
+            ResultSet result = stmtGetTumourByTumourID.executeQuery();
+            metadata = result.getMetaData();
+            int numberOfColumns = metadata.getColumnCount();
+            if (result.next()) {
+                record = new Tumour();
+                for (int i = 1; i <= numberOfColumns; i++) {
+                    if (metadata.getColumnType(i) == java.sql.Types.VARCHAR) {
+                        record.setVariable(metadata.getColumnName(i), result.getString(metadata.getColumnName(i)));
+                    } else if (metadata.getColumnType(i) == java.sql.Types.INTEGER) {
+                        record.setVariable(metadata.getColumnName(i), result.getInt(metadata.getColumnName(i)));
+                    }
+                }
+            }
+
+            Set<Source> sources = null;
+            try {
+                // We don't lock the sources...
+                sources = getSourcesByTumourID(tumourID, false);
+            } catch (DistributedTableDescriptionException ex) {
+                LOGGER.log(Level.SEVERE, null, ex);
+            } catch (UnknownTableException ex) {
+                LOGGER.log(Level.SEVERE, null, ex);
+            }
+
+            record.setSources(sources);
+            result = null;
+
+        } catch (SQLException sqle) {
+            LOGGER.log(Level.SEVERE, null, sqle);
         }
         return record;
     }
@@ -1675,10 +1880,8 @@ public class CanRegDAO {
     private synchronized Source getSource(int recordID, boolean lock) throws RecordLockedException {
         Source record = null;
         ResultSetMetaData metadata;
-        if (lock && isRecordLocked(recordID, Globals.SOURCE_TABLE_NAME)) {
+        if (lock && checkAndLockRecord(recordID, Globals.SOURCE_TABLE_NAME)) {
             throw new RecordLockedException();
-        } else if (lock) {
-            lockRecord(recordID, Globals.SOURCE_TABLE_NAME);
         }
         try {
             stmtGetSource.clearParameters();
@@ -1698,7 +1901,35 @@ public class CanRegDAO {
             }
             result = null;
         } catch (SQLException sqle) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, sqle);
+            LOGGER.log(Level.SEVERE, null, sqle);
+        }
+        return record;
+    }
+    
+    private synchronized Source getSourceBySourceID(String sourceID) throws RecordLockedException {
+        Source record = null;
+        ResultSetMetaData metadata;
+
+        try {
+            stmtGetSourceBySourceID.clearParameters();
+            stmtGetSourceBySourceID.setString(1, sourceID);
+            ResultSet result = stmtGetSourceBySourceID.executeQuery();
+            metadata = result.getMetaData();
+            int numberOfColumns = metadata.getColumnCount();
+            if (result.next()) {
+                record = new Source();
+                for (int i = 1; i <= numberOfColumns; i++) {
+                    if (metadata.getColumnType(i) == java.sql.Types.VARCHAR) {
+                        record.setVariable(metadata.getColumnName(i), result.getString(metadata.getColumnName(i)));
+                    } else if (metadata.getColumnType(i) == java.sql.Types.INTEGER) {
+                        record.setVariable(metadata.getColumnName(i), result.getInt(metadata.getColumnName(i)));
+                    }
+                }
+            }
+
+            result = null;
+        } catch (SQLException sqle) {
+            LOGGER.log(Level.SEVERE, null, sqle);
         }
         return record;
     }
@@ -1724,7 +1955,7 @@ public class CanRegDAO {
                 }
             }
         } catch (SQLException ex) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         return patientID;
     }
@@ -1750,7 +1981,7 @@ public class CanRegDAO {
                 }
             }
         } catch (SQLException ex) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         return tumourID;
     }
@@ -1776,7 +2007,7 @@ public class CanRegDAO {
                 }
             }
         } catch (SQLException ex) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         return patientRecordID;
     }
@@ -1802,7 +2033,7 @@ public class CanRegDAO {
                 }
             }
         } catch (SQLException ex) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         return sourceID;
     }
@@ -1819,7 +2050,7 @@ public class CanRegDAO {
                 tumourRecordID = "1";
             }
         } catch (SQLException ex) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         return tumourRecordID;
     }
@@ -1831,7 +2062,7 @@ public class CanRegDAO {
             statement.execute("DROP TABLE " + Globals.SCHEMA_NAME + ".USERS");
             statement.execute(QueryGenerator.strCreateUsersTable());
         } catch (SQLException ex) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
     }
 
@@ -1879,13 +2110,13 @@ public class CanRegDAO {
      */
     private static void debugOut(String msg) {
         if (debug) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.INFO, msg);
+            LOGGER.log(Level.INFO, msg);
         }
     }
     private Connection dbConnection;
     private Properties dbProperties;
     private boolean isConnected;
-    private final String systemCode;
+    private final String registryCode;
     private final Document doc;
     private Map<Integer, Dictionary> dictionaryMap;
     private final Map<String, Set<Integer>> locksMap;
@@ -1909,8 +2140,11 @@ public class CanRegDAO {
     private PreparedStatement stmtDeleteNameSexRecord;
     private PreparedStatement stmtUpdateExistingPatient;
     private PreparedStatement stmtGetPatient;
+    private PreparedStatement stmtGetPatientByPatientRecordID;
     private PreparedStatement stmtGetTumour;
+    private PreparedStatement stmtGetTumourByTumourID;
     private PreparedStatement stmtGetSource;
+    private PreparedStatement stmtGetSourceBySourceID;
     private PreparedStatement stmtGetPatients;
     private PreparedStatement stmtGetSources;
     private PreparedStatement stmtGetTumours;
@@ -1939,6 +2173,7 @@ public class CanRegDAO {
     private static final String strGetPatient
             = "SELECT * FROM APP.PATIENT "
             + "WHERE " + Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
+    private static final String strGetPatientByPatientRecordID = "SELECT * FROM APP.PATIENT WHERE PATIENTRECORDID = ?";
     private final String strGetPatients
             = "SELECT * FROM APP.PATIENT";
     private final String strGetUsers
@@ -1958,9 +2193,15 @@ public class CanRegDAO {
     private static final String strGetTumour
             = "SELECT * FROM APP.TUMOUR "
             + "WHERE " + Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
+    private static final String strGetTumourByTumourID 
+            = "SELECT * FROM APP.TUMOUR "
+            + "WHERE " + Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME_FOR_HOLDING + " = ?";
     private static final String strGetSource
             = "SELECT * FROM APP.Source "
             + "WHERE " + Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
+    private static final String strGetSourceBySourceID
+            = "SELECT * FROM APP.Source "
+            + "WHERE " + Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME_FOR_HOLDING + " = ?";
     private final String strGetTumours
             = "SELECT * FROM APP.TUMOUR";
     private final String strCountTumours
@@ -2034,13 +2275,14 @@ public class CanRegDAO {
                 try {
                     saveSource(source);
                 } catch (RecordLockedException ex) {
-                    Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
                 }
             }
         }
     }
 
-    private synchronized void deleteSources(Object tumourID) throws SQLException, DistributedTableDescriptionException, UnknownTableException, RecordLockedException {
+    private synchronized void deleteSources(Object tumourID)
+            throws SQLException, DistributedTableDescriptionException, UnknownTableException, RecordLockedException {
         Set<Source> sources = getSourcesByTumourID(tumourID, false);
         if (sources != null) {
             for (Source source : sources) {
@@ -2059,14 +2301,29 @@ public class CanRegDAO {
             lockSet.remove(recordID);
         }
     }
-
-    private synchronized void lockRecord(int recordID, String tableName) {
-        Set lockSet = locksMap.get(tableName);
+    
+    /**
+     * Method that check if a record in a table is already lock 
+     * and lock it if it's not the case
+     * 
+     * @param recordID the id of the record 
+     * @param tableName name of  the table in the database
+     * @return  true if the record was already locked, else false
+     */
+    private synchronized boolean checkAndLockRecord(int recordID, String tableName) {
+        boolean wasLocked = false;
+        Set<Integer> lockSet = locksMap.get(tableName);
+        // if the wasLocked set is null create a new wasLocked set
         if (lockSet == null) {
-            lockSet = new TreeSet<Integer>();
+            lockSet = new TreeSet<>();
             locksMap.put(tableName, lockSet);
+        } else {
+            wasLocked = lockSet.contains(recordID);
         }
-        lockSet.add(recordID);
+        if(!wasLocked){
+            lockSet.add(recordID);
+        }
+        return wasLocked;
     }
 
     private synchronized boolean isRecordLocked(int recordID, String tableName) {
@@ -2087,7 +2344,7 @@ public class CanRegDAO {
             dbs.setMaxNumberOfSourcesPerTumourRecord(maxNumberOfSourcesPerTumourRecord);
 
         } catch (SQLException ex) {
-            Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         return dbs;
     }
@@ -2295,11 +2552,11 @@ public class CanRegDAO {
             filterStringBuilder.append(")");
         }
 
-        /* debug stuff */
-        System.out.println("filterString: " + filterStringBuilder);
-        System.out.println("getterString: " + getterStringBuilder);
-        System.out.println("counterString: " + counterStringBuilder);
-        /* */
+        if(debug) {
+            System.out.println("filterString: " + filterStringBuilder);
+            System.out.println("getterString: " + getterStringBuilder);
+            System.out.println("counterString: " + counterStringBuilder);
+        }
 
         ResultSet countRowSet;
         try {
@@ -2350,7 +2607,7 @@ public class CanRegDAO {
                     line = br.readLine();
                 }
             } catch (IOException ex) {
-                Logger.getLogger(CanRegDAO.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
             } finally {
                 br.close();
             }
@@ -2372,7 +2629,7 @@ public class CanRegDAO {
                 System.out.println(command);
                 statement.execute(command);
             } catch (SQLException sqle) {
-                Logger.getLogger(CanRegDAO.class.getName()).log(Level.WARNING, null, sqle);
+                LOGGER.log(Level.WARNING, null, sqle);
                 success = false;
             }
         }
@@ -2384,7 +2641,7 @@ public class CanRegDAO {
                 System.out.println(command);
                 statement.execute(command);
             } catch (SQLException sqle) {
-                Logger.getLogger(CanRegDAO.class.getName()).log(Level.WARNING, null, sqle);
+                LOGGER.log(Level.WARNING, null, sqle);
                 success = false;
             }
         }
@@ -2397,7 +2654,7 @@ public class CanRegDAO {
                 System.out.println(command);
                 statement.execute(command);
             } catch (SQLException sqle) {
-                Logger.getLogger(CanRegDAO.class.getName()).log(Level.WARNING, null, sqle);
+                LOGGER.log(Level.WARNING, null, sqle);
                 success = false;
             }
         }
@@ -2412,7 +2669,7 @@ public class CanRegDAO {
                 System.out.println(command);
                 statement.execute(command);
             } catch (SQLException sqle) {
-                Logger.getLogger(CanRegDAO.class.getName()).log(Level.WARNING, null, sqle);
+                LOGGER.log(Level.WARNING, null, sqle);
                 success = false;
             }
         }
@@ -2426,7 +2683,7 @@ public class CanRegDAO {
                 System.out.println(command);
                 statement.execute(command);
             } catch (SQLException sqle) {
-                Logger.getLogger(CanRegDAO.class.getName()).log(Level.WARNING, null, sqle);
+                LOGGER.log(Level.WARNING, null, sqle);
                 success = false;
             }
         }
@@ -2463,14 +2720,14 @@ public class CanRegDAO {
         return success;
     }
 
-    public String getSystemCode() {
-        return systemCode;
+    public String getRegistryCode() {
+        return registryCode;
     }
 
     void upgrade() throws SQLException, RemoteException {
         // disconnect();
         dbConnection = DriverManager.getConnection(getDatabaseUrl() + ";upgrade=true", dbProperties);
-        Logger.getLogger(CanRegDAO.class.getName()).log(Level.INFO, "JavaDB Version: {0}", dbConnection.getMetaData().getDatabaseProductVersion());
+        LOGGER.log(Level.INFO, "JavaDB Version: {0}", dbConnection.getMetaData().getDatabaseProductVersion());
         // disconnect();
         // connect();
     }

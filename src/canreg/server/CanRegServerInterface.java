@@ -36,6 +36,8 @@ import canreg.common.database.PopulationDataset;
 import canreg.server.database.RecordLockedException;
 import canreg.common.database.Tumour;
 import canreg.server.database.UnknownTableException;
+import canreg.server.management.SystemDescription;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -51,6 +53,24 @@ import org.w3c.dom.Document;
  */
 public interface CanRegServerInterface extends Remote {
 
+    /**
+     * Instantiates a SystemDescription object. If it's a regular database and NOT a holding
+     * then the parameter holdingRegistryCode must be NULL and holding must be FALSE.
+     * @param originalRegistryCode
+     * @param holdingRegistryCode
+     * @param holding
+     * @return
+     * @throws RemoteException
+     * @throws SecurityException 
+     */
+    public SystemDescription initSystemDescription(String originalRegistryCode, String holdingRegistryCode, boolean holding, boolean isAdHocDB) 
+            throws RemoteException, SecurityException;
+    
+    
+    public void initDataBase(SystemDescription systemDescription, boolean holding) 
+            throws RemoteException, SecurityException;
+    
+    
     /**
      *
      * @param populationDatasetID
@@ -68,7 +88,10 @@ public interface CanRegServerInterface extends Remote {
      * @throws RecordLockedException
      */
     public void editPatient(Patient patient)
-            throws RemoteException, SecurityException, RecordLockedException;
+            throws RemoteException, SecurityException, RecordLockedException, SQLException;
+    
+    public void editPatientFromHoldingToProduction(Patient patient)
+            throws RemoteException, SecurityException, RecordLockedException, SQLException;
 
     /**
      * 
@@ -78,7 +101,10 @@ public interface CanRegServerInterface extends Remote {
      * @throws RecordLockedException
      */
     public void editTumour(Tumour tumour)
-            throws RemoteException, SecurityException, RecordLockedException;
+            throws SQLException, RemoteException, SecurityException, RecordLockedException;
+    
+    public void editTumourFromHoldingToProduction(Tumour tumour)
+            throws SQLException, RemoteException, SecurityException, RecordLockedException;
 
     /**
      * 
@@ -86,7 +112,7 @@ public interface CanRegServerInterface extends Remote {
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
-    public String getCanRegSystemName()
+    public String getCanRegRegistryName()
             throws RemoteException, SecurityException;
 
     /**
@@ -169,9 +195,10 @@ public interface CanRegServerInterface extends Remote {
             throws RemoteException, SecurityException;
 
     /**
+     * Change the password corresponding to the username. The password can only be changed by the user itself.
      * 
-     * @param username
-     * @param password
+     * @param username username
+     * @param password password to change
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
@@ -225,13 +252,15 @@ public interface CanRegServerInterface extends Remote {
     public List<User> listUsers() throws RemoteException, SecurityException;
 
     /**
-     *
-     * @param user
+     * save the user in the database and in the .CanRegServer folder
+     * 
+     * @param user user name
+     * @param addPasswordReminder allow to create a file to remind the user to change his password
      * @return
      * @throws RemoteException
      * @throws SecurityException
      */
-    public int saveUser(User user) throws RemoteException, SecurityException;
+    public int saveUser(User user,boolean addPasswordReminder) throws RemoteException, SecurityException;
 
     /**
      * User logs in
@@ -349,7 +378,8 @@ public interface CanRegServerInterface extends Remote {
      * @throws UnknownTableException
      * @throws DistributedTableDescriptionException
      */
-    public DistributedTableDescription getDistributedTableDescription(DatabaseFilter filter, String tableName) throws SQLException, RemoteException, SecurityException, UnknownTableException, DistributedTableDescriptionException ;
+    public DistributedTableDescription getDistributedTableDescription(DatabaseFilter filter, String tableName)
+            throws SQLException, RemoteException, SecurityException, UnknownTableException, DistributedTableDescriptionException ;
 
     /**
      * Retrieve rows from a resultset
@@ -466,13 +496,37 @@ public interface CanRegServerInterface extends Remote {
 
     public void shutDownServer() throws RemoteException, SecurityException;
 
+    // Set a password to the database 
     public boolean setDBPassword(char[] newPasswordArray, char[] oldPasswordArray, 
                                  String encryptionAlgorithm, String encryptionKeyLength)
             throws RemoteException, SecurityException;
+// check if the current database
 
-    public String getCanRegSystemCode() throws RemoteException, SecurityException;
+    /**
+     * check if the current database is encrypted by a password
+     * @param registryCode  the registry code
+     * @return a boolean true if the password is encrypted else false
+     * @throws RemoteException Remote Exception
+     * @throws SecurityException Security Exception
+     */
+    public boolean checkDatabaseEncryption(String registryCode) throws RemoteException, SecurityException;
 
-    public String getCanRegSystemRegion()throws RemoteException, SecurityException;
+    public String getCanRegRegistryCode() throws RemoteException, SecurityException;
+
+    public String getCanRegSystemRegion() throws RemoteException, SecurityException;
+    
+    public SystemDescription createNewHoldingDB(String registryCode, SystemDescription sysDesc)
+            throws RemoteException, IOException, SecurityException;
+    
+    public void deleteHoldingDB(String holdingRegistryCode) 
+            throws RemoteException, IOException, SecurityException, SQLException;
+    
+    public void changeRegistryDB(String registryCode) throws RemoteException, SecurityException;
+    
+    public void resetRegistryDB() throws RemoteException, SecurityException;
+    
+    public List<String> getHoldingDBsList() throws IOException, RemoteException, SecurityException;
+
 
     /**
      * Method to be used by a CanReg client to notify a CanReg server that the client
@@ -484,4 +538,49 @@ public interface CanRegServerInterface extends Remote {
      * @throws Exception 
      */
     public void pingRemote(Integer remoteClientHashCode) throws RemoteException, Exception;
+
+    /**
+     * Check if the encrypted password is equal to the password stored in database for the user 
+     * 
+     * @param username username of the user 
+     * @param encryptedPassword encrypted password of the user 
+     * @return boolean 
+     * @throws RemoteException 
+     */
+    public boolean checkPassword(String username, String encryptedPassword) throws RemoteException;
+
+    /**
+     * check if the file reminder present in the .CanRegServer exist.
+     * @param username  user name
+     * @return true or false
+     * @throws RemoteException RMI exception 
+     */
+    public boolean checkFileReminder(String username) throws RemoteException;
+    
+    /**
+     * Delete the file reminder in the .CanRegServer folder.
+     *
+     * @param username  user name
+     * @throws RemoteException RemoteException
+     */
+    public void deleteFileReminder(String username) throws RemoteException;
+
+    /**
+     * Create a new transaction to be saved in the database
+     * 
+     * @throws RemoteException RemoteException
+     */
+    public void openTransaction() throws RemoteException;
+
+    /**
+     * Rollback of the transaction if an exception occurred 
+     *  @throws RemoteException RemoteException
+     */
+    public void rollbackTransaction() throws RemoteException;
+
+    /**
+     *  Commit all the records hold by the transaction if there was no exception 
+     * @throws RemoteException RemoteException
+     */
+    public void commitTransaction() throws RemoteException;
 }

@@ -21,9 +21,9 @@
 package canreg.server.management;
 
 import canreg.client.LocalSettings;
-import canreg.common.database.User;
-import canreg.server.*;
 import canreg.common.Globals;
+import canreg.common.database.User;
+import canreg.server.CanRegLoginModule;
 import canreg.server.database.CanRegDAO;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -31,6 +31,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -51,6 +54,10 @@ import java.util.logging.Logger;
  */
 public class UserManagerNew {
 
+    private static final Logger LOGGER = Logger.getLogger(UserManagerNew.class.getName());
+    /**
+     *
+     */
     static public String DEFAULT_PASS_FILENAME = "Passwords.properties";
     static public String DEFAULT_LEVELS_FILENAME = "Levels.properties";        
 
@@ -67,15 +74,11 @@ public class UserManagerNew {
         
         clientSessionsMap = new ConcurrentHashMap<>();
         
-        try {
-            checkAliveClients = Executors.newSingleThreadScheduledExecutor();
-            LocalSettings localSettings = new LocalSettings("settings.xml");
-//            te falta que estos jtextfield solo acepten integers. Fijate en el codigo del jewel en la caja de texto de los channels
-            Integer seconds = Integer.parseInt(localSettings.getProperty(LocalSettings.CLIENT_SESSIONS_CHECK_KEY));
-            checkAliveClients.scheduleAtFixedRate(new CheckClientSessionAlive(), 0, seconds, TimeUnit.SECONDS);
-        } catch (IOException ex) {
-            Logger.getLogger(UserManagerNew.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        checkAliveClients = Executors.newSingleThreadScheduledExecutor();
+        LocalSettings localSettings = new LocalSettings("settings.xml");
+        //            te falta que estos jtextfield solo acepten integers. Fijate en el codigo del jewel en la caja de texto de los channels
+        Integer seconds = Integer.parseInt(localSettings.getProperty(LocalSettings.CLIENT_SESSIONS_CHECK_KEY));
+        checkAliveClients.scheduleAtFixedRate(new CheckClientSessionAlive(), 0, seconds, TimeUnit.SECONDS);
     }
 
     public int getNumberOfUsersLoggedIn() {
@@ -120,10 +123,10 @@ public class UserManagerNew {
             passwords.storeToXML(propOutputStream, "Passwords");
             success = true;
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(UserManagerNew.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             success = false;
         } catch (IOException ex) {
-            Logger.getLogger(UserManagerNew.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             success = false;
         } finally {
             if (propOutputStream != null) {
@@ -131,7 +134,7 @@ public class UserManagerNew {
                     propOutputStream.flush();
                     propOutputStream.close();
                 } catch (IOException ex) {
-                    Logger.getLogger(UserManagerNew.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
                     success = false;
                 }
             }
@@ -157,10 +160,10 @@ public class UserManagerNew {
             levels.storeToXML(propOutputStream, "Levels");
             success = true;
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(UserManagerNew.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             success = false;
         } catch (IOException ex) {
-            Logger.getLogger(UserManagerNew.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             success = false;
         } finally {
             if (propOutputStream != null) {
@@ -168,7 +171,7 @@ public class UserManagerNew {
                     propOutputStream.flush();
                     propOutputStream.close();
                 } catch (IOException ex) {
-                    Logger.getLogger(UserManagerNew.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
                     success = false;
                 }
             }
@@ -198,13 +201,13 @@ public class UserManagerNew {
                 if (password != null) {
                     user.setPassword(password.toCharArray());
                 } else {
-                    Logger.getLogger(UserManagerNew.class.getName()).log(Level.SEVERE, null, "Password and user rights doesn't match...");
+                    LOGGER.log(Level.SEVERE, null, "Password and user rights doesn't match...");
                 }
                 users.add(user);
             }
 
         } catch (IOException ex) {
-            Logger.getLogger(UserManagerNew.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         return users;
     }
@@ -227,13 +230,16 @@ public class UserManagerNew {
     }
     
     public void releaseRecord(int recordID, String tableName, Integer remoteHashCode) {
-        db.releaseRecord(recordID, tableName);
+//        db.releaseRecord(recordID, tableName);
         if(remoteHashCode == null)
             return;
         
-        Set lockSet = clientSessionsMap.get(remoteHashCode).records.get(tableName);
-        if (lockSet != null) 
-            lockSet.remove(recordID);
+        ClientSessionData sessionData = clientSessionsMap.get(remoteHashCode);
+        if(sessionData != null) {
+            Set lockSet = sessionData.records.get(tableName);
+            if (lockSet != null) 
+                lockSet.remove(recordID);
+        }
     }
 
     public void userLoggedOut(Integer remoteHashCode) {
@@ -304,5 +310,42 @@ public class UserManagerNew {
             for(Integer session : sessionsToRemove)
                 userLoggedOut(session);
         }
+    }
+
+    public boolean checkPasswordReminderFile(String username) {
+        File file = getFileReminder(username);
+        return file.exists();
+    }
+
+    public void createFileReminder(String username) {
+        File reminderFile = getFileReminder(username);
+        try {
+            if (!reminderFile.exists()) {
+                Files.createFile(reminderFile.toPath());
+            }
+        } catch (IOException ex) {
+            LOGGER.log(Level.SEVERE, String.format("Unable to create the file : %s", reminderFile.toPath()), ex);
+        }
+    }
+
+    public void deleteFileReminder(String username) {
+        File reminderFile = getFileReminder(username);
+        try {
+            Files.deleteIfExists(reminderFile.toPath());
+        } catch (IOException ex) {
+            LOGGER.log(Level.SEVERE,String.format("Unable to delete the file : %s",reminderFile.toPath()), ex);
+        }
+    }
+
+    private File getFileReminder(String username) {
+        String encryptedUsername = encodeUsername(username);
+        return new File(Globals.CANREG_SERVER_FOLDER + Globals.FILE_SEPARATOR + encryptedUsername);
+    }
+
+    private String encodeUsername(String username) {
+        return Base64.getEncoder().encodeToString(username.getBytes(StandardCharsets.UTF_8))
+            .replace('+', '-')
+            .replace('/', '_')
+            .replace('=', '.');
     }
 }

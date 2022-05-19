@@ -109,10 +109,13 @@
             <Property name="name" type="java.lang.String" value="fileNameTextField" noResource="true"/>
           </Properties>
           <Events>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="fileNameTextFieldFocusLost"/>
             <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="fileNameTextFieldMousePressed"/>
             <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="fileNameTextFieldMouseReleased"/>
-            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="fileNameTextFieldFocusLost"/>
           </Events>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="fileNameTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;  public void changedUpdate(DocumentEvent e) {&#xa;    changeFile();&#xa;  }&#xa;  public void removeUpdate(DocumentEvent e) {&#xa;    changeFile();&#xa;  }&#xa;  public void insertUpdate(DocumentEvent e) {&#xa;    changeFile();&#xa;  }&#xa;});"/>
+          </AuxValues>
         </Component>
         <Component class="javax.swing.JButton" name="browseButton">
           <Properties>

@@ -91,6 +91,7 @@ public class Globals {
      */
     static public String DEFAULT_SYSTEM_XML = "./conf/database/TRN.xml";
     public static String DEFAULT_DICTIONARIES_FOLDER = "/canreg/common/resources/dictionaries";
+    public static String ADHOC_SYSTEM_XML = "./conf/adhoc/ADHOC.xml";
     /**
      *
      */
@@ -100,8 +101,11 @@ public class Globals {
     static final private String CANREG_SERVER_SYSTEM_CONFIG_FOLDER_NAME = "System";
     static final private String CANREG_SERVER_DATABASE_FOLDER_NAME = "Database";
     static final private String CANREG_BACKUP_FOLDER_NAME = "Backup";
+    static final private String CANREG_HOLDING_DB_SYSTEM_DESCRIPTION_FOLDER_NAME = "Holding";
+    static final private String CANREG_ADHOC_DB_SYSTEM_DESCRIPTION_FOLDER_NAME = "AdHoc";
     static public String CANREG_PASSWORD_FILE_NAME = CANREG_SERVER_FOLDER + FILE_SEPARATOR + "passwords.properties";
     static public String CANREG_LEVELS_FILE_NAME = CANREG_SERVER_FOLDER + FILE_SEPARATOR + "levels.properties";
+    static public String CANREG_CONFIG_DATABASE = CANREG_SERVER_FOLDER + FILE_SEPARATOR + "database.properties";
     static public String CANREG_UPDATED_INSTRUCTIONS_URL = "http://www.iacr.com.fr/CanReg5/CanReg5-instructions.pdf";
     static public String CANREG_UPDATED_INSTRUCTIONS_LOCAL_FILE = CANREG_CLIENT_FOLDER + Globals.FILE_SEPARATOR + "CanReg5-instructions.pdf";
     static public String CANREG_LOCAL_LOCKED_RECORDS_FILE_NAME_SUFFIX = "-records.locked";
@@ -122,6 +126,11 @@ public class Globals {
     static public String USER_TABLES_PREVIEW_PATH = USER_TABLES_CONF_PATH + "/previews";
     static public String DEFAULT_PREVIEW_FILENAME = "blanc.png";
     public static String R_INSTALL_PACKAGES_SCRIPT = R_SCRIPTS_PATH + "/" + "r-packages/install_packages.r";
+    
+    public static final String IMPORT_CONF_PATH = "./conf/import";
+    public static final String USER_IMPORT_CONF_PATH = CANREG_CLIENT_FOLDER + FILE_SEPARATOR + IMPORT_CONF_PATH;
+    public static final String IMPORT_R_SCRIPTS_PATH = IMPORT_CONF_PATH + FILE_SEPARATOR + "r";
+    public static final String USER_IMPORT_R_SCRIPTS_PATH = CANREG_CLIENT_FOLDER + FILE_SEPARATOR + IMPORT_R_SCRIPTS_PATH;
     /**
      *
      */
@@ -130,6 +139,14 @@ public class Globals {
      *
      */
     static public String CANREG_SERVER_DATABASE_FOLDER = CANREG_SERVER_FOLDER + Globals.FILE_SEPARATOR + CANREG_SERVER_DATABASE_FOLDER_NAME;
+    /**
+     * 
+     */
+    static public String CANREG_SERVER_HOLDING_DB_SYSTEM_DESCRIPTION_FOLDER = CANREG_SERVER_FOLDER + Globals.FILE_SEPARATOR + CANREG_HOLDING_DB_SYSTEM_DESCRIPTION_FOLDER_NAME;
+    /**
+     * 
+     */
+    static public String CANREG_SERVER_ADHOC_DB_SYSTEM_DESCRIPTION_FOLDER = CANREG_SERVER_FOLDER + Globals.FILE_SEPARATOR + CANREG_ADHOC_DB_SYSTEM_DESCRIPTION_FOLDER_NAME;
     /**
      *
      */
@@ -252,6 +269,7 @@ public class Globals {
     public static String DD_FILE_VARIABLES_FILE = "/canreg/common/ruby/export_format_canreg5.tsv";
     public static final String DEFAULT_CLIENT_TO_SERVER_PING = "20";
     public static final String DEFAULT_CLIENT_SESSIONS_CHECK_PING = "45";
+    public static String DEFAULT_LOOK_AND_FEEL = "System";
 
     /**
      *
@@ -283,14 +301,17 @@ public class Globals {
      *
      */
     static public String PATIENT_TABLE_RECORD_ID_VARIABLE_NAME = "PRID";
+    static public String PATIENT_TABLE_RECORD_ID_VARIABLE_NAME_FOR_HOLDING = "PATIENTRECORDID";
     /**
      *
      */
     static public String TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME = "TRID";
+    static public String TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME_FOR_HOLDING = "TUMOURID";
     /**
      *
      */
     static public String SOURCE_TABLE_RECORD_ID_VARIABLE_NAME = "SRID";
+    static public String SOURCE_TABLE_RECORD_ID_VARIABLE_NAME_FOR_HOLDING = "SOURCERECORDID";
     /**
      *
      */

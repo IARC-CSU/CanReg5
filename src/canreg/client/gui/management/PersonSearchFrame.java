@@ -25,6 +25,7 @@
 package canreg.client.gui.management;
 
 import canreg.client.gui.*;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.server.database.RecordLockedException;
 import canreg.server.database.UnknownTableException;
 import canreg.common.cachingtableapi.DistributedTableDescription;
@@ -82,6 +83,7 @@ import org.apache.commons.csv.CSVPrinter;
  */
 public class PersonSearchFrame extends javax.swing.JInternalFrame implements ActionListener {
 
+    private static final Logger LOGGER = Logger.getLogger(PersonSearchFrame.class.getName());
     private final PersonSearchListener listener;
     private Task duplicateSearchTask;
     private JDesktopPane desktopPane;
@@ -459,9 +461,10 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                 rangeEnd = ("'" + rangeEnd + "'");
             }
             personSearchHandlerID = CanRegClientApp.getApplication().initiateGlobalDuplicateSearch(
-                    searcher, rangeStart, rangeEnd);
+                    searcher, rangeStart, rangeEnd, null);
         } catch (SecurityException | RemoteException ex) {
-            Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
         return duplicateSearchTask;
     }
@@ -485,8 +488,9 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
             matchesFound = 0;
             recordsTestedTextField.setText(recordsTested + "");
             matchesFoundTextField.setText(matchesFound + "");
+            long start = System.currentTimeMillis();
             try {
-                result = CanRegClientApp.getApplication().nextStepGlobalPersonSearch(personSearchHandlerID);
+                result = CanRegClientApp.getApplication().nextStepGlobalPersonSearch(personSearchHandlerID, null);
                 if (result != null) {
                     recordsTested += Globals.GLOBAL_PERSON_SEARCH_STEP_SIZE;
                 }
@@ -496,10 +500,10 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                         for (String patientRecordNumberA : result.keySet()) {
                             Map<String, Float> map = result.get(patientRecordNumberA);
                             matchesFound += map.size();
-                            Patient patientA = CanRegClientApp.getApplication().getPatientRecord(patientRecordNumberA, false);
+                            Patient patientA = CanRegClientApp.getApplication().getPatientRecord(patientRecordNumberA, false, null);
                             String patientNumberA = (String) patientA.getVariable(patientIDlookupVariable).toString();
                             for (String patientRecordNumberB : map.keySet()) {
-                                Patient patientB = CanRegClientApp.getApplication().getPatientRecord(patientRecordNumberB, false);
+                                Patient patientB = CanRegClientApp.getApplication().getPatientRecord(patientRecordNumberB, false, null);
                                 String patientNumberB = (String) patientB.getVariable(patientIDlookupVariable).toString();
                                 resultTableModel.addRow(new Object[]{patientNumberA, patientNumberB, map.get(patientRecordNumberB)});
                             }
@@ -508,14 +512,22 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
 
                         // TODO: Write to file
                     }
-                    result = CanRegClientApp.getApplication().nextStepGlobalPersonSearch(personSearchHandlerID);
+                    result = CanRegClientApp.getApplication().nextStepGlobalPersonSearch(personSearchHandlerID, null);
                     if (result != null) {
                         recordsTested += Globals.GLOBAL_PERSON_SEARCH_STEP_SIZE;
+                        if(recordsTested %1000 == 0 ){
+                            long now = System.currentTimeMillis();
+                            LOGGER.info(() ->" [records tested] : " + recordsTested  + " & [match found] : " + matchesFound
+                                + " [time elapsed] : "+(now-start)/1000+" sec");
+                        }
                     }
                 }
             } catch (SecurityException | RemoteException | DistributedTableDescriptionException | RecordLockedException | SQLException | UnknownTableException ex) {
-                Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
+            LOGGER.log(Level.INFO, () ->" duplicate search finished : [records tested] :"  + recordsTested  +
+                " & [match found] : " + matchesFound);
             return null;  // return your result
         }
 
@@ -559,7 +571,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
-        Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.INFO, command);
+        LOGGER.log(Level.INFO, command);
         if (command.startsWith("range")) {
             recordsInRangeField.setText(command.substring(6));
         }
@@ -572,7 +584,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
     public void interruptDuplicateSearchAction() {
         if (duplicateSearchTask != null) {
             try {
-                CanRegClientApp.getApplication().interuptGlobalPersonSearch(personSearchHandlerID);
+                CanRegClientApp.getApplication().interuptGlobalPersonSearch(personSearchHandlerID, null);
                 // boolean cancelled = duplicateSearchTask.cancel(true);
                 // if (!cancelled) {
                 //     JOptionPane.showConfirmDialog(this, "Task can not be interupted...");
@@ -583,7 +595,8 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                 // performButton.setEnabled(true);
                 // interruptButton.setEnabled(false);
             } catch (SecurityException | RemoteException ex) {
-                Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
         }
     }
@@ -621,19 +634,20 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                 try {
 //                  patient = CanRegClientApp.getApplication().getPatientRecord("" + model.getValueAt(rowNumber, columnNumber), false);
                     String patient1ID = (String) target.getValueAt(rowNumber, 0);
-                    Patient patient1 = CanRegClientApp.getApplication().getPatientRecordsByID(patient1ID, false)[0];
+                    Patient patient1 = CanRegClientApp.getApplication().getPatientsByPatientID(patient1ID, false, null)[0];
                     cpif.addMainRecordSet(patient1, null);
                     // find all results with same as ID1
                     for (int row = 0; row < resultTableModel.getRowCount(); row++) {
                         if (patient1ID.equals(target.getValueAt(row, 0))) {
                             String patient2ID = (String) target.getValueAt(row, 1);
-                            Patient patient2 = CanRegClientApp.getApplication().getPatientRecordsByID(patient2ID, false)[0];
+                            Patient patient2 = CanRegClientApp.getApplication().getPatientsByPatientID(patient2ID, false, null)[0];
                             cpif.addRecordSet(patient2, null, (Float) target.getValueAt(row, 2));
                         }
                     }
                     CanRegClientView.showAndPositionInternalFrame(desktopPane, cpif);
                 } catch (SQLException | RecordLockedException | UnknownTableException | DistributedTableDescriptionException | RemoteException | SecurityException ex) {
-                    Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
+                    new TechnicalError().errorDialog();
                 }
             }
         }
@@ -653,7 +667,8 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
 //                  patient = CanRegClientApp.getApplication().getPatientRecord("" + model.getValueAt(rowNumber, columnNumber), false);
                     editPatientID("" + target.getValueAt(rowNumber, columnNumber));
                 } catch (SecurityException ex) {
-                    Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
+                    new TechnicalError().errorDialog();
                 }
             }
         }
@@ -672,12 +687,11 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
 
         canreg.client.gui.dataentry2.RecordEditor recordEditor = null;
         String dataEntryVersion = localSettings.getProperty(LocalSettings.DATA_ENTRY_VERSION_KEY);
-        if (dataEntryVersion.equalsIgnoreCase(LocalSettings.DATA_ENTRY_VERSION_NEW)) {
-            recordEditor = new canreg.client.gui.dataentry2.RecordEditorMainFrame(desktopPane);
-        } else {
-            recordEditor = new RecordEditor(desktopPane);
-        }
-
+        if (dataEntryVersion.equalsIgnoreCase(LocalSettings.DATA_ENTRY_VERSION_NEW))
+            recordEditor = new canreg.client.gui.dataentry2.RecordEditorMainFrame(desktopPane, null, null);
+        else 
+            recordEditor = new RecordEditor(desktopPane, null, null);
+        
         recordEditor.setGlobalToolBox(CanRegClientApp.getApplication().getGlobalToolBox());
         recordEditor.setDictionary(CanRegClientApp.getApplication().getDictionary());
         DatabaseRecord record = null;
@@ -688,7 +702,8 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
         DatabaseRecord[] tumourRecords;
 
         try {
-            distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.PATIENT_TABLE_NAME);
+            distributedTableDescription =
+                    CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.PATIENT_TABLE_NAME, null);
             int numberOfRecords = distributedTableDescription.getRowCount();
 
             if (numberOfRecords == 0) {
@@ -699,8 +714,9 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                 if (answer == JOptionPane.YES_OPTION) {
                     record = new Patient();
                     record.setVariable(patientIDlookupVariable, idString);
-                    CanRegClientApp.getApplication().saveRecord(record);
-                    distributedTableDescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.PATIENT_TABLE_NAME);
+                    CanRegClientApp.getApplication().saveRecord(record, null);
+                    distributedTableDescription = 
+                            CanRegClientApp.getApplication().getDistributedTableDescription(filter, Globals.PATIENT_TABLE_NAME, null);
                     numberOfRecords = distributedTableDescription.getRowCount();
                 } else {
                     setCursor(normalCursor);
@@ -708,8 +724,8 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                 }
             }
 
-            rows = CanRegClientApp.getApplication().retrieveRows(distributedTableDescription.getResultSetID(), 0, numberOfRecords);
-            CanRegClientApp.getApplication().releaseResultSet(distributedTableDescription.getResultSetID());
+            rows = CanRegClientApp.getApplication().retrieveRows(distributedTableDescription.getResultSetID(), 0, numberOfRecords, null);
+            CanRegClientApp.getApplication().releaseResultSet(distributedTableDescription.getResultSetID(), null);
             String[] columnNames = distributedTableDescription.getColumnNames();
             int ids[] = new int[numberOfRecords];
             boolean found = false;
@@ -730,10 +746,10 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                 // Get all the tumour records for all the patient records...
                 for (int j = 0; j < numberOfRecords; j++) {
                     ids[j] = (Integer) rows[j][idColumnNumber];
-                    record = CanRegClientApp.getApplication().getRecord(ids[j], Globals.PATIENT_TABLE_NAME, true);
+                    record = CanRegClientApp.getApplication().getRecord(ids[j], Globals.PATIENT_TABLE_NAME, true, null);
                     recordEditor.addRecord(record);
 
-                    tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(idString, true);
+                    tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientID(idString, true, null);
                     for (DatabaseRecord rec : tumourRecords) {
                         // store them in a set, so we don't show them several times
                         if (rec != null) {
@@ -757,9 +773,11 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                 JOptionPane.showMessageDialog(rootPane, java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("RECORD_NOT_FOUND"), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/BrowseInternalFrame").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             }
         } catch (RecordLockedException | DistributedTableDescriptionException | UnknownTableException ex) {
-            Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         } catch (SQLException | RemoteException | SecurityException ex) {
-            Logger.getLogger(BrowseInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         } finally {
             setCursor(normalCursor);
         }
@@ -813,7 +831,7 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                 }
 
             } catch (IOException ex) {
-                Logger.getLogger(InstallNewSystemInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 success = false;
             }
             if (success) {
@@ -822,7 +840,8 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                 try {
                     Tools.openFile(fileName);
                 } catch (IOException ex) {
-                    Logger.getLogger(PersonSearchFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
+                    new TechnicalError().errorDialog();
                 }
             } else {
                 JOptionPane.showMessageDialog(desktopPane, "Something went wrong while writing to: " + fileName, "Error", JOptionPane.ERROR_MESSAGE);

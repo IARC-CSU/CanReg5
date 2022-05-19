@@ -31,6 +31,7 @@ import java.util.logging.Logger;
  */
 public class Migrator {
 
+    private static final Logger LOGGER = Logger.getLogger(Migrator.class.getName());
     private String newVersion;
     private CanRegDAO canRegDAO;
 
@@ -78,16 +79,16 @@ public class Migrator {
         // no users in the table from before so we just drop it
         db.dropAndRebuildUsersTable();
         db.setSystemPropery("DATABASE_VERSION", "4.99.5");
-        Logger.getLogger(Migrator.class.getName()).log(Level.INFO, "Migrated the database to version 4.99.5.");
+        LOGGER.log(Level.INFO, "Migrated the database to version 4.99.5.");
     }
 
     private void migrateTo_5_00_06(CanRegDAO db) {
         try {
             db.dropAndRebuildKeys();
             db.setSystemPropery("DATABASE_VERSION", "5.00.06");
-            Logger.getLogger(Migrator.class.getName()).log(Level.INFO, "Migrated the database to version 5.00.06.");
+            LOGGER.log(Level.INFO, "Migrated the database to version 5.00.06.");
         } catch (SQLException ex) {
-            Logger.getLogger(Migrator.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
     }
 
@@ -95,9 +96,9 @@ public class Migrator {
         try {
             db.addColumnToTable("USER_ROLE", "INT", Globals.USERS_TABLE_NAME);
             db.setSystemPropery("DATABASE_VERSION", "5.00.17");
-            Logger.getLogger(Migrator.class.getName()).log(Level.INFO, "Migrated the database to version 5.00.17.");
+            LOGGER.log(Level.INFO, "Migrated the database to version 5.00.17.");
         } catch (SQLException ex) {
-            Logger.getLogger(Migrator.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
     }
 
@@ -106,9 +107,9 @@ public class Migrator {
             db.dropColumnFromTable("USER_ROLE", Globals.USERS_TABLE_NAME );
             db.addColumnToTable("USER_ROLE", "VARCHAR(255)", Globals.USERS_TABLE_NAME);
             db.setSystemPropery("DATABASE_VERSION", "5.00.19");
-            Logger.getLogger(Migrator.class.getName()).log(Level.INFO, "Migrated the database to version 5.00.19.");
+            LOGGER.log(Level.INFO, "Migrated the database to version 5.00.19.");
         } catch (SQLException ex) {
-            Logger.getLogger(Migrator.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
     }
     private void migrateTo_5_00_43(CanRegDAO db) {
@@ -117,11 +118,11 @@ public class Migrator {
                 db.upgrade();
                 db.setSystemPropery("DATABASE_VERSION", "5.00.43");
             } catch (RemoteException ex) {
-                Logger.getLogger(Migrator.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
             }            
-            Logger.getLogger(Migrator.class.getName()).log(Level.INFO, "Migrated the database to version 5.00.43.");
+            LOGGER.log(Level.INFO, "Migrated the database to version 5.00.43.");
         } catch (SQLException ex) {
-            Logger.getLogger(Migrator.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
     }
 }

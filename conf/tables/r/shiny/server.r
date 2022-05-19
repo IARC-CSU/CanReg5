@@ -500,16 +500,22 @@ shinyServer(function(input, output, session) {
   })
 
    #Render table
-  output$table <-  renderTable({ 
+  output$table <-  renderTable(
+  	{ 
 
-  	# dt_all_table()
-    if (!is.null(dt_all()))  {
-      
-      canreg_shiny_table(dt_all(), input,session,  FALSE)
-	  	
-    }
-    
-  })
+	  	# dt_all_table()
+	    if (!is.null(dt_all()))  {
+	      
+	      dt_renderTable <- canreg_shiny_table(dt_all(), input,session,  FALSE)
+
+		  	
+	    }
+    },
+  	striped=TRUE,
+    hover = TRUE,
+    align = "ccrrrrrrrrrrr",
+    sanitize.text.function=identity
+  )
   
   #Download file
   output$downloadFile <- 
@@ -544,10 +550,10 @@ shinyServer(function(input, output, session) {
 
 				if (input$select_table == 13)
 				{
-					canreg_shiny_table(dt_all(),  input,session, TRUE,FALSE,file_temp)
+					canreg_shiny_table(dt_all(),  input,session, TRUE,file_temp)
 				}
 				else {
-					canreg_shiny_plot(dt_all(),  input,session, TRUE,FALSE,file_temp)
+					canreg_shiny_plot(dt_all(),  input,session, TRUE,file_temp)
 				}
 				
 				incProgress(1, detail = "")
