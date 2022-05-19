@@ -291,7 +291,11 @@ public class Globals {
         /**
          *
          */
-        ANALYST
+        ANALYST,
+        /**
+         *
+         */
+        API
     };
     /**
      *

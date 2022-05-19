@@ -252,7 +252,6 @@ out/*
 
 doc/CanReg5-Instructions.zip
 doc/CanReg5-Future.pdf
-.idea/workspace.xml
 
 conf/tables/r/\.RData
 
@@ -265,3 +264,7 @@ scripts/source_splitter/Gemfile.lock
 
 conf/tables/r/r-installation
 conf/tables/r/r-packages/log_install.txt
+
+## Idea
+.idea/*
+target/*
