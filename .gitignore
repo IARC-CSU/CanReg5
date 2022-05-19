@@ -267,3 +267,4 @@ conf/tables/r/r-packages/log_install.txt
 
 ## Idea
 .idea/*
+target/*
