@@ -1,6 +1,6 @@
 # CanReg5 Changelog
 
-## 5.00.45BETA1
+## 5.00.45BETA2
 
 - Holding database (BETA)
 - Ad-hoc analysis (BETA)
