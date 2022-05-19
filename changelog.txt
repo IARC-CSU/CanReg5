@@ -4,11 +4,14 @@
 
 - Holding database (BETA)
 - Ad-hoc analysis (BETA)
-- Improved person search perfomance
-- Memory leak fixes
-
+- Improved person search perfomance.
+- The user is invited to change the default password after a SUPERVISOR has reset it.
+- Enforce a database password before allowing the user to start the database server.
+- Memory leak fixes.
+- Various other bug fixes and security improvements.
 
 ## 5.00.44h
+
 - New Features: save list of person search matches as spreadsheet.
 - Fixed link to latest version information.
 - Table builder:
@@ -20,6 +23,7 @@
 - Other minor fixes.
 
 ## 5.00.44g
+
 - Table builder:
   - Better progress bar when installing bundled R packages.
   - Fixed bug where installing bundled R packages never finished.
@@ -27,24 +31,30 @@
   - Updated list of R packages needed.
 
 ## 5.00.44f
+
 - CanReg can now be bundled with an installation of R and packages that are known to work. (Windows only.)
 
 ## 5.00.44e
+
 - Table builder is now compatible with latest version of R (4.0.3) libraries. 
 
 ## 5.00.44d
+
 - Fixed a bug related to answering 'no' to 'really close?' for record with changes.
 
 ## 5.00.44c
+
 - Fixed a bug in recording of unknown dates.
 
 ## 5.00.44b
+
 - Table builder is now compatible with latest version of R. (4.0.0)
 - Population data sets with different reference populations are not compatible.
 - Added Ruby script to recode variables in a CSV file.
 - Added help files to scripts.
 
 ## 5.00.44
+
 - Table Builder:
   - Data visualizations in R are now translated to Russian, Spanish and Portuguese.
     - As usual, defaults to English if no language is available.
@@ -73,11 +83,13 @@
 - Various fixes.
 
 ## 5.00.43b
+
 - Updated the install_packages script.
 - Language codes sent to R scripts.
 - Various fixes.
 
 ## 5.00.43
+
 - Analysis features updated in collaboration with Mathieu Laversanne:
   - Replaced ReportR with Officer for generating docx and pptx documents. (This should take care of troubles related to the different architecture of R/Java.)
   - Web based data analysis functionality added using the Shiny R library. (This functionality is still at a BETA stage.)
@@ -96,6 +108,7 @@
 - Other fixes.
 
 ## 5.00.42
+
 - Analysis features updated in collaboration with Mathieu Laversanne:
   - Default report for further editing in Word or similar added.
     - Template system implemented.
@@ -130,9 +143,11 @@
 - Other fixes.
 
 ## 5.00.41b
+
 - Fixed bug in generation of variables list if source table contains more fields than patient table.
 
 ## 5.00.41
+
 - New data entry form. (Developed in collaboration with Betty Carballo and Patricio Carranza.)
 - Ability to enable/disble new data entry form in Options.
 - Removed latest news since Twitter no longer allows access to their API as RSS.
@@ -142,6 +157,7 @@
 - Small fixes.
 
 ## 5.00.40
+
 - Date format for data entry can now be chosen at user level. (Under "Options".)
 - Added detection of uninstallation/reinstallation/updates of R/GS software.
 - Improved year selection in table builder.
@@ -153,6 +169,7 @@
 - Various fixes.
 
 ## 5.00.39
+
 - Users can now perform "Exact search" while entering a new case.
 - System definition files are now always saved in UTF-8.
 - [ModifuDatabaseStructureInternalFrame] Save button now disabled while saving a file.
@@ -171,17 +188,20 @@
 - Other improvements.
 
 ## 5.00.38
+
 - Improved handling of non-standard database filenames.
 - Improved error messages.
 - Escaped character in export file header
 - Other bugfixes.
 
 ## 5.00.37
+
 - Fixed a bug in the Date of Last contact check introduced in the previous version.
 - Fixed a bug where updates to Source records were sometimes not imported.
 - Other minor fixes.
 
 ## 5.00.36
+
 - Fixed a bug occurring in some tables if the decimal point was not '.' (ie. Russian locale.)
 - Saving frequency tables now also produces pivot tables.
 - Hid "Other" age group structure button.
@@ -192,9 +212,11 @@
 - Other minor fixes.
 
 ## 5.00.35
+
 - Fixed a bug in the import of datasets split in three tables where sometimes not all cases were imported.
 
 ## 5.00.34
+
 - Fixed (Temporarily) the Age-Specific Time Trends script. (It now computes rates/trends for age groups >=40 and for all sites together only)
 - Fixed a bug where some non-Latin characters were not exported correctly, but showed up as question-marks. Now properly implemented as unicode (UTF-8).
 - Fixed a bug related to import of patients with multiple tumours.
@@ -202,6 +224,7 @@
 - Other minor fixes.
 
 ## 5.00.33
+
 - Corrected the Age Specific Rates script (was generating fake values, used for graphs, when exporting as CSV)
 - Removes the double extension from output files if HTML is selected (e.g. test.html.html)
 - Added SVG saving option to the Top Cancers Barchart script
@@ -212,6 +235,7 @@
 - Other minor fixes
 
 ## 5.00.32
+
 - Time trends added. 
 - CI5editorial tables added as an analysis option.
 - AgeSpecificRatesTopX table now sorts cancers by ASR.
@@ -230,6 +254,7 @@
 - Other minor fixes.
 
 ## 5.00.31
+
 - Age specific rates for top X cancer sites figure added (SA).
 - Data Quality table added (SA).
 - Updated other R scripts.
@@ -241,17 +266,20 @@
 - Other minor fixes.
 
 ## 5.00.30
+
 - Fixed a bug where some times a record would be locked and inaccessible after creating a new record specifying the ID.
 - Cleaned some code.
 - Other minor fixes.
 
 ## 5.00.29
+
 - Improved handling of patients missing tumour records.
 - Improved functionality for user created table definitions and R scripts.
 - Improved readability of some text on screen.
 - Other minor fixes.
 
 ## 5.00.28
+
 - Improved handling of separating characters within strings while exporting data.
 - Reference population now displayed on Age Specific Rates per 100.000 table.
 - Added a new age group structure.
@@ -259,10 +287,12 @@
 - Other minor fixes.
 
 ## 5.00.27
+
 - The latest Java update (7u21 and 6u45) broke CanReg5 integration of R and GS due to a new restriction in spaces in file names. This is a quick work around that solves the problem on Windows machines, in most languages (including Spanish, Portuguese, and English).
 - Fixed a bug in the testScript.r where generate SVG or PNG did not work.
 
 ## 5.00.26
+
 - CanRegDAO should now be more thread safe.
 - Improved the connection to SEER*stat.
 - Updated some R scripts.
@@ -274,6 +304,7 @@
 - Other minor fixes.
 
 ## 5.00.25
+
 - R script generated by CanReg5 now functions like the R scripts in the script folder by cat'ing out the file names generated. CanReg then reads from a report file instead of STOUT to decide on files generated by R.
 - Improved the "makeSureGgplot2IsInstalled.R" script by changing the repo to a dynamic one and the installation of packages to local folder more explicit.
 - Made the export window more dynamic.
@@ -283,6 +314,7 @@
 - Other fixes.
 
 ## 5.00.24
+
 - Fixed an error in ggplot pie charts occuring if any category had a 0 count.
 - Updated: The latest ggplot2 no longer allows options(title=""), but needs labs(title="").
 - Improved error handling in the population dataset editor.
@@ -292,6 +324,7 @@
 - Other fixes
 
 ## 5.00.23
+
 - Fixed bug occuring when top or morph did not have the appropriate length in the ICD03 to 10 module.
 - Fixed a bug in the import function where the character set of the imported files were sometimes not taken into consideration.
 - Fixed a bug in the person search where weights of the links were not taken into account.
@@ -299,6 +332,7 @@
 - Other bug fixes.
 
 ## 5.00.22
+
 - Fixed a bug where the browser didn't work without a filter/range. (Added too many parentheses in last update.)
 - New tables added. Previews updated.
 - "Top10" and "Cases by age group" charts can now be generated using R (with ggplot).
@@ -310,6 +344,7 @@
 - Other bug fixes.
 
 ## 5.00.21
+
 - Cases by age group Pie and Bar charts added.
 - Top 10 cancer sites can now also be represented as bar a chart.
 - Added a write to PDF function to the built in canreg5 chart viewer.
@@ -330,6 +365,7 @@
 - Internationalized some strings.
 
 ## 5.00.20
+
 - The display now refreshes after removing a variable in the tool to edit the database structure.
 - Export now takes into account UTF-8 characters.
 - Some tables, previously only available as PS, now also available as PDFs (if GhostScript is installed).
@@ -339,6 +375,7 @@
 - Other fixes.
 
 ## 5.00.19
+
 - Fixed a potential null-pointer in the table builder if people wanted to use the filter wizard.
 - Added JRuby helper scripts to use the CanReg5 conversions and grouping functionality on data not from CanReg. (See handbook.)
 - Table builder now shows a warning if trying to build a table with no data.
@@ -347,12 +384,14 @@
 - Updated the handbook.
 
 ## 5.00.18
+
 - Fixed a bug in the pie chart builder where cancer groups with the same count of cases only counted once.
 - Fixed a potential null-pointer error while accessing the lock-file.
 - Updated the docs.
 - Various bug fixes.
 
 ## 5.00.17
+
 - Implemented a system to detect records not properly released from the server after an unclean break.
 - Tablebuilder can now build tables without denominators.
 - Users can now change the font and font size used in CanReg5.
@@ -367,6 +406,7 @@
 - Various bug fixes
 
 ## 5.00.16
+
 - Portugese from Portugal added as langauge. (Thanks Gon�alo Lacerda)
 - Language chooser in Option Frame now only displays translated languages.
 - Fixed a potential null pointer error in the Population Datasets.
@@ -374,15 +414,18 @@
 - Tidied some old properties files.
 
 ## 5.00.15
+
 - Fixed a nullpointer error in the rangefilter panel if the actionlistener had not been set.
 
 ## 5.00.14
+
 - Fixed an import related bug where sometimes cases were missed during imort!
 - The browser sorts by default by Incidence Date/PatientID/SourceRecordID depending on tables shown.
 - Updated the doc.
 - Other minor fixes.
 
 ## 5.00.13
+
 - Added functionality in the system definition editor to detect running databases and changes that impacts on the database structure and warns the user about that.
 - Reverted back to the old way of accessing the twitter rss feed.
 - Logo updated.
@@ -390,6 +433,7 @@
 - Other bug fixes.
 
 ## 5.00.12
+
 - Tables for "age specific cases per 100.000" and "age specific cases" can now be written to a character separated file and opened in general spreadsheets for further work.
 - Duplicate entries no longer show up in the list of favourite servers.
 - Added automatic verification of short name of variables (database variable name) in the system editor.
@@ -400,6 +444,7 @@
 - Various fixes.
 
 ## 5.00.11
+
 - Fixed a bug in the topography/morphology check where too many rare cases were detected.
 - Fixed a bug in the table builder where text instead of numbers in age, sex, morphology, topography etc would break the table instead of give a warning.
 - Added a warning message when using the "Overwrite" option during import.
@@ -408,6 +453,7 @@
 - Other minor fixes.
 
 ## 5.00.10
+
 - Implemented export facilities to get data in a fixed width file following the NAACR 1946 v11.3 format from CanReg to SEER*prep and then on to SEER*stat.
 - System editor GUI is now using tabs to split up variables, dictionaries, groups, etc...
 - Improved scroll speed in system editor.
@@ -420,6 +466,7 @@
 - Other bugfixes.
 
 ## 5.00.09
+
 - Fixed a bug where the last character of some lines in the export file went missing.
 - Fixed a bug where user couldn't save dictionary when a it only contained one entry.
 - Fixed a bug where no error message was displayed when records were locked and tried to open.
@@ -428,6 +475,7 @@
 - Other bug fixes
 
 ## 5.00.08
+
 - Updated topography and morphology check.
 - Patients comparator implemented.
 - Internationalized pop up menus.
@@ -440,6 +488,7 @@
 - Other small fixes.
 
 ## 5.00.07
+
 - The database can now be encrypted with 56-bit DES using a minimum 8 character long boot password. The user must then provide this password during every server launch.
 - All server calls now handles server disconnects and requests users to log in again. This should end problems on laptops falling asleep.
 - The CanReg server can now be launched in single user mode without RMI (network calls).
@@ -460,6 +509,7 @@
 - Other bug fixes.
 
 ## 5.00.06
+
 - Implemented a table builder that calls R with any user specified standard variables.
 - AgeSpecific incidence curves (linear and semi log) functionality implemented using R. (Thanks to Anahita Rahimi.)
 - TableBuilder: user can now write many different file formats depending on what the various table builders support, PDF, PS, SVG, PNG, WMF, HTML etc.
@@ -498,6 +548,7 @@
 - Other bug fixes
 
 ## 5.00.05
+
 - Translated to Spanish by Graciela Cristina Nicolas.
 - Implemented Topography/Morphology check.
 - Fixed a memory leak during export.
@@ -524,6 +575,7 @@
 - Various fixes.
 
 ## 5.00.04
+
 - Fixed the "dropped result set while browsing" bug
 - Population data set editor improved.
 - Added pyramids directly in the editor for immediate feedback.
@@ -553,6 +605,7 @@
 - Varions fixes.
 
 ## 5.00.03
+
 - Turkish bug fixed. Changed all calls to toUpperCase() to a standardized static toUpperCaseStandardize() located in the Tool class. Default upper case and lower case locale set to ENGLISH.
 - Merged the handbook and the manual into one PDF that can be updated independent of the CanReg releases.
 - Frequencies by Year table can now be written to CSV file.
@@ -595,6 +648,7 @@
 - Updated the about box.
 
 ## 5.00.02
+
 - Fixed a bug when the standard variable is a string of 0 lenght.
 - Tidied some code.
 - Added a menu option to file bug/issue reports.
@@ -602,6 +656,7 @@
 - Handbook: Updated FAQ
 
 ## 5.00.01
+
 - Database: fixed a bug where some filters didn't work when joining two (or more) tables.
 - Import: handles better errors when one line does not have enough elements, the apache licenced csvreader now used to parse the infile.
 - Database: fixed a memory leak issue, improved efficiency of import function, improved error handling
