@@ -1064,7 +1064,7 @@ public final class CanRegClientView extends FrameView {
         boolean adhoc = false;
 
         // Hide/reveal menus
-        if (userRightsLevel == Globals.UserRightLevels.NOT_LOGGED_IN) {
+        if (userRightsLevel == Globals.UserRightLevels.NOT_LOGGED_IN || userRightsLevel == Globals.UserRightLevels.API) {
             analysis = false;
             management = false;
             dataEntry = false;
