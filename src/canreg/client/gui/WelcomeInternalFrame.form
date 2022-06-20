@@ -112,7 +112,11 @@
                         <Component class="javax.swing.JEditorPane" name="aboutEditorPane">
                           <Properties>
                             <Property name="editable" type="boolean" value="false"/>
-                            <Property name="font" type="java.awt.Font" resourceKey="aboutEditorPane.font"/>
+                            <Property name="font" type="java.awt.Font" noResource="true" editor="org.netbeans.modules.form.editors2.FontEditor">
+                              <FontInfo relative="true">
+                                <Font component="aboutEditorPane" property="font" relativeSize="true" size="7"/>
+                              </FontInfo>
+                            </Property>
                             <Property name="text" type="java.lang.String" resourceKey="aboutEditorPane.text"/>
                             <Property name="focusCycleRoot" type="boolean" value="false"/>
                             <Property name="focusable" type="boolean" value="false"/>
@@ -164,6 +168,11 @@
                     <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                       <action class="canreg.client.CanRegClientApp" id="showLoginFrame" methodName="showLoginFrame"/>
                     </Property>
+                    <Property name="font" type="java.awt.Font" noResource="true" editor="org.netbeans.modules.form.editors2.FontEditor">
+                      <FontInfo relative="true">
+                        <Font component="loginButton" property="font" relativeSize="true" size="2"/>
+                      </FontInfo>
+                    </Property>
                     <Property name="icon" type="javax.swing.Icon" resourceKey="loginButton.icon"/>
                     <Property name="text" type="java.lang.String" resourceKey="loginButton.text"/>
                     <Property name="toolTipText" type="java.lang.String" resourceKey="loginButton.toolTipText"/>
@@ -188,6 +197,11 @@
                         <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                           <action class="canreg.client.gui.WelcomeInternalFrame" id="installNewSystemAction" methodName="installNewSystemAction"/>
                         </Property>
+                        <Property name="font" type="java.awt.Font" noResource="true" editor="org.netbeans.modules.form.editors2.FontEditor">
+                          <FontInfo relative="true">
+                            <Font component="restoreBackupButton" property="font" relativeSize="true" size="2"/>
+                          </FontInfo>
+                        </Property>
                         <Property name="toolTipText" type="java.lang.String" resourceKey="restoreBackupButton.toolTipText"/>
                         <Property name="actionCommand" type="java.lang.String" resourceKey="restoreBackupButton.actionCommand"/>
                         <Property name="horizontalTextPosition" type="int" value="0"/>
@@ -199,6 +213,11 @@
                       <Properties>
                         <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                           <action class="canreg.client.gui.WelcomeInternalFrame" id="adHocAnalysisAction" methodName="adHocAnalysisAction"/>
+                        </Property>
+                        <Property name="font" type="java.awt.Font" noResource="true" editor="org.netbeans.modules.form.editors2.FontEditor">
+                          <FontInfo relative="true">
+                            <Font component="adHocButton" property="font" relativeSize="true" size="2"/>
+                          </FontInfo>
                         </Property>
                         <Property name="icon" type="javax.swing.Icon" resourceKey="adHocButton.icon"/>
                         <Property name="text" type="java.lang.String" resourceKey="adHocButton.text"/>
