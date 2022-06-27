@@ -1,11 +1,13 @@
 # CanReg5 Changelog
 
-## 5.00.45BETA1
+## 5.00.45BETA
 
-- Holding database (BETA)
-- Ad-hoc analysis (BETA)
-- Improved person search perfomance
-- Memory leak fixes
+- Holding database (BETA).
+- Ad-hoc analysis (BETA).
+- Tables for childhood cancer added.
+- ICD-O-3.2 implemented.
+- Improved person search perfomance.
+- Memory leak fixes.
 
 
 ## 5.00.44h
