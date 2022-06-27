@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2019  International Agency for Research on Cancer
+ * Copyright (C) 2008-2022  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -331,7 +331,6 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
         queryNewNameCheckBox.setEnabled(false);
         queryNewNameCheckBox.setName("queryNewNameCheckBox"); // NOI18N
 
-        formatChecksCheckBox.setSelected(true);
         formatChecksCheckBox.setText(resourceMap.getString("formatChecksCheckBox.text")); // NOI18N
         formatChecksCheckBox.setToolTipText(resourceMap.getString("formatChecksCheckBox.toolTipText")); // NOI18N
         formatChecksCheckBox.setName("formatChecksCheckBox"); // NOI18N
