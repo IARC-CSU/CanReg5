@@ -1,4 +1,4 @@
-## version : 1.0
+## version : 1.01
 
 
 canreg_output_cat <- function(ft, filename,sex_graph=FALSE, list_graph=FALSE) {
