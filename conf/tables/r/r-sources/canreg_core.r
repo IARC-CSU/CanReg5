@@ -1,4 +1,4 @@
-## version : 1.0
+## version : 1.11
 
 
 canreg_output_cat <- function(ft, filename,sex_graph=FALSE, list_graph=FALSE) {
@@ -1122,7 +1122,14 @@ canreg_get_agegroup_label <- function(dt, agegroup) {
   return(list(first_age = first_age, last_age= last_age, label = paste0(temp1,"-",temp2, " ",i18n$t("years"))))
 }
 
-
+#df_data <- dt_report
+#var_age <-"AGE_GROUP"
+#var_cases <- "CASES"
+#var_py <- "COUNT"
+#group_by <- c("cancer_label", "SEX","ICD10GROUPCOLOR")
+#missing_age <- canreg_missing_age(dt_all)
+#last_age<- canreg_age_group_cr$last_age+1
+#age_label_list <- "AGE_GROUP_LABEL"
 
 canreg_cum_risk_core <- function(df_data, var_age, var_cases, var_py, group_by=NULL,
                               missing_age = NULL,age_label_list = NULL,last_age = 15,
@@ -1159,7 +1166,7 @@ canreg_cum_risk_core <- function(df_data, var_age, var_cases, var_py, group_by=N
   dt_data[is.na(dt_data$CSU_A),CSU_P:=0 ] 
   
   #create age dummy: 1 2 3 4 --- 19
-  dt_data$age_factor <- c(as.factor(dt_data$CSU_A))
+  dt_data$age_factor <- as.numeric(c(as.factor(dt_data$CSU_A)))
 
   
   # correction factor 
@@ -1196,8 +1203,6 @@ canreg_cum_risk_core <- function(df_data, var_age, var_cases, var_py, group_by=N
 
   
   #keep age group selected 
-  
-
   
   age_max <- max(dt_data$age_factor)
 
@@ -2927,6 +2932,9 @@ canreg_scatter_error_bar <- function(dt_plot,
   return(csu_plot)
   
 }
+
+# ann = TRUE
+# shiny = FALSE
 
 canreg_report <- function(doc,report_path,dt_all,ls_args,ann=TRUE, shiny=FALSE) {
 
