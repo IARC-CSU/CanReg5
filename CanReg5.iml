@@ -21,6 +21,7 @@
     <orderEntry type="library" name="Maven: org.apache.xmlgraphics:batik-constants:1.14" level="project" />
     <orderEntry type="library" name="Maven: org.apache.xmlgraphics:batik-i18n:1.14" level="project" />
     <orderEntry type="library" name="Maven: org.apache.xmlgraphics:xmlgraphics-commons:2.6" level="project" />
+    <orderEntry type="library" name="Maven: commons-logging:commons-logging:1.0.4" level="project" />
     <orderEntry type="library" name="Maven: batik:batik-dom:1.6-1" level="project" />
     <orderEntry type="library" name="Maven: batik:batik-css:1.6-1" level="project" />
     <orderEntry type="library" name="Maven: batik:batik-util:1.6-1" level="project" />

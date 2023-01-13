@@ -19,21 +19,21 @@
  */
 package canreg.server;
 
-import canreg.common.database.User;
-import canreg.common.cachingtableapi.DistributedTableDescription;
-import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.common.DatabaseFilter;
 import canreg.common.Globals.UserRightLevels;
-import canreg.common.qualitycontrol.PersonSearcher;
-import canreg.server.database.CanRegDAO;
+import canreg.common.cachingtableapi.DistributedTableDescription;
+import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.common.database.DatabaseRecord;
 import canreg.common.database.Dictionary;
 import canreg.common.database.DictionaryEntry;
 import canreg.common.database.NameSexRecord;
 import canreg.common.database.Patient;
 import canreg.common.database.PopulationDataset;
-import canreg.server.database.RecordLockedException;
 import canreg.common.database.Tumour;
+import canreg.common.database.User;
+import canreg.common.qualitycontrol.PersonSearcher;
+import canreg.server.database.CanRegDAO;
+import canreg.server.database.RecordLockedException;
 import canreg.server.database.UnknownTableException;
 import canreg.server.management.SystemDescription;
 import canreg.server.security.ValidateMethodCall;
@@ -97,6 +97,7 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
 
     @Override
     public void setUserPassword(String username, String password) throws RemoteException, SecurityException {
+        checkPermission("setUserPassword");
         RMILoginPrincipal principal = (RMILoginPrincipal) theUser.getPrincipals().toArray()[0];
         username = principal.getName();
         theServer.setUserPassword(username, password);
@@ -349,9 +350,9 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     }
 
     @Override
-    public int saveUser(User user) throws RemoteException, SecurityException {
+    public int saveUser(User user,boolean addPasswordReminder) throws RemoteException, SecurityException {
         checkPermission("saveUser");
-        return theServer.saveUser(user);
+        return theServer.saveUser(user,addPasswordReminder);
     }
 
     @Override
@@ -389,6 +390,11 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     public boolean setDBPassword(char[] newPasswordArray, char[] oldPasswordArray, String encryptionAlgorithm, String encryptionKeyLength) throws RemoteException, SecurityException {
         checkPermission("setDBPassword");
         return theServer.setDBPassword(newPasswordArray, oldPasswordArray, encryptionAlgorithm, encryptionKeyLength);
+    }
+
+    @Override
+    public boolean checkDatabaseEncryption(String registryCode) throws RemoteException, SecurityException {
+        return theServer.checkDatabaseEncryption(registryCode);
     }
 
     @Override
@@ -454,7 +460,42 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
     public void pingRemote(Integer remoteClientHashCode) 
             throws RemoteException, Exception {
         theServer.pingRemote(remoteClientHashCode);
-    }    
+    }
+
+    @Override
+    public boolean checkFileReminder(String username) throws RemoteException {
+        checkPermission("checkFileReminder");
+        return theServer.checkFileReminder(username);
+    }
+    
+    @Override
+    public void deleteFileReminder(String username) throws RemoteException {
+        checkPermission("deleteFileReminder");
+        theServer.deleteFileReminder(username);
+    }
+
+    @Override
+    public void openTransaction() throws RemoteException {
+        theServer.openTransaction();
+        
+    }
+
+    @Override
+    public void rollbackTransaction() throws RemoteException {
+        theServer.rollbackTransaction();
+    }
+
+    @Override
+    public void commitTransaction() throws RemoteException {
+        theServer.commitTransaction();
+
+    }
+
+    @Override
+    public boolean checkPassword(String username, String encryptedPassword) throws RemoteException {
+        checkPermission("checkPassword");
+        return theServer.checkPassword(username, encryptedPassword);
+    }
     
     @Override
     public int hashCode() {

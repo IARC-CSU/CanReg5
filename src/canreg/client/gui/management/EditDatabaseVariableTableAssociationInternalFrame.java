@@ -29,7 +29,6 @@ import canreg.common.DatabaseIndexesListElement;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.Globals;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Map;
@@ -66,7 +65,7 @@ public class EditDatabaseVariableTableAssociationInternalFrame extends javax.swi
         this.dtp = dtp;
     }
 
-    public boolean loadSystemDefinition(String fileName) throws FileNotFoundException, SAXException, IOException, ParserConfigurationException {
+    public boolean loadSystemDefinition(String fileName) throws SAXException, IOException, ParserConfigurationException {
         this.fileName = fileName;
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();

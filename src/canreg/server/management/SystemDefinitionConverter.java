@@ -142,6 +142,8 @@ public class SystemDefinitionConverter {
     1 char			Basis Diag. Codes  (0-IARC; 1-Local)
     
      */
+    
+    private static final Logger LOGGER = Logger.getLogger(SystemDefinitionConverter.class.getName());
     private static final boolean debug = true;
     private final String namespace = "ns3:";
     private Document doc;
@@ -233,7 +235,7 @@ public class SystemDefinitionConverter {
                 sdc.convertAndSaveInSystemFolder(args[0]);
             } catch (FileNotFoundException ex) {
                 System.out.println(args[0] + " not found. " + ex);
-                Logger.getLogger(SystemDefinitionConverter.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, String.format( "%s not found in error : %s",args[0],ex), ex);
             }
         }
     }
@@ -249,9 +251,9 @@ public class SystemDefinitionConverter {
         try {
             convertToXML(canReg4FileName);
         } catch (ParserConfigurationException ex) {
-            Logger.getLogger(SystemDefinitionConverter.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(SystemDefinitionConverter.class.getName()).log(Level.SEVERE, "Something wrong with the file... ", ex);
+            LOGGER.log(Level.SEVERE, "Something wrong with the file... ", ex);
         } finally {
             File file = new File(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER); // Check to see it the canreg system folder exists
             if (!file.exists()) {
@@ -266,9 +268,9 @@ public class SystemDefinitionConverter {
         try {
             convertToXML(canReg4FileName);
         } catch (ParserConfigurationException ex) {
-            Logger.getLogger(SystemDefinitionConverter.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(SystemDefinitionConverter.class.getName()).log(Level.SEVERE, "Something wrong with the file... ", ex);
+            LOGGER.log(Level.SEVERE, "Something wrong with the file... ", ex);
         } finally {
             File file = new File(outFileName).getParentFile();
             if (!file.exists()) {
@@ -803,10 +805,9 @@ public class SystemDefinitionConverter {
             }
             // TODO put the groups in the right order...
 
-        } catch (EOFException e) {
-            // Nothing to do
         } catch (IOException e) {
             // Nothing to do
+            LOGGER.log(Level.SEVERE,"Error : End of file reached",e);
         } finally {
             dataStream.close();
         }
@@ -1032,7 +1033,7 @@ public class SystemDefinitionConverter {
 
     private static void debugOut(String msg) {
         if (debug) {
-            Logger.getLogger(SystemDefinitionConverter.class.getName()).log(Level.INFO, msg);
+            LOGGER.log(Level.INFO, msg);
         }
     }
 
@@ -1057,7 +1058,7 @@ public class SystemDefinitionConverter {
                 CharBuffer chabuf = decoder.decode(bytebuf);
                 translatedString = chabuf.toString();
             } catch (CharacterCodingException ex) {
-                Logger.getLogger(SystemDefinitionConverter.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
             }
         }
         return translatedString;

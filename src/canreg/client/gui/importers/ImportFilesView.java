@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2019  International Agency for Research on Cancer
+ * Copyright (C) 2008-2022  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@ package canreg.client.gui.importers;
 
 import canreg.client.LocalSettings;
 import canreg.client.CanRegClientApp;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.client.dataentry.Relation;
 import canreg.client.gui.components.PreviewFilePanel;
@@ -80,6 +81,7 @@ import org.w3c.dom.Document;
  */
 public class ImportFilesView extends javax.swing.JInternalFrame implements ActionListener {
 
+    private static final Logger LOGGER = Logger.getLogger(ImportFilesView.class.getName());
     private boolean needToRebuildVariableMap = true;
     private File patientInFile;
     private File tumourInFile;
@@ -329,7 +331,6 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
         queryNewNameCheckBox.setEnabled(false);
         queryNewNameCheckBox.setName("queryNewNameCheckBox"); // NOI18N
 
-        formatChecksCheckBox.setSelected(true);
         formatChecksCheckBox.setText(resourceMap.getString("formatChecksCheckBox.text")); // NOI18N
         formatChecksCheckBox.setToolTipText(resourceMap.getString("formatChecksCheckBox.toolTipText")); // NOI18N
         formatChecksCheckBox.setName("formatChecksCheckBox"); // NOI18N
@@ -740,7 +741,8 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
         try {
             localSettings.setProperty("import_path", chooser.getCurrentDirectory().getCanonicalPath());
         } catch (IOException ex) {
-            Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
 
         localSettings.writeSettings();
@@ -877,7 +879,7 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
                     success = CanRegClientApp.getApplication().importFiles(this, variablesMap, files, io);
                 }
             } catch(Exception ex) {
-                Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
                 success = false;
                 checksBar.setIndeterminate(false);
                 checksBar.setValue(0);
@@ -1045,12 +1047,14 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
                 sourceVariablesAssociationPanel.initializeVariableMappingPanel(map, sourceVariablesInDB, lineElements);
             }
         } catch (RemoteException ex) {
-            Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not open file: \'" + patientInFile.getPath() + "\'.", "Error", JOptionPane.ERROR_MESSAGE);
         } catch (IOException ex) {
-            Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         } finally {
             needToRebuildVariableMap = false;
             try {
@@ -1058,7 +1062,8 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
                     br.close();
                 }
             } catch (IOException ex) {
-                Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
         }
     }
@@ -1224,7 +1229,8 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
                 reportFileNameTextField.setText(chooser.getSelectedFile().getCanonicalPath());
                 // changeFile();
             } catch (IOException ex) {
-                Logger.getLogger(ImportFilesView.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
             reportFileNameSet = true;
         }

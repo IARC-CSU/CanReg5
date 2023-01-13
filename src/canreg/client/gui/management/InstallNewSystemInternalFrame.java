@@ -28,6 +28,7 @@ package canreg.client.gui.management;
 import canreg.client.CanRegClientApp;
 import canreg.client.LocalSettings;
 import canreg.client.gui.tools.WaitFrame;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.Globals;
 import canreg.exceptions.WrongCanRegVersionException;
 import canreg.server.management.SystemDescription;
@@ -54,7 +55,8 @@ import org.jdesktop.application.Task;
  * @author  ervikm
  */
 public class InstallNewSystemInternalFrame extends javax.swing.JInternalFrame {
-
+    
+    private static final Logger LOGGER = Logger.getLogger(InstallNewSystemInternalFrame.class.getName());
     SystemDescription systemDescription;
     LocalSettings localSettings;
     private String[] backupFilePatterns = new String[]{"seg0", "log"};
@@ -209,7 +211,7 @@ public class InstallNewSystemInternalFrame extends javax.swing.JInternalFrame {
                 // this.dispose();
             } catch (IOException ex) {
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/InstallNewSystemInternalFrame").getString("ERROR COPYING FILE."), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/InstallNewSystemInternalFrame").getString("ERROR."), JOptionPane.ERROR_MESSAGE);
-                Logger.getLogger(InstallNewSystemInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+               LOGGER.log(Level.SEVERE, null, ex);
             }
         } else {
             JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/InstallNewSystemInternalFrame").getString("PLEASE SPECIFY FILE NAME."), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/InstallNewSystemInternalFrame").getString("ERROR."), JOptionPane.ERROR_MESSAGE);
@@ -241,7 +243,8 @@ public class InstallNewSystemInternalFrame extends javax.swing.JInternalFrame {
                 fileNameTextField.setText(chooser.getSelectedFile().getCanonicalPath());
                 // changeFile();
             } catch (IOException ex) {
-                Logger.getLogger(InstallNewSystemInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+               LOGGER.log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
         }
     }
@@ -287,7 +290,7 @@ public class InstallNewSystemInternalFrame extends javax.swing.JInternalFrame {
                 }
             } catch (AlreadyBoundException ex) {
                 result = "running";
-                Logger.getLogger(InstallNewSystemInternalFrame.class.getName()).log(Level.INFO, null, ex);
+               LOGGER.log(Level.INFO, null, ex);
             }
             // Return your result...
             return result;
@@ -353,20 +356,9 @@ public class InstallNewSystemInternalFrame extends javax.swing.JInternalFrame {
             // String serverObjectString = "rmi://" + Globals.DEFAULT_SERVER_ADDRESS + ":" + Globals.DEFAULT_PORT + "/CanRegLogin" + systemDescription.getRegistryCode();
             try {
                 String canRegSystemName = CanRegClientApp.getApplication().loginDirect(systemDescription.getRegistryCode(), "morten", new char[]{'e', 'r', 'v', 'i', 'k'}, false);
-            } catch (LoginException ex) {
-                Logger.getLogger(InstallNewSystemInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (NullPointerException ex) {
-                Logger.getLogger(InstallNewSystemInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (NotBoundException ex) {
-                Logger.getLogger(InstallNewSystemInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (MalformedURLException ex) {
-                Logger.getLogger(InstallNewSystemInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (RemoteException ex) {
-                Logger.getLogger(InstallNewSystemInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (UnknownHostException ex) {
-                Logger.getLogger(InstallNewSystemInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (WrongCanRegVersionException ex) {
-                Logger.getLogger(InstallNewSystemInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (LoginException | NullPointerException | MalformedURLException | RemoteException | NotBoundException | WrongCanRegVersionException | UnknownHostException ex) {
+               LOGGER.log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
             }
 
         }
@@ -382,10 +374,10 @@ public class InstallNewSystemInternalFrame extends javax.swing.JInternalFrame {
                 try {
                     success = canreg.client.CanRegClientApp.getApplication().restoreBackup(folderName);
                 } catch (SecurityException ex) {
-                    Logger.getLogger(RestoreInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
                     return "security exception";
                 } catch (RemoteException ex) {
-                    Logger.getLogger(RestoreInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
                     return "remote exception";
                 }
             } else {
@@ -418,7 +410,8 @@ public class InstallNewSystemInternalFrame extends javax.swing.JInternalFrame {
                 try {
                     CanRegClientApp.getApplication().logOut();
                 } catch (RemoteException ex) {
-                    Logger.getLogger(InstallNewSystemInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                   LOGGER.log(Level.SEVERE, null, ex);
+                    new TechnicalError().errorDialog();
                 }
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/RestoreInternalFrame").getString("RESTORE SUCCESSFULL.") + "\n" + java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/RestoreInternalFrame").getString("PLEASE RESTART YOUR CANREG SYSTEM."), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/RestoreInternalFrame").getString("MESSAGE"), JOptionPane.INFORMATION_MESSAGE);
             }

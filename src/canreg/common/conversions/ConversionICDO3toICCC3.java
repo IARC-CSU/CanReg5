@@ -33,6 +33,7 @@ import java.util.logging.Logger;
 
 public class ConversionICDO3toICCC3 implements ConversionInterface {
 
+    private static final Logger LOGGER = Logger.getLogger(ConversionICDO3toICCC3.class.getName());
     private static final ConversionName CONVERSION_NAME = ConversionName.ICDO3toICCC3;
     private static final StandardVariableNames[] VARIABLES_NEEDED = new StandardVariableNames[]{
         StandardVariableNames.Sex,
@@ -44,7 +45,7 @@ public class ConversionICDO3toICCC3 implements ConversionInterface {
         StandardVariableNames.ICCC
     };
     static private final int UNASSIGNED = -1;
-    static private final int MAXMORPHRANGE = 1993;	//	Highest morph(9992) -  Lowest morph(8000) + 1
+    static private final int MAXMORPHRANGE = 1994;	//	Highest morph(9993) -  Lowest morph(8000) + 1
     static private final int ICCC1_MAX = 12;			//	ICCC first part - group code, Roman nums
     static private final String ICCC_GROUP[] = {"??", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"};
     static private final int ICCC2_MAX = 6;			//	ICCC second part - subgroup, letters
@@ -112,9 +113,9 @@ public class ConversionICDO3toICCC3 implements ConversionInterface {
                 }
             }
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(ConversionICDO3toICCC3.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(ConversionICDO3toICCC3.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
     }
 

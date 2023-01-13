@@ -1,8 +1,8 @@
-%% LyX 2.1.4 created this file.  For more info, see http://www.lyx.org/.
+%% LyX 2.3.6.1 created this file.  For more info, see http://www.lyx.org/.
 %% Do not edit unless you really know what you are doing.
 \documentclass[12pt,a4paper,english,portrait]{scrbook}
 \usepackage[T1]{fontenc}
-\usepackage[latin1]{inputenc}
+\usepackage[utf8]{inputenc}
 \pagestyle{headings}
 \setcounter{secnumdepth}{3}
 \setcounter{tocdepth}{3}
@@ -18,7 +18,7 @@
 \usepackage{graphicx}
 \usepackage[unicode=true,
  bookmarks=true,bookmarksnumbered=false,bookmarksopen=false,
- breaklinks=true,pdfborder={0 0 0},backref=false,colorlinks=true]
+ breaklinks=true,pdfborder={0 0 0},pdfborderstyle={},backref=false,colorlinks=true]
  {hyperref}
 \hypersetup{pdftitle={CanReg5 - Instructions},
  pdfauthor={Morten Johannes ERVIK},
@@ -28,23 +28,22 @@
 \makeatletter
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
-\pdfpageheight\paperheight
-\pdfpagewidth\paperwidth
+\special{papersize=\the\paperwidth,\the\paperheight}
 
 %% Because html converters don't know tabularnewline
 \providecommand{\tabularnewline}{\\}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Textclass specific LaTeX commands.
 \newenvironment{lyxcode}
-{\par\begin{list}{}{
-\setlength{\rightmargin}{\leftmargin}
-\setlength{\listparindent}{0pt}% needed for AMS classes
-\raggedright
-\setlength{\itemsep}{0pt}
-\setlength{\parsep}{0pt}
-\normalfont\ttfamily}%
- \item[]}
-{\end{list}}
+	{\par\begin{list}{}{
+		\setlength{\rightmargin}{\leftmargin}
+		\setlength{\listparindent}{0pt}% needed for AMS classes
+		\raggedright
+		\setlength{\itemsep}{0pt}
+		\setlength{\parsep}{0pt}
+		\normalfont\ttfamily}%
+	 \item[]}
+	{\end{list}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
 %% ================================================================================
@@ -65,6 +64,8 @@
 \makeatother
 
 \usepackage{listings}
+\renewcommand{\lstlistingname}{\inputencoding{latin9}Listing}
+
 \begin{document}
 \begin{center}
 \includegraphics[width=0.66\columnwidth]{LogoBetaNewer}
@@ -88,12 +89,9 @@ Version: \today\thispagestyle{empty}
 
 \newpage{}
 
-
 \part{Introduction}
 
-
 \chapter{What is CanReg?}
-
 \begin{flushleft}
 CanReg5 is an open source tool to input, store, check and analyse
 cancer registry data. It has modules to do data entry, quality control,
@@ -105,9 +103,7 @@ up of a new or modification of an existing database by adding new
 variables, tailoring the data entry forms etc.
 \par\end{flushleft}
 
-
-\section{A short introduction to the database structure in CanReg5\label{sub:A-short-introduction}}
-
+\section{A short introduction to the database structure in CanReg5\label{subsec:A-short-introduction}}
 \begin{flushleft}
 New in CanReg5 is the three level table structure. Where CanReg4\index{CanReg4}
 stored everything in one big table of tumours, CanReg5 splits this
@@ -150,10 +146,8 @@ record the source information per tumour like you would in CanReg4.
 This can be set up while migrating your system definition files.
 \par\end{flushleft}
 
-
 \section{Forum\index{forum}, Issue tracker\index{issue tracker}, community
 site\index{community site@community\textsf{\textbf{ }}site}, twitter\index{twitter}}
-
 \begin{flushleft}
 We have created a project page at GitHub to help us keep track of
 issues with CanReg5: \href{https://github.com/IARC-CSU/CanReg5}{https://github.com/IARC-CSU/CanReg5}.
@@ -195,9 +189,7 @@ follow: \href{http://twitter.com/canreg}{http://twitter.com/canreg}
 for updates. 
 \par\end{flushleft}
 
-
 \section{Getting hold of the latest version\index{latest version} of CanReg}
-
 \begin{flushleft}
 If you are running version 4.99.1 (or newer) of CanReg, you can launch
 CanReg and click ``Options...'', go to the ``Advanced'' tab. (See
@@ -211,26 +203,21 @@ recent version of CanReg5.
 \begin{centering}
 \includegraphics[width=4.72917in,height=5.36458in]{1}
 \par\end{centering}
-
 \caption{Checking if you have the latest version of CanReg installed.}
 
-
 \end{figure}
-
 
 \begin{flushleft}
 (If you have version 4.99.0 or no CanReg5 at all you can \index{download}download
 the newest version from here: \href{http://www.iacr.com.fr/CanReg5/CanReg5.zip}{http://www.iacr.com.fr/CanReg5/CanReg5.zip})
 \par\end{flushleft}
 
-
 \section{Logfile}
-
 \begin{flushleft}
 CanReg generates a \index{logfile}logfile when you run it. This file
 is called \index{canreg5client.log}canreg5client.log and is located
-in your home folder. (On windows it is most probably under C:\textbackslash{}Documents
-and Settings\textbackslash{}<your username> - you can access this
+in your home folder. (On windows it is most probably under C:\textbackslash Documents
+and Settings\textbackslash <your username> - you can access this
 by browsing to \%HOMEPATH\% Depending on how you have configured your
 computer it might show up as canreg5client.) If you can attach this
 to emails with feedback/queries it would be very useful. Please note
@@ -239,16 +226,17 @@ need to ``take it'' just after, for example, your error occurs.
 \par\end{flushleft}
 
 \begin{flushleft}
-\begin{minipage}[t]{1\columnwidth}%
+\noindent\begin{minipage}[t]{1\columnwidth}%
 Example content of a log-file:
 \begin{lyxcode}
-<?xml~version=\textquotedbl{}1.0\textquotedbl{}~encoding=\textquotedbl{}windows-1252\textquotedbl{}~standalone=\textquotedbl{}no\textquotedbl{}?>
+<?xml~version=\textquotedbl 1.0\textquotedbl ~encoding=\textquotedbl windows-1252\textquotedbl ~standalone=\textquotedbl no\textquotedbl ?>
 
-<!DOCTYPE~log~SYSTEM~\textquotedbl{}logger.dtd\textquotedbl{}>
+<!DOCTYPE~log~SYSTEM~\textquotedbl logger.dtd\textquotedbl >
 
 <log>
 
-<record>
+<record>~
+
 \begin{lyxcode}
 <date>2009-06-25T16:09:27</date>
 
@@ -272,39 +260,33 @@ Example content of a log-file:
 
 ...
 
-</log>\end{lyxcode}
+</log>
+\end{lyxcode}
 %
 \end{minipage}
 \par\end{flushleft}
 
 \newpage{}
 
-
 \part{Installing and running CanReg5\label{sec:Installing-and-running}}
-
 
 \chapter{Software installation\index{installation}\index{software installation}}
 
-
-\section{\label{sub:Java-Runtime-Environment}Install a recent Java Runtime
+\section{\label{subsec:Java-Runtime-Environment}Install a recent Java Runtime
 Environment\index{Java Runtime Environment@Java\textbf{ }Runtime\textbf{ }Environment}
 \index{JRE}}
-
 \begin{flushleft}
 Before you install and run CanReg5 for the first time it is recommended
 that you install the latest Java 8 Runtime Environment (July 2017:
 Version 8 Update 144 ) You can get that from here: \href{http://java.com/en/download/manual.jsp}{http://java.com/en/download/manual.jsp}
 \par\end{flushleft}
 
-
-\section{\label{sub:Install-CanReg5}Install CanReg5}
+\section{\label{subsec:Install-CanReg5}Install CanReg5}
 
 CanReg5 is compatible with most major operating systems and the default
 distribution of CanReg is simply a zip-archive.
 
-
 \subsection{From CanReg5.zip}
-
 \begin{flushleft}
 To install it simply extract the content to a new folder, for example
 on your desktop. (It is important to keep the same directory structure
@@ -315,7 +297,6 @@ If you have tools like 7-zip or WinRar installed it is just a matter
 of copying/moving the zip-file to the folder you want CanReg to reside,
 right-clicking it and choose ``Extract here...'' 
 
-
 \subsection{From CanReg5-Setup.zip (Windows only)}
 
 An alternative way to install CanReg is by running the CanReg5-Setup.exe
@@ -324,32 +305,27 @@ that will install CanReg5 in your ``Program Files'' folder (by default).
 It is just a matter of clicking ``next'' ,''next'', ``next''
 etc.
 
-
 \section{Recommended Third Party tools}
 
 It is recommended that you also install the following third party
 software:
 
-
 \subsection{Any post script viewer}
 
 CanReg can produce tables in the post script format. To view these
-you need a post script viewer like GhostView. (See \vref{sub:PostScript-Viewer}.)
-
+you need a post script viewer like GhostView. (See \vref{subsec:PostScript-Viewer}.)
 
 \subsection{R }
 
 Some of the more advanced analytical features in CanReg relies on
 the free software called R. Please install this if you need to use
-that functionality. (See \vref{sub:R}.) As of version 5.00.31, CanReg5
-has a built in offline R package installer that can be installed in
-parallell with CanReg5 and called from CanReg5 using the menu option
+that functionality. (See \vref{subsec:R}.) As of version 5.00.31,
+CanReg5 has a built in offline R package installer that can be installed
+in parallell with CanReg5 and called from CanReg5 using the menu option
 ``Tools''->''Install R packages''. (This is only visible if you
 have installed the R package installer.)
 
-
 \section{Un-install\index{un-install} CanReg5}
-
 \begin{flushleft}
 If you wish to un-install CanReg5, delete the following folders (or
 rename if you have anything valuable in them):\\
@@ -362,19 +338,16 @@ pressing Windows Key + R and then entering \%UserProfile\% and click
 OK. See \url{http://en.wikipedia.org/wiki/Home_directory} for more
 information.)
 
-Afterwards you can delete the folder from \ref{sub:Install-CanReg5}.
-
+Afterwards you can delete the folder from \ref{subsec:Install-CanReg5}.
 
 \chapter{First launch}
 
-
 \section{Run\index{run@\textsf{\textbf{run}}} CanReg5}
-
 \begin{flushleft}
 Go to the folder you installed CanReg5 in and double click on the
 coffee cup icon (CanReg.jar). (\textbf{If, at this point, CanReg5
 does not start you might have to update your Java Runtime Environment
-and retry}. (See \vref{sub:Java-Runtime-Environment}.) 
+and retry}. (See \vref{subsec:Java-Runtime-Environment}.) 
 \par\end{flushleft}
 
 \begin{flushleft}
@@ -387,17 +360,12 @@ You should now be presented with the CanReg5 welcome window (See figure
 \begin{centering}
 \includegraphics[width=0.9\linewidth]{CanRegWelcomeScreen}
 \par\end{centering}
-
 \caption{\label{fig:The-welcome-window}The welcome window}
 
-
 \end{figure}
-
 \par\end{center}
 
-
 \section{\index{demo system}Demo system}
-
 \begin{flushleft}
 Included is the dictionary for the training system located in the
 demo-folder in the zip-file. With this you can get a demo-system up
@@ -407,9 +375,7 @@ dictionary using ``Data Entry'' - ''Edit dictionary'' and ``Import
 complete dictionary from a file'', before you start to enter data. 
 \par\end{flushleft}
 
-
-\section{Install a new CanReg5 system\label{sub:Install-a-new}}
-
+\section{Install a new CanReg5 system\label{subsec:Install-a-new}}
 \begin{flushleft}
 If you want to install an already provided system definition (for
 example the demo system\index{demo system} TRN) please click ``Install
@@ -436,9 +402,7 @@ will ask you if you want to restore from this backup.
 If you click yes CanReg will launch the server with the newly installed
 system definitions and restore this backup. 
 
-
 \section{Convert the CanReg4 system definitions}
-
 \begin{flushleft}
 If you have a CanReg4\index{CanReg4} system you can use tools built
 into CanReg to help you migrate\index{migrate} this to CanReg5. 
@@ -459,18 +423,15 @@ Go to ``Tool'' in CanReg5 menu and click ``Convert system definition''
 \begin{centering}
 \includegraphics{4}
 \par\end{centering}
-
 \caption{\label{fig:CanReg-systems-definition-menu}CanReg systems definition
 converter menu}
 
-
 \end{figure}
-
 \par\end{center}
 
 \begin{flushleft}
 Do ``Browse'' to find your CanReg4 system definition file. (This
-is a file located in the folder \textbackslash{}\textbackslash{}CR4SHARE\textbackslash{}CANREG4\textbackslash{}CR4-SYST\textbackslash{}
+is a file located in the folder \textbackslash\textbackslash CR4SHARE\textbackslash CANREG4\textbackslash CR4-SYST\textbackslash{}
 followed by your 3 letter registry code i.e. TRN whose name is ending
 in .DEF (i.e. CR4-TRN.DEF).) 
 \par\end{flushleft}
@@ -523,14 +484,12 @@ describes your CanReg5 system.
 launch the server you can, if you want(!), manually edit this XML
 file you have created by opening it in a text editor or a dedicated
 XML editor. The file is located in your user folder under .CanRegServer.
-(On my machine, for example, running Windows XP it is under: C:\textbackslash{}Documents
-and Settings\textbackslash{}morten\textbackslash{}.CanRegServer\textbackslash{}System.)} 
+(On my machine, for example, running Windows XP it is under: C:\textbackslash Documents
+and Settings\textbackslash morten\textbackslash .CanRegServer\textbackslash System.)} 
 \par\end{flushleft}
 
-
 \section{Setting up or modifying a CanReg system\index{modifying a CanReg system}\index{setting up a CanReg system}
-using the built in editor\label{sub:Setting-up-or-modifying}}
-
+using the built in editor\label{subsec:Setting-up-or-modifying}}
 \begin{flushleft}
 To modify an existing CanReg system or set up a new one you can use
 tools built into CanReg5. 
@@ -603,9 +562,7 @@ Clicking edit on any button related to a dictionary, group or variable
 brings up the respective editor. 
 \par\end{flushleft}
 
-
 \subsection{Modifying a dictionary\index{dictionary} }
-
 \begin{center}
 \includegraphics{dictionary-editor-sex}
 \par\end{center}
@@ -642,9 +599,7 @@ of refinement in the case of a compound dictionary.
 using the tools in CanReg, or should it be locked? 
 \par\end{flushleft}
 
-
 \subsection{Modifying a group\index{group} }
-
 \begin{center}
 \includegraphics[width=3.34375in,height=1.26042in]{11}
 \par\end{center}
@@ -658,9 +613,7 @@ in CanReg5.
 \textbf{Name:} The name of the group 
 \par\end{flushleft}
 
-
 \subsection{Modifying a variable\index{variable} }
-
 \begin{center}
 \includegraphics[width=1\columnwidth]{variable-editor-surname}
 \par\end{center}
@@ -731,9 +684,7 @@ variable.
 \textbf{Table:} Choose the table where this variable should be stored. 
 \par\end{flushleft}
 
-
 \subsection{Set up person search variables }
-
 \begin{center}
 \includegraphics[width=5.4785in,height=3.4868in]{13}
 \par\end{center}
@@ -744,9 +695,7 @@ during person search\index{person search} in CanReg5, and their respective
 weights\index{weights} and minimum match\index{minimum match} criteria. 
 \par\end{flushleft}
 
-
 \subsection{Coding }
-
 \begin{center}
 \includegraphics[width=5.4785in,height=1.5014in]{14}
 \par\end{center}
@@ -756,9 +705,7 @@ Here you can change some coding\index{coding} settings of your CanReg
 system. (Not yet implemented.) 
 \par\end{flushleft}
 
-
 \subsection{Settings }
-
 \begin{center}
 \includegraphics[width=5.4785in,height=1.2653in]{15}
 \par\end{center}
@@ -768,18 +715,14 @@ Here you can change some settings\index{settings} of your CanReg
 system. (Not yet implemented.) 
 \par\end{flushleft}
 
-
 \subsection{Saving the system }
-
 \begin{flushleft}
 By clicking Save XML\index{XML} the system XML will be saved to the
 system folder of CanReg under the name $<$your system code$>$.xml
 (for example TRN.xml), ready for use. 
 \par\end{flushleft}
 
-
 \section{Launching the CanReg server\index{server}}
-
 \begin{flushleft}
 After clicking ``Login'' on the welcome screen of CanReg you get
 the login screen. To launch the CanReg server\index{launch the CanReg server}
@@ -809,28 +752,23 @@ an icon in your notification area\index{notification area}.
 \includegraphics{notificationarea}
 \par\end{center}
 
-
 \subsection{Launching server from \index{command line}command line}
 
 To launch CanReg5 from command line, you'll have to open command line
 on your computer (Windows: Win+R, ``cmd'') change into the folder
-you have \emph{installed} CanReg5 (Windows: ``cd \%programfiles(x86)\%\textbackslash{}CanReg5'')
+you have \emph{installed} CanReg5 (Windows: ``cd \%programfiles(x86)\%\textbackslash CanReg5'')
 and type the following to launch the server:
 
 ``java -jar CanReg5.jar <registry-code>'' (where <registry-code>
 should be replace by the code of your registry, ie ``java -jar CanReg5.jar
 TRN-E'')
 
-
-\section{Login\index{login@\textsf{\textbf{login}}}\label{sub:Login}}
-
+\section{Login\index{login@\textsf{\textbf{login}}}\label{subsec:Login}}
 \begin{flushleft}
 After launching the server you can log on to your CanReg system. 
 \par\end{flushleft}
 
-
 \subsection{Locally }
-
 \begin{flushleft}
 If you want to log in to a CanReg server running on your local machine\index{local machine},
 after either installing a CanReg5 system XML or converted your CanReg4
@@ -852,9 +790,7 @@ server is indeed running. (See ``Launching the CanReg server'' above.)
 \includegraphics{CanRegLoginScreen}
 \par\end{center}
 
-
 \subsection{In a network }
-
 \begin{flushleft}
 If you want to log on to a CanReg server running on another machine
 in your network\index{network} you need to know the address of that
@@ -909,9 +845,7 @@ or convert from CanReg4. You only need the code (for example TRN)
 of the CanReg system you want to connect to.
 \par\end{flushleft}
 
-
 \section{Import the dictionaries\index{import dictionaries} from CanReg4}
-
 \begin{flushleft}
 If you are migrating from CanReg4 make sure to export the most updated
 dictionary from your CanReg4 system. (In CanReg4: ``Data Entry'',
@@ -922,6 +856,7 @@ to use the demo system, the dictionary is located in: demo/dictionary.
 \item \begin{flushleft}
 Go to ``File'', ``Data Entry'', ``Edit dictionary'' in CanReg5
 \par\end{flushleft}
+
 \end{itemize}
 \begin{center}
 \includegraphics[width=3.91667in,height=2in]{17}
@@ -930,6 +865,7 @@ Go to ``File'', ``Data Entry'', ``Edit dictionary'' in CanReg5
 \item \begin{flushleft}
 Click on ``Import complete dictionary from file''.
 \par\end{flushleft}
+
 \end{itemize}
 \begin{center}
 \includegraphics[width=4.79792in,height=5.04097in]{18}
@@ -946,6 +882,7 @@ Tick ``CanReg4 Format'' if you are migrating from CanReg4, leave
 unticked if you are using the demo system or otherwise are importing
 a CanReg5 formatted dictionary.
 \par\end{flushleft}
+
 \end{itemize}
 \begin{center}
 \includegraphics{dictionaryimport}
@@ -967,8 +904,7 @@ verify that the dictionaries have been imported.
 \par\end{flushleft}
 \end{itemize}
 
-\section{Import the data\index{import data from CanReg4} from CanReg4\label{sub:Import-the-data}}
-
+\section{Import the data\index{import data from CanReg4} from CanReg4\label{subsec:Import-the-data}}
 \begin{flushleft}
 Make sure to export the most updated data from your \index{CanReg4}CanReg4
 system. 
@@ -1003,6 +939,7 @@ Take a look at the data you have now exported and close CanReg4.
 \item \begin{flushleft}
 Back in CanReg5 do ``File'', ``Data Entry'' and ``Import Data''.
 \par\end{flushleft}
+
 \end{itemize}
 \begin{center}
 \includegraphics[width=3.91667in,height=2in]{20}
@@ -1023,6 +960,7 @@ encoding\index{file encoding}'' (Default for Arabic text is ISO-8859-6).
 \textbf{Set ``Separating character\index{separating character@separating\textbf{ }character}''
 to Comma.} (Or whatever separating characters your file has.)
 \par\end{flushleft}
+
 \end{itemize}
 \begin{center}
 \includegraphics[width=5.00069in,height=4.21667in]{21}
@@ -1045,8 +983,8 @@ at all.
 Click ``Next'' (or select the tab ``Import File'') 
 \par\end{flushleft}
 \item \begin{flushleft}
-Click ``Import'' (leave everything as by default -- the import function
-only works on empty CanReg databases as per now\ldots{}) 
+Click ``Import'' (leave everything as by default – the import function
+only works on empty CanReg databases as per now\ldots ) 
 \par\end{flushleft}
 \item \begin{flushleft}
 Let CanReg5 import the data (this might take a while) and click ``OK''. 
@@ -1058,7 +996,6 @@ has arrived well.
 \end{itemize}
 
 \section{Import data from other programs\index{import data from other programs}}
-
 \begin{flushleft}
 You can import data from other programs than CanReg4 by using the
 import tool in CanReg5. The only thing to pay attention to is that
@@ -1067,7 +1004,7 @@ database.
 \par\end{flushleft}
 \begin{itemize}
 \item \begin{flushleft}
-Dates should be coded as year month day (yyyyMMdd) -- ISO 8601
+Dates should be coded as year month day (yyyyMMdd) – ISO 8601
 \par\end{flushleft}
 \item \begin{flushleft}
 Topography in 3 digits ICD-O-3 with no leading C. 
@@ -1075,6 +1012,7 @@ Topography in 3 digits ICD-O-3 with no leading C.
 \item \begin{flushleft}
 Morphology in 4 (or 5) digits ICD-O-3.
 \par\end{flushleft}
+
 \end{itemize}
 \begin{flushleft}
 Other fields with dictionaries, like for example addresses should
@@ -1090,32 +1028,26 @@ tumours to patients).
 
 \newpage{}
 
-
 \part{Working with CanReg5}
-
 
 \chapter{Start}
 
-
 \section{Welcome screen}
-
 \begin{flushleft}
 There are two options in this CanReg5 welcome screen\index{welcome screen}:
-\textquotedbl{}Login to CanReg\textquotedbl{} and \textquotedbl{}Install
-New System\textquotedbl{}.
+\textquotedbl Login to CanReg\textquotedbl{} and \textquotedbl Install
+New System\textquotedbl .
 \par\end{flushleft}
 
 \begin{center}
 \includegraphics[scale=0.5]{CanRegWelcomeScreen}
 \par\end{center}
 
-
 \section{Login to CanReg}
 
 If CanReg5 has already been setup on this computer for your cancer
-registry, then click on this option to pass to the \textquotedbl{}Login/Password\textquotedbl{}
-panel. (See \vref{sub:Login} for more information.)
-
+registry, then click on this option to pass to the \textquotedbl Login/Password\textquotedbl{}
+panel. (See \vref{subsec:Login} for more information.)
 
 \subsection{Advanced login settings}
 
@@ -1123,22 +1055,17 @@ panel. (See \vref{sub:Login} for more information.)
 \begin{centering}
 \includegraphics{loginsettings}
 \par\end{centering}
-
 \caption{\label{fig:Login-settings}Login settings}
-
 
 \end{figure}
 
-
 Under Settings you can tick Advanced to get access to some more advanced
 settings for CanReg. (See figure \vref{fig:Login-settings}.)
-
 
 \subsubsection{Test connection }
 
 will test the connection to the server specified - without connecting
 to it.
-
 
 \subsubsection{Get IP Address}
 
@@ -1147,7 +1074,6 @@ URL field. If this is set to localhost it will give you the IP address
 of the machine you are on. This can be usefull when installing CanReg
 in a network.
 
-
 \subsubsection{Port}
 
 lets you change the port the server is running on. This can be useful
@@ -1155,14 +1081,12 @@ if another program is running on the default port and you want to
 change that or if you need to tunnel CanReg traffic through a VPN-network
 or similar.
 
-
 \subsubsection{Automatically launch local server on startup}
 
 is by default ticked after installing a new XML. This does what it
 says - it will try to launch the last used CanReg server on this machine
 when starting CanReg. Basically it clicks ``Launch Server'' for
 you when opening the login screen.
-
 
 \subsubsection{Single user mode}
 
@@ -1174,21 +1098,18 @@ you can be sure that nobody can log on to your system but you (even
 if they have gotten hold of your username and password and server
 address).
 
-
 \section{Install New System}
 
 The CanReg5 program has been installed but you wish to add the Registry
 definition for a particular Cancer Registry. To install a new system
 you can use this module. Click browse and choose the XML-file that
-corresponds to your system. (See \vref{sub:Install-a-new} for more
-information.)\newpage{}
-
+corresponds to your system. (See \vref{subsec:Install-a-new} for
+more information.)\newpage{}
 
 \chapter{\index{data entry}Data entry}
 
 From the data entry menu you can open the Browse/edit data view, edit
 dictionary view, edit population datasets view or import data view.
-
 
 \section{Browse/edit}
 
@@ -1198,8 +1119,8 @@ For Data Entry purposes, you can use this Browse part to look for
 a particular record to Edit, or to see if a particular person has
 a cancer notification already stored.
 
-The table below shows the data - move (with the \textquotedbl{}Scroll
-Bars\textquotedbl{}) horizontally to see other variables, or vertically
+The table below shows the data - move (with the \textquotedbl Scroll
+Bars\textquotedbl ) horizontally to see other variables, or vertically
 to view other records.
 
 You can use the Filter, Index and Ranges to select which records to
@@ -1226,18 +1147,15 @@ FOR YOUR FIRST RECORD.
 If you have made changes to the database, use this button to update
 the table displayed.
 
-
 \subsection{Table\index{table}}
 
 This lets you select the table to look at.
 
-
-\subsection{Sorty by\index{sorty by}\label{sub:Sorty-by}}
+\subsection{Sorty by\index{sorty by}\label{subsec:Sorty-by}}
 
 The records will be ordered (or sorted) by the variable chosen.
 
-
-\subsection{Range\index{range}\label{sub:Range}}
+\subsection{Range\index{range}\label{subsec:Range}}
 
 \includegraphics{range}
 
@@ -1253,11 +1171,11 @@ Example of how to use:
 \item Range End = 20019999
 \end{itemize}
 
-\subsection{Filter\index{filter}\label{sub:Filter}}
+\subsection{Filter\index{filter}\label{subsec:Filter}}
 
 \includegraphics{filter}
 
-To select records. (Use \textquotedbl{}Range\textquotedbl{} as primary
+To select records. (Use \textquotedbl Range\textquotedbl{} as primary
 selection - it is quicker)
 
 \begin{tabular}{|c|>{\centering}p{0.75\linewidth}|}
@@ -1297,19 +1215,16 @@ OR & match one of the criterias\tabularnewline
 \hline 
 \end{tabular}
 
-
 \subsubsection{Examples of how to use}
 \begin{itemize}
-\item sex = \textquoteright 1\textquoteright{} (all male cases.)
+\item sex = ’1’ (all male cases.)
 \item age >= 60 (cases aged 60 and more.)
-\item sex = \textquoteright 2\textquoteright{} and age < 60 (female cases
-aged more than 60.)
+\item sex = ’2’ and age < 60 (female cases aged more than 60.)
 \item age BETWEEN 45 AND 60 (cases from patients aged from 45 to 60 (inclusive))
 \item age <15 OR age>60 (patients aged less than 15 and more than 60)
-\item name = 'Smith' (Name is \textquotedblleft Smith\textquotedblright )
-\item name LIKE 'Sm\%' (Name begins with \textquotedblleft Sm\textquotedblright .)
-\item basis = \textquoteright 7\textquoteright{} or Basis = \textquoteright 5\textquoteright{}
-(Basis is 7 or 5.)
+\item name = 'Smith' (Name is “Smith”)
+\item name LIKE 'Sm\%' (Name begins with “Sm”.)
+\item basis = ’7’ or Basis = ’5’ (Basis is 7 or 5.)
 \item topog LIKE '50\%' (for all Breast cases.)
 \end{itemize}
 
@@ -1319,14 +1234,11 @@ aged more than 60.)
 \begin{centering}
 \includegraphics{filterwizard}
 \par\end{centering}
-
 \caption{\label{fig:Filter-Wizard}Filter Wizard}
 \end{figure}
 
-
 The filter wizard is here to help you build filters. (See figure \vref{fig:Filter-Wizard}.)
 It is a fast method to specify filter, or selection, criteria.
-
 
 \subsubsection{For example}
 
@@ -1337,31 +1249,29 @@ table)
 
 Launch Filter Wizard and click on ...
 \begin{enumerate}
-\item Variable - \textquotedbl{}Sex\textquotedbl{}
-\item Operator - \textquotedbl{}=\textquotedbl{}
-\item Value - \textquotedbl{}Female\textquotedbl{} (from Dictionary)
-\item Logical Operator - \textquotedbl{}And\textquotedbl{}
-\item \textquotedbl{}Add\textquotedbl{}
-\item Variable - \textquotedbl{}Age\textquotedbl{}
-\item Operator - \textquotedbl{}>\textquotedbl{}
-\item Value - type \textquotedbl{}60\textquotedbl{}
-\item \textquotedbl{}Add\textquotedbl{}
-\item \textquotedbl{}OK\textquotedbl{}
+\item Variable - \textquotedbl Sex\textquotedbl{}
+\item Operator - \textquotedbl =\textquotedbl{}
+\item Value - \textquotedbl Female\textquotedbl{} (from Dictionary)
+\item Logical Operator - \textquotedbl And\textquotedbl{}
+\item \textquotedbl Add\textquotedbl{}
+\item Variable - \textquotedbl Age\textquotedbl{}
+\item Operator - \textquotedbl >\textquotedbl{}
+\item Value - type \textquotedbl 60\textquotedbl{}
+\item \textquotedbl Add\textquotedbl{}
+\item \textquotedbl OK\textquotedbl{}
 \end{enumerate}
-For some combinations using \textquotedbl{}AND\textquotedbl{} and
-\textquotedbl{}OR\textquotedbl{} you may need to add brackets after.
+For some combinations using \textquotedbl AND\textquotedbl{} and
+\textquotedbl OR\textquotedbl{} you may need to add brackets after.
 
 e.g.
 
-Topog = \textquoteleft 220\textquoteright{} AND (Basis=\textquoteright 1\textquoteright{}
-OR Basis=\textquoteright 2\textquoteright )
-
+Topog = ‘220’ AND (Basis=’1’ OR Basis=’2’)
 
 \subsection{Display variables\index{display variables}}
 
 \includegraphics{displayvariables}
 
-Click on a \textquotedbl{}radio button\textquotedbl{} above to display
+Click on a \textquotedbl radio button\textquotedbl{} above to display
 either:
 
 - All variables
@@ -1370,15 +1280,12 @@ either:
 
 - Key variables (Names, Age, Date Incidence, Topog etc)
 
-
 \subsection{Navigate buttons\index{navigate buttons}}
 
 Click on the Navigation buttons below to move record: Top, Bottom,
 Up, Down.
 
-
 \section{Edit record\index{edit record}}
-
 \begin{flushleft}
 To get to a data entry form either press Create New Record\index{create new record}
 from the menu bar
@@ -1422,43 +1329,36 @@ later.)
 When you have finished entering the data, you must perform the checks
 as described in the system variables part below.
 
-
 \subsection{System variables\index{system variables}}
 
 After data entry, you must perform the following steps:
-
 
 \paragraph{Person Search\index{person search}}
 
 Searches for any records that might belong to the same person.
 
-
 \paragraph{Check\index{check}}
 
-Performs various consistency checks (\vref{sub:Check})on the data
+Performs various consistency checks (\vref{subsec:Check})on the data
 you have entered.
-
 
 \paragraph{Record Status\index{record Status}}
 
-All new records are set to \textquotedbl{}Pending\textquotedbl{} and
-cannot be \textquotedbl{}Confirmed\textquotedbl{} until the \textquotedbl{}Check\textquotedbl{}
-and the \textquotedbl{}Person search\textquotedbl{} have been successfully
+All new records are set to \textquotedbl Pending\textquotedbl{} and
+cannot be \textquotedbl Confirmed\textquotedbl{} until the \textquotedbl Check\textquotedbl{}
+and the \textquotedbl Person search\textquotedbl{} have been successfully
 performed. Only confirmed cases are used for analysis. Only a user
-with \textquotedbl{}Supervisor\textquotedbl{} permission level can
+with \textquotedbl Supervisor\textquotedbl{} permission level can
 confirm rare or multiple primary cases, or delete records.
-
 
 \paragraph{Save\index{save record}}
 
 Save record to the database
 
-The \textquotedbl{}Updated\textquotedbl{} box shows the date that
+The \textquotedbl Updated\textquotedbl{} box shows the date that
 the record was last edited and by whom.
 
-
 \subsection{Obsolete button. }
-
 \begin{flushleft}
 This will flag the record as obsolete\index{obsolete}, so that it
 will not show up in analysis\index{analysis}. It is a way to keep
@@ -1466,8 +1366,7 @@ duplicate records\index{duplicate records} that might contain valuable
 information.
 \par\end{flushleft}
 
-
-\subsection{Check\index{check}\label{sub:Check}}
+\subsection{Check\index{check}\label{subsec:Check}}
 
 \includegraphics{check}
 
@@ -1476,29 +1375,26 @@ data entry form.
 
 There are three sections to the checks:
 
-
 \paragraph{Mandatory variable\index{mandatory variable}s}
 
 Indicates any variables, defined as mandatory for your Registry, that
 have not been filled in. If the value is really not available, then
-fill in \textquotedbl{}9\textquotedbl{} or \textquotedbl{}99\textquotedbl{}
-etc. - the code for \textquotedbl{}Unknown\textquotedbl{}.
-
+fill in \textquotedbl 9\textquotedbl{} or \textquotedbl 99\textquotedbl{}
+etc. - the code for \textquotedbl Unknown\textquotedbl .
 
 \paragraph{First Name\index{name} and Sex\index{sex}}
 
-Checks the combination of First Name and Sex. e.g. \textquotedbl{}Mary\textquotedbl{},
-\textquotedbl{}male\textquotedbl{} would probably be an error! A name
-that is really used by both sexes can be defined as \textquotedbl{}Unisex\textquotedbl{}.
-
+Checks the combination of First Name and Sex. e.g. \textquotedbl Mary\textquotedbl ,
+\textquotedbl male\textquotedbl{} would probably be an error! A name
+that is really used by both sexes can be defined as \textquotedbl Unisex\textquotedbl .
 
 \paragraph{Cross checks\index{cross checks}\index{checks}}
 
-These are the same consistency checks as in the IARC Tools \textquotedbl{}Check\textquotedbl{}
+These are the same consistency checks as in the IARC Tools \textquotedbl Check\textquotedbl{}
 program. Some combinations would be marked as errors:
 
 e.g. Sex = Female and Topography = Prostate, while others could be
-marked as \textquotedbl{}Rare\textquotedbl{}. Only a Supervisor can
+marked as \textquotedbl Rare\textquotedbl . Only a Supervisor can
 confirm a Rare case.
 
 As well as performing these checks, this function also determines
@@ -1506,16 +1402,15 @@ the ICD-10 code derived from the ICD-O Topography and Morphology.
 
 For more information on these checks please see: http://www.iacr.com.fr/TechRep42-MPrules.pdf
 
-(The following checks are implemented in CanReg5: \textquotedbl{}Age
-and Morphology\textquotedbl{}, \textquotedbl{}Age and Topography\textquotedbl{},
-\textquotedbl{}Age, IncidenceDate, and BirthDate\textquotedbl{}, \textquotedbl{}Age,
-Topography, and Morphology\textquotedbl{}, \textquotedbl{}Basis\textquotedbl{},
-\textquotedbl{}DateOfLastContact\textquotedbl{}, \textquotedbl{}Grade\textquotedbl{},
-\textquotedbl{}Morphology\textquotedbl{}, \textquotedbl{}Sex and Morphology\textquotedbl{},
-\textquotedbl{}Sex and Topography\textquotedbl{}, \textquotedbl{}Topography
-and Behaviour\textquotedbl{}, \textquotedbl{}Topography and Morphology\textquotedbl{},
-and \textquotedbl{}Topography\textquotedbl{}.)
-
+(The following checks are implemented in CanReg5: \textquotedbl Age
+and Morphology\textquotedbl , \textquotedbl Age and Topography\textquotedbl ,
+\textquotedbl Age, IncidenceDate, and BirthDate\textquotedbl , \textquotedbl Age,
+Topography, and Morphology\textquotedbl , \textquotedbl Basis\textquotedbl ,
+\textquotedbl DateOfLastContact\textquotedbl , \textquotedbl Grade\textquotedbl ,
+\textquotedbl Morphology\textquotedbl , \textquotedbl Sex and Morphology\textquotedbl ,
+\textquotedbl Sex and Topography\textquotedbl , \textquotedbl Topography
+and Behaviour\textquotedbl , \textquotedbl Topography and Morphology\textquotedbl ,
+and \textquotedbl Topography\textquotedbl .)
 
 \subsection{Person search\index{person search}}
 
@@ -1524,14 +1419,13 @@ records that might belong to the same person. All personal data such
 as Date of Birth, Place of Residence, Id Number, plus a phonetically
 simplified form of the name are used in this search. (This can be
 tailored by the administrator of the CanReg5 system.) Any other record
-with a percentage match higher than the \textquotedbl{}Minimum Match\textquotedbl{}
+with a percentage match higher than the \textquotedbl Minimum Match\textquotedbl{}
 is displayed.
 
 If no match is found, a message will be displayed to that effect.
 
 Otherwise, the computer only displays possibilities - YOU must decide
 if it really is the same person.
-
 
 \section{Dictionary editor\index{dictionary editor}}
 
@@ -1540,19 +1434,16 @@ if it really is the same person.
 The dictionary editor lets the supervisor users edit the coding schemes
 of the various variables in CanReg5.
 
-
 \subsection{Export Dictionary\index{export dictionary} to file}
 
 Export the current set of CanReg5 dictionaries to a tab-separated
 file for editing in for example Excel.
 
-
-\subsection{Display/edit \dots{} Select}
+\subsection{Display/edit … Select}
 
 This will display any dictionary picked by the user for editing directly
 in CanReg. The format will be standard tab-separated values so that
 the user can also copy and paste this into general spreadsheet applications.
-
 
 \subsection{Update}
 
@@ -1560,7 +1451,6 @@ This will import the dictionary picked by the user from the text area.
 The format must be tab-separated values. This means that the users
 can copy and paste directly form general spreadsheet applications
 (i.e. Excel).
-
 
 \subsection{Import Dictionary\index{import dictionary} from file}
 
@@ -1571,16 +1461,13 @@ file. (Or a two-space-separated CanReg4 dictionary.)
 \includegraphics[width=1\columnwidth]{dictionaryimport}
 \par\end{center}
 
-
 \section{Population Dataset Editor}
 
-
 \subsection{Manual entry/validation}
-
 \begin{flushleft}
 The Population Dataset\index{population dataset editor}\index{population dataset}
 \index{PDS}editor lets you edit population data set to be used in
-the table builder. This is located under File -- Data Entry Edit Population
+the table builder. This is located under File – Data Entry Edit Population
 Dataset: 
 \par\end{flushleft}
 
@@ -1612,7 +1499,7 @@ Fill in the details:
 A name for the dataset 
 \par\end{flushleft}
 \item \begin{flushleft}
-\textquotedbl{}Filter\textquotedbl{} or selection criteria, so the
+\textquotedbl Filter\textquotedbl{} or selection criteria, so the
 program only selects records corresponding to the population (e.g.
 Address code >= 10 and Address code <= 19) (Basically if it does not
 cover your entire area of your database.)
@@ -1634,10 +1521,11 @@ above it is mid 1992)
 The Standard population\index{standard population} used for ASR\index{ASR}s
 when building tables with this set. 
 \par\end{flushleft}
+
 \end{itemize}
-\textquotedbl{}Age Standardised\textquotedbl{} rates\index{age standardised rates}
+\textquotedbl Age Standardised\textquotedbl{} rates\index{age standardised rates}
 are calculated in order to compare rates from different countries
-that have different age profiles. Normally the \textquotedbl{}Standard\textquotedbl{}
+that have different age profiles. Normally the \textquotedbl Standard\textquotedbl{}
 population is the World standard included here. (If you wish to change
 this, choose another standard population (or click on the standard
 pop.''Edit'' button.)
@@ -1671,10 +1559,8 @@ and choosing ``Save as PNG...''
 
 And choosing a proper file name.
 
-
 \subsection{Import population data set\index{import population data set@import\textbf{ }population\textbf{ }data\textbf{ }set}
 from CanReg4 }
-
 \begin{flushleft}
 Alternatively you can import population data sets from CanReg4\index{CanReg4}.
 To do this you go to the Tools menu and choose ``Load CanReg4 Population
@@ -1722,14 +1608,13 @@ to change anything in the dataset you need to unlock it by toggling
 the ``Locked''-toggle. 
 \par\end{flushleft}
 
-
 \section{Import\index{import}}
 
 The import function lets you import data from other CanReg systems
 or other programs.
 
 (For a detailed walk through of how to get the data from CanReg4 to
-5 see \vref{sub:Import-the-data}.)
+5 see \vref{subsec:Import-the-data}.)
 
 Data in an external file may be added to the CanReg database by importing.
 It should be of the following format:
@@ -1760,9 +1645,8 @@ it automatically. Please verify using preview.
 
 \includegraphics[width=1\columnwidth]{importfileoptions}
 
-4) Import the file (maybe in \textquotedbl{}test only\textquotedbl{}
+4) Import the file (maybe in \textquotedbl test only\textquotedbl{}
 mode first)
-
 
 \subsection{Discrepancies\index{discrepancies}}
 
@@ -1772,7 +1656,7 @@ the data.
 
 \includegraphics{importoptionsdiscrepancies}
 
-Click on a \textquotedbl{}radio button\textquotedbl{} to either:
+Click on a \textquotedbl radio button\textquotedbl{} to either:
 \begin{itemize}
 \item Reject these discrepancies (they will not be imported)
 \item Update them (any new data will be copied over to the database record)
@@ -1786,16 +1670,14 @@ import file to read.
 
 \includegraphics{importoptionsmaxlines}
 
-With \textquotedbl{}Test only\textquotedbl{} ticked, NO data is actually
+With \textquotedbl Test only\textquotedbl{} ticked, NO data is actually
 added to your database; only a report is generated showing what WOULD
 happen. It lists discrepancies, possible matches, rare or error cases
 etc.
 
-
 \subsection{CanReg DATA}
 
 \includegraphics{importoptionscanregdata}
-
 
 \subsubsection{Perform Checks}
 
@@ -1805,14 +1687,12 @@ Pending case, then the Checks\index{checks} must and will be performed.
 If however, the case has already passed the Checks, the Checks will
 NOT be performed again unless specified by ticking this option.
 
-
 \subsubsection{Perform Person Search}
 
 Normally, when importing CanReg data, the Person Search\index{person search}
 will still be performed even if already done. If this option is NOT
 ticked, then the Person Search will NOT be repeated in this case.
 This is only advisable is the case of having no original data.
-
 
 \subsubsection{Query New First Name}
 
@@ -1827,9 +1707,7 @@ known.
 
 \newpage{}
 
-
 \chapter{\index{analysis}Analysis}
-
 
 \section{Export data\index{export data@export\textsf{\textbf{ }}data}}
 
@@ -1862,32 +1740,30 @@ You will be presented with a screen that resembles the browse-screen:
 
 The following steps need to be taken:
 \begin{itemize}
-\item Specify the records you want to be selected by using the Filter(\vref{sub:Filter})
-and Range(\vref{sub:Range}) options, and the order in which they
-will be written using the Sort by(\vref{sub:Sorty-by}).
-\item Select the Variables(\vref{sub:ExportVariablesSelector}) to display.
+\item Specify the records you want to be selected by using the Filter(\vref{subsec:Filter})
+and Range(\vref{subsec:Range}) options, and the order in which they
+will be written using the Sort by(\vref{subsec:Sorty-by}).
+\item Select the Variables(\vref{subsec:ExportVariablesSelector}) to display.
 \item Choose the Variable headers to include.
-\item Choose the File Format (\vref{sub:Export-file-format}) suitable for
-your needs.
+\item Choose the File Format (\vref{subsec:Export-file-format}) suitable
+for your needs.
 \end{itemize}
 \begin{flushleft}
 Please note that some of the functionality, like the ability to store
 export-setups is not yet implemented. 
 \par\end{flushleft}
 
-
 \subsection{Options}
 
 \includegraphics{exportoptions}
 
-
-\subsection{Export file format\index{export file format}\label{sub:Export-file-format}}
+\subsection{Export file format\index{export file format}\label{subsec:Export-file-format}}
 
 All file formats produce text files, with one case per line (a new
 line at the end of each case). They all have default extension .TXT
-except for \textquotedbl{}Comma Separated Variable\textquotedbl{},
-which has .CSV. \textquotedbl{}Tab Delimited\textquotedbl{} writes
-each variable separated by the TAB character. \textquotedbl{}Comma
+except for \textquotedbl Comma Separated Variable\textquotedbl ,
+which has .CSV. \textquotedbl Tab Delimited\textquotedbl{} writes
+each variable separated by the TAB character. \textquotedbl Comma
 Separated Values\textquotedbl{} encloses each variable in quotes,
 and separates by a comma.
 
@@ -1896,11 +1772,9 @@ If you export data to a ``Tab Separated'' or a ``Comma Separated''
 file you can open this in general spreadsheets (like \emph{Excel}).
 \par\end{flushleft}
 
-
 \subsection{Titles\index{titles}, variable names\index{variable names}}
 
 \includegraphics{exporttitles}
-
 
 \subsubsection{Titles }
 
@@ -1912,20 +1786,17 @@ Will write at the top of your export file:
 This option is useful is you are writing a report, or case listing.
 (Not yet implemented.)
 
-
 \subsubsection{Short variable name }
 
 Puts the abbreviated names of the variables at the top of each column.
 (If this file were imported into, for example\emph{ Access} or \emph{R
 }then these would automatically become the names of the variables.)
 
-
 \subsubsection{Long Variable name }
 
 Writes the full name of the variable at the top of each column.
 
-
-\subsection{Variables\label{sub:ExportVariablesSelector}}
+\subsection{Variables\label{subsec:ExportVariablesSelector}}
 
 \includegraphics{exportvariables}
 
@@ -1938,29 +1809,26 @@ descriptions they only show up as codes in the preview window.)
 
 You can drag the grid columns to change the order of the variables.
 
-Click on \textquotedbl{}All variables\textquotedbl{} to select them
+Click on \textquotedbl All variables\textquotedbl{} to select them
 all.
-
 
 \subsection{Date Format}
 
 \includegraphics{exportdateformat}
 
-Tick \textquotedbl{}Format Date\index{format date}\textquotedbl{},
-for example, to export \textquotedbl{}21/04/2001\textquotedbl{} instead
-of numeric form \textquotedbl{}20010421\textquotedbl{}. (The date
+Tick \textquotedbl Format Date\index{format date}\textquotedbl ,
+for example, to export \textquotedbl 21/04/2001\textquotedbl{} instead
+of numeric form \textquotedbl 20010421\textquotedbl . (The date
 format can be any format specified by a text string using dd for days,
-MM for months, and yyyy for year, for example: \textquotedblleft yyyyMMdd\textquotedblright{}
-(the default), \textquotedblleft dd/MM/yyyy\textquotedblright , or
-\textquotedblleft MM.dd.yyyy\textquotedblright .)
+MM for months, and yyyy for year, for example: “yyyyMMdd” (the default),
+“dd/MM/yyyy”, or “MM.dd.yyyy”.)
 
-Tick \textquotedbl{}Correct Unknown\index{correct unknown}\textquotedbl{}
-so that unknown day will be written as \textquotedbl{}01\textquotedbl{}
-and unknown month as \textquotedbl{}07\textquotedbl{}. This is necessary
+Tick \textquotedbl Correct Unknown\index{correct unknown}\textquotedbl{}
+so that unknown day will be written as \textquotedbl 01\textquotedbl{}
+and unknown month as \textquotedbl 07\textquotedbl . This is necessary
 if you wish to import the data into \emph{Excel}, or any other software
 that will reject invalid dates. (Please note that you lose information
 on what dates are unknown and what dates are really mid-year.)
-
 
 \subsection{Export setup}
 
@@ -1970,13 +1838,11 @@ This module is used to load previously made export settings or save
 the current settings. This includes the filter, the sequence, the
 variables to export and the various options. (Not yet implemented.)
 
-
 \section{Table builder\index{table builder@table\textsf{\textbf{ }}builder}}
-
 \begin{flushleft}
 The Table builder (See figure \vref{fig:Table-builder}) lets you
 build incidence tables\index{incidence tables} etc in CanReg. You
-find it under analysis --> table builder. 
+find it under analysis –> table builder. 
 \par\end{flushleft}
 
 \begin{center}
@@ -1984,15 +1850,11 @@ find it under analysis --> table builder.
 \begin{centering}
 \includegraphics[width=4.07292in,height=1.57292in]{40}
 \par\end{centering}
-
 \caption{\label{fig:Table-builder-in-the-menu}Table builder in the menu.}
 \end{figure}
-
 \par\end{center}
 
-
 \subsection{Example}
-
 \begin{flushleft}
 When you start it you first choose the type of table you want to produce.
 (Please note that not all the tables in the list has been implemented.)
@@ -2007,10 +1869,8 @@ Pick Incidence per 100,000 by age group (Period):
 \begin{centering}
 \includegraphics[width=5.04167in,height=4.125in]{41}
 \par\end{centering}
-
 \caption{\label{fig:Table-builder}Table builder}
 \end{figure}
-
 \par\end{center}
 
 The incidence rate is defined as:
@@ -2032,15 +1892,13 @@ City, 1991 to 1993:
 \begin{centering}
 \includegraphics[width=5.02083in,height=4.125in]{42}
 \par\end{centering}
-
 \caption{\label{fig:The-range-chooser}The range chooser.}
 \end{figure}
-
 \par\end{center}
 
 \begin{flushleft}
 In order to create tables of incidence rates, we need to know the
-size of the population at risk. Therefore, a \textquotedbl{}Population
+size of the population at risk. Therefore, a \textquotedbl Population
 Data Set\textquotedbl{} is needed. 
 \par\end{flushleft}
 
@@ -2056,12 +1914,9 @@ See figure \vref{fig:The-population-dataset}.
 \begin{centering}
 \includegraphics[width=5in,height=4.11458in]{43}
 \par\end{centering}
-
 \caption{\label{fig:The-population-dataset}The population dataset chooser.}
 
-
 \end{figure}
-
 \par\end{center}
 
 \begin{flushleft}
@@ -2078,10 +1933,8 @@ name you give for each file.)
 \begin{centering}
 \includegraphics[width=1\columnwidth]{44}
 \par\end{centering}
-
 \caption{\label{fig:File-formats-selector}File formats selector}
 \end{figure}
-
 \par\end{center}
 
 \begin{flushleft}
@@ -2090,8 +1943,8 @@ You get a message saying, ``Tables built.''
 
 \begin{flushleft}
 Click OK and if you have a program that can read PostScript (See page
-\pageref{sub:Tables}.) files the tables will be displayed after you
-press OK. (You might have to go to the Orientation menu in \emph{GSView}
+\pageref{subsec:Tables}.) files the tables will be displayed after
+you press OK. (You might have to go to the Orientation menu in \emph{GSView}
 and choose Portrait to get the table in the proper orientation.)
 \par\end{flushleft}
 
@@ -2100,30 +1953,24 @@ and choose Portrait to get the table in the proper orientation.)
 \begin{centering}
 \includegraphics[angle=90,width=0.9\columnwidth]{46}
 \par\end{centering}
-
 \caption{\label{fig:Incidence-Rates-per}Incidence Rates per 100.000}
 \end{figure}
-
 \par\end{center}
-
 
 \subsection{File formats}
 
 The various tables can be generated in various file formats, depending
 on what they support.
 
-
 \subsubsection{Portable Document Format (PDF)}
 
 PDF is a well known standard document format that can be read in for
 example Adobe Reader, installed on most computers
 
-
 \subsubsection{Post Script (PS)}
 
 Post Scipt is the predecessor of PDF and is an open format that can
 be displayed using for example GSview.
-
 
 \subsubsection{Scalable Vector Graphics (SVG)}
 
@@ -2134,7 +1981,6 @@ the HTML5 standard), and further edited in programs like InkScape
 or Adobe Illustrator. They can also be directly embedded in many documents
 using Google Docs or Open Office.
 
-
 \subsubsection{Image files (Portable Network Graphics (PNG), Windows Meta files
 (WMF) or TIFFs)}
 
@@ -2142,11 +1988,9 @@ Image files are useful for presentation on screen or online, but less
 adapted to print, as they are not scalable. (If possible it is best
 to use PNG as that is an open format.)
 
-
 \subsubsection{Tabulated data (HTML)}
 
 This is the data from the tables in HTML format for further processing.
-
 
 \subsubsection{Word files (DOCX)}
 
@@ -2154,13 +1998,11 @@ This generates a word document that can be edited in any compatible
 software. (Microsoft Word, Libre Office Writer, Open Office Writer,
 etc.)
 
-
 \subsubsection{PowerPoint (PPTX)}
 
 This generates a slide deck that can be edited in any compatible software.
 (Microsoft PowerPoint, Libre Office Impress, Open Office Impress,
 etc.)
-
 
 \subsection{CanReg5 Chart Editor}
 
@@ -2171,13 +2013,11 @@ PDF or SVG or printing it. (See figure \vref{fig:CanReg5-chart-editor}.)
 \begin{centering}
 \includegraphics[width=0.6\columnwidth]{charteditor}
 \par\end{centering}
-
 \caption{\label{fig:CanReg5-chart-editor}CanReg5 chart editor}
 \end{figure}
 
 
-
-\subsection{CanReg and SEER{*}Stat\label{sub:CanReg-and-SEER*stat}}
+\subsection{CanReg and SEER{*}Stat\label{subsec:CanReg-and-SEER*stat}}
 
 CanReg provides a facility to export data to be used in the free SEER{*}stat\index{SEER{*}Stat}.
 (Windows only.) To do so you'll have to first get hold of and install
@@ -2185,16 +2025,16 @@ SEER{*}Stat and SEER{*}Prep\index{SEER{*}Prep} from the SEER website.
 (\href{http://seer.cancer.gov/seerprep/}{http://seer.cancer.gov/seerprep/}
 and \href{http://seer.cancer.gov/seerstat}{http://seer.cancer.gov/seerstat})
 
-\fbox{\begin{minipage}[t]{1\columnwidth}%
+\noindent\fbox{\begin{minipage}[t]{1\columnwidth - 2\fboxsep - 2\fboxrule}%
 Please note that the following limits apply (for now, as SEER{*}Stat
 wants things like this, but in the future we might be able to work
 around them):
 \begin{itemize}
 \item PatientIDs have to be 8 digits or less.
-\item Population datasets has to have 5 year age groups.\end{itemize}
+\item Population datasets has to have 5 year age groups.
+\end{itemize}
 %
 \end{minipage}}
-
 
 \subsubsection{In CanReg}
 
@@ -2212,22 +2052,19 @@ SEER{*}Prep - a socalled .dd-file.
 
 Start SEER{*}Prep.
 
-
 \subsubsection{In SEER{*}Prep}
 
 \begin{figure}
 \begin{centering}
 \includegraphics[width=0.9\columnwidth]{seerprep}
 \par\end{centering}
-
 \caption{SEER{*}Prep in action}
 \end{figure}
-
 
 Load the .dd file you created with CanReg using the little folder
 icon.
 
-\fbox{\begin{minipage}[t]{1\columnwidth}%
+\noindent\fbox{\begin{minipage}[t]{1\columnwidth - 2\fboxsep - 2\fboxrule}%
 You can also do this manually. You then have to first specify that
 your files follow the CanReg5 format, by opening the corresponding
 .dd file from the folder you installed CanReg5 in. Then under ``Database
@@ -2241,7 +2078,8 @@ Do the following choices under ``When Linking to Populations Use:''
 \item Age: ``Age recode with <1 years old''
 \item Default Std: ``World Std. Million (19 age groups) (recommended)''
 \item Race: ``Custom race''
-\item Leave Population Count Location as it is (Start col 19, length 8)\end{itemize}
+\item Leave Population Count Location as it is (Start col 19, length 8)
+\end{itemize}
 %
 \end{minipage}}
 
@@ -2267,7 +2105,6 @@ Exit SEER{*}Prep and start SEER{*}Stat.
 
 \href{http://seer.cancer.gov/seerprep/example.html}{http://seer.cancer.gov/seerprep/example.html})
 
-
 \subsubsection{In SEER{*}Stat}
 
 Your data from above should now appear in SEER{*}Stat under the name
@@ -2284,18 +2121,18 @@ that SEER{*}Prep writes data to.
 Under ``Other variables'' you have to specify valid paths for the
 ``User Variables'', ``Open or Save'' and ``Temporary Files''.
 
-
 \subsection{Launch browser}
 
 This launches your web browser for an interactive data analysis session.
 
+Note: Your data is kept on your local machine even though it is accessed
+using your web browser.
 
 \section{Frequency distributions\index{frequency distributions}}
-
 \begin{flushleft}
 Frequencies distributions let you look at the data in your database
 as frequencies by year. You can cross-tabulate\index{cross-tabulate}
-several variables. To start this module go to Analysis -- Frequencies
+several variables. To start this module go to Analysis – Frequencies
 Distributions: 
 \par\end{flushleft}
 
@@ -2338,9 +2175,7 @@ but you can select the lines you want and press Ctrl-C (on Windows
 and Linux) or Apple-C (on Mac) and paste it into other programs.
 \par\end{flushleft}
 
-
 \subsection{Pivot tables}
-
 \begin{flushleft}
 If you save a table with only one stratifier (selected variable) CanReg5
 also saves a pivot table based on the data in the table. Here's an
@@ -2355,20 +2190,15 @@ example with the sex variable:
 \newpage{}
 \par\end{flushleft}
 
-
 \chapter{Management\index{management}}
 
-
 \section{Back up and restore}
-
 \begin{flushleft}
 Backup\index{backup}-functionality can be found under the Management
 menu. 
 \par\end{flushleft}
 
-
 \subsection{Perform backup }
-
 \begin{flushleft}
 Under ``Management'' click ``Backup''
 \par\end{flushleft}
@@ -2384,12 +2214,10 @@ you can see the files you created by clicking ``Open folder containing
 Backup\index{folder containing backup}''. It is stored in the \textbf{CanReg
 server} folder under Backup and 3 digit code\index{3 digit code}
 of the registry and then the date of the backup. On my machine, for
-example, it is ``C:\textbackslash{}Documents and Settings\textbackslash{}morten\textbackslash{}.CanRegServer\textbackslash{}Backup\textbackslash{}TRN\textbackslash{}2009-01-14''. 
+example, it is ``C:\textbackslash Documents and Settings\textbackslash morten\textbackslash .CanRegServer\textbackslash Backup\textbackslash TRN\textbackslash 2009-01-14''. 
 \par\end{flushleft}
 
-
 \subsection{Restore from backup\index{restore from backup} }
-
 \begin{flushleft}
 If you are on the server machine you can restore the backup you created
 above by clicking ``Restore'' in the ``Management''-menu restore
@@ -2406,17 +2234,14 @@ You will probably perform this either:
 There are two ways to do this. The easiest one is to use the tool
 ``Install new system'' that we have access to when CanReg launches.
 
-
-\subsubsection{Restore with ``Install new system''}
+\subsubsection{Restore with \textquotedblleft Install new system\textquotedblright}
 
 Click ``Install new system'' and browse to the XML file describing
 this system and click Open. If this is part of a backup CanReg will
 tell you that a backup has been detected and asks you if you want
 to restore this. Click yes and it will restore this.
 
-
-\subsubsection{Restore with ``Restore from backup''-tool}
-
+\subsubsection{Restore with \textquotedblleft Restore from backup\textquotedblright -tool}
 \begin{center}
 \includegraphics[width=4.63542in,height=1.22917in]{23}
 \par\end{center}
@@ -2429,21 +2254,17 @@ date of backup. In the example above we restore a backup from january
 2009. If you select the folder within this ``date'' folder you will
 get an error message and the restore will not be performed.
 
-
 \section{Manage users\index{manage users@manage\textsf{\textbf{ }}users}}
-
 \begin{flushleft}
 The user manager\index{user manager} is located under management
--- users:
+– users:
 \par\end{flushleft}
 
 \begin{center}
 \includegraphics[width=4.10417in,height=2.17708in]{29}
 \par\end{center}
 
-
 \subsection{Change your own password }
-
 \begin{flushleft}
 To change your own password\index{password}, go to the Current user
 tab in the user manager and enter your new password twice. (See figure
@@ -2455,17 +2276,12 @@ tab in the user manager and enter your new password twice. (See figure
 \begin{centering}
 \includegraphics{30}
 \par\end{centering}
-
 \caption{\label{fig:Change-your-own-pqd}Change your own password}
 
-
 \end{figure}
-
 \par\end{center}
 
-
 \subsection{Database password}
-
 \begin{flushleft}
 The CanReg5 database can be encrypted using DES or AES encryption
 with keys up to 512 bits. To enable this you need to provide a minimum
@@ -2490,25 +2306,21 @@ This functionality is only available to users with supervisor access.
 \begin{centering}
 \includegraphics{databasePassword}
 \par\end{centering}
-
 \caption{\label{fig:Set-database-password}Set database password}
 \end{figure}
-
 \par\end{flushleft}
 
 Note: ``To use the AES algorithm with a key length of 192 or 256,
 you must use unrestricted policy jar files for your JRE. You can obtain
-these files from your Java provider. They might have a name like \textquotedbl{}Java
+these files from your Java provider. They might have a name like \textquotedbl Java
 Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy
 Files.\textquotedbl{} If you specify a non-default key length using
 the default policy jar files, a Java exception occurs.'' (Ref: \href{https://db.apache.org/derby/docs/10.9/devguide/cdevcsecure67151.html}{https://db.apache.org/derby/docs/10.9/devguide/cdevcsecure67151.html})
 Simply download the Java Cryptographic Extension (from \href{https://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html}{https://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html}
 if you're using Java 8.), unzip the archive and copy the .jar files
-to the ``lib'' folder inside your CanReg5 installation.
-
+to the ``lib'' folder inside your CanReg5 installation. 
 
 \subsection{User manager\index{user manager@user\textbf{ }manager} }
-
 \begin{flushleft}
 If you are logged in with Supervisor\index{supervisor} rights you
 have access to the User manager part of the user manager. (See figure
@@ -2523,47 +2335,41 @@ to confirm rare cases\index{rare cases} or possible duplicates. Changing
 the Dictionary and User Administration (adding users, changing user
 levels) are also prohibited.
 \item An Analyst\index{analyst} cannot make any changes to the database.
-Only analysis options are available.
+Only analysis options are available. 
 \end{itemize}
 \begin{center}
 \begin{figure}
 \begin{centering}
 \includegraphics{31}
 \par\end{centering}
-
 \caption{\label{fig:User-manager}User manager}
 
-
 \end{figure}
-
 \par\end{center}
 
 \begin{flushleft}
-To add a new user, click \textquotedblleft Add user\index{add user}\textquotedblright{}
-fill in the user's login name. This will create a default user with
-registrar permissions\index{permissions}. To change this select the
-user and pick a suitable user right level and click \textquotedblleft Update
-user\textquotedblright .
+To add a new user, click “Add user\index{add user}” fill in the user's
+login name. This will create a default user with registrar permissions\index{permissions}.
+To change this select the user and pick a suitable user right level
+and click “Update user”.
 \par\end{flushleft}
 
 \begin{flushleft}
-You can change a permission level for a user and hit \textquotedbl{}Update
-user\index{update user}\textquotedbl{}, or delete a user\index{delete user}
-by selecting the user and then clicking the \textquotedbl{}Delete\textquotedbl{}
+You can change a permission level for a user and hit \textquotedbl Update
+user\index{update user}\textquotedbl , or delete a user\index{delete user}
+by selecting the user and then clicking the \textquotedbl Delete\textquotedbl{}
 button. The default password\index{default password} of any user
 is its user name. This should of course be changed at first login
 by the user himself.
 \par\end{flushleft}
 
-
 \section{Quality control\index{quality control}}
-
 
 \subsection{Name and sex}
 
 \includegraphics{nameandsex}
 
-Click the button \textquotedbl{}Show First name\index{name}s by Sex\index{sex}\textquotedbl{}
+Click the button \textquotedbl Show First name\index{name}s by Sex\index{sex}\textquotedbl{}
 to view all the names used in your registry:
 \begin{itemize}
 \item Male names
@@ -2579,13 +2385,11 @@ category, the supervisor can recreate the lists by clicking the second
 button. In a network environment, only do this when nobody else is
 using the program.
 
-
 \subsection{Person search\textmd{\index{person search}}}
 
 \includegraphics{duplicatesearch}
 
 Registration number - range start and end.
-
 
 \subsubsection{Advanced}
 
@@ -2593,18 +2397,15 @@ Change weights\index{weights} and search variables\index{search variables}.
 
 \includegraphics{advancedduplicatesearch}
 
-
 \subsubsection{Results}
 
 Results from the search appears here as potential duplicates are found.
 
 \includegraphics{personsearchresults}
 
-
 \section{Options\index{options}}
 
 \includegraphics{options1}
-
 
 \subsection{Language\index{language}}
 
@@ -2614,17 +2415,14 @@ The date format can be any format specified by a text string using
 dd for days, MM for months, and yyyy for year, for example: ``yyyyMMdd''
 (the default), ``dd/MM/yyyy'', or ``MM.dd.yyyy''.
 
-
 \subsection{Look \& Feel\index{look & feel@look \& feel}}
 
 You need to restart your CanReg5 system if you change font style or
 font size.
 
-
 \subsubsection{Change font}
 
 Set the font size to sizes from Small to Big.
-
 
 \subsubsection{Change font style}
 
@@ -2635,14 +2433,11 @@ section on your Windows Control Panel.) You can use this if the default
 font doesn't contain all the characters you would like to use or if
 you just prefer the look of another font.
 
-
 \subsubsection{Show only outline}
 
-The \textquotedblleft Show only outline\index{only outline} of windows
-while moving\textquotedblright{} will increase the performance of
-the user interface of CanReg. Tick this if moving windows around the
-screen is slow.
-
+The “Show only outline\index{only outline} of windows while moving”
+will increase the performance of the user interface of CanReg. Tick
+this if moving windows around the screen is slow.
 
 \subsubsection{{[}NEW{]} Data Entry Version}
 
@@ -2654,10 +2449,8 @@ form and the original version.
 \begin{centering}
 \includegraphics[width=0.6\textwidth]{DataEntryNew}
 \par\end{centering}
-
 \caption{\label{fig:data-entry-new}The new data entry form}
 \end{figure}
-
 \par\end{center}
 
 \begin{center}
@@ -2665,25 +2458,20 @@ form and the original version.
 \begin{centering}
 \includegraphics[width=0.6\columnwidth]{DataEntryOriginal}
 \par\end{centering}
-
 \caption{\label{fig:data-entry-original}The original data entry form}
 \end{figure}
-
 \par\end{center}
-
 
 \subsubsection{{[}NEW{]}Show sources to the right side of tumours}
 
 This relates to the new version of the data entry form. Sources can
 either be shown below or to the right of the tumours.
 
-
 \subsection{Periodic backup\index{backup}}
 
 \includegraphics{options12}
 
 Reminder backup options
-
 
 \subsection{CanReg version\index{CanReg version}}
 
@@ -2694,7 +2482,6 @@ of CanReg is installed. This will access the internet to find the
 most recent version. You can click ``Download latest version'' to
 get the latest universal version of CanReg (The zip-file.) or click
 ``View Changelog'' to see what is new in CanReg.
-
 
 \subsection{Paths}
 
@@ -2709,10 +2496,8 @@ Here you can set the paths to the various helper applications of CanReg.
 
 \part{Appendix}
 
-
 \chapter{Frequently asked questions\index{frequently asked questions@frequently\textsf{\textbf{ }}asked\textsf{\textbf{ }}questions}
 (FAQ\index{FAQ})}
-
 
 \section{Server\index{server} }
 \begin{description}
@@ -2749,7 +2534,7 @@ remote registration\index{remote registration}?
 CanReg5 is designed for local networks, yes, but traffic is
 over standard TCP/IP\index{TCP/IP} so you can tunnel\index{tunnel}
 this through secure channels (SSH\index{SSH}/VPN\index{VPN} etc)
-to do remote registration. (This is not \textquotedbl{}officially\textquotedbl{}
+to do remote registration. (This is not \textquotedbl officially\textquotedbl{}
 supported, as we haven't been able to test it enough (yet).) 
 \par\end{flushleft}
 \end{description}
@@ -2791,8 +2576,8 @@ ones from canreg4.
 \item [{A:}] \begin{flushleft}
 To clear the previous data\index{clear the previous data}
 from CanReg5 you need to delete the database files. These can be found
-in your user folder\index{user folder} under .CanRegServer\textbackslash{}Database
-(On my machine it is under C:\textbackslash{}Documents and Settings\textbackslash{}ervikm\textbackslash{}.CanRegServer\textbackslash{}Database
+in your user folder\index{user folder} under .CanRegServer\textbackslash Database
+(On my machine it is under C:\textbackslash Documents and Settings\textbackslash ervikm\textbackslash .CanRegServer\textbackslash Database
 ). Please note that this deletes the dictionaries and population data
 as well, so you might want to export those prior to deleting this.
 Then you can relaunch CanReg and the server and the empty database
@@ -2815,7 +2600,7 @@ dictionary corresponding to your system or do necessary modifications.
 \par\end{flushleft}
 \end{description}
 
-\section{\label{sub:Tables}Analysis\index{analysis}/tables\index{tables}}
+\section{\label{subsec:Tables}Analysis\index{analysis}/tables\index{tables}}
 \begin{description}
 \item [{Q:}] \begin{flushleft}
 What program can I use to view the post script files\index{postscript files}
@@ -2869,7 +2654,7 @@ brakes down and see if you have some unclosed quotes in any of the
 fields. This will brake down the import as CanReg allows qoutes around
 strings that contain the separating character, but not unclosed quotes.\\
 Another possibility is that your Java Runtime Environment has been
-set up with not enough memory. To address this please see \vref{sub:Issues-with-memory}.
+set up with not enough memory. To address this please see \vref{subsec:Issues-with-memory}.
 \par\end{flushleft}
 \end{description}
 
@@ -2952,7 +2737,6 @@ choose to collect both.
 
 \caption{\label{fig:Minimum-variables.}Minimum variables.}
 \end{figure}
-
 \par\end{flushleft}
 \item [{Q:}] \begin{flushleft}
 In what database table\index{database table} should the variable
@@ -3007,16 +2791,14 @@ See if that helps. If not write a bug report to canreg@iarc.fr.\newpage{}
 
 \chapter{Known issues}
 
-
 \section{Known bugs\index{bugs} (errors\index{errors})}
 \begin{itemize}
 \item \begin{flushleft}
 Using a population dataset with a cut off age at less than 85 while
 building some R-tables leads to errors in the last age group in the
 tables.
-\par\end{flushleft}
 
-\begin{itemize}
+\par\end{flushleft}\begin{itemize}
 \item \begin{flushleft}
 Severity: Shouldn't cause loss of data 
 \par\end{flushleft}
@@ -3041,9 +2823,8 @@ Age can not yet be calculated automatically.
 \item \begin{flushleft}
 The result set in the browser is sometimes very slow to scroll around
 in. 
-\par\end{flushleft}
 
-\begin{itemize}
+\par\end{flushleft}\begin{itemize}
 \item \begin{flushleft}
 Solution: Use filters to minimize the number of records shown at any
 time or only browse the ``Patient'' or the ``Tumour'' table. 
@@ -3067,12 +2848,11 @@ Category: Database/Browse
 Step}
 
 (For a video demonstration of this process, please see webinar 3 -
-available from the GICR website under ``Resources''. (\href{http://gicr.iarc.fr/en/resources.php\#TRAINING}{http://gicr.iarc.fr/en/resources.php\#{}TRAINING}))
+available from the GICR website under ``Resources''. (\href{http://gicr.iarc.fr/en/resources.php\#TRAINING}{http://gicr.iarc.fr/en/resources.php\#TRAINING}))
 
 Install CanReg5. (See\vref{sec:Installing-and-running}) Start CanReg5
 and it presents you the Welcome window. Do NOT click anything here
 just yet.
-
 
 \section{Step 1 - Import the variable definitions\index{import variable definitions}\index{variable definitions}
 of CanReg4 to CanReg5}
@@ -3080,20 +2860,19 @@ of CanReg4 to CanReg5}
 The first step is to import the variables of CanReg4 to CanReg5 -
 the system definition of CanReg4.)
 \begin{enumerate}
-\item Go to \textquotedblleft Tool\textquotedblright{} in CanReg5 menu and
-click \textquotedblleft Convert system definition\textquotedblright . 
+\item Go to “Tool” in CanReg5 menu and click “Convert system definition”.
 
 \begin{enumerate}
 \item \includegraphics[width=0.9\linewidth]{ToolsConvertCR4Menu}
 \end{enumerate}
-\item Do \textquotedblleft Browse\textquotedblright{} to find your CanReg4
-system definition file. (This is a file located in the folder \textbackslash{}CR4SHARE\textbackslash{}CANREG4\textbackslash{}CR4-SYST\textbackslash{}
+\item Do “Browse” to find your CanReg4 system definition file. (This is
+a file located in the folder \textbackslash CR4SHARE\textbackslash CANREG4\textbackslash CR4-SYST\textbackslash{}
 followed by your 3 letter registry code i.e. TRN whose name is ending
 in .DEF (i.e. CR4-TRN.DEF).) 
-\item Select your CanReg4 file and double click it or click \textquotedblleft Open\textquotedblright . 
-\item Click \textquotedblleft Convert\textquotedblright . 
+\item Select your CanReg4 file and double click it or click “Open”. 
+\item Click “Convert”. 
 \item The program will then ask you if you want to add this server to your
-favourites. Click \textquotedblleft Yes\textquotedblright{} here.
+favourites. Click “Yes” here.
 
 \begin{enumerate}
 \item \includegraphics[scale=0.5]{5}
@@ -3102,7 +2881,7 @@ favourites. Click \textquotedblleft Yes\textquotedblright{} here.
 go from a tumour based database structure with only one big table
 with all the tumour and patient related information to a structure
 with both a table for tumour related information, one for patient
-related information and yet another one for source information\eqref{sub:A-short-introduction}
+related information and yet another one for source information\eqref{subsec:A-short-introduction}
 we need to specify what variable goes in what table of CanReg5. We
 recommend putting the unique patient related information (name, date
 of birth and follow-up variables) in the patient table, source information
@@ -3114,35 +2893,33 @@ but please go through one by one the variables and decide.
 \begin{enumerate}
 \item \includegraphics{chooseTableForVariables}
 \end{enumerate}
-\item Click \textquotedblleft Save\textquotedblright . You have now created
-an XML\index{XML} file that describes your CanReg5 system. 
+\item Click “Save”. You have now created an XML\index{XML} file that describes
+your CanReg5 system. 
 \item Optional: Before you proceed to the next step and launch the server
 you can, if you want(!), edit this this XML file you have created.
-Either using the built in grapical tool in CanReg5 \eqref{sub:Setting-up-or-modifying}
+Either using the built in grapical tool in CanReg5 \eqref{subsec:Setting-up-or-modifying}
 or manually by opening it in a text editor or a dedicated XML editor.
 The file is located in your user folder under .CanRegServer. (On my
-machine, for example, running Windows XP it is under: C:\textbackslash{}Documents
-and Settings\textbackslash{}morten\textbackslash{}.CanRegServer\textbackslash{}System.)
-\item Click \textquotedblleft Login\textquotedblright .
+machine, for example, running Windows XP it is under: C:\textbackslash Documents
+and Settings\textbackslash morten\textbackslash .CanRegServer\textbackslash System.)
+\item Click “Login”.
 \item Launch the CanReg server 
 
 \begin{enumerate}
-\item Click \textquotedblleft Settings\textquotedblright{} 
-\item Click \textquotedblleft Launch Server\textquotedblright . (If you
-get a java firewall query, please confirm that it is OK that java
-can comunicate through you firewall by clicking \textquotedblleft OK\textquotedblright{}
-or \textquotedblleft Yes\textquotedblright .) If this is the first
-time you launch the server on this machine it will automatically create
-the database needed for CanReg5. 
+\item Click “Settings” 
+\item Click “Launch Server”. (If you get a java firewall query, please confirm
+that it is OK that java can comunicate through you firewall by clicking
+“OK” or “Yes”.) If this is the first time you launch the server on
+this machine it will automatically create the database needed for
+CanReg5. 
 \end{enumerate}
 \item Now it is time to log into the system. 
 
 \begin{enumerate}
-\item Click \textquotedblleft System\textquotedblright{} 
-\item Enter username: \textquotedblleft morten\textquotedblright{} 
-\item Enter password: \textquotedblleft ervik\textquotedblright{} 
-\item Click \textquotedblleft Login\textquotedblright . The system will
-now log you onto your CanReg server. 
+\item Click “System” 
+\item Enter username: “morten” 
+\item Enter password: “ervik” 
+\item Click “Login”. The system will now log you onto your CanReg server. 
 \end{enumerate}
 \end{enumerate}
 
@@ -3155,31 +2932,27 @@ the description of what variables exist in you canreg4 database.)
 This is demonstrated in the video called 06-import-dictionary.avi. 
 \begin{enumerate}
 \item If you are migrating from CanReg4 make sure to export the most updated
-dictionary from your CanReg4 system. (In CanReg4: \textquotedblleft Data
-Entry\textquotedblright , \textquotedblleft Dictionary\textquotedblright ,
-\textquotedblleft Export dictionary to text file\textquotedblright )
-\item Go to \textquotedblleft File\textquotedblright , \textquotedblleft Data
-Entry\textquotedblright , \textquotedblleft Edit dictionary\textquotedblright{}
-in CanReg5 
+dictionary from your CanReg4 system. (In CanReg4: “Data Entry”, “Dictionary”,
+“Export dictionary to text file”)
+\item Go to “File”, “Data Entry”, “Edit dictionary” in CanReg5 
 
 \begin{enumerate}
 \item \includegraphics[clip]{dictionaryMenu}
 \end{enumerate}
-\item Click on \textquotedblleft Import complete dictionary from file\textquotedblright . 
+\item Click on “Import complete dictionary from file”. 
 \item Browse and select the dictionary from you CanReg4 work folder or elsewhere. 
 \item If CanReg does not detect the encoding of the file automatically,
 please select it from the drop down list. 
 \item Click ``Preview'' to take a look at the dictionary. (Please note
 that only the first hundred lines or so are shown.)
-\item Tick \textquotedblleft CanReg4 Format\textquotedblright{} if you are
-migrating, leave unticked if you are using the demo system or otherwise
-are importing a CanReg5 formatted dictionary. 
+\item Tick “CanReg4 Format” if you are migrating, leave unticked if you
+are using the demo system or otherwise are importing a CanReg5 formatted
+dictionary. 
 \item Click ``Import''. This might take some time. Please note the bar
 in the lower right indicating that the program is busy. 
 \item Afterwards you will receive a message of success imported. Click OK. 
-\item Go back to \textquotedblleft File\textquotedblright , \textquotedblleft Data
-Entry\textquotedblright , \textquotedblleft Edit dictionary\textquotedblright{}
-and verify that the dictionaries have been imported. 
+\item Go back to “File”, “Data Entry”, “Edit dictionary” and verify that
+the dictionaries have been imported. 
 \end{enumerate}
 
 \section{Step 3 - Import the data\index{import data from CanReg4}\index{import data}
@@ -3188,61 +2961,51 @@ from your CanReg4\index{CanReg4} installation}
 The next step is to import the \emph{data} from CanReg4 to CanReg5.
 This is demoed in the video called 07-import-data.avi.
 \begin{enumerate}
-\item Make sure you export the most updated data from your CanReg4 system. 
+\item Make sure you export the most updated data from your CanReg4 system.
 
 \begin{enumerate}
-\item In CanReg4: \textquotedblleft Analysis\textquotedblright , \textquotedblleft Export
-data\textquotedblright{} 
-\item Tick \textquotedblleft Export all variables\textquotedblright . 
+\item In CanReg4: “Analysis”, “Export data” 
+\item Tick “Export all variables”. 
 \item Choose variables names short 
-\item Under \textquotedblleft Export File options\textquotedblright{} choose
-\textquotedblleft Comma separated variables\textquotedblright{} 
-\item Untick \textquotedblleft Format date\textquotedblright{} 
-\item Untick \textquotedblleft Correct Unknown\textquotedblright{} 
-\item Click \textquotedblleft write data to file\textquotedblright{} and
-pick a file name that you can find back easily in CanReg5. For example
-on the desktop. Click \textquotedblleft save\textquotedblright . 
+\item Under “Export File options” choose “Comma separated variables” 
+\item Untick “Format date” 
+\item Untick “Correct Unknown” 
+\item Click “write data to file” and pick a file name that you can find
+back easily in CanReg5. For example on the desktop. Click “save”. 
 \item Take a look at the data you have now exported and close CanReg4.
 \item Take a note of the number of records. (This should later match the
 number of \emph{Tumour records} in your CanReg5 system.)
 \end{enumerate}
-\item Back in CanReg5 do \textquotedblleft File\textquotedblright , \textquotedblleft Data
-Entry\textquotedblright{} and \textquotedblleft Import Data\textquotedblright .
-\item Click \textquotedblleft Browse\textquotedblright{} and locate the
-file from step A. Select it and click \textquotedblleft Open\textquotedblright .
-You can if you want preview the file to see that you picked the right
-one and that the file looks OK. If for example Arabic names are garbled
-you should try to choose another \textquotedblleft File encoding\textquotedblright{}
-(Default for Arabic text is ISO-8859-6).
-\item Set \textquotedblleft Separating character\textquotedblright{} to
-Comma. (Or whatever separating character your file has.) 
+\item Back in CanReg5 do “File”, “Data Entry” and “Import Data”.
+\item Click “Browse” and locate the file from step A. Select it and click
+“Open”. You can if you want preview the file to see that you picked
+the right one and that the file looks OK. If for example Arabic names
+are garbled you should try to choose another “File encoding” (Default
+for Arabic text is ISO-8859-6).
+\item Set “Separating character” to Comma. (Or whatever separating character
+your file has.) 
 \item Click Preview to see that the data looks OK. 
-\item Click \textquotedblleft Next\textquotedblright{} (or select the tab
-\textquotedblleft Associate Variables\textquotedblright ) 
+\item Click “Next” (or select the tab “Associate Variables”) 
 \item This lets you associate the variables in the file to import with the
 variables in the database. CanReg5 will find most of these associations
 by itself, but you should revise them to see if they look OK. Look
 for variable names in bold, as they are the one that are not assigned
 at all. 
-\item Click \textquotedblleft Next\textquotedblright{} (or select the tab
-\textquotedblleft Import File\textquotedblright ) 
-\item Click \textquotedblleft Import\textquotedblright{} (leave everything
-as by default \textendash{} the import function only works on empty
-CanReg databases as per now\dots ) 
-\item Let CanReg5 import the data (this might take a while) and click \textquotedblleft OK\textquotedblright . 
-\item Click \textquotedblleft Browse/Edit\textquotedblright{} and \textquotedblleft Refresh
-Table\textquotedblright{} to see that the data has arrived well. \emph{Verify
-that you have the same number of tumours in the tumour table as in
-CanReg4.} Double click a record to take a look at it.\newpage{}
+\item Click “Next” (or select the tab “Import File”) 
+\item Click “Import” (leave everything as by default – the import function
+only works on empty CanReg databases as per now…) 
+\item Let CanReg5 import the data (this might take a while) and click “OK”. 
+\item Click “Browse/Edit” and “Refresh Table” to see that the data has arrived
+well. \emph{Verify that you have the same number of tumours in the
+tumour table as in CanReg4.} Double click a record to take a look
+at it.\newpage{}
 \end{enumerate}
 
 \chapter{Advanced database management}
 
 This appendix covers some advanced database management topics
 
-
 \section{The System definition file (the XML file)}
-
 
 \subsection{Advanced options in the CanReg5 person search}
 
@@ -3251,7 +3014,6 @@ definition file to improve the detection of duplicate patients (in
 addition to \emph{weight}), namely \emph{discriminatory power, reliability},
 and \emph{presence}.
 
-
 \subsubsection{Weight}
 
 The weight of the link. These can add up to more/less than 100 (but
@@ -3259,13 +3021,11 @@ will then be normalized to 100). The weight is the score that the
 link will get if there is a 100\% match on that variable. Some algorithms
 also return numbers between 0 and a 100, and if so, the score is adjusted.
 
-
 \subsubsection{Disciminatory power}
 
 Does nothing at the moment!
 
-(Discriminatory Power calculator: \href{http://insilico.ehu.es/mini_tools/discriminatory_power/index.php}{http://insilico.ehu.es/mini\_{}tools/discriminatory\_{}power/index.php})
-
+(Discriminatory Power calculator: \href{http://insilico.ehu.es/mini_tools/discriminatory_power/index.php}{http://insilico.ehu.es/mini\_tools/discriminatory\_power/index.php})
 
 \subsubsection{Reliablity}
 
@@ -3273,19 +3033,16 @@ Does nothing at the moment!
 
 How reliable is the data. Scale from 0 to 1.
 
-
 \subsubsection{Prescence}
 
 Does nothing at the moment!
 
 How often is the variable filled. Scale from 0 to 1.
 
-
 \subsubsection{Threshold}
 
 Set between 0 and 100. Cases with higher match percentage than this
 shows up in person search.
-
 
 \chapter{Technical details on the Table Builder}
 
@@ -3293,7 +3050,6 @@ The graphical tool to build tables in CanReg5, the Table Builder,
 can be modified to suit particular needs of users via configuration
 files. CanReg comes with some default ones, but these can be added
 to as the user sees fit.
-
 
 \section{Configuration files}
 
@@ -3306,16 +3062,12 @@ folder. For each line in the Table Builder you will find a corresponding
 \begin{centering}
 \includegraphics{41}
 \par\end{centering}
-
 \caption{\label{fig:The-Table-Builder}The Table Builder}
-
 
 \end{figure}
 
-
 The user can change or add new configuration files and they will appear
 in this list. 
-
 
 \subsection{The file structure and parameters}
 
@@ -3327,24 +3079,20 @@ one entry witch is the label, or name, of the table. This is what
 will be displayed in the list in the table builder. Let's go through
 the standard groups one by one:
 
-
 \subsubsection{table\_label}
 
 The name or label of the table.
-
 
 \subsubsection{table\_description}
 
 The description of the table - more information that the user will
 see when he selects the table in the list.
 
-
 \subsubsection{table\_engine}
 
 This is the name of the engine that will produce the table when the
 user click \emph{Generate }in CanReg5\emph{.} More on this in the
 next sub section.
-
 
 \subsubsection{engine\_parameters}
 
@@ -3353,7 +3101,6 @@ the engine understand. For example a code saying ``noC44'' to tell
 the engine that this should be counts exluding skin cancer - if the
 engine supports that parameter.
 
-
 \subsubsection{preview\_image}
 
 This is the name of a file found in one of the previews folders (within
@@ -3361,23 +3108,21 @@ the ``conf/tables'' folders mentioned above) that will displayed
 in CanReg when the user has selected this table. The user provided
 previews override the system provided ones.
 
-
 \subsubsection{ICD\_groups\_labels}
 
 Many tables also need a list of ICD group labels to display. This
 is just a list of labels with the 3 first characters detailing if
 this should be displayed for male/female cases. For example the line:
 \begin{lyxcode}
-\textquotedbl{}11~Lip\textquotedbl{}
+\textquotedbl 11~Lip\textquotedbl{}
 \end{lyxcode}
 Means that the name of this site/group of sites is Lip and it should
 be displayed for both male and female.
 \begin{lyxcode}
-\textquotedbl{}01~Ovary\textquotedbl{}
+\textquotedbl 01~Ovary\textquotedbl{}
 \end{lyxcode}
 on the other hand means that this should only be displayed for female
 cases.
-
 
 \subsubsection{ICD10\_groups (or ICD\_groups)}
 
@@ -3391,18 +3136,18 @@ your own groups by following the following rules:
 \item For a single site enter the ICD10 code for that site, i.e. ``C09''.
 \item For a single subsite enter the ICD10 code for that site, i.e. ``C000''.
 \item For a range enter it as <site>-<site without the leading 'C'>, i.e.
-\textquotedbl{}C30-31\textquotedbl{}.
+\textquotedbl C30-31\textquotedbl .
 \item For a series of sites enter them like <site or range>, <site or range>
-etc., i.e. \textquotedbl{}C47,C49\textquotedbl{} or \textquotedbl{}C82-85,C96\textquotedbl{}
+etc., i.e. \textquotedbl C47,C49\textquotedbl{} or \textquotedbl C82-85,C96\textquotedbl{}
 \item There are some special sites that can be defined by using their standard
 names. These can not be part of any range or series:
 
 \begin{enumerate}
-\item \textquotedbl{}MPD\textquotedbl{} - Myeloproliferative disorders
-\item \textquotedbl{}MDS\textquotedbl{} - Myelodysplastic syndromes
-\item \textquotedbl{}O\&U\textquotedbl{} - Other and unspecified
-\item \textquotedbl{}ALL\textquotedbl{} - All sites
-\item \textquotedbl{}ALLbC44\textquotedbl{} - All sites but C44
+\item \textquotedbl MPD\textquotedbl{} - Myeloproliferative disorders
+\item \textquotedbl MDS\textquotedbl{} - Myelodysplastic syndromes
+\item \textquotedbl O\&U\textquotedbl{} - Other and unspecified
+\item \textquotedbl ALL\textquotedbl{} - All sites
+\item \textquotedbl ALLbC44\textquotedbl{} - All sites but C44
 \end{enumerate}
 \end{enumerate}
 
@@ -3416,14 +3161,13 @@ tables. Their names:
 \item ``populationpyramids''
 \item ``top10piechart''
 \item ``r-engine''
-\item \textquotedbl{}r-engine-grouped\textquotedbl{}
+\item \textquotedbl r-engine-grouped\textquotedbl{}
 \end{itemize}
 
-\subsection{Incidence Rates Table(``incidencerates'')}
+\subsection{Incidence Rates Table(\textquotedblleft incidencerates\textquotedblright )}
 
 This is the engine that produces a A4 ready to print overview of number
 of cases per 100.000 per site in the database. (See figure \vref{fig:Incidence-Rates-per}.)
-
 
 \subsubsection{line\_breaks}
 
@@ -3432,68 +3176,67 @@ line\_breaks. It is a list of pairs of numbers detailing where to
 put grey boxes behind the numbers to make them easier to read. For
 example
 \begin{lyxcode}
-\textquotedbl{}8,9\textquotedbl{}
+\textquotedbl 8,9\textquotedbl{}
 
-\textquotedbl{}17,-1\textquotedbl{}
+\textquotedbl 17,-1\textquotedbl{}
 
-\textquotedbl{}21,1\textquotedbl{}
+\textquotedbl 21,1\textquotedbl{}
 \end{lyxcode}
 This means that at line 8 we start a 9 line big box. Stopping at line
 17. Picks up again on line 21 for just one line.
 
-
-\subsection{Number of Cases (``number of cases'')}
+\subsection{Number of Cases (\textquotedblleft number of cases\textquotedblright )}
 
 This is the engine that produces a A4 ready to print overview of number
 of cases per site in the database.
-
 
 \subsubsection{line\_breaks}
 
 This has the same special parameter line\_breaks as the ``incidencerates''
 engine.
 
-
-\subsection{Population Pyramids (``populationpyramids'')}
+\subsection{Population Pyramids (\textquotedblleft populationpyramids\textquotedblright )}
 
 This is the simplest configuration file so far as it looks like this:
 \begin{lyxcode}
-table\_label~\{
+table\_label~\{~
+
 \begin{lyxcode}
-\textquotedbl{}Population~Pyramids\textquotedbl{}~
+\textquotedbl Population~Pyramids\textquotedbl ~
 
 \}
 \end{lyxcode}
-table\_description~\{
+table\_description~\{~
+
 \begin{lyxcode}
-\textquotedbl{}Population~Pyramids\textquotedbl{}~
+\textquotedbl Population~Pyramids\textquotedbl ~
 
 \}
 \end{lyxcode}
-table\_engine~\{
+table\_engine~\{~
+
 \begin{lyxcode}
-\textquotedbl{}populationpyramids\textquotedbl{}~
+\textquotedbl populationpyramids\textquotedbl ~
 
 \}
 \end{lyxcode}
-preview\_image~\{
+preview\_image~\{~
+
 \begin{lyxcode}
-\textquotedbl{}populationpyramid.png\textquotedbl{}~
+\textquotedbl populationpyramid.png\textquotedbl ~
 
 \}~
 \end{lyxcode}
 \end{lyxcode}
 
-\subsection{Top 10 pie chart (``top10piechart'')}
+\subsection{Top 10 pie chart (\textquotedblleft top10piechart\textquotedblright )}
 
 \begin{figure}[h]
 \includegraphics[width=1\linewidth]{pieChart}
 
 \caption{\label{fig:Pie-Chart}Pie Chart}
 
-
 \end{figure}
-
 
 Here you place your ``candidate'' groups in the ICD10\_groups and
 ICD\_groups\_labels in the .conf file and the engine produses a pie
@@ -3503,15 +3246,13 @@ you have provided in either PNGs or SVGs. (See\vref{fig:Pie-Chart})
 If you pass ``noC44'' as one of the engine parameters you get tables
 excluding skin cancer.
 
-
-\subsection{The R engines (``r-engine'' and ``r-engine-grouped'')}
+\subsection{The R engines (\textquotedblleft r-engine\textquotedblright{} and
+\textquotedblleft r-engine-grouped\textquotedblright )}
 
 You can call R programs directly from within the TableBuilder of CanReg5.
-This is detailed in \vref{sub:CanReg-and-R}.
+This is detailed in \vref{subsec:CanReg-and-R}.
 
-
-\section{\label{sub:CanReg-and-R}CanReg and R\index{R}}
-
+\section{\label{subsec:CanReg-and-R}CanReg and R\index{R}}
 
 \subsection{Configuration file parameters}
 
@@ -3519,27 +3260,26 @@ Like with the other Table Builder engines of CanReg you can configure
 the R engines as well using configuration files. Specific to the R
 engines are the following parameters:
 
-
 \subsubsection{r\_scripts}
 
 This can be one or many R scripts that gets called by CanReg to produce
 tables. (See the listing on page \pageref{A-sample-main} for a skeleton
 script.)
 
-
 \subsubsection{file\_types\_generated}
 
 This details what filetypes this R script can generate. For example:
 \begin{lyxcode}
-file\_types\_generated~\{~
+file\_types\_generated~\{~~
+
 \begin{lyxcode}
-\textquotedbl{}pdf\textquotedbl{}~
+\textquotedbl pdf\textquotedbl ~
 
-\textquotedbl{}ps\textquotedbl{}~
+\textquotedbl ps\textquotedbl ~
 
-\textquotedbl{}svg\textquotedbl{}
+\textquotedbl svg\textquotedbl{}
 
-\textquotedbl{}html\textquotedbl{}
+\textquotedbl html\textquotedbl{}
 
 \}
 \end{lyxcode}
@@ -3586,7 +3326,6 @@ cat(generatedFilenames)
 \lstset{backgroundcolor=\color{white}}
 \lstset{language= , caption= }
 
-
 \subsection{Arguments}
 
 When calling the R scripts CanReg provides the following arguments:
@@ -3621,23 +3360,22 @@ out in a columns and b rows.
 \end{itemize}
 Example call: 
 \begin{lyxcode}
-\textquotedbl{}C:\textbackslash{}Program~Files\textbackslash{}R\textbackslash{}R-2.12.2\textbackslash{}bin\textbackslash{}R.exe\textquotedbl{}~
+\textquotedbl C:\textbackslash Program~Files\textbackslash R\textbackslash R-2.12.2\textbackslash bin\textbackslash R.exe\textquotedbl ~
 
 -{}-slave~-{}-file=
 
-\textquotedbl{}C:\textbackslash{}Users\textbackslash{}ervikm\textbackslash{}Desktop\textbackslash{}CanReg\textbackslash{}.\textbackslash{}conf\textbackslash{}tables\textbackslash{}r\textbackslash{}test.r\textquotedbl{}
+\textquotedbl C:\textbackslash Users\textbackslash ervikm\textbackslash Desktop\textbackslash CanReg\textbackslash .\textbackslash conf\textbackslash tables\textbackslash r\textbackslash test.r\textquotedbl{}
 
--{}-args~-ft=svg~-out=\textquotedbl{}C:\textbackslash{}Documents~and~Settings\textbackslash{}ervikm\textbackslash{}Desktop\textbackslash{}test\textquotedbl{}
+-{}-args~-ft=svg~-out=\textquotedbl C:\textbackslash Documents~and~Settings\textbackslash ervikm\textbackslash Desktop\textbackslash test\textquotedbl{}
 
--pop=\textquotedbl{}C:\textbackslash{}Users\textbackslash{}ervikm\textbackslash{}Temp\textbackslash{}pop4834689295162083243.tsv\textquotedbl{}
+-pop=\textquotedbl C:\textbackslash Users\textbackslash ervikm\textbackslash Temp\textbackslash pop4834689295162083243.tsv\textquotedbl{}
 
--inc=\textquotedbl{}C:\textbackslash{}Users\textbackslash{}ervikm\textbackslash{}Temp\textbackslash{}inc4297000362541616146.tsv\textquotedbl{}
+-inc=\textquotedbl C:\textbackslash Users\textbackslash ervikm\textbackslash Temp\textbackslash inc4297000362541616146.tsv\textquotedbl{}
 
 -onePage=3x4~
 \end{lyxcode}
 (The user never sees this, but it can be useful to keep this in mind
 when writing your own R scripts.)
-
 
 \subsection{Population file }
 
@@ -3656,20 +3394,20 @@ columns:
 CanReg writes an incidence file to a temporary file with a structure
 depending on the script and the engine.
 
-
 \subsubsection{r-engine}
 
 If you use the r-engine you can specify the columns you need from
 CanReg with the variables\_needed configuration file parameter. For
 example:
 \begin{lyxcode}
-variables\_needed~\{~
+variables\_needed~\{~~
+
 \begin{lyxcode}
-\textquotedbl{}Age\textquotedbl{}~
+\textquotedbl Age\textquotedbl ~
 
-\textquotedbl{}ICD10\textquotedbl{}~
+\textquotedbl ICD10\textquotedbl ~
 
-\textquotedbl{}Sex\textquotedbl{}~
+\textquotedbl Sex\textquotedbl ~
 
 \}
 \end{lyxcode}
@@ -3706,7 +3444,7 @@ To be able to generate SVG files in the R programs you need to install
 a package called ``RSvgDevice'' from within R. To install this package
 you need to lauch R and type in the following command.
 \begin{lyxcode}
-install.packages(\textquotedbl{}RSvgDevice\textquotedbl{})
+install.packages(\textquotedbl RSvgDevice\textquotedbl )
 \end{lyxcode}
 Then select a country (mirror) close to you and click OK. This will
 install the package and it is ready for R to use. You can now close
@@ -3719,26 +3457,22 @@ are connected to the internet.)
 
 \newpage{}
 
-
 \chapter{Third party tools}
 
 Here's a list of useful free third-party tools to use with CanReg5.
-
 
 \section{Java Runtime Environment}
 
 To run CanReg at all you need a Java Runtime Environment\index{Java Runtime Environment}.
 You can get it from \href{http://java.com/en/download/manual.jsp}{http://java.com/en/download/manual.jsp}.
 
-
-\subsection{\label{sub:Issues-with-memory}Issues with memory}
+\subsection{\label{subsec:Issues-with-memory}Issues with memory}
 
 By default most JVM implementations limit themselves to using a small
 amount of RAM (eg: 64MB), even if your computer has a lot of system
 RAM (eg: 1GB). This can lead to out of memory conditions, even if
 your computer has lots of free memory. To configure your JVM to use
 more memory, complete the following steps:
-
 
 \subsubsection{On Windows:}
 
@@ -3752,7 +3486,6 @@ potential web browsers open) for these changes to take effect.
 
 These settings require 256MB of contiguous memory be available. You
 may need to restart your computer before these settings will work.
-
 
 \subsubsection{On Solaris/Linux:}
 \begin{lyxcode}
@@ -3770,11 +3503,9 @@ This will configure your JVM to use a fixed 256MB of RAM.
 If you have multiple versions of java on same machine, please perform
 the above operations for all versions. 
 
-
 \section{Analysis}
 
-
-\subsection{\label{sub:R}R}
+\subsection{\label{subsec:R}R}
 
 R is a free software environment for statistical computing and graphics.
 It compiles and runs on a wide variety of UNIX platforms, Windows
@@ -3790,7 +3521,6 @@ and then click ``Download R...''. The latest as of the 18th of October
 2016 is version 3.3.1 and you can get more information on the installation
 procedure here: \url{http://cran.r-project.org/src/base/NEWS.html}.
 
-
 \subsection{Epi Info}
 
 From the Epi Info\index{Epi Info} website: 
@@ -3799,16 +3529,15 @@ From the Epi Info\index{Epi Info} website:
 lacking a background in information technology often have a need for
 simple tools that allow the rapid creation of data collection instruments
 and data analysis, visualization, and reporting using epidemiologic
-methods. Epi Info\texttrademark , a suite of lightweight software
-tools, delivers core ad-hoc epidemiologic functionality without the
-complexity or expense of large, enterprise applications.''
+methods. Epi Info™, a suite of lightweight software tools, delivers
+core ad-hoc epidemiologic functionality without the complexity or
+expense of large, enterprise applications.''
 \end{quote}
 More information about it on: \href{http://wwwn.cdc.gov/epiinfo/}{http://wwwn.cdc.gov/epiinfo/}
 
 The newest version of EpiInfo is windows based, but CDC also provides
 a DOS based version, Epi Info 6. (Available here: \url{http://wwwn.cdc.gov/epiinfo/html/ei6_downloads.htm}.
 )
-
 
 \subsection{SEER{*}Stat and SEER{*}Prep}
 
@@ -3821,8 +3550,7 @@ cancer records and to produce statistics for studying the impact of
 cancer on a population.''
 \end{quote}
 To get your data from CanReg to SEER{*}Stat you need to go via SEER{*}Prep\index{SEER{*}Prep}.
-(See \vref{sub:CanReg-and-SEER*stat} for more information.)
-
+(See \vref{subsec:CanReg-and-SEER*stat} for more information.)
 
 \subsection{PSPP}
 
@@ -3830,15 +3558,12 @@ To get your data from CanReg to SEER{*}Stat you need to go via SEER{*}Prep\index
 is a Free replacement for the proprietary program SPSS, and appears
 very similar to it with a few exceptions.'' Available from \href{http://www.gnu.org/software/pspp/}{http://www.gnu.org/software/pspp/}.
 
-
 \subsection{SOFA}
 
 SOFA - Statistics Open For All The user-friendly, open-source statistics,
 analysis, and reporting package. Available from \href{http://www.sofastatistics.com/home.php}{http://www.sofastatistics.com/home.php}.
 
-
 \section{Data cleaning and record linkage\index{data cleaning}}
-
 
 \subsection{Open Refine\index{Google Refine}}
 
@@ -3849,14 +3574,12 @@ your data is kept locally on your machine.
 
 More information about it on: \href{https://github.com/OpenRefine}{https://github.com/OpenRefine}
 
-
 \subsection{Talend Open Studio\index{Talend Open Studio}}
 
 Talend Open Studio is a more heavy duty package to clean and standardise
 your data before importing it into CanReg. It is free and open source. 
 
 More information about it on: \href{http://www.talend.com/}{http://www.talend.com/}
-
 
 \subsection{FRIL: Fine-Grained Records Integration and Linkage Tool}
 
@@ -3870,7 +3593,6 @@ performance and accuracy. ``
 \end{quote}
 More information about it on: \href{http://fril.sourceforge.net/index.html}{http://fril.sourceforge.net/index.html}
 
-
 \subsection{LinkPlus}
 
 From the CDC website:
@@ -3879,8 +3601,7 @@ From the CDC website:
 CDC's Division of Cancer Prevention and Control in support of CDC's
 National Program of Cancer Registries (NPCR). Link Plus is a record
 linkage tool for cancer registries. It is an easy-to-use, standalone
-application for Microsoft\textregistered{} Windows\textregistered{}
-that can run in two modes\textemdash{}
+application for Microsoft® Windows® that can run in two modes—
 
 To detect duplicates in a cancer registry database. To link a cancer
 registry file with external files. Although originally designed to
@@ -3892,9 +3613,7 @@ public health data.''
 \end{quote}
 More information about it on:\url{http://www.cdc.gov/cancer/npcr/tools/registryplus/lp.htm}
 
-
 \section{Data security\index{data security}}
-
 
 \subsection{GnuPG\index{GnuPG}}
 \begin{itemize}
@@ -3924,10 +3643,8 @@ More information about it on:\url{http://www.cdc.gov/cancer/npcr/tools/registryp
 
 \section{Graphics display/editing}
 
-
-\subsection{\label{sub:PostScript-Viewer}PostScript Viewer\index{postscript viewer@postscript\textbf{ }viewer}
+\subsection{\label{subsec:PostScript-Viewer}PostScript Viewer\index{postscript viewer@postscript\textbf{ }viewer}
 \index{PS files}}
-
 \begin{flushleft}
 Some of the tables generated by CanReg5 are PostScipt files\index{postscipt files}.
 PostScript is an open standard, so you can use many different tools
@@ -3961,7 +3678,6 @@ Then you can get GS View from here: \href{http://pages.cs.wisc.edu/~ghost/gsview
 Run this file to install GS View. 
 \par\end{flushleft}
 
-
 \subsection{InkScape}
 
 InkScape is a free open source program to display and edit SVGs and
@@ -3980,9 +3696,7 @@ trace bitmaps and much more.''
 \end{quote}
 Available from: \href{http://inkscape.org/}{http://inkscape.org/}
 
-
 \section{General}
-
 
 \subsection{Notepad++}
 
@@ -3994,21 +3708,16 @@ or just simply looking at data from CanReg. Available from: \href{http://notepad
 
 \newpage{}
 
-
 \chapter{Scripts}
 
-
 \section{Ruby scripts}
-
 
 \subsection{Script to generate icd10 codes and cancer groups}
 
 This tool lets you add icd10 codes and user defined groups to data
 in a csv file.
 
-
 \subsubsection{Prerequisites}
-
 
 \paragraph{Install JRuby }
 \begin{enumerate}
@@ -4017,7 +3726,8 @@ your machine
 \item Run the installer and follow on screen instructions. (Make sure you
 add jruby to the path when asked.)
 \item Windows: Run the ``install.bat'' in the script folder. Linux/Mac:
-run the following commands:\end{enumerate}
+run the following commands:
+\end{enumerate}
 \begin{lyxcode}
 jgem~install~bundler~
 
@@ -4072,20 +3782,158 @@ Default:~``Here~be~Data.txt''~
 
 -h,~-{}-help~Display~help~functions.
 \end{lyxcode}
-\newpage{}
 
+\subsection{Script to generate iccc codes}
+
+Add column of icd10 and iccc3 for incidence data in a spreadsheet.
+
+\subsubsection{Prerequisites}
+
+\paragraph{Install JRuby }
+\begin{enumerate}
+\item Downoad the latest JRuby from here: http://jruby.org/download fitting
+your machine 
+\item Run the installer and follow on screen instructions. (Make sure you
+add jruby to the path when asked.)
+\item Windows: Run the ``install.bat'' in the script folder. Linux/Mac:
+run the following commands:
+\end{enumerate}
+\begin{lyxcode}
+jgem~install~bundler~
+
+jruby~-{}-1.9~-S~bundle~install
+\end{lyxcode}
+
+\subsubsection{Usage}
+\begin{lyxcode}
+jruby~icd10\_iccc\_converter.rb~{[}options{]}~
+\end{lyxcode}
+
+\paragraph{Example: }
+\begin{lyxcode}
+jruby~icd10\_iccc\_converter.rb~-t~Topography~-m~Morphology~-b~Behaviour~-s~Sex~-c~,~-f~LotsOfData.csv
+\end{lyxcode}
+
+\paragraph{Arguments:}
+\begin{lyxcode}
+-t~TOPOGRAPHY\_COLUMN\_NAME,~~~~~~~Name~of~the~column~containing~topography.~~Default:~TOP~~~~~~~~~-{}-topography-column-name~~~~~
+
+-m~MORPHOLOGY\_COLUMN\_NAME,~~~~~~~Name~of~the~column~containing~morphology.~~Default:~MOR~~~~~~~~~-{}-morphology-column-name~~~~~
+
+-b~BEHAVIOUR\_COLUMN\_NAME,~~~~~~~~Name~of~the~column~containing~behaviour.~~Default:~BEH~~~~~~~~~-{}-behaviour-column-name~~~~~
+
+-s~SEX\_COLUMN\_NAME,~~~~~~~~~~~~~~Name~of~the~column~containing~sex.~(Coded:~1-Male,~2-Female)~~Default:~SEX~~~~~~~~~-{}-sex-column-name~~~~~
+
+-c~SEPARATING\_CHARACTER,~~~~~~~~~Separating~character~in~the~files.~~Default:~tab~~~~~~~~~-{}-separating-character~~~~~
+
+-p~PATH\_TO\_CANREG,~~~~~~~~~~~~~~~Path~to~the~CanReg.jar-file.~~Default:~../../CanReg.jar~~~~~~~~~-{}-path-to-canreg~~~~~
+
+-f,~-{}-in-file~IN\_FILE~~~~~~~~~~~~File~to~process.~~Default:~Lots~of~Data.txt~~~~~
+
+-h,~-{}-help~~~~~~~~~~~~~~~~~~~~~~~Display~help~functions.
+\end{lyxcode}
+
+\subsection{Script to split source records}
+
+Split CanReg5 data records with multiple sources into multiple records.
+
+\subsubsection{Prerequisites}
+
+To use this tool you need to either install an implementation of Ruby
+-{}- JRuby or regular ruby is recommended.
+
+\paragraph{Install JRuby}
+\begin{enumerate}
+\item Downoad the latest JRuby from here: http://jruby.org/download fitting
+your machine 
+\item Run the installer and follow on screen instructions. (Make sure you
+add jruby to the path when asked.)
+\item Windows: Run the ``install.bat'' in the script folder. Linux/Mac:
+run the following commands:
+\end{enumerate}
+\begin{lyxcode}
+jgem~install~bundler~
+
+jruby~-S~bundle~install
+\end{lyxcode}
+
+\paragraph{Install JRuby}
+\begin{enumerate}
+\item Downoad the latest Ruby from here: http://ruby.org/download fitting
+your machine
+\item Run the installer and follow on screen instructions. (Make sure you
+add jruby to the path when asked.)
+\item Run the following commands:
+\end{enumerate}
+\begin{lyxcode}
+gem~install~bundler~
+
+bundle~install
+\end{lyxcode}
+
+\subsubsection{Usage}
+\begin{lyxcode}
+jruby~splitter.rb~{[}options{]}~
+\end{lyxcode}
+
+\paragraph{Example: }
+\begin{lyxcode}
+jruby~splitter.rb~-c~','~-f~LotsOfData.csv
+\end{lyxcode}
+
+\paragraph{Arguments:}
+\begin{lyxcode}
+-c~SEPARATING\_CHARACTER,~~~~~~~~~Separating~character~in~the~files.~~Default:~tab~~~~~~~~~-{}-separating-character~~~~~
+
+-f,~-{}-in-file~IN\_FILE~~~~~~~~~~~~File~to~process.~~Default:~Lots~of~Data.txt~~~~~
+
+-m,~-{}-map-file~MAP\_FILE~~~~~~~~~~JSON~file~with~variable~mapping.~~Default:~conf.json~~~~~
+
+-h,~-{}-help~~~~~~~~~~~~~~~~~~~~~~~Display~help~functions.
+\end{lyxcode}
+
+\paragraph{Example mapping file}
+
+\inputencoding{latin9}\begin{lstlisting}
+{   
+  "tumour_id_field": "TUMOURIDSOURCETABLE",
+  "source_id_field": "SOURCERECORDID",   
+  "common_fields_map": {
+    "SERONO": "SERONO",
+    "HISTONO": "HISTONO",
+    "OTHERLNO": "OTHERLNO",
+    "SOURCE": "SOURCE"
+  },
+  "source_fields_map": [
+    {
+      "HOSP1": "HOSP",
+      "DATE1": "SDATE",
+      "HOSPNO1": "REFNO"
+    },
+    {
+      "HOSP2": "HOSP",
+      "DATE2": "SDATE",
+      "REFNO2": "REFNO"
+    },
+    {
+      "HOSP3": "HOSP",
+      "DATE3": "SDATE",
+      "REFNO3": "REFNO"
+    }
+  ]
+}
+\end{lstlisting}
+\inputencoding{utf8}
+\newpage{}
 
 \chapter{About}
 
-
 \section{Copyright}
 
-� 2008-2017 International Agency for Research on Cancer World Health
+© 2008-2020 International Agency for Research on Cancer World Health
 Organization All rights reserved.
 
-
 \section{Credits}
-
 
 \subsection{Lead developement and design: }
 \begin{itemize}
@@ -4100,7 +3948,7 @@ quality control module)
 \item Mathieu Laversanne (R code for analysis)
 \item Anahita Rahimi (R code for analysis)
 \item Sebastien Antoni (R code for analysis)
-\item Betty Carballo and Patricio Carranza (New Data Entry form)
+\item Betty Carballo and Patricio Carranza (New Data Entry form, bugfixes)
 \end{itemize}
 
 \subsection{Additional design}
@@ -4142,19 +3990,15 @@ quality control module)
 \item Frank Tang (juniversalchardet) 
 \item Object Refinery Limited (JFreeChart)
 \item Chris Evans (jcommons) 
-\item The Buzz Media (imgscalr \textendash{} Java Image Scaling Library) 
+\item The Buzz Media (imgscalr – Java Image Scaling Library) 
 \item The Apache Software Foundation (Batik) 
 \item iText Software Corp (iText)
 \end{itemize}
 
-\subsection{Alpha-testers}
+\subsection{Testers}
 \begin{itemize}
 \item Mathieu Mazuir, IARC/DEP 
 \item Antoine Buemi, Registre des Cancers du Haut-Rhin
-\end{itemize}
-
-\subsection{Beta-testers}
-\begin{itemize}
 \item Xenios Anastassiades, Ministry of Health, Cyprus 
 \item Deborah Bringman, University of California Irvine, USA 
 \item Amr Ebeid, Gharbiah Cancer Registry, Egypt 
@@ -4165,7 +4009,18 @@ quality control module)
 \item Kevin Ward, Emory University, USA 
 \item Cankut Yakut, Izmir Cancer Registry, Turkey
 \item Antoine Buemi, Registre des Cancers du Haut-Rhin, France
-\item Gon�alo Forjaz, Azores Cancer Registry, Portugal
+\item Gonçalo Forjaz, Azores Cancer Registry, Portugal
+\item Gladys Chesumbai, Nairobi, Kenya
+\item Guy Nda, Abidjan, Ivory Coast
+\item Soner Sabirli, Istanbul, Turkey
+\item Amani Elbasmi, Kuwait
+\item Claudia Uribe, Bucaramanga, Colombia
+\item Beatriz Carballo, Cordoba, Argentina,
+\item Nikhil Dethe, Mumbai, India
+\item Hyunjoo Kong, Seoul, Korea
+\item Kyu-won Jung, WPRO, Philippines
+\item Victoria Medina, Manila, Philippines
+\item Suchita Yadav, Mumbai, India
 \end{itemize}
 
 \subsection{Translators}
@@ -4177,7 +4032,7 @@ Ukraine
 \item \textbf{Spanish:} Graciela Cristina Nicolas and Betty Carballo, Cordoba,
 Argentina
 \item \textbf{Chinese:} Yayun Dai, IARC, France and Shixuan Liu, China
-\item \textbf{Portugese, Portugal: }Gon�alo Lacerda, Azores, Portugal
+\item \textbf{Portugese, Portugal: }Gonçalo Lacerda, Azores, Portugal
 \item \textbf{Turkish:} Cankut Yakut, Izmir Cancer Registry, Turkey
 \end{itemize}
 
@@ -4198,7 +4053,7 @@ CANCER Volume 103, 1457-1467
 \section{Acknowledgments}
 \begin{itemize}
 \item CanReg1: Allen Bieber 
-\item CanReg2: St�phane Olivier 
+\item CanReg2: Stéphane Olivier 
 \item CanReg3 and 4: Andy Cooke
 \end{itemize}
 
@@ -4214,5 +4069,5 @@ ALL RIGHTS RESERVED
 
 \lstinputlisting[basicstyle={\small},breaklines=true,lineskip=0pt]{../../changelog.txt}
 
-\printindex{}
+\printindex
 \end{document}

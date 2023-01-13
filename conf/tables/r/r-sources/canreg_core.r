@@ -1,5 +1,4 @@
-## version : 1.1
-
+## version : 1.11
 
 canreg_output_cat <- function(ft, filename,sex_graph=FALSE, list_graph=FALSE) {
   
@@ -1123,7 +1122,14 @@ canreg_get_agegroup_label <- function(dt, agegroup) {
   return(list(first_age = first_age, last_age= last_age, label = paste0(temp1,"-",temp2, " ",i18n$t("years"))))
 }
 
-
+#df_data <- dt_report
+#var_age <-"AGE_GROUP"
+#var_cases <- "CASES"
+#var_py <- "COUNT"
+#group_by <- c("cancer_label", "SEX","ICD10GROUPCOLOR")
+#missing_age <- canreg_missing_age(dt_all)
+#last_age<- canreg_age_group_cr$last_age+1
+#age_label_list <- "AGE_GROUP_LABEL"
 
 canreg_cum_risk_core <- function(df_data, var_age, var_cases, var_py, group_by=NULL,
                               missing_age = NULL,age_label_list = NULL,last_age = 15,
@@ -1160,7 +1166,7 @@ canreg_cum_risk_core <- function(df_data, var_age, var_cases, var_py, group_by=N
   dt_data[is.na(dt_data$CSU_A),CSU_P:=0 ] 
   
   #create age dummy: 1 2 3 4 --- 19
-  dt_data$age_factor <- c(as.factor(dt_data$CSU_A))
+  dt_data$age_factor <- as.numeric(c(as.factor(dt_data$CSU_A)))
 
   
   # correction factor 
@@ -1197,8 +1203,6 @@ canreg_cum_risk_core <- function(df_data, var_age, var_cases, var_py, group_by=N
 
   
   #keep age group selected 
-  
-
   
   age_max <- max(dt_data$age_factor)
 
@@ -1952,7 +1956,7 @@ canreg_bar_plot <- function(dt,
 }
 
 canreg_child_table <-function(df_data,
-                               landscape = FALSE,
+                               render_shiny = FALSE,
                                list_graph = FALSE,
                                canreg_header=NULL,
                                return_data = FALSE,
@@ -1963,13 +1967,39 @@ canreg_child_table <-function(df_data,
    age_label <- table_iccc$age_label_order
    dt_report <- table_iccc$dt
 
-   setnames(dt_report,"CSU_C.0", paste0("cases_", age_label[1] ))
-   setnames(dt_report,"CSU_C.1", paste0("cases_", age_label[2] ))
-   setnames(dt_report,"CSU_C.2", paste0("cases_", age_label[3] ))
-   setnames(dt_report,"ratio","ratio_MF")
-   setnames(dt_report,"age_crude.0", paste0("crude_", age_label[1] ))
-   setnames(dt_report,"age_crude.1", paste0("crude_", age_label[2] ))
-   setnames(dt_report,"age_crude.2", paste0("crude_", age_label[3] ))
+   if (render_shiny)
+   {
+      setnames(dt_report, "ICCC_code", paste("ICCC","code",sep="<br>"))
+      setnames(dt_report, "ICCC_label", paste("ICCC","label",sep="<br>"))
+      setnames(dt_report, "CSU_C.0", paste(paste0(age_label[1], " years old"),"number of cases",sep="<br>"))
+      setnames(dt_report, "CSU_C.1", paste(paste0(age_label[2], " years old"),"number of cases",sep="<br>"))
+      setnames(dt_report, "CSU_C.2", paste(paste0(age_label[3], " years old"),"number of cases",sep="<br>"))
+      setnames(dt_report, "total_cases", paste("Total","cases",sep="<br>"))
+      setnames(dt_report, "ratio", paste("Ratio","M/F",sep="<br>"))
+      setnames(dt_report, "frequence", "Frequence")
+      setnames(dt_report, "age_crude.0", paste(paste0(age_label[1], " years old"),"rate per million",sep="<br>"))
+      setnames(dt_report, "age_crude.1", paste(paste0(age_label[2], " years old"),"rate per million",sep="<br>"))
+      setnames(dt_report, "age_crude.2", paste(paste0(age_label[3], " years old"),"rate per million",sep="<br>"))
+      setnames(dt_report, "crude", paste("Crude rate","per million",sep="<br>"))
+      setnames(dt_report, "asr", paste("ASR","per million",sep="<br>"))
+
+   }
+   else 
+   {
+     setnames(dt_report,"ICCC_code", "ICCC code")
+     setnames(dt_report,"ICCC_label", "ICCC label")
+     setnames(dt_report,"CSU_C.0", paste0(age_label[1], " years old: cases"))
+     setnames(dt_report,"CSU_C.1", paste0(age_label[2], " years old: cases"))
+     setnames(dt_report,"CSU_C.2", paste0(age_label[3], " years old: cases"))
+     setnames(dt_report,"total_cases","total cases")
+     setnames(dt_report,"ratio","ratio M/F")
+     setnames(dt_report,"age_crude.0", paste0(age_label[1], " years old: rate per million"))
+     setnames(dt_report,"age_crude.1", paste0(age_label[2], " years old: rate per million"))
+     setnames(dt_report,"age_crude.2", paste0(age_label[3], " years old: rate per million"))
+     setnames(dt_report,"crude", "Crude rate per million")
+     setnames(dt_report,"asr", "ASR per million")
+   }
+
    return(dt_report)
 
 
@@ -2952,6 +2982,9 @@ canreg_scatter_error_bar <- function(dt_plot,
   return(csu_plot)
   
 }
+
+# ann = TRUE
+# shiny = FALSE
 
 canreg_report <- function(doc,report_path,dt_all,ls_args,ann=TRUE, shiny=FALSE) {
 

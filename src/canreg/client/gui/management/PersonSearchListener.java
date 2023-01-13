@@ -31,6 +31,8 @@ import java.util.logging.Logger;
  * @author ervikm
  */
 public class PersonSearchListener implements ActionListener, Serializable {
+
+    private static final Logger LOGGER = Logger.getLogger(PersonSearchListener.class.getName());
     private ActionListener actionListener;
     
     /**
@@ -44,7 +46,7 @@ public class PersonSearchListener implements ActionListener, Serializable {
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
-        Logger.getLogger(PersonSearchListener.class.getName()).log(Level.INFO, command);
+        LOGGER.log(Level.INFO, command);
         if (command.startsWith("range")) {
             // recordsInRangeField.setText(command.substring(6));
             actionListener.actionPerformed(e);

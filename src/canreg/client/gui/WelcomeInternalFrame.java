@@ -28,6 +28,7 @@ package canreg.client.gui;
 import canreg.client.CanRegClientApp;
 import canreg.client.gui.adhoc.AdHocDatabaseFrame;
 import canreg.client.gui.management.InstallNewSystemInternalFrame;
+import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.Globals;
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,6 +50,7 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
     private FrameView fv;
     private Properties appInfoProperties;
     private JDialog aboutBox;
+    private static final Logger LOGGER = Logger.getLogger(WelcomeInternalFrame.class.getName());
 
     /** Creates new form WelcomeInternalFrame
      * @param fv 
@@ -78,7 +80,8 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
             versionString += " (" + appInfoProperties.getProperty("program.BUILDDATE") + ")";
             versionLabel.setText(versionLabel.getText() + " " + versionString);
         } catch (IOException ex) {
-            Logger.getLogger(WelcomeInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
+            new TechnicalError().errorDialog();
         }
     }
 
@@ -151,7 +154,7 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
         aboutScrollPane.setName("aboutScrollPane"); // NOI18N
 
         aboutEditorPane.setEditable(false);
-        aboutEditorPane.setFont(resourceMap.getFont("aboutEditorPane.font")); // NOI18N
+        aboutEditorPane.setFont(aboutEditorPane.getFont().deriveFont(aboutEditorPane.getFont().getSize()+7f));
         aboutEditorPane.setText(resourceMap.getString("aboutEditorPane.text")); // NOI18N
         aboutEditorPane.setFocusCycleRoot(false);
         aboutEditorPane.setFocusable(false);
@@ -187,6 +190,7 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(WelcomeInternalFrame.class, this);
         loginButton.setAction(actionMap.get("showLoginFrame")); // NOI18N
+        loginButton.setFont(loginButton.getFont().deriveFont(loginButton.getFont().getSize()+2f));
         loginButton.setIcon(resourceMap.getIcon("loginButton.icon")); // NOI18N
         loginButton.setText(resourceMap.getString("loginButton.text")); // NOI18N
         loginButton.setToolTipText(resourceMap.getString("loginButton.toolTipText")); // NOI18N
@@ -197,9 +201,10 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
         buttonPanel.add(loginButton);
 
         jPanel6.setName("jPanel6"); // NOI18N
-        jPanel6.setLayout(new java.awt.GridLayout());
+        jPanel6.setLayout(new java.awt.GridLayout(1, 0));
 
         restoreBackupButton.setAction(actionMap.get("installNewSystemAction")); // NOI18N
+        restoreBackupButton.setFont(restoreBackupButton.getFont().deriveFont(restoreBackupButton.getFont().getSize()+2f));
         restoreBackupButton.setToolTipText(resourceMap.getString("restoreBackupButton.toolTipText")); // NOI18N
         restoreBackupButton.setActionCommand(resourceMap.getString("restoreBackupButton.actionCommand")); // NOI18N
         restoreBackupButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -208,6 +213,7 @@ public class WelcomeInternalFrame extends javax.swing.JInternalFrame {
         jPanel6.add(restoreBackupButton);
 
         adHocButton.setAction(actionMap.get("adHocAnalysisAction")); // NOI18N
+        adHocButton.setFont(adHocButton.getFont().deriveFont(adHocButton.getFont().getSize()+2f));
         adHocButton.setIcon(resourceMap.getIcon("adHocButton.icon")); // NOI18N
         adHocButton.setText(resourceMap.getString("adHocButton.text")); // NOI18N
         adHocButton.setToolTipText(resourceMap.getString("adHocButton.toolTipText")); // NOI18N

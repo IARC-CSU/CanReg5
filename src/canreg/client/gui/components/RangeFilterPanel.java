@@ -52,6 +52,7 @@ import org.w3c.dom.Document;
  */
 public final class RangeFilterPanel extends javax.swing.JPanel implements ActionListener {
 
+    private static final Logger LOGGER = Logger.getLogger(RangeFilterPanel.class.getName());
     private Document doc;
     // private DatabaseVariablesListElement[] variablesInDB;
     private DatabaseIndexesListElement[] indexesInDB;
@@ -775,7 +776,7 @@ private void rangeEndTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GE
             try {
                 filterWizardInternalFrame.setSelected(true);
             } catch (PropertyVetoException ex) {
-                Logger.getLogger(RangeFilterPanel.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
             }
         } else {
             filterWizardInternalFrame.setTextPane("");

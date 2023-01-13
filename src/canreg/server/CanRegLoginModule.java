@@ -39,6 +39,7 @@ import javax.security.auth.login.LoginException;
  */
 public class CanRegLoginModule implements LoginModule {
 
+    private static final Logger LOGGER = Logger.getLogger(CanRegLoginModule.class.getName());
     private final boolean debug = Globals.DEBUG;
 
     // validation objects
@@ -87,7 +88,7 @@ public class CanRegLoginModule implements LoginModule {
      */
     private void debugOut(String msg) {
         if (debug) {
-            Logger.getLogger(CanRegLoginModule.class.getName()).log(Level.INFO, msg);
+            LOGGER.log(Level.INFO, msg);
         }
     }
 
@@ -143,13 +144,22 @@ public class CanRegLoginModule implements LoginModule {
 
         } catch (java.io.IOException e) {
             debugOut("File error: " + Globals.PASS_FILENAME + "\n");
+        }
+        // used if the stored password is null 
+        if(realPassword == null){
             return false;
         }
 
         try {
-            // debugOut("user entered password: " + PasswordService.getInstance().encrypt(passwordString) );
-
-            if ((realPassword == null) || !realPassword.equals(PasswordService.getInstance().encrypt(passwordString))) {
+            boolean validPassword;
+            //debugOut("user entered password SHA-256: " + PasswordService.getInstance().encrypt(passwordString,"SHA-256"));
+            //debugOut("user entered password SHA : " + PasswordService.getInstance().encrypt(passwordString,"SHA"));
+            if (realPassword.length() == 40){
+                validPassword = realPassword.equals(PasswordService.getInstance().encrypt(passwordString,"SHA"));
+            }else {
+                validPassword = realPassword.equals(PasswordService.getInstance().encrypt(passwordString,"SHA-256"));
+            }
+            if (!validPassword) {
                 {
                     // debugOut("Password does not match: " + realPassword + " " + passwordString + "\n");
                     return false;

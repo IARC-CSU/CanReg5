@@ -46,6 +46,7 @@ import org.xml.sax.SAXException;
  */
 public final class SystemDescription implements Serializable {
 
+    private static final Logger LOGGER = Logger.getLogger(SystemDescription.class.getName());
     private static boolean debug = Globals.DEBUG;
     private Document doc;
     // private DOMParser parser;
@@ -76,11 +77,11 @@ public final class SystemDescription implements Serializable {
                 debugOut(QueryGenerator.strCreateTablesOfDictionaries(doc));
             }
         } catch (ParserConfigurationException ex) {
-            Logger.getLogger(SystemDescription.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         } catch (SAXException ex) {
-            Logger.getLogger(SystemDescription.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(SystemDescription.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
     }
 
@@ -154,6 +155,7 @@ public final class SystemDescription implements Serializable {
                         region = Globals.REGIONS[regionID];
                     } catch (NumberFormatException nfe) {
                         // not a number
+                        LOGGER.log(Level.WARNING,"Error in number",nfe);
                     }
                 }
             }
@@ -275,6 +277,7 @@ public final class SystemDescription implements Serializable {
                         dateFormat = canreg4dateFormats[i];
                     } catch (NumberFormatException nfe) {
                         // do nothing
+                        LOGGER.log(Level.WARNING,"Error in number",nfe);
                     }
                 }
             }
@@ -437,7 +440,7 @@ public final class SystemDescription implements Serializable {
 
     private static void debugOut(String msg) {
         if (debug) {
-            Logger.getLogger(SystemDescription.class.getName()).log(Level.INFO, msg);
+            LOGGER.log(Level.INFO, msg);
         }
     }
 
@@ -450,7 +453,7 @@ public final class SystemDescription implements Serializable {
         try {
             canreg.server.xml.Tools.writeXmlFile(doc, path);
         } catch (RuntimeException npe) {
-            Logger.getLogger(SystemDescription.class.getName()).log(Level.SEVERE, "Error writing system description...");
+            LOGGER.log(Level.SEVERE, "Error writing system description...");
             throw npe;
         }
     }

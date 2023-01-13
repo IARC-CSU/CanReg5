@@ -195,9 +195,10 @@ public interface CanRegServerInterface extends Remote {
             throws RemoteException, SecurityException;
 
     /**
+     * Change the password corresponding to the username. The password can only be changed by the user itself.
      * 
-     * @param username
-     * @param password
+     * @param username username
+     * @param password password to change
      * @throws java.rmi.RemoteException
      * @throws java.lang.SecurityException
      */
@@ -251,13 +252,15 @@ public interface CanRegServerInterface extends Remote {
     public List<User> listUsers() throws RemoteException, SecurityException;
 
     /**
-     *
-     * @param user
+     * save the user in the database and in the .CanRegServer folder
+     * 
+     * @param user user name
+     * @param addPasswordReminder allow to create a file to remind the user to change his password
      * @return
      * @throws RemoteException
      * @throws SecurityException
      */
-    public int saveUser(User user) throws RemoteException, SecurityException;
+    public int saveUser(User user,boolean addPasswordReminder) throws RemoteException, SecurityException;
 
     /**
      * User logs in
@@ -493,9 +496,20 @@ public interface CanRegServerInterface extends Remote {
 
     public void shutDownServer() throws RemoteException, SecurityException;
 
+    // Set a password to the database 
     public boolean setDBPassword(char[] newPasswordArray, char[] oldPasswordArray, 
                                  String encryptionAlgorithm, String encryptionKeyLength)
             throws RemoteException, SecurityException;
+// check if the current database
+
+    /**
+     * check if the current database is encrypted by a password
+     * @param registryCode  the registry code
+     * @return a boolean true if the password is encrypted else false
+     * @throws RemoteException Remote Exception
+     * @throws SecurityException Security Exception
+     */
+    public boolean checkDatabaseEncryption(String registryCode) throws RemoteException, SecurityException;
 
     public String getCanRegRegistryCode() throws RemoteException, SecurityException;
 
@@ -524,4 +538,49 @@ public interface CanRegServerInterface extends Remote {
      * @throws Exception 
      */
     public void pingRemote(Integer remoteClientHashCode) throws RemoteException, Exception;
+
+    /**
+     * Check if the encrypted password is equal to the password stored in database for the user 
+     * 
+     * @param username username of the user 
+     * @param encryptedPassword encrypted password of the user 
+     * @return boolean 
+     * @throws RemoteException 
+     */
+    public boolean checkPassword(String username, String encryptedPassword) throws RemoteException;
+
+    /**
+     * check if the file reminder present in the .CanRegServer exist.
+     * @param username  user name
+     * @return true or false
+     * @throws RemoteException RMI exception 
+     */
+    public boolean checkFileReminder(String username) throws RemoteException;
+    
+    /**
+     * Delete the file reminder in the .CanRegServer folder.
+     *
+     * @param username  user name
+     * @throws RemoteException RemoteException
+     */
+    public void deleteFileReminder(String username) throws RemoteException;
+
+    /**
+     * Create a new transaction to be saved in the database
+     * 
+     * @throws RemoteException RemoteException
+     */
+    public void openTransaction() throws RemoteException;
+
+    /**
+     * Rollback of the transaction if an exception occurred 
+     *  @throws RemoteException RemoteException
+     */
+    public void rollbackTransaction() throws RemoteException;
+
+    /**
+     *  Commit all the records hold by the transaction if there was no exception 
+     * @throws RemoteException RemoteException
+     */
+    public void commitTransaction() throws RemoteException;
 }

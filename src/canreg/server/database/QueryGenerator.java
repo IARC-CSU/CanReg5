@@ -33,7 +33,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 public class QueryGenerator {
-
+    
+    private static final Logger LOGGER = Logger.getLogger(QueryGenerator.class.getName());
     static final boolean debug = true;
     static final String namespace = "ns3:";
 
@@ -686,7 +687,7 @@ public class QueryGenerator {
 
     private static void debugOut(String msg) {
         if (debug) {
-            Logger.getLogger(QueryGenerator.class.getName()).log(Level.INFO, msg);
+            LOGGER.log(Level.INFO, msg);
         }
     }
 
