@@ -534,7 +534,6 @@ public class Import {
                 reportWriter = new BufferedWriter(new FileWriter(io.getReportFileName()));
             } catch (IOException ex) {
                 LOGGER.log(Level.WARNING, null, ex);
-                new TechnicalError().errorDialog();
             }
         }
         boolean success = false;

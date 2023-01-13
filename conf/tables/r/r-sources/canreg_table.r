@@ -1,4 +1,4 @@
-## version 1.01
+## version 1.1
 
 canreg_table_shiny <- function(ls_args)
 {
@@ -85,6 +85,31 @@ canreg_table_report <- function(ls_args)
   }
 
   cat(paste("-outFile",ls_args$filename,sep=":"))
+
+
+}
+
+canreg_table_child_table <- function(ls_args)
+{
+  #load dependency packages
+  canreg_load_packages(c("data.table", "shiny.i18n", "Rcan"))
+  i18n <<- Translator$new(translation_csvs_path  = (paste(sep="/", script.basename, "r-translations")))
+  i18n$set_translation_language(ls_args$lang)
+
+  #get ICCC data
+  dt_iccc <<- canreg_merge_iccc_pop(
+    inc_file =ls_args$inc,
+    pop_file =ls_args$pop,
+    group_by = c("ICCC",  "YEAR", "SEX")
+  )
+
+  canreg_output(output_type = ls_args$ft, filename = ls_args$out,landscape = ls_args$landscape,list_graph = FALSE,
+                FUN=canreg_child_table,
+                df_data=dt_iccc,
+                canreg_header = ls_args$header)
+
+  #talk to canreg
+  canreg_output_cat(ls_args$ft, ls_args$filename)
 
 
 }

@@ -377,7 +377,6 @@
                 </Component>
                 <Component class="javax.swing.JCheckBox" name="formatChecksCheckBox">
                   <Properties>
-                    <Property name="selected" type="boolean" value="true"/>
                     <Property name="text" type="java.lang.String" resourceKey="formatChecksCheckBox.text"/>
                     <Property name="toolTipText" type="java.lang.String" resourceKey="formatChecksCheckBox.toolTipText"/>
                     <Property name="name" type="java.lang.String" value="formatChecksCheckBox" noResource="true"/>

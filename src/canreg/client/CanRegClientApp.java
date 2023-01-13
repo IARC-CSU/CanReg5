@@ -401,8 +401,8 @@ public class CanRegClientApp extends SingleFrameApplication {
         try {
             splashMessage(java.util.ResourceBundle.getBundle("canreg/client/resources/CanRegClientApp").getString("INITIALIZING LOGGER..."), 20);
             Handler fh = new FileHandler(Globals.LOGFILE_PATTERN);
-            Logger.getLogger("").addHandler(fh);
-            Logger.getLogger("canreg").setLevel(Level.parse(Globals.LOG_LEVEL));
+            LOGGER.addHandler(fh);
+            LOGGER.setLevel(Level.parse(Globals.LOG_LEVEL));
         } catch (IOException | SecurityException ex) {
            LOGGER.log(Level.SEVERE, null, ex);
             new TechnicalError().errorDialog();
@@ -722,7 +722,6 @@ public class CanRegClientApp extends SingleFrameApplication {
                 // Locale.setDefault(localSettings.getLocale());
             } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
                LOGGER.log(Level.WARNING, null, ex);
-                new TechnicalError().errorDialog();
             }
         }
     }
@@ -1307,7 +1306,6 @@ public class CanRegClientApp extends SingleFrameApplication {
                 } catch (RecordLockedException recordLockedException) {
                    LOGGER.log(Level.WARNING,String.format("Tumour record  %d already locked ?",id), recordLockedException);
 //                    throw recordLockedException;
-                    new TechnicalError().errorDialog();
                 } catch (RemoteException ex) {
                    LOGGER.log(Level.SEVERE, null, ex);
                     if (!handlePotentialDisconnect(ex)) {
@@ -1373,7 +1371,6 @@ public class CanRegClientApp extends SingleFrameApplication {
                     tumourToReturn = records[0];
                 } catch (java.lang.ArrayIndexOutOfBoundsException aiobe) {
                     LOGGER.log(Level.WARNING,String.format("Tumour record %d already locked ?",id), aiobe);
-                    new TechnicalError().errorDialog();
                 }
             }
         } else {
@@ -1899,6 +1896,29 @@ public class CanRegClientApp extends SingleFrameApplication {
            LOGGER.log(Level.SEVERE, "Unable to check the databases encryption", ex);
             return false;
         }
+    }
+
+    /**
+     * Init the transaction from here all records
+     * will be save if there is no issue 
+     */
+    public void openTransaction() throws RemoteException {
+            mainServer.openTransaction();
+    }
+
+    /**
+     * If there is an SaveRecordException no record will change in the database
+     */
+    public void rollbackTransaction() throws RemoteException {
+            mainServer.rollbackTransaction();
+    }
+
+    /**
+     * End of the transaction all record are send to the database
+     * 
+     */
+    public void commitTransaction() throws RemoteException {
+            mainServer.commitTransaction();
     }
     
     private class PingToServer implements Runnable {

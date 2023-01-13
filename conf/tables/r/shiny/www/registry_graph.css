@@ -1,7 +1,11 @@
 
 
 div#plot{
-	height:600px!important
+  height:600px!important
+}
+
+div#table{
+  height:600px!important
 }
 
 div#plot img{
@@ -192,5 +196,20 @@ section.sidebar .shiny-input-container {
 
 .form-group {
     margin-bottom: 10px;
+}
+
+.table {
+    border: black;
+    border-style: solid;
+    border-width: thin;
+    margin-right: 20px!important;
+}
+
+.table-striped>tbody>tr:nth-of-type(odd) {
+    background-color: #dadada!important;
+}
+
+thead {
+    background: #0b80b7!important;
 }
 

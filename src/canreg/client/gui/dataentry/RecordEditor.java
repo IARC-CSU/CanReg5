@@ -268,9 +268,9 @@ public class RecordEditor extends javax.swing.JInternalFrame
                     canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.PATIENT_TABLE_NAME, server);
                 }
             } catch (RemoteException ex) {
-                Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
+               LOGGER.log(Level.SEVERE, null, ex);
             } catch (SecurityException ex) {
-                Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
+               LOGGER.log(Level.SEVERE, null, ex);
             }
         }
         patientRecords.clear();
@@ -287,9 +287,9 @@ public class RecordEditor extends javax.swing.JInternalFrame
                         canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.SOURCE_TABLE_NAME, server);
                     }
                 } catch (RemoteException ex) {
-                    Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                   LOGGER.log(Level.SEVERE, null, ex);
                 } catch (SecurityException ex) {
-                    Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                   LOGGER.log(Level.SEVERE, null, ex);
                 }
             }
             try {
@@ -299,9 +299,9 @@ public class RecordEditor extends javax.swing.JInternalFrame
                     canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.TUMOUR_TABLE_NAME, server);
                 }
             } catch (RemoteException ex) {
-                Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
+               LOGGER.log(Level.SEVERE, null, ex);
             } catch (SecurityException ex) {
-                Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.SEVERE, null, ex);
+               LOGGER.log(Level.SEVERE, null, ex);
             }
         }
         tumourRecords.clear();
@@ -590,7 +590,7 @@ public class RecordEditor extends javax.swing.JInternalFrame
 //                        .getPatientsByPatientID(productionPatient.getVariableAsString(patientIDVariable), true, null);
             }
         } catch(Exception ex) {
-            Logger.getLogger(canreg.client.gui.dataentry2.RecordEditorMainFrame.class.getName()).log(Level.WARNING, null, ex);
+           LOGGER.log(Level.WARNING, null, ex);
             this.viewProductionRecordBtn.setVisible(false);
         }
     }
