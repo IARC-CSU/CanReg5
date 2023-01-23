@@ -1,6 +1,1 @@
-An age-standardised rate (ASR) is a summary measure of the rate that a population would have if it had a standard age structure.
-
-Standardization is necessary when comparing several populations that differ with respect to age because age has a powerful influence on the risk of dying from cancer.
-
-The ASR is a weighted mean of the age-specific rates; the weights are taken from population distribution of the standard population.
-The ASR is also expressed per 100,000.
+The age-standardized rate is the summary rate that would have been observed, given the schedule of age-specific rates, in a population with the age composition of a defined reference population, called the standard. The most widely used reference for global comparisons is the world standard, as proposed by Segi, and modified by Doll et al. Standardization is necessary when comparing several populations that differ with respect to age because age has a powerful influence on the risk of developing cancer.  The ASR is a weighted mean of the age-specific rates; the weights are taken from the population distribution of the standard population. The ASR is commonly expressed per 100,000 for all ages, and, given its relative rarity, per 1,000,000 for children and adolescents.
