@@ -7,6 +7,9 @@
 - Improved person search perfomance
 - Memory leak fixes
 
+## 5.00.44i
+- Updated texts in standard reports.
+- Updated libraries.
 
 ## 5.00.44h
 - New Features: save list of person search matches as spreadsheet.

@@ -199,6 +199,7 @@ public class LatestNewsInternalFrame extends javax.swing.JInternalFrame implemen
     private javax.swing.JEditorPane newsEditorPane;
     // End of variables declaration//GEN-END:variables
 
+
     private void initContent() {
         newsEditorPane.setContentType("text/html");
 //        try {
@@ -212,7 +213,6 @@ public class LatestNewsInternalFrame extends javax.swing.JInternalFrame implemen
 //            LOGGER.log(Level.INFO, null, ex);
 //        }
     }
-
     @Action
     public void okAction() {
         this.dispose();
