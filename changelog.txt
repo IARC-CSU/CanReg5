@@ -1,5 +1,8 @@
 # CanReg5 Changelog
 
+## 5.00.44j
+- Updated the Spanish translations of the standard reports.
+
 ## 5.00.44i
 - Updated texts in standard reports.
 - Updated libraries.
