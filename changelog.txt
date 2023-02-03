@@ -1,11 +1,13 @@
 # CanReg5 Changelog
 
 ## 5.00.45BETA1
-
 - Holding database (BETA)
 - Ad-hoc analysis (BETA)
 - Improved person search perfomance
 - Memory leak fixes
+
+## 5.00.44j
+- Updated the Spanish translations of the standard reports.
 
 ## 5.00.44i
 - Updated texts in standard reports.
