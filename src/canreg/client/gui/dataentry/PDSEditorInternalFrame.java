@@ -1,6 +1,6 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
- * Copyright (C) 2008-2017  International Agency for Research on Cancer
+ * Copyright (C) 2008-2023  International Agency for Research on Cancer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Morten Johannes Ervik, CSU/IARC, ervikm@iarc.fr
+ * @author Morten Johannes Ervik, CSU/IARC, ervikm@iarc.who.int
  */
 /*
  * PDSEditorInternalFrame.java
@@ -599,26 +599,26 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
 
         pdsTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)}
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)}
             },
             new String [] {
                 "Male", "Female"
@@ -652,26 +652,26 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
 
         totalsTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)}
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)}
             },
             new String [] {
                 "Male", "Female"
@@ -1057,26 +1057,26 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
 
         pdsTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)}
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)}
             },
             new String [] {
                 "Male", "Female"
@@ -1100,26 +1100,26 @@ public final class PDSEditorInternalFrame extends javax.swing.JInternalFrame imp
 
         totalsTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)},
-                { new Integer(0),  new Integer(0)}
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)},
+                { Integer.valueOf(0),  Integer.valueOf(0)}
             },
             new String [] {
                 "Male", "Female"

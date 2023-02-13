@@ -505,7 +505,7 @@ public abstract class AbstractEditorialTableBuilder implements TableBuilderInter
                 offset = offset + 1;
                 Integer j = Integer.parseInt(group.substring(offset, offset + 2));
                 for (int n = i; n < j; n++) {
-                    cancerGroup.add(new Integer(n + 1));
+                    cancerGroup.add(Integer.valueOf(n + 1));
                 }
                 offset = offset + 2;
             }
@@ -546,7 +546,7 @@ public abstract class AbstractEditorialTableBuilder implements TableBuilderInter
                         Integer j = Integer.parseInt(group.substring(offset,
                                 offset + 1));
                         for (int n = i; n < j; n++) {
-                            cancerGroup.add(new Integer(n + 1));
+                            cancerGroup.add(Integer.valueOf(n + 1));
                         }
                         offset = offset + 1;
                     }
@@ -562,7 +562,7 @@ public abstract class AbstractEditorialTableBuilder implements TableBuilderInter
                                 offset + 3));
                         j = (j + 1) * 10 - 1;
                         for (int n = j; i < n; i++) {
-                            cancerGroup.add(new Integer(i));
+                            cancerGroup.add(Integer.valueOf(i));
                         }
                         offset = offset + 2;
                     }

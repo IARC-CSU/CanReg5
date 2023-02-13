@@ -67,7 +67,7 @@ public class EditorialTableTools {
                             offset + 1));
                     j = j + ((i / 10) * 10);
                     for (int n = j; i < n; i++) {
-                        cancerGroup.add(new Integer(i + 1));
+                        cancerGroup.add(Integer.valueOf(i + 1));
                     }
                     offset = offset + 1;
                 }
@@ -83,7 +83,7 @@ public class EditorialTableTools {
                             offset + 2));
                     j = ((j + 1) * 10) - 1;
                     for (int n = j; i <= n; i++) {
-                        cancerGroup.add(new Integer(i));
+                        cancerGroup.add(Integer.valueOf(i));
                     }
                     offset = offset + 2;
                 }
