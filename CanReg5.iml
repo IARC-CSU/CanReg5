@@ -21,7 +21,6 @@
     <orderEntry type="library" name="Maven: org.apache.xmlgraphics:batik-constants:1.14" level="project" />
     <orderEntry type="library" name="Maven: org.apache.xmlgraphics:batik-i18n:1.14" level="project" />
     <orderEntry type="library" name="Maven: org.apache.xmlgraphics:xmlgraphics-commons:2.6" level="project" />
-    <orderEntry type="library" name="Maven: commons-logging:commons-logging:1.0.4" level="project" />
     <orderEntry type="library" name="Maven: batik:batik-dom:1.6-1" level="project" />
     <orderEntry type="library" name="Maven: batik:batik-css:1.6-1" level="project" />
     <orderEntry type="library" name="Maven: batik:batik-util:1.6-1" level="project" />
@@ -40,7 +39,7 @@
     <orderEntry type="module-library">
       <library name="Maven: javax.jnlp:jnlp:1.6">
         <CLASSES>
-          <root url="jar://C:/Program Files/Java/jdk1.8.0_201/jre/lib/javaws.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../../Program Files/Java/jdk1.8.0_201/jre/lib/javaws.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

@@ -39,17 +39,6 @@ import canreg.common.Globals;
 import canreg.common.cachingtableapi.DistributedTableDataSource;
 import canreg.common.cachingtableapi.DistributedTableDescription;
 import canreg.common.cachingtableapi.DistributedTableDescriptionException;
-import canreg.common.database.AgeGroupStructure;
-import canreg.common.database.DatabaseRecord;
-import canreg.common.database.Dictionary;
-import canreg.common.database.DictionaryEntry;
-import canreg.common.database.NameSexRecord;
-import canreg.common.database.Patient;
-import canreg.common.database.PopulationDataset;
-import canreg.common.database.PopulationDatasetsEntry;
-import canreg.common.database.Source;
-import canreg.common.database.Tumour;
-import canreg.common.database.User;
 import canreg.server.DatabaseStats;
 import org.w3c.dom.Document;
 
@@ -87,7 +76,11 @@ import java.util.logging.Logger;
 public class CanRegDAO {
     
     private static final Logger LOGGER = Logger.getLogger(CanRegDAO.class.getName());
-    private static final boolean debug = false;
+    private static final boolean DEBUG = false;
+    private static final String  BOOT_PASSWORD ="bootPassword";
+    private static final String  SHUT_DOWN = "shutdown";
+    private static final String  PAPER_31_PDF = "http://www.who.int/healthinfo/paper31.pdf";
+
     private final DatabaseVariablesListElement[] variables;
     StringBuilder counterStringBuilder = new StringBuilder();
     StringBuilder getterStringBuilder = new StringBuilder();
@@ -133,7 +126,7 @@ public class CanRegDAO {
     public CanRegDAO(String registryCode, Document doc, Properties databaseProperties) {
         this(doc, registryCode, false);
         dbProperties = databaseProperties;
-        this.bootPassword = databaseProperties.getProperty("bootPassword");
+        this.bootPassword = databaseProperties.getProperty(BOOT_PASSWORD);
         // Initialize the datasource
         initDataSource(databaseProperties);
     }
@@ -250,13 +243,11 @@ public class CanRegDAO {
     public DataSource initDataSource(Properties databaseProperties) {
         String dbUrl = getDatabaseUrl();
         dbDatasource = PoolConnection.DbDatasource(dbUrl, databaseProperties);
-        LOGGER.log(Level.INFO, "DataSource created\n" + databaseProperties.toString());
+        LOGGER.log(Level.INFO, String.format("DataSource created\n %s", databaseProperties.toString()));
         return dbDatasource;
     }
 
     public synchronized Map<Integer, Dictionary> getDictionary() {
-        // Map<Integer, Dictionary> dictionaryMap = new LinkedHashMap<Integer, Dictionary>();
-        
         ResultSet results;
 
         // rebuild dictionary map
@@ -339,20 +330,20 @@ public class CanRegDAO {
     }
 
     public synchronized int saveUser(User user) {
-        int ID = user.getID();
+        int id = user.getID();
 
-        if (ID > -1) {
+        if (id > -1) {
             // edit user
-            ID = editUser(user);
+            id = editUser(user);
         } else {
             // save new user
-            ID = saveNewUser(user);
+            id = saveNewUser(user);
         }
-        return ID;
+        return id;
     }
 
     private synchronized int editUser(User user) {
-        int ID = user.getID();
+        int id = user.getID();
         ResultSet results;
         try( Connection connection = getDbConnection();
             PreparedStatement stmtEditUser = connection.prepareStatement(QueryGenerator.strEditUser())) {
@@ -362,25 +353,25 @@ public class CanRegDAO {
             stmtEditUser.setInt(3, user.getUserRightLevelIndex());
             stmtEditUser.setString(4, user.getEmail());
             stmtEditUser.setString(5, user.getRealName());
-            stmtEditUser.setInt(6, ID);
+            stmtEditUser.setInt(6, id);
 
             int rowCount = stmtEditUser.executeUpdate();
 
             results = stmtEditUser.getResultSet();
             if (results != null) {
                 if (results.next()) {
-                    ID = results.getInt(1);
+                    id = results.getInt(1);
                 }
             }
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, null, ex);
         }
 
-        return ID;
+        return id;
     }
 
     private synchronized int saveNewUser(User user) {
-        int ID = -1;
+        int id = -1;
         ResultSet results;
         try( Connection connection = getDbConnection();
             PreparedStatement stmtSaveNewUser = connection.prepareStatement(QueryGenerator.strSaveUser())) {
@@ -393,12 +384,12 @@ public class CanRegDAO {
             int rowCount = stmtSaveNewUser.executeUpdate();
             results = stmtSaveNewUser.getResultSet();
             if (results != null && results.next()) {
-                    ID = results.getInt(1);
+                    id = results.getInt(1);
             }
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, null, ex);
         }
-        return ID;
+        return id;
     }
 
     public synchronized Map<String, User> getUsers() {
@@ -425,7 +416,7 @@ public class CanRegDAO {
     public synchronized User getUserByUsername(String userName) {
         User user = null;
         try( Connection connection = getDbConnection();
-            PreparedStatement stmtGetUser = connection.prepareStatement(strGetUserByUserName)
+            PreparedStatement stmtGetUser = connection.prepareStatement(STR_GET_USER_BY_USER_NAME)
             ) {
             stmtGetUser.clearParameters();
             stmtGetUser.setString(1, userName);
@@ -515,7 +506,7 @@ public class CanRegDAO {
 
         try( Connection connection = getDbConnection();
             Statement queryStatement = connection.createStatement()) {
-            ResultSet  results = queryStatement.executeQuery(strGetPopulationDatasetEntries);
+            ResultSet  results = queryStatement.executeQuery(STR_GET_POPULATION_DATASET_ENTRIES);
             while (results.next()) {
                 int id = results.getInt(1);
 
@@ -747,17 +738,14 @@ public class CanRegDAO {
             // Create indexes - do last: least important
             LinkedList<String> tumourIndexList = QueryGenerator.strCreateIndexTable("Tumour", doc);
             for (String query : tumourIndexList) {
-                // debugOut(query);
                 statement.execute(query);
             }
             LinkedList<String> patientIndexList = QueryGenerator.strCreateIndexTable("Patient", doc);
             for (String query : patientIndexList) {
-                // debugOut(query);
                 statement.execute(query);
             }
             LinkedList<String> sourceIndexList = QueryGenerator.strCreateIndexTable("Source", doc);
             for (String query : sourceIndexList) {
-                // debugOut(query);
                 statement.execute(query);
             }
             bCreatedTables = true;
@@ -804,7 +792,7 @@ public class CanRegDAO {
 
         try {
             dbConnection.trulyClose(); // Close current connection.
-            dbProperties.put("shutdown", "true");
+            dbProperties.put(SHUT_DOWN, "true");
             openUniqueConnection(dbUrl);
         } catch (SQLException e) {
             if (e.getSQLState().equals("08006")) {
@@ -815,14 +803,12 @@ public class CanRegDAO {
             ex = e;
         }
         if (!shutdownSuccess) {
-            dbProperties.remove("shutdown");
+            dbProperties.remove(SHUT_DOWN);
             LOGGER.log(Level.SEVERE, null, ex);
-            // ((DonMan) parent).signalError("Error during shutdown for RESTORE: ", ex,
-            //        "in: DonDao.restore", false);
             return "shutdown failed";
         }
         try {
-            dbProperties.remove("shutdown");
+            dbProperties.remove(SHUT_DOWN);
             dbConnection.trulyClose(); // Close current connection.
 
             // check to see if there is a database already - rename it
@@ -847,8 +833,7 @@ public class CanRegDAO {
             bRestored = true;
         } catch (SQLException ex2) {
             LOGGER.log(Level.SEVERE, null, ex2);
-            //((DonMan) parent).signalError("Error during RESTORE: ", e,
-            //       "in: DonDao.restore", false);
+
         }
         dbProperties.remove("restoreFrom");
         // connect(); // Do not reconnect as this would be a potential security problem...
@@ -915,7 +900,7 @@ public class CanRegDAO {
      */
     public void openTransaction() throws SQLException {
         if (dbConnection == null) {
-            dbConnection = DriverManager.getConnection(getDatabaseUrl(), dbProperties);
+            dbConnection = (DbConnectionWrapper) DriverManager.getConnection(getDatabaseUrl(), dbProperties);
         }
         dbConnection.setAutoCommit(false);
     }
@@ -946,12 +931,12 @@ public class CanRegDAO {
 
     public boolean connectWithBootPassword(char[] passwordArray) throws RemoteException, SQLException {
         String password = new String(passwordArray);
-        dbProperties.setProperty("bootPassword", password);
+        dbProperties.setProperty(BOOT_PASSWORD, password);
         boolean success = connect();
         if(success) {
             this.bootPassword = password;
         }
-        dbProperties.remove("bootPassword");
+        dbProperties.remove(BOOT_PASSWORD);
         return success;
     }
 
@@ -982,7 +967,7 @@ public class CanRegDAO {
         } else if (newPasswordArray.length == 0) {
             // remove password
             String oldPassword = new String(oldPasswordArray);
-            dbProperties.setProperty("bootPassword", oldPassword);
+            dbProperties.setProperty(BOOT_PASSWORD, oldPassword);
             try {
                 disconnect();
                 // side effect of removing password is that we have to upgrade the database version
@@ -1010,9 +995,9 @@ public class CanRegDAO {
             dbProperties.setProperty("encryptionKeyLength", encryptionKeyLength);
             dbProperties.setProperty("encryptionAlgorithm", encryptionAlgorithm + "/" + defaultFeedbackMode + "/" + defaultPadding);
             String password = new String(newPasswordArray);
-            dbProperties.setProperty("bootPassword", password);
+            dbProperties.setProperty(BOOT_PASSWORD, password);
         }
-        dbProperties.remove("bootPassword");
+        dbProperties.remove(BOOT_PASSWORD);
         dbProperties.remove("newBootPassword");
 
         if (newPasswordArray.length == 0) {
@@ -1030,7 +1015,7 @@ public class CanRegDAO {
             String dbUrl = getDatabaseUrl();
             try{
                 dbConnection.trulyClose(); // Close current connection.
-                dbProperties.put("shutdown", "true");
+                dbProperties.put(SHUT_DOWN, "true");
                 openUniqueConnection(dbUrl);
             } catch (SQLException e) {
                 if (e.getSQLState().equals("08006")) {
@@ -1040,7 +1025,7 @@ public class CanRegDAO {
                     throw e;
                 }
             }
-            dbProperties.remove("shutdown");
+            dbProperties.remove(SHUT_DOWN);
         }
         return shutdownSuccess;
     }
@@ -1050,8 +1035,7 @@ public class CanRegDAO {
      * @return String location of the database
      */
     public String getDatabaseLocation() {
-        String dbLocation = System.getProperty("derby.system.home") + "/" + getRegistryCode();
-        return dbLocation;
+        return System.getProperty("derby.system.home") + "/" + getRegistryCode();
     }
 
     /**
@@ -1093,9 +1077,6 @@ public class CanRegDAO {
 
                 Object obj = record.getVariable(variable.getDatabaseVariableName());
 
-                // System.out.println(
-                //         element.getElementsByTagName(Globals.NAMESPACE + "short_name").item(0).getTextContent() +
-                //         ": " + obj.toString());
                 if (variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_ALPHA_NAME) || variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_ASIAN_TEXT_NAME) || variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_DICTIONARY_NAME) || variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_DATE_NAME) || variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_TEXT_AREA_NAME)) {
                     if (obj != null) {
                         try {
@@ -1457,10 +1438,8 @@ public class CanRegDAO {
             }
 
         } catch (java.sql.SQLIntegrityConstraintViolationException sqle) {
-            // System.out.println(nameSexRecord.getName());
              LOGGER.log(Level.SEVERE,String.format(" Error : an integrity constraint has been violated for nameSexRecord : %s",nameSexRecord.getName()), sqle);
         } catch (SQLException sqle) {
-            System.out.println(nameSexRecord.getName());
             LOGGER.log(Level.SEVERE, String.format("SQL error : for nameSexRecord : %s",nameSexRecord.getName()), sqle);
         }
         return id;
@@ -1469,7 +1448,7 @@ public class CanRegDAO {
     public synchronized boolean clearNameSexTable() {
         boolean success = false;
         try(Connection connection =getDbConnection();
-            PreparedStatement stmtClearNameSexTable = connection.prepareStatement(strClearNameSexTable)) {
+            PreparedStatement stmtClearNameSexTable = connection.prepareStatement(STR_CLEAR_NAME_SEX_TABLE)) {
             stmtClearNameSexTable.clearParameters();
 
             stmtClearNameSexTable.executeUpdate();
@@ -1484,7 +1463,7 @@ public class CanRegDAO {
     public synchronized boolean deleteDictionaryEntries(int dictionaryID) {
         boolean success = false;
         try(Connection connection = getDbConnection();
-            PreparedStatement stmtDeleteDictionaryEntries = connection.prepareStatement(strDeleteDictionaryEntries)) {
+            PreparedStatement stmtDeleteDictionaryEntries = connection.prepareStatement(STR_DELETE_DICTIONARY_ENTRIES)) {
             stmtDeleteDictionaryEntries.clearParameters();
             stmtDeleteDictionaryEntries.setInt(1, dictionaryID);
 
@@ -1503,7 +1482,7 @@ public class CanRegDAO {
             throw new RecordLockedException();
         }
         try(Connection connection = getDbConnection();
-            PreparedStatement  stmtDeletePatientRecord = connection.prepareStatement(strDeletePatientRecord)) {
+            PreparedStatement  stmtDeletePatientRecord = connection.prepareStatement(STR_DELETE_PATIENT_RECORD)) {
             stmtDeletePatientRecord.clearParameters();
             stmtDeletePatientRecord.setInt(1, patientRecordID);
             stmtDeletePatientRecord.executeUpdate();
@@ -1520,7 +1499,7 @@ public class CanRegDAO {
             throw new RecordLockedException();
         }
         try(Connection connection = getDbConnection();
-            PreparedStatement stmtDeleteTumourRecord = connection.prepareStatement(strDeleteTumourRecord)) {
+            PreparedStatement stmtDeleteTumourRecord = connection.prepareStatement(STR_DELETE_TUMOUR_RECORD)) {
             stmtDeleteTumourRecord.clearParameters();
             stmtDeleteTumourRecord.setInt(1, tumourRecordID);
             stmtDeleteTumourRecord.executeUpdate();
@@ -1537,7 +1516,7 @@ public class CanRegDAO {
             throw new RecordLockedException();
         }
         try(Connection connection = getDbConnection();
-            PreparedStatement  stmtDeleteSourceRecord = connection.prepareStatement(strDeleteSourceRecord)) {
+            PreparedStatement  stmtDeleteSourceRecord = connection.prepareStatement(STR_DELETE_SOURCE_RECORD)) {
             stmtDeleteSourceRecord.clearParameters();
             stmtDeleteSourceRecord.setInt(1, sourceRecordID);
             stmtDeleteSourceRecord.executeUpdate();
@@ -1560,7 +1539,6 @@ public class CanRegDAO {
             success = deleteSourceRecord(recordID);
         } else {
             String idString = "ID";
-            // ResultSet results = null;
             try( Connection connection = getDbConnection();
                 Statement statement = connection.createStatement()) {
                 statement.execute("DELETE FROM " + Globals.SCHEMA_NAME + "." + tableName + " WHERE " + idString + " = " + recordID);
@@ -1576,9 +1554,9 @@ public class CanRegDAO {
         //     throw new RecordLockedException();
         // }
         try(Connection connection = getDbConnection();
-            PreparedStatement stmtDeletePopoulationDataset = connection.prepareStatement(strDeletePopulationDataset);
+            PreparedStatement stmtDeletePopoulationDataset = connection.prepareStatement(STR_DELETE_POPULATION_DATASET);
             PreparedStatement stmtDeletePopoulationDatasetEntries =
-                connection.prepareStatement(strDeletePopulationDatasetEntries))
+                connection.prepareStatement(STR_DELETE_POPULATION_DATASET_ENTRIES))
         {
             // First delete entries
             stmtDeletePopoulationDatasetEntries.clearParameters();
@@ -1707,9 +1685,6 @@ public class CanRegDAO {
                                 } else {
                                     stmtEditRecord.setString(variableNumber, "");
                                 }
-                                // System.out.println(
-                                //        element.getElementsByTagName(Globals.NAMESPACE + "short_name").item(0).getTextContent() +
-                                //        ": " + strObj);
                             } catch (java.lang.ClassCastException cce) {
                                 debugOut("Cast to String Error. Type:" + variableType + ", Value: " + obj + ", Variable Number: " + variableNumber);
                                 throw cce;
@@ -1722,9 +1697,6 @@ public class CanRegDAO {
                             try {
                                 Integer intObj = (Integer) obj;
                                 stmtEditRecord.setInt(variableNumber, intObj);
-                                // System.out.println(
-                                //        element.getElementsByTagName(Globals.NAMESPACE + "short_name").item(0).getTextContent() +
-                                //        ": " + obj.toString());
                             } catch (java.lang.ClassCastException cce) {
                                 debugOut("Number " + variableType + " " + obj);
                                 throw cce;
@@ -1787,13 +1759,13 @@ public class CanRegDAO {
                 Object tumourID = tumour.getVariable(tumourIDVariableName);
                 Set<Source> sources = tumour.getSources();
                 // delete old sources
-//                try {
-//                    deleteSources(tumourID);
-//                } catch (DistributedTableDescriptionException ex) {
-//                    LOGGER.log(Level.SEVERE, null, ex);
-//                } catch (UnknownTableException ex) {
-//                    LOGGER.log(Level.SEVERE, null, ex);
-//                }
+                try {
+                    deleteSources(tumourID);
+                } catch (DistributedTableDescriptionException ex) {
+                    LOGGER.log(Level.SEVERE, null, ex);
+                } catch (UnknownTableException ex) {
+                    LOGGER.log(Level.SEVERE, null, ex);
+                }
                 // save each of the source records
                 saveSources(tumourID, sources);
             }
@@ -1816,7 +1788,7 @@ public class CanRegDAO {
         pds.setReferencePopulationBool(true);
         pds.setPopulationDatasetName("World Standard Population");
         pds.setSource("SEGI 1960 / World Health Organization");
-        pds.setDescription("http://www.who.int/healthinfo/paper31.pdf");
+        pds.setDescription(PAPER_31_PDF);
         pds.setAgeGroupStructure(new AgeGroupStructure(5, 85));
 
         int i = 0;
@@ -1831,7 +1803,7 @@ public class CanRegDAO {
         pds.setReferencePopulationBool(true);
         pds.setPopulationDatasetName("European Standard Population");
         pds.setSource("World Health Organization");
-        pds.setDescription("http://www.who.int/healthinfo/paper31.pdf");
+        pds.setDescription(PAPER_31_PDF);
         pds.setAgeGroupStructure(new AgeGroupStructure(5, 85));
 
         i = 0;
@@ -1846,7 +1818,7 @@ public class CanRegDAO {
         pds.setReferencePopulationBool(true);
         pds.setPopulationDatasetName("WHO Standard Population");
         pds.setSource("World Health Organization");
-        pds.setDescription("http://www.who.int/healthinfo/paper31.pdf");
+        pds.setDescription(PAPER_31_PDF);
         pds.setAgeGroupStructure(new AgeGroupStructure(5, 85));
 
         i = 0;
@@ -1932,7 +1904,7 @@ public class CanRegDAO {
 
     public synchronized static Map<Integer, Dictionary> buildDictionaryMap(Document doc) {
 
-        Map<Integer, Dictionary> dictionariesMap = new LinkedHashMap<Integer, Dictionary>();
+        Map<Integer, Dictionary> dictionariesMap = new LinkedHashMap<>();
 
         // NodeList dictionaries = variablesElement.getElementsByTagName(Globals.NAMESPACE + "dictionary");
         DatabaseDictionaryListElement[] dictionaries = canreg.common.Tools.getDictionaryListElements(doc, Globals.NAMESPACE);
@@ -1967,7 +1939,7 @@ public class CanRegDAO {
             throw new RecordLockedException();
         } 
         try(Connection connection = getDbConnection();
-            PreparedStatement stmtGetPatient = connection.prepareStatement(strGetPatient)) {
+            PreparedStatement stmtGetPatient = connection.prepareStatement(STR_GET_PATIENT)) {
             stmtGetPatient.clearParameters();
             stmtGetPatient.setInt(1, recordID);
             ResultSet result = stmtGetPatient.executeQuery();
@@ -2162,7 +2134,7 @@ public class CanRegDAO {
         ResultSetMetaData metadata;
         try(Connection connection = getDbConnection() ;
             PreparedStatement stmtGetPatientByPatientRecordID =
-                connection.prepareStatement(strGetPatientByPatientRecordID))
+                connection.prepareStatement(STR_GET_PATIENT_BY_PATIENT_RECORD_ID))
         {
             stmtGetPatientByPatientRecordID.clearParameters();
             stmtGetPatientByPatientRecordID.setString(1, patientRecordID);
@@ -2194,7 +2166,7 @@ public class CanRegDAO {
             throw new RecordLockedException();
         }
         try(Connection connection = getDbConnection();
-            PreparedStatement stmtGetTumour = connection.prepareStatement(strGetTumour)) {
+            PreparedStatement stmtGetTumour = connection.prepareStatement(STR_GET_TUMOUR)) {
             stmtGetTumour.clearParameters();
             stmtGetTumour.setInt(1, recordID);
             ResultSet result = stmtGetTumour.executeQuery();
@@ -2240,7 +2212,7 @@ public class CanRegDAO {
         ResultSetMetaData metadata;
 
         try(Connection connection = getDbConnection();
-            PreparedStatement stmtGetTumourByTumourID = connection.prepareStatement(strGetTumourByTumourID))
+            PreparedStatement stmtGetTumourByTumourID = connection.prepareStatement(STR_GET_TUMOUR_BY_TUMOUR_ID))
         {
             stmtGetTumourByTumourID.clearParameters();
             stmtGetTumourByTumourID.setString(1, tumourID);
@@ -2284,7 +2256,7 @@ public class CanRegDAO {
             throw new RecordLockedException();
         }
         try(Connection connection = getDbConnection();
-            PreparedStatement stmtGetSource = connection.prepareStatement(strGetSource)) {
+            PreparedStatement stmtGetSource = connection.prepareStatement(STR_GET_SOURCE)) {
             stmtGetSource.clearParameters();
             stmtGetSource.setInt(1, recordID);
             ResultSet result = stmtGetSource.executeQuery();
@@ -2312,7 +2284,7 @@ public class CanRegDAO {
         ResultSetMetaData metadata;
 
         try(Connection connection = getDbConnection();
-            PreparedStatement stmtGetSourceBySourceID = connection.prepareStatement(strGetSourceBySourceID)) {
+            PreparedStatement stmtGetSourceBySourceID = connection.prepareStatement(STR_GET_SOURCE_BY_SOURCE_ID)) {
             stmtGetSourceBySourceID.clearParameters();
             stmtGetSourceBySourceID.setString(1, sourceID);
             ResultSet result = stmtGetSourceBySourceID.executeQuery();
@@ -2521,7 +2493,7 @@ public class CanRegDAO {
      * @param msg the message to be printed to the console
      */
     private static void debugOut(String msg) {
-        if (debug) {
+        if (DEBUG) {
             LOGGER.log(Level.INFO, msg);
         }
     }
@@ -2543,17 +2515,17 @@ public class CanRegDAO {
     private final String patientRecordIDVariableName;
     private final String tumourIDVariableName;
     private final String sourceRecordIDVariableName;
-    private static final String strGetPatient
+    private static final String STR_GET_PATIENT
             = "SELECT * FROM APP.PATIENT "
             + "WHERE " + Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
-    private static final String strGetPatientByPatientRecordID = "SELECT * FROM APP.PATIENT WHERE PATIENTRECORDID = ?";
-    private final String strGetPatients
+    private static final String STR_GET_PATIENT_BY_PATIENT_RECORD_ID = "SELECT * FROM APP.PATIENT WHERE PATIENTRECORDID = ?";
+    private static final String STR_GET_PATIENTS
             = "SELECT * FROM APP.PATIENT";
-    private final String strCountPatients
+    private static final String STR_COUNT_PATIENTS
             = "SELECT COUNT(*) FROM APP.PATIENT";
-    private final String strCountSources
+    private static final String STR_COUNT_SOURCES
             = "SELECT COUNT(*) FROM APP.SOURCE";
-    private final String strGetSources
+    private static final String STR_GET_SOURCES
             = "SELECT * FROM APP.SOURCE";
     private final String strGetPatientsAndTumours;
     private final String strCountPatientsAndTumours;
@@ -2561,55 +2533,54 @@ public class CanRegDAO {
     private final String strCountSourcesAndTumours;
     private final String strGetSourcesAndTumoursAndPatients;
     private final String strCountSourcesAndTumoursAndPatients;
-    private static final String strGetTumour
+    private static final String STR_GET_TUMOUR
             = "SELECT * FROM APP.TUMOUR "
             + "WHERE " + Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
-    private static final String strGetTumourByTumourID 
+    private static final String STR_GET_TUMOUR_BY_TUMOUR_ID
             = "SELECT * FROM APP.TUMOUR "
             + "WHERE " + Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME_FOR_HOLDING + " = ?";
-    private static final String strGetSource
+    private static final String STR_GET_SOURCE
             = "SELECT * FROM APP.Source "
             + "WHERE " + Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
-    private static final String strGetSourceBySourceID
+    private static final String STR_GET_SOURCE_BY_SOURCE_ID
             = "SELECT * FROM APP.Source "
             + "WHERE " + Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME_FOR_HOLDING + " = ?";
-    private final String strGetTumours
+    private static final String STR_GET_TUMOURS
             = "SELECT * FROM APP.TUMOUR";
-    private final String strCountTumours
+    private static final String STR_COUNT_TUMOURS
             = "SELECT COUNT(*) FROM APP.TUMOUR";
-    private static final String strGetDictionary
-            = "SELECT * FROM APP.DICTIONARIES "
-            + "WHERE ID = ?";
-    private final String strGetDictionaries
+    private static final String STR_GET_DICTIONARY
+            = "SELECT * FROM APP.DICTIONARIES WHERE ID = ?";
+    private static final String STR_GET_DICTIONARIES
             = "SELECT * FROM APP.DICTIONARIES ";
-    private static final String strGetDictionaryEntry
+    private static final String STR_GET_DICTIONARY_ENTRY
             = "SELECT * FROM APP.DICTIONARY "
             + "WHERE ID = ?";
    
-    private static final String strGetPopulationDatasetEntries
+    private static final String STR_GET_POPULATION_DATASET_ENTRIES
             = "SELECT * FROM APP.PDSET ";
    
-    private static final String strDeletePatientRecord
+    private static final String STR_DELETE_PATIENT_RECORD
             = "DELETE FROM APP.PATIENT "
             + "WHERE " + Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
-    private static final String strDeleteSourceRecord
+    private static final String STR_DELETE_SOURCE_RECORD
             = "DELETE FROM APP.SOURCE "
             + "WHERE " + Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
-    private static final String strDeleteTumourRecord
+    private static final String STR_DELETE_TUMOUR_RECORD
             = "DELETE FROM APP.TUMOUR "
             + "WHERE " + Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME + " = ?";
-    private static final String strDeleteDictionaryEntries
+    private static final String STR_DELETE_DICTIONARY_ENTRIES
             = "DELETE FROM APP.DICTIONARY "
             + "WHERE DICTIONARY = ?";
-    private static final String strClearNameSexTable
+    private static final String STR_CLEAR_NAME_SEX_TABLE
             = "DELETE FROM APP.NAMESEX";
-    private static final String strDeletePopulationDataset
+    private static final String STR_DELETE_POPULATION_DATASET
             = "DELETE FROM APP.PDSETS "
             + "WHERE PDS_ID = ?";
-    private static final String strDeletePopulationDatasetEntries
+    private static final String STR_DELETE_POPULATION_DATASET_ENTRIES
             = "DELETE FROM APP.PDSET "
             + "WHERE PDS_ID = ?";
-    private static final String strGetUserByUserName
+    private static final String STR_GET_USER_BY_USER_NAME
             = "SELECT * FROM APP.USERS WHERE username = ?";
     // The Dynamic ones
     private final String strMaxNumberOfSourcesPerTumourRecord;
@@ -2747,7 +2718,7 @@ public class CanRegDAO {
             }
         }
 
-        query = "SELECT COUNT(*) FROM APP.PATIENT" + rangePart;
+        query = STR_COUNT_PATIENTS + rangePart;
         System.out.print(query);
         ResultSet countRowSet = statement.executeQuery(query);
         if (countRowSet.next()) {
@@ -2844,7 +2815,7 @@ public class CanRegDAO {
                     + "GROUP BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList + " "
                     + "ORDER BY SUBSTR(" + incidenceDateVariableName + ",1,4) " + variablesList;
         }
-        System.out.println(query);
+        LOGGER.info(query);
         try {
             result = statement.executeQuery(query);
         } catch (java.sql.SQLSyntaxErrorException ex) {
@@ -2872,14 +2843,14 @@ public class CanRegDAO {
         boolean joinedTables = false;
 
         if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
-            counterStringBuilder.append(strCountTumours);
-            getterStringBuilder.append(strGetTumours);
+            counterStringBuilder.append(STR_COUNT_TUMOURS);
+            getterStringBuilder.append(STR_GET_TUMOURS);
         } else if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
-            counterStringBuilder.append(strCountPatients);
-            getterStringBuilder.append(strGetPatients);
+            counterStringBuilder.append(STR_COUNT_PATIENTS);
+            getterStringBuilder.append(STR_GET_PATIENTS);
         } else if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
-            counterStringBuilder.append(strCountSources);
-            getterStringBuilder.append(strGetSources);
+            counterStringBuilder.append(STR_COUNT_SOURCES);
+            getterStringBuilder.append(STR_GET_SOURCES);
         } else if (tableName.equalsIgnoreCase(Globals.TUMOUR_AND_PATIENT_JOIN_TABLE_NAME)) {
             counterStringBuilder.append(strCountPatientsAndTumours);
             getterStringBuilder.append(strGetPatientsAndTumours);
@@ -2926,10 +2897,10 @@ public class CanRegDAO {
             filterStringBuilder.append(")");
         }
 
-        if(debug) {
-            System.out.println("filterString: " + filterStringBuilder);
-            System.out.println("getterString: " + getterStringBuilder);
-            System.out.println("counterString: " + counterStringBuilder);
+        if(DEBUG) {
+            LOGGER.log(Level.INFO,"filterString: {}", filterStringBuilder);
+            LOGGER.log(Level.INFO,"getterString: {}", getterStringBuilder);
+            LOGGER.log(Level.INFO,"counterString: {}",counterStringBuilder);
         }
 
         ResultSet countRowSet;
@@ -3004,10 +2975,10 @@ public class CanRegDAO {
                 globalToolBox.translateStandardVariableNameToDatabaseListElement(
                         Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName())) {
             try {
-                System.out.println(command);
+                LOGGER.log(Level.INFO, command);
                 statement.execute(command);
             } catch (SQLException sqle) {
-                LOGGER.log(Level.SEVERE, "Exception in : " + command, sqle);
+                LOGGER.log(Level.SEVERE, String.format("Exception in : %s", command ), sqle);
                 success = false;
             }
         }
@@ -3016,10 +2987,10 @@ public class CanRegDAO {
                 globalToolBox.translateStandardVariableNameToDatabaseListElement(
                         Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName())) {
             try {
-                System.out.println(command);
+                LOGGER.log(Level.INFO, command);
                 statement.execute(command);
             } catch (SQLException sqle) {
-                LOGGER.log(Level.SEVERE, "Exception in : " + command, sqle);
+                LOGGER.log(Level.SEVERE, String.format("Exception in : %s", command), sqle);
                 success = false;
             }
         }
@@ -3061,7 +3032,7 @@ public class CanRegDAO {
                 System.out.println(command);
                 statement.execute(command);
             } catch (SQLException sqle) {
-                LOGGER.log(Level.SEVERE, "Exception in : " + command, sqle);
+                LOGGER.log(Level.SEVERE, String.format("Exception in : %s", command), sqle);
                 success = false;
             }
         }
@@ -3103,11 +3074,8 @@ public class CanRegDAO {
     }
 
     void upgrade() throws SQLException, RemoteException {
-        // disconnect();
         openUniqueConnection(getDatabaseUrl() + ";upgrade=true");
         LOGGER.log(Level.INFO, "JavaDB Version: {0}", dbConnection.getMetaData().getDatabaseProductVersion());
-        // disconnect();
-        // connect();
     }
 
     /**
