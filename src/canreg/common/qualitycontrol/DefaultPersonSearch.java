@@ -48,6 +48,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
     private float threshold = 50;
     private float maximumTotalScore;
     private float[] variableWeights;
+    private boolean[] lockeds;
     Map<String, DatabaseVariablesListElement> variablesInDBMap;
     private PersonSearchVariable[] searchVariables;
     // private Soundex soundex = new Soundex();
@@ -86,12 +87,14 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
         discPower = new float[variableNames.length];
         reliability = new float[variableNames.length];
         presence = new float[variableNames.length];
+        lockeds = new boolean[variableNames.length];
         for (PersonSearchVariable psv : personSearchVariables) {
             variableNames[i] = psv.getName();
             variableWeights[i] = psv.getWeight();
             discPower[i] = psv.getDiscPower();
             reliability[i] = psv.getReliability();
             presence[i] = psv.getPresence();
+            lockeds[i] = psv.isLocked();
             i++;
         }
 
@@ -103,6 +106,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
             float rel = reliability[varb];
             float pres = presence[varb];
             float weigth = variableWeights[varb];
+
 
             int sim = 100;
             float maxscore = scoreFunction(dis, rel, pres, sim, weigth);
@@ -157,6 +161,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
         DatabaseVariablesListElement dbvle;
         String varibleType;
         CompareAlgorithms compareAlgorithm;
+        boolean locked;
 
         for (int link = 0; link < variableNames.length; ++link) {
             dbvle = variablesInDBMap.get(variableNames[link]);
@@ -174,6 +179,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
                 patient2data = patient2dataObject.toString();
 
                 compareAlgorithm = searchVariables[link].getCompareAlgorithm();
+                locked = lockeds[link];
 
                 if (patient1data.trim().length() == 0 || patient2data.trim().length() == 0) {
                     similarity = missing;
@@ -181,9 +187,9 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
                     similarity = missing;
                 } else if (patient2data.equals(unknownCode)) {
                     similarity = missing;
-                } else if (compareAlgorithm.equals(CompareAlgorithms.code)) {
+                }/*else if (compareAlgorithm.equals(CompareAlgorithms.code)) {
                     similarity = compareCodes(patient1data, patient2data);
-                } else if (compareAlgorithm.equals(CompareAlgorithms.alpha)) {
+                }*/ else if (compareAlgorithm.equals(CompareAlgorithms.alpha)) {
                     similarity = compareText(patient1data, patient2data);
                 } else if (compareAlgorithm.equals(CompareAlgorithms.date)) {
                     similarity = compareDate(patient1data, patient2data);
@@ -246,6 +252,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
         String patient2data;
         DatabaseVariablesListElement dbvle;
         CompareAlgorithms compareAlgorithm;
+        boolean locked;
 
         for (int link = 0; link < variableNames.length; ++link) {
             dbvle = variablesInDBMap.get(variableNames[link]);
@@ -263,6 +270,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
                 patient2data = patient2dataObject.toString();
 
                 compareAlgorithm = searchVariables[link].getCompareAlgorithm();
+                locked = lockeds[link];
 
                 if (patient1data.trim().length() == 0 || patient2data.trim().length() == 0) {
                     similarity = missing;
@@ -270,6 +278,8 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
                     similarity = missing;
                 } else if (patient2data.equals(unknownCode)) {
                     similarity = missing;
+                } else if (locked) {
+                    similarity = 100;
                 } else if (compareAlgorithm.equals(CompareAlgorithms.code)) {
                     similarity = compareCodes(patient1data, patient2data);
                 } else if (compareAlgorithm.equals(CompareAlgorithms.alpha)) {

@@ -1,4 +1,4 @@
-<?xml version="1.1" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 
 <Form version="1.5" maxVersion="1.6" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
   <Properties>
@@ -23,7 +23,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="variablesComboBox" pref="115" max="32767" attributes="0"/>
+              <Component id="variablesComboBox" pref="382" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
@@ -36,9 +36,11 @@
               <Component id="discPowerjLabel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="discPowerTextField" min="-2" pref="35" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="jCheckBox2" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="removeButton" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -54,6 +56,7 @@
               <Component id="discPowerTextField" alignment="3" min="-2" max="-2" attributes="0"/>
               <Component id="discPowerjLabel" alignment="3" min="-2" max="-2" attributes="0"/>
               <Component id="removeButton" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Component id="jCheckBox2" alignment="3" min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -131,6 +134,15 @@
         <Property name="text" type="java.lang.String" resourceKey="discPowerjLabel.text"/>
         <Property name="name" type="java.lang.String" value="discPowerjLabel" noResource="true"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="jCheckBox2">
+      <Properties>
+        <Property name="text" type="java.lang.String" resourceKey="jCheckBox2.text"/>
+        <Property name="name" type="java.lang.String" value="jCheckBox2" noResource="true"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jCheckBox2ActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

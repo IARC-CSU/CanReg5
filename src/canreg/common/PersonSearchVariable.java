@@ -35,6 +35,7 @@ public class PersonSearchVariable implements Serializable {
     private float presence = 1.0f;
     private DatabaseVariablesListElement databaseVariablesListElement;
     private CompareAlgorithms compareAlgorithm;
+    private boolean locked;
 
     /**
      * 
@@ -136,5 +137,13 @@ public class PersonSearchVariable implements Serializable {
      */
     public void setPresence(float presence) {
         this.presence = presence;
+    }
+
+    public boolean isLocked() {
+        return locked;
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
     }
 }

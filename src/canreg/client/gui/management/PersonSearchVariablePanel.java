@@ -127,6 +127,7 @@ public class PersonSearchVariablePanel extends javax.swing.JPanel {
         psv.setWeight(getWeight());
         psv.setDiscPower(getDiscPower());
         psv.setAlgorithm(getCompareAlgorithm());
+        psv.setLocked(getLocked());
         return psv;
     }
 
@@ -156,6 +157,7 @@ public class PersonSearchVariablePanel extends javax.swing.JPanel {
         jLabel3 = new javax.swing.JLabel();
         discPowerTextField = new javax.swing.JTextField();
         discPowerjLabel = new javax.swing.JLabel();
+        lockCheckBox = new javax.swing.JCheckBox();
 
         setName("Form"); // NOI18N
 
@@ -189,6 +191,14 @@ public class PersonSearchVariablePanel extends javax.swing.JPanel {
         discPowerjLabel.setText(resourceMap.getString("discPowerjLabel.text")); // NOI18N
         discPowerjLabel.setName("discPowerjLabel"); // NOI18N
 
+        lockCheckBox.setText(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(PersonSearchVariablePanel.class).getString("jCheckBox2.text")); // NOI18N
+        lockCheckBox.setName("jCheckBox2"); // NOI18N
+        lockCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -197,7 +207,7 @@ public class PersonSearchVariablePanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(variablesComboBox, 0, 115, Short.MAX_VALUE)
+                .addComponent(variablesComboBox, 0, 382, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -210,9 +220,11 @@ public class PersonSearchVariablePanel extends javax.swing.JPanel {
                 .addComponent(discPowerjLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(discPowerTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(lockCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(removeButton)
-                .addGap(10, 10, 10))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -225,9 +237,14 @@ public class PersonSearchVariablePanel extends javax.swing.JPanel {
                 .addComponent(jLabel3)
                 .addComponent(discPowerTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(discPowerjLabel)
-                .addComponent(removeButton))
+                .addComponent(removeButton)
+                .addComponent(lockCheckBox))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jCheckBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jCheckBox2ActionPerformed
 
     /**
      * 
@@ -239,11 +256,13 @@ public class PersonSearchVariablePanel extends javax.swing.JPanel {
 
     @Action
     public void variableChanged() {
+
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox compareAlgorithmComboBox;
     private javax.swing.JTextField discPowerTextField;
     private javax.swing.JLabel discPowerjLabel;
+    private javax.swing.JCheckBox lockCheckBox;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -260,5 +279,9 @@ public class PersonSearchVariablePanel extends javax.swing.JPanel {
             LOGGER.log(Level.WARNING, null, nfe);
         }
         return discPower;
+    }
+
+    private boolean getLocked(){
+        return lockCheckBox.isSelected();
     }
 }
