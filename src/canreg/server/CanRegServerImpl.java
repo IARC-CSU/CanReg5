@@ -947,8 +947,6 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
                 for (int row = startRow; row < endRow && row < rowData.length; row++) {
                     int patientIDA = (Integer) rowData[row][0];
                     Object[] patientAData = patientsData.get(patientIDA);
-                    // Map<String, Float> patientIDScoreMap = performPersonSearch(patientA, searcher, globalPersonSearchHandler.getDistributedTableDescription());
-
                     if (patientAData != null) {
                         Map<String, Float> patientIDScoreMap = performPersonSearchDataOnly(patientIDA, patientAData, searcher, patientsData, globalPersonSearchHandler.getAllPatientRecordIDs());
                         if (patientIDScoreMap.size() > 0) {
@@ -1077,9 +1075,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
                         float score = searcher.compare(patient, patientB);
                         if (score > threshold) {
                             patientIDScoreMap.put((String) patientB.getVariable(patientRecordIDvariableName), score);
-                            // debugOut("Found patient id: " + patientB.getVariable(patientRecordIDvariableName) + ", score: " + score + "%");
                         } else {
-                            // debugOut("Not found " + patientB.getVariable(patientRecordIDvariableName) + " " + score);
                         }
                     } catch (RecordLockedException ex) {
                         LOGGER.log(Level.SEVERE, null, ex);

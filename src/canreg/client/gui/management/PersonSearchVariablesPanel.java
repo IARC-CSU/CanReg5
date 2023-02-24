@@ -277,5 +277,6 @@ public class PersonSearchVariablesPanel extends javax.swing.JPanel implements Ac
         thresholdTextField.setEnabled(editable);
         setVariableListEnabled(editable);
         addVariableButton.setEnabled(editable);
+
     }
 }

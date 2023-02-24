@@ -94,7 +94,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
             discPower[i] = psv.getDiscPower();
             reliability[i] = psv.getReliability();
             presence[i] = psv.getPresence();
-            lockeds[i] = psv.isLocked();
+            lockeds[i] = psv.isBlock();
             i++;
         }
 
@@ -187,9 +187,11 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
                     similarity = missing;
                 } else if (patient2data.equals(unknownCode)) {
                     similarity = missing;
-                }/*else if (compareAlgorithm.equals(CompareAlgorithms.code)) {
+                } else if (locked) {
+                    similarity = compareExact(patient1data, patient2data);
+                } else if (compareAlgorithm.equals(CompareAlgorithms.code)) {
                     similarity = compareCodes(patient1data, patient2data);
-                }*/ else if (compareAlgorithm.equals(CompareAlgorithms.alpha)) {
+                } else if (compareAlgorithm.equals(CompareAlgorithms.alpha)) {
                     similarity = compareText(patient1data, patient2data);
                 } else if (compareAlgorithm.equals(CompareAlgorithms.date)) {
                     similarity = compareDate(patient1data, patient2data);
@@ -279,7 +281,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
                 } else if (patient2data.equals(unknownCode)) {
                     similarity = missing;
                 } else if (locked) {
-                    similarity = 100;
+                    similarity = compareExact(patient1data, patient2data);
                 } else if (compareAlgorithm.equals(CompareAlgorithms.code)) {
                     similarity = compareCodes(patient1data, patient2data);
                 } else if (compareAlgorithm.equals(CompareAlgorithms.alpha)) {
@@ -290,6 +292,8 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
                     similarity = compareNumber(patient1data, patient2data);
                 } else if (compareAlgorithm.equals(CompareAlgorithms.soundex)) {
                     similarity = compareSoundex(patient1data, patient2data);
+                } else if (compareAlgorithm.equals(CompareAlgorithms.exact)) {
+                    similarity = compareExact(patient1data, patient2data);
                 } else {
                     similarity = compareText(patient1data, patient2data);
                 }
@@ -565,12 +569,6 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
         float Score = sim * weigth; // 2012
         return Score;
     }
-    
-//    private float scoreFunction(float dis, float rel, float pres, float sim, float weigth) {
-//        float Score = (sim / 5) * (2 + 4 * rel + 3 * dis) - 60 * rel - 20; // 2007
-//        //float	Score = (sim / 6) * (2 +4*rel +3*dis + rel*dis) - 6*rel -2;	//	20/08/2003
-//        return Score;
-//    }
 
     /**
      * 
@@ -598,6 +596,10 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
         } else {
             return 0;
         }
+    }
+
+    private int compareExact(String patient1data, String patient2data){
+        return (patient1data.equals(patient2data)) ? 100 : 0;
     }
 
     @Override

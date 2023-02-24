@@ -176,10 +176,12 @@ public class Tools {
             if (e.getElementsByTagName(namespace + "reliability").item(0) != null) {
                 searchVariables[i].setReliability(Float.parseFloat(e.getElementsByTagName(namespace + "reliability").item(0).getTextContent()));
             }
-
             NodeList compareAlgorithmElement = e.getElementsByTagName(namespace + "compare_algorithm");
             if (compareAlgorithmElement.getLength() > 0) {
                 searchVariables[i].setAlgorithm(CompareAlgorithms.valueOf(compareAlgorithmElement.item(0).getTextContent()));
+            }
+            if (e.getElementsByTagName(namespace + "block").item(0) != null) {
+                searchVariables[i].setBlock(Boolean.parseBoolean(e.getElementsByTagName(namespace + "block").item(0).getTextContent()));
             }
         }
         return searchVariables;
