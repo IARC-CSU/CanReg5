@@ -282,7 +282,7 @@
 
     <target name="-copy-tmp-manifest" if="manifest.file">
         <property name="tmp.manifest.file" value="${build.dir}/manifest.mf"/>
-        <copy file="${manifest.file}" tofile="${build.dir}/manifest.mf" encoding="${manifest.encoding}" outputencoding="UTF-8"/>
+        <copy file="${manifest.file}" tofile="${build.dir}/manifest.mf" encoding="UTF-8" outputencoding="UTF-8"/>
     </target>
 
     <target name="-set-mixed-code-properties" depends="-check-signing-possible" if="jnlp.signed.true+signjars.task.available">

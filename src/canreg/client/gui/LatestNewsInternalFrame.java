@@ -36,8 +36,14 @@ import canreg.client.gui.tools.globalpopup.MyPopUpMenu;
 //import com.sun.cnpi.rss.elements.Link;
 //import com.sun.cnpi.rss.elements.Rss;
 //import com.sun.cnpi.rss.parser.*;
-import canreg.client.gui.tools.globalpopup.TechnicalError;
 import java.io.IOException;
+import java.text.ParseException;
+import java.util.Collection;
+import java.util.Iterator;
+import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.HyperlinkEvent;
@@ -45,7 +51,6 @@ import javax.swing.event.HyperlinkListener;
 import org.jdesktop.application.Action;
 
 public class LatestNewsInternalFrame extends javax.swing.JInternalFrame implements HyperlinkListener {
-    private static final Logger LOGGER = Logger.getLogger(LatestNewsInternalFrame.class.getName());
 
     /** Creates new form LatestNewsInternalFrame */
     public LatestNewsInternalFrame() {
@@ -199,6 +204,7 @@ public class LatestNewsInternalFrame extends javax.swing.JInternalFrame implemen
     private javax.swing.JEditorPane newsEditorPane;
     // End of variables declaration//GEN-END:variables
 
+
     private void initContent() {
         newsEditorPane.setContentType("text/html");
 //        try {
@@ -212,7 +218,6 @@ public class LatestNewsInternalFrame extends javax.swing.JInternalFrame implemen
 //            LOGGER.log(Level.INFO, null, ex);
 //        }
     }
-
     @Action
     public void okAction() {
         this.dispose();
@@ -224,8 +229,7 @@ public class LatestNewsInternalFrame extends javax.swing.JInternalFrame implemen
             try {
                 canreg.common.Tools.browse(event.getURL().toString());
             } catch (IOException ex) {
-                LOGGER.log(Level.SEVERE, null, ex);
-                new TechnicalError().errorDialog();
+                Logger.getLogger(LatestNewsInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
