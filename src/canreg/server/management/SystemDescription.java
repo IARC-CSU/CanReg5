@@ -562,7 +562,6 @@ public final class SystemDescription implements Serializable {
             parentElement = doc.createElement(namespace + "search_variables");
             doc.appendChild(parentElement);
         }
-        //  debugOut(i+ " " + variableElement.getElementsByTagName(namespace + "short_name").item(0).getTextContent());
         while (parentElement.hasChildNodes()) {
             parentElement.removeChild(parentElement.getLastChild());
         }

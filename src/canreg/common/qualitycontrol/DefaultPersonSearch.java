@@ -1,17 +1,17 @@
 /**
  * CanReg5 - a tool to input, store, check and analyse cancer registry data.
  * Copyright (C) 2008-2015  International Agency for Research on Cancer
- *
+ * <p>
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -35,10 +35,10 @@ import java.util.logging.Logger;
  * The default person search module
  * @author ervikm
  * based on code from DEPedits by Andy Cooke 2008
- * 
+ *
  */
 public class DefaultPersonSearch implements PersonSearcher, Serializable {
-    
+
     private static final Logger LOGGER = Logger.getLogger(PersonSearcher.class.getName());
     private String[] variableNames;
     static final int missing = -1;  // flag to say variable value missing
@@ -56,7 +56,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
     // private Caverphone caverphone = new Caverphone();
 
     /**
-     * 
+     *
      * @param variablesInDB
      */
     public DefaultPersonSearch(DatabaseVariablesListElement[] variablesInDB) {
@@ -67,7 +67,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public synchronized PersonSearchVariable[] getPersonSearchVariables() {
@@ -75,7 +75,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
     }
 
     /**
-     * 
+     *
      * @param personSearchVariables
      */
     @Override
@@ -137,7 +137,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
     }
 
     /**
-     * 
+     *
      * @param patient1
      * @param patient2
      * @return
@@ -159,7 +159,6 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
         String patient1data;
         String patient2data;
         DatabaseVariablesListElement dbvle;
-        String varibleType;
         CompareAlgorithms compareAlgorithm;
         boolean locked;
 
@@ -188,7 +187,10 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
                 } else if (patient2data.equals(unknownCode)) {
                     similarity = missing;
                 } else if (locked) {
-                    similarity = compareExact(patient1data, patient2data);
+                    similarity = (compareAlgorithm.equals(CompareAlgorithms.date)) ? compareExact(patient1data.substring(0, 4), patient2data.substring(0, 4)) : compareExact(patient1data, patient2data);
+                    if (similarity < -100){
+                        return 0;
+                    }
                 } else if (compareAlgorithm.equals(CompareAlgorithms.code)) {
                     similarity = compareCodes(patient1data, patient2data);
                 } else if (compareAlgorithm.equals(CompareAlgorithms.alpha)) {
@@ -281,7 +283,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
                 } else if (patient2data.equals(unknownCode)) {
                     similarity = missing;
                 } else if (locked) {
-                    similarity = compareExact(patient1data, patient2data);
+                    similarity = (compareAlgorithm.equals(CompareAlgorithms.date)) ? compareExact(patient1data.substring(0, 4), patient2data.substring(0, 4)) : compareExact(patient1data, patient2data);
                 } else if (compareAlgorithm.equals(CompareAlgorithms.code)) {
                     similarity = compareCodes(patient1data, patient2data);
                 } else if (compareAlgorithm.equals(CompareAlgorithms.alpha)) {
@@ -313,6 +315,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
         }
         return totalScore;
     }
+
     private int compareCodes(String s1, String s2) {
         // called from Compare
         // finds how many common chars in same positions in s1 and s2
@@ -394,7 +397,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
                         SmallStr = SmallStr.replaceAll(sub, rep1);
                         BigStr = BigStr.replaceAll(sub, rep2);
                     } catch (Exception e) {
-                        LOGGER.log(Level.SEVERE,null,e);
+                        LOGGER.log(Level.SEVERE, null, e);
                     }
                     posB[matchCount] = posBig;
                     posS[matchCount] = posSmall;
@@ -456,7 +459,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
                 YrInt1 = Integer.parseInt(YrStr1);
                 YrInt2 = Integer.parseInt(YrStr2);
             } catch (Exception e) {
-                LOGGER.log(Level.SEVERE,null,e);
+                LOGGER.log(Level.SEVERE, null, e);
                 return 0;
             }
             if (YrInt1 == YrInt2 + 1 || YrInt1 == YrInt2 - 1) {
@@ -530,14 +533,14 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
         //------------------------------------------
 
         /*****  25% error returns 0
-        
-        eg  Age 62, 64
-        Diff = 2 , Max = 64
-        score = (1 - 4 * 2 / 64) * 100 = 87
-        
-        eg  Age 40, 35
-        Diff = 5 , Max = 40
-        score = (1 - 4 * 5 / 40) * 100 = 50
+
+         eg  Age 62, 64
+         Diff = 2 , Max = 64
+         score = (1 - 4 * 2 / 64) * 100 = 87
+
+         eg  Age 40, 35
+         Diff = 5 , Max = 40
+         score = (1 - 4 * 5 / 40) * 100 = 50
          ***************************/
         if (s1.equals(s2)) {
             return 100;
@@ -571,7 +574,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
     }
 
     /**
-     * 
+     *
      * @return
      */
     @Override
@@ -580,7 +583,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
     }
 
     /**
-     * 
+     *
      * @param threshold
      */
     @Override
@@ -598,8 +601,8 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
         }
     }
 
-    private int compareExact(String patient1data, String patient2data){
-        return (patient1data.equals(patient2data)) ? 100 : 0;
+    private int compareExact(String patient1data, String patient2data) {
+        return (patient1data.equals(patient2data)) ? 100 : -1000;
     }
 
     @Override

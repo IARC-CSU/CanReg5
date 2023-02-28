@@ -138,6 +138,7 @@ public class PersonSearchVariablePanel extends javax.swing.JPanel {
         variablesComboBox.setEnabled(enabled);
         compareAlgorithmComboBox.setEnabled(enabled);
         discPowerTextField.setEnabled(enabled);
+        blockCheckBox.setEnabled(enabled);
     }
 
     /** This method is called from within the constructor to

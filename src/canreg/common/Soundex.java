@@ -138,6 +138,13 @@ public class Soundex {
     };
     for (int i = 0; i< names.length; i++)
       System.out.println(Soundex.soundex(names[i]) + ' ' + names[i]);
+
+    String j1 = "GERONIMO";
+    String j2 = "JERONIMO";
+
+    System.out.println(Soundex.soundex(j1));
+    System.out.println(Soundex.soundex(j2));
   }
+
 
 }
