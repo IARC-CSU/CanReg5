@@ -19,14 +19,8 @@
  */
 package canreg.server;
 
-import canreg.common.DatabaseFilter;
-import canreg.common.DatabaseIndexesListElement;
-import canreg.common.DefaultConfigFileUtils;
-import canreg.common.GlobalToolBox;
-import canreg.common.Globals;
+import canreg.common.*;
 import canreg.common.Globals.UserRightLevels;
-import canreg.common.PersonSearchVariable;
-import canreg.common.Tools;
 import canreg.common.cachingtableapi.DistributedTableDescription;
 import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.common.database.DatabaseRecord;
@@ -47,6 +41,7 @@ import canreg.server.database.RecordLockedException;
 import canreg.server.database.UnknownTableException;
 import canreg.server.management.SystemDescription;
 import canreg.server.management.UserManagerNew;
+
 import java.awt.AWTException;
 import java.awt.Image;
 import java.awt.SystemTray;
@@ -62,20 +57,12 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.derby.drda.NetworkServerControl;
 import org.w3c.dom.Document;
@@ -211,7 +198,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         // Update the tooltip now that everything is up and running...
         setTrayIconToolTip("CanReg5 server " + systemDescription.getRegistryName() + " (" + registryCode + ") running");
         displayTrayIconPopUpMessage("Server running", "CanReg5 server " + systemDescription.getRegistryName() + " (" + registryCode + ") running", MessageType.INFO);
-        
+
         // Step six: create the holding DBs for the API users
         initHoldingDbsForApiUsers(systemDescription);
     }
@@ -231,8 +218,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
                 String mainRegistryCode = getCanRegRegistryCode();
                 try {
                     SystemDescription holdingSystemDescription = createNewApiHoldingDBSystemDescription(
-                                    mainRegistryCode, 
-                                    mainSystemDescription, 
+                                    mainRegistryCode,
+                                    mainSystemDescription,
                                     apiUser);
                     // Additional variables for holding db
                     HoldingDbCommon.addVariablesForImportToHoldingDB(holdingSystemDescription);
@@ -271,7 +258,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      * Build the registry code for a holding db for an api user.
      * @param mainRegistryCode main registry code like TRN
      * @param apiUserName the userName of the api user
-     * @param withDate true to add the date: _yyyy-mm-dd                 
+     * @param withDate true to add the date: _yyyy-mm-dd
      * @return "HOLDING_" + registryCode + "_" + normalizedUserName + "_" + yyyy-mm-dd
      *      or "HOLDING_" + registryCode + "_" + normalizedUserName
      */
@@ -499,7 +486,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         displayTrayIconPopUpMessage("User logged out", "User " + username + " logged out.", MessageType.INFO);
     }
 
-    // 
+    //
     /**
      * For testing purposes only - not secure enough... Not used!
      *
@@ -1004,6 +991,30 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             }
             searcher = personSearcher;
         }
+
+        // get the list of search variables which are set in "Modify Database Structure" window
+        PersonSearchVariable[] psv = searcher.getSearchVariables();
+        String attributeName; // the column name of the database table
+        StringBuilder filterToApply = new StringBuilder(); // filter to apply to the database call
+        for (int i = 0; i < psv.length; i++) {
+            // value needs to be "blocked" and the compare algorithm mustn't be soundex
+            if (psv[i].isBlock() && !psv[i].getCompareAlgorithm().equals(PersonSearcher.CompareAlgorithms.soundex)) {
+                attributeName = psv[i].getName();
+                String variableValue = patient.getVariable(attributeName).toString();
+                // if selected algorithm is date, comparison is done on the year
+                if (psv[i].getCompareAlgorithm().equals(PersonSearcher.CompareAlgorithms.date)) {
+                    variableValue = variableValue.substring(0, 4);
+                    filterToApply.append(" AND ").append(attributeName).append(" like '").append(variableValue).append("%'");
+                // if selected algorithm is number, remove the quotes on the value
+                } else if (psv[i].getCompareAlgorithm().equals(PersonSearcher.CompareAlgorithms.number)) {
+                    filterToApply.append(" AND ").append(attributeName).append("=").append(variableValue);
+                } else {
+                    filterToApply.append(" AND ").append(attributeName).append("='").append(variableValue).append("'");
+                }
+            }
+        }
+        // remove the first " AND " from the query
+        filter.setFilterString(String.valueOf(filterToApply).replaceFirst(" AND ", ""));
         try {
             dataDescription = currentDAO.getDistributedTableDescriptionAndInitiateDatabaseQuery(filter, Globals.PATIENT_TABLE_NAME, currentDAO.generateResultSetID());
             resultSetID = dataDescription.getResultSetID();
@@ -1053,7 +1064,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
 
     private Map<String, Float> performPersonSearch(Patient patient, PersonSearcher searcher, Object[][] rowData) throws RemoteException, SecurityException {
         Map<String, Float> patientIDScoreMap = new TreeMap<>();
-        
+
         Patient patientB;
 
         Object patientIDAObject = patient.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
@@ -1258,7 +1269,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     }
 
     /**
-     * Returns the main folder for the system of a holding database: like  'xxx/.CanRegServer/Holding/TRN'  
+     * Returns the main folder for the system of a holding database: like  'xxx/.CanRegServer/Holding/TRN'
      * @param registryCode the registry code
      * @return File pointing on the filesystem folder
      */
@@ -1363,7 +1374,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     public int hashCode() {
         return super.hashCode();
     }
-    
+
     // Method to release the ResultSet in finally block if the ResultSetID is not null 
     private void releaseNotNullResultSet(String resultSetID) throws RemoteException{
         try {

@@ -49,23 +49,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.rmi.RemoteException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.sql.*;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -2709,32 +2694,44 @@ public class CanRegDAO {
 
     private DistributedTableDataSource initiatePersonSearchQuery(DatabaseFilter filter, Statement statement) throws SQLException, DistributedTableDescriptionException {
         ResultSet result;
-        String query = "";
-        String rangePart = "";
+        String query; // the sql query
+        String rangePart; // the sql query part where the ID range is set
+        String blockAttributesPart = ""; // the sql query part where the blocked attributes are listed
         int rowCount = -1;
         DistributedTableDataSource dataSource;
+        StringBuilder whereQuery; // the "WHERE" sql query part
+        ArrayList<String> useWhereQueryParts = new ArrayList<>(); // arrayList which contains the different parts of the "WHERE" section
 
+        // This part is used during the global duplicate person search
         if ((filter.getRangeStart() != null && filter.getRangeStart().length() > 0) || (filter.getRangeEnd() != null && filter.getRangeEnd().length() > 0)) {
             rangePart = QueryGenerator.buildRangePart(filter);
             if (rangePart.length() > 0) {
-                rangePart = " WHERE " + rangePart;
+                useWhereQueryParts.add(rangePart);
             }
         }
-
-        query = STR_COUNT_PATIENTS + rangePart;
-        System.out.print(query);
-        ResultSet countRowSet = statement.executeQuery(query);
-        if (countRowSet.next()) {
-            rowCount = countRowSet.getInt(1);
+        // this part is used during a single person duplicate search
+        if ( filter.getFilterString() != null && filter.getFilterString().length() > 0 ) {
+            useWhereQueryParts.add(filter.getFilterString()); //
         }
-        countRowSet = null;
 
-        query = "SELECT " + Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME + " FROM APP.PATIENT" + rangePart;
+        whereQuery = new StringBuilder((useWhereQueryParts.size() > 0) ? " WHERE " + useWhereQueryParts.get(0) : "");
+        // normally, useWhereQueryParts size should always be 1
+        for (int i = 1; i < useWhereQueryParts.size(); i++) {
+            whereQuery.append(" AND ").append(useWhereQueryParts.get(i));
+        }
+
+        query = "SELECT " + Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME + " FROM APP.PATIENT" + whereQuery;
         try {
             result = statement.executeQuery(query);
         } catch (java.sql.SQLSyntaxErrorException ex) {
             throw ex;
         }
+        // counting rows
+        if (result.last()) {
+            rowCount = result.getRow();
+            result.first();
+        }
+
         if (rowCount > 0) {
             dataSource = new DistributedTableDataSourceResultSetImpl(rowCount, result);
         } else {
