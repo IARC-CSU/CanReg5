@@ -27,7 +27,6 @@ import canreg.common.database.Patient;
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
-//import org.apache.commons.codec.language.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -187,7 +186,13 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
                 } else if (patient2data.equals(unknownCode)) {
                     similarity = missing;
                 } else if (locked) {
-                    similarity = (compareAlgorithm.equals(CompareAlgorithms.date)) ? compareExact(patient1data.substring(0, 4), patient2data.substring(0, 4)) : compareExact(patient1data, patient2data);
+                    if (compareAlgorithm.equals(CompareAlgorithms.date)){
+                        similarity = compareExact(patient1data.substring(0, 4), patient2data.substring(0, 4));
+                    }else if (compareAlgorithm.equals(CompareAlgorithms.soundex)){
+                        similarity = compareSoundex(patient1data, patient2data);
+                    }else {
+                        similarity = compareExact(patient1data, patient2data);
+                    }
                     if (similarity < -100){
                         return 0;
                     }
@@ -283,7 +288,16 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
                 } else if (patient2data.equals(unknownCode)) {
                     similarity = missing;
                 } else if (locked) {
-                    similarity = (compareAlgorithm.equals(CompareAlgorithms.date)) ? compareExact(patient1data.substring(0, 4), patient2data.substring(0, 4)) : compareExact(patient1data, patient2data);
+                    if (compareAlgorithm.equals(CompareAlgorithms.date)){
+                        similarity = compareExact(patient1data.substring(0, 4), patient2data.substring(0, 4));
+                    }else if (compareAlgorithm.equals(CompareAlgorithms.soundex)){
+                        similarity = compareSoundex(patient1data, patient2data);
+                    }else {
+                        similarity = compareExact(patient1data, patient2data);
+                    }
+                    if (similarity <= 0){
+                        return 0;
+                    }
                 } else if (compareAlgorithm.equals(CompareAlgorithms.code)) {
                     similarity = compareCodes(patient1data, patient2data);
                 } else if (compareAlgorithm.equals(CompareAlgorithms.alpha)) {
@@ -602,7 +616,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
     }
 
     private int compareExact(String patient1data, String patient2data) {
-        return (patient1data.equals(patient2data)) ? 100 : -1000;
+        return (patient1data.equals(patient2data)) ? 100 : 0;
     }
 
     @Override
