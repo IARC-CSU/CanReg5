@@ -233,8 +233,8 @@ public class RecordEditorPatient extends javax.swing.JPanel
     public DatabaseRecord getDatabaseRecord() {
         buildDatabaseRecord();
         return databaseRecord;
-    }    
-    
+    }
+
     @Override
     public void setDatabaseRecord(DatabaseRecord dbr) {
         this.databaseRecord = dbr;
@@ -374,7 +374,8 @@ public class RecordEditorPatient extends javax.swing.JPanel
     
     @Action
     public void runPersonSearch() {
-        autoFill();
+        // remove autoFill as it make the runPersonSearch bug
+        //autoFill();
         actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditorMainFrame.PERSON_SEARCH));
     }
         
