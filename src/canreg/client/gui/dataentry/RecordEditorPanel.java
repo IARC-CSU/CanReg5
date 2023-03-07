@@ -1135,14 +1135,16 @@ public class RecordEditorPanel extends javax.swing.JPanel implements ActionListe
 
     @Action
     public void runPersonSearch() {
-        autoFill();
+        // commented out as it doesn't seem to do anything relevant
+        // autoFill();
         actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.PERSON_SEARCH));
 
     }
 
     @Action
     public void runChecksAction() {
-        autoFill();
+        // commented out as it doesn't seem to do anything relevant
+        // autoFill();
         actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditor.CHECKS));
     }
 

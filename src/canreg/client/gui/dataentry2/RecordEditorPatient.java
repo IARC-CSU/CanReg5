@@ -374,7 +374,7 @@ public class RecordEditorPatient extends javax.swing.JPanel
     
     @Action
     public void runPersonSearch() {
-        // remove autoFill as it make the runPersonSearch bug
+        // commented out as it doesn't seem to do anything relevant
         //autoFill();
         actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditorMainFrame.PERSON_SEARCH));
     }

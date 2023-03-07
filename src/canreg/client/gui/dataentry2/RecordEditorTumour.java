@@ -824,7 +824,8 @@ public class RecordEditorTumour extends javax.swing.JPanel
    
     @Action
     public void runChecksAction() {
-        autoFill();
+        // commented out as it doesn't seem to do anything relevant
+        // autoFill();
         actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditorMainFrame.CHECKS));
         checkResultCodeBeforeChanges = resultCode;
         recordStatusBeforeChanges = (String) databaseRecord.getVariable(recordStatusVariableListElement.getDatabaseVariableName());
