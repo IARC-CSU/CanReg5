@@ -845,8 +845,12 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
      * That way, the waitFrame will be displayed first instead of being added to the action queue to be displayed
      * right after the completion of the actionEvent - which doesn't make sense for a waitFrame.
      *
-     * TODO: check what's the usage of the actionCommand AUTO_FILL. It doesn't seem like it's working properly
-     *  + it was inserted into the runPersonSearch action method without any explanation.
+     * Currently, only the "person_search" action triggers the worker and display the waitFrame
+     * The "Check" action can't be launched inside the worker as it uses an autofill that can't be triggered from a SwingWorker
+     *
+     * TODO: check what's the usage of the actionCommand AUTO_FILL
+     *  It was inserted into the runPersonSearch actions and runChecksAction actions methods without any explanation
+     *  It has the exact same behavior after commenting them out
      */
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -862,77 +866,11 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
 
             public void triggerAction(ActionEvent e) {
                 Object source = e.getSource();
-                if (e.getActionCommand().equalsIgnoreCase(REQUEST_FOCUS)) {
-                    try {
-                        setSelected(true);
-                    } catch (PropertyVetoException ex) {
-                        LOGGER.log(Level.WARNING, null, ex);
-                    }
-                } else if (source instanceof RecordEditorPanel) {
+                if (source instanceof RecordEditorPanel && e.getActionCommand().equalsIgnoreCase(PERSON_SEARCH)) {
                     RecordEditorPanel recordEditorPanel = (RecordEditorPanel) source;
-                    if (e.getActionCommand().equalsIgnoreCase(CHANGED)) {
-                        //changesDone();
-                    } else if (e.getActionCommand().equalsIgnoreCase(DELETE)) {
-                        deleteRecord(recordEditorPanel);
-                    } else if (e.getActionCommand().equalsIgnoreCase(CHECKS)) {
-                        runChecks(recordEditorPanel);
-                    //} else if (e.getActionCommand().equalsIgnoreCase(SAVE)) {
-                    //    saveRecord(recordEditorPanel);
-                    } else if (e.getActionCommand().equalsIgnoreCase(CHANGE_PATIENT_RECORD)) {
-                        changePatientRecord((RecordEditorTumour) recordEditorPanel);
-                    } else if (e.getActionCommand().equalsIgnoreCase(OBSOLETE)) {
-                        int option = JOptionPane.showConfirmDialog(null,
-                                java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorMainFrame")
-                                        .getString("REALLY CHANGE OBSOLETE-STATUS?"),
-                                java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorMainFrame")
-                                        .getString("REALLY CHANGE OBSOLETE-STATUS?"),
-                                JOptionPane.YES_NO_OPTION);
-                        boolean toggle = (option == JOptionPane.YES_OPTION);
-                        toggleObsolete(toggle, (RecordEditorTumour) tumourTabbedPane.getSelectedComponent());
-                        if (toggle) {
-                            refreshShowObsolete();
-                        }
-                    } else if (e.getActionCommand().equalsIgnoreCase(RUN_MP)) {
-                        runMPsearch((RecordEditorTumour) recordEditorPanel);
-                    } else if (e.getActionCommand().equalsIgnoreCase(RUN_EXACT)) {
-                        runExactSearch((RecordEditorPatient) recordEditorPanel);
-                    } else if (e.getActionCommand().equalsIgnoreCase(CALC_AGE)) {
-                        // this should be called at any time any of the fields birth date or incidence date gets changed
-                        DatabaseRecord sourceDatabaseRecord = recordEditorPanel.getDatabaseRecord();
-                        DatabaseRecord patientDatabaseRecord;
-                        // TODO: implement calculate age
-                        if (sourceDatabaseRecord instanceof Tumour) {
-                            RecordEditorPanel patientRecordEditorPanel = (RecordEditorPanel) patientTabbedPane.getSelectedComponent();
-                            patientDatabaseRecord = patientRecordEditorPanel.getDatabaseRecord();
-                        } else {
-                            // get all the tumour records
-                        }
-                    // ???
-                    // doesn't seem to be usefull nor to work: it only "refreshes" either the tumour or the patient
-                    // it doesn't refresh the second one and leaves it empty
-                    } else if (e.getActionCommand().equalsIgnoreCase(AUTO_FILL)) {
-                        LinkedList<DatabaseVariablesListElement> autoFillList = recordEditorPanel.getAutoFillList();
-                        DatabaseRecord sourceOfActionDatabaseRecord = recordEditorPanel.getDatabaseRecord();
-                        DatabaseRecord otherDatabaseRecord;
-                        if (sourceOfActionDatabaseRecord instanceof Tumour) {
-                            RecordEditorPatient patientRecordEditorPanel = (RecordEditorPatient) patientTabbedPane.getSelectedComponent();
-                            otherDatabaseRecord = patientRecordEditorPanel.getDatabaseRecord();
-                            autoFillHelper.autoFill(autoFillList, sourceOfActionDatabaseRecord, otherDatabaseRecord, recordEditorPanel);
-                            patientRecordEditorPanel.refreshDatabaseRecord(otherDatabaseRecord, patientRecordEditorPanel.isSaveNeeded());
-                            recordEditorPanel.refreshDatabaseRecord(sourceOfActionDatabaseRecord, recordEditorPanel.isSaveNeeded());
-                        } else if (sourceOfActionDatabaseRecord instanceof Patient) {
-                            RecordEditorTumour tumourRecordEditorPanel = (RecordEditorTumour) tumourTabbedPane.getSelectedComponent();
-                            otherDatabaseRecord = tumourRecordEditorPanel.getDatabaseRecord();
-                            autoFillHelper.autoFill(autoFillList, sourceOfActionDatabaseRecord, otherDatabaseRecord, recordEditorPanel);
-                            tumourRecordEditorPanel.refreshDatabaseRecord(otherDatabaseRecord, tumourRecordEditorPanel.isSaveNeeded());
-                            recordEditorPanel.refreshDatabaseRecord(sourceOfActionDatabaseRecord, recordEditorPanel.isSaveNeeded());
-                        }
-//                 autoFillHelper.autoFill(autoFillList, sourceOfActionDatabaseRecord, otherDatabaseRecord, recordEditorPanel);
-                    } else if (e.getActionCommand().equalsIgnoreCase(PERSON_SEARCH)) {
-                        Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
-                        setCursor(hourglassCursor);
-                        runPersonSearch((RecordEditorPatient) recordEditorPanel);
-                    }
+                    Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
+                    setCursor(hourglassCursor);
+                    runPersonSearch((RecordEditorPatient) recordEditorPanel);
                 }
             }
 
@@ -941,7 +879,80 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                 waitFrame.setVisible(false);
             }
         };
-        worker.execute();
+
+        if (e.getActionCommand().equalsIgnoreCase(PERSON_SEARCH)) {
+            worker.execute();
+        } else {
+            Object source = e.getSource();
+            if (e.getActionCommand().equalsIgnoreCase(REQUEST_FOCUS)) {
+                try {
+                    setSelected(true);
+                } catch (PropertyVetoException ex) {
+                    LOGGER.log(Level.WARNING, null, ex);
+                }
+            } else if (source instanceof RecordEditorPanel) {
+                RecordEditorPanel recordEditorPanel = (RecordEditorPanel) source;
+                if (e.getActionCommand().equalsIgnoreCase(CHANGED)) {
+                    //changesDone();
+                } else if (e.getActionCommand().equalsIgnoreCase(DELETE)) {
+                    deleteRecord(recordEditorPanel);
+                } else if (e.getActionCommand().equalsIgnoreCase(CHECKS)) {
+                    runChecks(recordEditorPanel);
+                    //} else if (e.getActionCommand().equalsIgnoreCase(SAVE)) {
+                    //    saveRecord(recordEditorPanel);
+                } else if (e.getActionCommand().equalsIgnoreCase(CHANGE_PATIENT_RECORD)) {
+                    changePatientRecord((RecordEditorTumour) recordEditorPanel);
+                } else if (e.getActionCommand().equalsIgnoreCase(OBSOLETE)) {
+                    int option = JOptionPane.showConfirmDialog(null,
+                            java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorMainFrame")
+                                    .getString("REALLY CHANGE OBSOLETE-STATUS?"),
+                            java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorMainFrame")
+                                    .getString("REALLY CHANGE OBSOLETE-STATUS?"),
+                            JOptionPane.YES_NO_OPTION);
+                    boolean toggle = (option == JOptionPane.YES_OPTION);
+                    toggleObsolete(toggle, (RecordEditorTumour) tumourTabbedPane.getSelectedComponent());
+                    if (toggle) {
+                        refreshShowObsolete();
+                    }
+                } else if (e.getActionCommand().equalsIgnoreCase(RUN_MP)) {
+                    runMPsearch((RecordEditorTumour) recordEditorPanel);
+                } else if (e.getActionCommand().equalsIgnoreCase(RUN_EXACT)) {
+                    runExactSearch((RecordEditorPatient) recordEditorPanel);
+                } else if (e.getActionCommand().equalsIgnoreCase(CALC_AGE)) {
+                    // this should be called at any time any of the fields birth date or incidence date gets changed
+                    DatabaseRecord sourceDatabaseRecord = recordEditorPanel.getDatabaseRecord();
+                    DatabaseRecord patientDatabaseRecord;
+                    // TODO: implement calculate age
+                    if (sourceDatabaseRecord instanceof Tumour) {
+                        RecordEditorPanel patientRecordEditorPanel = (RecordEditorPanel) patientTabbedPane.getSelectedComponent();
+                        patientDatabaseRecord = patientRecordEditorPanel.getDatabaseRecord();
+                    } else {
+                        // get all the tumour records
+                    }
+                    // ???
+                    // doesn't seem to be usefull nor to work: it only "refreshes" either the tumour or the patient
+                    // it doesn't refresh the second one and leaves it empty
+                } else if (e.getActionCommand().equalsIgnoreCase(AUTO_FILL)) {
+                    LinkedList<DatabaseVariablesListElement> autoFillList = recordEditorPanel.getAutoFillList();
+                    DatabaseRecord sourceOfActionDatabaseRecord = recordEditorPanel.getDatabaseRecord();
+                    DatabaseRecord otherDatabaseRecord;
+                    if (sourceOfActionDatabaseRecord instanceof Tumour) {
+                        RecordEditorPatient patientRecordEditorPanel = (RecordEditorPatient) patientTabbedPane.getSelectedComponent();
+                        otherDatabaseRecord = patientRecordEditorPanel.getDatabaseRecord();
+                        autoFillHelper.autoFill(autoFillList, sourceOfActionDatabaseRecord, otherDatabaseRecord, recordEditorPanel);
+                        patientRecordEditorPanel.refreshDatabaseRecord(otherDatabaseRecord, patientRecordEditorPanel.isSaveNeeded());
+                        recordEditorPanel.refreshDatabaseRecord(sourceOfActionDatabaseRecord, recordEditorPanel.isSaveNeeded());
+                    } else if (sourceOfActionDatabaseRecord instanceof Patient) {
+                        RecordEditorTumour tumourRecordEditorPanel = (RecordEditorTumour) tumourTabbedPane.getSelectedComponent();
+                        otherDatabaseRecord = tumourRecordEditorPanel.getDatabaseRecord();
+                        autoFillHelper.autoFill(autoFillList, sourceOfActionDatabaseRecord, otherDatabaseRecord, recordEditorPanel);
+                        tumourRecordEditorPanel.refreshDatabaseRecord(otherDatabaseRecord, tumourRecordEditorPanel.isSaveNeeded());
+                        recordEditorPanel.refreshDatabaseRecord(sourceOfActionDatabaseRecord, recordEditorPanel.isSaveNeeded());
+                    }
+//                 autoFillHelper.autoFill(autoFillList, sourceOfActionDatabaseRecord, otherDatabaseRecord, recordEditorPanel);
+                }
+            }
+        }
     }
 
     private DatabaseRecord saveRecord(DatabaseRecord databaseRecord)
@@ -968,7 +979,6 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                 id = (Integer) databaseRecord.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
                 canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.PATIENT_TABLE_NAME, server);
                 canreg.client.CanRegClientApp.getApplication().editRecord(databaseRecord, server);
-                id = (Integer) databaseRecord.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
                 newDatabaseRecord = canreg.client.CanRegClientApp.getApplication().getRecord(id, Globals.PATIENT_TABLE_NAME, true, server);
                 patientRecords.remove(databaseRecord);
                 patientRecords.add(newDatabaseRecord);
@@ -976,12 +986,6 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                 id = (Integer) databaseRecord.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME);
                 canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.TUMOUR_TABLE_NAME, server);
                 canreg.client.CanRegClientApp.getApplication().editRecord(databaseRecord, server);
-                // issue encountered with editRecord which doesn't update "databaseRecord"'s "Source" list
-                // => it does add new data, but deletes and update data incorrectly when requested
-                //   => delete : delete every sources
-                //   => update : overwrite existing sources
-                //   => add : overwrite existing sources
-                id = (Integer) databaseRecord.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME);
                 newDatabaseRecord = canreg.client.CanRegClientApp.getApplication().getRecord(id, Globals.TUMOUR_TABLE_NAME, true, server);
                 tumourRecords.remove(databaseRecord);
                 tumourRecords.add(newDatabaseRecord);
