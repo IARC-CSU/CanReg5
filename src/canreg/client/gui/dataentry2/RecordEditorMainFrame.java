@@ -845,16 +845,18 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
      * That way, the waitFrame will be displayed first instead of being added to the action queue to be displayed
      * right after the completion of the actionEvent - which doesn't make sense for a waitFrame.
      *
-     * Currently, only the "person_search" action triggers the worker and display the waitFrame
-     * The "Check" action can't be launched inside the worker as it uses an autofill that can't be triggered from a SwingWorker
+     * Currently, the worker used here can only used by "person_search" action to display the waitFrame. For others
+     * action, a new worker needs to be created.
      *
-     * TODO: check what's the usage of the actionCommand AUTO_FILL
-     *  It was inserted into the runPersonSearch actions and runChecksAction actions methods without any explanation
-     *  It has the exact same behavior after commenting them out
+     * Please note, the "Check" action can't be launched inside the worker as it uses an autofill that can't be
+     * triggered from a SwingWorker
+     *
      */
     @Override
     public void actionPerformed(ActionEvent e) {
         SwingWorker<Object, ActionEvent> worker = new SwingWorker<Object, ActionEvent>() {
+
+            PersonSearchResults personSearchResults;
 
             @Override
             protected Object doInBackground() throws Exception {
@@ -870,13 +872,14 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                     RecordEditorPanel recordEditorPanel = (RecordEditorPanel) source;
                     Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
                     setCursor(hourglassCursor);
-                    runPersonSearch((RecordEditorPatient) recordEditorPanel);
+                    personSearchResults = runPersonSearch((RecordEditorPatient) recordEditorPanel);
                 }
             }
 
             @Override
             protected void done() {
                 waitFrame.setVisible(false);
+                handleRunPersonSearchResults(personSearchResults);
             }
         };
 
@@ -1626,7 +1629,12 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
         }
     }
 
-    private void runPersonSearch(RecordEditorPatient recordEditorPanel) {
+    /**
+     * Gets the RecordEditorPatient's databaseRecord and triggers performDuplicateSearch()
+     * @param recordEditorPanel The panel containing data of the targeted patient to look for duplicates in the database
+     * @return PersonSearchResults : The data to be displayed resulting of the search
+     */
+    private PersonSearchResults runPersonSearch(RecordEditorPatient recordEditorPanel) {
         Map<String, Float> map;
         try {
             DatabaseRecord sourceOfActionDatabaseRecord = recordEditorPanel.getDatabaseRecord();
@@ -1658,16 +1666,11 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                     }
                 }
                 setCursor(normalCursor);
-                JOptionPane.showInternalMessageDialog(this,
-                        java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorMainFrame")
-                                .getString("POTENTIAL DUPLICATES FOUND:") + records);
-                CanRegClientView.showAndPositionInternalFrame(desktopPane, cpif);
+                return new PersonSearchResults(records, this, cpif);
+
             } else {
                 setCursor(normalCursor);
-                JOptionPane.showInternalMessageDialog(this,
-                        java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorMainFrame")
-                                .getString("NO POTENTIAL DUPLICATES FOUND."));
-                // recordEditorPanel.setPersonSearchStatus();
+                return new PersonSearchResults("", this, null);
             }
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
@@ -1675,6 +1678,44 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
         } finally {
             Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
             setCursor(normalCursor);
+        }
+        return null; // this can't happen
+    }
+
+    /**
+     * The purpose of the "PersonSearchResults" class is to separate the data handling and processing from the data displaying
+     * By doing so, it is possible to "close" the loading window when the "ok" button is displayed instead of closing
+     * them at the same time. This is only done like this for UI purposes.
+     * The data processing is handled by runPersonSearch and the data display is handled by handleRunPersonSearchResults()
+     */
+    static final class PersonSearchResults {
+        private final String records;
+        private final Component parentComponent;
+        private final ComparePatientsInternalFrame cpif;
+
+        public PersonSearchResults(String records, Component parentComponent, ComparePatientsInternalFrame cpif) {
+            this.records = records;
+            this.parentComponent = parentComponent;
+            this.cpif = cpif;
+        }
+    }
+
+    /**
+     * displays the results of runPersonSearch(): open an information box then displays the results of the search, if there's any
+     * @param results The results from running runPersonSearch()
+     */
+    private void handleRunPersonSearchResults(PersonSearchResults results) {
+        if (results == null) return; // this line should never be triggered as runPersonSearch shouldn't return null
+        if (!results.records.equalsIgnoreCase("")) { // potential duplicates found
+            JOptionPane.showInternalMessageDialog(results.parentComponent,
+                    java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorMainFrame")
+                            .getString("POTENTIAL DUPLICATES FOUND:") + results.records);
+            CanRegClientView.showAndPositionInternalFrame(desktopPane, results.cpif);
+        } else { // no potential duplicate found
+            JOptionPane.showInternalMessageDialog(results.parentComponent,
+                    java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry2/resources/RecordEditorMainFrame")
+                            .getString("NO POTENTIAL DUPLICATES FOUND."));
+            // recordEditorPanel.setPersonSearchStatus();
         }
     }
 
