@@ -48,6 +48,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
     private float maximumTotalScore;
     private float[] variableWeights;
     private boolean[] lockeds;
+    private int RANGE = 5;
     Map<String, DatabaseVariablesListElement> variablesInDBMap;
     private PersonSearchVariable[] searchVariables;
     // private Soundex soundex = new Soundex();
@@ -160,6 +161,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
         DatabaseVariablesListElement dbvle;
         CompareAlgorithms compareAlgorithm;
         boolean locked;
+        int range;
 
         for (int link = 0; link < variableNames.length; ++link) {
             dbvle = variablesInDBMap.get(variableNames[link]);
@@ -178,6 +180,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
 
                 compareAlgorithm = searchVariables[link].getCompareAlgorithm();
                 locked = lockeds[link];
+                range = RANGE;
 
                 if (patient1data.trim().length() == 0 || patient2data.trim().length() == 0) {
                     similarity = missing;
@@ -187,13 +190,13 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
                     similarity = missing;
                 } else if (locked) {
                     if (compareAlgorithm.equals(CompareAlgorithms.date)){
-                        similarity = compareExact(patient1data.substring(0, 4), patient2data.substring(0, 4));
+                        similarity = compareDateBlocked(patient1data.substring(0, 4), patient2data.substring(0, 4), range);
                     }else if (compareAlgorithm.equals(CompareAlgorithms.soundex)){
                         similarity = compareSoundex(patient1data, patient2data);
                     }else {
                         similarity = compareExact(patient1data, patient2data);
                     }
-                    if (similarity < -100){
+                    if (similarity <= 0){
                         return 0;
                     }
                 } else if (compareAlgorithm.equals(CompareAlgorithms.code)) {
@@ -262,6 +265,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
         DatabaseVariablesListElement dbvle;
         CompareAlgorithms compareAlgorithm;
         boolean locked;
+        int range;
 
         for (int link = 0; link < variableNames.length; ++link) {
             dbvle = variablesInDBMap.get(variableNames[link]);
@@ -280,6 +284,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
 
                 compareAlgorithm = searchVariables[link].getCompareAlgorithm();
                 locked = lockeds[link];
+                range = RANGE;
 
                 if (patient1data.trim().length() == 0 || patient2data.trim().length() == 0) {
                     similarity = missing;
@@ -289,7 +294,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
                     similarity = missing;
                 } else if (locked) {
                     if (compareAlgorithm.equals(CompareAlgorithms.date)){
-                        similarity = compareExact(patient1data.substring(0, 4), patient2data.substring(0, 4));
+                        similarity = compareDateBlocked(patient1data.substring(0, 4), patient2data.substring(0, 4), range);
                     }else if (compareAlgorithm.equals(CompareAlgorithms.soundex)){
                         similarity = compareSoundex(patient1data, patient2data);
                     }else {
@@ -617,6 +622,12 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
 
     private int compareExact(String patient1data, String patient2data) {
         return (patient1data.equals(patient2data)) ? 100 : 0;
+    }
+
+    private int compareDateBlocked(String patient1Data, String patient2Data, int range){
+        int year1 = Integer.parseInt(patient1Data);
+        int year2 = Integer.parseInt(patient2Data);
+        return (year1 - range <= year2 && year2 <= year1 + range) ? 100: 0;
     }
 
     @Override
