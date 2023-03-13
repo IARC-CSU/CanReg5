@@ -1004,7 +1004,10 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
                 // if selected algorithm is date, comparison is done on the year
                 if (psv[i].getCompareAlgorithm().equals(PersonSearcher.CompareAlgorithms.date)) {
                     variableValue = variableValue.substring(0, 4);
-                    filterToApply.append(" AND ").append(attributeName).append(" like '").append(variableValue).append("%'");
+                    int yearRange = psv[i].getYearRange() + 1;
+                    int startRange = Integer.parseInt(variableValue) - yearRange;
+                    int endRange = Integer.parseInt(variableValue) + yearRange;
+                    filterToApply.append(" AND ").append(attributeName).append(" > '").append(startRange).append("1231' AND ").append(attributeName).append(" < '").append(endRange).append("0101'");
                 // if selected algorithm is number, remove the quotes on the value
                 } else if (psv[i].getCompareAlgorithm().equals(PersonSearcher.CompareAlgorithms.number)) {
                     filterToApply.append(" AND ").append(attributeName).append("=").append(variableValue);

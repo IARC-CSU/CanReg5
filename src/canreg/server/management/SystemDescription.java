@@ -577,6 +577,7 @@ public final class SystemDescription implements Serializable {
         element.appendChild(createElement(namespace + "variable_name", variable.getName()));
         element.appendChild(createElement(namespace + "weigth", variable.getWeight() + ""));
         element.appendChild(createElement(namespace + "disc_power", variable.getDiscPower() + ""));
+        element.appendChild(createElement(namespace + "year_range", variable.getYearRange() + ""));
         element.appendChild(createElement(namespace + "reliability", variable.getReliability() + ""));
         element.appendChild(createElement(namespace + "prescence", variable.getPresence() + ""));
         element.appendChild(createElement(namespace + "compare_algorithm", variable.getCompareAlgorithm().toString()));

@@ -31,6 +31,7 @@ public class PersonSearchVariable implements Serializable {
 
     private float weight = 0.0f;
     private float discPower = 1.0f;
+    private int yearRange = 0;
     private float reliability = 1.0f;
     private float presence = 1.0f;
     private DatabaseVariablesListElement databaseVariablesListElement;
@@ -109,6 +110,20 @@ public class PersonSearchVariable implements Serializable {
      */
     public void setDiscPower(float discPower) {
         this.discPower = discPower;
+    }
+
+    /**
+     * @return the year range
+     */
+    public int getYearRange() {
+        return yearRange;
+    }
+
+    /**
+     * @param yearRange the year range to set
+     */
+    public void setYearRange(int yearRange) {
+        this.yearRange = yearRange;
     }
 
     /**

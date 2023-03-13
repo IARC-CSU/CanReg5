@@ -170,6 +170,9 @@ public class Tools {
             if (e.getElementsByTagName(namespace + "prescence").item(0) != null) {
                 searchVariables[i].setPresence(Float.parseFloat(e.getElementsByTagName(namespace + "prescence").item(0).getTextContent()));
             }
+            if (e.getElementsByTagName(namespace + "year_range").item(0) != null) {
+                searchVariables[i].setYearRange(Integer.parseInt(e.getElementsByTagName(namespace + "year_range").item(0).getTextContent()));
+            }
             if (e.getElementsByTagName(namespace + "disc_power").item(0) != null) {
                 searchVariables[i].setDiscPower(Float.parseFloat(e.getElementsByTagName(namespace + "disc_power").item(0).getTextContent()));
             }
