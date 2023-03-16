@@ -49,17 +49,17 @@ public class PersonSearchVariablePanel extends javax.swing.JPanel {
         initComponents();
         discPowerTextField.setVisible(false);
         discPowerjLabel.setVisible(false);
-        yearRangeTextField.setVisible(false);
-        yearRangeLabel.setVisible(false);
+        yearMarginTextField.setVisible(false);
+        yearMarginLabel.setVisible(false);
 
         compareAlgorithmComboBox.setModel(new javax.swing.DefaultComboBoxModel(CompareAlgorithms.values()));
         compareAlgorithmComboBox.addActionListener(e -> {
             if (((JComboBox) e.getSource()).getModel().getSelectedItem().equals(CompareAlgorithms.valueOf("date"))) {
-                yearRangeTextField.setVisible(true);
-                yearRangeLabel.setVisible(true);
+                yearMarginTextField.setVisible(true);
+                yearMarginLabel.setVisible(true);
             } else {
-                yearRangeTextField.setVisible(false);
-                yearRangeLabel.setVisible(false);
+                yearMarginTextField.setVisible(false);
+                yearMarginLabel.setVisible(false);
             }
         });
     }
@@ -94,7 +94,7 @@ public class PersonSearchVariablePanel extends javax.swing.JPanel {
             variablesComboBox.setSelectedItem(databaseVariablesListElement);
         }
         weightTextField.setText(searchVariable.getWeight() + "");
-        yearRangeTextField.setText(searchVariable.getYearRange() + "");
+        yearMarginTextField.setText(searchVariable.getYearRange() + "");
         discPowerTextField.setText(searchVariable.getDiscPower() + "");
         blockCheckBox.setSelected(searchVariable.isBlock());
     }
@@ -176,8 +176,8 @@ public class PersonSearchVariablePanel extends javax.swing.JPanel {
         discPowerTextField = new javax.swing.JTextField();
         discPowerjLabel = new javax.swing.JLabel();
         blockCheckBox = new javax.swing.JCheckBox();
-        yearRangeTextField = new javax.swing.JTextField();
-        yearRangeLabel = new javax.swing.JLabel();
+        yearMarginTextField = new javax.swing.JTextField();
+        yearMarginLabel = new javax.swing.JLabel();
 
         setName("Form"); // NOI18N
 
@@ -220,12 +220,12 @@ public class PersonSearchVariablePanel extends javax.swing.JPanel {
             }
         });
 
-        yearRangeTextField.setText(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(PersonSearchVariablePanel.class).getString("yearRangeTextField.text")); // NOI18N
-        yearRangeTextField.setName("yearRangeTextField"); // NOI18N
+        yearMarginTextField.setText(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(PersonSearchVariablePanel.class).getString("yearMarginTextField.text")); // NOI18N
+        yearMarginTextField.setName("yearMarginTextField"); // NOI18N
 
-        yearRangeLabel.setText(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(PersonSearchVariablePanel.class).getString("yearRangeLabel.text")); // NOI18N
-        yearRangeLabel.setToolTipText(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(PersonSearchVariablePanel.class).getString("yearRangeLabel.toolTipText")); // NOI18N
-        yearRangeLabel.setName("yearRangeLabel"); // NOI18N
+        yearMarginLabel.setText(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(PersonSearchVariablePanel.class).getString("yearMarginLabel.text")); // NOI18N
+        yearMarginLabel.setToolTipText(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(PersonSearchVariablePanel.class).getString("yearMarginLabel.toolTipText")); // NOI18N
+        yearMarginLabel.setName("yearMarginLabel"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -241,10 +241,6 @@ public class PersonSearchVariablePanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(compareAlgorithmComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(yearRangeLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(yearRangeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(weightTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -252,31 +248,40 @@ public class PersonSearchVariablePanel extends javax.swing.JPanel {
                 .addComponent(discPowerjLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(discPowerTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(24, 24, 24)
+                .addGap(18, 18, 18)
                 .addComponent(blockCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(removeButton)
+                .addGap(18, 18, 18)
+                .addComponent(yearMarginLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(yearMarginTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(variablesComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(compareAlgorithmComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3)
-                    .addComponent(removeButton)
-                    .addComponent(blockCheckBox)
-                    .addComponent(weightTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(yearRangeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(yearRangeLabel)
-                    .addComponent(jLabel2)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(yearMarginTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(yearMarginLabel))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(removeButton)
+                        .addComponent(blockCheckBox))
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(discPowerTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(discPowerjLabel)))
+                        .addComponent(discPowerjLabel))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel1)
+                        .addComponent(variablesComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(compareAlgorithmComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel3)
+                        .addComponent(weightTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel2)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        yearMarginLabel.getAccessibleContext().setAccessibleDescription(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(PersonSearchVariablePanel.class).getString("yearMarginLabel.AccessibleContext.accessibleDescription")); // NOI18N
     }// </editor-fold>//GEN-END:initComponents
 
     private void blockCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_blockCheckBoxActionPerformed
@@ -306,8 +311,8 @@ public class PersonSearchVariablePanel extends javax.swing.JPanel {
     private javax.swing.JButton removeButton;
     private javax.swing.JComboBox variablesComboBox;
     private javax.swing.JTextField weightTextField;
-    private javax.swing.JLabel yearRangeLabel;
-    private javax.swing.JTextField yearRangeTextField;
+    private javax.swing.JLabel yearMarginLabel;
+    private javax.swing.JTextField yearMarginTextField;
     // End of variables declaration//GEN-END:variables
 
     private float getDiscPower() {
@@ -321,7 +326,7 @@ public class PersonSearchVariablePanel extends javax.swing.JPanel {
     }
 
     private int getYearRange() {
-        return Integer.parseInt(yearRangeTextField.getText());
+        return Integer.parseInt(yearMarginTextField.getText());
     }
 
     private boolean getBlocked(){

@@ -29,10 +29,6 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="compareAlgorithmComboBox" min="-2" pref="77" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="yearRangeLabel" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="yearRangeTextField" min="-2" pref="50" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
               <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="weightTextField" min="-2" pref="50" max="-2" attributes="0"/>
@@ -40,10 +36,14 @@
               <Component id="discPowerjLabel" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="discPowerTextField" min="-2" pref="50" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="blockCheckBox" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="removeButton" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="yearMarginLabel" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="yearMarginTextField" min="-2" pref="50" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
@@ -51,20 +51,26 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="variablesComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="compareAlgorithmComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="removeButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="blockCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="weightTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="yearRangeTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="yearRangeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jLabel2" alignment="3" max="-2" attributes="0"/>
-                  <Group type="103" alignment="3" groupAlignment="3" attributes="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                      <Component id="yearMarginTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="yearMarginLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="removeButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="blockCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="discPowerTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="discPowerjLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="variablesComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="compareAlgorithmComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="weightTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel2" alignment="3" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
@@ -160,18 +166,21 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="blockCheckBoxActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JTextField" name="yearRangeTextField">
+    <Component class="javax.swing.JTextField" name="yearMarginTextField">
       <Properties>
-        <Property name="text" type="java.lang.String" resourceKey="yearRangeTextField.text"/>
-        <Property name="name" type="java.lang.String" value="yearRangeTextField" noResource="true"/>
+        <Property name="text" type="java.lang.String" resourceKey="yearMarginTextField.text"/>
+        <Property name="name" type="java.lang.String" value="yearMarginTextField" noResource="true"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="yearRangeLabel">
+    <Component class="javax.swing.JLabel" name="yearMarginLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" resourceKey="yearRangeLabel.text"/>
-        <Property name="toolTipText" type="java.lang.String" resourceKey="yearRangeLabel.toolTipText"/>
-        <Property name="name" type="java.lang.String" value="yearRangeLabel" noResource="true"/>
+        <Property name="text" type="java.lang.String" resourceKey="yearMarginLabel.text"/>
+        <Property name="toolTipText" type="java.lang.String" resourceKey="yearMarginLabel.toolTipText"/>
+        <Property name="name" type="java.lang.String" value="yearMarginLabel" noResource="true"/>
       </Properties>
+      <AccessibilityProperties>
+        <Property name="AccessibleContext.accessibleDescription" type="java.lang.String" resourceKey="yearMarginLabel.AccessibleContext.accessibleDescription"/>
+      </AccessibilityProperties>
     </Component>
   </SubComponents>
 </Form>
