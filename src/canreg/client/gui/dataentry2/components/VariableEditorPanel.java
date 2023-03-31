@@ -32,7 +32,15 @@ import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeListener;
 import java.util.logging.*;
+import javax.swing.KeyStroke;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.UndoableEditEvent;
+import javax.swing.event.UndoableEditListener;
+import javax.swing.undo.CannotRedoException;
+import javax.swing.undo.CannotUndoException;
+import javax.swing.undo.UndoManager;
 
 /**
  *
@@ -49,6 +57,23 @@ public class VariableEditorPanel extends javax.swing.JPanel
     protected boolean hasChanged = false;
     protected ActionListener listener;
 
+    // attributes used for undo/redo purpose
+    private UndoAction undoAction;
+    private RedoAction redoAction;
+    protected UndoHandler undoHandler = new UndoHandler();
+    protected UndoManager undoManager;
+
+    /**
+     *  The undoListener is not initialised in the constructor:
+     *  If it was initialised there, the document the listener's listening will be overwritten later, thus making it pointless
+     *
+     *  The initUndoListener() method is launched twice in the code:
+     *    - once in setMaximumLength => activate the undo/redo feature on the form field
+     *    - once in setInitialValue => re-initialise the UndoManager to disable initial value of the field from being undone
+     *
+     *  As setInitialValue is only triggered in the patient information edition, the re-initialisation is only occurring
+     *  if the user opens an existing patient record.
+      */
     public VariableEditorPanel() {
         initComponents();
     }
@@ -66,7 +91,7 @@ public class VariableEditorPanel extends javax.swing.JPanel
 
     @Override
     public boolean isFilledOK() {
-        boolean filledOK = false;
+        boolean filledOK;
         if (mandatory) {
             if (databaseListElement != null && databaseListElement.getDictionary() != null && 
                 codeTextField.getText().trim().length() < databaseListElement.getDictionary().getFullDictionaryCodeLength()) 
@@ -136,6 +161,8 @@ public class VariableEditorPanel extends javax.swing.JPanel
         setValue(value);
         initialValue = getValue();
         listener = tempListener;
+        // add the undo listener after the initial value have been set since we don't want to undo the original value
+        initUndoListener();
     }
     
     @Override
@@ -151,7 +178,7 @@ public class VariableEditorPanel extends javax.swing.JPanel
         else 
             codeTextField.setBackground(VARIABLE_OK_COLOR);        
     }
-    
+
     @Override
     public synchronized Object getValue() {
         Object valueObject = null;
@@ -163,9 +190,8 @@ public class VariableEditorPanel extends javax.swing.JPanel
                 } catch (NumberFormatException numberFormatException) {
                     LOGGER.log(Level.WARNING, String.format("%s %s",databaseListElement.getShortName(),valueString), numberFormatException);
                 }
-            } else 
-                valueObject = null;            
-        } else 
+            }
+        } else
             valueObject = valueString;
         
         return valueObject;
@@ -200,8 +226,10 @@ public class VariableEditorPanel extends javax.swing.JPanel
     
     protected void setMaximumLength(int length) {
         this.maxLength = length;
-        if (this.maxLength > 0) 
-            codeTextField.setDocument(new MaxLengthDocument(maxLength, this));        
+        if (this.maxLength > 0)
+            codeTextField.setDocument(new MaxLengthDocument(maxLength, this));
+        // initialise UndoListener here as the document won't be recreated after this step
+        initUndoListener();
     }
     
     protected void componentFocusGained(java.awt.event.FocusEvent evt) {
@@ -237,11 +265,8 @@ public class VariableEditorPanel extends javax.swing.JPanel
         try {
             Object currentValue = getValue();
             if (listener != null) {
-                if ((currentValue != null && !currentValue.equals(initialValue)) ||
-                   (initialValue != null && !initialValue.equals(currentValue))) 
-                    hasChanged = true;
-                else 
-                   hasChanged = false;
+                hasChanged = (currentValue != null && !currentValue.equals(initialValue)) ||
+                        (initialValue != null && !initialValue.equals(currentValue));
                 listener.actionPerformed(new ActionEvent(this, 0, CHANGED_STRING));
             }
         } catch(NullPointerException ne) {
@@ -304,14 +329,13 @@ public class VariableEditorPanel extends javax.swing.JPanel
             return false;
         }
         final VariableEditorPanel other = (VariableEditorPanel) obj;
-        if (this.variableNameLabel != other.variableNameLabel && 
+        if (this.variableNameLabel != other.variableNameLabel &&
             (this.variableNameLabel == null || ! this.variableNameLabel.getText().equals(other.variableNameLabel.getText()))) {
             return false;
         }
         return true;
     }
-         
-    @SuppressWarnings("unchecked")
+
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -384,7 +408,92 @@ public class VariableEditorPanel extends javax.swing.JPanel
         filler1.setName("filler1"); // NOI18N
         add(filler1);
     }// </editor-fold>//GEN-END:initComponents
-  
+
+    /**
+     *  Undo/redo feature is initialised here
+     *  We need to recreate a new instance of UndoManager each time initUndoListener() is launched to reset undo/redo's history.
+     *  To avoid having multiple UndoableEditListener on the same field, we need to remove then re-add the listener during the initialisation
+     *
+     *  Then shortcuts are created and added to the InputMap.
+     *  Finally, the actionMapKey triggered by the shortcut is associated to its action in the ActionMap
+     */
+    private void initUndoListener() {
+        undoManager = new UndoManager();
+        this.codeTextField.getDocument().removeUndoableEditListener(undoHandler);
+        this.codeTextField.getDocument().addUndoableEditListener(undoHandler);
+        // ctrl + Z
+        KeyStroke undoKeystroke = KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.CTRL_MASK);
+        // ctrl + Y
+        KeyStroke redoKeystroke = KeyStroke.getKeyStroke(KeyEvent.VK_Y, KeyEvent.CTRL_MASK);
+
+        undoAction = new UndoAction();
+        // associate "ctrl + z" to the action "undoKeystroke"
+        this.codeTextField.getInputMap().put(undoKeystroke, "undoKeystroke");
+        // "undoKeystroke" is the name of the "undoAction" action
+        this.codeTextField.getActionMap().put("undoKeystroke", undoAction);
+
+        redoAction = new RedoAction();
+        this.codeTextField.getInputMap().put(redoKeystroke, "redoKeystroke");
+        this.codeTextField.getActionMap().put("redoKeystroke", redoAction);
+    }
+
+    /**
+     * The following classes - UndoHandler, UndoAction, RedoAction - are used for the undo/feature
+     */
+    class UndoHandler implements UndoableEditListener {
+        public void undoableEditHappened(UndoableEditEvent e) {
+            undoManager.addEdit(e.getEdit());
+            undoAction.update();
+            redoAction.update();
+        }
+    }
+    class UndoAction extends AbstractAction {
+        public void actionPerformed(ActionEvent e) {
+            try {
+                if (undoManager.canUndo())
+                    undoManager.undo();
+            } catch (CannotUndoException ex) {
+                // if something wrong happened, abort the action
+                return;
+            }
+            update();
+            redoAction.update();
+        }
+
+        protected void update() {
+            if (undoManager.canUndo()) {
+                setEnabled(true);
+                putValue(Action.NAME, undoManager.getUndoPresentationName());
+            } else {
+                setEnabled(false);
+                putValue(Action.NAME, "Undo");
+            }
+        }
+    }
+    class RedoAction extends AbstractAction {
+        public void actionPerformed(ActionEvent e) {
+            try {
+                if (undoManager.canRedo())
+                    undoManager.redo();
+            } catch (CannotRedoException ex) {
+                // if something wrong happened, abort the action
+                return;
+            }
+            update();
+            undoAction.update();
+        }
+
+        protected void update() {
+            if (undoManager.canRedo()) {
+                setEnabled(true);
+                putValue(Action.NAME, undoManager.getRedoPresentationName());
+            } else {
+                setEnabled(false);
+                putValue(Action.NAME, "Redo");
+            }
+        }
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     protected javax.swing.JTextField codeTextField;
     private javax.swing.Box.Filler filler1;
@@ -392,5 +501,4 @@ public class VariableEditorPanel extends javax.swing.JPanel
     protected javax.swing.JSplitPane mainSplitPane;
     protected javax.swing.JLabel variableNameLabel;
     // End of variables declaration//GEN-END:variables
-        
 }
