@@ -436,7 +436,11 @@ public class RecordEditorTumour extends javax.swing.JPanel
         }
         return sources;
     }
-    
+
+    public Map<Integer, Dictionary> getDictionary() {
+        return dictionary;
+    }
+
     private void buildTabs() {
         sourcesTabbedPane.removeAll();
         for (Source source : sources) {
