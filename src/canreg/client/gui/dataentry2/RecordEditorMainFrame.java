@@ -947,6 +947,11 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
                 id = (Integer) databaseRecord.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME);
                 canreg.client.CanRegClientApp.getApplication().releaseRecord(id, Globals.TUMOUR_TABLE_NAME, server);
                 canreg.client.CanRegClientApp.getApplication().editRecord(databaseRecord, server);
+                // issue encountered with editRecord which doesn't update "databaseRecord"'s "Source" list
+                // => it does add new data, but deletes and update data incorrectly when requested
+                //   => delete : delete every sources
+                //   => update : overwrite existing sources
+                //   => add : overwrite existing sources
                 id = (Integer) databaseRecord.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME);
                 newDatabaseRecord = canreg.client.CanRegClientApp.getApplication().getRecord(id, Globals.TUMOUR_TABLE_NAME, true, server);
                 tumourRecords.remove(databaseRecord);

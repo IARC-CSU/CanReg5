@@ -143,6 +143,10 @@ public class RecordEditorPatient extends javax.swing.JPanel
         this.tumours.remove(tumour);
     }    
     
+    public LinkedList<RecordEditorTumour> getTumours() {
+        return tumours;
+    }
+    
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals(VariableEditorPanelInterface.CHANGED_STRING)) {

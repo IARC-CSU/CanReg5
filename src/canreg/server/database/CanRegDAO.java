@@ -1759,6 +1759,8 @@ public class CanRegDAO {
                 Object tumourID = tumour.getVariable(tumourIDVariableName);
                 Set<Source> sources = tumour.getSources();
                 // delete old sources
+                // FIX ME : delete source doesn't work, it deletes more than what is requested
+                /*
                 try {
                     deleteSources(tumourID);
                 } catch (DistributedTableDescriptionException ex) {
@@ -1766,6 +1768,7 @@ public class CanRegDAO {
                 } catch (UnknownTableException ex) {
                     LOGGER.log(Level.SEVERE, null, ex);
                 }
+                */
                 // save each of the source records
                 saveSources(tumourID, sources);
             }

@@ -47,6 +47,8 @@ import java.awt.Component;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.DateFormat;
@@ -67,6 +69,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import org.jdesktop.application.Action;
@@ -119,15 +122,15 @@ public class RecordEditorTumour extends javax.swing.JPanel
     private String recordStatusBeforeChanges;
     //The patient to which this tumour is linked to
     private RecordEditorPatient patient;
-    private final LocalSettings localSettings;    
-    
+    private final LocalSettings localSettings;
+
     
     public RecordEditorTumour(ActionListener listener, 
                               RecordEditorMainFrame recordEditor) {
         this.recordEditor = recordEditor;
         this.actionListener = listener;
         this.localSettings = CanRegClientApp.getApplication().getLocalSettings();
-        initComponents(); 
+        initComponents();
 
         this.changesMap = new HashMap<VariableEditorPanel, Boolean>();
         globalToolBox = CanRegClientApp.getApplication().getGlobalToolBox();
@@ -446,6 +449,75 @@ public class RecordEditorTumour extends javax.swing.JPanel
     }
     
     @Action
+    public void moveSourceAction() {
+        LinkedList<RecordEditorTumour> tumours = this.patient.getTumours();
+        HashMap<String, Source> allSources = new HashMap<>();
+
+        for (RecordEditorTumour ret : tumours) {
+            ret.sources.forEach(source -> {
+                allSources.put(source.getVariable("sourcerecordid").toString(),source);
+            });
+        }
+
+        // pour afficher une fenetre supplémentaire
+        RecordEditorSourceSelectorInternalFrame selector =
+                new RecordEditorSourceSelectorInternalFrame(
+                        tumours,
+                        this.getDatabaseRecord().getVariableAsString(String.valueOf(Globals.StandardVariableNames.TumourID)));
+        ((JDialog)selector).addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                String selectedTumourId = selector.getValidatedTumourId();
+                if (selectedTumourId != null) {
+                    RecordEditorTumour targetedTumour = null;
+                    // in case the selected tumour is the current tumour
+                    if (databaseRecord.getVariableAsString("tumourid").equals(selectedTumourId))
+                        return;
+                    // find the selected tumour with its ID
+                    for (RecordEditorTumour tumour : tumours){
+                        if (tumour.databaseRecord.getVariableAsString("tumourid").equals(selectedTumourId)) {
+                            targetedTumour = tumour;
+                            break;
+                        }
+                    }
+                    if (targetedTumour == null){
+                        // IMPOSSIBLE CASE
+                        return;
+                    }
+
+                    // remove source
+                    RecordEditorSource selectedSourceEditor = (RecordEditorSource) sourcesTabbedPane.getSelectedComponent();
+                    Source selectedSource = (Source) selectedSourceEditor.getDatabaseRecord();
+                    sources.remove(selectedSource);
+                    sourcesTabbedPane.remove(selectedSourceEditor);
+
+                    // delete tumourIdsourcetable & tumourSourceId & srid => avoid conflict in DB
+                    selectedSource.setVariable("tumourIdsourcetable", null);
+                    selectedSource.setVariable("sourceRecordId", null);
+                    selectedSource.setVariable("srid",null);
+
+                    // add new source in the selected tumour and refresh sources tabs
+                    targetedTumour.sources.add(selectedSource);
+                    targetedTumour.setSources(targetedTumour.sources);
+                    refreshTitles();
+                    
+                    // if no more source is left for current Tumour
+                    if (sources.isEmpty()) {
+                        addSourceAction();
+                    }
+
+                    // mark Tumours as changed to get them saved
+                    setSaveNeeded(true);
+                    targetedTumour.setSaveNeeded(true);
+                }
+            }
+        });
+        selector.setModal(true);
+        selector.setVisible( true );
+    }
+
+    // button "Add Source"
+    @Action
     public void addSourceAction() {
         Source newSource = new Source();
         RecordEditorSource newPanel = new RecordEditorSource(this);
@@ -464,6 +536,9 @@ public class RecordEditorTumour extends javax.swing.JPanel
         Source oldSource = (Source) oldPanel.getDatabaseRecord();
         sources.remove(oldSource);
         sourcesTabbedPane.remove(oldPanel);
+        this.setSources(this.sources);
+        this.setSaveNeeded(true);
+        refreshTitles();
     }
     
     private void refreshTitles() {
@@ -676,6 +751,10 @@ public class RecordEditorTumour extends javax.swing.JPanel
         }
     }
     
+    /**
+     * Refreshes the value of "author" and the text value of "date" of the "updated" area
+     * Refreshes the date displayed on the tooltip
+     */
     private void refreshUpdatedBy() {
         String updatedBy = java.util.ResourceBundle
                 .getBundle("canreg/client/gui/dataentry2/resources/RecordEditorTumour").getString("UNKNOWN_BY");
@@ -894,6 +973,10 @@ public class RecordEditorTumour extends javax.swing.JPanel
         this.actionListener = listener;
     }
 
+    /**
+     * Set the "Check" button to match the status of the "resultCode" and update the dropdown list in the "Record status" area
+     * @param resultCode
+     */
     public void setChecksResultCode(ResultCode resultCode) {
         this.resultCode = resultCode;
         boolean canBeConfirmed = false;
@@ -1014,14 +1097,16 @@ public class RecordEditorTumour extends javax.swing.JPanel
         jPanel8 = new javax.swing.JPanel();
         jPanel9 = new javax.swing.JPanel();
         filler7 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
-        addSourceRecordButton = new javax.swing.JButton();
+        moveSourceRecordButton = new javax.swing.JButton();
         filler8 = new javax.swing.Box.Filler(new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 32767));
-        sourceMenuButton = new javax.swing.JButton();
+        addSourceRecordButton = new javax.swing.JButton();
         filler9 = new javax.swing.Box.Filler(new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 32767));
+        sourceMenuButton = new javax.swing.JButton();
+        filler10 = new javax.swing.Box.Filler(new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 32767));
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getActionMap(RecordEditorTumour.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance().getContext().getActionMap(RecordEditorTumour.class, this);
         sourceDeleteMenuItem.setAction(actionMap.get("removeSourceAction")); // NOI18N
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(RecordEditorTumour.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance().getContext().getResourceMap(RecordEditorTumour.class);
         sourceDeleteMenuItem.setText(resourceMap.getString("removeSourceAction.Action.text")); // NOI18N
         sourceDeleteMenuItem.setName("deleteRecord"); // NOI18N
         sourceDeleteMenuItem.setIcon(resourceMap.getIcon("deleteRecord.Action.icon"));
@@ -1264,6 +1349,15 @@ public class RecordEditorTumour extends javax.swing.JPanel
         jPanel9.setLayout(new javax.swing.BoxLayout(jPanel9, javax.swing.BoxLayout.LINE_AXIS));
         jPanel9.add(filler7);
 
+        moveSourceRecordButton.setAction(actionMap.get("moveSourceAction")); // NOI18N
+        moveSourceRecordButton.setText("Copy Source");
+        moveSourceRecordButton.setMaximumSize(new java.awt.Dimension(220, 23));
+        moveSourceRecordButton.setMinimumSize(new java.awt.Dimension(21, 23));
+        moveSourceRecordButton.setName("copySourceAction"); // NOI18N
+        moveSourceRecordButton.setPreferredSize(new java.awt.Dimension(150, 22));
+        jPanel9.add(moveSourceRecordButton);
+        jPanel9.add(filler8);
+
         addSourceRecordButton.setAction(actionMap.get("addSourceAction")); // NOI18N
         addSourceRecordButton.setText(resourceMap.getString("addSourceAction.Action.text")); // NOI18N
         addSourceRecordButton.setMaximumSize(new java.awt.Dimension(220, 23));
@@ -1275,7 +1369,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
             }
         });
         jPanel9.add(addSourceRecordButton);
-        jPanel9.add(filler8);
+        jPanel9.add(filler9);
 
         sourceMenuButton.setAction(actionMap.get("sourceMenuAction")); // NOI18N
         sourceMenuButton.setText(resourceMap.getString("menuButton.text")); // NOI18N
@@ -1283,7 +1377,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
         sourceMenuButton.setMaximumSize(new java.awt.Dimension(100, 23));
         sourceMenuButton.setMinimumSize(new java.awt.Dimension(30, 23));
         jPanel9.add(sourceMenuButton);
-        jPanel9.add(filler9);
+        jPanel9.add(filler10);
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
@@ -1358,6 +1452,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
     private javax.swing.JScrollPane dataScrollPane;
     private javax.swing.JLabel dateLabel;
     private javax.swing.Box.Filler filler1;
+    private javax.swing.Box.Filler filler10;
     private javax.swing.Box.Filler filler11;
     private javax.swing.Box.Filler filler12;
     private javax.swing.Box.Filler filler3;
@@ -1378,6 +1473,7 @@ public class RecordEditorTumour extends javax.swing.JPanel
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JSplitPane jSplitPane2;
+    private javax.swing.JButton moveSourceRecordButton;
     private javax.swing.JButton mpButton;
     private javax.swing.JComboBox<String> patientsComboBox;
     private javax.swing.JComboBox<String> recordStatusComboBox;
