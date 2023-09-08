@@ -1,3 +1,18 @@
+## Version 1.12
+
+08/09/2023
+fix character/numeric issue
+
+## Version 1.11
+
+15/11/2022
+fix factor/numeric issue
+
+## version : 1.1
+
+21/09/2021
+Add Childhood cancers table
+
 ## version : 1.01
 
 Fix age-specific major site bug

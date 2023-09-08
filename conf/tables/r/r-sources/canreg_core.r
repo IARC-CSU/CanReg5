@@ -1,4 +1,4 @@
-## version : 1.11
+## version : 1.12
 
 
 canreg_output_cat <- function(ft, filename,sex_graph=FALSE, list_graph=FALSE) {
@@ -1769,15 +1769,12 @@ canreg_bar_CI5_compare <- function(dt,group_by = "SEX", landscape = TRUE,list_gr
       dt_plot[["country_label"]] <-Rcan:::core.csu_legend_wrapper(dt_plot[["country_label"]], 14)
       dt_plot[,country_label:=factor(country_label, levels=country_label)]
       
-      
-      
-      
       temp <-
         canreg_bar_plot(dt=dt_plot, 
                      var_top="asr",
                      var_bar="country_label",
                      plot_title = unique(dt_plot$cancer_label),
-                     plot_subtitle = unique(i18n$t(dt_plot$SEX)), 
+                     plot_subtitle = i18n$t(as.character(dt_plot$SEX[1])), 
                      plot_caption = caption,
                      xtitle=xtitle,
                      digit = digit,
@@ -1868,6 +1865,7 @@ canreg_bar_plot <- function(dt,
                              text_size_factor = 1,
                              landscape = FALSE) 
 {
+
   
   line_size <- 0.4
   text_size <- 14 
