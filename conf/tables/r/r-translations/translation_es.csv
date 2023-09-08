@@ -1,6 +1,6 @@
 en,es
-Male,Hombres
-Female,Mujeres
+Male,Masculino
+Female,Femenino
 Population,Población
 % of total population,% de la población total
 All cancers,Todos los cánceres
@@ -26,14 +26,14 @@ Pancreas,Páncreas
 Larynx,Laringe
 "Trachea, bronchus, lung","Pulmón, tráquea, bronquios"
 Melanoma of skin,Melanoma de piel
-Breast,mama
-Cervix,cervical
+Breast,Mama
+Cervix,Cervical
 Corpus & uterus NOS,Corpus y Úter
 Ovary & adnexa,Ovario y anexos
 Prostate,Próstata
 Testis,Testículo
 Kidney & urinary NOS,Riñón y orina
-Bladder,vejiga
+Bladder,Vejiga
 Brain & central nervous system,Cerebro y sistema nervioso
 Thyroid,Tiroides
 Lymphoma,Linfoma
