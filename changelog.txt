@@ -1,5 +1,9 @@
 # CanReg5 Changelog
 
+## 5.00.44k 
+- Updated the Spanish translations of the standard reports.
+- Fixed bug in translated field in report.
+
 ## 5.00.44j
 - Updated the Spanish translations of the standard reports.
 
