@@ -73,10 +73,10 @@ public class DictionaryElementChooser extends javax.swing.JInternalFrame {
 
         upAction = new UpAction("Go up", null,
                 "",
-                Integer.valueOf(KeyEvent.VK_UP));
+                new Integer(KeyEvent.VK_UP));
         downAction = new DownAction("Go down", null,
                 "",
-                Integer.valueOf(KeyEvent.VK_DOWN));
+                new Integer(KeyEvent.VK_DOWN));
 
         /* Not working yet, so we remove it...
         this.registerKeyboardAction(upAction, "lineup", up,
