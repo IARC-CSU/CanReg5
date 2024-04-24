@@ -1,4 +1,4 @@
-set isxpath="C:\Program Files (x86)\Inno Setup 5"
+set isxpath="C:\Program Files (x86)\Inno Setup 6"
 set isx=%isxpath%\iscc.exe
 set iwz=helpers\InnoSetup\CanReg5-InnoSetup.iss
 set iwz-r=helpers\InnoSetup\CanReg5-R-packages-InnoSetup.iss

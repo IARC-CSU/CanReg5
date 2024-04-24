@@ -4,9 +4,9 @@
   <author>
     <name>Morten Ervik</name>
   </author>
-  <id>http://www.iacr.com.fr/CanReg5/feeds/news.rss</id>
+  <id>http://www.iacr.com.fr/CanReg5/rss.xml</id>
   <title>CanReg5 Updates</title>
-  <updated>2017-05-18T17:42:43+02:00</updated>
+  <updated>2021-04-15T13:13:27+02:00</updated>
   <entry>
     <id>http://www.iacr.com.fr/CanReg5</id>
     <link href="http://www.iacr.com.fr/CanReg5"/>
@@ -238,6 +238,27 @@
   <entry>
     <id>http://www.iacr.com.fr/CanReg5</id>
     <link href="http://www.iacr.com.fr/CanReg5"/>
+    <summary>- Implemented a table builder that calls R with any user specified standard variables.
+
+- AgeSpecific incidence curves (linear and semi log) functionality implemented using R. (Thanks to Anahita Rahimi.)
+
+- TableBuilder: user can now write many different file formats depending on what the various table builders support, PDF, PS, SVG, PNG, WMF, HTML etc.
+
+- CanReg chart viewer implemented. Tables supporting this can be previewed directly in CanReg.
+
+- You can now join all 3 tables in the browse/export/frequency tools.
+
+- Improved error messages when filters are incorrect.
+
+- Range can now be formed by any variables that is included in an index.
+</summary>
+    <title>5.00.06</title>
+    <updated>2011-05-31T15:08:18+00:00</updated>
+    <dc:date>2011-05-31T15:08:18+00:00</dc:date>
+  </entry>
+  <entry>
+    <id>http://www.iacr.com.fr/CanReg5</id>
+    <link href="http://www.iacr.com.fr/CanReg5"/>
     <summary>- Fixed some bugs in the population pyramid where totals showed up as 0s and the population name contained the name of one year of the population data set.
 
 - Fixed a bug where a resultset was not closed properly
@@ -295,27 +316,6 @@
 - Other bug fixes
 
 
-</summary>
-    <title>5.00.06</title>
-    <updated>2011-05-31T15:08:18+00:00</updated>
-    <dc:date>2011-05-31T15:08:18+00:00</dc:date>
-  </entry>
-  <entry>
-    <id>http://www.iacr.com.fr/CanReg5</id>
-    <link href="http://www.iacr.com.fr/CanReg5"/>
-    <summary>- Implemented a table builder that calls R with any user specified standard variables.
-
-- AgeSpecific incidence curves (linear and semi log) functionality implemented using R. (Thanks to Anahita Rahimi.)
-
-- TableBuilder: user can now write many different file formats depending on what the various table builders support, PDF, PS, SVG, PNG, WMF, HTML etc.
-
-- CanReg chart viewer implemented. Tables supporting this can be previewed directly in CanReg.
-
-- You can now join all 3 tables in the browse/export/frequency tools.
-
-- Improved error messages when filters are incorrect.
-
-- Range can now be formed by any variables that is included in an index.
 </summary>
     <title>5.00.06</title>
     <updated>2011-05-31T15:08:18+00:00</updated>
@@ -1038,11 +1038,22 @@
   <entry>
     <id>http://www.iacr.com.fr/CanReg5</id>
     <link href="http://www.iacr.com.fr/CanReg5"/>
+    <summary>- Fixed bug in generation of variables list if source table contains more fields than patient table.
+
+
+</summary>
+    <title>5.00.41</title>
+    <updated>2017-03-29T13:00:01+00:00</updated>
+    <dc:date>2017-03-29T13:00:01+00:00</dc:date>
+  </entry>
+  <entry>
+    <id>http://www.iacr.com.fr/CanReg5</id>
+    <link href="http://www.iacr.com.fr/CanReg5"/>
     <summary>- New data entry form. (Developed in collaboration with Betty Carballo and Patricio Carranza.)
 
 - Ability to enable/disble new data entry form in Options.
 
-- Removed latest news since Twitter no longer allows access to their API like that.
+- Removed latest news since Twitter no longer allows access to their API as RSS.
 
 - Improved layout for login and welcome screens for big fonts.
 
@@ -1058,5 +1069,5 @@
     <updated>2017-03-29T13:00:01+00:00</updated>
     <dc:date>2017-03-29T13:00:01+00:00</dc:date>
   </entry>
-  <dc:date>2017-05-18T17:42:43+02:00</dc:date>
+  <dc:date>2021-04-15T13:13:27+02:00</dc:date>
 </feed>

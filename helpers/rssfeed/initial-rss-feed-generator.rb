@@ -51,7 +51,7 @@ changelog.sort_by! {|v| v[:version]}
 rss = RSS::Maker.make("atom") do |maker|
   maker.channel.author = "Morten Ervik"
   maker.channel.updated = Time.now.to_s
-  maker.channel.about = "http://www.iacr.com.fr/CanReg5/feeds/news.rss"
+  maker.channel.about = "http://www.iacr.com.fr/CanReg5/rss.xml"
   maker.channel.title = "CanReg5 Updates"
 
   changelog.each do |p|

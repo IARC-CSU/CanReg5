@@ -1,3 +1,1 @@
-The age-specific rate is calculated simply by dividing the number of cancer deaths observed in a given age category during a given time period by the corresponding number of person years in the population at risk in the same age category and time period.
-
-For cancer, the result is usually expressed as an annual rate per 100,000 person-years.
+The age-specific rate is calculated by dividing the number of new cancer cases observed in a given age category during a given time period by the corresponding number of person years in the population at risk in the same age category and time period. For cancer, the result is usually expressed as a rate per 100,000 person-years.
