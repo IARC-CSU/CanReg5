@@ -30,6 +30,10 @@ AllowNoIcons=yes
 OutputBaseFilename=CanReg5-Setup
 Compression=lzma
 SolidCompression=yes
+; Specify that admin privileges are required by default
+PrivilegesRequired=admin
+; Allow overrides from the dialog
+PrivilegesRequiredOverridesAllowed=dialog
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
