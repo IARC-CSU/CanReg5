@@ -1,4 +1,4 @@
-## version : 1.1
+## version : 1.13
 
 canreg_error_log <- function(e,filename,out,Args,inc,pop) {
 
@@ -369,6 +369,7 @@ canreg_check_update <- function()
   # need to add test for internet
   remote_source_folder <- "https://raw.githubusercontent.com/IARC-CSU/CanReg5/master/conf/tables/r/r-sources/"
   remote_shiny_folder <- "https://raw.githubusercontent.com/IARC-CSU/CanReg5/master/conf/tables/r/shiny/"
+  remote_translation_folder <- "https://raw.githubusercontent.com/IARC-CSU/CanReg5/master/conf/tables/r/r-translations/"
 
   if (canreg_update_source(paste0(remote_source_folder,"versions.txt")))
   {
@@ -388,6 +389,10 @@ canreg_check_update <- function()
     canreg_update_source(paste0(remote_shiny_folder,"global.r"))
     canreg_update_source(paste0(remote_shiny_folder,"server.r"))
     canreg_update_source(paste0(remote_shiny_folder,"ui.r"))
+
+    canreg_update_source(paste0(remote_translation_folder,"translation_es.csv"))
+    canreg_update_source(paste0(remote_translation_folder,"translation_pt.csv"))
+    canreg_update_source(paste0(remote_translation_folder,"translation_ru.csv"))
 
   }
 
@@ -412,6 +417,17 @@ canreg_update_source <- function (url, data=FALSE) {
 
     dt_temp <- readRDS(url(url))
     remote_version <- attr(dt_temp, "version")
+
+  }
+  else if (grepl("r-translations", folder_url))
+  {
+    dt_local <- fread(local_file)
+    dt_remote <-fread(url)
+    if (!isTRUE(all.equal(dt_local, dt_remote)))
+    {
+      remote_version <- 2
+      local_version <- 1
+    }
 
   }
   else {
