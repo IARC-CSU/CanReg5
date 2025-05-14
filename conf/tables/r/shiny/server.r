@@ -54,7 +54,7 @@ shinyServer(function(input, output, session) {
 			"Age-specific rates (Top Cancer Sites)" = 6,
 			"Age-specific rate by cancer sites" = 7,
 			"Barchart of cases by year" = 8,
-			"CI5 XI comparaison" = 12)
+			"CI5 XII comparaison" = 12)
 			
 			if (year_info$span >= 3) {
 			
@@ -379,7 +379,7 @@ shinyServer(function(input, output, session) {
 			show(id="controls_COL2", anim=TRUE)
 		}
 		else if (input$select_table== 12) {
-			table$label <- "CI5 XI comparison"
+			table$label <- "CI5 XII comparison"
 			show(id="controls_COL1", anim=TRUE)
 			hide(id="controls_COL2", anim=TRUE)
 			show(id="fluid_test", anim=TRUE)
@@ -710,7 +710,7 @@ shinyServer(function(input, output, session) {
 				
 				dims <- attr( png::readPNG (paste0(filename, ".png")), "dim" )
 				values$doc <-  add_slide(values$doc, layout="Canreg_basic", master="Office Theme") ## add PPTX slide (Title + content)
-				values$doc <- ph_with(values$doc, value =  "CI5 XI comparison", location = ph_location_type(type =  "title"))
+				values$doc <- ph_with(values$doc, value =  "CI5 XII comparison", location = ph_location_type(type =  "title"))
 				temp_img <- external_img(src = paste0(filename, ".png"), height =graph_width*dims[1]/dims[2],width = graph_width)
   				values$doc <- ph_with(values$doc,value = temp_img,location = ph_location_type(type = "body"), use_loc_size =FALSE)
 				
