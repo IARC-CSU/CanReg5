@@ -20,8 +20,8 @@ else
     zip -r translations.zip translations
 fi
 
-# 4. Pack core directories, excluding full R packages
-zip -r CanReg5.zip conf demo scripts -x "conf/tables/r/r-packages/*"
+# 4. Pack core directories and launchers, excluding full R packages
+zip -r CanReg5.zip conf demo scripts CanReg.sh CanReg5.app -x "conf/tables/r/r-packages/*"
 
 # 5. Pack R package tarballs only
 zip -g CanReg5.zip conf/tables/r/r-packages/*.tar.gz || true

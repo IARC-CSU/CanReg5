@@ -242,6 +242,7 @@ translations/
 CanReg5.zip
 doc/CanReg5-Instructions.pdf
 CanReg5-R-packages.zip
+CanReg5.app/
 *.orig
 r-packages/*.zip
 version.txt
