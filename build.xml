@@ -81,6 +81,10 @@
             <entry key="program.BUILDDATE" type="date" value="now" pattern="yyyyMMddHHmmss" />
         </propertyfile>
         <copy file="appinfo.properties" todir="${build.classes.dir}"/>
+        <mkdir dir="dist/lib"/>
+        <copy todir="dist/lib" failonerror="false">
+            <fileset dir="lib" includes="*.jar"/>
+        </copy>
     </target>
     <target name="-post-jar">
         <exec executable="ruby" osfamily="unix" failonerror="false">
