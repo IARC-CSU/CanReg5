@@ -92,6 +92,9 @@
             <arg value="update_version_number.rb"/>
         </exec>
         <echo>Building zip-distribution...</echo>
+        <exec executable="/bin/sh" osfamily="unix" failonerror="false">
+            <arg value="create-zip.sh"/>
+        </exec>
         <exec executable="cmd" osfamily="windows" failonerror="false">
             <arg value="/c"/>
             <arg value="create-zip.bat"/>
