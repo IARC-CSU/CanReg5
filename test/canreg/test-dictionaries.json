@@ -1,0 +1,537 @@
+{
+  "0": {
+    "dictionaryEntries": {
+      "0": {
+        "dictionaryID": 984,
+        "code": "0",
+        "description": "Pending"
+      },
+      "1": {
+        "dictionaryID": 985,
+        "code": "1",
+        "description": "Confirmed"
+      },
+      "2": {
+        "dictionaryID": 986,
+        "code": "2",
+        "description": "Deleted"
+      }
+    }
+  },
+  "1": {
+    "dictionaryEntries": {
+      "0": {
+        "dictionaryID": 987,
+        "code": "0",
+        "description": "Not done"
+      },
+      "1": {
+        "dictionaryID": 988,
+        "code": "1",
+        "description": "Done: OK"
+      },
+      "2": {
+        "dictionaryID": 989,
+        "code": "2",
+        "description": "Done: Rare"
+      },
+      "3": {
+        "dictionaryID": 990,
+        "code": "3",
+        "description": "Done: Invalid"
+      }
+    }
+  },
+  "2": {
+    "dictionaryEntries": {
+      "0": {
+        "dictionaryID": 991,
+        "code": "0",
+        "description": "Not done"
+      },
+      "1": {
+        "dictionaryID": 992,
+        "code": "1",
+        "description": "Done: OK"
+      },
+      "2": {
+        "dictionaryID": 993,
+        "code": "2",
+        "description": "Done: Mult. Prim."
+      },
+      "3": {
+        "dictionaryID": 994,
+        "code": "3",
+        "description": "Done: Duplicate"
+      },
+      "4": {
+        "dictionaryID": 995,
+        "code": "4",
+        "description": "Done: Non-IARC MP"
+      }
+    }
+  },
+  "3": {
+    "dictionaryEntries": {
+      "10": {
+        "dictionaryID": 1006,
+        "code": "10",
+        "description": "OROPHARYNX"
+      },
+      "11": {
+        "dictionaryID": 1007,
+        "code": "11",
+        "description": "NASOPHARYNX"
+      },
+      "12": {
+        "dictionaryID": 1008,
+        "code": "12",
+        "description": "SINUS - PYRIFORM"
+      },
+      "13": {
+        "dictionaryID": 1009,
+        "code": "13",
+        "description": "HYPOPHARYNX"
+      },
+      "14": {
+        "dictionaryID": 1010,
+        "code": "14",
+        "description": "PHARYNX"
+      },
+      "15": {
+        "dictionaryID": 1011,
+        "code": "15",
+        "description": "ESOPHAGUS"
+      },
+      "16": {
+        "dictionaryID": 1012,
+        "code": "16",
+        "description": "STOMACH"
+      },
+      "17": {
+        "dictionaryID": 1013,
+        "code": "17",
+        "description": "SMALL INTESTINE"
+      },
+      "18": {
+        "dictionaryID": 1014,
+        "code": "18",
+        "description": "COLON"
+      },
+      "19": {
+        "dictionaryID": 1015,
+        "code": "19",
+        "description": "RECTOSIGMOID"
+      }
+    }
+  },
+  "4": {
+    "dictionaryEntries": {
+      "8000": {
+        "dictionaryID": 1397,
+        "code": "8000",
+        "description": "Neoplasm, malignant"
+      },
+      "8001": {
+        "dictionaryID": 1398,
+        "code": "8001",
+        "description": "Tumor cells, malignant"
+      },
+      "8002": {
+        "dictionaryID": 1399,
+        "code": "8002",
+        "description": "Malignant tumor, small cell type"
+      },
+      "8003": {
+        "dictionaryID": 1400,
+        "code": "8003",
+        "description": "Malignant tumor, giant cell type"
+      },
+      "8004": {
+        "dictionaryID": 1401,
+        "code": "8004",
+        "description": "Malignant tumor, spindle cell type"
+      },
+      "8005": {
+        "dictionaryID": 1402,
+        "code": "8005",
+        "description": "Malignant tumor, clear cell type"
+      },
+      "8010": {
+        "dictionaryID": 1403,
+        "code": "8010",
+        "description": "Carcinoma, NOS"
+      },
+      "8011": {
+        "dictionaryID": 1404,
+        "code": "8011",
+        "description": "Epithelioma, malignant"
+      },
+      "8012": {
+        "dictionaryID": 1405,
+        "code": "8012",
+        "description": "Large cell carcinoma, NOS"
+      },
+      "8013": {
+        "dictionaryID": 1406,
+        "code": "8013",
+        "description": "Large cell neuroendocrine carcinoma"
+      },
+      "8014": {
+        "dictionaryID": 1407,
+        "code": "8014",
+        "description": "Large cell carcinoma with rhabdoid phenotype"
+      },
+      "8015": {
+        "dictionaryID": 1408,
+        "code": "8015",
+        "description": "Glassy cell carcinoma"
+      },
+      "8020": {
+        "dictionaryID": 1409,
+        "code": "8020",
+        "description": "Carcinoma, undifferentiated, NOS"
+      },
+      "8021": {
+        "dictionaryID": 1410,
+        "code": "8021",
+        "description": "Carcinoma, anaplastic, NOS"
+      },
+      "8022": {
+        "dictionaryID": 1411,
+        "code": "8022",
+        "description": "Pleomorphic carcinoma"
+      },
+      "8030": {
+        "dictionaryID": 1412,
+        "code": "8030",
+        "description": "Giant cell and spindle cell carcinoma"
+      },
+      "8031": {
+        "dictionaryID": 1413,
+        "code": "8031",
+        "description": "Giant cell carcinoma"
+      },
+      "8032": {
+        "dictionaryID": 1414,
+        "code": "8032",
+        "description": "Spindle cell carcinoma, NOS"
+      },
+      "8033": {
+        "dictionaryID": 1415,
+        "code": "8033",
+        "description": "Pseudosarcomatous carcinoma"
+      },
+      "8034": {
+        "dictionaryID": 1416,
+        "code": "8034",
+        "description": "Polygonal cell carcinoma"
+      },
+      "8035": {
+        "dictionaryID": 1417,
+        "code": "8035",
+        "description": "Carcinoma with osteoclast-like giant cells"
+      },
+      "8041": {
+        "dictionaryID": 1418,
+        "code": "8041",
+        "description": "Small cell carcinoma, NOS"
+      },
+      "8042": {
+        "dictionaryID": 1419,
+        "code": "8042",
+        "description": "Oat cell carcinoma"
+      },
+      "8043": {
+        "dictionaryID": 1420,
+        "code": "8043",
+        "description": "Small cell carcinoma, fusiform cell"
+      },
+      "8044": {
+        "dictionaryID": 1421,
+        "code": "8044",
+        "description": "Small cell carcinoma, intermediate cell"
+      },
+      "8045": {
+        "dictionaryID": 1422,
+        "code": "8045",
+        "description": "Combined small cell carcinoma"
+      },
+      "8046": {
+        "dictionaryID": 1423,
+        "code": "8046",
+        "description": "Non-small cell carcinoma"
+      }
+    }
+  },
+  "5": {
+    "dictionaryEntries": {
+      "0": {
+        "dictionaryID": 1950,
+        "code": "0",
+        "description": "Benign"
+      },
+      "1": {
+        "dictionaryID": 1951,
+        "code": "1",
+        "description": "Uncertain"
+      },
+      "2": {
+        "dictionaryID": 1952,
+        "code": "2",
+        "description": "In situ"
+      },
+      "3": {
+        "dictionaryID": 1953,
+        "code": "3",
+        "description": "Malignant"
+      }
+    }
+  },
+  "6": {
+    "dictionaryEntries": {
+      "1": {
+        "dictionaryID": 1954,
+        "code": "1",
+        "description": "Male"
+      },
+      "2": {
+        "dictionaryID": 1955,
+        "code": "2",
+        "description": "Female"
+      },
+      "9": {
+        "dictionaryID": 1956,
+        "code": "9",
+        "description": "Unknown"
+      }
+    }
+  },
+  "7": {
+    "dictionaryEntries": {
+      "0": {
+        "dictionaryID": 1957,
+        "code": "0",
+        "description": "Death Certificate Only"
+      },
+      "1": {
+        "dictionaryID": 1958,
+        "code": "1",
+        "description": "Clinical only"
+      },
+      "2": {
+        "dictionaryID": 1959,
+        "code": "2",
+        "description": "Clin. Invest./Ult Soun"
+      },
+      "3": {
+        "dictionaryID": 1960,
+        "code": "3",
+        "description": "Surgery/Autopsy"
+      },
+      "4": {
+        "dictionaryID": 1961,
+        "code": "4",
+        "description": "Laboratory test"
+      },
+      "5": {
+        "dictionaryID": 1962,
+        "code": "5",
+        "description": "Cytology"
+      },
+      "6": {
+        "dictionaryID": 1963,
+        "code": "6",
+        "description": "Histology of metastase"
+      },
+      "7": {
+        "dictionaryID": 1964,
+        "code": "7",
+        "description": "Histology of primary"
+      },
+      "8": {
+        "dictionaryID": 1965,
+        "code": "8",
+        "description": "Autopsy/Histology"
+      },
+      "9": {
+        "dictionaryID": 1966,
+        "code": "9",
+        "description": "Unknown"
+      }
+    }
+  },
+  "8": {
+    "dictionaryEntries": {
+      "W": {
+        "dictionaryID": 1967,
+        "code": "W",
+        "description": "White"
+      },
+      "M": {
+        "dictionaryID": 1968,
+        "code": "M",
+        "description": "Mulato"
+      },
+      "B": {
+        "dictionaryID": 1969,
+        "code": "B",
+        "description": "Black "
+      },
+      "O": {
+        "dictionaryID": 1970,
+        "code": "O",
+        "description": "Other"
+      }
+    }
+  },
+  "9": {
+    "dictionaryEntries": {
+      "74000": {
+        "dictionaryID": 1971,
+        "code": "74000",
+        "description": "CHAC. QUINTA SONHOS"
+      },
+      "74003": {
+        "dictionaryID": 1972,
+        "code": "74003",
+        "description": "CENTRAL"
+      },
+      "74055": {
+        "dictionaryID": 1973,
+        "code": "74055",
+        "description": "CENTRAL"
+      },
+      "74063": {
+        "dictionaryID": 1974,
+        "code": "74063",
+        "description": "NORTE FERROVIARIO"
+      },
+      "74070": {
+        "dictionaryID": 1975,
+        "code": "74070",
+        "description": "AEROPORTO"
+      },
+      "74075": {
+        "dictionaryID": 1976,
+        "code": "74075",
+        "description": "AEROPORTO"
+      },
+      "74080": {
+        "dictionaryID": 1977,
+        "code": "74080",
+        "description": "SUL"
+      },
+      "74093": {
+        "dictionaryID": 1978,
+        "code": "74093",
+        "description": "SUL"
+      }
+    }
+  },
+  "10": {
+    "dictionaryEntries": {
+      "0101-05": {
+        "dictionaryID": 2229,
+        "code": "0101-05",
+        "description": "Brigadeiro"
+      },
+      "0101-10": {
+        "dictionaryID": 2230,
+        "code": "0101-10",
+        "description": "General-de-brigada"
+      },
+      "0101-15": {
+        "dictionaryID": 2231,
+        "code": "0101-15",
+        "description": "Almirante"
+      },
+      "0102-05": {
+        "dictionaryID": 2232,
+        "code": "0102-05",
+        "description": "Capitão"
+      },
+      "0102-10": {
+        "dictionaryID": 2233,
+        "code": "0102-10",
+        "description": "Capitão"
+      },
+      "0102-15": {
+        "dictionaryID": 2234,
+        "code": "0102-15",
+        "description": "Capitão-de-corveta"
+      },
+      "0103-05": {
+        "dictionaryID": 2235,
+        "code": "0103-05",
+        "description": "Cabo"
+      },
+      "0103-10": {
+        "dictionaryID": 2236,
+        "code": "0103-10",
+        "description": "Cabo"
+      },
+      "0103-15": {
+        "dictionaryID": 2237,
+        "code": "0103-15",
+        "description": "Cabo"
+      },
+      "0201-05": {
+        "dictionaryID": 2238,
+        "code": "0201-05",
+        "description": "Coronel da polícia militar Ocupação"
+      },
+      "0201-10": {
+        "dictionaryID": 2239,
+        "code": "0201-10",
+        "description": "Tenente-coronel da polícia militar Ocupação"
+      }
+    }
+  },
+  "11": {
+    "dictionaryEntries": {
+      "100": {
+        "dictionaryID": 4745,
+        "code": "100",
+        "description": "LABORATORIO SABIN"
+      },
+      "102": {
+        "dictionaryID": 4746,
+        "code": "102",
+        "description": "LABORATORIO JARBAS DOLES"
+      },
+      "148": {
+        "dictionaryID": 4747,
+        "code": "148",
+        "description": "LABORATORIO INSTITUTO DE HEMOTERAPIA DE GOIANIA"
+      },
+      "153": {
+        "dictionaryID": 4748,
+        "code": "153",
+        "description": "LABORATORIO BANCO DE SANGUE GOIANO"
+      },
+      "174": {
+        "dictionaryID": 4749,
+        "code": "174",
+        "description": "LABORATORIO PAPANICOLAU LTDA"
+      }
+    }
+  },
+  "12": {
+    "dictionaryEntries": {}
+  },
+  "13": {
+    "dictionaryEntries": {
+      "A": {
+        "dictionaryID": 4801,
+        "code": "A",
+        "description": "Alive"
+      },
+      "D": {
+        "dictionaryID": 4802,
+        "code": "D",
+        "description": "Dead"
+      }
+    }
+  }
+}

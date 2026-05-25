@@ -64,7 +64,12 @@ public class GlobalToolBox {
         databaseVariableNameToDatabaseVariableListElementMap = buildDBVariablesMap(databaseVariablesListElements);
         standardCharSet = Tools.getStandardCharset(doc, Globals.NAMESPACE);
         translator = Tools.getTranslator(doc, Globals.NAMESPACE);
-        localSettings = CanRegClientApp.getApplication().getLocalSettings();
+        LocalSettings localSettings = Tools.getLocalSettings();
+        if(localSettings != null) {
+            this.localSettings = localSettings;
+        } else {
+            this.localSettings = CanRegClientApp.getApplication().getLocalSettings();
+        }
         // mapIARCstandardVariablesVariableName = Tools.getMapIARCstandardVariablesVariableName(doc, Globals.NAMESPACE);
     }
 

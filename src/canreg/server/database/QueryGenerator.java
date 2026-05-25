@@ -398,6 +398,7 @@ public class QueryGenerator {
         // add an unique identifier
         // commands.add("ALTER TABLE APP.TUMOUR DROP UNIQUE (" + canreg.common.Tools.toUpperCaseStandardized(databaseVariableName) + ")");
 
+        // FIXME: fails for holding db
         commands.add("ALTER TABLE APP.TUMOUR ADD UNIQUE (" + canreg.common.Tools.toUpperCaseStandardized(databaseVariableName) + ")");
         // create primary key
         commands.add("ALTER TABLE APP.TUMOUR ADD PRIMARY KEY ( " + Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME + " , " + canreg.common.Tools.toUpperCaseStandardized(databaseVariableName) + ") ");
@@ -409,6 +410,7 @@ public class QueryGenerator {
         // drop the current primary key
         commands.add("ALTER TABLE APP.SOURCE DROP PRIMARY KEY");
         // add an unique identifier
+        // FIXME: fails for holding db
         commands.add("ALTER TABLE APP.SOURCE ADD UNIQUE (" + canreg.common.Tools.toUpperCaseStandardized(databaseVariableName) + ")");
 
         commands.add("ALTER TABLE APP.SOURCE ALTER COLUMN " + canreg.common.Tools.toUpperCaseStandardized(databaseVariableName) + "  NOT NULL");
@@ -699,12 +701,27 @@ public class QueryGenerator {
     static String strAddColumnToTable(String columnName, String columnType, String table) {
         return "ALTER TABLE APP." + table + " ADD COLUMN " + columnName.toUpperCase() + " " + columnType;
     }
-    
+
     static String strDropColumnFromTable(String columnName, String table) {
         return "ALTER TABLE APP." + table + " DROP COLUMN " + columnName.toUpperCase();
     }
 
     static String strSetColumnDataType(String columnName, String columnType, String table) {
         return "ALTER TABLE APP." + table + " ALTER "+ columnName.toUpperCase() + " SET DATA TYPE "+columnType;
+    }
+
+    static String strCountPatientByRegistryNumber(String patientIDVariableName) {
+        return "SELECT COUNT(*) FROM APP." + Globals.PATIENT_TABLE_NAME + " WHERE " + patientIDVariableName + " = ?";
+    }
+
+     static String strCountPatientByRecordID(String patientRecordID) {
+        return "SELECT COUNT(*) FROM APP." + Globals.PATIENT_TABLE_NAME + " WHERE " + patientRecordID + " = ?";
+    }
+    static String strCountTumourByTumourID(String tumourID) {
+        return "SELECT COUNT(*) FROM APP." + Globals.TUMOUR_TABLE_NAME + " WHERE " + tumourID + " = ?";
+    }
+
+    static String strCountSourceByRecordID(String sourceRecordID) {
+        return "SELECT COUNT(*) FROM APP." + Globals.SOURCE_TABLE_NAME + " WHERE " + sourceRecordID + " = ?";
     }
 }

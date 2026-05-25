@@ -20,6 +20,7 @@
 package canreg.client.gui.importers;
 
 import canreg.client.gui.tools.globalpopup.TechnicalError;
+import canreg.common.database.HoldingDbCommon;
 import canreg.common.database.Patient;
 import canreg.common.database.Tools;
 import canreg.common.database.Tumour;
@@ -29,7 +30,6 @@ import canreg.common.database.DatabaseRecord;
 import canreg.common.cachingtableapi.DistributedTableDescriptionException;
 import canreg.client.CanRegClientApp;
 import canreg.client.dataentry.Relation;
-import canreg.common.DatabaseGroupsListElement;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
@@ -94,8 +94,8 @@ public class Import {
     public static String TUMOURS = "tumours";
     public static String SOURCES = "sources";
     public static String R_SCRIPTS = "r_scripts";
-    private static final String RAW_DATA_COLUMN = "RAW_DATA";
-    private static final String FORMAT_ERRORS_COLUMN = "FORMAT_ERRORS";    
+    private static final String RAW_DATA_COLUMN = HoldingDbCommon.RAW_DATA_COLUMN;
+    private static final String FORMAT_ERRORS_COLUMN = HoldingDbCommon.FORMAT_ERRORS_COLUMN;    
 
     /**
      *
@@ -417,55 +417,12 @@ public class Import {
         return success;
     }
     
-    private static DatabaseVariablesListElement createFormatErrorsVariable(String databaseTableName, 
-                                                                           DatabaseGroupsListElement group, 
-                                                                           int variableID) {
-        DatabaseVariablesListElement variableFormatErrors = new DatabaseVariablesListElement(databaseTableName, 
-                                                                                             1, 
-                                                                                             FORMAT_ERRORS_COLUMN, 
-                                                                                             Globals.VARIABLE_TYPE_ALPHA_NAME);
-        variableFormatErrors.setGroup(group);
-        variableFormatErrors.setVariableLength(4000);
-        variableFormatErrors.setVariableID(variableID);
-        //The next sets() are mandatory, otherwise the saveXml() throws an exception
-        variableFormatErrors.setFullName("Format errors from original CSV");
-        variableFormatErrors.setEnglishName("Format Errors");
-        variableFormatErrors.setFillInStatus("Optional");
-        variableFormatErrors.setMultiplePrimaryCopy("Othr");
-        variableFormatErrors.setStandardVariableName("");
-        variableFormatErrors.setXPos(0);
-        variableFormatErrors.setYPos(0);
-        return variableFormatErrors;
-    }
-    
-    private static DatabaseVariablesListElement createRawDataVariable(String databaseTableName, 
-                                                                      DatabaseGroupsListElement group, 
-                                                                      int variableID) {
-        DatabaseVariablesListElement variableRawData = new DatabaseVariablesListElement(databaseTableName, 
-                                                                                        1, 
-                                                                                        RAW_DATA_COLUMN, 
-                                                                                        Globals.VARIABLE_TYPE_ALPHA_NAME);
-        variableRawData.setGroup(group);
-        variableRawData.setVariableLength(32000);
-        variableRawData.setVariableID(variableID);
-        //The next sets() are mandatory, otherwise the saveXml() throws an exception
-        variableRawData.setFullName("Raw Data from original CSV");
-        variableRawData.setEnglishName("Raw Data");
-        variableRawData.setFillInStatus("Optional");
-        variableRawData.setMultiplePrimaryCopy("Othr");
-        variableRawData.setStandardVariableName("");
-        variableRawData.setXPos(0);
-        variableRawData.setYPos(0);
-        return variableRawData;
-    }
-    
-    private static Relation createRelation(DatabaseVariablesListElement variable, 
-                                           int variableID, 
-                                           int columnIndexInFile, 
+    private static Relation createRelation(DatabaseVariablesListElement variable,
+                                           int columnIndexInFile,
                                            String variableNameInFile) {
         Relation relation = new Relation();
         relation.setDatabaseTableName(variable.getDatabaseTableName());
-        relation.setDatabaseTableVariableID(variableID);
+        relation.setDatabaseTableVariableID(variable.getVariableID());
         relation.setDatabaseVariableName(variable.getDatabaseVariableName());
         relation.setFileColumnNumber(columnIndexInFile);
         relation.setFileVariableName(variableNameInFile);
@@ -491,63 +448,14 @@ public class Import {
         int tumourAmountOfColumns = getAmountOfColumns(files, io, 1);
         int sourceAmountOfColumns = getAmountOfColumns(files, io, 2);
         
-        SystemDescription systemDescription = new SystemDescription(Paths.get(new URI(originalDBDescription.getDocumentURI())).toFile().getAbsolutePath());
-        DatabaseGroupsListElement defaultGroup = systemDescription.getDatabaseGroupsListElements()[1];
-        int lastVariableId = systemDescription.getDatabaseVariableListElements().length - 1;
-        
-        //Two new variables are added for the holding DB: "Format Errors" and "Raw Data"    
-        //First we add the "Fromat Errors". This is the penultimate column in the csv file. This columns
-        //indicates which are the columns that have format errors.
-        DatabaseVariablesListElement patientFormatErrorsVar = createFormatErrorsVariable(Globals.PATIENT_TABLE_NAME, 
-                                                                                       defaultGroup, 
-                                                                                       ++lastVariableId);
-        Relation patientFormatErrorsRel = createRelation(patientFormatErrorsVar, lastVariableId, (patientAmountOfColumns - 2), "format.errors");
-        map.add(patientFormatErrorsRel);
-        
-        //The "Raw Data" columns contains the full content for that record. Useful so the user can
-        //revise format errors but without the forced changes of the data entry GUI.
-        DatabaseVariablesListElement patientRawDataVar = createRawDataVariable(Globals.PATIENT_TABLE_NAME, 
-                                                                             defaultGroup, 
-                                                                             ++lastVariableId);
-        Relation patientRawDataRel = createRelation(patientRawDataVar, lastVariableId, (patientAmountOfColumns - 1), "all.raw.data");
-        map.add(patientRawDataRel);
-        
-        
-        //"Format Errors" and "Raw Data" are also added to the tumour and source tables in case
-        //the user input 3 files that don't share data.
-        DatabaseVariablesListElement tumourFormatErrorsVar = createFormatErrorsVariable(Globals.TUMOUR_TABLE_NAME, 
-                                                                                       defaultGroup, 
-                                                                                       ++lastVariableId);
-        Relation tumourFormatErrorsRel = createRelation(tumourFormatErrorsVar, lastVariableId, (tumourAmountOfColumns - 2), "format.errors");
-        map.add(tumourFormatErrorsRel);
-        
-        DatabaseVariablesListElement tumourRawDataVar = createRawDataVariable(Globals.TUMOUR_TABLE_NAME, 
-                                                                             defaultGroup, 
-                                                                             ++lastVariableId);
-        Relation tumourRawDataRel = createRelation(tumourRawDataVar, lastVariableId, (tumourAmountOfColumns - 1), "all.raw.data");
-        map.add(tumourRawDataRel);
-        
-        DatabaseVariablesListElement sourceFormatErrorsVar = createFormatErrorsVariable(Globals.SOURCE_TABLE_NAME, 
-                                                                                       defaultGroup, 
-                                                                                       ++lastVariableId);
-        Relation sourceFormatErrorsRel = createRelation(sourceFormatErrorsVar, lastVariableId, (sourceAmountOfColumns - 2), "format.errors");
-        map.add(sourceFormatErrorsRel);
-        
-        DatabaseVariablesListElement sourceRawDataVar = createRawDataVariable(Globals.SOURCE_TABLE_NAME, 
-                                                                             defaultGroup, 
-                                                                             ++lastVariableId);
-        Relation sourceRawDataRel = createRelation(sourceRawDataVar, lastVariableId, (sourceAmountOfColumns - 1), "all.raw.data");
-        map.add(sourceRawDataRel);
-        
-        ArrayList<DatabaseVariablesListElement> variables = new ArrayList<>(Arrays.asList(systemDescription.getDatabaseVariableListElements()));
-        variables.add(patientFormatErrorsVar);
-        variables.add(patientRawDataVar);
-        variables.add(tumourFormatErrorsVar);
-        variables.add(tumourRawDataVar);
-        variables.add(sourceFormatErrorsVar);
-        variables.add(sourceRawDataVar);
-        systemDescription.setVariables(variables.toArray(new DatabaseVariablesListElement[variables.size()]));
-        
+        SystemDescription systemDescription = 
+                new SystemDescription(Paths.get(new URI(originalDBDescription.getDocumentURI())).toFile().getAbsolutePath());
+        List<DatabaseVariablesListElement> newVariables = 
+                HoldingDbCommon.addVariablesForImportToHoldingDB(systemDescription);
+        List<Relation> relationsToAdd = buildRelationsForImportToHoldingDB(newVariables, 
+                patientAmountOfColumns, tumourAmountOfColumns, sourceAmountOfColumns);
+        map.addAll(relationsToAdd);
+
         //Creation of XML of Holding DB        
         String registryCode = server.getCanRegRegistryCode();
         systemDescription = server.createNewHoldingDB(registryCode, systemDescription);
@@ -555,7 +463,60 @@ public class Import {
         CanRegServerInterface holdingProxy = ((CanRegRegistryProxy) server).getInstanceForHoldingDB(systemDescription.getRegistryCode());
 
         return importFiles(task, map, files, holdingProxy, io, true, originalDBDescription);
-    }    
+    }
+
+    /**
+     * Build the new relations for the new variables.
+     * @param newVariables new variables
+     * @param patientAmountOfColumns patientAmountOfColumns 
+     * @param tumourAmountOfColumns tumourAmountOfColumns
+     * @param sourceAmountOfColumns sourceAmountOfColumns
+     * @return list of new relations
+     */
+    public static List<Relation> buildRelationsForImportToHoldingDB(List<DatabaseVariablesListElement> newVariables, int patientAmountOfColumns, int tumourAmountOfColumns, int sourceAmountOfColumns) {
+        List<Relation> newRelations = new ArrayList<>();
+        int variableIndex = 0;
+
+        //Two new variables are added for the holding DB: "Format Errors" and "Raw Data"    
+        //First we add the "Fromat Errors". This is the penultimate column in the csv file. This columns
+        //indicates which are the columns that have format errors.
+        DatabaseVariablesListElement patientFormatErrorsVar = newVariables.get(variableIndex);
+        Relation patientFormatErrorsRel = createRelation(patientFormatErrorsVar,
+                (patientAmountOfColumns - 2), "format.errors");
+        newRelations.add(patientFormatErrorsRel);
+
+        //The "Raw Data" columns contains the full content for that record. Useful so the user can
+        //revise format errors but without the forced changes of the data entry GUI.
+        variableIndex++;
+        DatabaseVariablesListElement patientRawDataVar = newVariables.get(variableIndex);
+        Relation patientRawDataRel = createRelation(patientRawDataVar, (patientAmountOfColumns - 1), "all.raw.data");
+        newRelations.add(patientRawDataRel);
+
+
+        //"Format Errors" and "Raw Data" are also added to the tumour and source tables in case
+        //the user input 3 files that don't share data.
+        variableIndex++;
+        DatabaseVariablesListElement tumourFormatErrorsVar = newVariables.get(variableIndex);
+        Relation tumourFormatErrorsRel = createRelation(tumourFormatErrorsVar, (tumourAmountOfColumns - 2), "format.errors");
+        newRelations.add(tumourFormatErrorsRel);
+
+        variableIndex++;
+        DatabaseVariablesListElement tumourRawDataVar = newVariables.get(variableIndex);
+        Relation tumourRawDataRel = createRelation(tumourRawDataVar, (tumourAmountOfColumns - 1), "all.raw.data");
+        newRelations.add(tumourRawDataRel);
+
+        variableIndex++;
+        DatabaseVariablesListElement sourceFormatErrorsVar = newVariables.get(variableIndex);
+        Relation sourceFormatErrorsRel = createRelation(sourceFormatErrorsVar, (sourceAmountOfColumns - 2), "format.errors");
+        newRelations.add(sourceFormatErrorsRel);
+
+        variableIndex++;
+        DatabaseVariablesListElement sourceRawDataVar = newVariables.get(variableIndex);
+        Relation sourceRawDataRel = createRelation(sourceRawDataVar, (sourceAmountOfColumns - 1), "all.raw.data");
+        newRelations.add(sourceRawDataRel);
+        
+        return newRelations;
+    }
 
     public static boolean importFiles(Task<Object, Void> task, 
                                       List<canreg.client.dataentry.Relation> map, File[] files, 
