@@ -4,6 +4,9 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$DIR"
 
+# Add standard macOS/Linux Homebrew and openjdk paths to PATH (GUI launches do not inherit shell profiles)
+export PATH="/opt/homebrew/bin:/opt/homebrew/opt/openjdk/bin:/usr/local/bin:/usr/local/opt/openjdk/bin:$PATH"
+
 if [ -f "dist/CanReg.jar" ]; then
     java -cp "dist/CanReg.jar:dist/lib/*" canreg.client.CanRegClientApp
 elif [ -f "CanReg.jar" ]; then
