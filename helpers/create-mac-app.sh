@@ -79,9 +79,9 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$DIR/../../.."
 
 if [ -f "dist/CanReg.jar" ]; then
-    java -jar dist/CanReg.jar
+    java -cp "dist/CanReg.jar:dist/lib/*" canreg.client.CanRegClientApp
 elif [ -f "CanReg.jar" ]; then
-    java -jar CanReg.jar
+    java -cp "CanReg.jar:lib/*" canreg.client.CanRegClientApp
 else
     # Show user-friendly macOS native error dialog if JAR is missing
     osascript -e 'display alert "CanReg5 Launcher Error" message "Could not find CanReg.jar.\n\nPlease ensure you have compiled the project with '\''ant jar'\'' first or placed CanReg.jar in the same directory as CanReg5.app."' as critical

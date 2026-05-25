@@ -5,9 +5,9 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$DIR"
 
 if [ -f "dist/CanReg.jar" ]; then
-    java -jar dist/CanReg.jar
+    java -cp "dist/CanReg.jar:dist/lib/*" canreg.client.CanRegClientApp
 elif [ -f "CanReg.jar" ]; then
-    java -jar CanReg.jar
+    java -cp "CanReg.jar:lib/*" canreg.client.CanRegClientApp
 else
     echo "Error: CanReg.jar could not be found." >&2
     echo "Please compile with 'ant jar' or ensure CanReg.jar is in the same folder." >&2
