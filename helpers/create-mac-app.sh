@@ -78,8 +78,8 @@ echo "Writing Launcher script..."
 cat << 'EOF' > "${MACOS_DIR}/CanReg5"
 #!/bin/bash
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-# Navigate relative to the .app bundle (which sits in the project root or a distribution root)
-cd "$DIR/../../.."
+# Navigate to the self-contained Resources directory inside the .app bundle
+cd "$DIR/../Resources"
 
 # Add standard macOS Homebrew and JDK binary paths to PATH (GUI launches do not inherit shell profiles)
 export PATH="/opt/homebrew/bin:/opt/homebrew/opt/openjdk/bin:/usr/local/bin:/usr/local/opt/openjdk/bin:$PATH"
@@ -100,17 +100,33 @@ if ! "$JAVA_CMD" -version &>/dev/null; then
     exit 1
 fi
 
-if [ -f "dist/CanReg.jar" ]; then
-    "$JAVA_CMD" -cp "dist/CanReg.jar:dist/lib/*" canreg.client.CanRegClientApp
-elif [ -f "CanReg.jar" ]; then
+if [ -f "CanReg.jar" ]; then
     "$JAVA_CMD" -cp "CanReg.jar:lib/*" canreg.client.CanRegClientApp
 else
     # Show user-friendly macOS native error dialog if JAR is missing
-    osascript -e 'display alert "CanReg5 Launcher Error" message "Could not find CanReg.jar.\n\nPlease ensure you have compiled the project with '\''ant jar'\'' first or placed CanReg.jar in the same directory as CanReg5.app."' as critical
+    osascript -e 'display alert "CanReg5 Launcher Error" message "Could not find CanReg.jar inside the App Bundle.\n\nPlease rebuild the package using '\''ant jar'\''."' as critical
 fi
 EOF
 
-# 4. Make it executable and apply ad-hoc code signature
+# 4. Copy all compiled application resources inside the App Bundle to make it 100% self-contained
+echo "Copying assets into App Bundle Resources..."
+if [ -f "dist/CanReg.jar" ]; then
+    cp "dist/CanReg.jar" "${RESOURCES_DIR}/"
+fi
+if [ -d "dist/lib" ]; then
+    cp -R "dist/lib" "${RESOURCES_DIR}/"
+fi
+if [ -d "conf" ]; then
+    cp -R "conf" "${RESOURCES_DIR}/"
+fi
+if [ -d "demo" ]; then
+    cp -R "demo" "${RESOURCES_DIR}/"
+fi
+if [ -d "scripts" ]; then
+    cp -R "scripts" "${RESOURCES_DIR}/"
+fi
+
+# 5. Make it executable and apply ad-hoc code signature
 chmod +x "${MACOS_DIR}/CanReg5"
 
 echo "Applying ad-hoc code signature..."
