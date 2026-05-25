@@ -107,6 +107,15 @@ else
 fi
 EOF
 
-# 4. Make it executable
+# 4. Make it executable and apply ad-hoc code signature
 chmod +x "${MACOS_DIR}/CanReg5"
+
+echo "Applying ad-hoc code signature..."
+if command -v codesign &>/dev/null; then
+    codesign --force --deep --sign - "${APP_NAME}"
+    echo "Ad-hoc code signature applied successfully."
+else
+    echo "Warning: codesign utility not found. App bundle signature was skipped."
+fi
+
 echo "macOS App Bundle CanReg5.app created successfully!"
