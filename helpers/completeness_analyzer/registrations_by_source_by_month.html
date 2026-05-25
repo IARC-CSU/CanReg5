@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cancer Registry Data Visualizer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .tooltip {
+            position: absolute;
+            text-align: center;
+            padding: 8px;
+            font: 12px sans-serif;
+            background: lightsteelblue;
+            border: 0px;
+            border-radius: 8px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .axis-label {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+            margin-bottom: 5px; /* Added for better wrapping */
+            font-size: 12px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            border: 2px solid transparent;
+            padding: 2px 6px;
+            border-radius: 6px;
+        }
+        .legend-item.active {
+            border-color: #3b82f6; /* Blue-500 */
+            background-color: #eff6ff; /* Blue-50 */
+        }
+        .legend-item.inactive {
+            opacity: 0.5;
+        }
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            margin-right: 5px;
+            border-radius: 2px;
+        }
+        .trend-line {
+            fill: none;
+            stroke: #ef4444; /* red-500 */
+            stroke-width: 3;
+            stroke-dasharray: 6 4;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900">Cancer Registry Completeness Analyzer</h1>
+            <p class="text-md text-gray-600 mt-2">Upload your data file to visualize the number of records per month by source.</p>
+        </header>
+
+        <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-200">
+            
+            <!-- Step 1: File Upload -->
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold text-gray-800 border-b pb-2 mb-4">Step 1: Upload Your Data File</h2>
+                <div class="grid md:grid-cols-2 gap-4 items-center">
+                    <div>
+                        <label for="fileInput" class="block text-sm font-medium text-gray-700 mb-2">Select a character-separated file (.csv, .txt, .tsv):</label>
+                        <input type="file" id="fileInput" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" accept=".csv,.txt,.tsv,.psv,.dat">
+                    </div>
+                    <div>
+                        <label for="delimiter" class="block text-sm font-medium text-gray-700 mb-2">Detected Delimiter (auto):</label>
+                        <input type="text" id="delimiter" placeholder="Auto-detected" class="p-2 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                </div>
+                 <div class="mt-4">
+                    <input type="checkbox" id="hasHeader" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" checked>
+                    <label for="hasHeader" class="ml-2 text-sm font-medium text-gray-700">My file has a header row</label>
+                </div>
+            </div>
+
+            <!-- Step 2: Column Mapping -->
+            <div id="mappingSection" class="mb-6 hidden">
+                <h2 class="text-xl font-semibold text-gray-800 border-b pb-2 mb-4">Step 2: Map Your Data Columns</h2>
+                <p class="text-sm text-gray-600 mb-4">Select columns and specify the date format. The Incidence Date is a fallback if the Source Date is missing.</p>
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div>
+                        <label for="sourceColumn" class="block text-sm font-medium text-gray-700">Source Column:</label>
+                        <select id="sourceColumn" class="mt-1 block w-full p-2 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></select>
+                    </div>
+                    <div>
+                        <label for="sourceDateColumn" class="block text-sm font-medium text-gray-700">Source Date Column:</label>
+                        <select id="sourceDateColumn" class="mt-1 block w-full p-2 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></select>
+                    </div>
+                    <div>
+                        <label for="incidenceDateColumn" class="block text-sm font-medium text-gray-700">Incidence Date Column:</label>
+                        <select id="incidenceDateColumn" class="mt-1 block w-full p-2 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></select>
+                    </div>
+                    <div>
+                        <label for="dateFormat" class="block text-sm font-medium text-gray-700">Date Format (auto):</label>
+                        <input type="text" id="dateFormat" placeholder="e.g., YYYYMMDD" class="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Process Data -->
+            <div class="text-center">
+                <button id="processButton" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:bg-gray-400 transition-colors" disabled>
+                    Process and Visualize Data
+                </button>
+            </div>
+        </div>
+
+        <!-- Error/Message Display -->
+        <div id="messageArea" class="mt-6 text-center"></div>
+
+        <!-- Visualization Area -->
+        <div id="chartContainer" class="mt-8 bg-white p-4 rounded-2xl shadow-lg border border-gray-200 hidden">
+             <h3 class="text-xl font-semibold text-gray-800 mb-2 text-center">Records per Month by Source</h3>
+             <p class="text-center text-sm text-gray-500 mb-4">Click a legend item to filter. The red dashed line shows the yearly average trend.</p>
+            <div id="legend" class="flex flex-wrap justify-center mb-4"></div>
+            <svg id="chart"></svg>
+        </div>
+        <div class="tooltip"></div>
+
+    </div>
+
+    <script>
+        // --- State Variables ---
+        let fileTextContent = '';
+        let fileHeaders = [];
+        let originalAggregatedData = {};
+        let activeSourceFilter = null;
+        let colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+
+        // --- DOM Element References ---
+        const fileInput = document.getElementById('fileInput');
+        const delimiterInput = document.getElementById('delimiter');
+        const hasHeaderCheckbox = document.getElementById('hasHeader');
+        const mappingSection = document.getElementById('mappingSection');
+        const processButton = document.getElementById('processButton');
+        const messageArea = document.getElementById('messageArea');
+        const chartContainer = document.getElementById('chartContainer');
+        const sourceColumnSelect = document.getElementById('sourceColumn');
+        const sourceDateColumnSelect = document.getElementById('sourceDateColumn');
+        const incidenceDateColumnSelect = document.getElementById('incidenceDateColumn');
+        const dateFormatInput = document.getElementById('dateFormat');
+        
+        // --- Event Listeners ---
+        fileInput.addEventListener('change', handleFileSelect);
+        sourceDateColumnSelect.addEventListener('change', updateDateFormatDetection);
+        incidenceDateColumnSelect.addEventListener('change', updateDateFormatDetection);
+        processButton.addEventListener('click', handleProcessData);
+
+
+        /**
+         * Main handler for file selection. Reads the file and sets up the UI.
+         */
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) {
+                resetUI();
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                fileTextContent = e.target.result;
+
+                const detectedDelimiter = detectDelimiter(fileTextContent);
+                delimiterInput.value = detectedDelimiter === '\t' ? 'Tab' : detectedDelimiter;
+                
+                const delimiter = getDelimiter();
+                const firstLine = fileTextContent.split('\n')[0].trim();
+                const headers = firstLine.split(delimiter);
+
+                if (headers.length <= 1 && fileTextContent.length > 0) {
+                     displayMessage('Could not detect columns. Is the auto-detected delimiter correct?', 'error');
+                     resetUI();
+                     return;
+                }
+                
+                fileHeaders = hasHeaderCheckbox.checked ? headers : headers.map((_, i) => `Column ${i + 1}`);
+                populateMappingDropdowns(fileHeaders);
+                updateDateFormatDetection();
+                
+                mappingSection.classList.remove('hidden');
+                processButton.disabled = false;
+                messageArea.innerHTML = '';
+            };
+            reader.onerror = () => {
+                displayMessage('Error reading file.', 'error');
+                resetUI();
+            };
+            reader.readAsText(file);
+        }
+        
+        /**
+         * Main handler for processing data and triggering visualization.
+         */
+        function handleProcessData() {
+            try {
+                const delimiter = getDelimiter();
+                const sourceCol = sourceColumnSelect.value;
+                const sourceDateCol = sourceDateColumnSelect.value;
+                const incidenceDateCol = incidenceDateColumnSelect.value;
+                const dateFormat = dateFormatInput.value.trim();
+
+                const sourceIndex = fileHeaders.indexOf(sourceCol);
+                const sourceDateIndex = fileHeaders.indexOf(sourceDateCol);
+                const incidenceDateIndex = fileHeaders.indexOf(incidenceDateCol);
+                
+                if (sourceIndex === -1 || sourceDateIndex === -1 || incidenceDateIndex === -1) {
+                    throw new Error("Invalid column mapping. Please re-check your selections.");
+                }
+                if (!dateFormat) {
+                    throw new Error("Date format is required. Please specify it (e.g., YYYYMMDD).");
+                }
+
+                const lines = fileTextContent.split('\n');
+                const startLine = hasHeaderCheckbox.checked ? 1 : 0;
+                
+                const records = [];
+                for (let i = startLine; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    if (line) {
+                       const values = line.split(delimiter);
+                       if (values.length > Math.max(sourceIndex, sourceDateIndex, incidenceDateIndex)) {
+                           records.push(values);
+                       }
+                    }
+                }
+
+                originalAggregatedData = aggregateData(records, sourceIndex, sourceDateIndex, incidenceDateIndex, dateFormat);
+                activeSourceFilter = null;
+                
+                if (Object.keys(originalAggregatedData).length === 0) {
+                    displayMessage('No valid data found to visualize. Check your data, mappings, and date format.', 'error');
+                    chartContainer.classList.add('hidden');
+                } else {
+                    displayMessage('Data processed successfully. Chart generated below.', 'success');
+                    chartContainer.classList.remove('hidden');
+                    colorScale.domain(Object.keys(originalAggregatedData));
+                    drawLegend();
+                    drawChart(originalAggregatedData);
+                }
+            } catch (error) {
+                console.error("Processing Error:", error);
+                displayMessage(`An error occurred: ${error.message}`, 'error');
+                chartContainer.classList.add('hidden');
+            }
+        }
+        
+        /**
+         * Aggregates raw data into counts per source per month.
+         */
+        function aggregateData(records, srcIdx, srcDateIdx, incDateIdx, dateFormat) {
+            const monthlyCounts = {};
+            records.forEach(record => {
+                const source = record[srcIdx]?.trim();
+                let dateStr = record[srcDateIdx]?.trim();
+                if (!dateStr) {
+                    dateStr = record[incDateIdx]?.trim();
+                }
+                
+                const yearMonth = parseDate(dateStr, dateFormat);
+
+                if (source && yearMonth) {
+                    if (!monthlyCounts[source]) monthlyCounts[source] = {};
+                    if (!monthlyCounts[source][yearMonth]) monthlyCounts[source][yearMonth] = 0;
+                    monthlyCounts[source][yearMonth]++;
+                }
+            });
+            return monthlyCounts;
+        }
+
+        // --- Auto-Detection Functions ---
+        function detectDelimiter(text) {
+            const delimiters = [',', '\t', '|', ';'];
+            const lines = text.split('\n').slice(0, 10);
+            let bestDelimiter = ',';
+            let maxConsistentCount = 0;
+
+            delimiters.forEach(delimiter => {
+                let firstLineCount = -1;
+                let consistentLines = 0;
+                for(const line of lines) {
+                    const trimmedLine = line.trim();
+                    if (trimmedLine === '') continue;
+                    const count = trimmedLine.split(delimiter).length - 1;
+                    if (count > 0) {
+                        if (firstLineCount === -1) {
+                            firstLineCount = count;
+                            consistentLines = 1;
+                        } else if (count === firstLineCount) {
+                            consistentLines++;
+                        }
+                    }
+                }
+                if (consistentLines > maxConsistentCount && firstLineCount > 0) {
+                    maxConsistentCount = consistentLines;
+                    bestDelimiter = delimiter;
+                }
+            });
+            return bestDelimiter;
+        }
+
+        function detectDateFormat(sampleValues) {
+            const formatScores = {
+                'YYYYMMDD': 0, 'YYYY-MM-DD': 0, 'MM/DD/YYYY': 0, 'DD.MM.YYYY': 0
+            };
+            const formatRegex = {
+                'YYYYMMDD': /^\d{8}$/,
+                'YYYY-MM-DD': /^\d{4}-\d{2}-\d{2}$/,
+                'MM/DD/YYYY': /^\d{1,2}\/\d{1,2}\/\d{4}$/,
+                'DD.MM.YYYY': /^\d{1,2}\.\d{1,2}\.\d{4}$/
+            };
+            
+            sampleValues.forEach(val => {
+                if (!val) return;
+                for (const format in formatRegex) {
+                    if (formatRegex[format].test(val)) {
+                        formatScores[format]++;
+                    }
+                }
+            });
+
+            let bestFormat = 'YYYYMMDD';
+            let maxScore = 0;
+            for (const format in formatScores) {
+                if (formatScores[format] > maxScore) {
+                    maxScore = formatScores[format];
+                    bestFormat = format;
+                }
+            }
+            return bestFormat;
+        }
+
+        function updateDateFormatDetection() {
+            if (!fileTextContent) return;
+            
+            const lines = fileTextContent.split('\n');
+            const startLine = hasHeaderCheckbox.checked ? 1 : 0;
+            const delimiter = getDelimiter();
+            const dateColumnName = sourceDateColumnSelect.value;
+            const dateColumnIndex = fileHeaders.indexOf(dateColumnName);
+
+            if (dateColumnIndex === -1) return;
+
+            const sampleValues = [];
+            for (let i = startLine; i < Math.min(lines.length, startLine + 50); i++) {
+                const line = lines[i]?.trim();
+                if (line) {
+                    const values = line.split(delimiter);
+                    if (values.length > dateColumnIndex) {
+                        sampleValues.push(values[dateColumnIndex].trim());
+                    }
+                }
+            }
+            const detectedFormat = detectDateFormat(sampleValues);
+            dateFormatInput.value = detectedFormat;
+        }
+        
+        function parseDate(dateStr, format) {
+            if (!dateStr) return null;
+            let year, month;
+            try {
+                switch(format.toUpperCase()) {
+                    case 'YYYYMMDD':
+                        if (dateStr.length !== 8) return null;
+                        year = dateStr.substring(0, 4);
+                        month = dateStr.substring(4, 6);
+                        break;
+                    case 'YYYY-MM-DD':
+                        const partsYMD = dateStr.split('-');
+                        if(partsYMD.length !== 3) return null;
+                        year = partsYMD[0];
+                        month = partsYMD[1];
+                        break;
+                    case 'MM/DD/YYYY':
+                        const partsMDY = dateStr.split('/');
+                        if(partsMDY.length !== 3) return null;
+                        year = partsMDY[2];
+                        month = partsMDY[0].padStart(2, '0');
+                        break;
+                    case 'DD.MM.YYYY':
+                         const partsDMY = dateStr.split('.');
+                        if(partsDMY.length !== 3) return null;
+                        year = partsDMY[2];
+                        month = partsDMY[1].padStart(2, '0');
+                        break;
+                    default: return null;
+                }
+                if (isNaN(parseInt(year)) || isNaN(parseInt(month)) || parseInt(month) < 1 || parseInt(month) > 12) return null;
+                return `${year}-${month}`;
+            } catch (e) { return null; }
+        }
+        
+        // --- UI and Charting Functions ---
+        function drawLegend() {
+            const allSources = Object.keys(originalAggregatedData);
+            const legend = d3.select("#legend");
+            legend.selectAll("*").remove();
+
+            const legendItems = legend.selectAll(".legend-item")
+                .data(allSources).enter().append("div")
+                .attr("class", "legend-item")
+                .on("click", (event, d) => {
+                    activeSourceFilter = activeSourceFilter === d ? null : d;
+                    drawChart(activeSourceFilter ? { [d]: originalAggregatedData[d] } : originalAggregatedData);
+                    drawLegend();
+                });
+
+            legendItems.append("div").attr("class", "legend-color").style("background-color", d => colorScale(d));
+            legendItems.append("span").text(d => d);
+            
+            legendItems.each(function(d) {
+                d3.select(this)
+                  .classed("active", activeSourceFilter && d === activeSourceFilter)
+                  .classed("inactive", activeSourceFilter && d !== activeSourceFilter);
+            });
+        }
+
+        /**
+         * Draws the bar chart and trend line.
+         */
+        function drawChart(data) {
+            const chartSvg = d3.select("#chart");
+            chartSvg.selectAll("*").remove(); 
+            d3.select(".tooltip").style("opacity", 0);
+
+            // --- Data preparation for chart ---
+            const allMonths = new Set();
+            Object.keys(originalAggregatedData).forEach(source => Object.keys(originalAggregatedData[source]).forEach(month => allMonths.add(month)));
+            const sortedMonths = Array.from(allMonths).sort();
+            const sources = Object.keys(data);
+            
+            const stackedData = sortedMonths.map(month => {
+                const entry = { month, total: 0 };
+                sources.forEach(source => {
+                    const value = data[source]?.[month] || 0;
+                    entry[source] = value;
+                    entry.total += value;
+                });
+                return entry;
+            });
+            
+            const series = d3.stack().keys(sources)(stackedData);
+            
+            // --- Chart setup ---
+            const margin = { top: 20, right: 30, bottom: 60, left: 60 };
+            const containerWidth = document.getElementById('chartContainer').clientWidth;
+            const width = containerWidth > 0 ? containerWidth - margin.left - margin.right : 600;
+            const height = 500 - margin.top - margin.bottom;
+
+            chartSvg.attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom);
+            const g = chartSvg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+
+            // --- Scales ---
+            const xScale = d3.scaleBand().domain(sortedMonths).range([0, width]).padding(0.2);
+            const yScale = d3.scaleLinear().domain([0, d3.max(series, d => d3.max(d, d => d[1]))]).nice().range([height, 0]);
+
+            // --- Axes ---
+            const xAxis = g.append("g").attr("transform", `translate(0,${height})`).call(d3.axisBottom(xScale).tickFormat((d,i) => i % Math.ceil(sortedMonths.length / (width/80)) === 0 ? d : ""));
+            xAxis.selectAll("text").attr("transform", "rotate(-45)").style("text-anchor", "end");
+            g.append("g").call(d3.axisLeft(yScale));
+
+            // --- Axis Labels ---
+            chartSvg.append("text").attr("class", "axis-label").attr("text-anchor", "middle").attr("x", margin.left + width / 2).attr("y", height + margin.top + margin.bottom - 5).text("Month (YYYY-MM)");
+            chartSvg.append("text").attr("class", "axis-label").attr("text-anchor", "middle").attr("transform", "rotate(-90)").attr("y", 15).attr("x", -height / 2 - margin.top).text("Number of Records");
+
+            // --- Tooltip ---
+            const tooltip = d3.select(".tooltip");
+            
+            // --- Draw Bars ---
+            g.selectAll("g.layer").data(series).enter().append("g")
+                .attr("class", "layer").attr("fill", d => colorScale(d.key))
+                .selectAll("rect").data(d => d).enter().append("rect")
+                .attr("x", d => xScale(d.data.month))
+                .attr("y", d => yScale(d[1]))
+                .attr("height", d => yScale(d[0]) - yScale(d[1]))
+                .attr("width", xScale.bandwidth())
+                .on("mouseover", function(event, d) {
+                    const sourceKey = d3.select(this.parentNode).datum().key;
+                    const count = d.data[sourceKey];
+                    tooltip.transition().duration(200).style("opacity", .9);
+                    tooltip.html(`Source: ${sourceKey}<br>Month: ${d.data.month}<br>Records: ${count}`)
+                        .style("left", (event.pageX + 5) + "px").style("top", (event.pageY - 28) + "px");
+                })
+                .on("mouseout", () => tooltip.transition().duration(500).style("opacity", 0));
+                
+            // --- Trend Line Calculation ---
+            const yearlyAverages = d3.rollup(stackedData, 
+                v => d3.mean(v, d => d.total), 
+                d => d.month.substring(0, 4)
+            );
+            
+            const trendLineData = Array.from(yearlyAverages, ([year, avg]) => {
+                // Find all months for the current year to calculate the midpoint X
+                const monthsOfYear = sortedMonths.filter(m => m.startsWith(year));
+                const firstMonthX = xScale(monthsOfYear[0]) + xScale.bandwidth() / 2;
+                const lastMonthX = xScale(monthsOfYear[monthsOfYear.length - 1]) + xScale.bandwidth() / 2;
+                
+                return {
+                    x: (firstMonthX + lastMonthX) / 2,
+                    y: yScale(avg)
+                };
+            }).filter(d => !isNaN(d.x)); // Filter out any potential NaN values if a year has no data
+            
+            // --- Draw Trend Line ---
+            if (trendLineData.length > 1) {
+                const line = d3.line().x(d => d.x).y(d => d.y);
+                g.append("path")
+                    .datum(trendLineData)
+                    .attr("class", "trend-line")
+                    .attr("d", line);
+            }
+        }
+
+        function getDelimiter() {
+            const val = delimiterInput.value;
+            return val.toLowerCase() === 'tab' ? '\t' : val;
+        }
+        
+        function populateMappingDropdowns(headers) {
+            [sourceColumnSelect, sourceDateColumnSelect, incidenceDateColumnSelect].forEach(select => {
+                select.innerHTML = '';
+                headers.forEach(header => {
+                    const option = document.createElement('option');
+                    option.value = header;
+                    option.textContent = header;
+                    select.appendChild(option);
+                });
+            });
+            const selectIfPresent = (select, names) => {
+                for (const name of names) {
+                    const opt = Array.from(select.options).find(o => o.value.toLowerCase().includes(name));
+                    if(opt) { select.value = opt.value; break; }
+                }
+            };
+            selectIfPresent(sourceColumnSelect, ['source', 'src']);
+            selectIfPresent(sourceDateColumnSelect, ['date', 'source date']);
+            selectIfPresent(incidenceDateColumnSelect, ['incid', 'incidence']);
+        }
+
+        function displayMessage(text, type) {
+            const colorClass = type === 'error' ? 'text-red-600' : 'text-green-600';
+            messageArea.innerHTML = `<p class="p-3 rounded-lg bg-${type === 'error' ? 'red' : 'green'}-100 ${colorClass}">${text}</p>`;
+        }
+        
+        function resetUI() {
+            mappingSection.classList.add('hidden');
+            chartContainer.classList.add('hidden');
+            processButton.disabled = true;
+            fileInput.value = '';
+            delimiterInput.value = '';
+            dateFormatInput.value = '';
+            fileTextContent = '';
+            originalAggregatedData = {};
+            activeSourceFilter = null;
+        }
+    </script>
+</body>
+</html>

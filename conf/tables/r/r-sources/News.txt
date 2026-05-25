@@ -7,7 +7,6 @@ Update CI5 comparaison data
 
 08/09/2023
 Add system to update translation remotely
-
 ## Version 1.12
 
 08/09/2023
