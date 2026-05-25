@@ -146,6 +146,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
         if(this.server == null)
             this.holdingOptions.setVisible(false);
         
+        setPreferredSize(new java.awt.Dimension(950, 600));
         pack();
     }
     ///
@@ -183,7 +184,7 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class).getContext().getResourceMap(BrowseInternalFrame.class);
         setTitle(resourceMap.getString("Form.title")); // NOI18N
         setFrameIcon(resourceMap.getIcon("Form.frameIcon")); // NOI18N
-        setMinimumSize(new java.awt.Dimension(598, 435));
+        setMinimumSize(new java.awt.Dimension(950, 435));
         setName("Form"); // NOI18N
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
             public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
