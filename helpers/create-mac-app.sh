@@ -78,10 +78,39 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # Navigate relative to the .app bundle (which sits in the project root or a distribution root)
 cd "$DIR/../../.."
 
+# Resolve a working Java command since GUI launches do not inherit shell profiles
+JAVA_CMD="java"
+
+if ! "$JAVA_CMD" -version &>/dev/null; then
+    # Try loading typical shell profiles to inherit Homebrew/custom PATHs
+    [ -f "$HOME/.zshrc" ] && source "$HOME/.zshrc" &>/dev/null || true
+    [ -f "$HOME/.bash_profile" ] && source "$HOME/.bash_profile" &>/dev/null || true
+fi
+
+# If default java still doesn't work, search common macOS installation locations explicitly
+if ! "$JAVA_CMD" -version &>/dev/null; then
+    if [ -x "/opt/homebrew/opt/openjdk/bin/java" ]; then
+        JAVA_CMD="/opt/homebrew/opt/openjdk/bin/java"
+    elif [ -x "/usr/local/opt/openjdk/bin/java" ]; then
+        JAVA_CMD="/usr/local/opt/openjdk/bin/java"
+    else
+        JVM_JAVA=$(ls -d /Library/Java/JavaVirtualMachines/*/Contents/Home/bin/java 2>/dev/null | tail -n 1)
+        if [ -x "$JVM_JAVA" ]; then
+            JAVA_CMD="$JVM_JAVA"
+        fi
+    fi
+fi
+
+# Double check if Java is resolved and runnable
+if ! "$JAVA_CMD" -version &>/dev/null; then
+    osascript -e 'display alert "CanReg5 Launcher Error" message "Unable to locate a Java Runtime.\n\nPlease ensure Java is installed on your Mac."' as critical
+    exit 1
+fi
+
 if [ -f "dist/CanReg.jar" ]; then
-    java -cp "dist/CanReg.jar:dist/lib/*" canreg.client.CanRegClientApp
+    "$JAVA_CMD" -cp "dist/CanReg.jar:dist/lib/*" canreg.client.CanRegClientApp
 elif [ -f "CanReg.jar" ]; then
-    java -cp "CanReg.jar:lib/*" canreg.client.CanRegClientApp
+    "$JAVA_CMD" -cp "CanReg.jar:lib/*" canreg.client.CanRegClientApp
 else
     # Show user-friendly macOS native error dialog if JAR is missing
     osascript -e 'display alert "CanReg5 Launcher Error" message "Could not find CanReg.jar.\n\nPlease ensure you have compiled the project with '\''ant jar'\'' first or placed CanReg.jar in the same directory as CanReg5.app."' as critical
