@@ -4,10 +4,15 @@ set -e
 
 echo "Building zip-distribution on macOS/Linux..."
 
-# 1. Clean up old packaging assets
+# 1. Clean up old packaging assets and regenerate macOS App Bundle on macOS
 rm -rf translations
 rm -f CanReg5.zip CanReg5-R-packages.zip translations.zip
 rm -rf dist/web
+
+if [ "$(uname)" = "Darwin" ]; then
+    echo "Regenerating and signing macOS App Bundle..."
+    ./helpers/create-mac-app.sh
+fi
 
 # 2. Extract translation properties via rsync
 mkdir -p translations
