@@ -732,7 +732,7 @@ canreg_table_CI5_comp <- function(ls_args)
 canreg_clean_install <- function(args)
 { 
   ## 2019-07-02(ME): This list now contains packages from both analysis and format checking... (starting with XML)
-  packages_list <- c("Rcpp", "data.table", "ggplot2","shiny","shinydashboard", "shinyjs","gridExtra", "scales", "Cairo","grid","officer","flextable", "zip", "bmp", "jpeg", "png", "shiny.i18n","Rcan", "XML", "plyr", "stringr", "dplyr", "RJSONIO", "jsonlite", "anchors", "lubridate", "reshape2", "tidyr")
+  packages_list <- c("Rcpp", "data.table", "ggplot2","shiny","shinydashboard", "shinyjs","gridExtra", "scales", "Cairo","grid","officer","flextable", "zip", "bmp", "jpeg", "png", "shiny.i18n","Rcan", "XML", "plyr", "stringr", "dplyr", "RJSONIO", "jsonlite", "lubridate", "reshape2", "tidyr")
 
   ## get Args from canreg  
   skin <- FALSE

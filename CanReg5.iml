@@ -40,14 +40,14 @@
     <orderEntry type="module-library">
       <library name="Maven: javax.jnlp:jnlp:1.6">
         <CLASSES>
-          <root url="jar://C:/Program Files/Java/jdk1.8.0_141/jre/lib/javaws.jar!/" />
+          <root url="jar://C:/Program Files/Java/jdk1.8.0_201/jre/lib/javaws.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="library" name="Maven: org.apache.commons:commons-csv:1.4" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.apache.derby:derby:10.14.2.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.derby:derby:10.14.2.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.derby:derbynet:10.14.2.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.derby:derbytools:10.14.2.0" level="project" />
     <orderEntry type="library" name="Maven: com.formdev:flatlaf-intellij-themes:1.3" level="project" />
@@ -68,5 +68,15 @@
     <orderEntry type="library" name="Maven: com.googlecode.paradoxdriver:paradoxdriver:1.5.0" level="project" />
     <orderEntry type="library" name="Maven: xml-apis:xml-apis:1.0.b2" level="project" />
     <orderEntry type="library" name="Maven: com.formdev:flatlaf:1.3" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.commons:commons-dbcp2:2.5.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.commons:commons-pool2:2.6.0" level="project" />
+    <orderEntry type="library" name="Maven: commons-logging:commons-logging:1.2" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.12" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.hamcrest:hamcrest-core:1.3" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.mockito:mockito-core:4.0.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: net.bytebuddy:byte-buddy:1.11.19" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: net.bytebuddy:byte-buddy-agent:1.11.19" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.objenesis:objenesis:3.2" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.mockito:mockito-inline:4.0.0" level="project" />
   </component>
 </module>
