@@ -915,7 +915,7 @@ public class CanRegDAO {
      */
     public void openTransaction() throws SQLException {
         if (dbConnection == null) {
-            dbConnection = DriverManager.getConnection(getDatabaseUrl(), dbProperties);
+            dbConnection = wrapUniqueConnection(DriverManager.getConnection(getDatabaseUrl(), dbProperties));
         }
         dbConnection.setAutoCommit(false);
     }
