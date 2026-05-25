@@ -708,20 +708,43 @@ public class CanRegClientApp extends SingleFrameApplication {
         if (setFont) {
             setUIFont(fontName, fontSizeInt);
         }
-        if (localSettings.getProperty(LocalSettings.LOOK_AND_FEEL_KEY).length() > 0) {
+        String lafKey = localSettings.getProperty(LocalSettings.LOOK_AND_FEEL_KEY);
+        if (lafKey != null && lafKey.trim().length() > 0) {
             try {
-                if (localSettings.getProperty(LocalSettings.LOOK_AND_FEEL_KEY).equalsIgnoreCase("Dark")) {
-                    UIManager.setLookAndFeel( new com.formdev.flatlaf.FlatDarculaLaf() );
-                } else if (localSettings.getProperty(LocalSettings.LOOK_AND_FEEL_KEY).equalsIgnoreCase("Light")){
-                    UIManager.setLookAndFeel( new com.formdev.flatlaf.FlatIntelliJLaf() );
+                String lafClassName;
+                if (lafKey.equalsIgnoreCase("Flat Light")) {
+                    lafClassName = "com.formdev.flatlaf.FlatLightLaf";
+                } else if (lafKey.equalsIgnoreCase("Flat Dark")) {
+                    lafClassName = "com.formdev.flatlaf.FlatDarkLaf";
+                } else if (lafKey.equalsIgnoreCase("Flat Darcula") || lafKey.equalsIgnoreCase("Dark")) {
+                    lafClassName = "com.formdev.flatlaf.FlatDarculaLaf";
+                } else if (lafKey.equalsIgnoreCase("IntelliJ Light") || lafKey.equalsIgnoreCase("Light") || lafKey.equalsIgnoreCase("macOS Light")) {
+                    lafClassName = "com.formdev.flatlaf.FlatIntelliJLaf";
+                } else if (lafKey.equalsIgnoreCase("One Dark")) {
+                    lafClassName = "com.formdev.flatlaf.intellijthemes.FlatOneDarkIJTheme";
+                } else if (lafKey.equalsIgnoreCase("Nord")) {
+                    lafClassName = "com.formdev.flatlaf.intellijthemes.FlatNordIJTheme";
+                } else if (lafKey.equalsIgnoreCase("Arc Light")) {
+                    lafClassName = "com.formdev.flatlaf.intellijthemes.FlatArcIJTheme";
+                } else if (lafKey.equalsIgnoreCase("Arc Dark")) {
+                    lafClassName = "com.formdev.flatlaf.intellijthemes.FlatArcDarkIJTheme";
+                } else if (lafKey.equalsIgnoreCase("GitHub Light")) {
+                    lafClassName = "com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatGitHubIJTheme";
+                } else if (lafKey.equalsIgnoreCase("GitHub Dark") || lafKey.equalsIgnoreCase("macOS Dark")) {
+                    lafClassName = "com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatGitHubDarkIJTheme";
+                } else if (lafKey.equalsIgnoreCase("System")) {
+                    lafClassName = UIManager.getSystemLookAndFeelClassName();
+                } else {
+                    lafClassName = "com.formdev.flatlaf.FlatLightLaf";
                 }
-                else {
-                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-//                    UIManager.setLookAndFeel(localSettings.getProperty(LocalSettings.LOOK_AND_FEEL_KEY));
-                }
-                // Locale.setDefault(localSettings.getLocale());
+                UIManager.setLookAndFeel(lafClassName);
             } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-               LOGGER.log(Level.WARNING, null, ex);
+                LOGGER.log(Level.WARNING, "Failed to set look and feel: " + lafKey, ex);
+                try {
+                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                } catch (Exception e) {
+                    LOGGER.log(Level.SEVERE, null, e);
+                }
             }
         }
     }
@@ -1635,6 +1658,9 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @param args
      */
     public static void main(String[] args) {
+        System.setProperty("apple.laf.useScreenMenuBar", "true");
+        System.setProperty("apple.awt.application.name", "CanReg5");
+        System.setProperty("flatlaf.useWindowDecorations", "true");
         // first see if we are dealing with something that doesn't use the GUI
         if (args.length > 0 && args[0].equalsIgnoreCase("--convert")) {
             // direct access to the converter

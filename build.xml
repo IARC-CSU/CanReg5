@@ -83,18 +83,21 @@
         <copy file="appinfo.properties" todir="${build.classes.dir}"/>
     </target>
     <target name="-post-jar">
-        <exec executable="cmd">
+        <exec executable="ruby" osfamily="unix" failonerror="false">
+            <arg value="update_version_number.rb"/>
+        </exec>
+        <exec executable="cmd" osfamily="windows" failonerror="false">
             <arg value="/c"/>
             <arg value="ruby"/>
             <arg value="update_version_number.rb"/>
         </exec>
         <echo>Building zip-distribution...</echo>
-        <exec executable="cmd">
+        <exec executable="cmd" osfamily="windows" failonerror="false">
             <arg value="/c"/>
             <arg value="create-zip.bat"/>
         </exec>
         <echo>Building setup...</echo>
-        <exec executable="cmd">
+        <exec executable="cmd" osfamily="windows" failonerror="false">
             <arg value="/c"/>
             <arg value="inno-build.bat"/>
         </exec>

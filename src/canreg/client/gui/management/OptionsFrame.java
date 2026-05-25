@@ -252,7 +252,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         themeLabel.setToolTipText(resourceMap.getString("themeLabel.toolTipText")); // NOI18N
         themeLabel.setName("themeLabel"); // NOI18N
 
-        themeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "System", "Light", "Dark" }));
+        themeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "macOS Light", "macOS Dark", "Flat Light", "Flat Dark", "Flat Darcula", "One Dark", "Nord", "Arc Light", "Arc Dark", "GitHub Light", "GitHub Dark", "System" }));
         themeComboBox.setToolTipText(resourceMap.getString("themeComboBox.toolTipText")); // NOI18N
         themeComboBox.setName("themeComboBox"); // NOI18N
 

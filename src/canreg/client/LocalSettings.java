@@ -388,7 +388,11 @@ public final class LocalSettings {
         } else if (key.equalsIgnoreCase(WORKING_DIR_PATH_KEY)) {
             property = System.getProperty("user.home", ".") + System.getProperty("file.separator") + "CanReg";  //NOSONAR
         } else if (key.equalsIgnoreCase(LOOK_AND_FEEL_KEY)) {
-            property = Globals.DEFAULT_LOOK_AND_FEEL;
+            if (System.getProperty("os.name").toLowerCase().contains("mac")) {
+                property = "macOS Light";
+            } else {
+                property = "Light";
+            }
         } else if (key.equalsIgnoreCase(AUTO_BACKUP_KEY)) {
             property = TRUE_PROPERTY;
         } else if (key.equalsIgnoreCase(BACKUP_EVERY_KEY)) {
@@ -420,7 +424,7 @@ public final class LocalSettings {
         setProperty(REMEMBER_PASSWORD_KEY, getDefaultProperty(REMEMBER_PASSWORD_KEY));
         setProperty(USERNAME_KEY, getDefaultProperty(USERNAME_KEY));
         setProperty(PASSWORD_KEY, getDefaultProperty(PASSWORD_KEY));
-        setProperty(LOOK_AND_FEEL_KEY, getDefaultProperty(PASSWORD_KEY));
+        setProperty(LOOK_AND_FEEL_KEY, getDefaultProperty(LOOK_AND_FEEL_KEY));
         setProperty(WORKING_DIR_PATH_KEY, getDefaultProperty(WORKING_DIR_PATH_KEY));
         setProperty(AUTO_BACKUP_KEY, getDefaultProperty(AUTO_BACKUP_KEY));
         setProperty(BACKUP_EVERY_KEY, getDefaultProperty(BACKUP_EVERY_KEY));
