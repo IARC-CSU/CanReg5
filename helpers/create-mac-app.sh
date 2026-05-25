@@ -9,6 +9,9 @@ MACOS_DIR="${CONTENTS_DIR}/MacOS"
 RESOURCES_DIR="${CONTENTS_DIR}/Resources"
 ICON_SOURCE="src/canreg/client/gui/resources/LogoBetaNewer.png"
 
+echo "Cleaning old macOS App Bundle..."
+rm -rf "${APP_NAME}"
+
 echo "Creating macOS App Bundle structure..."
 mkdir -p "${MACOS_DIR}"
 mkdir -p "${RESOURCES_DIR}"
