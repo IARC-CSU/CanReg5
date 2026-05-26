@@ -1086,6 +1086,16 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
             }
         }
 
+        children.sort((String path1, String path2) -> {
+            String name1 = new File(path1).getName();
+            String name2 = new File(path2).getName();
+            int cmp = name1.compareToIgnoreCase(name2);
+            if (cmp != 0) {
+                return cmp;
+            }
+            return path1.compareToIgnoreCase(path2);
+        });
+
         // LinkedList<TableBuilderListElement> tableTypeLinkedList = new LinkedList<TableBuilderListElement>();
         DefaultListModel listModel = new DefaultListModel();
         //open one by one using configreader
