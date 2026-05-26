@@ -562,7 +562,6 @@ public final class SystemDescription implements Serializable {
             parentElement = doc.createElement(namespace + "search_variables");
             doc.appendChild(parentElement);
         }
-        //  debugOut(i+ " " + variableElement.getElementsByTagName(namespace + "short_name").item(0).getTextContent());
         while (parentElement.hasChildNodes()) {
             parentElement.removeChild(parentElement.getLastChild());
         }
@@ -578,9 +577,12 @@ public final class SystemDescription implements Serializable {
         element.appendChild(createElement(namespace + "variable_name", variable.getName()));
         element.appendChild(createElement(namespace + "weigth", variable.getWeight() + ""));
         element.appendChild(createElement(namespace + "disc_power", variable.getDiscPower() + ""));
+        element.appendChild(createElement(namespace + "year_range", variable.getYearRange() + ""));
         element.appendChild(createElement(namespace + "reliability", variable.getReliability() + ""));
         element.appendChild(createElement(namespace + "prescence", variable.getPresence() + ""));
         element.appendChild(createElement(namespace + "compare_algorithm", variable.getCompareAlgorithm().toString()));
+        element.appendChild(createElement(namespace + "block", String.valueOf(variable.isBlock())));
+
         return element;
     }
 

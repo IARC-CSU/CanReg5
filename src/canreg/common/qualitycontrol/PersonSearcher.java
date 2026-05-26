@@ -34,6 +34,7 @@ public interface PersonSearcher {
         number,
         code,
         soundex,
+        exact,
         // double_metaphone,
         // caverphone
     };

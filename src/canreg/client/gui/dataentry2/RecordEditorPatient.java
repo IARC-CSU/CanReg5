@@ -143,6 +143,10 @@ public class RecordEditorPatient extends javax.swing.JPanel
         this.tumours.remove(tumour);
     }    
     
+    public LinkedList<RecordEditorTumour> getTumours() {
+        return tumours;
+    }
+    
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals(VariableEditorPanelInterface.CHANGED_STRING)) {
@@ -229,8 +233,8 @@ public class RecordEditorPatient extends javax.swing.JPanel
     public DatabaseRecord getDatabaseRecord() {
         buildDatabaseRecord();
         return databaseRecord;
-    }    
-    
+    }
+
     @Override
     public void setDatabaseRecord(DatabaseRecord dbr) {
         this.databaseRecord = dbr;
@@ -370,7 +374,8 @@ public class RecordEditorPatient extends javax.swing.JPanel
     
     @Action
     public void runPersonSearch() {
-        autoFill();
+        // commented out as it doesn't seem to do anything relevant
+        //autoFill();
         actionListener.actionPerformed(new ActionEvent(this, 0, RecordEditorMainFrame.PERSON_SEARCH));
     }
         

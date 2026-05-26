@@ -20,6 +20,7 @@
 package canreg.common.database;
 
 import canreg.client.CanRegClientApp;
+import canreg.common.Globals;
 import canreg.common.Translator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 //   Commented away to be able to disable the IARCtools package... 
@@ -28,6 +29,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 // import fr.iarc.cin.iarctools.tools.RecordInterface;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.UUID;
 
 /**
  *
@@ -38,7 +40,7 @@ public class DatabaseRecord implements Serializable //   Commented away to be ab
 // , RecordInterface 
 {
 
-    private final HashMap<String, Object> variables;
+    protected final HashMap<String, Object> variables;
     // private EnumMap<IARCStandardVariableNames, String> map;
     private Translator translator;
     protected String patientIDVariableName;
@@ -118,5 +120,26 @@ public class DatabaseRecord implements Serializable //   Commented away to be ab
         } else {
             return value.toString();
         }
+    }
+
+    /**
+     *
+     * @return the Patient's UUID if it's valid, else returns null
+     */
+    public UUID getUuid() {
+        Object obj = getVariable("uuid");
+        if (obj != null && !obj.toString().equals("")) {
+            try {
+                return UUID.fromString(obj.toString());
+            } catch (IllegalArgumentException e) {
+                // if this is not a UUID
+                return null;
+            }
+        }
+        return null;
+    }
+
+    public void setUuid() {
+        this.setVariable(Globals.StandardVariableNames.UUID.name(),UUID.randomUUID());
     }
 }

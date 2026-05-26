@@ -664,6 +664,8 @@ public class QueryGenerator {
             if (found) {
                 queryLine += dictionaryElement.getElementsByTagName("ns3:full_dictionary_code_length").item(0).getTextContent() + ") ";
             }
+        } else if (variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_UUID)) {
+            queryLine += " VARCHAR(36)";
         }
         // unique or not null? Move to XML?
         NodeList standardVariableNodeList = element.getElementsByTagName(namespace + "standard_variable_name");
@@ -682,6 +684,8 @@ public class QueryGenerator {
                 //    queryLine += " NOT NULL UNIQUE ";
             } else if (standardVariableName.equalsIgnoreCase(Globals.StandardVariableNames.SourceRecordID.toString())) {
                 queryLine += " NOT NULL UNIQUE ";
+            } else if (standardVariableName.equalsIgnoreCase(Globals.StandardVariableNames.UUID.toString())) {
+                queryLine += " UNIQUE ";
             }
         }
         return queryLine;

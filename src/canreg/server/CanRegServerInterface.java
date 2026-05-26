@@ -583,4 +583,6 @@ public interface CanRegServerInterface extends Remote {
      * @throws RemoteException RemoteException
      */
     public void commitTransaction() throws RemoteException;
+
+    public int[] deleteEmptyRecords() throws RecordLockedException, RuntimeException, RemoteException;
 }

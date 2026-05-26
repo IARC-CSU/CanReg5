@@ -21,6 +21,7 @@
  package canreg.common.database;
 
 import java.io.Serializable;
+import java.util.Set;
 
 /**
  *
@@ -39,5 +40,15 @@ public class Source extends DatabaseRecord implements Serializable {
      @Override
      public String toString(){
         return "Source Record";
+     }
+
+     public Source clone(){
+         Source clone = new Source();
+         clone.patientIDVariableName = this.patientIDVariableName;
+         Set<String> keys = this.variables.keySet();
+         for (String key:keys) {
+             clone.variables.put(key, this.getVariable(key));
+         }
+         return clone;
      }
 }

@@ -524,9 +524,7 @@ public class Import {
                                       boolean intoHoldingDB, Document doc) 
             throws SQLException, RemoteException, SecurityException, RecordLockedException, 
                    UnknownTableException, DistributedTableDescriptionException, Exception {
-        
-        GlobalToolBox globalToolBox = new GlobalToolBox(doc);
-        
+
         int numberOfLinesRead = 0;
         Writer reportWriter = new BufferedWriter(new OutputStreamWriter(System.out));
         if (io.getReportFileName() != null && io.getReportFileName().trim().length() > 0) {
@@ -536,12 +534,7 @@ public class Import {
                 LOGGER.log(Level.WARNING, null, ex);
             }
         }
-        boolean success = false;
-        Set<String> noNeedToLookAtPatientVariables = new TreeSet<String>();
-        noNeedToLookAtPatientVariables.add(canreg.common.Tools.toLowerCaseStandardized(io.getPatientIDVariableName()));
-        noNeedToLookAtPatientVariables.add(canreg.common.Tools.toLowerCaseStandardized(io.getPatientRecordIDVariableName()));
-
-        ResultCode worstResultCodeFound;
+        boolean success;
         CSVParser parser = null;
         CSVFormat format = CSVFormat.DEFAULT
                 .withFirstRecordAsHeader()
@@ -565,8 +558,6 @@ public class Import {
 
                 int numberOfRecordsInFile = canreg.common.Tools.numberOfLinesInFile(files[0].getAbsolutePath());
 
-                numberOfLinesRead = 0;
-
                 if (linesToRead > 0) {
                     linesToRead = Math.min(numberOfRecordsInFile, linesToRead);
                 } else {
@@ -574,12 +565,9 @@ public class Import {
                 }
                 parser = CSVParser.parse(files[0], io.getFileCharsets()[0], format);
 
-                for (CSVRecord csvRecord : parser) { 
-                    // We allow for null tasks...
-                    boolean savePatient = true;
-//                    boolean deletePatient = false;
-//                    int oldPatientDatabaseRecordID = -1;
-
+                GlobalToolBox globalToolBox = new GlobalToolBox(server.getDatabseDescription());
+                for (CSVRecord csvRecord : parser) {
+                    // updating progress bar
                     if (task != null) {
                         task.firePropertyChange(PROGRESS, ((numberOfLinesRead - 1) * 100 / linesToRead) / 3, ((numberOfLinesRead) * 100 / linesToRead) / 3);
                         task.firePropertyChange(PATIENTS, ((numberOfLinesRead - 1) * 100 / linesToRead), ((numberOfLinesRead) * 100 / linesToRead));
@@ -589,8 +577,8 @@ public class Import {
                     Patient patient = new Patient();
                     for (int i = 0; i < map.size(); i++) {
                         Relation rel = map.get(i);
-                        if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase("patient")) {
-                            if (rel.getVariableType().equalsIgnoreCase("Number")) {
+                        if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
+                            if (rel.getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_NUMBER_NAME)) {
                                 if (csvRecord.get(rel.getFileColumnNumber()).length() > 0) {
                                     try {
                                         patient.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(csvRecord.get(rel.getFileColumnNumber())));
@@ -610,13 +598,11 @@ public class Import {
                             task.firePropertyChange(RECORD, i - 1 / map.size() * 50, i / map.size() * 50);
                         }
                     }
-                    // debugOut(patient.toString());
-
                     Object patientRecordID = patient.getVariable(io.getPatientRecordIDVariableName());
-                    
-                    importPatient(server, io.getDiscrepancies(), (String) patientRecordID, 
-                                  patient, reportWriter, 
-                                  intoHoldingDB, io.isTestOnly(), false);                                       
+
+                    importPatient(server, io.getDiscrepancies(), (String) patientRecordID,
+                            patient, reportWriter,
+                            intoHoldingDB, io.isTestOnly(), false, globalToolBox);
 
                     if (task != null) {
                         task.firePropertyChange(RECORD, 100, 75);
@@ -873,14 +859,35 @@ public class Import {
         return success;
     }
 
+    /**
+     * Import the data from a holding database into another one (most often the main database)
+     * It will create one new patient record if the PatientRecordID is not found
+     * Or it will patch the patient record it found with the data from the holding database
+     * @param server
+     * @param discrepancyOption What to do with the new data? REJECT/UPDATE/OVERWRITE
+     * @param patientRecordID The PatientRecordID of the patient to import
+     * @param patientToImport The Patient to import
+     * @param reportWriter Report of the import
+     * @param intoHoldingDB Is this import sends data to the holdingDatabase?
+     * @param isTestOnly Is this for test purpose?
+     * @param fromHoldingToProduction Should this send data into the main database?
+     * @return
+     * @throws SQLException
+     * @throws SecurityException
+     * @throws RecordLockedException
+     * @throws UnknownTableException
+     * @throws DistributedTableDescriptionException
+     * @throws RemoteException
+     * @throws IOException
+     * @throws Exception
+     */
     public static int importPatient(CanRegServerInterface server, int discrepancyOption,
                                      String patientRecordID, Patient patientToImport, Writer reportWriter, 
                                      boolean intoHoldingDB, boolean isTestOnly, 
-                                     boolean fromHoldingToProduction)
+                                     boolean fromHoldingToProduction, GlobalToolBox globalToolBox)
             throws SQLException, SecurityException, RecordLockedException, 
                    UnknownTableException, DistributedTableDescriptionException, RemoteException,
                    IOException, Exception {
-        GlobalToolBox globalToolBox = new GlobalToolBox(server.getDatabseDescription());
         Patient oldPatientRecord = null;
         try {
             oldPatientRecord = CanRegClientApp.getApplication().getPatientRecord(patientRecordID, false, server);
@@ -893,6 +900,7 @@ public class Import {
         } */
 
         boolean savePatient = true;
+        // if oldPatientRecord is not null, patch patientToImport with its data
         if (oldPatientRecord != null) {
             if(intoHoldingDB) {
                 savePatient = false;
@@ -909,7 +917,6 @@ public class Import {
                         }
     //                                oldPatientDatabaseRecordID = (Integer) oldPatientRecord.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
                         patientToImport = oldPatientRecord;
-                        savePatient = true;
                         break;
                     case ImportOptions.OVERWRITE:
     //                                oldPatientDatabaseRecordID = (Integer) oldPatientRecord.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
@@ -918,42 +925,37 @@ public class Import {
                             reportWriter.write("Patient " + patientRecordID + Globals.newline + overWriteReport);
                         }
                         patientToImport = oldPatientRecord;
-                        savePatient = true;
                         break;
                 }
             }
-        } 
+        }
 
 //      if (deletePatient) {
 //           server.deleteRecord(oldPatientDatabaseRecordID, Globals.PATIENT_TABLE_NAME);
 //      }
 
-        if ( ! isTestOnly) {
-            if (savePatient) {
-                if (patientToImport.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME) != null) {
+        if ( ! isTestOnly && savePatient) {
+            if (oldPatientRecord != null) { // does the patient record already exist ?
     //              try {
-                        if(fromHoldingToProduction) {
-                            if(patientToImport.getVariableAsString(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME_FOR_HOLDING).contains("@H")) {
-                                DatabaseVariablesListElement patientIDVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString());
-                                DatabaseVariablesListElement patientRecordIDVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString());
-                                patientToImport.setVariable(patientIDVariable.getDatabaseVariableName(), "");
-                                patientToImport.setVariable(patientRecordIDVariable.getDatabaseVariableName(), "");
-                                return server.savePatient(patientToImport);
-                            } else
-                                server.editPatientFromHoldingToProduction(patientToImport);
-                        }
-                        else
-                            server.editPatient(patientToImport);
+                if (fromHoldingToProduction) {
+                    server.editPatientFromHoldingToProduction(patientToImport);
+                } else {
+                    server.editPatient(patientToImport);
+                }
     //              } catch(Exception ex) {
     //                  LOGGER.log(Level.SEVERE, "ERROR EDITING PATIENT " + patientID, ex);
     //              }
-                } else {
+            } else {
     //              try {
-                        return server.savePatient(patientToImport);
+                // Reset RegNo and PatientRecordID. The application will get them new values during the saving process
+                DatabaseVariablesListElement patientIDVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString());
+                DatabaseVariablesListElement patientRecordIDVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString());
+                patientToImport.setVariable(patientIDVariable.getDatabaseVariableName(), "");
+                patientToImport.setVariable(patientRecordIDVariable.getDatabaseVariableName(), "");
+                return server.savePatient(patientToImport);
     //              } catch(Exception ex) {
     //                  LOGGER.log(Level.SEVERE, "ERROR SAVING PATIENT " + patientID, ex);
     //              }
-                }
             }
         }
         
@@ -1276,6 +1278,12 @@ public class Import {
         return id;
     }
 
+    /**
+     * patches the data from oldRecord using the data from newRecord
+     * @param oldRecord
+     * @param newRecord
+     * @return a report of the differences between oldRecord and newRecord
+     */
     private static String updateRecord(DatabaseRecord oldRecord, DatabaseRecord newRecord) {
         String report = "";
         // get all the elements from the newTumour and put them in the oldTumour
@@ -1298,6 +1306,12 @@ public class Import {
         return report;
     }
 
+    /**
+     * Overwrites oldRecord's values and set newRecord value
+     * @param oldRecord
+     * @param newRecord
+     * @return a report of the differences between oldRecord and newRecord
+     */
     private static String overwriteRecord(DatabaseRecord oldRecord, DatabaseRecord newRecord) {
         String report = "";
         // get all the elements from the newTumour and put them in the oldTumour

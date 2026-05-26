@@ -120,6 +120,7 @@
                   <Component id="patientNumberTextField" alignment="1" max="32767" attributes="1"/>
                   <Component id="editTumourNumberButton" alignment="0" max="32767" attributes="1"/>
                   <Component id="tumourNumberTextField" alignment="0" max="32767" attributes="1"/>
+                  <Component id="jButton1" alignment="0" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -136,7 +137,9 @@
                       <Component id="editTumourNumberButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="tumourNumberTextField" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="73" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="32" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>

@@ -65,23 +65,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JDesktopPane;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
+import javax.swing.*;
 import javax.swing.Timer;
+
+import canreg.server.database.RecordLockedException;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.FrameView;
 import org.jdesktop.application.ResourceMap;
@@ -94,7 +85,8 @@ import org.jdesktop.application.TaskMonitor;
  */
 public final class CanRegClientView extends FrameView {
     private static final Logger LOGGER = Logger.getLogger(CanRegClientView.class.getName());
-
+    private static WaitFrame waitFrame;
+    private static final ResourceBundle TRANSLATION_BUNDLE = java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView");
 
     public CanRegClientView(SingleFrameApplication app) {
         super(app);
@@ -179,6 +171,16 @@ public final class CanRegClientView extends FrameView {
         
         this.holdingPopup = new JPopupMenu();
         this.holdingDBsButton.addMouseListener(new PopupListener());
+
+        // initializing the waitFrame
+        waitFrame = new WaitFrame();
+        waitFrame.setLabel(TRANSLATION_BUNDLE.getString("DELETING_RECORDS"));
+        waitFrame.setIndeterminate(true);
+        desktopPane.add(waitFrame);
+        waitFrame.getContentPane().setVisible(true);
+        waitFrame.setLocation((desktopPane.getWidth() - waitFrame.getWidth()) / 2,
+                (desktopPane.getHeight() - waitFrame.getHeight()) / 2);
+
     }
 
 
@@ -258,6 +260,7 @@ public final class CanRegClientView extends FrameView {
         usersMenuItem = new javax.swing.JMenuItem();
         jSeparator10 = new javax.swing.JSeparator();
         advancedMenu = new javax.swing.JMenu();
+        jMenuItem19 = new javax.swing.JMenuItem();
         jMenuItem18 = new javax.swing.JMenuItem();
         jMenuItem16 = new javax.swing.JMenuItem();
         jMenuItem17 = new javax.swing.JMenuItem();
@@ -553,6 +556,10 @@ public final class CanRegClientView extends FrameView {
         jMenuItem17.setName("stopDBMenuItem"); // NOI18N
         advancedMenu.add(jMenuItem17);
 
+        jMenuItem19.setAction(actionMap.get("deleteEmptyRecords")); // NOI18N
+        jMenuItem19.setName("deleteEmptyRecordsMenuItem"); // NOI18N
+        advancedMenu.add(jMenuItem19);
+
         managementMenu.add(advancedMenu);
 
         jSeparator5.setName("jSeparator5"); // NOI18N
@@ -811,7 +818,7 @@ public final class CanRegClientView extends FrameView {
         holdingPopup.removeAll();
         if(this.holdingDBsSystemCodes.isEmpty()) {
             JMenuItem menuItem = 
-                    new JMenuItem(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("NO HOLDING DB"));
+                    new JMenuItem(TRANSLATION_BUNDLE.getString("NO HOLDING DB"));
             holdingPopup.add(menuItem);
         } else {
             for(String dbCode : this.holdingDBsSystemCodes) {
@@ -895,14 +902,14 @@ public final class CanRegClientView extends FrameView {
     @Action
     public void showLoginFrame() {
         if (CanRegClientApp.getApplication().isLoggedIn()) {
-            int i = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("DO WANT TO LOG OUT OF THE CURRENT CANREG SYSTEM?"), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("ALREADY LOGGED IN."), JOptionPane.YES_NO_OPTION);
+            int i = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), TRANSLATION_BUNDLE.getString("DO WANT TO LOG OUT OF THE CURRENT CANREG SYSTEM?"), TRANSLATION_BUNDLE.getString("ALREADY LOGGED IN."), JOptionPane.YES_NO_OPTION);
             if (i == 0) {
                 logOut();
             }
         }
         // If still logged in
         if (CanRegClientApp.getApplication().isLoggedIn()) {
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("ALREADY LOGGED IN."), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("MESSAGE"), JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), TRANSLATION_BUNDLE.getString("ALREADY LOGGED IN."), TRANSLATION_BUNDLE.getString("MESSAGE"), JOptionPane.INFORMATION_MESSAGE);
         } else {
             LoginInternalFrame loginInternalFrame = new LoginInternalFrame(this, desktopPane);
             showAndPositionInternalFrame(desktopPane, loginInternalFrame);
@@ -912,7 +919,7 @@ public final class CanRegClientView extends FrameView {
 
     @Action
     public void logOutaction() {
-        int i = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("DO YOU REALLY WANT TO LOG OUT?"), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("LOG OUT?"), JOptionPane.YES_NO_OPTION);
+        int i = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), TRANSLATION_BUNDLE.getString("DO YOU REALLY WANT TO LOG OUT?"), TRANSLATION_BUNDLE.getString("LOG OUT?"), JOptionPane.YES_NO_OPTION);
         if (i == 0) {
             logOut();
         }
@@ -976,7 +983,7 @@ public final class CanRegClientView extends FrameView {
             debugOut(users);
 
             // show the dialog box
-            StandardDialog sd = new StandardDialog(getFrame(), true, java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("USERS LOGGED IN"), users);
+            StandardDialog sd = new StandardDialog(getFrame(), true, TRANSLATION_BUNDLE.getString("USERS LOGGED IN"), users);
             sd.setLocationRelativeTo(null);
             sd.setVisible(true);
 
@@ -1015,7 +1022,7 @@ public final class CanRegClientView extends FrameView {
                 }else {
                     JOptionPane.showConfirmDialog(
                         null,
-                        java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("PLEASE SET AN ENCRYPTION PASSWORD"),
+                        TRANSLATION_BUNDLE.getString("PLEASE SET AN ENCRYPTION PASSWORD"),
                         "Message", JOptionPane.DEFAULT_OPTION);
 
                     
@@ -1033,9 +1040,9 @@ public final class CanRegClientView extends FrameView {
             // the result computed by doInBackground().
             boolean success = (Boolean) result;
             if (success) {
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("Database_server_started."), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("MESSAGE"), JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), TRANSLATION_BUNDLE.getString("Database_server_started."), TRANSLATION_BUNDLE.getString("MESSAGE"), JOptionPane.INFORMATION_MESSAGE);
             } else {
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("Database_server_not_started."), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("MESSAGE"), JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), TRANSLATION_BUNDLE.getString("Database_server_not_started."), TRANSLATION_BUNDLE.getString("MESSAGE"), JOptionPane.INFORMATION_MESSAGE);
             }
         }
     }
@@ -1045,11 +1052,48 @@ public final class CanRegClientView extends FrameView {
     public void stopDatabaseServer() {
         try {
             CanRegClientApp.getApplication().stopDatabaseServer();
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("Database_server_stopped."), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("MESSAGE"), JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), TRANSLATION_BUNDLE.getString("Database_server_stopped."), TRANSLATION_BUNDLE.getString("MESSAGE"), JOptionPane.INFORMATION_MESSAGE);
         } catch (RemoteException | SecurityException ex) {
             LOGGER.log(Level.SEVERE, null, ex);
             new TechnicalError().errorDialog();
         }
+    }
+
+    @Action
+    public void deleteEmptyRecords(){
+        SwingWorker<Object, ActionEvent> worker = new SwingWorker<Object, ActionEvent>() {
+            int[] res;
+
+            @Override
+            protected Object doInBackground() throws Exception {
+                waitFrame.setSelected(true);
+                waitFrame.setVisible(true);
+                try {
+                    res = CanRegClientApp.getApplication().deleteEmptyRecords(null);
+                } catch (RecordLockedException e) {
+                    new TechnicalError().errorDialog(TRANSLATION_BUNDLE.getString("DELETE_EMPTY_RECORDS_LOCKED_RECORD"));
+                } catch (RuntimeException e) {
+                    new TechnicalError().errorDialog();
+                }
+                return true;
+            }
+
+            @Override
+            protected void done() {
+                waitFrame.setVisible(false);
+                if (res.length == 2) {
+                    JOptionPane.showInternalMessageDialog(
+                            CanRegClientApp.getApplication().getMainFrame().getContentPane(),
+                            TRANSLATION_BUNDLE.getString("DELETE_EMPTY_RECORDS_DONE_PATIENT_DELETED") + res[0]+ TRANSLATION_BUNDLE.getString("DELETE_EMPTY_RECORDS_DONE_TUMOUR_DELETED") + res[1],
+                            TRANSLATION_BUNDLE.getString("DELETE_EMPTY_RECORDS_DONE_TITLE"),
+                            JOptionPane.INFORMATION_MESSAGE
+                    );
+                } else {
+                    new TechnicalError().errorDialog();
+                }
+            }
+        };
+        worker.execute();
     }
 
 
@@ -1170,15 +1214,15 @@ public final class CanRegClientView extends FrameView {
         }
         desktopPane.removeAll();
         desktopPane.repaint();
-        getFrame().setTitle(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("CANREG5 - NOT LOGGED IN."));
-        userLevelLabel.setText(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("NOT LOGGED IN."));
+        getFrame().setTitle(TRANSLATION_BUNDLE.getString("CANREG5 - NOT LOGGED IN."));
+        userLevelLabel.setText(TRANSLATION_BUNDLE.getString("NOT LOGGED IN."));
     }
 
 
     @Action
     public void openIacrWebsite() {
         try {
-            canreg.common.Tools.browse((java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("http://www.iacr.com.fr/")));
+            canreg.common.Tools.browse((TRANSLATION_BUNDLE.getString("http://www.iacr.com.fr/")));
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, null, ex);
             new TechnicalError().errorDialog();
@@ -1189,7 +1233,7 @@ public final class CanRegClientView extends FrameView {
     @Action
     public void openICDO3web() {
         try {
-            canreg.common.Tools.browse((java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("http://training.seer.cancer.gov/icdo3")));
+            canreg.common.Tools.browse((TRANSLATION_BUNDLE.getString("http://training.seer.cancer.gov/icdo3")));
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, null, ex);
             new TechnicalError().errorDialog();
@@ -1212,7 +1256,7 @@ public final class CanRegClientView extends FrameView {
     @Action
     public void openENCRweb() {
         try {
-            canreg.common.Tools.browse(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("http://www.encr.com.fr/"));
+            canreg.common.Tools.browse(TRANSLATION_BUNDLE.getString("http://www.encr.com.fr/"));
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, null, ex);
             new TechnicalError().errorDialog();
@@ -1264,7 +1308,7 @@ public final class CanRegClientView extends FrameView {
         } else {
             boolean newBrowser = false;
             if (browseInternalFrame.isVisible()) {
-                int i = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("ONLY ONE BROWSER CAN BE OPEN AT A TIME. OPEN NEW ONE?"), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("NEW BROWSER?"), JOptionPane.YES_NO_OPTION);
+                int i = JOptionPane.showInternalConfirmDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), TRANSLATION_BUNDLE.getString("ONLY ONE BROWSER CAN BE OPEN AT A TIME. OPEN NEW ONE?"), TRANSLATION_BUNDLE.getString("NEW BROWSER?"), JOptionPane.YES_NO_OPTION);
                 if (i == JOptionPane.YES_OPTION) {
                     newBrowser = true;
                 }
@@ -1571,7 +1615,7 @@ public final class CanRegClientView extends FrameView {
         DownloadLatestInstructionsTask(org.jdesktop.application.Application app) {
             super(app);
             waitFrame = new WaitFrame();
-            waitFrame.setLabel(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("DOWNLOADING HANDBOOK..."));
+            waitFrame.setLabel(TRANSLATION_BUNDLE.getString("DOWNLOADING HANDBOOK..."));
             waitFrame.setIndeterminate(true);
             desktopPane.add(waitFrame, javax.swing.JLayeredPane.POPUP_LAYER);
             waitFrame.setVisible(true);
@@ -1599,7 +1643,7 @@ public final class CanRegClientView extends FrameView {
     @Action
     public void openPubCanWebsite() {
         try {
-            canreg.common.Tools.browse(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("http://www.pubcan.org"));
+            canreg.common.Tools.browse(TRANSLATION_BUNDLE.getString("http://www.pubcan.org"));
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, null, ex);
             new TechnicalError().errorDialog();
@@ -1609,7 +1653,7 @@ public final class CanRegClientView extends FrameView {
     @Action
     public void openReportBug() {
         try {
-            canreg.common.Tools.browse(java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("BugReportWebsite"));
+            canreg.common.Tools.browse(TRANSLATION_BUNDLE.getString("BugReportWebsite"));
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, null, ex);
             new TechnicalError().errorDialog();
@@ -1770,9 +1814,9 @@ public final class CanRegClientView extends FrameView {
         protected void succeeded(Object result) {
 //            waitFrame.dispose();
             if (result == null) 
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("R_packages_installed."), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("MESSAGE"), JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), TRANSLATION_BUNDLE.getString("R_packages_installed."), TRANSLATION_BUNDLE.getString("MESSAGE"), JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("R_packages_not_installed."), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("MESSAGE"), JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), TRANSLATION_BUNDLE.getString("R_packages_not_installed."), TRANSLATION_BUNDLE.getString("MESSAGE"), JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -1804,7 +1848,7 @@ public final class CanRegClientView extends FrameView {
                     for (PopulationDataset pds : populationDatasetsMap.values()) {
                         canreg.common.database.Tools.writePopulationDatasetToJSON(pds, path + "/" + pds.getPopulationDatasetID() + "-" + pds.getPopulationDatasetName() + ".json");
                     }
-                    JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("Population_datasets_written_to_file") + ": " + populationDatasetsMap.values().size() + "." , java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("MESSAGE"), JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), TRANSLATION_BUNDLE.getString("Population_datasets_written_to_file") + ": " + populationDatasetsMap.values().size() + "." , TRANSLATION_BUNDLE.getString("MESSAGE"), JOptionPane.INFORMATION_MESSAGE);
                 } catch (SecurityException | RemoteException ex) {
                     LOGGER.log(Level.SEVERE, null, ex);
                     new TechnicalError().errorDialog();
@@ -1845,7 +1889,7 @@ public final class CanRegClientView extends FrameView {
                         new TechnicalError().errorDialog();
                     }
                 }
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("Population_datasets_loaded_from_file") + ": " + saved + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/resources/CanRegClientView").getString("MESSAGE"), JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), TRANSLATION_BUNDLE.getString("Population_datasets_loaded_from_file") + ": " + saved + ".", TRANSLATION_BUNDLE.getString("MESSAGE"), JOptionPane.INFORMATION_MESSAGE);
             } catch (IOException ex) {
                 LOGGER.log(Level.SEVERE, null, ex);
                 new TechnicalError().errorDialog();
@@ -1900,6 +1944,7 @@ public final class CanRegClientView extends FrameView {
     private javax.swing.JMenuItem jMenuItem16;
     private javax.swing.JMenuItem jMenuItem17;
     private javax.swing.JMenuItem jMenuItem18;
+    private javax.swing.JMenuItem jMenuItem19;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;

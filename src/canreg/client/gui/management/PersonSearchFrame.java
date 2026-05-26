@@ -501,10 +501,10 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                             Map<String, Float> map = result.get(patientRecordNumberA);
                             matchesFound += map.size();
                             Patient patientA = CanRegClientApp.getApplication().getPatientRecord(patientRecordNumberA, false, null);
-                            String patientNumberA = (String) patientA.getVariable(patientIDlookupVariable).toString();
+                            String patientNumberA = patientA.getVariable(patientIDlookupVariable).toString();
                             for (String patientRecordNumberB : map.keySet()) {
                                 Patient patientB = CanRegClientApp.getApplication().getPatientRecord(patientRecordNumberB, false, null);
-                                String patientNumberB = (String) patientB.getVariable(patientIDlookupVariable).toString();
+                                String patientNumberB = patientB.getVariable(patientIDlookupVariable).toString();
                                 resultTableModel.addRow(new Object[]{patientNumberA, patientNumberB, map.get(patientRecordNumberB)});
                             }
                         }

@@ -885,6 +885,8 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
                 checksBar.setValue(0);
                 importButton.setEnabled(true);
             } finally {
+                Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+                setCursor(normalCursor);
                 for(File file : tempFiles) {
                     if(file != null)
                         file.delete();

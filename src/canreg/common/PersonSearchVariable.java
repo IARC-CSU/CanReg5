@@ -31,10 +31,12 @@ public class PersonSearchVariable implements Serializable {
 
     private float weight = 0.0f;
     private float discPower = 1.0f;
+    private int yearRange = 0;
     private float reliability = 1.0f;
     private float presence = 1.0f;
     private DatabaseVariablesListElement databaseVariablesListElement;
     private CompareAlgorithms compareAlgorithm;
+    private boolean block;
 
     /**
      * 
@@ -111,6 +113,20 @@ public class PersonSearchVariable implements Serializable {
     }
 
     /**
+     * @return the year range
+     */
+    public int getYearRange() {
+        return yearRange;
+    }
+
+    /**
+     * @param yearRange the year range to set
+     */
+    public void setYearRange(int yearRange) {
+        this.yearRange = yearRange;
+    }
+
+    /**
      * @return the reliability
      */
     public float getReliability() {
@@ -136,5 +152,13 @@ public class PersonSearchVariable implements Serializable {
      */
     public void setPresence(float presence) {
         this.presence = presence;
+    }
+
+    public boolean isBlock() {
+        return block;
+    }
+
+    public void setBlock(boolean block) {
+        this.block = block;
     }
 }

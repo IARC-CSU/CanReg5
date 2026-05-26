@@ -562,7 +562,8 @@ public class Globals {
         /**
          * The date of death
          */
-        DeathDate
+        DeathDate,
+        UUID
     }
     public static String FILL_IN_STATUS_MANDATORY_STRING = "Mandatory";
     public static String FILL_IN_STATUS_AUTOMATIC_STRING = "Automatic";
@@ -583,6 +584,7 @@ public class Globals {
     public static String VARIABLE_TYPE_DICTIONARY_NAME = "Dict";
     public static String VARIABLE_TYPE_ASIAN_TEXT_NAME = "AsianText";
     public static String VARIABLE_TYPE_TEXT_AREA_NAME = "TextArea";
+    public static String VARIABLE_TYPE_UUID = "UUID";
     public static String MULTIPLEPRIMARY_COPY_INTERESTING_STRING = "Intr";
     public static String MULTIPLEPRIMARY_COPY_OTHER_STRING = "Othr";
     public static String MULTIPLEPRIMARY_COPY_MUST_STRING = "Must";
