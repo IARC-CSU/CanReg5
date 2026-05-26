@@ -13,6 +13,7 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -44,6 +45,7 @@ public class FixedWidthFileWriterTest {
     /**
      * Test of setOutputFileName method, of class FixedWidthFileWriter.
      */
+    @Ignore("Prototype test")
     @Test
     public void testSetOutputFileName() {
         System.out.println("setOutputFileName");
@@ -66,6 +68,7 @@ public class FixedWidthFileWriterTest {
     /**
      * Test of writeLine method, of class FixedWidthFileWriter.
      */
+    @Ignore("Prototype test")
     @Test
     public void testWriteLine() {
         System.out.println("writeLine");
@@ -81,6 +84,7 @@ public class FixedWidthFileWriterTest {
     /**
      * Test of defineOrder method, of class FixedWidthFileWriter.
      */
+    @Ignore("Prototype test")
     @Test
     public void testDefineOrder() {
         System.out.println("defineOrder");

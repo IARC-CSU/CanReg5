@@ -17,6 +17,7 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.w3c.dom.Document;
@@ -50,6 +51,7 @@ public class ImportTest {
     /**
      * Test of importFile method, of class Import.
      */
+    @Ignore("Requires local environment system description XML")
     @Test
     public void importFile() {
         try {

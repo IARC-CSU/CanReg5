@@ -12,13 +12,11 @@ import canreg.server.management.SystemDescription;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import canreg.common.DatabaseVariablesListElement;
+import org.w3c.dom.Document;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,22 +32,39 @@ import java.util.stream.Collectors;
  */
 public class CheckRecordServiceTest {
 
+    private static class FakeCanRegDAO extends CanRegDAO {
+        private final DatabaseVariablesListElement[] variables;
+
+        public FakeCanRegDAO(String registryCode, Document doc, DatabaseVariablesListElement[] variables) {
+            super(registryCode, doc, new Properties());
+            this.variables = variables;
+        }
+
+        @Override
+        public javax.sql.DataSource initDataSource(Properties databaseProperties) {
+            return null;
+        }
+
+        @Override
+        public DatabaseVariablesListElement[] getDatabaseVariablesList() {
+            return variables;
+        }
+    }
+
     private File xmlRegistryFile = new File("test/canreg/test-system.xml");
     private File settingsFile = new File("test/canreg/test-settings.xml");
     private File dictionariesFile = new File("test/canreg/test-dictionaries.json");
     private CheckRecordService service;
     private SystemDescription systemDescription;
-    @Mock
     private CanRegDAO dao;
-
-    private AutoCloseable closeable;
 
     @Before
     public void before() throws IOException {
-        closeable = MockitoAnnotations.openMocks(this);
-
         systemDescription = buildSystemDescription(xmlRegistryFile);
-        Mockito.when(dao.getDatabaseVariablesList()).thenReturn(systemDescription.getDatabaseVariableListElements());
+        dao = new FakeCanRegDAO(
+                systemDescription.getRegistryCode(),
+                systemDescription.getSystemDescriptionDocument(),
+                systemDescription.getDatabaseVariableListElements());
         service = new CheckRecordService(dao);
 
         Map<Integer, Dictionary> dictionariesMap = CanRegDAO.buildDictionaryMap(systemDescription.getSystemDescriptionDocument());
@@ -63,11 +78,6 @@ public class CheckRecordServiceTest {
             dictionariesMap.get(Integer.parseInt(entry.getKey())).getDictionaryEntries().putAll(entry.getValue().getDictionaryEntries());
         }
 
-    }
-
-    @After
-    public void releaseMocks() throws Exception {
-        closeable.close();
     }
 
     @Test
