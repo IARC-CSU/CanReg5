@@ -86,6 +86,89 @@
             <fileset dir="lib" includes="*.jar"/>
         </copy>
     </target>
+    <target name="-build-jdeploy">
+        <echo>Generating native distributions using jDeploy...</echo>
+        <exec executable="npx" failonerror="true">
+            <arg value="jdeploy"/>
+            <arg value="package"/>
+        </exec>
+    </target>
+
+    <target name="-package-zips" depends="-build-jdeploy">
+        <echo>Building platform-specific zip distributions...</echo>
+        
+        <!-- 1. Translations zip -->
+        <zip destfile="${dist.dir}/translations.zip">
+            <zipfileset dir="src/canreg/client" includes="**/*.properties"/>
+        </zip>
+
+        <!-- 2. R-Packages zip -->
+        <mkdir dir="${dist.dir}/web"/>
+        <zip destfile="${dist.dir}/web/CanReg5-R-packages.zip">
+            <zipfileset dir="conf/tables/r/r-packages" prefix="conf/tables/r/r-packages"/>
+        </zip>
+
+        <!-- 3. Base Zip Configuration (shared across platforms) -->
+        <!-- We use a patternset to share the base files across all platform ZIPs -->
+        <patternset id="base.files">
+            <include name="conf/**"/>
+            <exclude name="conf/tables/r/r-packages/*"/>
+            <include name="demo/**"/>
+            <include name="scripts/**"/>
+            <include name="CanReg.sh"/>
+            <include name="changelog.txt"/>
+            <include name="changelog.html"/>
+        </patternset>
+
+        <!-- 4. Platform ZIPs -->
+        <!-- Windows ZIP -->
+        <zip destfile="${dist.dir}/web/CanReg5-Windows.zip">
+            <zipfileset dir=".">
+                <patternset refid="base.files"/>
+            </zipfileset>
+            <zipfileset dir="conf/tables/r/r-packages" includes="*.tar.gz" prefix="conf/tables/r/r-packages"/>
+            <zipfileset dir="doc/CanReg5-Instructions" includes="CanReg5-Instructions.pdf" prefix="doc" erroronmissingdir="false"/>
+            <zipfileset dir="${dist.dir}" includes="CanReg.jar"/>
+            <zipfileset dir="${dist.dir}/lib" prefix="lib"/>
+            <zipfileset dir="jdeploy/installers" includes="*win*.exe"/>
+        </zip>
+
+        <!-- macOS App Bundle (only if building on Mac) -->
+        <condition property="isMac">
+            <os family="mac"/>
+        </condition>
+        <antcall target="-build-mac-app"/>
+
+        <!-- Linux ZIP -->
+        <zip destfile="${dist.dir}/web/CanReg5-Linux.zip">
+            <zipfileset dir=".">
+                <patternset refid="base.files"/>
+            </zipfileset>
+            <zipfileset dir="conf/tables/r/r-packages" includes="*.tar.gz" prefix="conf/tables/r/r-packages"/>
+            <zipfileset dir="doc/CanReg5-Instructions" includes="CanReg5-Instructions.pdf" prefix="doc" erroronmissingdir="false"/>
+            <zipfileset dir="${dist.dir}" includes="CanReg.jar"/>
+            <zipfileset dir="${dist.dir}/lib" prefix="lib"/>
+            <zipfileset dir="jdeploy/installers" includes="*linux*"/>
+        </zip>
+
+        <!-- 5. Copy metadata files to web directory -->
+        <copy todir="${dist.dir}/web">
+            <fileset dir="." includes="changelog.txt,changelog.html,version.txt"/>
+            <fileset file="doc/CanReg5-Instructions/CanReg5-Instructions.pdf" erroronmissingdir="false"/>
+        </copy>
+    </target>
+
+    <target name="-build-mac-app" if="isMac">
+        <echo>Creating macOS App Bundle...</echo>
+        <exec executable="/bin/bash" failonerror="false">
+            <arg value="helpers/create-mac-app.sh"/>
+        </exec>
+        <zip destfile="${dist.dir}/web/CanReg5-macOS.zip">
+            <zipfileset dir="." includes="CanReg5.app/**" excludes="CanReg5.app/Contents/MacOS/CanReg5"/>
+            <zipfileset dir="." includes="CanReg5.app/Contents/MacOS/CanReg5" filemode="755"/>
+        </zip>
+    </target>
+
     <target name="-post-jar">
         <exec executable="ruby" osfamily="unix" failonerror="false">
             <arg value="update_version_number.rb"/>
@@ -95,14 +178,10 @@
             <arg value="ruby"/>
             <arg value="update_version_number.rb"/>
         </exec>
-        <echo>Building zip-distribution...</echo>
-        <exec executable="/bin/sh" osfamily="unix" failonerror="false">
-            <arg value="create-zip.sh"/>
-        </exec>
-        <exec executable="cmd" osfamily="windows" failonerror="false">
-            <arg value="/c"/>
-            <arg value="create-zip.bat"/>
-        </exec>
+        
+        <!-- Package ZIPs (which depends on jDeploy) -->
+        <antcall target="-package-zips"/>
+        
         <echo>Building setup...</echo>
         <exec executable="cmd" osfamily="windows" failonerror="false">
             <arg value="/c"/>

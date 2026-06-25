@@ -53,10 +53,21 @@ java -cp "dist/CanReg.jar:lib/*" canreg.client.CanRegClientApp
 java -cp "dist/CanReg.jar;lib/*" canreg.client.CanRegClientApp
 ```
 
-### Packaging Distribution (macOS/Linux)
-When you run `ant jar`, the post-build sequence automatically invokes:
-1. `ruby update_version_number.rb` to update version identifiers.
-2. `create-zip.sh` to package translations, documentation, configurations, and core assets into a clean distributable ZIP structure found under `dist/web/CanReg5.zip`.
+### Packaging Distribution
+When you run `ant jar`, the post-build sequence automatically invokes packaging tasks to generate the distribution zips for users. 
+
+**Native Desktop Installers (jDeploy & Mac Bundle)**
+CanReg5 now uses a hybrid approach for native distribution:
+1. **Windows and Linux:** Built using [jDeploy](https://www.jdeploy.com/) to generate standalone installers (`.exe`, `.deb`, `.AppImage`). This requires **Node.js (`npm` and `npx`)** on the developer's machine.
+2. **macOS:** Built using a native `create-mac-app.sh` script to generate a fully self-contained `CanReg5.app` macOS application bundle. This step only triggers if the build is executed on a macOS machine.
+
+The packaging process follows these steps:
+1. `ruby update_version_number.rb` updates version identifiers.
+2. `npx jdeploy package` generates the local native desktop installers in `jdeploy/installers`.
+3. Ant creates platform-specific distribution zips in `dist/web/`:
+   - `CanReg5-Windows.zip` (Contains Windows `.exe` and base project files)
+   - `CanReg5-macOS.zip` (Contains the `CanReg5.app` application bundle)
+   - `CanReg5-Linux.zip` (Contains Linux `.deb`/`.AppImage` and base project files)
 
 
 ## Installation for Developers

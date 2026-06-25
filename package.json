@@ -1,0 +1,27 @@
+{
+  "name": "canreg5",
+  "version": "5.0.0",
+  "description": "CanReg5 is a multi user, multi platform, open source tool to input, store, check and analyse cancer registry data.",
+  "main": "index.js",
+  "bin": {
+    "canreg5": "jdeploy-bundle/jdeploy.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IARC-CSU/CanReg5.git"
+  },
+  "author": "Morten Johannes Ervik, CSU/IARC",
+  "license": "ISC",
+  "jdeploy": {
+    "jar": "dist/CanReg.jar",
+    "classPath": ["dist/lib/*"],
+    "mainClass": "canreg.client.CanRegClientApp",
+    "javaVersion": "8",
+    "title": "CanReg5",
+    "icon": "src/canreg/client/gui/resources/LogoBetaNewer.png",
+    "installers": ["win", "linux"]
+  }
+}
