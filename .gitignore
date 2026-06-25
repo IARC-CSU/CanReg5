@@ -271,3 +271,8 @@ report-template-TRN-E/*
 ## Idea
 .idea/*
 target/*
+
+## jDeploy
+jdeploy/*
+jdeploy-bundle/*
+
