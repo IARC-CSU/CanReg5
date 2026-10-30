@@ -1,6 +1,11 @@
 package canreg.server.database;
 
+import canreg.TestFixtures;
+import canreg.common.DatabaseFilter;
+import canreg.common.DatabaseVariablesListElement;
+import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
+import java.util.LinkedList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.junit.Test;
@@ -312,5 +317,93 @@ public class QueryGeneratorTest {
         assertTrue(query.toUpperCase().contains("CREATE TABLE"));
         assertTrue(query.toUpperCase().contains("NAME"));
         assertTrue(query.toUpperCase().contains("SEX"));
+    }
+
+    @Test
+    public void testStrEditPatientTumourSource() throws Exception {
+        Document doc = createMultiTableDoc();
+        String editPat = QueryGenerator.strEditPatient(doc);
+        assertTrue(editPat.contains("UPDATE APP.PATIENT"));
+        assertTrue(editPat.contains("\"PAT_NAME\" = ?"));
+        assertTrue(editPat.contains("WHERE " + Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME + " = ?"));
+
+        String editTum = QueryGenerator.strEditTumour(doc);
+        assertTrue(editTum.contains("UPDATE APP.TUMOUR"));
+        assertTrue(editTum.contains("\"TUM_YEAR\" = ?"));
+        assertTrue(editTum.contains("WHERE " + Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME + " = ?"));
+
+        String editSrc = QueryGenerator.strEditSource(doc);
+        assertTrue(editSrc.contains("UPDATE APP.SOURCE"));
+        assertTrue(editSrc.contains("\"SRC_ID\" = ?"));
+        assertTrue(editSrc.contains("WHERE " + Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME + " = ?"));
+    }
+
+    @Test
+    public void testJoinAndHighestIDQueriesWithGlobalToolBox() throws Exception {
+        GlobalToolBox gtb = TestFixtures.createGlobalToolBox();
+
+        String patTum = QueryGenerator.strGetPatientsAndTumours(gtb);
+        assertTrue(patTum.startsWith("SELECT * FROM APP.TUMOUR, APP.PATIENT WHERE"));
+
+        String countPatTum = QueryGenerator.strCountPatientsAndTumours(gtb);
+        assertTrue(countPatTum.startsWith("SELECT COUNT(*) FROM APP.TUMOUR, APP.PATIENT WHERE"));
+
+        String srcTum = QueryGenerator.strGetSourcesAndTumours(gtb);
+        assertTrue(srcTum.startsWith("SELECT * FROM APP.SOURCE, APP.TUMOUR WHERE"));
+
+        String countSrcTum = QueryGenerator.strCountSourcesAndTumours(gtb);
+        assertTrue(countSrcTum.startsWith("SELECT COUNT(*) FROM APP.SOURCE, APP.TUMOUR WHERE"));
+
+        String allTables = QueryGenerator.strGetRecordsAllTables(gtb);
+        assertTrue(allTables.startsWith("SELECT * FROM APP.SOURCE, APP.TUMOUR, APP.PATIENT WHERE"));
+
+        String countAllTables = QueryGenerator.strCountRecordsAllTables(gtb);
+        assertTrue(countAllTables.startsWith("SELECT COUNT(*) FROM APP.SOURCE, APP.TUMOUR, APP.PATIENT WHERE"));
+
+        assertEquals("SELECT max(\"REGNO\") FROM APP.PATIENT", QueryGenerator.strGetHighestPatientID(gtb));
+        assertTrue(QueryGenerator.strGetHighestTumourID(gtb).contains("SELECT max(\"TUMOURID\") FROM APP.TUMOUR"));
+        assertTrue(QueryGenerator.strGetHighestPatientRecordID(gtb).contains("SELECT max(\"PATIENTRECORDID\") FROM APP.PATIENT"));
+        assertTrue(QueryGenerator.strGetHighestSourceRecordID(gtb).contains("SELECT max(\"SOURCERECORDID\") FROM APP.SOURCE"));
+        assertTrue(QueryGenerator.strMaxNumberOfSourcesPerTumourRecord(gtb).contains("GROUP BY"));
+    }
+
+    @Test
+    public void testBuildRangePartAndIndexes() throws Exception {
+        Document doc = TestFixtures.loadTestSystemDocument();
+        LinkedList<String> patientIndexes = QueryGenerator.strCreateIndexTable("Patient", doc);
+        assertNotNull(patientIndexes);
+        assertFalse(patientIndexes.isEmpty());
+        assertTrue(patientIndexes.getFirst().toLowerCase().contains("create index"));
+
+        GlobalToolBox gtb = new GlobalToolBox(doc);
+        DatabaseVariablesListElement regno = gtb.translateStandardVariableNameToDatabaseListElement(
+                Globals.StandardVariableNames.PatientID.toString());
+
+        DatabaseFilter filter = new DatabaseFilter();
+        filter.setRangeDatabaseVariablesListElement(regno);
+        filter.setRangeStart("'20000001'");
+        filter.setRangeEnd("'20209999'");
+
+        String rangeSql = QueryGenerator.buildRangePart(filter);
+        assertTrue(rangeSql.contains("IN ( SELECT"));
+        assertTrue(rangeSql.contains(">= '20000001'"));
+        assertTrue(rangeSql.contains("AND"));
+        assertTrue(rangeSql.contains("<= '20209999'"));
+    }
+
+    @Test
+    public void testKeysAndNameSexAndPDSQueries() {
+        assertTrue(QueryGenerator.strSavePopoulationDataset().contains("INSERT INTO APP.PDSETS"));
+        assertTrue(QueryGenerator.strSavePopoulationDatasetsEntry().contains("INSERT INTO APP.PDSET"));
+        assertTrue(QueryGenerator.strSaveNameSexEntry().contains("INSERT INTO APP.NAMESEX"));
+        assertTrue(QueryGenerator.strDeleteNameSexEntry().contains("DELETE FROM APP.NAMESEX"));
+
+        String[] patPk = QueryGenerator.strCreatePatientTablePrimaryKey("PATIENTRECORDID");
+        assertEquals(2, patPk.length);
+        assertTrue(patPk[1].contains("ADD PRIMARY KEY"));
+
+        String[] tumFk = QueryGenerator.strCreateTumourTableForeignKey("PATIENTRECORDIDTUMOURTABLE", "PATIENTRECORDID");
+        assertEquals(1, tumFk.length);
+        assertTrue(tumFk[0].contains("ADD FOREIGN KEY"));
     }
 }

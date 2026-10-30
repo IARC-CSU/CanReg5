@@ -64,12 +64,15 @@ public class GlobalToolBox {
         databaseVariableNameToDatabaseVariableListElementMap = buildDBVariablesMap(databaseVariablesListElements);
         standardCharSet = Tools.getStandardCharset(doc, Globals.NAMESPACE);
         translator = Tools.getTranslator(doc, Globals.NAMESPACE);
-        LocalSettings localSettings = Tools.getLocalSettings();
-        if(localSettings != null) {
-            this.localSettings = localSettings;
-        } else {
-            this.localSettings = CanRegClientApp.getApplication().getLocalSettings();
+        LocalSettings settings = Tools.getLocalSettings();
+        if (settings == null) {
+            try {
+                settings = CanRegClientApp.getApplication().getLocalSettings();
+            } catch (IllegalStateException ex) {
+                settings = null;
+            }
         }
+        this.localSettings = settings;
         // mapIARCstandardVariablesVariableName = Tools.getMapIARCstandardVariablesVariableName(doc, Globals.NAMESPACE);
     }
 
@@ -233,7 +236,7 @@ public class GlobalToolBox {
     }
     
     public String getDateFormatString() {
-        return localSettings.getProperty(LocalSettings.DATE_FORMAT_KEY);
+        return localSettings != null ? localSettings.getProperty(LocalSettings.DATE_FORMAT_KEY) : Globals.DATE_FORMAT_STRING;
     }
     
     public Dictionary getDictionaryByStandardVariable(Globals.StandardVariableNames variable){

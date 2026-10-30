@@ -43,8 +43,16 @@ public abstract class AbstractEditorialTableBuilder implements TableBuilderInter
     private static final Logger LOGGER = Logger.getLogger(AbstractEditorialTableBuilder.class.getName());
 
     public AbstractEditorialTableBuilder() {
-        LocalSettings localSettings = CanRegClientApp.getApplication().getLocalSettings();
-        gspath = localSettings.getProperty(LocalSettings.GS_PATH);
+        String path = null;
+        try {
+            LocalSettings localSettings = CanRegClientApp.getApplication().getLocalSettings();
+            if (localSettings != null) {
+                path = localSettings.getProperty(LocalSettings.GS_PATH);
+            }
+        } catch (IllegalStateException ex) {
+            // Headless / unit test environment where CanRegClientApp is not launched
+        }
+        gspath = path;
     }
     protected static FileTypes[] fileTypesGenerated = {
         FileTypes.ps, FileTypes.csv

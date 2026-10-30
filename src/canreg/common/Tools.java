@@ -231,12 +231,19 @@ public class Tools {
         if (doc == null) {
             return new DatabaseVariablesListElement[0];
         }
-        if(localSettings == null) {
-            localSettings = CanRegClientApp.getApplication().getLocalSettings();
+        String dateFormatString = Globals.DATE_FORMAT_STRING;
+        DatabaseVariablesListElement.VariableType displayVariableType = DatabaseVariablesListElement.VariableType.FULL;
+        if (localSettings == null) {
+            try {
+                localSettings = CanRegClientApp.getApplication().getLocalSettings();
+            } catch (IllegalStateException ex) {
+                LOGGER.log(Level.FINE, "CanRegClientApp is not launched; using default date format and display variable type.");
+            }
         }
-
-        String dateFormatString = localSettings.getDateFormatString();
-        DatabaseVariablesListElement.VariableType displayVariableType = localSettings.getDisplayVariableType();
+        if (localSettings != null) {
+            dateFormatString = localSettings.getDateFormatString();
+            displayVariableType = localSettings.getDisplayVariableType();
+        }
 
         NodeList nl = doc.getElementsByTagName(namespace + "variable");
         // DatabaseVariablesListElement[] variables = new DatabaseVariablesListElement[nl.getLength()];

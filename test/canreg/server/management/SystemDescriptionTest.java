@@ -13,17 +13,7 @@ import static org.junit.Assert.*;
  *
  * Uses the committed training registry configuration file
  * {@code conf/database/TRN.xml} as a test fixture.
- *
- * NOTE: These tests are currently @Ignored because
- * {@code SystemDescription} calls {@code canreg.common.Tools.getVariableListElements},
- * which in turn calls {@code CanRegClientApp.getApplication()}.  That method
- * throws {@code IllegalStateException("Application is not launched.")} when
- * invoked outside a running Swing application.  The tests are preserved here as
- * a regression suite to be un-ignored once the coupling is broken.
- *
- * No database or network access is required once that blocker is resolved.
  */
-@Ignore("SystemDescription calls CanRegClientApp.getApplication() which requires a running Swing application")
 public class SystemDescriptionTest {
 
     private static final String TRN_XML_PATH = "conf/database/TRN.xml";
