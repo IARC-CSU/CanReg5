@@ -160,7 +160,7 @@
 
     <target name="-build-mac-app" if="isMac">
         <echo>Creating macOS App Bundle...</echo>
-        <exec executable="/bin/bash" failonerror="false">
+        <exec executable="/bin/bash" failonerror="true">
             <arg value="helpers/create-mac-app.sh"/>
         </exec>
         <zip destfile="${dist.dir}/web/CanReg5-macOS.zip">

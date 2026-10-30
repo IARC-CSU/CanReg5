@@ -9,6 +9,14 @@ MACOS_DIR="${CONTENTS_DIR}/MacOS"
 RESOURCES_DIR="${CONTENTS_DIR}/Resources"
 ICON_SOURCE="src/canreg/client/gui/resources/LogoBetaNewer.png"
 
+# Resolve version from appinfo.properties or version.txt
+if [ -f "appinfo.properties" ]; then
+    APP_VERSION=$(grep '^program\.VERSION=' appinfo.properties | cut -d'=' -f2 | tr -d '[:space:]')
+elif [ -s "version.txt" ]; then
+    APP_VERSION=$(tr -d '[:space:]' < "version.txt")
+fi
+APP_VERSION="${APP_VERSION:-5.00.45}"
+
 echo "Cleaning old macOS App Bundle..."
 rm -rf "${APP_NAME}"
 
@@ -41,8 +49,8 @@ else
 fi
 
 # 2. Create Info.plist
-echo "Writing Info.plist..."
-cat << 'EOF' > "${CONTENTS_DIR}/Info.plist"
+echo "Writing Info.plist (version ${APP_VERSION})..."
+cat << EOF > "${CONTENTS_DIR}/Info.plist"
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -62,7 +70,7 @@ cat << 'EOF' > "${CONTENTS_DIR}/Info.plist"
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>
-    <string>5.00.44k</string>
+    <string>${APP_VERSION}</string>
     <key>CFBundleSignature</key>
     <string>????</string>
     <key>LSMinimumSystemVersion</key>
