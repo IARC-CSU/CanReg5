@@ -66,7 +66,7 @@ public class CalculateAge implements ConversionInterface {
             GregorianCalendarCanReg bdcal = DateHelper.parseDateStringToGregorianCalendarCanReg(birthDateCode, Globals.DATE_FORMAT_STRING);
             String incidenceDateCode = variables.get(StandardVariableNames.IncidenceDate).toString();
             GregorianCalendarCanReg inccal = DateHelper.parseDateStringToGregorianCalendarCanReg(incidenceDateCode, Globals.DATE_FORMAT_STRING);
-            int yearsBetween = (int) DateHelper.yearsBetween(inccal, bdcal);
+            int yearsBetween = (int) DateHelper.yearsBetween(bdcal, inccal);
             if (yearsBetween >= 0) {
                 result.setValue(yearsBetween);
                 result.setResultCode(ConversionResult.ResultCode.OK);
