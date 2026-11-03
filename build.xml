@@ -86,6 +86,9 @@
             <fileset dir="lib" includes="*.jar"/>
         </copy>
     </target>
+    <target name="-post-compile">
+        <copy file="appinfo.properties" todir="${build.classes.dir}" failonerror="false"/>
+    </target>
     <target name="-build-jdeploy">
         <echo>Generating native distributions using jDeploy...</echo>
         <exec executable="npx" failonerror="true">

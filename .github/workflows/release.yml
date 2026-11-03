@@ -48,6 +48,18 @@ jobs:
       - name: Run Unit Tests
         run: ant test -Drun.jvmargs="-Djava.awt.headless=true"
 
+      - name: Show Test Failures
+        if: failure()
+        run: |
+          for f in build/test/results/*.txt; do
+            if grep -E "FAILURE|ERROR" "$f" > /dev/null 2>&1; then
+              echo "=========================================="
+              echo "FAILED: $f"
+              echo "=========================================="
+              cat "$f"
+            fi
+          done
+
       - name: Build JAR and Platform Distributions
         run: ant jar
 
