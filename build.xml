@@ -118,7 +118,6 @@
             <exclude name="conf/tables/r/r-packages/*"/>
             <include name="demo/**"/>
             <include name="scripts/**"/>
-            <include name="CanReg.sh"/>
             <include name="changelog.txt"/>
             <include name="changelog.html"/>
         </patternset>
@@ -129,11 +128,11 @@
             <zipfileset dir=".">
                 <patternset refid="base.files"/>
             </zipfileset>
+            <zipfileset dir="." includes="CanReg.exe,CanReg.bat"/>
             <zipfileset dir="conf/tables/r/r-packages" includes="*.tar.gz" prefix="conf/tables/r/r-packages"/>
             <zipfileset dir="doc/CanReg5-Instructions" includes="CanReg5-Instructions.pdf" prefix="doc" erroronmissingdir="false"/>
             <zipfileset dir="${dist.dir}" includes="CanReg.jar"/>
             <zipfileset dir="${dist.dir}/lib" prefix="lib"/>
-            <zipfileset dir="jdeploy/installers" includes="*win*.exe" erroronmissingdir="false"/>
         </zip>
 
         <!-- Windows ZIP with bundled R (if r-runtime exists) -->
@@ -153,11 +152,11 @@
             <zipfileset dir=".">
                 <patternset refid="base.files"/>
             </zipfileset>
+            <zipfileset dir="." includes="CanReg.sh" filemode="755"/>
             <zipfileset dir="conf/tables/r/r-packages" includes="*.tar.gz" prefix="conf/tables/r/r-packages"/>
             <zipfileset dir="doc/CanReg5-Instructions" includes="CanReg5-Instructions.pdf" prefix="doc" erroronmissingdir="false"/>
             <zipfileset dir="${dist.dir}" includes="CanReg.jar"/>
             <zipfileset dir="${dist.dir}/lib" prefix="lib"/>
-            <zipfileset dir="jdeploy/installers" includes="*linux*" erroronmissingdir="false"/>
         </zip>
 
         <!-- 5. Copy metadata files to web directory -->
@@ -184,11 +183,11 @@
             <zipfileset dir=".">
                 <patternset refid="base.files"/>
             </zipfileset>
+            <zipfileset dir="." includes="CanReg.exe,CanReg.bat"/>
             <zipfileset dir="conf/tables/r/r-packages" includes="*.tar.gz" prefix="conf/tables/r/r-packages"/>
             <zipfileset dir="doc/CanReg5-Instructions" includes="CanReg5-Instructions.pdf" prefix="doc" erroronmissingdir="false"/>
             <zipfileset dir="${dist.dir}" includes="CanReg.jar"/>
             <zipfileset dir="${dist.dir}/lib" prefix="lib"/>
-            <zipfileset dir="jdeploy/installers" includes="*win*.exe" erroronmissingdir="false"/>
             <zipfileset dir="r-runtime" prefix="r-runtime"/>
         </zip>
     </target>
