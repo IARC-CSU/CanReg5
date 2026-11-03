@@ -134,7 +134,7 @@ jobs:
       - name: Build Standard Windows Installer (Inno Setup)
         shell: cmd
         run: |
-          ISCC.exe /DCanReg5Dir=. helpers\InnoSetup\CanReg5-InnoSetup.iss
+          ISCC.exe /DCanReg5Dir="%GITHUB_WORKSPACE%" helpers\InnoSetup\CanReg5-InnoSetup.iss
 
       - name: Acquire Standalone R Runtime
         shell: pwsh
@@ -164,7 +164,7 @@ jobs:
       - name: Build Windows with R Installer (Inno Setup)
         shell: cmd
         run: |
-          ISCC.exe /DCanReg5Dir=. /DRSourceDir=r-runtime helpers\InnoSetup\CanReg5-with-R-InnoSetup.iss
+          ISCC.exe /DCanReg5Dir="%GITHUB_WORKSPACE%" /DRSourceDir="%GITHUB_WORKSPACE%\r-runtime" helpers\InnoSetup\CanReg5-with-R-InnoSetup.iss
 
       - name: Package Windows with R Zip Distribution
         shell: cmd
