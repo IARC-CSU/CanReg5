@@ -6,15 +6,27 @@
 #define MyAppPublisher "IARC"
 #define MyAppURL "http://www.iacr.com.fr"
 #define MyAppExeName "CanReg.exe"
-#define CanReg5Dir "C:\Users\ervikm\Documents\GitHub\CanReg5"
-#include "..\..\inno-settings.txt"
+
+#ifndef CanReg5Dir
+  #define CanReg5Dir "..\.."
+#endif
+
+#ifndef MyAppVersion
+  #if FileExists(CanReg5Dir + "\inno-settings.txt")
+    #include CanReg5Dir + "\inno-settings.txt"
+  #else
+    #define MyAppVersion "5.00.46BETA1"
+  #endif
+#endif
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{D9F66332-D6B4-4160-BAC8-127AB39FC443}}
+#ifdef SignWithMsSign
 SignTool=MsSign $f
+#endif
 AppName={#MyAppName}
 ; AppVersion={#MyAppVersion}
 AppVerName={#MyAppName} 1.0

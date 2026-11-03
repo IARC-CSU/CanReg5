@@ -216,7 +216,7 @@ pip-log.txt
 .mr.developer.cfg
 vqyl2sk0.zpf.txt
 doc/CanReg5-Instructions/CanReg5-Instructions.pdf
-lib/*.jar
+
 *.class
 
 # Mobile Tools for Java (J2ME)
@@ -226,6 +226,7 @@ lib/*.jar
 *.jar
 *.war
 *.ear
+!lib/*.jar
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
@@ -259,7 +260,7 @@ conf/tables/r/\.RData
 conf/tables/r/\.Rhistory
 
 scripts/source_splitter/Gemfile.lock
-.vscode/settings.json
+.vscode/
 
 .Rhistory
 
@@ -269,7 +270,7 @@ conf/tables/r/r-packages/log_install.txt
 report-template-TRN-E/*
 
 ## Idea
-.idea/*
+.idea/
 target/*
 
 ## jDeploy

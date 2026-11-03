@@ -7,6 +7,7 @@
     ## to get canreg argument list
   Args <- commandArgs(TRUE)
   
+  ls_args <- list(filename = NULL, out = NULL, inc = NULL, pop = NULL, ft = \"\")
   tryCatch({
     ## source function to check if update needed
     source(paste(sep="/", script.basename, "r-sources", "Rcan_core.r"))
@@ -26,8 +27,8 @@
   
   error = function(e){
     if (exists("doc")) {
-      print(doc, ls_args$filename)
-     if (file.exists(ls_args$filename)) file.remove(ls_args$filename)
+      if (!is.null(ls_args$filename)) try(print(doc, ls_args$filename), silent = TRUE)
+     if (!is.null(ls_args$filename) && file.exists(ls_args$filename)) file.remove(ls_args$filename)
     }
 
     

@@ -66,12 +66,10 @@ canreg_table_report <- function(ls_args)
 
   sysName <<- Sys.info()[['sysname']]
 
-  if (sysName == "Windows") {
-    pb <<- winProgressBar(
-      title = "Create docx",
-      label = "Initializing"
-    )
-  } 
+  pb <<- winProgressBar(
+    title = "Create docx",
+    label = "Initializing"
+  ) 
 
   doc <- read_docx(paste(sep="/", script.basename,"slide_template", "template.docx"))
   
@@ -80,7 +78,7 @@ canreg_table_report <- function(ls_args)
   
   print(doc, ls_args$filename)
 
-  if (sysName == "Windows") {
+  if (exists("pb") && !is.null(pb)) {
     close(pb)
   }
 
@@ -148,12 +146,10 @@ canreg_table_slide <- function(ls_args)
 
   sysName <<- Sys.info()[['sysname']]
 
-  if (sysName == "Windows") {
-    pb <<- winProgressBar(
-      title = "Create pptx",
-      label = "Initializing"
-    )
-  } 
+  pb <<- winProgressBar(
+    title = "Create pptx",
+    label = "Initializing"
+  ) 
 
   doc <- read_pptx(path=paste(sep="/", script.basename,"slide_template", "canreg_template.pptx"))
   
@@ -164,7 +160,7 @@ canreg_table_slide <- function(ls_args)
   
   print(doc, target = ls_args$filename)
 
-  if (sysName == "Windows") {
+  if (exists("pb") && !is.null(pb)) {
     close(pb)
   }
 

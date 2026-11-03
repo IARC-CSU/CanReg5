@@ -27,6 +27,7 @@ import canreg.common.Globals.StandardVariableNames;
 import canreg.common.database.IncompatiblePopulationDataSetException;
 import canreg.common.database.PopulationDataset;
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -34,6 +35,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -55,6 +57,7 @@ public class RTableBuilder implements TableBuilderInterface {
     private String[] rScriptsArguments;
     private final String R_SCRIPTS_ARGUMENTS = "r_scripts_arguments";
     private int unknownAgeCode = Globals.DEFAULT_UNKNOWN_AGE_CODE;
+    private ProgressListener progressListener;
     private static final Logger LOGGER = Logger.getLogger(RTableBuilder.class.getName());
 
     public RTableBuilder(String configFileName) throws FileNotFoundException {
@@ -190,23 +193,45 @@ public class RTableBuilder implements TableBuilderInterface {
                 
                 System.out.println(commandList);
                 Process pr = rt.exec(commandList.toArray(new String[]{}));
-                // collect the output from the R program in a stream
-                is = new BufferedInputStream(pr.getInputStream());
+                // collect the output from the R program in real-time
+                BufferedReader reader = new BufferedReader(new InputStreamReader(pr.getInputStream()));
+                String line;
+                StringBuilder outputLog = new StringBuilder();
                 try {
-                    pr.waitFor();
-                    // convert the output to a string
-                    String theString = Tools.convertStreamToString(is);
-                    LOGGER.log(Level.INFO, "Messages from R: \n{0}", theString);
-                    // System.out.println(theString);  
-                    // and add all to the list of files to return
-                    for (String fileName : theString.split("\\r?\\n")) {
-                        if (fileName.startsWith("-outFile:")) {
-                            // System.out.println(fileName);
-                            fileName = fileName.replaceFirst("-outFile:", "");
+                    while ((line = reader.readLine()) != null) {
+                        outputLog.append(line).append("\n");
+                        if (line.startsWith("-progress:")) {
+                            try {
+                                String[] parts = line.split(":", 3);
+                                int pct = Integer.parseInt(parts[1].trim());
+                                String msg = parts.length > 2 ? parts[2].trim() : "";
+                                if (progressListener != null) {
+                                    progressListener.onProgress(pct, msg);
+                                }
+                            } catch (Exception ex) {
+                                LOGGER.log(Level.FINE, "Failed to parse progress line: " + line, ex);
+                            }
+                        } else if (line.startsWith("-outFile:")) {
+                            String fileName = line.replaceFirst("-outFile:", "").trim();
                             if (new File(fileName).exists()) {
                                 filesCreated.add(fileName);
                             }
                         }
+                    }
+                    pr.waitFor();
+                    if (pr.exitValue() != 0) {
+                        try {
+                            BufferedReader errReader = new BufferedReader(new InputStreamReader(pr.getErrorStream()));
+                            String errLine;
+                            while ((errLine = errReader.readLine()) != null) {
+                                outputLog.append(errLine).append("\n");
+                            }
+                        } catch (Exception ignored) {
+                        }
+                    }
+                    LOGGER.log(Level.INFO, "Messages from R: \n{0}", outputLog.toString());
+                    if (pr.exitValue() != 0) {
+                        throw new TableErrorException("R exited with error code " + pr.exitValue() + ":\n" + outputLog.toString());
                     }
                 } catch (InterruptedException ex) {
                     LOGGER.log(Level.SEVERE, "Error while building R", ex);
@@ -240,5 +265,10 @@ public class RTableBuilder implements TableBuilderInterface {
     @Override
     public void setUnknownAgeCode(int unknownAgeCode) {
         this.unknownAgeCode = unknownAgeCode;
+    }
+
+    @Override
+    public void setProgressListener(ProgressListener progressListener) {
+        this.progressListener = progressListener;
     }
 }

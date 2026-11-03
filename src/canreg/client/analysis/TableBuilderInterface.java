@@ -85,4 +85,8 @@ public interface TableBuilderInterface {
     public boolean areThesePopulationDatasetsCompatible(PopulationDataset[] populations);
     
     public void setUnknownAgeCode(int unknownAgeCode);
+
+    default void setProgressListener(ProgressListener listener) {
+        // default empty implementation
+    }
 }

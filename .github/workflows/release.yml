@@ -48,6 +48,18 @@ jobs:
       - name: Run Unit Tests
         run: ant test -Drun.jvmargs="-Djava.awt.headless=true"
 
+      - name: Show Test Failures
+        if: failure()
+        run: |
+          for f in build/test/results/*.txt; do
+            if grep -E "FAILURE|ERROR" "$f" > /dev/null 2>&1; then
+              echo "=========================================="
+              echo "FAILED: $f"
+              echo "=========================================="
+              cat "$f"
+            fi
+          done
+
       - name: Build JAR and Platform Distributions
         run: ant jar
 
@@ -55,12 +67,15 @@ jobs:
         run: |
           mkdir -p release-assets
           cp dist/web/CanReg5-Windows.zip release-assets/
+          if [ -f dist/web/CanReg5-Windows-with-R.zip ]; then
+            cp dist/web/CanReg5-Windows-with-R.zip release-assets/
+          fi
           cp dist/web/CanReg5-macOS.zip release-assets/
           cp dist/web/CanReg5-Linux.zip release-assets/
           cp dist/web/CanReg5-R-packages.zip release-assets/
           cp dist/translations.zip release-assets/
           for f in jdeploy/installers/*; do
-            if [ -f "$f" ]; then
+            if [ -f "$f" ] && [[ "$f" != *win* ]]; then
               cp "$f" release-assets/
             fi
           done
@@ -75,4 +90,107 @@ jobs:
           generate_release_notes: true
           files: |
             release-assets/*
+
+  build-windows-installers:
+    name: Build Windows Native Installers (Inno Setup)
+    runs-on: windows-latest
+    needs: build-and-release
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'zulu'
+          java-version: '8'
+
+      - name: Install Inno Setup
+        shell: pwsh
+        run: |
+          choco install innosetup --no-progress
+          echo "C:\Program Files (x86)\Inno Setup 6" >> $env:GITHUB_PATH
+
+      - name: Extract version from Git tag
+        id: version
+        shell: bash
+        run: |
+          TAG_NAME="${GITHUB_REF_NAME}"
+          VERSION="${TAG_NAME#v}"
+          echo "tag=${TAG_NAME}" >> "$GITHUB_OUTPUT"
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Sync version into appinfo.properties & inno-settings.txt
+        shell: bash
+        run: |
+          sed -i "s/^program\.VERSION=.*/program.VERSION=${{ steps.version.outputs.version }}/" appinfo.properties
+          echo "#define MyAppVersion \"${{ steps.version.outputs.version }}\"" > inno-settings.txt
+
+      - name: Build CanReg5 JAR and Distribution
+        shell: cmd
+        run: |
+          ant jar
+
+      - name: Build Standard Windows Installer (Inno Setup)
+        shell: cmd
+        run: |
+          ISCC.exe /DCanReg5Dir="%GITHUB_WORKSPACE%" helpers\InnoSetup\CanReg5-InnoSetup.iss
+
+      - name: Acquire Standalone R Runtime
+        shell: pwsh
+        run: |
+          $RZipUrl = "https://github.com/IARC-CSU/CanReg5/releases/download/r-runtime-v1/canreg5-r-runtime-win-x64.zip"
+          $Downloaded = $false
+          try {
+            Write-Host "Attempting to download pre-built R runtime from $RZipUrl..."
+            [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+            Invoke-WebRequest -Uri $RZipUrl -OutFile "r-runtime.zip" -UseBasicParsing -TimeoutSec 90
+            if ((Test-Path "r-runtime.zip") -and (Get-Item "r-runtime.zip").Length -gt 10000000) {
+              Write-Host "Extracting pre-built R runtime..."
+              Expand-Archive -Path "r-runtime.zip" -DestinationPath "." -Force
+              Remove-Item "r-runtime.zip" -Force
+              $Downloaded = $true
+              Write-Host "Pre-built R runtime successfully extracted."
+            } else {
+              if (Test-Path "r-runtime.zip") { Remove-Item -Force "r-runtime.zip" }
+            }
+          } catch {
+            Write-Host "Pre-built R runtime not found or download failed: $($_.Exception.Message)"
+            if (Test-Path "r-runtime.zip") { Remove-Item -Force "r-runtime.zip" }
+          }
+
+          if (-not $Downloaded -and -not (Test-Path "r-runtime\bin\R.exe")) {
+            Write-Host "Building R runtime from scratch via PowerShell..."
+            ./scripts/build_r_bundle.ps1 -RVersion "4.6.2" -OutputDir "r-runtime"
+          }
+
+      - name: Build Windows with R Installer (Inno Setup)
+        shell: cmd
+        run: |
+          ISCC.exe /DCanReg5Dir="%GITHUB_WORKSPACE%" /DRSourceDir="%GITHUB_WORKSPACE%\r-runtime" helpers\InnoSetup\CanReg5-with-R-InnoSetup.iss
+
+      - name: Package Windows with R Zip Distribution
+        shell: cmd
+        run: |
+          ant -DhasRRuntime=true package-windows-with-r
+
+      - name: Prepare Windows Release Assets
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path windows-assets
+          Compress-Archive -Path dist\CanReg5-Setup.exe -DestinationPath windows-assets\CanReg5-Setup.zip -Force
+          Compress-Archive -Path dist\CanReg5-with-R-Setup.exe -DestinationPath windows-assets\CanReg5-with-R-Setup.zip -Force
+          Copy-Item dist\CanReg5-Setup.exe windows-assets\
+          Copy-Item dist\CanReg5-with-R-Setup.exe windows-assets\
+          if (Test-Path dist\web\CanReg5-Windows-with-R.zip) {
+            Copy-Item dist\web\CanReg5-Windows-with-R.zip windows-assets\
+          }
+          Get-ChildItem -Path windows-assets
+
+      - name: Attach Windows Release Assets
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          files: |
+            windows-assets/*
 
