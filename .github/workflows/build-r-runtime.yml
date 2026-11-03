@@ -6,7 +6,7 @@ on:
       r_version:
         description: 'R version to package'
         required: true
-        default: '4.3.3'
+        default: '4.6.2'
       release_tag:
         description: 'GitHub Release tag to upload asset to'
         required: true

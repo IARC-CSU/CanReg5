@@ -158,7 +158,7 @@ jobs:
 
           if (-not $Downloaded -and -not (Test-Path "r-runtime\bin\R.exe")) {
             Write-Host "Building R runtime from scratch via PowerShell..."
-            ./scripts/build_r_bundle.ps1 -RVersion "4.3.3" -OutputDir "r-runtime"
+            ./scripts/build_r_bundle.ps1 -RVersion "4.6.2" -OutputDir "r-runtime"
           }
 
       - name: Build Windows with R Installer (Inno Setup)

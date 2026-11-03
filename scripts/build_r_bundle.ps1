@@ -1,7 +1,7 @@
 # build_r_bundle.ps1
 # Automates downloading, configuring, and packaging a portable R runtime for CanReg5 on Windows.
 param (
-    [string]$RVersion = "4.3.3",
+    [string]$RVersion = "4.6.2",
     [string]$OutputDir = "r-runtime"
 )
 
@@ -9,13 +9,34 @@ $ErrorActionPreference = "Stop"
 
 Write-Host "=== Building Portable R Bundle for CanReg5 (R $RVersion) ==="
 
-$InstallerUrl = "https://cran.r-project.org/bin/windows/base/old/R-$RVersion-win.exe"
+$CurrentUrl = "https://cran.r-project.org/bin/windows/base/R-$RVersion-win.exe"
+$OldUrl = "https://cran.r-project.org/bin/windows/base/old/$RVersion/R-$RVersion-win.exe"
+$ArchiveUrl = "https://cran-archive.r-project.org/bin/windows/base/old/$RVersion/R-$RVersion-win.exe"
+$GenericUrl = "https://cran.r-project.org/bin/windows/base/R-win.exe"
 $InstallerPath = "$env:TEMP\R-$RVersion-win.exe"
 $TempInstallDir = "$env:TEMP\R-portable-$RVersion"
 
-Write-Host "Downloading R $RVersion from $InstallerUrl..."
+Write-Host "Downloading R $RVersion..."
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-Invoke-WebRequest -Uri $InstallerUrl -OutFile $InstallerPath
+
+$Downloaded = $false
+foreach ($Url in @($CurrentUrl, $OldUrl, $ArchiveUrl, $GenericUrl)) {
+    try {
+        Write-Host "Trying $Url..."
+        Invoke-WebRequest -Uri $Url -OutFile $InstallerPath -UseBasicParsing -TimeoutSec 120
+        if ((Get-Item $InstallerPath).Length -gt 10000000) {
+            $Downloaded = $true
+            Write-Host "Successfully downloaded R installer from $Url."
+            break
+        }
+    } catch {
+        Write-Host "Failed downloading from $Url: $($_.Exception.Message)"
+    }
+}
+
+if (-not $Downloaded) {
+    throw "Unable to download R $RVersion installer from any CRAN repository."
+}
 
 Write-Host "Installing silently to $TempInstallDir..."
 if (Test-Path $TempInstallDir) {

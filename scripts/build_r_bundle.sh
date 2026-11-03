@@ -3,13 +3,13 @@
 # Prepares portable R for CanReg5 using innoextract or by packaging pre-installed library packages.
 set -euo pipefail
 
-R_VERSION="${1:-4.3.3}"
+R_VERSION="${1:-4.6.2}"
 OUTPUT_DIR="${2:-r-runtime}"
 
 echo "=== CanReg5 Portable R Bundle Builder (R ${R_VERSION}) ==="
 
 if command -v innoextract >/dev/null 2>&1; then
-    INSTALLER_URL="https://cran.r-project.org/bin/windows/base/old/R-${R_VERSION}-win.exe"
+    INSTALLER_URL="https://cran.r-project.org/bin/windows/base/old/${R_VERSION}/R-${R_VERSION}-win.exe"
     TMP_DIR="$(mktemp -d)"
     trap 'rm -rf "${TMP_DIR}"' EXIT
 
