@@ -42,6 +42,7 @@ DefaultGroupName={#MyAppName}
 OutputDir={#CanReg5Dir}\dist
 InfoBeforeFile={#CanReg5Dir}\changelog.rtf
 LicenseFile={#CanReg5Dir}\src\canreg\client\gui\resources\gpl-3.0-standalone.txt
+SetupIconFile={#CanReg5Dir}\src\canreg\client\gui\resources\LogoBetaNew64x64.ico
 AllowNoIcons=yes
 OutputBaseFilename=CanReg5-with-R-Setup
 Compression=lzma
@@ -79,9 +80,9 @@ Source: "{#RSourceDir}\*"; DestDir: "{app}\r-runtime"; Flags: ignoreversion recu
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
-Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
+Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\conf\LogoBetaNew64x64.ico"
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
-Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
+Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon; IconFilename: "{app}\conf\LogoBetaNew64x64.ico"
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, "&", "&&")}}"; Flags: nowait postinstall skipifsilent

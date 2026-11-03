@@ -54,3 +54,4 @@ jobs:
           prerelease: false
           files: |
             canreg5-r-runtime-win-x64.zip
+
