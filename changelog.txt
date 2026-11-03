@@ -4,6 +4,9 @@
 - Automated installer packaging for Windows, macOS, and Linux
 - GitHub Actions CI/CD release pipeline
 - Headless unit testing suite across core modules
+- Cleaned and consolidated dependency libraries in lib/
+- Cross-platform Table Builder progress reporting for R scripts (macOS, Linux, and Windows)
+- Non-blocking background task execution for Table Builder to prevent GUI freezing
 - Fix chronological date handling in age calculation
 
 ## 5.00.45
