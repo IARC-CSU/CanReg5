@@ -351,7 +351,23 @@ public final class LocalSettings {
     public String getProperty(String key) {
         String property = properties.getProperty(key);
 
-        if (key.equals(R_PATH) || key.equals(GS_PATH)) {
+        if (key.equals(R_PATH)) {
+            String bundledR = getBundledRInstallation();
+            if (bundledR != null && !bundledR.isEmpty()) {
+                // If bundled R exists in the application directory, automatically prioritize it!
+                // This ensures stale/broken system R paths from older installations do not break CanReg5.
+                if (property == null || property.isEmpty() || !new File(property).exists() || !property.contains("r-runtime")) {
+                    property = bundledR;
+                }
+            } else if (property != null && property.length() > 0) {
+                File tempFile = new File(property);
+                if (!tempFile.exists()) {
+                    property = null;
+                }
+            } else {
+                property = null;
+            }
+        } else if (key.equals(GS_PATH)) {
             if (property != null && property.length() > 0) {
                 File tempFile = new File(property);
                 if (!tempFile.exists()) {
@@ -650,59 +666,95 @@ public final class LocalSettings {
         }
     }
 
-    public static String tryToFindRInstallation() {
+    public static String getBundledRInstallation() {
         String os = System.getProperty("os.name", "").toLowerCase();
-
-        // 1. First, always check for bundled R in the application directory on all platforms
-        String[] bundledCandidates = new String[]{
-            "r-runtime" + Globals.FILE_SEPARATOR + "bin" + Globals.FILE_SEPARATOR + (os.contains("win") ? "R.exe" : "R"),
-            "r-runtime" + Globals.FILE_SEPARATOR + "bin" + Globals.FILE_SEPARATOR + "x64" + Globals.FILE_SEPARATOR + "R.exe",
-            Globals.R_SCRIPTS_PATH + Globals.FILE_SEPARATOR + "r-installation" + Globals.FILE_SEPARATOR + "bin" + Globals.FILE_SEPARATOR + (os.contains("win") ? "R.exe" : "R"),
-            Globals.R_SCRIPTS_PATH + Globals.FILE_SEPARATOR + "r-installation" + Globals.FILE_SEPARATOR + "bin" + Globals.FILE_SEPARATOR + "x64" + Globals.FILE_SEPARATOR + "R.exe"
-        };
-        for (String candidate : bundledCandidates) {
-            File f = new File(candidate);
-            if (f.exists()) {
-                try {
-                    return f.getCanonicalPath();
-                } catch (IOException ex) {
-                    return f.getAbsolutePath();
+        List<String> baseDirs = new ArrayList<String>();
+        baseDirs.add(".");
+        String userDir = System.getProperty("user.dir");
+        if (userDir != null && !userDir.isEmpty()) {
+            baseDirs.add(userDir);
+        }
+        try {
+            java.security.CodeSource cs = LocalSettings.class.getProtectionDomain().getCodeSource();
+            if (cs != null && cs.getLocation() != null) {
+                File codeFile = new File(cs.getLocation().toURI());
+                if (codeFile.isFile()) {
+                    baseDirs.add(codeFile.getParent());
+                } else if (codeFile.isDirectory()) {
+                    File p = codeFile.getParentFile();
+                    if (p != null) {
+                        baseDirs.add(p.getParent());
+                    }
                 }
             }
+        } catch (Exception ignored) {
         }
 
-        // Also check if r-installation or r-runtime has a version subdirectory like r-runtime/R-4.3.3/bin/R.exe
-        String[] bundledDirs = new String[]{
-            "r-runtime",
-            Globals.R_SCRIPTS_PATH + Globals.FILE_SEPARATOR + "r-installation"
-        };
-        for (String baseDir : bundledDirs) {
-            File dir = new File(baseDir);
-            if (dir.exists() && dir.isDirectory()) {
-                File[] subdirs = dir.listFiles();
-                if (subdirs != null) {
-                    for (File sub : subdirs) {
-                        if (sub.isDirectory()) {
-                            File f1 = new File(sub, "bin" + Globals.FILE_SEPARATOR + (os.contains("win") ? "R.exe" : "R"));
-                            if (f1.exists()) {
-                                try {
-                                    return f1.getCanonicalPath();
-                                } catch (IOException ex) {
-                                    return f1.getAbsolutePath();
+        for (String baseDir : baseDirs) {
+            if (baseDir == null || baseDir.isEmpty()) {
+                continue;
+            }
+            String[] candidates = new String[]{
+                baseDir + Globals.FILE_SEPARATOR + "r-runtime" + Globals.FILE_SEPARATOR + "bin" + Globals.FILE_SEPARATOR + (os.contains("win") ? "R.exe" : "R"),
+                baseDir + Globals.FILE_SEPARATOR + "r-runtime" + Globals.FILE_SEPARATOR + "bin" + Globals.FILE_SEPARATOR + "x64" + Globals.FILE_SEPARATOR + "R.exe",
+                baseDir + Globals.FILE_SEPARATOR + "conf" + Globals.FILE_SEPARATOR + "tables" + Globals.FILE_SEPARATOR + "r" + Globals.FILE_SEPARATOR + "r-installation" + Globals.FILE_SEPARATOR + "bin" + Globals.FILE_SEPARATOR + (os.contains("win") ? "R.exe" : "R"),
+                baseDir + Globals.FILE_SEPARATOR + "conf" + Globals.FILE_SEPARATOR + "tables" + Globals.FILE_SEPARATOR + "r" + Globals.FILE_SEPARATOR + "r-installation" + Globals.FILE_SEPARATOR + "bin" + Globals.FILE_SEPARATOR + "x64" + Globals.FILE_SEPARATOR + "R.exe"
+            };
+            for (String candidate : candidates) {
+                File f = new File(candidate);
+                if (f.exists()) {
+                    try {
+                        return f.getCanonicalPath();
+                    } catch (IOException ex) {
+                        return f.getAbsolutePath();
+                    }
+                }
+            }
+
+            // Also check subdirectories of r-runtime and r-installation (e.g. r-runtime/R-4.3.3/bin/R.exe)
+            String[] subDirCandidates = new String[]{
+                baseDir + Globals.FILE_SEPARATOR + "r-runtime",
+                baseDir + Globals.FILE_SEPARATOR + "conf" + Globals.FILE_SEPARATOR + "tables" + Globals.FILE_SEPARATOR + "r" + Globals.FILE_SEPARATOR + "r-installation"
+            };
+            for (String subCandidate : subDirCandidates) {
+                File dir = new File(subCandidate);
+                if (dir.exists() && dir.isDirectory()) {
+                    File[] subdirs = dir.listFiles();
+                    if (subdirs != null) {
+                        for (File sub : subdirs) {
+                            if (sub.isDirectory()) {
+                                File f1 = new File(sub, "bin" + Globals.FILE_SEPARATOR + (os.contains("win") ? "R.exe" : "R"));
+                                if (f1.exists()) {
+                                    try {
+                                        return f1.getCanonicalPath();
+                                    } catch (IOException ex) {
+                                        return f1.getAbsolutePath();
+                                    }
                                 }
-                            }
-                            File f2 = new File(sub, "bin" + Globals.FILE_SEPARATOR + "x64" + Globals.FILE_SEPARATOR + "R.exe");
-                            if (f2.exists()) {
-                                try {
-                                    return f2.getCanonicalPath();
-                                } catch (IOException ex) {
-                                    return f2.getAbsolutePath();
+                                File f2 = new File(sub, "bin" + Globals.FILE_SEPARATOR + "x64" + Globals.FILE_SEPARATOR + "R.exe");
+                                if (f2.exists()) {
+                                    try {
+                                        return f2.getCanonicalPath();
+                                    } catch (IOException ex) {
+                                        return f2.getAbsolutePath();
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
+        }
+        return null;
+    }
+
+    public static String tryToFindRInstallation() {
+        String os = System.getProperty("os.name", "").toLowerCase();
+
+        // 1. First priority: Bundled portable R runtime inside CanReg5 installation
+        String bundled = getBundledRInstallation();
+        if (bundled != null && !bundled.isEmpty()) {
+            return bundled;
         }
 
         // 2. Platform-specific system discovery

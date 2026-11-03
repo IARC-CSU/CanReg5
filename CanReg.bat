@@ -23,3 +23,4 @@ if exist "CanReg.jar" (
     pause
 )
 endlocal
+

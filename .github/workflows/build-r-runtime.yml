@@ -1,0 +1,56 @@
+name: Build Standalone Windows R Runtime
+
+on:
+  workflow_dispatch:
+    inputs:
+      r_version:
+        description: 'R version to package'
+        required: true
+        default: '4.3.3'
+      release_tag:
+        description: 'GitHub Release tag to upload asset to'
+        required: true
+        default: 'r-runtime-v1'
+
+permissions:
+  contents: write
+
+jobs:
+  build-r-runtime:
+    name: Build and Publish Portable Windows R Runtime
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Standalone R Runtime with Pre-installed Packages
+        shell: pwsh
+        run: |
+          ./scripts/build_r_bundle.ps1 -RVersion "${{ github.event.inputs.r_version || '4.3.3' }}" -OutputDir "r-runtime"
+
+      - name: Compress R Runtime
+        shell: pwsh
+        run: |
+          Compress-Archive -Path r-runtime -DestinationPath canreg5-r-runtime-win-x64.zip -Force
+          Get-Item canreg5-r-runtime-win-x64.zip | Select-Object Name, Length
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: canreg5-r-runtime-win-x64
+          path: canreg5-r-runtime-win-x64.zip
+          retention-days: 90
+
+      - name: Publish or Update GitHub Release Asset
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.release_tag || 'r-runtime-v1' }}
+          name: 'CanReg5 Portable R Runtime (Windows x64)'
+          body: |
+            Pre-built standalone portable R runtime (v${{ github.event.inputs.r_version || '4.3.3' }}) for CanReg5 on Windows x64.
+            Includes all pre-installed packages: Rcan, ggplot2, shiny, shinydashboard, shinyjs, gridExtra, scales, Cairo, officer, flextable, zip, shiny.i18n, etc.
+          draft: false
+          prerelease: false
+          files: |
+            canreg5-r-runtime-win-x64.zip

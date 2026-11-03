@@ -35,7 +35,7 @@ $Packages = @(
 )
 $PkgString = ($Packages | ForEach-Object { "`"$_`"" }) -join ", "
 
-$InstallCmd = "install.packages(c($PkgString), repos='https://cran.r-project.org', type='win.binary', quiet=TRUE)"
+$InstallCmd = "install.packages(c($PkgString), repos='https://cran.r-project.org', type='win.binary', dependencies=TRUE, quiet=TRUE)"
 Start-Process -FilePath $RScriptExe -ArgumentList "-e `"$InstallCmd`"" -Wait
 
 Write-Host "Cleaning up unneeded files to minimize bundle size..."
