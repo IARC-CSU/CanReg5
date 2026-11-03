@@ -145,15 +145,18 @@ jobs:
             Write-Host "Attempting to download pre-built R runtime from $RZipUrl..."
             [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
             Invoke-WebRequest -Uri $RZipUrl -OutFile "r-runtime.zip" -UseBasicParsing -TimeoutSec 90
-            if ((Get-Item "r-runtime.zip").Length -gt 10000000) {
+            if ((Test-Path "r-runtime.zip") -and (Get-Item "r-runtime.zip").Length -gt 10000000) {
               Write-Host "Extracting pre-built R runtime..."
               Expand-Archive -Path "r-runtime.zip" -DestinationPath "." -Force
               Remove-Item "r-runtime.zip" -Force
               $Downloaded = $true
               Write-Host "Pre-built R runtime successfully extracted."
+            } else {
+              if (Test-Path "r-runtime.zip") { Remove-Item -Force "r-runtime.zip" }
             }
           } catch {
             Write-Host "Pre-built R runtime not found or download failed: $($_.Exception.Message)"
+            if (Test-Path "r-runtime.zip") { Remove-Item -Force "r-runtime.zip" }
           }
 
           if (-not $Downloaded -and -not (Test-Path "r-runtime\bin\R.exe")) {
