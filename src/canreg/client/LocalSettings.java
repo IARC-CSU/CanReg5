@@ -27,6 +27,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -398,7 +399,7 @@ public final class LocalSettings {
         } else if (key.equalsIgnoreCase(BACKUP_EVERY_KEY)) {
             property = Globals.DEFAULT_BACK_UP_EVERY;
         } else if (key.equalsIgnoreCase(R_PATH)) {
-            property = tryToFindRInstalltionOnWindows();
+            property = tryToFindRInstallation();
         } else if (key.equalsIgnoreCase(GS_PATH)) {
             property = tryToFindGSInstalltionOnWindows();
         } else if (key.equalsIgnoreCase(FONT_NAME_KEY)) {
@@ -649,37 +650,151 @@ public final class LocalSettings {
         }
     }
 
-    private static String tryToFindRInstalltionOnWindows() {
-        String path = "";
-        // try windows 32
-        String[] foldersToTry = new String[]{
-            Globals.R_SCRIPTS_PATH + Globals.FILE_SEPARATOR + "r-installation",
-            Globals.FILE_SEPARATOR + "Program Files" + Globals.FILE_SEPARATOR + "R",
-            System.getenv("ProgramFilesW6432") + Globals.FILE_SEPARATOR + "R",
-            System.getenv("ProgramFiles") + Globals.FILE_SEPARATOR + "R",
-            System.getenv("ProgramFiles(x86)") + Globals.FILE_SEPARATOR + "R"
+    public static String tryToFindRInstallation() {
+        String os = System.getProperty("os.name", "").toLowerCase();
+
+        // 1. First, always check for bundled R in the application directory on all platforms
+        String[] bundledCandidates = new String[]{
+            "r-runtime" + Globals.FILE_SEPARATOR + "bin" + Globals.FILE_SEPARATOR + (os.contains("win") ? "R.exe" : "R"),
+            "r-runtime" + Globals.FILE_SEPARATOR + "bin" + Globals.FILE_SEPARATOR + "x64" + Globals.FILE_SEPARATOR + "R.exe",
+            Globals.R_SCRIPTS_PATH + Globals.FILE_SEPARATOR + "r-installation" + Globals.FILE_SEPARATOR + "bin" + Globals.FILE_SEPARATOR + (os.contains("win") ? "R.exe" : "R"),
+            Globals.R_SCRIPTS_PATH + Globals.FILE_SEPARATOR + "r-installation" + Globals.FILE_SEPARATOR + "bin" + Globals.FILE_SEPARATOR + "x64" + Globals.FILE_SEPARATOR + "R.exe"
         };
-        File folder;
-        long lastModified = 0;
-        for (String folderToTry : foldersToTry) {
-            folder = new File(folderToTry);
-            if (folder.exists()) {
-                File[] files = folder.listFiles();
-                // find the newest R installation
-                for (File thisFile : files) {
-                    if (lastModified < thisFile.lastModified()) {
-                        File tempFile = new File(files[0].getPath() + Globals.FILE_SEPARATOR + "bin" + Globals.FILE_SEPARATOR + "R.exe");
-                        if (tempFile.exists()) {
-                            path = tempFile.getPath();
-                            lastModified = thisFile.lastModified();
+        for (String candidate : bundledCandidates) {
+            File f = new File(candidate);
+            if (f.exists()) {
+                try {
+                    return f.getCanonicalPath();
+                } catch (IOException ex) {
+                    return f.getAbsolutePath();
+                }
+            }
+        }
+
+        // Also check if r-installation or r-runtime has a version subdirectory like r-runtime/R-4.3.3/bin/R.exe
+        String[] bundledDirs = new String[]{
+            "r-runtime",
+            Globals.R_SCRIPTS_PATH + Globals.FILE_SEPARATOR + "r-installation"
+        };
+        for (String baseDir : bundledDirs) {
+            File dir = new File(baseDir);
+            if (dir.exists() && dir.isDirectory()) {
+                File[] subdirs = dir.listFiles();
+                if (subdirs != null) {
+                    for (File sub : subdirs) {
+                        if (sub.isDirectory()) {
+                            File f1 = new File(sub, "bin" + Globals.FILE_SEPARATOR + (os.contains("win") ? "R.exe" : "R"));
+                            if (f1.exists()) {
+                                try {
+                                    return f1.getCanonicalPath();
+                                } catch (IOException ex) {
+                                    return f1.getAbsolutePath();
+                                }
+                            }
+                            File f2 = new File(sub, "bin" + Globals.FILE_SEPARATOR + "x64" + Globals.FILE_SEPARATOR + "R.exe");
+                            if (f2.exists()) {
+                                try {
+                                    return f2.getCanonicalPath();
+                                } catch (IOException ex) {
+                                    return f2.getAbsolutePath();
+                                }
+                            }
                         }
                     }
                 }
             }
         }
 
-        //
+        // 2. Platform-specific system discovery
+        if (os.contains("win")) {
+            return tryToFindRInstallationOnWindows();
+        } else if (os.contains("mac")) {
+            return tryToFindRInstallationOnMac();
+        } else {
+            return tryToFindRInstallationOnLinux();
+        }
+    }
+
+    private static String tryToFindRInstallationOnWindows() {
+        String path = "";
+        List<String> foldersToTry = new ArrayList<>();
+        String pf = System.getenv("ProgramFiles");
+        if (pf != null) {
+            foldersToTry.add(pf + Globals.FILE_SEPARATOR + "R");
+        }
+        String pfw = System.getenv("ProgramFilesW6432");
+        if (pfw != null) {
+            foldersToTry.add(pfw + Globals.FILE_SEPARATOR + "R");
+        }
+        String pfx86 = System.getenv("ProgramFiles(x86)");
+        if (pfx86 != null) {
+            foldersToTry.add(pfx86 + Globals.FILE_SEPARATOR + "R");
+        }
+        String localAppData = System.getenv("LOCALAPPDATA");
+        if (localAppData != null) {
+            foldersToTry.add(localAppData + Globals.FILE_SEPARATOR + "Programs" + Globals.FILE_SEPARATOR + "R");
+        }
+        foldersToTry.add("C:\\Program Files\\R");
+        foldersToTry.add("C:\\R");
+
+        long lastModified = 0;
+        for (String folderToTry : foldersToTry) {
+            File folder = new File(folderToTry);
+            if (folder.exists() && folder.isDirectory()) {
+                File[] files = folder.listFiles();
+                if (files != null) {
+                    for (File thisFile : files) {
+                        if (thisFile.isDirectory() && lastModified < thisFile.lastModified()) {
+                            File tempFile64 = new File(thisFile.getPath() + Globals.FILE_SEPARATOR + "bin" + Globals.FILE_SEPARATOR + "x64" + Globals.FILE_SEPARATOR + "R.exe");
+                            File tempFile = new File(thisFile.getPath() + Globals.FILE_SEPARATOR + "bin" + Globals.FILE_SEPARATOR + "R.exe");
+                            if (tempFile64.exists()) {
+                                path = tempFile64.getPath();
+                                lastModified = thisFile.lastModified();
+                            } else if (tempFile.exists()) {
+                                path = tempFile.getPath();
+                                lastModified = thisFile.lastModified();
+                            }
+                        }
+                    }
+                }
+            }
+        }
         return path;
+    }
+
+    private static String tryToFindRInstallationOnMac() {
+        String[] macCandidates = new String[]{
+            "/Library/Frameworks/R.framework/Resources/bin/R",
+            "/usr/local/bin/R",
+            "/opt/homebrew/bin/R",
+            "/usr/bin/R"
+        };
+        for (String candidate : macCandidates) {
+            File f = new File(candidate);
+            if (f.exists() && f.canExecute()) {
+                return candidate;
+            }
+        }
+        return "";
+    }
+
+    private static String tryToFindRInstallationOnLinux() {
+        String[] linuxCandidates = new String[]{
+            "/usr/bin/R",
+            "/usr/local/bin/R",
+            "/opt/R/bin/R"
+        };
+        for (String candidate : linuxCandidates) {
+            File f = new File(candidate);
+            if (f.exists() && f.canExecute()) {
+                return candidate;
+            }
+        }
+        return "";
+    }
+
+    private static String tryToFindRInstalltionOnWindows() {
+        return tryToFindRInstallation();
     }
 
     private String tryToFindGSInstalltionOnWindows() { // NOSONAR

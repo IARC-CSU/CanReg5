@@ -67,6 +67,9 @@ jobs:
         run: |
           mkdir -p release-assets
           cp dist/web/CanReg5-Windows.zip release-assets/
+          if [ -f dist/web/CanReg5-Windows-with-R.zip ]; then
+            cp dist/web/CanReg5-Windows-with-R.zip release-assets/
+          fi
           cp dist/web/CanReg5-macOS.zip release-assets/
           cp dist/web/CanReg5-Linux.zip release-assets/
           cp dist/web/CanReg5-R-packages.zip release-assets/
@@ -87,4 +90,54 @@ jobs:
           generate_release_notes: true
           files: |
             release-assets/*
+
+  build-windows-r:
+    name: Build Windows Release with Bundled R
+    runs-on: windows-latest
+    needs: build-and-release
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'zulu'
+          java-version: '8'
+
+      - name: Set up Node.js (for jDeploy)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Extract version from Git tag
+        id: version
+        shell: bash
+        run: |
+          TAG_NAME="${GITHUB_REF_NAME}"
+          VERSION="${TAG_NAME#v}"
+          echo "tag=${TAG_NAME}" >> "$GITHUB_OUTPUT"
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Sync version into appinfo.properties
+        shell: bash
+        run: |
+          sed -i "s/^program\.VERSION=.*/program.VERSION=${{ steps.version.outputs.version }}/" appinfo.properties
+
+      - name: Build Standalone R Runtime
+        shell: pwsh
+        run: |
+          ./scripts/build_r_bundle.ps1 -RVersion "4.3.3" -OutputDir "r-runtime"
+
+      - name: Build JAR and Package Windows with R Distribution
+        shell: cmd
+        run: |
+          ant jar
+
+      - name: Attach Windows with R Release Asset
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          files: |
+            dist/web/CanReg5-Windows-with-R.zip
 

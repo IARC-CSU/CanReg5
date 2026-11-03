@@ -172,176 +172,130 @@ canreg_args <- function(Args) {
 
 canreg_load_packages <- function(packages_list) { 
 
-
   sysName <- Sys.info()[['sysname']]
 
-  # timeStart<-Sys.time()
-
-
-  if (sysName == "Windows") {
+  if (exists("winProgressBar", mode = "function")) {
     pb <- winProgressBar(
-    title = "Download R packages",
-    label = "Initializing"
+      title = "Loading R packages",
+      label = "Initializing"
     )
-  } 
-
+  } else {
+    pb <- NULL
+  }
 
   if (getRversion() == '3.2.0') {
-     
-    stop("The table builder do not work with R '3.2.0', please install any version after '3.2.1'.\n '3.2.1' would do as well as '3.3.0' for instance.\n You can edit the Path in the 'Option' in CanReg.") 
-    
+    stop("The table builder does not work with R '3.2.0', please install any version after '3.2.1'.\n '3.2.1' or later is recommended.\n You can edit the Path in the 'Options' in CanReg.") 
   }
 
-  #add curl to loading source from github
-  # packages_list <- c("curl", packages_list)
-    
-  dir.create(file.path(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5")),recursive = TRUE)
-  .libPaths(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5"))
+  user_lib <- file.path(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5"))
+  if (!dir.exists(user_lib)) {
+    dir.create(user_lib, recursive = TRUE, showWarnings = FALSE)
+  }
 
-  list_installed_packages <- installed.packages()[,"Package"]
-  missing_packages <- packages_list[!(packages_list %in% list_installed_packages)]
-
-  #managing installing package for old R version. 
-  if (getRversion() < '3.2.0') {
-    utils::setInternet2(TRUE)
-    if (sysName == "Windows") {
-      options(download.file.method = "internal")
-    } else if (sysName == "Linux") {
-      options(download.file.method = "wget")
-    } else if (sysName == "Darwin") {
-      options(download.file.method = "curl")
+  # Add bundled library locations if present
+  bundled_libs <- c(
+    file.path(script.basename, "r-packages", "library"),
+    file.path(script.basename, "r-installation", "library"),
+    file.path(dirname(script.basename), "r-packages", "library")
+  )
+  active_libs <- c(user_lib)
+  for (bl in bundled_libs) {
+    if (dir.exists(bl)) {
+      active_libs <- c(active_libs, bl)
     }
-  } else if (getRversion() < '3.3.0') {
-    if (sysName == "Windows") {
-      options(download.file.method = "wininet")
-    } else {
-      options(download.file.method = "libcurl")
+  }
+  .libPaths(unique(c(active_libs, .libPaths())))
+
+  # Fast check: are all required packages already available?
+  missing_packages <- c()
+  for (pkg in packages_list) {
+    if (!requireNamespace(pkg, quietly = TRUE)) {
+      missing_packages <- c(missing_packages, pkg)
     }
   }
 
+  # Fast path: all packages are available, load immediately without network
+  if (length(missing_packages) == 0) {
+    packages_to_load <- unique(c(packages_list, "grid"))
+    for (i in seq_along(packages_to_load)) {
+      if (exists("canreg_progress", mode = "function")) {
+        canreg_progress(pb, i / (length(packages_to_load) + 1), "Loading R packages", sprintf("Loading package - %s", packages_to_load[i]))
+      } else if (sysName == "Windows" && exists("setWinProgressBar", mode = "function")) {
+        setWinProgressBar(pb, value = i / (length(packages_to_load) + 1), label = sprintf("Loading package - %s", packages_to_load[i]))
+      }
+      suppressPackageStartupMessages(require(packages_to_load[i], character.only = TRUE, quietly = TRUE))
+    }
+    if (exists("canreg_progress", mode = "function")) {
+      canreg_progress(pb, 1, "Loading R packages", "Done")
+    } else if (sysName == "Windows" && exists("setWinProgressBar", mode = "function")) {
+      setWinProgressBar(pb, 1, title = "Loading R packages", label = "Done")
+    }
+    if (!is.null(pb)) {
+      try(close(pb), silent = TRUE)
+    }
+    return(invisible(TRUE))
+  }
+
+  # Slow path: missing packages need to be installed from CRAN
+  # First verify internet connectivity
+  has_internet <- FALSE
+  try({
+    con <- url("https://cran.r-project.org", open = "rb", timeout = 5)
+    close(con)
+    has_internet <- TRUE
+  }, silent = TRUE)
+
+  if (!has_internet) {
+    if (!is.null(pb)) {
+      try(close(pb), silent = TRUE)
+    }
+    stop(paste0(
+      "Missing required R package(s): ", paste(missing_packages, collapse = ", "), ".\n",
+      "No internet connection to CRAN is available to download them automatically.\n",
+      "Please connect to the internet, install the packages, or use the CanReg5 bundle with R included."
+    ))
+  }
+
+  # Online installation for missing packages
   old.repos <- getOption("repos") 
-  on.exit(options(repos = old.repos)) #this resets the repos option when the function exits 
+  on.exit(options(repos = old.repos))
   new.repos <- old.repos
-
   new.repos["CRAN"] <- "https://cran.r-project.org"
-  options(repos = new.repos) 
-
-  if (!"ggplot2" %in% missing_packages) {
-    if (packageVersion("ggplot2") < "2.2.0") {
-      missing_packages <- c(missing_packages,"ggplot2" )
-    }
-  }
-
-  if (!"data.table" %in% missing_packages) {
-    if (packageVersion("data.table") < "1.9.6") {
-      missing_packages <- c(missing_packages,"data.table" )
-    }
-  }
-
-  if (!"scales" %in% missing_packages) {
-    if (packageVersion("scales") < "0.4.1") {
-      missing_packages <- c(missing_packages,"scales" )
-    }
-  }
-
-  if (!"officer" %in% missing_packages) {
-    if (packageVersion("officer") < "0.2.2") {
-      missing_packages <- c(missing_packages,"officer" )
-    }
-  }
-
-  if (!"flextable" %in% missing_packages) {
-    if (packageVersion("flextable") < "0.5.2") {
-      missing_packages <- c(missing_packages,"flextable" )
-    }
-  }
-
-  #to avoid package from source which need compilation.
-  if (sysName == "Windows") {
-    options(pkgType="win.binary") 
-  }
-
-  missing_packages <- unique(missing_packages)
-
-  if (!"gtools" %in% list_installed_packages) {
-    install.packages("gtools", dependencies=  c("Depends", "Imports", "LinkingTo"), quiet = TRUE)
-  }
-
-  require("gtools", character.only = TRUE)
-
-
-  if(length(missing_packages) > 0 ) {
-
-    all_pck <- getDependencies(missing_packages, installed=FALSE, available=TRUE)
-    missing_packages <- c(missing_packages, all_pck)
-
-    for (i in seq_along(missing_packages)) {
-
-      if (sysName == "Windows") {
-        setWinProgressBar(
-          pb, 
-          value = i / (length(missing_packages) + 1),
-          label = sprintf("%s - (This might take a while...)", missing_packages[i])
-        )
-      }
-
-      install.packages(missing_packages[i], dependencies=  FALSE, quiet = TRUE)
-
-
-    }
-
-  }
-
-  # ensure all package dependencies are installed
-  if (sysName == "Windows") {
-    setWinProgressBar(pb, 0, label = "Ensuring package dependencies ...")
-  }
-  all_pck <- getDependencies(packages_list, installed=FALSE, available=TRUE)
-  missing_packages <- all_pck[!(all_pck %in% list_installed_packages)]
-
-  if(length(missing_packages) > 0 ) {
-
-    for (i in seq_along(missing_packages)) {
-
-      if (sysName == "Windows") {
-        setWinProgressBar(
-          pb, 
-          value = i / (length(missing_packages) + 1),
-          label = sprintf("%s - (I hope you are sitting comfortably...)", missing_packages[i])
-        )
-      }
-
-      install.packages(missing_packages[i], dependencies=  FALSE, quiet = TRUE)
-    }
-  }
-
+  options(repos = new.repos)
 
   if (sysName == "Windows") {
-    setWinProgressBar(pb, 0, title = "Loading R packages",label = "Initializing")
+    options(pkgType = "win.binary") 
   }
 
-  packages_list <- c(packages_list,"grid")
-
-
- 
-  for (i in seq_along(packages_list)) {
-
-    if (sysName == "Windows") {
-      setWinProgressBar(
-        pb, 
-        value = i / (length(packages_list) + 1),
-        label = sprintf("Loading package - %s", packages_list[i])
-      )
+  for (i in seq_along(missing_packages)) {
+    if (exists("canreg_progress", mode = "function")) {
+      canreg_progress(pb, i / (length(missing_packages) + 1), "Downloading R packages", sprintf("Installing %s...", missing_packages[i]))
+    } else if (sysName == "Windows" && exists("setWinProgressBar", mode = "function")) {
+      setWinProgressBar(pb, value = i / (length(missing_packages) + 1), label = sprintf("%s (Installing...)", missing_packages[i]))
     }
-
-    require(packages_list[i], character.only = TRUE)
-
+    try(install.packages(missing_packages[i], lib = user_lib, dependencies = TRUE, quiet = TRUE), silent = TRUE)
   }
 
-  if (sysName == "Windows") {
-    setWinProgressBar(pb, 1, title = "Loading R packages",label = "Done")
-    close(pb)
+  # Load all packages
+  packages_to_load <- unique(c(packages_list, "grid"))
+  for (i in seq_along(packages_to_load)) {
+    if (exists("canreg_progress", mode = "function")) {
+      canreg_progress(pb, i / (length(packages_to_load) + 1), "Loading R packages", sprintf("Loading package - %s", packages_to_load[i]))
+    } else if (sysName == "Windows" && exists("setWinProgressBar", mode = "function")) {
+      setWinProgressBar(pb, value = i / (length(packages_to_load) + 1), label = sprintf("Loading package - %s", packages_to_load[i]))
+    }
+    suppressPackageStartupMessages(require(packages_to_load[i], character.only = TRUE, quietly = TRUE))
   }
+
+  if (exists("canreg_progress", mode = "function")) {
+    canreg_progress(pb, 1, "Loading R packages", "Done")
+  } else if (sysName == "Windows" && exists("setWinProgressBar", mode = "function")) {
+    setWinProgressBar(pb, 1, title = "Loading R packages", label = "Done")
+  }
+  if (!is.null(pb)) {
+    try(close(pb), silent = TRUE)
+  }
+}
 
   # timeEnd<-Sys.time()
   # difference <- difftime(timeEnd, timeStart, units='mins')

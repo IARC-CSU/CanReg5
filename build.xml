@@ -136,6 +136,12 @@
             <zipfileset dir="jdeploy/installers" includes="*win*.exe"/>
         </zip>
 
+        <!-- Windows ZIP with bundled R (if r-runtime exists) -->
+        <condition property="hasRRuntime">
+            <available file="r-runtime" type="dir"/>
+        </condition>
+        <antcall target="-package-windows-with-r"/>
+
         <!-- macOS App Bundle (only if building on Mac) -->
         <condition property="isMac">
             <os family="mac"/>
@@ -172,11 +178,26 @@
         </zip>
     </target>
 
+    <target name="-package-windows-with-r" if="hasRRuntime">
+        <echo>Packaging CanReg5-Windows-with-R.zip (including bundled R runtime)...</echo>
+        <zip destfile="${dist.dir}/web/CanReg5-Windows-with-R.zip">
+            <zipfileset dir=".">
+                <patternset refid="base.files"/>
+            </zipfileset>
+            <zipfileset dir="conf/tables/r/r-packages" includes="*.tar.gz" prefix="conf/tables/r/r-packages"/>
+            <zipfileset dir="doc/CanReg5-Instructions" includes="CanReg5-Instructions.pdf" prefix="doc" erroronmissingdir="false"/>
+            <zipfileset dir="${dist.dir}" includes="CanReg.jar"/>
+            <zipfileset dir="${dist.dir}/lib" prefix="lib"/>
+            <zipfileset dir="jdeploy/installers" includes="*win*.exe"/>
+            <zipfileset dir="r-runtime" prefix="r-runtime"/>
+        </zip>
+    </target>
+
     <target name="-post-jar">
-        <exec executable="ruby" osfamily="unix" failonerror="false">
+        <exec executable="ruby" osfamily="unix" failonerror="false" failifexecutionfails="false">
             <arg value="update_version_number.rb"/>
         </exec>
-        <exec executable="cmd" osfamily="windows" failonerror="false">
+        <exec executable="cmd" osfamily="windows" failonerror="false" failifexecutionfails="false">
             <arg value="/c"/>
             <arg value="ruby"/>
             <arg value="update_version_number.rb"/>
@@ -186,7 +207,7 @@
         <antcall target="-package-zips"/>
         
         <echo>Building setup...</echo>
-        <exec executable="cmd" osfamily="windows" failonerror="false">
+        <exec executable="cmd" osfamily="windows" failonerror="false" failifexecutionfails="false">
             <arg value="/c"/>
             <arg value="inno-build.bat"/>
         </exec>
