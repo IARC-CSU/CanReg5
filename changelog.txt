@@ -6,7 +6,7 @@
 - Headless unit testing suite across core modules
 - Fix chronological date handling in age calculation
 
-## 5.00.45BETA1
+## 5.00.45
 - Holding database (BETA)
 - Ad-hoc analysis (BETA)
 - Improved person search perfomance
