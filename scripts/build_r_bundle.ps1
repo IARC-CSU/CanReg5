@@ -30,7 +30,7 @@ foreach ($Url in @($CurrentUrl, $OldUrl, $ArchiveUrl, $GenericUrl)) {
             break
         }
     } catch {
-        Write-Host "Failed downloading from $Url: $($_.Exception.Message)"
+        Write-Host "Failed downloading from ${Url} - $($_.Exception.Message)"
     }
 }
 
