@@ -15,7 +15,7 @@ if [ -f "appinfo.properties" ]; then
 elif [ -s "version.txt" ]; then
     APP_VERSION=$(tr -d '[:space:]' < "version.txt")
 fi
-APP_VERSION="${APP_VERSION:-5.00.45}"
+APP_VERSION="${APP_VERSION:-5.00.46}"
 
 echo "Cleaning old macOS App Bundle..."
 rm -rf "${APP_NAME}"

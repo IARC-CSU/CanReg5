@@ -1,6 +1,6 @@
 {
   "name": "canreg5",
-  "version": "5.0.0",
+  "version": "5.0.46",
   "description": "CanReg5 is a multi user, multi platform, open source tool to input, store, check and analyse cancer registry data.",
   "main": "index.js",
   "bin": {
