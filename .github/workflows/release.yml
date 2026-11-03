@@ -172,7 +172,7 @@ jobs:
       - name: Package Windows with R Zip Distribution
         shell: cmd
         run: |
-          ant -DhasRRuntime=true -package-windows-with-r
+          ant -DhasRRuntime=true package-windows-with-r
 
       - name: Prepare Windows Release Assets
         shell: pwsh

@@ -97,6 +97,16 @@
         </exec>
     </target>
 
+    <!-- Base Zip Configuration (shared across platforms) -->
+    <patternset id="base.files">
+        <include name="conf/**"/>
+        <exclude name="conf/tables/r/r-packages/*"/>
+        <include name="demo/**"/>
+        <include name="scripts/**"/>
+        <include name="changelog.txt"/>
+        <include name="changelog.html"/>
+    </patternset>
+
     <target name="-package-zips" depends="-build-jdeploy">
         <echo>Building platform-specific zip distributions...</echo>
         
@@ -110,17 +120,6 @@
         <zip destfile="${dist.dir}/web/CanReg5-R-packages.zip">
             <zipfileset dir="conf/tables/r/r-packages" prefix="conf/tables/r/r-packages"/>
         </zip>
-
-        <!-- 3. Base Zip Configuration (shared across platforms) -->
-        <!-- We use a patternset to share the base files across all platform ZIPs -->
-        <patternset id="base.files">
-            <include name="conf/**"/>
-            <exclude name="conf/tables/r/r-packages/*"/>
-            <include name="demo/**"/>
-            <include name="scripts/**"/>
-            <include name="changelog.txt"/>
-            <include name="changelog.html"/>
-        </patternset>
 
         <!-- 4. Platform ZIPs -->
         <!-- Windows ZIP -->
@@ -177,8 +176,14 @@
         </zip>
     </target>
 
+    <target name="package-windows-with-r" depends="init" description="Package CanReg5-Windows-with-R.zip">
+        <property name="hasRRuntime" value="true"/>
+        <antcall target="-package-windows-with-r"/>
+    </target>
+
     <target name="-package-windows-with-r" if="hasRRuntime">
         <echo>Packaging CanReg5-Windows-with-R.zip (including bundled R runtime)...</echo>
+        <mkdir dir="${dist.dir}/web"/>
         <zip destfile="${dist.dir}/web/CanReg5-Windows-with-R.zip">
             <zipfileset dir=".">
                 <patternset refid="base.files"/>
