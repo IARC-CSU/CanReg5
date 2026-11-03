@@ -5,17 +5,31 @@
 #define MyAppPublisher "IARC"
 #define MyAppURL "http://www.iacr.com.fr"
 #define MyAppExeName "CanReg.exe"
-#define CanReg5Dir "C:\Users\ervikm\Documents\GitHub\CanReg5"
-#define RDir "C:\Program Files\R"
-#define Rversion "R-4.2.1"
-#include "..\..\inno-settings.txt"
+
+#ifndef CanReg5Dir
+  #define CanReg5Dir "..\.."
+#endif
+
+#ifndef MyAppVersion
+  #if FileExists(CanReg5Dir + "\inno-settings.txt")
+    #include CanReg5Dir + "\inno-settings.txt"
+  #else
+    #define MyAppVersion "5.00.46BETA1"
+  #endif
+#endif
+
+#ifndef RSourceDir
+  #define RSourceDir CanReg5Dir + "\r-runtime"
+#endif
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{B8398F6C-55C8-40CC-9053-DBBA21741E39}
+#ifdef SignWithMsSign
 SignTool=MsSign $f
+#endif
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
@@ -32,6 +46,10 @@ AllowNoIcons=yes
 OutputBaseFilename=CanReg5-with-R-Setup
 Compression=lzma
 SolidCompression=yes
+; Specify that admin privileges are required by default
+PrivilegesRequired=admin
+; Allow overrides from the dialog
+PrivilegesRequiredOverridesAllowed=dialog
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -47,15 +65,16 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 Source: "{#CanReg5Dir}\CanReg.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#CanReg5Dir}\conf\*"; DestDir: "{app}\conf"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#CanReg5Dir}\conf\*"; Excludes: "r-packages\*.zip,r-packages\*.R" ; DestDir: "{app}\conf"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#CanReg5Dir}\demo\*"; DestDir: "{app}\demo"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#CanReg5Dir}\scripts\*"; DestDir: "{app}\scripts"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#CanReg5Dir}\dist\lib\*"; DestDir: "{app}\lib"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#CanReg5Dir}\dist\CanReg.jar"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#CanReg5Dir}\dist\README.TXT"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#CanReg5Dir}\dist\README.TXT"; DestDir: "{app}"; Flags: ignoreversion skipifsourcedoesntexist
 Source: "{#CanReg5Dir}\changelog.txt"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#CanReg5Dir}\doc\CanReg5-Instructions\CanReg5-Instructions.pdf"; DestDir: "{app}\doc"; Flags: ignoreversion
-Source: "{#RDir}\{#Rversion}\*"; DestDir: "{app}\conf\tables\r\r-installation\{#Rversion}"; Flags: ignoreversion recursesubdirs createallsubdirs  
+Source: "{#CanReg5Dir}\changelog.html"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#CanReg5Dir}\doc\CanReg5-Instructions\CanReg5-Instructions.pdf"; DestDir: "{app}\doc"; Flags: ignoreversion skipifsourcedoesntexist
+Source: "{#RSourceDir}\*"; DestDir: "{app}\r-runtime"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; Source: "{#CanReg5Dir}\conf\tables\r\r-packages\*"; DestDir: "{app}\conf\tables\r\r-packages"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 

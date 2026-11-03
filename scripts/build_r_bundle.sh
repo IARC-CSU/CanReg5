@@ -40,3 +40,4 @@ else
     echo "  brew install innoextract (macOS) or apt-get install innoextract (Ubuntu)"
     echo "Or run scripts/build_r_bundle.ps1 on Windows / Windows GitHub runner."
 fi
+

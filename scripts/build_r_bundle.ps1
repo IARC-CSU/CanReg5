@@ -60,3 +60,4 @@ if (Test-Path $OutputDir) {
 Copy-Item -Recurse -Force $TempInstallDir $OutputDir
 
 Write-Host "=== Portable R Bundle successfully created in $OutputDir ==="
+

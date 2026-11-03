@@ -91,7 +91,7 @@
     </target>
     <target name="-build-jdeploy">
         <echo>Generating native distributions using jDeploy...</echo>
-        <exec executable="npx" failonerror="true">
+        <exec executable="npx" failonerror="false" failifexecutionfails="false">
             <arg value="jdeploy"/>
             <arg value="package"/>
         </exec>
@@ -133,7 +133,7 @@
             <zipfileset dir="doc/CanReg5-Instructions" includes="CanReg5-Instructions.pdf" prefix="doc" erroronmissingdir="false"/>
             <zipfileset dir="${dist.dir}" includes="CanReg.jar"/>
             <zipfileset dir="${dist.dir}/lib" prefix="lib"/>
-            <zipfileset dir="jdeploy/installers" includes="*win*.exe"/>
+            <zipfileset dir="jdeploy/installers" includes="*win*.exe" erroronmissingdir="false"/>
         </zip>
 
         <!-- Windows ZIP with bundled R (if r-runtime exists) -->
@@ -157,7 +157,7 @@
             <zipfileset dir="doc/CanReg5-Instructions" includes="CanReg5-Instructions.pdf" prefix="doc" erroronmissingdir="false"/>
             <zipfileset dir="${dist.dir}" includes="CanReg.jar"/>
             <zipfileset dir="${dist.dir}/lib" prefix="lib"/>
-            <zipfileset dir="jdeploy/installers" includes="*linux*"/>
+            <zipfileset dir="jdeploy/installers" includes="*linux*" erroronmissingdir="false"/>
         </zip>
 
         <!-- 5. Copy metadata files to web directory -->
@@ -188,7 +188,7 @@
             <zipfileset dir="doc/CanReg5-Instructions" includes="CanReg5-Instructions.pdf" prefix="doc" erroronmissingdir="false"/>
             <zipfileset dir="${dist.dir}" includes="CanReg.jar"/>
             <zipfileset dir="${dist.dir}/lib" prefix="lib"/>
-            <zipfileset dir="jdeploy/installers" includes="*win*.exe"/>
+            <zipfileset dir="jdeploy/installers" includes="*win*.exe" erroronmissingdir="false"/>
             <zipfileset dir="r-runtime" prefix="r-runtime"/>
         </zip>
     </target>

@@ -75,7 +75,7 @@ jobs:
           cp dist/web/CanReg5-R-packages.zip release-assets/
           cp dist/translations.zip release-assets/
           for f in jdeploy/installers/*; do
-            if [ -f "$f" ]; then
+            if [ -f "$f" ] && [[ "$f" != *win* ]]; then
               cp "$f" release-assets/
             fi
           done
@@ -91,8 +91,8 @@ jobs:
           files: |
             release-assets/*
 
-  build-windows-r:
-    name: Build Windows Release with Bundled R
+  build-windows-installers:
+    name: Build Windows Native Installers (Inno Setup)
     runs-on: windows-latest
     needs: build-and-release
     steps:
@@ -105,10 +105,11 @@ jobs:
           distribution: 'zulu'
           java-version: '8'
 
-      - name: Set up Node.js (for jDeploy)
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
+      - name: Install Inno Setup
+        shell: pwsh
+        run: |
+          choco install innosetup --no-progress
+          echo "C:\Program Files (x86)\Inno Setup 6" >> $env:GITHUB_PATH
 
       - name: Extract version from Git tag
         id: version
@@ -119,25 +120,54 @@ jobs:
           echo "tag=${TAG_NAME}" >> "$GITHUB_OUTPUT"
           echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
 
-      - name: Sync version into appinfo.properties
+      - name: Sync version into appinfo.properties & inno-settings.txt
         shell: bash
         run: |
           sed -i "s/^program\.VERSION=.*/program.VERSION=${{ steps.version.outputs.version }}/" appinfo.properties
+          echo "#define MyAppVersion \"${{ steps.version.outputs.version }}\"" > inno-settings.txt
+
+      - name: Build CanReg5 JAR and Distribution
+        shell: cmd
+        run: |
+          ant jar
+
+      - name: Build Standard Windows Installer (Inno Setup)
+        shell: cmd
+        run: |
+          ISCC.exe /DCanReg5Dir=. helpers\InnoSetup\CanReg5-InnoSetup.iss
 
       - name: Build Standalone R Runtime
         shell: pwsh
         run: |
           ./scripts/build_r_bundle.ps1 -RVersion "4.3.3" -OutputDir "r-runtime"
 
-      - name: Build JAR and Package Windows with R Distribution
+      - name: Build Windows with R Installer (Inno Setup)
         shell: cmd
         run: |
-          ant jar
+          ISCC.exe /DCanReg5Dir=. /DRSourceDir=r-runtime helpers\InnoSetup\CanReg5-with-R-InnoSetup.iss
 
-      - name: Attach Windows with R Release Asset
+      - name: Package Windows with R Zip Distribution
+        shell: cmd
+        run: |
+          ant -DhasRRuntime=true -package-windows-with-r
+
+      - name: Prepare Windows Release Assets
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path windows-assets
+          Compress-Archive -Path dist\CanReg5-Setup.exe -DestinationPath windows-assets\CanReg5-Setup.zip -Force
+          Compress-Archive -Path dist\CanReg5-with-R-Setup.exe -DestinationPath windows-assets\CanReg5-with-R-Setup.zip -Force
+          Copy-Item dist\CanReg5-Setup.exe windows-assets\
+          Copy-Item dist\CanReg5-with-R-Setup.exe windows-assets\
+          if (Test-Path dist\web\CanReg5-Windows-with-R.zip) {
+            Copy-Item dist\web\CanReg5-Windows-with-R.zip windows-assets\
+          }
+          Get-ChildItem -Path windows-assets
+
+      - name: Attach Windows Release Assets
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.version.outputs.tag }}
           files: |
-            dist/web/CanReg5-Windows-with-R.zip
+            windows-assets/*
 
