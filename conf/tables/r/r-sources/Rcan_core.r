@@ -1,6 +1,6 @@
 ## version : 1.13
 
-canreg_error_log <- function(e,filename,out,Args,inc,pop) {
+canreg_error_log <- function(e, filename = NULL, out = NULL, Args = NULL, inc = NULL, pop = NULL) {
 
   if (exists("pb") && !is.null(pb)) {
     try(close(pb), silent = TRUE)
@@ -14,7 +14,7 @@ canreg_error_log <- function(e,filename,out,Args,inc,pop) {
   sc <- "canreg"
   label <- "error"
   
-  if (!missing(Args) && length(Args) > 0) {
+  if (!missing(Args) && !is.null(Args) && length(Args) > 0) {
     for (i in 1:length(Args)) {
       temp <- Args[i]
       pos <- regexpr("=",temp)[1]
@@ -34,83 +34,94 @@ canreg_error_log <- function(e,filename,out,Args,inc,pop) {
 
   cat(paste0("Error in CanReg5 R analysis: ", conditionMessage(e), "\n"), file = stderr())
   
-
-  
   #create log error file name 
   log_name <- paste0(gsub("\\W","", label),"_",sc,"_",gsub("\\D","", Sys.time()),"_error_log.txt") 
 
   #find path and create log file
-  pos <- max(gregexpr("\\", out, fixed=TRUE)[[1]])
-  path <- substr(out,start=1, stop=pos)
-  log_file <- paste0(path, log_name)
-  error_connection <- file(log_file,open="wt")
-  sink(error_connection)
-  sink(error_connection, type="message")
-  
-  #print error
-  cat(paste0("An error occured! please send the log file: `",log_file,"` to canreg@iarc.fr.\n"))
-  cat("The second part of this log (After '----------------------') contains your aggregated data, if you do not won't to share the aggregated data, you can delete this part.\n\n")
-  print(paste("MY_ERROR:  ",e))
-  cat("\n")
-  
-  #print argument from canreg
-  print(Args)
-  cat("\n")
-  
-  #print environment
-  print(ls.str())
-  cat("\n")
-  
-  #print R version and package load
-  print(sessionInfo())
-  cat("\n")
-
-  #print table builder version 
-  print(canreg_get_table_builder_version())
-  cat("\n")
-  
-  
-  #print java information if windows
-  if (Sys.info()[['sysname']] == "Windows") {
-    print(canreg_find_java())
+  path <- tempdir()
+  if (!missing(out) && !is.null(out) && nzchar(out)) {
+    if (file.exists(dirname(out))) {
+      path <- dirname(out)
+    } else {
+      pos <- max(gregexpr("[/\\\\]", out)[[1]])
+      if (pos > 0) {
+        p <- substr(out, start = 1, stop = pos)
+        if (dir.exists(p)) path <- p
+      }
+    }
   }
-  
-  #print missing package
+  log_file <- file.path(path, log_name)
+  error_connection <- tryCatch(file(log_file, open="wt"), error = function(err) NULL)
+  if (!is.null(error_connection)) {
+    sink(error_connection)
+    sink(error_connection, type="message")
+    
+    #print error
+    cat(paste0("An error occured! please send the log file: `",log_file,"` to canreg@iarc.fr.\n"))
+    cat("The second part of this log (After '----------------------') contains your aggregated data, if you do not won't to share the aggregated data, you can delete this part.\n\n")
+    print(paste("MY_ERROR:  ", conditionMessage(e)))
+    cat("\n")
+    
+    #print argument from canreg
+    if (!missing(Args) && !is.null(Args)) {
+      print(Args)
+      cat("\n")
+    }
+    
+    #print environment
+    print(ls.str())
+    cat("\n")
+    
+    #print R version and package load
+    print(sessionInfo())
+    cat("\n")
 
-  packages_list <- c("data.table", "ggplot2", "gridExtra", "scales", "Cairo","officer","flextable", "zip", "bmp", "jpeg", "png","shiny.i18n", "Rcan")
-
-  missing_packages <- packages_list[!(packages_list %in% installed.packages()[,"Package"])]  
-  if (length(missing_packages) == 0) {
-    print("No missing package")
-  } else {
-    print(missing_packages)
+    #print table builder version 
+    if (exists("canreg_get_table_builder_version", mode = "function")) {
+      print(canreg_get_table_builder_version())
+      cat("\n")
+    }
+    
+    #print java information if windows
+    if (Sys.info()[['sysname']] == "Windows" && exists("canreg_find_java", mode = "function")) {
+      print(canreg_find_java())
+    }
+    
+    #print missing package
+    packages_list <- c("data.table", "ggplot2", "gridExtra", "scales", "Cairo","officer","flextable", "zip", "bmp", "jpeg", "png","shiny.i18n", "Rcan")
+    missing_packages <- packages_list[!(packages_list %in% installed.packages()[,"Package"])]  
+    if (length(missing_packages) == 0) {
+      print("No missing package")
+    } else {
+      print(missing_packages)
+    }
+    cat("\n")
+    
+    #test loading package
+    lapply(packages_list, require, character.only = TRUE)
+    cat("\n")
+    
+    print("----------------------")
+    cat("\n")
+    #print incidence / population file (r format)
+    if (!missing(inc) && !is.null(inc) && file.exists(inc)) {
+      cat("Incidence file\n")
+      try(dput(read.table(inc, header=TRUE, sep="\t")), silent = TRUE)
+      cat("\n")
+    }
+    if (!missing(pop) && !is.null(pop) && file.exists(pop)) {
+      cat("population file\n")
+      try(dput(read.table(pop, header=TRUE, sep="\t")), silent = TRUE)
+      cat("\n")
+    }
+    
+    #close log_file and send to canreg
+    sink(type="message")
+    sink()
+    close(error_connection)
+    
+    cat(paste("-outFile",log_file,sep=":"))
   }
-  cat("\n")
-  
-  #test loading package
-  lapply(packages_list, require, character.only = TRUE)
-  cat("\n")
-  
-  print("----------------------")
-  cat("\n")
-  #print incidence / population file (r format)
-  cat("Incidence file\n")
-  dput(read.table(inc, header=TRUE, sep="\t"))
-  cat("\n")
-  cat("population file\n")
-  dput(read.table(pop, header=TRUE, sep="\t"))
-  cat("\n")
-  
-  #close log_file and send to canreg
-  sink(type="message")
-  sink()
-  close(error_connection)
-  
-  
-  
-  
-  cat(paste("-outFile",log_file,sep=":"))
-  
 }
 
 
@@ -137,12 +148,12 @@ canreg_args <- function(Args) {
     } 
     else {
       varname <- substring(temp,2,pos-1)
-      assign(varname,substring(temp, pos+1)) 
-      if (suppressWarnings(!is.na(as.numeric(get(varname))))){
-        assign(varname, as.numeric(get(varname)))
+      val <- substring(temp, pos+1)
+      if (suppressWarnings(!is.na(as.numeric(val)))){
+        val <- as.numeric(val)
       }
+      arg_list[[varname]] <- val
     }
-    arg_list[[varname]] <- get(varname)
   }
   
   ## Get the list of languages from the folder of translations...
