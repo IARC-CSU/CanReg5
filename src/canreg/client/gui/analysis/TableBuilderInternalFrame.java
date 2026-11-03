@@ -26,6 +26,8 @@
 package canreg.client.gui.analysis;
 
 import canreg.client.analysis.TableBuilderInterface.FileTypes;
+import canreg.client.analysis.ProgressListener;
+import canreg.client.gui.tools.WaitFrame;
 import canreg.client.gui.tools.globalpopup.TechnicalError;
 import canreg.common.cachingtableapi.DistributedTableDescription;
 import canreg.client.CanRegClientApp;
@@ -74,12 +76,15 @@ import javax.imageio.ImageIO;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
+import javax.swing.JDesktopPane;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jdesktop.application.Action;
+import org.jdesktop.application.Task;
 import org.jfree.chart.JFreeChart;
 
 /**
@@ -1166,8 +1171,6 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
         }
 
         Set<DatabaseVariablesListElement> variables = new LinkedHashSet<>();
-        DistributedTableDescription tableDatadescription;
-        JChartTableBuilderInterface chartBuilder;
 
         if (tableBuilder == null) {
             JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("TABLE_TYPE_NOT_YET_IMPLEMENTED"), java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("TABLE_TYPE_NOT_YET_IMPLEMENTED"), JOptionPane.ERROR_MESSAGE);
@@ -1212,8 +1215,6 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
                         return;
                     }
                 }
-
-                setCursor(hourglassCursor);
 
                 int i = 0;
                 String populationFilterString = "";
@@ -1266,102 +1267,224 @@ public class TableBuilderInternalFrame extends javax.swing.JInternalFrame {
 
                 filter.setQueryType(DatabaseFilter.QueryType.FREQUENCIES_BY_YEAR);
                 filter.setDatabaseVariables(variables);
-                DistributedTableDataSourceClient tableDataSource;
-                Object[][] incidenceData = null;
-                
-                try {
-                    tableDatadescription = canreg.client.CanRegClientApp.getApplication().getDistributedTableDescription(filter, tableName, null);
-                    tableDataSource = new DistributedTableDataSourceClient(tableDatadescription, null);
-                    if (tableDatadescription.getRowCount() > 0) {
-                        incidenceData = tableDataSource.retrieveRows(0, tableDatadescription.getRowCount());
-                    } else {
-                        // display error - no lines
-                        JOptionPane.showMessageDialog(this,
-                                "No incidence data available correspondign to the current filter, period and population.",
-                                "No incidence data",
-                                JOptionPane.ERROR_MESSAGE);
-                    }
 
-                    // Build the table(s)
-                    LinkedList<String> filesGenerated
-                            = tableBuilder.buildTable(
-                                    heading,
-                                    fileName,
-                                    startYear,
-                                    endYear,
-                                    incidenceData,
-                                    populations,
-                                    standardPopulations,
-                                    configFields,
-                                    tble.getEngineParameters(),
-                                    filetype, 
-                                    language
-                            );
-
-                    if (filetype != FileTypes.jchart) {
-
-                        String filesGeneratedList = new String();
-                        filesGeneratedList = filesGenerated.stream().map((fileN) -> "\n" + fileN).reduce(filesGeneratedList, String::concat);
-
-                        setCursor(normalCursor);
-
-                        // Opening the resulting files if the list is not empty...
-                        if (filesGenerated.isEmpty()) {
-                            if (filetype == FileTypes.browser) {
-                                // TODO write proper message
-                                JOptionPane.showMessageDialog(this,
-                                        "Your browser will now launch. Please wait.", // (If not, please open a web browser and go to: http://127.0.0.1:5676/ )",
-                                        java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("TABLE(S)_BUILT."),
-                                        JOptionPane.INFORMATION_MESSAGE);
-                            } else {
-                                JOptionPane.showMessageDialog(this,
-                                        "Please use \"View work files\" in the \"File\"-menu to open them",
-                                        java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("TABLE(S)_BUILT."),
-                                        JOptionPane.INFORMATION_MESSAGE);
-                            }
-                        } else {
-                            JOptionPane.showMessageDialog(this,
-                                    filesGeneratedList,
-                                    java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("TABLE(S)_BUILT."),
-                                    JOptionPane.INFORMATION_MESSAGE);
-                            filesGenerated.stream().filter((resultFileName) -> (new File(resultFileName).exists())).forEachOrdered((resultFileName) -> {
-                                try {
-                                    canreg.common.Tools.openFile(resultFileName);
-                                } catch (IOException ex) {
-                                    JOptionPane.showMessageDialog(this, "Unable to open: " + resultFileName + "\n" + ex.getLocalizedMessage());
-                                    LOGGER.log(Level.SEVERE, null, ex);
-                                }
-                            });
-                        }
-                    } else {
-                        chartBuilder = (JChartTableBuilderInterface) tableBuilder;
-                        JFreeChart[] charts = chartBuilder.getCharts();
-                        for (JFreeChart chart : charts) {
-                            JChartViewerInternalFrame chartViewerInternalFrame = new JChartViewerInternalFrame();
-                            chartViewerInternalFrame.setChart(chart);
-                            CanRegClientView.showAndPositionInternalFrame(
-                                    CanRegClientApp.getApplication().getDesktopPane(),
-                                    chartViewerInternalFrame);
-                        }
-                        setCursor(normalCursor);
-                    }
-
-                } catch (SQLException ex) {
-                    setCursor(normalCursor);
-                    JOptionPane.showMessageDialog(this, "Something wrong with the SQL query: \n" + ex.getLocalizedMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                    LOGGER.log(Level.SEVERE, null, ex);
-                } catch (RemoteException | SecurityException | NotCompatibleDataException | DistributedTableDescriptionException | UnknownTableException ex) {
-                    LOGGER.log(Level.SEVERE, null, ex);
-                } catch (TableErrorException ex) {
-                    setCursor(normalCursor);
-                    LOGGER.log(Level.SEVERE, null, ex);
-                    JOptionPane.showMessageDialog(
-                            this, "Something went wrong while building the table: \n" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                } finally {
-                    setCursor(normalCursor);
-                }
+                BuildTableTask task = new BuildTableTask(
+                        CanRegClientApp.getApplication(),
+                        tableBuilder,
+                        filter,
+                        tableName,
+                        heading,
+                        fileName,
+                        startYear,
+                        endYear,
+                        populations,
+                        standardPopulations,
+                        configFields,
+                        tble.getEngineParameters(),
+                        filetype,
+                        language
+                );
+                CanRegClientApp.getApplication().getContext().getTaskService().execute(task);
             } else {
                 JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("POPULATION_SET_NOT_COMPATIBLE"), java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("NO_TABLES_BUILT"), JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    private class BuildTableTask extends Task<LinkedList<String>, Void> {
+
+        private final WaitFrame waitFrame;
+        private final TableBuilderInterface builder;
+        private final DatabaseFilter filter;
+        private final String tableName;
+        private final String heading;
+        private final String fileName;
+        private final int startYear;
+        private final int endYear;
+        private final PopulationDataset[] populations;
+        private final PopulationDataset[] standardPopulations;
+        private final LinkedList<ConfigFields> configFields;
+        private final String[] engineParameters;
+        private final FileTypes filetype;
+        private final String language;
+
+        public BuildTableTask(
+                org.jdesktop.application.Application app,
+                TableBuilderInterface builder,
+                DatabaseFilter filter,
+                String tableName,
+                String heading,
+                String fileName,
+                int startYear,
+                int endYear,
+                PopulationDataset[] populations,
+                PopulationDataset[] standardPopulations,
+                LinkedList<ConfigFields> configFields,
+                String[] engineParameters,
+                FileTypes filetype,
+                String language) {
+            super(app);
+            this.builder = builder;
+            this.filter = filter;
+            this.tableName = tableName;
+            this.heading = heading;
+            this.fileName = fileName;
+            this.startYear = startYear;
+            this.endYear = endYear;
+            this.populations = populations;
+            this.standardPopulations = standardPopulations;
+            this.configFields = configFields;
+            this.engineParameters = engineParameters;
+            this.filetype = filetype;
+            this.language = language;
+
+            setCursor(hourglassCursor);
+            waitFrame = new WaitFrame();
+            waitFrame.setLabel("Building table... Please wait...");
+            waitFrame.setProgress(0);
+            waitFrame.setIndeterminate(true);
+            JDesktopPane desktopPane = CanRegClientApp.getApplication().getDesktopPane();
+            if (desktopPane != null) {
+                desktopPane.add(waitFrame, javax.swing.JLayeredPane.POPUP_LAYER);
+                waitFrame.setVisible(true);
+                waitFrame.setLocation((desktopPane.getWidth() - waitFrame.getWidth()) / 2, (desktopPane.getHeight() - waitFrame.getHeight()) / 2);
+            }
+
+            builder.setProgressListener(new ProgressListener() {
+                @Override
+                public void onProgress(final int percentage, final String message) {
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (waitFrame != null) {
+                                if (percentage < 0) {
+                                    waitFrame.setIndeterminate(true);
+                                } else {
+                                    waitFrame.setIndeterminate(false);
+                                    waitFrame.setProgress(percentage);
+                                }
+                                if (message != null && !message.isEmpty()) {
+                                    waitFrame.setLabel(message);
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        @Override
+        protected LinkedList<String> doInBackground() throws Exception {
+            DistributedTableDescription tableDatadescription = CanRegClientApp.getApplication().getDistributedTableDescription(filter, tableName, null);
+            if (tableDatadescription.getRowCount() <= 0) {
+                return null;
+            }
+            DistributedTableDataSourceClient tableDataSource = new DistributedTableDataSourceClient(tableDatadescription, null);
+            Object[][] incidenceData = tableDataSource.retrieveRows(0, tableDatadescription.getRowCount());
+
+            return builder.buildTable(
+                    heading,
+                    fileName,
+                    startYear,
+                    endYear,
+                    incidenceData,
+                    populations,
+                    standardPopulations,
+                    configFields,
+                    engineParameters,
+                    filetype,
+                    language
+            );
+        }
+
+        @Override
+        protected void succeeded(LinkedList<String> filesGenerated) {
+            if (filesGenerated == null) {
+                JOptionPane.showMessageDialog(TableBuilderInternalFrame.this,
+                        "No incidence data available corresponding to the current filter, period and population.",
+                        "No incidence data",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if (filetype != FileTypes.jchart) {
+                String filesGeneratedList = new String();
+                filesGeneratedList = filesGenerated.stream().map((fileN) -> "\n" + fileN).reduce(filesGeneratedList, String::concat);
+
+                if (filesGenerated.isEmpty()) {
+                    if (filetype == FileTypes.browser) {
+                        JOptionPane.showMessageDialog(TableBuilderInternalFrame.this,
+                                "Your browser will now launch. Please wait.",
+                                java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("TABLE(S)_BUILT."),
+                                JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(TableBuilderInternalFrame.this,
+                                "Please use \"View work files\" in the \"File\"-menu to open them",
+                                java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("TABLE(S)_BUILT."),
+                                JOptionPane.INFORMATION_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(TableBuilderInternalFrame.this,
+                            filesGeneratedList,
+                            java.util.ResourceBundle.getBundle("canreg/client/gui/analysis/resources/TableBuilderInternalFrame").getString("TABLE(S)_BUILT."),
+                            JOptionPane.INFORMATION_MESSAGE);
+                    filesGenerated.stream().filter((resultFileName) -> (new File(resultFileName).exists())).forEachOrdered((resultFileName) -> {
+                        try {
+                            canreg.common.Tools.openFile(resultFileName);
+                        } catch (IOException ex) {
+                            JOptionPane.showMessageDialog(TableBuilderInternalFrame.this, "Unable to open: " + resultFileName + "\n" + ex.getLocalizedMessage());
+                            LOGGER.log(Level.SEVERE, null, ex);
+                        }
+                    });
+                }
+            } else {
+                JChartTableBuilderInterface chartBuilder = (JChartTableBuilderInterface) builder;
+                JFreeChart[] charts = chartBuilder.getCharts();
+                for (JFreeChart chart : charts) {
+                    JChartViewerInternalFrame chartViewerInternalFrame = new JChartViewerInternalFrame();
+                    chartViewerInternalFrame.setChart(chart);
+                    CanRegClientView.showAndPositionInternalFrame(
+                            CanRegClientApp.getApplication().getDesktopPane(),
+                            chartViewerInternalFrame);
+                }
+            }
+        }
+
+        @Override
+        protected void failed(Throwable cause) {
+            LOGGER.log(Level.SEVERE, null, cause);
+            if (cause instanceof SQLException) {
+                JOptionPane.showMessageDialog(TableBuilderInternalFrame.this,
+                        "Something wrong with the SQL query: \n" + cause.getLocalizedMessage(),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            } else if (cause instanceof TableErrorException) {
+                JOptionPane.showMessageDialog(TableBuilderInternalFrame.this,
+                        "Something went wrong while building the table: \n" + cause.getMessage(),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            } else {
+                new TechnicalError().errorDialog();
+            }
+        }
+
+        @Override
+        protected void interrupted(InterruptedException e) {
+            LOGGER.log(Level.INFO, "Table generation interrupted", e);
+        }
+
+        @Override
+        protected void finished() {
+            setCursor(normalCursor);
+            builder.setProgressListener(null);
+            if (waitFrame != null) {
+                waitFrame.setVisible(false);
+                waitFrame.dispose();
+                JDesktopPane desktopPane = CanRegClientApp.getApplication().getDesktopPane();
+                if (desktopPane != null) {
+                    desktopPane.remove(waitFrame);
+                    desktopPane.repaint();
+                }
             }
         }
     }

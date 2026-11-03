@@ -1,5 +1,35 @@
 ## version : 1.12
 
+canreg_progress <- function(pb, value, title = NULL, label = NULL, detail = NULL) {
+  pct <- as.integer(round(value * (if (value <= 1) 100 else 1)))
+  msg <- if (!is.null(label)) label else (if (!is.null(detail)) detail else (if (!is.null(title)) title else ""))
+  cat(paste0("\n-progress:", pct, ":", msg, "\n"))
+  flush.console()
+  if (exists("sysName") && sysName == "Windows" && !is.null(pb) && inherits(pb, "winProgressBar")) {
+    tryCatch({ utils::setWinProgressBar(pb, value, title = title, label = label) }, error = function(e) {})
+  }
+}
+
+if (!exists("winProgressBar", envir = .GlobalEnv) || Sys.info()[['sysname']] != "Windows") {
+  winProgressBar <- function(title = "Progress", label = "", min = 0, max = 1, initial = 0, width = 300) {
+    canreg_progress(NULL, initial, title = title, label = label)
+    structure(list(title = title, min = min, max = max), class = "canregProgressBar")
+  }
+}
+if (!exists("setWinProgressBar", envir = .GlobalEnv) || Sys.info()[['sysname']] != "Windows") {
+  setWinProgressBar <- function(pb, value, title = NULL, label = NULL, detail = NULL) {
+    canreg_progress(pb, value, title = title, label = label, detail = detail)
+  }
+}
+if (!exists("close.winProgressBar", envir = .GlobalEnv) || Sys.info()[['sysname']] != "Windows") {
+  close.canregProgressBar <- function(con, ...) {
+    canreg_progress(con, 1.0, label = "Done")
+  }
+  close.winProgressBar <- function(con, ...) {
+    canreg_progress(con, 1.0, label = "Done")
+  }
+}
+
 canreg_output_cat <- function(ft, filename,sex_graph=FALSE, list_graph=FALSE) {
   
   if (ft %in% c("png", "tiff", "svg") & sex_graph ) {
@@ -2958,7 +2988,7 @@ canreg_report <- function(doc,report_path,dt_all,ls_args,ann=TRUE, shiny=FALSE) 
   if (shiny) {
     incProgress(inc_progress_value, detail = "import / create template")
   } else {
-    if (sysName == "Windows") {
+    if (TRUE) {
       setWinProgressBar(pb, inc_progress_value*i_pb,label = "import / create template")
       i_pb <- i_pb+1
     }
@@ -3021,7 +3051,7 @@ canreg_report <- function(doc,report_path,dt_all,ls_args,ann=TRUE, shiny=FALSE) 
   if (shiny) {
     incProgress(inc_progress_value, detail = "Number of cases in period, by age group & sex")
   } else {
-    if (sysName == "Windows") {
+    if (TRUE) {
       setWinProgressBar(pb, inc_progress_value*i_pb,label = "Number of cases in period, by age group & sex")
       i_pb <- i_pb+1
     }
@@ -3058,7 +3088,7 @@ canreg_report <- function(doc,report_path,dt_all,ls_args,ann=TRUE, shiny=FALSE) 
   if (shiny) {
     incProgress(inc_progress_value, detail = "Number of cases by year")
   } else {
-    if (sysName == "Windows") {
+    if (TRUE) {
       setWinProgressBar(pb, inc_progress_value*i_pb,label = "Number of cases by year")
       i_pb <- i_pb+1
     }
@@ -3089,7 +3119,7 @@ canreg_report <- function(doc,report_path,dt_all,ls_args,ann=TRUE, shiny=FALSE) 
   if (shiny) {
     incProgress(inc_progress_value, detail = "The most common cancers, by sex")
   } else {
-    if (sysName == "Windows") {
+    if (TRUE) {
       setWinProgressBar(pb, inc_progress_value*i_pb,label = "The most common cancers, by sex")
       i_pb <- i_pb+1
     }
@@ -3271,7 +3301,7 @@ canreg_report <- function(doc,report_path,dt_all,ls_args,ann=TRUE, shiny=FALSE) 
   if (shiny) {
     incProgress(inc_progress_value, detail = "Age-specific incidence rates (most common sites) by sex")
   } else {
-    if (sysName == "Windows") {
+    if (TRUE) {
       setWinProgressBar(pb, inc_progress_value*i_pb,label = "Age-specific incidence rates (most common sites) by sex")
       i_pb <- i_pb+1
     }
@@ -3317,7 +3347,7 @@ canreg_report <- function(doc,report_path,dt_all,ls_args,ann=TRUE, shiny=FALSE) 
     if (shiny) {
       incProgress(inc_progress_value, detail = "Trend in ASR (most common sites) by sex")
     } else {
-      if (sysName == "Windows") {
+      if (TRUE) {
         setWinProgressBar(pb, inc_progress_value*i_pb,label = "Trend in ASR (most common sites) by sex")
         i_pb <- i_pb+1
       }
@@ -3374,7 +3404,7 @@ canreg_report <- function(doc,report_path,dt_all,ls_args,ann=TRUE, shiny=FALSE) 
     if (shiny) {
       incProgress(inc_progress_value, detail = "Estimated annual percentage change")
     } else {
-      if (sysName == "Windows") {
+      if (TRUE) {
         setWinProgressBar(pb, inc_progress_value*i_pb,label = "Estimated annual percentage change")
         i_pb <- i_pb+1
       }
@@ -3440,7 +3470,7 @@ canreg_report <- function(doc,report_path,dt_all,ls_args,ann=TRUE, shiny=FALSE) 
     if (shiny) {
       incProgress(inc_progress_value, detail = "Comparison of summary rates with other registries (in same region)")
     } else {
-      if (sysName == "Windows") {
+      if (TRUE) {
         setWinProgressBar(pb, inc_progress_value*i_pb,label = "Comparison of summary rates with other registries (in same region)")
         i_pb <- i_pb+1
       }
@@ -3522,7 +3552,7 @@ canreg_report <- function(doc,report_path,dt_all,ls_args,ann=TRUE, shiny=FALSE) 
   if (shiny) {
     incProgress(inc_progress_value, detail = "Basis of Diagnosis (DCO / Clinical / MV) by site")
   } else {
-    if (sysName == "Windows") {
+    if (TRUE) {
       setWinProgressBar(pb, inc_progress_value*i_pb,label = "Basis of Diagnosis (DCO / Clinical / MV) by site")
       i_pb <- i_pb+1
     }
@@ -3582,7 +3612,7 @@ canreg_report <- function(doc,report_path,dt_all,ls_args,ann=TRUE, shiny=FALSE) 
   if (shiny) {
     incProgress(inc_progress_value, detail = "Childhood cancers (0 to 14 years)")
   } else {
-    if (sysName == "Windows") {
+    if (TRUE) {
       setWinProgressBar(pb, inc_progress_value*i_pb,label = "Childhood cancers (0 to 14 years)")
       i_pb <- i_pb+1
     }
@@ -3664,7 +3694,7 @@ canreg_report <- function(doc,report_path,dt_all,ls_args,ann=TRUE, shiny=FALSE) 
       if (shiny) {
         incProgress(inc_progress_value, detail = "Add appendix")
       } else {
-        if (sysName == "Windows") {
+        if (TRUE) {
           setWinProgressBar(pb, inc_progress_value*i_pb,label = "Add appendix")
           i_pb <- i_pb+1
         }
@@ -3713,7 +3743,7 @@ canreg_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
   if (shiny) {
     incProgress(inc_progress_value, detail = "Population pyramid")
   } else {
-    if (sysName == "Windows") {
+    if (TRUE) {
       setWinProgressBar(pb, inc_progress_value*i_pb,label = "Population pyramid")
       i_pb <- i_pb+1
     }
@@ -3740,7 +3770,7 @@ canreg_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
   if (shiny) {
     incProgress(inc_progress_value, detail = "Number of cases by age group & sex")
   } else {
-    if (sysName == "Windows") {
+    if (TRUE) {
       setWinProgressBar(pb, inc_progress_value*i_pb,label = "Number of cases by age group & sex")
       i_pb <- i_pb+1
     }
@@ -3771,7 +3801,7 @@ canreg_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
   if (shiny) {
     incProgress(inc_progress_value, detail = "Proportion of cases by age group & sex")
   } else {
-    if (sysName == "Windows") {
+    if (TRUE) {
       setWinProgressBar(pb, inc_progress_value*i_pb,label = "Proportion of cases by age group & sex")
       i_pb <- i_pb+1
     }
@@ -3800,7 +3830,7 @@ canreg_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
   if (shiny) {
     incProgress(inc_progress_value, detail = "Number of cases by year")
   } else {
-    if (sysName == "Windows") {
+    if (TRUE) {
       setWinProgressBar(pb, inc_progress_value*i_pb,label = "Number of cases by year")
       i_pb <- i_pb+1
     }
@@ -3835,7 +3865,7 @@ canreg_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
   if (shiny) {
     incProgress(inc_progress_value, detail = "Top 10 cancers, both sexes: number of cases")
   } else {
-    if (sysName == "Windows") {
+    if (TRUE) {
       setWinProgressBar(pb, inc_progress_value*i_pb,label = "Top 10 cancers, both sexes: number of cases")
       i_pb <- i_pb+1
     }
@@ -3884,7 +3914,7 @@ canreg_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
   if (shiny) {
     incProgress(inc_progress_value, detail = "Top 10 cancers, both sexes: ASR")
   } else {
-    if (sysName == "Windows") {
+    if (TRUE) {
       setWinProgressBar(pb, inc_progress_value*i_pb,label = "Top 10 cancers, both sexes: ASR")
       i_pb <- i_pb+1
     }
@@ -3908,7 +3938,7 @@ canreg_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
   if (shiny) {
     incProgress(inc_progress_value, detail = "Top 10 cancers: Number of cases")
   } else {
-    if (sysName == "Windows") {
+    if (TRUE) {
       setWinProgressBar(pb, inc_progress_value*i_pb,label = "Top 10 cancers: Number of cases")
       i_pb <- i_pb+1
     }
@@ -3960,7 +3990,7 @@ canreg_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
   if (shiny) {
     incProgress(inc_progress_value, detail = "Top 10 cancers: ASR")
   } else {
-    if (sysName == "Windows") {
+    if (TRUE) {
       setWinProgressBar(pb, inc_progress_value*i_pb,label = "Top 10 cancers: ASR")
       i_pb <- i_pb+1
     }
@@ -3990,7 +4020,7 @@ canreg_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
   if (shiny) {
     incProgress(inc_progress_value, detail = "Top 10 cancers: Cumulative risk")
   } else {
-    if (sysName == "Windows") {
+    if (TRUE) {
       setWinProgressBar(pb, inc_progress_value*i_pb,label = "Top 10 cancers: Cumulative risk")
       i_pb <- i_pb+1
     }
@@ -4035,7 +4065,7 @@ canreg_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
   if (shiny) {
     incProgress(inc_progress_value, detail = "Age-specific rates")
   } else {
-    if (sysName == "Windows") {
+    if (TRUE) {
       setWinProgressBar(pb, inc_progress_value*i_pb,label = "Age-specific rates")
       i_pb <- i_pb+1
     }
@@ -4092,7 +4122,7 @@ canreg_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
     if (shiny) {
       incProgress(inc_progress_value, detail = "Trend in ASR")
     } else {
-      if (sysName == "Windows") {
+      if (TRUE) {
         setWinProgressBar(pb, inc_progress_value*i_pb,detail = "Trend in ASR")
         i_pb <- i_pb+1
       }
@@ -4161,7 +4191,7 @@ canreg_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
     if (shiny) {
       incProgress(inc_progress_value, detail = "Estimated annual percentage change")
     } else {
-      if (sysName == "Windows") {
+      if (TRUE) {
         setWinProgressBar(pb, inc_progress_value*i_pb,label ="Estimated annual percentage change")
         i_pb <- i_pb+1
       }
@@ -4207,7 +4237,7 @@ canreg_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
     if (shiny) {
       incProgress(inc_progress_value, detail = "Comparison of summary rates with other registries")
     } else {
-      if (sysName == "Windows") {
+      if (TRUE) {
         setWinProgressBar(pb, inc_progress_value*i_pb,label = "Comparison of summary rates with other registries")
         i_pb <- i_pb+1
       }
@@ -4244,7 +4274,7 @@ canreg_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
   if (shiny) {
     incProgress(inc_progress_value, detail = "Basis of diagnosis (DCO/Clinical/MV) by site")
   } else {
-    if (sysName == "Windows") {
+    if (TRUE) {
       setWinProgressBar(pb, inc_progress_value*i_pb,label = "Basis of diagnosis (DCO/Clinical/MV) by site")
       i_pb <- i_pb+1
     }
@@ -4291,7 +4321,7 @@ canreg_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
   if (shiny) {
     incProgress(inc_progress_value, detail = "Childhood cancers (0 to 14 years)")
   } else {
-    if (sysName == "Windows") {
+    if (TRUE) {
       setWinProgressBar(pb, inc_progress_value*i_pb,label = "Childhood cancers (0 to 14 years)")
       i_pb <- i_pb+1
     }
@@ -4378,7 +4408,7 @@ canreg_slide <- function(doc,dt_all,ls_args,ann=TRUE,shiny=FALSE) {
     if (shiny) {
       incProgress(inc_progress_value, detail = "Age-specific incidence rate by site")
     } else {
-      if (sysName == "Windows") {
+      if (TRUE) {
         setWinProgressBar(pb, inc_progress_value*i_pb,label = "Age-specific incidence rate by site")
         i_pb <- i_pb+1
       }

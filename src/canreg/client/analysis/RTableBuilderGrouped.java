@@ -26,6 +26,7 @@ import canreg.common.Globals;
 import canreg.common.Globals.StandardVariableNames;
 import canreg.common.database.PopulationDataset;
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -33,6 +34,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.LinkedList;
@@ -86,6 +88,7 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
     private final String[] rScriptsArguments;
     private String[] icd10GroupColors;
     private boolean writeColors = true;
+    private ProgressListener progressListener;
     private static final Logger LOGGER = Logger.getLogger(RTableBuilderGrouped.class.getName());
 
     public RTableBuilderGrouped(String configFileName) throws FileNotFoundException {
@@ -335,25 +338,33 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
                 Runtime rt = Runtime.getRuntime();
                 Process pr = rt.exec(commandList.toArray(new String[]{}));
 
-                // collect the output from the R program in a stream
-                is = new BufferedInputStream(pr.getInputStream());
                 if (fileType != FileTypes.browser) {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(pr.getInputStream()));
+                    String line;
+                    StringBuilder outputLog = new StringBuilder();
                     try {
-                        pr.waitFor();
-                        // convert the output to a string
-                        String theString = convertStreamToString(is);
-                        LOGGER.log(Level.INFO, "Messages from R: \n{0}", theString);
-                        // System.out.println(theString.split("\\r?\\n").length);
-                        // and add all to the list of files to return
-                        for (String fileName : theString.split("\\r?\\n")) {
-                            if (fileName.startsWith("-outFile:")) {
-                                // System.out.println(fileName);
-                                fileName = fileName.replaceFirst("-outFile:", "");
+                        while ((line = reader.readLine()) != null) {
+                            outputLog.append(line).append("\n");
+                            if (line.startsWith("-progress:")) {
+                                try {
+                                    String[] parts = line.split(":", 3);
+                                    int pct = Integer.parseInt(parts[1].trim());
+                                    String msg = parts.length > 2 ? parts[2].trim() : "";
+                                    if (progressListener != null) {
+                                        progressListener.onProgress(pct, msg);
+                                    }
+                                } catch (Exception ex) {
+                                    LOGGER.log(Level.FINE, "Failed to parse progress line: " + line, ex);
+                                }
+                            } else if (line.startsWith("-outFile:")) {
+                                String fileName = line.replaceFirst("-outFile:", "").trim();
                                 if (new File(fileName).exists()) {
                                     filesCreated.add(fileName);
                                 }
                             }
                         }
+                        pr.waitFor();
+                        LOGGER.log(Level.INFO, "Messages from R: \n{0}", outputLog.toString());
                     } catch (InterruptedException ex) {
                         LOGGER.log(Level.SEVERE,"Method interrupted while waiting for the command list to complete " , ex);
                         new TechnicalError().errorDialog();
@@ -392,5 +403,10 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
     @Override
     public void setUnknownAgeCode(int unknownAgeCode) {
         this.unknownAgeInt = unknownAgeCode;
+    }
+
+    @Override
+    public void setProgressListener(ProgressListener progressListener) {
+        this.progressListener = progressListener;
     }
 }

@@ -260,7 +260,7 @@ conf/tables/r/\.RData
 conf/tables/r/\.Rhistory
 
 scripts/source_splitter/Gemfile.lock
-.vscode/settings.json
+.vscode/
 
 .Rhistory
 
@@ -270,7 +270,7 @@ conf/tables/r/r-packages/log_install.txt
 report-template-TRN-E/*
 
 ## Idea
-.idea/*
+.idea/
 target/*
 
 ## jDeploy
