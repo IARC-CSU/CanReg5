@@ -17,12 +17,19 @@ canreg_load_packages <- function(packages_list) {
 
   sysName <- Sys.info()[['sysname']]
 
-  user_lib <- file.path(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5"))
+  r_user_env <- Sys.getenv("R_LIBS_USER")
+  if (nzchar(r_user_env)) {
+    user_lib <- paste0(r_user_env, "-CanReg5")
+  } else {
+    user_lib <- file.path(path.expand("~"), ".R-CanReg5-library")
+  }
   if (!dir.exists(user_lib)) {
-    dir.create(user_lib, recursive = TRUE, showWarnings = FALSE)
+    try(dir.create(user_lib, recursive = TRUE, showWarnings = FALSE), silent = TRUE)
   }
 
-  .libPaths(unique(c(user_lib, .libPaths())))
+  if (dir.exists(user_lib)) {
+    .libPaths(unique(c(user_lib, .libPaths())))
+  }
 
   missing_packages <- c()
   for (pkg in packages_list) {

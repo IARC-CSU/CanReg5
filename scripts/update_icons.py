@@ -101,3 +101,4 @@ if os.path.exists(os.path.dirname(mac_icns)):
 shutil.rmtree(iconset_dir, ignore_errors=True)
 
 print("=== Icon update complete across all platforms! ===")
+

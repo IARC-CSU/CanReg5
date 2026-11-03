@@ -364,7 +364,20 @@ public class RTableBuilderGrouped implements TableBuilderInterface {
                             }
                         }
                         pr.waitFor();
+                        if (pr.exitValue() != 0) {
+                            try {
+                                BufferedReader errReader = new BufferedReader(new InputStreamReader(pr.getErrorStream()));
+                                String errLine;
+                                while ((errLine = errReader.readLine()) != null) {
+                                    outputLog.append(errLine).append("\n");
+                                }
+                            } catch (Exception ignored) {
+                            }
+                        }
                         LOGGER.log(Level.INFO, "Messages from R: \n{0}", outputLog.toString());
+                        if (pr.exitValue() != 0) {
+                            throw new TableErrorException("R exited with error code " + pr.exitValue() + ":\n" + outputLog.toString());
+                        }
                     } catch (InterruptedException ex) {
                         LOGGER.log(Level.SEVERE,"Method interrupted while waiting for the command list to complete " , ex);
                         new TechnicalError().errorDialog();

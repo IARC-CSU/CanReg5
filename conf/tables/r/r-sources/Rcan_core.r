@@ -2,8 +2,8 @@
 
 canreg_error_log <- function(e,filename,out,Args,inc,pop) {
 
-  if (exists("pb")) {
-    close(pb)
+  if (exists("pb") && !is.null(pb)) {
+    try(close(pb), silent = TRUE)
   }
   
   ## get Args from canreg  
@@ -11,23 +11,28 @@ canreg_error_log <- function(e,filename,out,Args,inc,pop) {
   landscape <- FALSE
   logr <- FALSE
   multi_graph <- FALSE
+  sc <- "canreg"
+  label <- "error"
   
-  for (i in 1:length(Args)) {
-    
-    temp <- Args[i]
-    pos <- regexpr("=",temp)[1]
-    
-    if (pos < 0) {
-      assign(substring(temp,2), TRUE)
-    } 
-    else {
-      varname <- substring(temp,2,pos-1)
-      assign(varname,substring(temp, pos+1)) 
-      if (suppressWarnings(!is.na(as.numeric(get(varname))))){
-        assign(varname, as.numeric(get(varname)))
+  if (!missing(Args) && length(Args) > 0) {
+    for (i in 1:length(Args)) {
+      temp <- Args[i]
+      pos <- regexpr("=",temp)[1]
+      
+      if (pos < 0) {
+        assign(substring(temp,2), TRUE)
+      } 
+      else {
+        varname <- substring(temp,2,pos-1)
+        assign(varname,substring(temp, pos+1)) 
+        if (suppressWarnings(!is.na(as.numeric(get(varname))))){
+          assign(varname, as.numeric(get(varname)))
+        }
       }
     }
   }
+
+  cat(paste0("Error in CanReg5 R analysis: ", conditionMessage(e), "\n"), file = stderr())
   
 
   
@@ -187,24 +192,48 @@ canreg_load_packages <- function(packages_list) {
     stop("The table builder does not work with R '3.2.0', please install any version after '3.2.1'.\n '3.2.1' or later is recommended.\n You can edit the Path in the 'Options' in CanReg.") 
   }
 
-  user_lib <- file.path(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5"))
+  r_user_env <- Sys.getenv("R_LIBS_USER")
+  if (nzchar(r_user_env)) {
+    user_lib <- paste0(r_user_env, "-CanReg5")
+  } else {
+    user_lib <- file.path(path.expand("~"), ".R-CanReg5-library")
+  }
   if (!dir.exists(user_lib)) {
-    dir.create(user_lib, recursive = TRUE, showWarnings = FALSE)
+    try(dir.create(user_lib, recursive = TRUE, showWarnings = FALSE), silent = TRUE)
+  }
+
+  active_libs <- c()
+  if (dir.exists(user_lib)) {
+    active_libs <- c(active_libs, user_lib)
   }
 
   # Add bundled library locations if present
-  bundled_libs <- c(
-    file.path(script.basename, "r-packages", "library"),
-    file.path(script.basename, "r-installation", "library"),
-    file.path(dirname(script.basename), "r-packages", "library")
-  )
-  active_libs <- c(user_lib)
-  for (bl in bundled_libs) {
-    if (dir.exists(bl)) {
-      active_libs <- c(active_libs, bl)
+  sb <- NULL
+  if (exists("script.basename", envir = .GlobalEnv)) {
+    sb <- get("script.basename", envir = .GlobalEnv)
+  } else if (exists("script.basename", inherits = TRUE)) {
+    sb <- get("script.basename")
+  }
+  if (!is.null(sb) && nzchar(sb)) {
+    bundled_libs <- c(
+      file.path(sb, "r-packages", "library"),
+      file.path(sb, "r-installation", "library"),
+      file.path(dirname(sb), "r-packages", "library"),
+      file.path(dirname(dirname(sb)), "r-runtime", "library")
+    )
+    for (bl in bundled_libs) {
+      if (dir.exists(bl)) {
+        active_libs <- c(active_libs, bl)
+      }
     }
   }
-  .libPaths(unique(c(active_libs, .libPaths())))
+  if (dir.exists("r-runtime/library")) {
+    active_libs <- c(active_libs, file.path(getwd(), "r-runtime", "library"))
+  }
+
+  if (length(active_libs) > 0) {
+    .libPaths(unique(c(active_libs, .libPaths())))
+  }
 
   # Fast check: are all required packages already available?
   missing_packages <- c()
@@ -295,12 +324,6 @@ canreg_load_packages <- function(packages_list) {
   if (!is.null(pb)) {
     try(close(pb), silent = TRUE)
   }
-}
-
-  # timeEnd<-Sys.time()
-  # difference <- difftime(timeEnd, timeStart, units='mins')
-  # print(difference)
-
 }
 
 canreg_check_update <- function()
