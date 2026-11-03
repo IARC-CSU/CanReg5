@@ -66,11 +66,12 @@ import org.apache.commons.csv.CSVRecord;
  * @author ervikm
  */
 public class Tools {
-    
+
     private static final Logger LOGGER = Logger.getLogger(Tools.class.getName());
-    
+
     /** Static storage of the local settings. */
     private static LocalSettings localSettings;
+
     /**
      * 
      * @param objects
@@ -165,26 +166,33 @@ public class Tools {
                 found = element.getDatabaseVariableName().equalsIgnoreCase(variableName);
             }
             searchVariables[i].setVariable(element);
-            searchVariables[i].setWeight(Float.parseFloat(e.getElementsByTagName(namespace + "weigth").item(0).getTextContent()));
+            searchVariables[i]
+                    .setWeight(Float.parseFloat(e.getElementsByTagName(namespace + "weigth").item(0).getTextContent()));
 
             if (e.getElementsByTagName(namespace + "prescence").item(0) != null) {
-                searchVariables[i].setPresence(Float.parseFloat(e.getElementsByTagName(namespace + "prescence").item(0).getTextContent()));
+                searchVariables[i].setPresence(
+                        Float.parseFloat(e.getElementsByTagName(namespace + "prescence").item(0).getTextContent()));
             }
             if (e.getElementsByTagName(namespace + "year_range").item(0) != null) {
-                searchVariables[i].setYearRange(Integer.parseInt(e.getElementsByTagName(namespace + "year_range").item(0).getTextContent()));
+                searchVariables[i].setYearRange(
+                        Integer.parseInt(e.getElementsByTagName(namespace + "year_range").item(0).getTextContent()));
             }
             if (e.getElementsByTagName(namespace + "disc_power").item(0) != null) {
-                searchVariables[i].setDiscPower(Float.parseFloat(e.getElementsByTagName(namespace + "disc_power").item(0).getTextContent()));
+                searchVariables[i].setDiscPower(
+                        Float.parseFloat(e.getElementsByTagName(namespace + "disc_power").item(0).getTextContent()));
             }
             if (e.getElementsByTagName(namespace + "reliability").item(0) != null) {
-                searchVariables[i].setReliability(Float.parseFloat(e.getElementsByTagName(namespace + "reliability").item(0).getTextContent()));
+                searchVariables[i].setReliability(
+                        Float.parseFloat(e.getElementsByTagName(namespace + "reliability").item(0).getTextContent()));
             }
             NodeList compareAlgorithmElement = e.getElementsByTagName(namespace + "compare_algorithm");
             if (compareAlgorithmElement.getLength() > 0) {
-                searchVariables[i].setAlgorithm(CompareAlgorithms.valueOf(compareAlgorithmElement.item(0).getTextContent()));
+                searchVariables[i]
+                        .setAlgorithm(CompareAlgorithms.valueOf(compareAlgorithmElement.item(0).getTextContent()));
             }
             if (e.getElementsByTagName(namespace + "block").item(0) != null) {
-                searchVariables[i].setBlock(Boolean.parseBoolean(e.getElementsByTagName(namespace + "block").item(0).getTextContent()));
+                searchVariables[i].setBlock(
+                        Boolean.parseBoolean(e.getElementsByTagName(namespace + "block").item(0).getTextContent()));
             }
         }
         return searchVariables;
@@ -219,15 +227,16 @@ public class Tools {
 
     /**
      * getVariableListElements.
-     * @param doc doc 
-     * @param namespace namespace
+     * 
+     * @param doc           doc
+     * @param namespace     namespace
      * @param dictionaryMap dictionaryMap
-     * @param groupsMap groupsMap
+     * @param groupsMap     groupsMap
      * @return array of DatabaseVariablesListElement
      */
-    public static DatabaseVariablesListElement[] getVariableListElements(Document doc, String namespace, 
-            TreeMap<String, DatabaseDictionaryListElement> dictionaryMap, TreeMap<String, 
-            DatabaseGroupsListElement> groupsMap) {
+    public static DatabaseVariablesListElement[] getVariableListElements(Document doc, String namespace,
+            TreeMap<String, DatabaseDictionaryListElement> dictionaryMap,
+            TreeMap<String, DatabaseGroupsListElement> groupsMap) {
         if (doc == null) {
             return new DatabaseVariablesListElement[0];
         }
@@ -237,7 +246,8 @@ public class Tools {
             try {
                 localSettings = CanRegClientApp.getApplication().getLocalSettings();
             } catch (IllegalStateException ex) {
-                LOGGER.log(Level.FINE, "CanRegClientApp is not launched; using default date format and display variable type.");
+                LOGGER.log(Level.FINE,
+                        "CanRegClientApp is not launched; using default date format and display variable type.");
             }
         }
         if (localSettings != null) {
@@ -246,7 +256,8 @@ public class Tools {
         }
 
         NodeList nl = doc.getElementsByTagName(namespace + "variable");
-        // DatabaseVariablesListElement[] variables = new DatabaseVariablesListElement[nl.getLength()];
+        // DatabaseVariablesListElement[] variables = new
+        // DatabaseVariablesListElement[nl.getLength()];
         LinkedList<DatabaseVariablesListElement> variablesList = new LinkedList<>();
         // build a list of database variables
         for (int i = 0; i < nl.getLength(); i++) {
@@ -282,7 +293,8 @@ public class Tools {
             NodeList variableLengthNodeList = e.getElementsByTagName(namespace + "variable_length");
             if (variableLengthNodeList != null && variableLengthNodeList.getLength() > 0) {
                 variable.setVariableLength(Integer.decode(variableLengthNodeList.item(0).getTextContent()));
-            } else if (e.getElementsByTagName(namespace + "variable_type").item(0).getTextContent().equalsIgnoreCase("dict")) {
+            } else if (e.getElementsByTagName(namespace + "variable_type").item(0).getTextContent()
+                    .equalsIgnoreCase("dict")) {
                 String dictionaryName = e.getElementsByTagName(namespace + "use_dictionary").item(0).getTextContent();
                 NodeList dictnl = doc.getElementsByTagName(namespace + "dictionary");
                 boolean found = false;
@@ -290,10 +302,12 @@ public class Tools {
                 Element dictionaryElement = null;
                 while (!found && j < dictnl.getLength()) {
                     dictionaryElement = (Element) dictnl.item(j++);
-                    found = dictionaryElement.getElementsByTagName(namespace + "name").item(0).getTextContent().equalsIgnoreCase(dictionaryName);
+                    found = dictionaryElement.getElementsByTagName(namespace + "name").item(0).getTextContent()
+                            .equalsIgnoreCase(dictionaryName);
                 }
                 if (found) {
-                    variable.setVariableLength(Integer.decode(dictionaryElement.getElementsByTagName("ns3:full_dictionary_code_length").item(0).getTextContent()));
+                    variable.setVariableLength(Integer.decode(dictionaryElement
+                            .getElementsByTagName("ns3:full_dictionary_code_length").item(0).getTextContent()));
                 }
             }
             NodeList fillInStatusNodeList = e.getElementsByTagName(namespace + "fill_in_status");
@@ -315,7 +329,7 @@ public class Tools {
             if (variable.getVariableType().equalsIgnoreCase("Date")) {
                 variable.setDateFormatString(dateFormatString);
             }
-            
+
             variable.setDisplayVariableType(displayVariableType);
             // Add variable to the list.
             variablesList.add(variable);
@@ -335,7 +349,8 @@ public class Tools {
      * @param tableName
      * @return
      */
-    public static DatabaseVariablesListElement[] getVariableListElements(Document doc, String namespace, String tableName) {
+    public static DatabaseVariablesListElement[] getVariableListElements(Document doc, String namespace,
+            String tableName) {
         if (doc == null) {
             return new DatabaseVariablesListElement[0];
         }
@@ -347,8 +362,7 @@ public class Tools {
             }
         }
         variablesInTable = new DatabaseVariablesListElement[tempVariablesInTable.size()];
-        for (int i = 0; i
-                < variablesInTable.length; i++) {
+        for (int i = 0; i < variablesInTable.length; i++) {
             variablesInTable[i] = tempVariablesInTable.get(i);
         }
         return variablesInTable;
@@ -365,7 +379,8 @@ public class Tools {
      * @param variablesMap
      * @return
      */
-    public static DatabaseIndexesListElement[] getIndexesListElements(Document doc, String namespace, TreeMap<String, DatabaseVariablesListElement> variablesMap) {
+    public static DatabaseIndexesListElement[] getIndexesListElements(Document doc, String namespace,
+            TreeMap<String, DatabaseVariablesListElement> variablesMap) {
         if (doc == null) {
             return new DatabaseIndexesListElement[0];
         }
@@ -374,9 +389,12 @@ public class Tools {
             variablesMap = buildVariablesMap(getVariableListElements(doc, namespace));
         }
         DatabaseIndexesListElement[] indexes = new DatabaseIndexesListElement[nl.getLength()];
-        Map<String, DatabaseIndexesListElement> patientIndexMap = buildIndexMap(Globals.PATIENT_TABLE_NAME, doc, namespace, variablesMap);
-        Map<String, DatabaseIndexesListElement> tumourIndexMap = buildIndexMap(Globals.TUMOUR_TABLE_NAME, doc, namespace, variablesMap);
-        Map<String, DatabaseIndexesListElement> sourceIndexMap = buildIndexMap(Globals.SOURCE_TABLE_NAME, doc, namespace, variablesMap);
+        Map<String, DatabaseIndexesListElement> patientIndexMap = buildIndexMap(Globals.PATIENT_TABLE_NAME, doc,
+                namespace, variablesMap);
+        Map<String, DatabaseIndexesListElement> tumourIndexMap = buildIndexMap(Globals.TUMOUR_TABLE_NAME, doc,
+                namespace, variablesMap);
+        Map<String, DatabaseIndexesListElement> sourceIndexMap = buildIndexMap(Globals.SOURCE_TABLE_NAME, doc,
+                namespace, variablesMap);
 
         for (int i = 0; i < nl.getLength(); i++) {
             Element e = (Element) nl.item(i);
@@ -400,7 +418,8 @@ public class Tools {
      * mapping variable names in capital letters to variable list elements
      *
      */
-    public static TreeMap<String, DatabaseVariablesListElement> buildVariablesMap(DatabaseVariablesListElement[] variableListElements) {
+    public static TreeMap<String, DatabaseVariablesListElement> buildVariablesMap(
+            DatabaseVariablesListElement[] variableListElements) {
         TreeMap<String, DatabaseVariablesListElement> variablesMap = new TreeMap<>();
         for (DatabaseVariablesListElement elem : variableListElements) {
             variablesMap.put(canreg.common.Tools.toUpperCaseStandardized(elem.getDatabaseVariableName()), elem);
@@ -412,7 +431,8 @@ public class Tools {
      * mapping standard variables to variable list elements
      *
      */
-    public static TreeMap<StandardVariableNames, DatabaseVariablesListElement> buildStandardVariablesMap(DatabaseVariablesListElement[] variableListElements) {
+    public static TreeMap<StandardVariableNames, DatabaseVariablesListElement> buildStandardVariablesMap(
+            DatabaseVariablesListElement[] variableListElements) {
         TreeMap<StandardVariableNames, DatabaseVariablesListElement> variablesMap = new TreeMap<>();
         for (DatabaseVariablesListElement elem : variableListElements) {
             if (elem.getStandardVariableName() != null) {
@@ -422,12 +442,14 @@ public class Tools {
         return variablesMap;
     }
 
-    public static Map<String, DatabaseIndexesListElement> buildIndexMap(String tableName, Document doc, String namespace, TreeMap<String, DatabaseVariablesListElement> variablesMap) {
+    public static Map<String, DatabaseIndexesListElement> buildIndexMap(String tableName, Document doc,
+            String namespace, TreeMap<String, DatabaseVariablesListElement> variablesMap) {
         if (variablesMap == null) {
             variablesMap = buildVariablesMap(getVariableListElements(doc, namespace));
         }
 
-        Map<String, DatabaseIndexesListElement> indexMap = Collections.synchronizedMap(new TreeMap<String, DatabaseIndexesListElement>());
+        Map<String, DatabaseIndexesListElement> indexMap = Collections
+                .synchronizedMap(new TreeMap<String, DatabaseIndexesListElement>());
 
         NodeList nodes = doc.getElementsByTagName(namespace + "indexes");
         Element variablesElement = (Element) nodes.item(0);
@@ -441,7 +463,8 @@ public class Tools {
             Element element = (Element) indexes.item(i);
 
             // Create line
-            String tableNameDB = canreg.common.Tools.toUpperCaseStandardized(element.getElementsByTagName(namespace + "table").item(0).getTextContent());
+            String tableNameDB = canreg.common.Tools.toUpperCaseStandardized(
+                    element.getElementsByTagName(namespace + "table").item(0).getTextContent());
 
             if (tableNameDB.equalsIgnoreCase(tableName)) {
                 String nameDB = element.getElementsByTagName(namespace + "name").item(0).getTextContent();
@@ -455,9 +478,9 @@ public class Tools {
                     // Go through all the variable definitions
                     for (int j = 0; j < variables.getLength(); j++) {
                         Element variableElement = (Element) variables.item(j);
-                        String variableName = variableElement.getElementsByTagName(namespace + "variable_name").item(0).getTextContent();
-                        DatabaseVariablesListElement variable =
-                                variablesMap.get(variableName);
+                        String variableName = variableElement.getElementsByTagName(namespace + "variable_name").item(0)
+                                .getTextContent();
+                        DatabaseVariablesListElement variable = variablesMap.get(variableName);
                         if (variable == null) {
                             variable = variablesMap.get(canreg.common.Tools.toUpperCaseStandardized(variableName));
                         }
@@ -492,13 +515,18 @@ public class Tools {
             Element e = (Element) nl.item(i);
             dictionaries[i] = new DatabaseDictionaryListElement();
             dictionaries[i].setName(e.getElementsByTagName(namespace + "name").item(0).getTextContent());
-            dictionaries[i].setDictionaryID(Integer.parseInt(e.getElementsByTagName(namespace + "dictionary_id").item(0).getTextContent()));
+            dictionaries[i].setDictionaryID(
+                    Integer.parseInt(e.getElementsByTagName(namespace + "dictionary_id").item(0).getTextContent()));
             dictionaries[i].setFont(e.getElementsByTagName(namespace + "font").item(0).getTextContent());
             dictionaries[i].setType(e.getElementsByTagName(namespace + "type").item(0).getTextContent());
-            dictionaries[i].setCodeLength(Integer.parseInt(e.getElementsByTagName(namespace + "code_length").item(0).getTextContent()));
-            dictionaries[i].setCategoryDescriptionLength(Integer.parseInt(e.getElementsByTagName(namespace + "category_description_length").item(0).getTextContent()));
-            dictionaries[i].setFullDictionaryCodeLength(Integer.parseInt(e.getElementsByTagName(namespace + "full_dictionary_code_length").item(0).getTextContent()));
-            dictionaries[i].setFullDictionaryDescriptionLength(Integer.parseInt(e.getElementsByTagName(namespace + "full_dictionary_description_length").item(0).getTextContent()));
+            dictionaries[i].setCodeLength(
+                    Integer.parseInt(e.getElementsByTagName(namespace + "code_length").item(0).getTextContent()));
+            dictionaries[i].setCategoryDescriptionLength(Integer.parseInt(
+                    e.getElementsByTagName(namespace + "category_description_length").item(0).getTextContent()));
+            dictionaries[i].setFullDictionaryCodeLength(Integer.parseInt(
+                    e.getElementsByTagName(namespace + "full_dictionary_code_length").item(0).getTextContent()));
+            dictionaries[i].setFullDictionaryDescriptionLength(Integer.parseInt(
+                    e.getElementsByTagName(namespace + "full_dictionary_description_length").item(0).getTextContent()));
             // lock part
             NodeList elem = e.getElementsByTagName(namespace + "locked");
             if (elem != null && elem.getLength() > 0) {
@@ -566,8 +594,7 @@ public class Tools {
     public static String[] getVariableNames(Document doc, String namespace) {
         NodeList nl = doc.getElementsByTagName(namespace + "variable");
         String[] variableNames = new String[nl.getLength()];
-        for (int i = 0; i
-                < nl.getLength(); i++) {
+        for (int i = 0; i < nl.getLength(); i++) {
             Element e = (Element) nl.item(i);
             variableNames[i] = e.getElementsByTagName(namespace + "short_name").item(0).getTextContent();
         }
@@ -604,7 +631,7 @@ public class Tools {
             }
 
         } catch (IOException ioe) {
-            LOGGER.log(Level.SEVERE,String.format("I/O Error - %s",ioe),ioe);
+            LOGGER.log(Level.SEVERE, String.format("I/O Error - %s", ioe), ioe);
         }
         return contents.toString();
     }
@@ -639,7 +666,7 @@ public class Tools {
         try {
             file = File.createTempFile("cr5", "tmp");
             output = new BufferedWriter(new FileWriter(file));
-            //FileWriter always assumes default encoding is OK!
+            // FileWriter always assumes default encoding is OK!
             output.write(getFileFromURL(url));
         } finally {
             if (output != null) {
@@ -661,10 +688,10 @@ public class Tools {
         try {
             file = File.createTempFile("cr5", "tmp");
             output = new BufferedWriter(new FileWriter(file));
-            //FileWriter always assumes default encoding is OK!
+            // FileWriter always assumes default encoding is OK!
             output.write(getFileFromURL(urlString));
         } finally {
-            if (output != null){
+            if (output != null) {
                 output.close();
             }
         }
@@ -682,7 +709,7 @@ public class Tools {
                     {
                         bout.write(data, 0, x);
                     }
-                    
+
                 }
             }
         }
@@ -723,9 +750,9 @@ public class Tools {
      * @throws java.io.IOException
      */
     public static int numberOfLinesInFile(String file) throws IOException {
-        //returns the number of lines in a file
-        //author : Ravindra S
-        //Symphony software Hyderabad
+        // returns the number of lines in a file
+        // author : Ravindra S
+        // Symphony software Hyderabad
         int countRec = 0;
 
         long lastRec;
@@ -756,7 +783,7 @@ public class Tools {
         File dir1 = new File(".");
         try {
             System.out.println("Current dir : " + dir1.getCanonicalPath());
-            //System.out.println ("Parent  dir : " + dir2.getCanonicalPath());
+            // System.out.println ("Parent dir : " + dir2.getCanonicalPath());
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, null, ex);
         }
@@ -850,19 +877,19 @@ public class Tools {
     public static Set<String> getMissingStandardVariables(DatabaseVariablesListElement[] elements) {
         /*
          * Table 1. Basic information for cancer registries
-        Name According to local usage
-        Sex
-        Date of birth or age Estimate if not known
-        Demographic
-        Address Usual residence
-        Ethnic groupb When population consists of two or more groups
-        Incidence date
-        Most valid basis of diagnosis
-        Topography (site) Primary tumour
-        Morphology (histology)
-        Behaviour
-        Source of information E.g., hospital record no., name of physician
-        - - - -
+         * Name According to local usage
+         * Sex
+         * Date of birth or age Estimate if not known
+         * Demographic
+         * Address Usual residence
+         * Ethnic groupb When population consists of two or more groups
+         * Incidence date
+         * Most valid basis of diagnosis
+         * Topography (site) Primary tumour
+         * Morphology (histology)
+         * Behaviour
+         * Source of information E.g., hospital record no., name of physician
+         * - - - -
          */
         String NAMES_STRING = "Name (According to local usage)";
         String SEX_STRING = "Sex";
@@ -955,116 +982,133 @@ public class Tools {
         // TODO scan the doc for things coded non-standard and build a translator
         // for now just return an empty translator
         Translator translator = new Translator();
-        // DatabaseVariablesListElement[] variables = getVariableListElements(doc, NAMESPACE);
+        // DatabaseVariablesListElement[] variables = getVariableListElements(doc,
+        // NAMESPACE);
 
         return translator;
     }
 
-// TODO reimplement method to access the IARCTools package...
-//   Commented away to be able to disable the IARCtools package... 
-//    
-//    public static Map<IARCStandardVariableNames, String> getMapIARCstandardVariablesVariableName(Document doc, String NAMESPACE) {
-//        EnumMap<IARCStandardVariableNames, String> map = new EnumMap<IARCStandardVariableNames, String>(IARCStandardVariableNames.class);
-//        DatabaseVariablesListElement[] variables = getVariableListElements(doc, NAMESPACE);
-//        Map<StandardVariableNames, IARCStandardVariableNames> mapStdVarbNamesIARCStdVarbNames = getMapStdVarbNamesIARCStdVarbNames();
-//
-//        for (DatabaseVariablesListElement variable : variables) {
-//            String stdNameString = variable.getStandardVariableName();
-//            if (stdNameString != null) {
-//                try {
-//                    StandardVariableNames stdVarb = StandardVariableNames.valueOf(stdNameString);
-//                    IARCStandardVariableNames iarcStdVarb = mapStdVarbNamesIARCStdVarbNames.get(stdVarb);
-//                    if (iarcStdVarb != null) {
-//                        map.put(iarcStdVarb, variable.getDatabaseVariableName());
-//                    }
-//                } catch (java.lang.IllegalArgumentException ex) {
-//                    LOGGER.log(Level.WARNING, "{0} is not a standard variable name...", stdNameString);
-//                }
-//            }
-//        }
-//
-//        return map;
-//    }
-//
-//    private static Map<StandardVariableNames, IARCStandardVariableNames> getMapStdVarbNamesIARCStdVarbNames() {
-//        EnumMap<StandardVariableNames, IARCStandardVariableNames> map = new EnumMap<StandardVariableNames, IARCStandardVariableNames>(StandardVariableNames.class);
-//
-//        /**
-//         * Date
-//         * String
-//         * Coded yyyyMMdd
-//         */
-//        map.put(StandardVariableNames.IncidenceDate, IARCStandardVariableNames.IncidenceDate);
-//        /**
-//         * Date
-//         * String
-//         * Coded yyyyMMdd
-//         */
-//        map.put(StandardVariableNames.BirthDate, IARCStandardVariableNames.BirthDate);
-//        /**
-//         * Age at diagnosis
-//         * Number
-//         * Unknown age 999
-//         */
-//        map.put(StandardVariableNames.Age, IARCStandardVariableNames.Age);
-//        /**
-//         * Gender
-//         * Coded 1=Male, 2=Female, 9=Unknown
-//         */
-//        map.put(StandardVariableNames.Sex, IARCStandardVariableNames.Sex);
-//
-//        /**
-//         * Topography, Site
-//         * String
-//         * Coded according to ICD-O-3
-//         */
-//        map.put(StandardVariableNames.Topography, IARCStandardVariableNames.Topography);
-//        /**
-//         * Morphology, Histology
-//         * String
-//         * Coded according to ICD-O-3
-//         */
-//        map.put(StandardVariableNames.Morphology, IARCStandardVariableNames.Morphology);
-//        /**
-//         * Behaviour
-//         * String
-//         * Coded according to ICD-O-3
-//         */
-//        map.put(StandardVariableNames.Behaviour, IARCStandardVariableNames.Behaviour);
-//
-//        /**
-//         * Basis of Diagnosis
-//         * String
-//         * Coded according to ICD-O-3
-//         */
-//        map.put(StandardVariableNames.BasisDiagnosis, IARCStandardVariableNames.BasisDiagnosis);
-//        /**
-//         * ICD10
-//         */
-//        map.put(StandardVariableNames.ICD10, IARCStandardVariableNames.ICD10);
-//        /**
-//         * Date
-//         * String
-//         * Coded yyyyMMdd
-//         */
-//        map.put(StandardVariableNames.Lastcontact, IARCStandardVariableNames.Lastcontact);
-//        /**
-//         * Grade
-//         * Value between 1 and 9
-//         */
-//        map.put(StandardVariableNames.Grade, IARCStandardVariableNames.Grade);
-//        /**
-//         * International Childhood Cancer Classification
-//         */
-//        map.put(StandardVariableNames.ICCC, IARCStandardVariableNames.ICCC);
-//        /**
-//         * Stage
-//         */
-//        map.put(StandardVariableNames.Stage, IARCStandardVariableNames.Stage);
-//        return map;
-//    }
+    // TODO reimplement method to access the IARCTools package...
+    // Commented away to be able to disable the IARCtools package...
+    //
+    // public static Map<IARCStandardVariableNames, String>
+    // getMapIARCstandardVariablesVariableName(Document doc, String NAMESPACE) {
+    // EnumMap<IARCStandardVariableNames, String> map = new
+    // EnumMap<IARCStandardVariableNames, String>(IARCStandardVariableNames.class);
+    // DatabaseVariablesListElement[] variables = getVariableListElements(doc,
+    // NAMESPACE);
+    // Map<StandardVariableNames, IARCStandardVariableNames>
+    // mapStdVarbNamesIARCStdVarbNames = getMapStdVarbNamesIARCStdVarbNames();
+    //
+    // for (DatabaseVariablesListElement variable : variables) {
+    // String stdNameString = variable.getStandardVariableName();
+    // if (stdNameString != null) {
+    // try {
+    // StandardVariableNames stdVarb = StandardVariableNames.valueOf(stdNameString);
+    // IARCStandardVariableNames iarcStdVarb =
+    // mapStdVarbNamesIARCStdVarbNames.get(stdVarb);
+    // if (iarcStdVarb != null) {
+    // map.put(iarcStdVarb, variable.getDatabaseVariableName());
+    // }
+    // } catch (java.lang.IllegalArgumentException ex) {
+    // LOGGER.log(Level.WARNING, "{0} is not a standard variable name...",
+    // stdNameString);
+    // }
+    // }
+    // }
+    //
+    // return map;
+    // }
+    //
+    // private static Map<StandardVariableNames, IARCStandardVariableNames>
+    // getMapStdVarbNamesIARCStdVarbNames() {
+    // EnumMap<StandardVariableNames, IARCStandardVariableNames> map = new
+    // EnumMap<StandardVariableNames,
+    // IARCStandardVariableNames>(StandardVariableNames.class);
+    //
+    // /**
+    // * Date
+    // * String
+    // * Coded yyyyMMdd
+    // */
+    // map.put(StandardVariableNames.IncidenceDate,
+    // IARCStandardVariableNames.IncidenceDate);
+    // /**
+    // * Date
+    // * String
+    // * Coded yyyyMMdd
+    // */
+    // map.put(StandardVariableNames.BirthDate,
+    // IARCStandardVariableNames.BirthDate);
+    // /**
+    // * Age at diagnosis
+    // * Number
+    // * Unknown age 999
+    // */
+    // map.put(StandardVariableNames.Age, IARCStandardVariableNames.Age);
+    // /**
+    // * Gender
+    // * Coded 1=Male, 2=Female, 9=Unknown
+    // */
+    // map.put(StandardVariableNames.Sex, IARCStandardVariableNames.Sex);
+    //
+    // /**
+    // * Topography, Site
+    // * String
+    // * Coded according to ICD-O-3
+    // */
+    // map.put(StandardVariableNames.Topography,
+    // IARCStandardVariableNames.Topography);
+    // /**
+    // * Morphology, Histology
+    // * String
+    // * Coded according to ICD-O-3
+    // */
+    // map.put(StandardVariableNames.Morphology,
+    // IARCStandardVariableNames.Morphology);
+    // /**
+    // * Behaviour
+    // * String
+    // * Coded according to ICD-O-3
+    // */
+    // map.put(StandardVariableNames.Behaviour,
+    // IARCStandardVariableNames.Behaviour);
+    //
+    // /**
+    // * Basis of Diagnosis
+    // * String
+    // * Coded according to ICD-O-3
+    // */
+    // map.put(StandardVariableNames.BasisDiagnosis,
+    // IARCStandardVariableNames.BasisDiagnosis);
+    // /**
+    // * ICD10
+    // */
+    // map.put(StandardVariableNames.ICD10, IARCStandardVariableNames.ICD10);
+    // /**
+    // * Date
+    // * String
+    // * Coded yyyyMMdd
+    // */
+    // map.put(StandardVariableNames.Lastcontact,
+    // IARCStandardVariableNames.Lastcontact);
+    // /**
+    // * Grade
+    // * Value between 1 and 9
+    // */
+    // map.put(StandardVariableNames.Grade, IARCStandardVariableNames.Grade);
+    // /**
+    // * International Childhood Cancer Classification
+    // */
+    // map.put(StandardVariableNames.ICCC, IARCStandardVariableNames.ICCC);
+    // /**
+    // * Stage
+    // */
+    // map.put(StandardVariableNames.Stage, IARCStandardVariableNames.Stage);
+    // return map;
+    // }
     // This method writes a image to the system clipboard.
-// otherwise it returns null.
+    // otherwise it returns null.
     public static void setClipboard(Image image) {
         ImageSelection imgSel = new ImageSelection(image);
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(imgSel, null);
@@ -1088,59 +1132,65 @@ public class Tools {
         }
         return out.toString();
     }
-    
-    public static String combine(Collection<String> s, String glue){
-        return combine(s.toArray(new String[]{}), glue);
+
+    public static String combine(Collection<String> s, String glue) {
+        return combine(s.toArray(new String[] {}), glue);
     }
-    
-//    public static String encapsulateIfNeeded(String fileName){
-//       if (fileName.contains(" ")) {
-//            return "\'" + fileName + "\'";
-//        } else {
-//            return fileName;
-//        }
-//    }
-    
+
+    // public static String encapsulateIfNeeded(String fileName){
+    // if (fileName.contains(" ")) {
+    // return "\'" + fileName + "\'";
+    // } else {
+    // return fileName;
+    // }
+    // }
+
     /**
      * Saves an object data into a JSON file. The file will be encoded in UTF-8.
-     * @param obj object to be stored as JSON.
-     * @param jsonDestination complete path (including "fileName.json") to the location
-     * of the JSON that is being created.
-     * @throws IOException 
+     * 
+     * @param obj             object to be stored as JSON.
+     * @param jsonDestination complete path (including "fileName.json") to the
+     *                        location
+     *                        of the JSON that is being created.
+     * @throws IOException
      */
-    public static void objectToJSON(Object obj, File jsonDestination) 
+    public static void objectToJSON(Object obj, File jsonDestination)
             throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
-        //Commented because it makes the process slower
+        // Commented because it makes the process slower
         // mapper.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
         Writer out = null;
         try {
             out = new OutputStreamWriter(new FileOutputStream(jsonDestination), StandardCharsets.UTF_8);
             mapper.writeValue(out, obj);
         } finally {
-            if(out != null) {
-                try { out.close(); }
-                catch(IOException ex) {
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException ex) {
                     LOGGER.log(Level.WARNING, null, ex);
-                }   
+                }
             }
         }
     }
-    
+
     /**
-     * Reads an existent JSON file and transforms it into a Java Object. You must cast
-     * the returning object into a specific class. The JSON HAS to be encoded in UTF-8.
+     * Reads an existent JSON file and transforms it into a Java Object. You must
+     * cast
+     * the returning object into a specific class. The JSON HAS to be encoded in
+     * UTF-8.
+     * 
      * @param jsonOrigin complete path (including "fileName.json") of the JSON file
-     * to be read.
+     *                   to be read.
      * @return an object containing all the data from the JSON file.
-     * @throws IOException 
+     * @throws IOException
      */
-    public static Object JSONtoObject(File jsonOrigin, Class clazz) 
+    public static Object JSONtoObject(File jsonOrigin, Class clazz)
             throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
-        //Commented because it makes the process slower
+        // Commented because it makes the process slower
         // mapper.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
         Reader in = null;
         Object obj = null;
@@ -1148,28 +1198,30 @@ public class Tools {
             in = new InputStreamReader(new FileInputStream(jsonOrigin), StandardCharsets.UTF_8);
             obj = mapper.readValue(in, clazz);
         } finally {
-            if(in != null) {
-                try { in.close(); }
-                catch(IOException ex) {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException ex) {
                     LOGGER.log(Level.WARNING, null, ex);
-                } 
+                }
             }
         }
-        
+
         return obj;
     }
-    
+
     /**
      * Writes a database dictionary to a File encoded in UTF-8
+     * 
      * @param dictionaryDestination
      * @param dictionariesInDB
-     * @return 
+     * @return
      */
-    public static void writeDictionaryToFileUTF8(File dictionaryDestination, 
-                                                 DatabaseDictionaryListElement[] dictionariesInDB) 
+    public static void writeDictionaryToFileUTF8(File dictionaryDestination,
+            DatabaseDictionaryListElement[] dictionariesInDB)
             throws IOException {
-        try(BufferedWriter bw = Files.newBufferedWriter(Paths.get(dictionaryDestination.getAbsolutePath()), 
-                                             StandardCharsets.UTF_8);) {
+        try (BufferedWriter bw = Files.newBufferedWriter(Paths.get(dictionaryDestination.getAbsolutePath()),
+                StandardCharsets.UTF_8);) {
             for (DatabaseDictionaryListElement dbdle : dictionariesInDB) {
                 bw.write("#" + dbdle.getDictionaryID() + "\t----" + dbdle.getName() + Globals.newline);
                 Dictionary dic = CanRegClientApp.getApplication().getDictionary().get(dbdle.getDictionaryID());
@@ -1186,27 +1238,30 @@ public class Tools {
             bw.flush();
         }
     }
-    
+
     /**
-     * Creates a new file encoded in UTF-8 based on an already existing file with another
+     * Creates a new file encoded in UTF-8 based on an already existing file with
+     * another
      * encoding.
-     * @param source the file to be transformed
+     * 
+     * @param source      the file to be transformed
      * @param srcEncoding the encoding of the file to be transformed
-     * @param target the new file in UTF-8
-     * @throws IOException 
+     * @param target      the new file in UTF-8
+     * @throws IOException
      */
-    public static void transformFileToUTF8(File source, String srcEncoding, File target) 
+    public static void transformFileToUTF8(File source, String srcEncoding, File target)
             throws IOException {
         try (
-          BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(source), srcEncoding));
-          BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(target), StandardCharsets.UTF_8)); ) {
-              char[] buffer = new char[16384];
-              int read;
-              while ((read = br.read(buffer)) != -1)
-                  bw.write(buffer, 0, read);
-        } 
+                BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(source), srcEncoding));
+                BufferedWriter bw = new BufferedWriter(
+                        new OutputStreamWriter(new FileOutputStream(target), StandardCharsets.UTF_8));) {
+            char[] buffer = new char[16384];
+            int read;
+            while ((read = br.read(buffer)) != -1)
+                bw.write(buffer, 0, read);
+        }
     }
-    
+
     public static String getFileExtension(File file) {
         String extension = "";
 
@@ -1214,10 +1269,10 @@ public class Tools {
             String name = file.getName();
             extension = name.substring(name.lastIndexOf("."));
         }
- 
+
         return extension;
     }
-    
+
     public static String getFileNameWithoutExtension(File file) {
         String name = "";
 
@@ -1225,39 +1280,39 @@ public class Tools {
             name = file.getName();
             name = name.substring(0, name.lastIndexOf("."));
         }
- 
+
         return name;
     }
-    
+
     /**
      * 
      * @param source
      * @param sourceEncoding
      * @return
-     * @throws IOException 
+     * @throws IOException
      */
     public static File createTempFileInUTF8(File source, String sourceEncoding)
-                throws IOException {
-        if(sourceEncoding == null)
+            throws IOException {
+        if (sourceEncoding == null)
             return source;
-        
-        if(sourceEncoding.toUpperCase().contains("UTF-8"))
+
+        if (sourceEncoding.toUpperCase().contains("UTF-8"))
             return source;
-        
-        File newTemp = new File(source.getParentFile(), "TEMP_" + source.getName());            
+
+        File newTemp = new File(source.getParentFile(), "TEMP_" + source.getName());
         try {
-            if( ! newTemp.createNewFile())
+            if (!newTemp.createNewFile())
                 throw new IOException("Temp file could not be created in source directory.");
-        } catch(IOException ex) {
+        } catch (IOException ex) {
             LOGGER.log(Level.WARNING, null, ex);
-            newTemp = File.createTempFile(getFileNameWithoutExtension(newTemp), 
-                                          getFileExtension(newTemp));
+            newTemp = File.createTempFile(getFileNameWithoutExtension(newTemp),
+                    getFileExtension(newTemp));
         }
-        
+
         transformFileToUTF8(source, sourceEncoding, newTemp);
         return newTemp;
     }
-    
+
     public static int getAmountOfColumnsInCSV(File csvFile, char separator, Charset fileCharset)
             throws IOException {
         CSVFormat format = CSVFormat.DEFAULT
@@ -1266,15 +1321,15 @@ public class Tools {
         CSVParser parser = CSVParser.parse(csvFile, fileCharset, format);
         return parser.getHeaderMap().size();
     }
-    
-    public static boolean deleteFolderRecursively(File folder) 
+
+    public static boolean deleteFolderRecursively(File folder)
             throws IOException {
         if (folder.isDirectory()) {
             for (File c : folder.listFiles())
-              deleteFolderRecursively(c);
+                deleteFolderRecursively(c);
         }
         if (!folder.delete())
-          return false;
+            return false;
         return true;
     }
 
