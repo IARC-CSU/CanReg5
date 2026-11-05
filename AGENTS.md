@@ -72,4 +72,4 @@ CanReg5 is a multi-user, multi-platform, open-source tool for cancer registries 
     - **Release Tags:** Final versions are tagged alphabetically (e.g., `v5.00.44h`, `v5.00.44i`).
     - **Pre-releases:** Includes tags for beta versions (`BETA1`, `BETA10`) and release candidates (`RC1`).
 - **Release Documentation:** The `changelog.txt` remains the authoritative source for detailed version history and feature updates.
-- **VCS History:** Repository shows a migration path from Mercurial to Git, evidenced by the presence of both `.hgignore` and `.gitignore`.
+- **VCS History:** Repository was migrated from Mercurial to Git (historical changelogs and commits reflect the transition).

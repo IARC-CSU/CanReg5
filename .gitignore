@@ -274,6 +274,10 @@ report-template-TRN-E/*
 target/*
 
 ## jDeploy
-jdeploy/*
-jdeploy-bundle/*
+jdeploy/
+jdeploy-bundle/
+
+# Patch / R temporary files
+*.rej
+Rplots.pdf
 
