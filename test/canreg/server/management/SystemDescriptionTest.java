@@ -38,7 +38,8 @@ public class SystemDescriptionTest {
     @Test
     public void testRegistryNameIsTrainingRegistry() {
         SystemDescription sd = createSD();
-        // TRN.xml declares: <ns3:registry_name>Training Cancer Registry</ns3:registry_name>
+        // TRN.xml declares: <ns3:registry_name>Training Cancer
+        // Registry</ns3:registry_name>
         assertEquals("Training Cancer Registry", sd.getRegistryName());
     }
 
@@ -113,8 +114,8 @@ public class SystemDescriptionTest {
     public void testEachDictionaryHasName() {
         SystemDescription sd = createSD();
         for (DatabaseDictionaryListElement d : sd.getDatabaseDictionaryListElements()) {
-            assertNotNull("Dictionary name must not be null",  d.getName());
-            assertFalse("Dictionary name must not be empty",   d.getName().trim().isEmpty());
+            assertNotNull("Dictionary name must not be null", d.getName());
+            assertFalse("Dictionary name must not be empty", d.getName().trim().isEmpty());
         }
     }
 
@@ -153,8 +154,8 @@ public class SystemDescriptionTest {
     public void testEachGroupHasName() {
         SystemDescription sd = createSD();
         for (DatabaseGroupsListElement g : sd.getDatabaseGroupsListElements()) {
-            assertNotNull("Group name must not be null",  g.getGroupName());
-            assertFalse("Group name must not be empty",   g.getGroupName().trim().isEmpty());
+            assertNotNull("Group name must not be null", g.getGroupName());
+            assertFalse("Group name must not be empty", g.getGroupName().trim().isEmpty());
         }
     }
 
