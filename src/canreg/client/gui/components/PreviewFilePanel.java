@@ -81,6 +81,14 @@ public class PreviewFilePanel extends javax.swing.JPanel {
         charsetsComboBox.setModel(new javax.swing.DefaultComboBoxModel(charsets.values().toArray()));
         // set the default mapping
         charsetsComboBox.setSelectedItem(CanRegClientApp.getApplication().getGlobalToolBox().getStandardCharset());
+        charsetsComboBox.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                if (inFile != null && inFile.exists() && inFile.isFile()) {
+                    updatePreview();
+                }
+            }
+        });
         // initializeVariableMappingTab();
     }
 
@@ -337,11 +345,14 @@ public class PreviewFilePanel extends javax.swing.JPanel {
 
 
     @Action
-    public void previewAction() {
+    public void updatePreview(boolean showDialogOnError) {
+        if (inFile == null || !inFile.exists() || !inFile.isFile()) {
+            previewPanel.setVisible(false);
+            return;
+        }
         // show the contents of the file
         BufferedReader br = null;
         try {
-            changeFile();
             // numberOfRecordsTextField.setText(""+(canreg.common.Tools.numberOfLinesInFile(inFile.getAbsolutePath())-1));
             FileInputStream fis = new FileInputStream(inFile);
             br = new BufferedReader(new InputStreamReader(fis, (Charset) charsetsComboBox.getSelectedItem()));
@@ -378,12 +389,16 @@ public class PreviewFilePanel extends javax.swing.JPanel {
             Vector columnNames = new Vector(Arrays.asList(headers));
             previewTable.setModel(new DefaultTableModel(data, columnNames));
         } catch (FileNotFoundException fileNotFoundException) {
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(),
-                java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportView").getString("COULD_NOT_PREVIEW_FILE:") + " \'" + fileNameTextField.getText().trim() + "\'.", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportView").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
-           LOGGER.log(Level.SEVERE, null, fileNotFoundException);
-        } catch (IOException ex) {
-           LOGGER.log(Level.SEVERE, null, ex);
-            new TechnicalError().errorDialog();
+            LOGGER.log(Level.WARNING, "File not found for preview: " + inFile.getPath(), fileNotFoundException);
+            if (showDialogOnError) {
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(),
+                    java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportView").getString("COULD_NOT_PREVIEW_FILE:") + " '" + fileNameTextField.getText().trim() + "'.", java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportView").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception ex) {
+            LOGGER.log(Level.WARNING, "Could not preview file: " + inFile.getPath(), ex);
+            if (showDialogOnError) {
+                new TechnicalError().errorDialog();
+            }
         } finally {
             try {
                 if (br != null) {
@@ -394,6 +409,16 @@ public class PreviewFilePanel extends javax.swing.JPanel {
                 new TechnicalError().errorDialog();
             }
         }
+    }
+
+    public void updatePreview() {
+        updatePreview(false);
+    }
+
+    @Action
+    public void previewAction() {
+        changeFile();
+        updatePreview(true);
     }
 
     @Action
@@ -415,11 +440,15 @@ public class PreviewFilePanel extends javax.swing.JPanel {
             // JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/PreviewFilePanel").getString("NO_ENCODING_DETECTED."), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/components/PreviewFilePanel").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
         }
         autoDetectSeparator(true);
+        updatePreview();
     }
     
     @Action
     public void comboBoxChanged() {
         listener.actionPerformed(new ActionEvent(this, 0, SEPARATING_CHARACTER_CHANGED_ACTION));
+        if (inFile != null && inFile.exists() && inFile.isFile()) {
+            updatePreview();
+        }
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -452,6 +481,9 @@ public class PreviewFilePanel extends javax.swing.JPanel {
                 if (inFile.exists() && inFile.isFile()) {
                     numberOfRecordsTextField.setText("" + (canreg.common.Tools.numberOfLinesInFile(inFile.getCanonicalPath()) - 1));
                     autoDetectSeparator(false);
+                    updatePreview();
+                } else {
+                    previewPanel.setVisible(false);
                 }
             } catch (IOException ex) {
                LOGGER.log(Level.SEVERE, null, ex);
@@ -459,6 +491,7 @@ public class PreviewFilePanel extends javax.swing.JPanel {
             }
         } else {
             inFile = null;
+            previewPanel.setVisible(false);
         }
     }
 
