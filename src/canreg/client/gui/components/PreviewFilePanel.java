@@ -219,7 +219,7 @@ public class PreviewFilePanel extends javax.swing.JPanel {
         fileLabel.setName("fileLabel"); // NOI18N
 
         separatingCharacterComboBox.setEditable(true);
-        separatingCharacterComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tab", "Comma" }));
+        separatingCharacterComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tab", "Comma", "Semicolon", "Pipe" }));
         separatingCharacterComboBox.setAction(actionMap.get("comboBoxChanged")); // NOI18N
         separatingCharacterComboBox.setName("separatingCharacterComboBox"); // NOI18N
 
@@ -304,7 +304,9 @@ public class PreviewFilePanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void fileNameTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_fileNameTextFieldFocusLost
-        // TODO add your handling code here:
+        if (fileNameTextField.getText().trim().length() > 0) {
+            changeFile();
+        }
 }//GEN-LAST:event_fileNameTextFieldFocusLost
 
     private void fileNameTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fileNameTextFieldMouseReleased
@@ -412,6 +414,7 @@ public class PreviewFilePanel extends javax.swing.JPanel {
 
             // JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/PreviewFilePanel").getString("NO_ENCODING_DETECTED."), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/components/PreviewFilePanel").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
         }
+        autoDetectSeparator(true);
     }
     
     @Action
@@ -439,12 +442,17 @@ public class PreviewFilePanel extends javax.swing.JPanel {
     private javax.swing.JLabel separatingCharacterLabel;
     // End of variables declaration//GEN-END:variables
 
+    private String lastAutoDetectedSeparatorFilePath = null;
+
     private void changeFile() {
         if (fileNameTextField.getText().trim().length() > 0) {
             try {
                 inFile = new File(fileNameTextField.getText().trim());
                 listener.actionPerformed(new ActionEvent(this, 0, FILE_CHANGED_ACTION));
-                numberOfRecordsTextField.setText("" + (canreg.common.Tools.numberOfLinesInFile(inFile.getCanonicalPath()) - 1));
+                if (inFile.exists() && inFile.isFile()) {
+                    numberOfRecordsTextField.setText("" + (canreg.common.Tools.numberOfLinesInFile(inFile.getCanonicalPath()) - 1));
+                    autoDetectSeparator(false);
+                }
             } catch (IOException ex) {
                LOGGER.log(Level.SEVERE, null, ex);
                 new TechnicalError().errorDialog();
@@ -454,13 +462,51 @@ public class PreviewFilePanel extends javax.swing.JPanel {
         }
     }
 
+    public void autoDetectSeparator(boolean force) {
+        if (inFile != null && inFile.exists() && inFile.isFile()) {
+            String currentPath = inFile.getAbsolutePath();
+            if (force || !currentPath.equals(lastAutoDetectedSeparatorFilePath)) {
+                Charset cs = getCharacterSet();
+                char sep = Tools.autoDetectSeparator(inFile, cs);
+                setSeparator(sep);
+                lastAutoDetectedSeparatorFilePath = currentPath;
+            }
+        }
+    }
+
+    public void autoDetectSeparator() {
+        autoDetectSeparator(true);
+    }
+
+    public void setSeparator(char sep) {
+        if (sep == '\t') {
+            separatingCharacterComboBox.setSelectedItem("Tab");
+        } else if (sep == ',') {
+            separatingCharacterComboBox.setSelectedItem("Comma");
+        } else if (sep == ';') {
+            separatingCharacterComboBox.setSelectedItem("Semicolon");
+        } else if (sep == '|') {
+            separatingCharacterComboBox.setSelectedItem("Pipe");
+        } else {
+            separatingCharacterComboBox.setSelectedItem(String.valueOf(sep));
+        }
+    }
+
     public char getSeparator() {
-        String sc = separatingCharacterComboBox.getSelectedItem().toString();
+        Object item = separatingCharacterComboBox.getSelectedItem();
+        if (item == null) {
+            return ',';
+        }
+        String sc = item.toString().trim();
         char schar = ','; // Default
-        if (sc.equalsIgnoreCase("Tab")) {
+        if (sc.equalsIgnoreCase("Tab") || sc.equalsIgnoreCase("\\t") || sc.equals("\t")) {
             schar = '\t';
-        } else if (sc.equalsIgnoreCase("Comma")) {
+        } else if (sc.equalsIgnoreCase("Comma") || sc.equals(",")) {
             schar = ',';
+        } else if (sc.equalsIgnoreCase("Semicolon") || sc.equals(";")) {
+            schar = ';';
+        } else if (sc.equalsIgnoreCase("Pipe") || sc.equals("|")) {
+            schar = '|';
         } else if (sc.length() > 0) {
             schar = sc.charAt(0);
         }

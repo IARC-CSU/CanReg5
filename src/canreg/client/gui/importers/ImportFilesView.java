@@ -1209,7 +1209,15 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
      */
     @Action
     public void autodetectSeparatingCharacterAction() {
-        JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportFilesView").getString("NOT_YET_IMPLEMENTED."), java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportFilesView").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
+        if (patientPreviewFilePanel != null) {
+            patientPreviewFilePanel.autoDetectSeparator();
+        }
+        if (tumourPreviewFilePanel != null) {
+            tumourPreviewFilePanel.autoDetectSeparator();
+        }
+        if (sourcePreviewFilePanel != null) {
+            sourcePreviewFilePanel.autoDetectSeparator();
+        }
     }
 
     /**

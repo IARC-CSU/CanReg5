@@ -44,10 +44,13 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -1320,6 +1323,161 @@ public class Tools {
                 .withDelimiter(separator);
         CSVParser parser = CSVParser.parse(csvFile, fileCharset, format);
         return parser.getHeaderMap().size();
+    }
+
+    /**
+     * Automatically detects the separating character (delimiter) of a tabular file.
+     * Evaluates Tab ('\t'), Comma (','), Semicolon (';'), and Pipe ('|') by sampling
+     * lines from the file and scoring column count uniformity and consistency.
+     *
+     * @param file the tabular file to inspect
+     * @param charset the character encoding of the file (if null, UTF-8 is assumed)
+     * @return the detected separating character, or fallback based on file extension
+     */
+    public static char autoDetectSeparator(File file, Charset charset) {
+        if (file == null || !file.exists() || !file.isFile() || file.length() == 0) {
+            return getFallbackSeparator(file != null ? file.getName() : null);
+        }
+
+        if (charset == null) {
+            charset = StandardCharsets.UTF_8;
+        }
+
+        // Delimiter candidates to test
+        char[] candidates = new char[]{'\t', ',', ';', '|'};
+
+        // Sample up to 50 non-empty lines
+        List<String> sampledLines = new ArrayList<String>(50);
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), charset))) {
+            String line;
+            while ((line = reader.readLine()) != null && sampledLines.size() < 50) {
+                String trimmed = line.trim();
+                if (!trimmed.isEmpty()) {
+                    sampledLines.add(line);
+                }
+            }
+        } catch (Exception ex) {
+            LOGGER.log(Level.FINE, "Error reading file for separator detection: " + file.getName(), ex);
+            return getFallbackSeparator(file.getName());
+        }
+
+        if (sampledLines.isEmpty()) {
+            return getFallbackSeparator(file.getName());
+        }
+
+        // If only 1 line, pick delimiter that produces max columns > 1
+        if (sampledLines.size() == 1) {
+            String singleLine = sampledLines.get(0);
+            char bestDelim = getFallbackSeparator(file.getName());
+            int maxCols = 1;
+            for (char delim : candidates) {
+                int cols = countDelimitedColumns(singleLine, delim);
+                if (cols > maxCols) {
+                    maxCols = cols;
+                    bestDelim = delim;
+                }
+            }
+            return bestDelim;
+        }
+
+        // For multiple lines: evaluate consistency across lines for each candidate
+        char bestDelim = getFallbackSeparator(file.getName());
+        double highestScore = -1.0;
+
+        for (char delim : candidates) {
+            Map<Integer, Integer> colFrequencies = new HashMap<Integer, Integer>();
+
+            for (String line : sampledLines) {
+                int cols = countDelimitedColumns(line, delim);
+                Integer count = colFrequencies.get(cols);
+                colFrequencies.put(cols, count == null ? 1 : count + 1);
+            }
+
+            // Find mode column count (> 1)
+            int modeCols = 0;
+            int modeCount = 0;
+            for (Map.Entry<Integer, Integer> entry : colFrequencies.entrySet()) {
+                int cols = entry.getKey();
+                int freq = entry.getValue();
+                if (cols > 1 && freq > modeCount) {
+                    modeCount = freq;
+                    modeCols = cols;
+                }
+            }
+
+            if (modeCols <= 1 || modeCount == 0) {
+                continue; // Delimiter did not produce multi-column records
+            }
+
+            double consistencyRatio = (double) modeCount / sampledLines.size();
+
+            // Score formula:
+            // High bonus for perfect uniformity across all sampled lines
+            // Proportional score for consistency ratio, with column count weight
+            double score;
+            if (modeCount == sampledLines.size()) {
+                // Perfect consistency on every line
+                score = 10000.0 + (modeCols * 10.0);
+            } else if (consistencyRatio >= 0.7) {
+                // High consistency (e.g. slight discrepancy due to header or trailer)
+                score = (consistencyRatio * 1000.0) + (modeCols * 5.0);
+            } else {
+                score = (consistencyRatio * 100.0) + modeCols;
+            }
+
+            if (score > highestScore) {
+                highestScore = score;
+                bestDelim = delim;
+            }
+        }
+
+        return bestDelim;
+    }
+
+    /**
+     * Automatically detects the separating character (delimiter) of a tabular file.
+     *
+     * @param filePath path to the tabular file
+     * @param charset character encoding of the file
+     * @return detected separating character
+     */
+    public static char autoDetectSeparator(String filePath, Charset charset) {
+        if (filePath == null || filePath.trim().isEmpty()) {
+            return ',';
+        }
+        return autoDetectSeparator(new File(filePath.trim()), charset);
+    }
+
+    /**
+     * Counts the number of columns resulting from splitting the line by delimiter,
+     * respecting double-quoted fields.
+     */
+    private static int countDelimitedColumns(String line, char delimiter) {
+        if (line == null || line.isEmpty()) {
+            return 1;
+        }
+        int count = 1;
+        boolean inQuotes = false;
+        int len = line.length();
+        for (int i = 0; i < len; i++) {
+            char c = line.charAt(i);
+            if (c == '"') {
+                inQuotes = !inQuotes;
+            } else if (c == delimiter && !inQuotes) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private static char getFallbackSeparator(String fileName) {
+        if (fileName != null) {
+            String lower = fileName.toLowerCase(Locale.ROOT);
+            if (lower.endsWith(".tsv") || lower.endsWith(".tab")) {
+                return '\t';
+            }
+        }
+        return ',';
     }
 
     public static boolean deleteFolderRecursively(File folder)
