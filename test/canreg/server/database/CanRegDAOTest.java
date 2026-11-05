@@ -338,4 +338,83 @@ public class CanRegDAOTest {
 
         dao.releaseResultSet(desc.getResultSetID());
     }
+
+    @Test
+    public void testPreparedStatementCacheAndReuse() throws Exception {
+        Connection conn = dao.getDbConnection();
+        String testSql = "SELECT COUNT(*) FROM APP.PATIENT";
+
+        java.sql.PreparedStatement stmt1 = dao.getCachedPreparedStatement(conn, testSql, false);
+        assertNotNull(stmt1);
+        assertFalse(stmt1.isClosed());
+
+        java.sql.PreparedStatement stmt2 = dao.getCachedPreparedStatement(conn, testSql, false);
+        assertSame("Cached prepared statement should be reused across calls", stmt1, stmt2);
+
+        // Invalidation should close and remove statement
+        dao.invalidatePreparedStatement(testSql, false);
+        assertTrue("Invalidated statement should be closed", stmt1.isClosed());
+
+        java.sql.PreparedStatement stmt3 = dao.getCachedPreparedStatement(conn, testSql, false);
+        assertNotNull(stmt3);
+        assertNotSame("Re-requesting invalidated statement should produce a new instance", stmt1, stmt3);
+    }
+
+    @Test
+    public void testBatchSequentialGetNextPatientIDAndRollback() throws Exception {
+        // First allocation queries DB or initializes year-based sequence
+        String firstID = dao.getNextPatientID();
+        assertNotNull(firstID);
+        assertFalse(firstID.trim().isEmpty());
+
+        // Subsequent allocations should increment sequentially in memory without DB scans
+        String secondID = dao.getNextPatientID();
+        assertNotNull(secondID);
+        assertEquals(canreg.common.Tools.increment(firstID), secondID);
+
+        String thirdID = dao.getNextPatientID();
+        assertNotNull(thirdID);
+        assertEquals(canreg.common.Tools.increment(secondID), thirdID);
+
+        // On rollback, cached sequence must be invalidated
+        dao.openTransaction();
+        dao.rollbackTransaction();
+
+        // Fresh fetch after rollback should query database
+        String afterRollbackID = dao.getNextPatientID();
+        assertNotNull(afterRollbackID);
+    }
+
+    @Test
+    public void testFormatInitialPatientRecordID() {
+        String patientID = "20260001";
+        String initialRecordID = dao.formatInitialPatientRecordID(patientID);
+        assertNotNull(initialRecordID);
+        assertTrue(initialRecordID.startsWith(patientID));
+        assertTrue(initialRecordID.endsWith("1"));
+        assertEquals(10, initialRecordID.length());
+    }
+
+    @Test
+    public void testBatchSavePatientAndTumourStatementReuse() throws Exception {
+        dao.openTransaction();
+        for (int i = 0; i < 5; i++) {
+            Patient p = new Patient();
+            p.setVariable("FirstN", "BATCH_FIRST_" + i);
+            p.setVariable("FamN", "BATCH_FAM_" + i);
+            p.setVariable("Sex", "1");
+            int pid = dao.savePatient(p);
+            assertTrue(pid > 0);
+
+            Tumour t = new Tumour();
+            t.setVariable("PatientRecordIDtumourtable", p.getVariable("PATIENTRECORDID"));
+            t.setVariable("IncDate", "20260101");
+            t.setVariable("Top", "C50");
+            t.setVariable("Mor", "8000");
+            t.setVariable("Beh", "3");
+            int tid = dao.saveTumour(t);
+            assertTrue(tid > 0);
+        }
+        dao.commitTransaction();
+    }
 }

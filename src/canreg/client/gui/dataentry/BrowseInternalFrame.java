@@ -1078,11 +1078,17 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
             int totalPatients = patientRecordIDsToProcess.size();
             int currentPatientIndex = 0;
             int batchCount = 0;
+            int lastProgressPercent = -1;
 
             try {
                 productionServer.openTransaction();
             } catch (Exception ex) {
                 LOGGER.log(Level.WARNING, "Could not open transaction on production server", ex);
+            }
+            try {
+                server.openTransaction();
+            } catch (Exception ex) {
+                LOGGER.log(Level.WARNING, "Could not open transaction on holding server", ex);
             }
 
             try {
@@ -1091,20 +1097,23 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                     final int progressPercent = totalPatients > 0
                             ? (int) (((double) (currentPatientIndex - 1) / totalPatients) * 100)
                             : 0;
-                    final String statusMessage = browseResourceMap.getString("IMPORTING RECORDS INTO PRODUCTION ")
-                            + " (" + currentPatientIndex + "/" + totalPatients + ")...";
+                    if (progressPercent != lastProgressPercent || currentPatientIndex % 100 == 0 || currentPatientIndex == totalPatients) {
+                        lastProgressPercent = progressPercent;
+                        final String statusMessage = browseResourceMap.getString("IMPORTING RECORDS INTO PRODUCTION ")
+                                + " (" + currentPatientIndex + "/" + totalPatients + ")...";
 
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (waitFrame != null) {
-                                waitFrame.setProgress(progressPercent);
-                                waitFrame.setLabel(statusMessage);
+                        SwingUtilities.invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (waitFrame != null) {
+                                    waitFrame.setProgress(progressPercent);
+                                    waitFrame.setLabel(statusMessage);
+                                }
                             }
-                        }
-                    });
-                    setProgress(progressPercent, 0, 100);
-                    setMessage(statusMessage);
+                        });
+                        setProgress(progressPercent, 0, 100);
+                        setMessage(statusMessage);
+                    }
 
                     Patient patientToImport = CanRegClientApp.getApplication().getPatientRecord(holdingPatientRecordID, false, server);
                     if (patientToImport == null) {
@@ -1123,6 +1132,14 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
 
                     Tumour[] tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientRecordID(holdingPatientRecordID, false, server);
                     if (tumourRecords != null) {
+                        String targetPatientRecordID = holdingPatientRecordID;
+                        if (productionPRID != -1) {
+                            Patient productionPatient = (Patient) productionServer.getRecord(productionPRID, Globals.PATIENT_TABLE_NAME, false, server.hashCode());
+                            if (productionPatient != null) {
+                                targetPatientRecordID = productionPatient.getVariableAsString(patientRecordIDVariable);
+                            }
+                        }
+
                         for (Tumour tumourToImport : tumourRecords) {
                             if (tumourToImport == null) {
                                 continue;
@@ -1148,16 +1165,10 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                             }
 
                             String tumourID = tumourToImport.getVariableAsString(tumourIDlookupVariable);
-                            String targetPatientRecordID = holdingPatientRecordID;
-
                             if (productionPRID != -1) {
-                                Patient productionPatient = (Patient) productionServer.getRecord(productionPRID, Globals.PATIENT_TABLE_NAME, false, server.hashCode());
-                                if (productionPatient != null) {
-                                    targetPatientRecordID = productionPatient.getVariableAsString(patientRecordIDVariable);
-                                    tumourToImport.setVariable(tumourIDVariableName, "");
-                                    tumourToImport.setVariable(tumourPatientRecordIdVariableName, targetPatientRecordID);
-                                    tumourID = "";
-                                }
+                                tumourToImport.setVariable(tumourIDVariableName, "");
+                                tumourToImport.setVariable(tumourPatientRecordIdVariableName, targetPatientRecordID);
+                                tumourID = "";
                             }
 
                             Import.importTumour(productionServer, discrepancyOption, tumourID,
@@ -1198,6 +1209,12 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                         } catch (Exception ex) {
                             LOGGER.log(Level.WARNING, "Error committing batch transaction on production server", ex);
                         }
+                        try {
+                            server.commitTransaction();
+                            server.openTransaction();
+                        } catch (Exception ex) {
+                            LOGGER.log(Level.WARNING, "Error committing batch transaction on holding server", ex);
+                        }
                     }
                 }
 
@@ -1206,9 +1223,18 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                 } catch (Exception ex) {
                     LOGGER.log(Level.WARNING, "Error committing final transaction on production server", ex);
                 }
+                try {
+                    server.commitTransaction();
+                } catch (Exception ex) {
+                    LOGGER.log(Level.WARNING, "Error committing final transaction on holding server", ex);
+                }
             } catch (Exception ex) {
                 try {
                     productionServer.rollbackTransaction();
+                } catch (Exception ignore) {
+                }
+                try {
+                    server.rollbackTransaction();
                 } catch (Exception ignore) {
                 }
                 throw ex;

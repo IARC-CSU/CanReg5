@@ -67,6 +67,9 @@ public class CanRegDAO {
     private static final String PAPER_31_PDF = "http://www.who.int/healthinfo/paper31.pdf";
 
     private final DatabaseVariablesListElement[] variables;
+    private final Map<String, DatabaseVariablesListElement[]> tableVariablesMap;
+    private final Map<String, PreparedStatement> statementCache = new HashMap<String, PreparedStatement>();
+    private String lastAllocatedPatientID = null;
     StringBuilder counterStringBuilder = new StringBuilder();
     StringBuilder getterStringBuilder = new StringBuilder();
     StringBuilder filterStringBuilder = new StringBuilder();
@@ -133,6 +136,21 @@ public class CanRegDAO {
         globalToolBox = new GlobalToolBox(doc);
 
         variables = globalToolBox.getVariables();
+
+        Map<String, List<DatabaseVariablesListElement>> tempMap = new HashMap<String, List<DatabaseVariablesListElement>>();
+        for (DatabaseVariablesListElement variable : variables) {
+            String tableNameDB = variable.getDatabaseTableName().toUpperCase();
+            List<DatabaseVariablesListElement> list = tempMap.get(tableNameDB);
+            if (list == null) {
+                list = new ArrayList<DatabaseVariablesListElement>();
+                tempMap.put(tableNameDB, list);
+            }
+            list.add(variable);
+        }
+        tableVariablesMap = new HashMap<String, DatabaseVariablesListElement[]>();
+        for (Map.Entry<String, List<DatabaseVariablesListElement>> entry : tempMap.entrySet()) {
+            tableVariablesMap.put(entry.getKey(), entry.getValue().toArray(new DatabaseVariablesListElement[entry.getValue().size()]));
+        }
 
         distributedDataSources = new LinkedHashMap<String, DistributedTableDataSource>();
         activeStatements = new LinkedHashMap<String, Statement>();
@@ -221,6 +239,86 @@ public class CanRegDAO {
         }
         // create a new connection for a remote access
         return dbDatasource.getConnection();
+    }
+
+    /**
+     * Retrieve or create a cached PreparedStatement for the current connection.
+     *
+     * @param connection the database connection
+     * @param sql the SQL string to prepare
+     * @param returnGeneratedKeys whether generated keys should be returned
+     * @return the prepared statement
+     * @throws SQLException if a database access error occurs
+     */
+    public synchronized PreparedStatement getCachedPreparedStatement(Connection connection, String sql, boolean returnGeneratedKeys) throws SQLException {
+        if (dbDatasource != null) {
+            return returnGeneratedKeys ? connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
+                    : connection.prepareStatement(sql);
+        }
+        String key = (returnGeneratedKeys ? "GK:" : "NO:") + sql;
+        PreparedStatement stmt = statementCache.get(key);
+        if (stmt == null || stmt.isClosed()) {
+            stmt = returnGeneratedKeys ? connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
+                    : connection.prepareStatement(sql);
+            statementCache.put(key, stmt);
+        }
+        return stmt;
+    }
+
+    /**
+     * Invalidate and close a cached PreparedStatement if an error occurs.
+     *
+     * @param sql the SQL query
+     * @param returnGeneratedKeys whether generated keys were requested
+     */
+    public synchronized void invalidatePreparedStatement(String sql, boolean returnGeneratedKeys) {
+        String key = (returnGeneratedKeys ? "GK:" : "NO:") + sql;
+        PreparedStatement stmt = statementCache.remove(key);
+        if (stmt != null) {
+            try {
+                if (!stmt.isClosed()) {
+                    stmt.close();
+                }
+            } catch (SQLException ignore) {
+            }
+        }
+    }
+
+    /**
+     * Clear all cached PreparedStatements and reset cached sequence counters.
+     */
+    public synchronized void clearStatementCache() {
+        for (PreparedStatement stmt : statementCache.values()) {
+            if (stmt != null) {
+                try {
+                    if (!stmt.isClosed()) {
+                        stmt.close();
+                    }
+                } catch (SQLException ignore) {
+                }
+            }
+        }
+        statementCache.clear();
+        lastAllocatedPatientID = null;
+    }
+
+    /**
+     * Formats the initial PatientRecordID for a brand new PatientID (patientID + "0...01")
+     * without requiring a full-table query against APP.PATIENT.
+     *
+     * @param patientID the patient ID
+     * @return formatted initial patient record ID
+     */
+    public String formatInitialPatientRecordID(String patientID) {
+        String patientRecordID = patientID;
+        int patientRecordIDlength = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getVariableLength();
+        while (patientRecordID.length() < patientRecordIDlength - 1) {
+            patientRecordID += "0";
+        }
+        if (patientRecordID.length() == patientRecordIDlength - 1) {
+            patientRecordID += "1";
+        }
+        return patientRecordID;
     }
 
     /**
@@ -906,6 +1004,7 @@ public class CanRegDAO {
      * @throws SQLException SQLException
      */
     public synchronized void rollbackTransaction() throws SQLException {
+        lastAllocatedPatientID = null;
         if (dbConnection != null && !dbConnection.getAutoCommit()) {
             dbConnection.rollback();
             dbConnection.setAutoCommit(true);
@@ -1006,6 +1105,7 @@ public class CanRegDAO {
 
     public boolean disconnect() throws SQLException {
         boolean shutdownSuccess = false;
+        clearStatementCache();
         if (isConnected) {
             String dbUrl = getDatabaseUrl();
             try {
@@ -1053,74 +1153,75 @@ public class CanRegDAO {
         int id = -1;
         stmtSaveNewRecord.clearParameters();
 
+        DatabaseVariablesListElement[] tableVars = tableVariablesMap.get(tableName.toUpperCase());
+        if (tableVars == null) {
+            List<DatabaseVariablesListElement> list = new ArrayList<DatabaseVariablesListElement>();
+            for (DatabaseVariablesListElement v : variables) {
+                if (v.getDatabaseTableName().equalsIgnoreCase(tableName)) {
+                    list.add(v);
+                }
+            }
+            tableVars = list.toArray(new DatabaseVariablesListElement[list.size()]);
+        }
+
         int recordVariableNumber = 0;
+        for (DatabaseVariablesListElement variable : tableVars) {
+            recordVariableNumber++;
+            int variableLength = variable.getVariableLength();
+            String variableType = variable.getVariableType();
 
-        // Go through all the variable definitions
-        // todo: optimize this code!
-        for (DatabaseVariablesListElement variable : variables) {
+            Object obj = record.getVariable(variable.getDatabaseVariableName());
 
-            // Create line
-            String tableNameDB = variable.getDatabaseTableName();
-
-            if (tableNameDB.equalsIgnoreCase(tableName)) {
-                recordVariableNumber++;
-                int variableLength;
-                String variableType = variable.getVariableType();
-                variableLength = variable.getVariableLength();
-                // String variableLenghtString = null;
-
-                Object obj = record.getVariable(variable.getDatabaseVariableName());
-
-                if (variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_ALPHA_NAME) ||
-                        variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_ASIAN_TEXT_NAME) ||
-                        variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_DICTIONARY_NAME) ||
-                        variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_DATE_NAME) ||
-                        variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_TEXT_AREA_NAME) ||
-                        variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_UUID)) {
-                    if (obj != null) {
-                        try {
-                            String strObj = obj.toString();
-                            if (strObj.length() > 0) {
-                                if (variableLength > 0 && strObj.length() > variableLength) {
-                                    strObj = strObj.substring(0, variableLength);
-                                }
-                                stmtSaveNewRecord.setString(recordVariableNumber, strObj);
-                            } else {
-                                stmtSaveNewRecord.setString(recordVariableNumber, "");
+            if (variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_ALPHA_NAME) ||
+                    variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_ASIAN_TEXT_NAME) ||
+                    variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_DICTIONARY_NAME) ||
+                    variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_DATE_NAME) ||
+                    variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_TEXT_AREA_NAME) ||
+                    variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_UUID)) {
+                if (obj != null) {
+                    try {
+                        String strObj = obj.toString();
+                        if (strObj.length() > 0) {
+                            if (variableLength > 0 && strObj.length() > variableLength) {
+                                strObj = strObj.substring(0, variableLength);
                             }
-                        } catch (java.lang.ClassCastException cce) {
-                            debugOut("Cast to String Error. Type:" + variableType + ", Value: " + obj + ", Variable Number: " + recordVariableNumber);
-                            throw cce;
+                            stmtSaveNewRecord.setString(recordVariableNumber, strObj);
+                        } else {
+                            stmtSaveNewRecord.setString(recordVariableNumber, "");
                         }
-                    } else {
-                        stmtSaveNewRecord.setString(recordVariableNumber, "");
+                    } catch (java.lang.ClassCastException cce) {
+                        debugOut("Cast to String Error. Type:" + variableType + ", Value: " + obj + ", Variable Number: " + recordVariableNumber);
+                        throw cce;
                     }
-                } else if (variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_NUMBER_NAME)) {
-                    if (obj != null) {
-                        try {
-                            Integer intObj = (Integer) obj;
-                            stmtSaveNewRecord.setInt(recordVariableNumber, intObj);
-                        } catch (java.lang.ClassCastException cce) {
-                            debugOut("Number " + variableType + " " + obj);
-                            throw cce;
-                        }
-                    } else {
-                        stmtSaveNewRecord.setInt(recordVariableNumber, -1);
+                } else {
+                    stmtSaveNewRecord.setString(recordVariableNumber, "");
+                }
+            } else if (variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_NUMBER_NAME)) {
+                if (obj != null) {
+                    try {
+                        Integer intObj = (Integer) obj;
+                        stmtSaveNewRecord.setInt(recordVariableNumber, intObj);
+                    } catch (java.lang.ClassCastException cce) {
+                        debugOut("Number " + variableType + " " + obj);
+                        throw cce;
                     }
+                } else {
+                    stmtSaveNewRecord.setInt(recordVariableNumber, -1);
                 }
             }
         }
 
         int rowCount = stmtSaveNewRecord.executeUpdate();
-        ResultSet results = stmtSaveNewRecord.getGeneratedKeys();
-        if (results.next()) {
-            id = results.getInt(1);
-            if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
-                record.setVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME, id);
-            } else if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
-                record.setVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME, id);
-            } else if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
-                record.setVariable(Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME, id);
+        try (ResultSet results = stmtSaveNewRecord.getGeneratedKeys()) {
+            if (results.next()) {
+                id = results.getInt(1);
+                if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
+                    record.setVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME, id);
+                } else if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
+                    record.setVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME, id);
+                } else if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
+                    record.setVariable(Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME, id);
+                }
             }
         }
 
@@ -1137,12 +1238,14 @@ public class CanRegDAO {
         if (patientID == null || patientID.trim().length() == 0) {
             patientID = getNextPatientID();
             patient.setVariable(patientIDVariable.getDatabaseVariableName(), patientID);
-            patientRecordID = getNextPatientRecordID(patientID);
+            patientRecordID = formatInitialPatientRecordID(patientID);
             patient.setVariable(patientRecordIDVariable.getDatabaseVariableName(), patientRecordID);
-        } else if (patientRecordID == null || patientRecordID.trim().length() == 0) {
-            patientRecordID = getNextPatientRecordID(patientID);
-            patient.setVariable(patientRecordIDVariable.getDatabaseVariableName(), patientRecordID);
-            patient.setVariable(patientRecordIDVariable.getDatabaseVariableName(), getNextPatientRecordID(patientID));
+        } else {
+            lastAllocatedPatientID = null;
+            if (patientRecordID == null || patientRecordID.trim().length() == 0) {
+                patientRecordID = getNextPatientRecordID(patientID);
+                patient.setVariable(patientRecordIDVariable.getDatabaseVariableName(), patientRecordID);
+            }
         }
         DatabaseVariablesListElement patientRecordStatusVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientCheckStatus.toString());
         if (patient.getVariable(patientRecordStatusVariable.getDatabaseVariableName()) == null) {
@@ -1153,10 +1256,13 @@ public class CanRegDAO {
             patient.setVariable(patientUnduplicationStatusVariable.getDatabaseVariableName(), "0");
         }
 
-        try (Connection connection = getDbConnection();
-             PreparedStatement stmtSaveNewPatient = connection.prepareStatement(strSavePatient, Statement.RETURN_GENERATED_KEYS);
-        ) {
+        Connection connection = getDbConnection();
+        try {
+            PreparedStatement stmtSaveNewPatient = getCachedPreparedStatement(connection, strSavePatient, true);
             return saveRecord(Globals.PATIENT_TABLE_NAME, patient, stmtSaveNewPatient);
+        } catch (SQLException ex) {
+            invalidatePreparedStatement(strSavePatient, true);
+            throw ex;
         }
     }
 
@@ -1166,13 +1272,10 @@ public class CanRegDAO {
         Object tumourID = tumour.getVariable(tumourIDVariableName);
         String patientRecordIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName();
         String patientRecordID = (String) tumour.getVariable(patientRecordIDVariableName);
-        // 
 
         if (tumourID == null
-                || tumourID.toString().trim().length() == 0 // || !tumourID.toString().trim().startsWith(patientRecordID) // TODO: fix this! For now - disable it... (Maybe that is the best solution in the long run as well...)
+                || tumourID.toString().trim().length() == 0
         ) {
-            if (patientRecordID == null || patientRecordID.trim().length() == 0) {
-            }
             tumourID = getNextTumourID(patientRecordID);
             tumour.setVariable(tumourIDVariableName, tumourID);
         }
@@ -1189,24 +1292,18 @@ public class CanRegDAO {
             tumour.setVariable(tumourCheckStatusVariable.getDatabaseVariableName(), "0");
         }
 
-        // save tumour before we save the sources...
-        try (Connection connection = getDbConnection();
-             PreparedStatement stmtSaveNewTumour = connection.prepareStatement(strSaveTumour, Statement.RETURN_GENERATED_KEYS)) {
+        Connection connection = getDbConnection();
+        try {
+            PreparedStatement stmtSaveNewTumour = getCachedPreparedStatement(connection, strSaveTumour, true);
             int id = saveRecord(Globals.TUMOUR_TABLE_NAME, tumour, stmtSaveNewTumour);
 
             Set<Source> sources = tumour.getSources();
-            // delete old sources ## DEPRECATED
-//        try {
-//            deleteSources(tumourID);
-//        } catch (DistributedTableDescriptionException ex) {
-//            LOGGER.log(Level.SEVERE, null, ex);
-//        } catch (UnknownTableException ex) {
-//            LOGGER.log(Level.SEVERE, null, ex);
-//        }
-            // save each of the source records
             saveSources(tumourID, sources);
 
             return id;
+        } catch (SQLException ex) {
+            invalidatePreparedStatement(strSaveTumour, true);
+            throw ex;
         }
     }
 
@@ -1220,9 +1317,10 @@ public class CanRegDAO {
         if (sourceID != null && sourceID.contains("@H")) {
             sourceID = "";
         }
-        try (Connection connection = getDbConnection();
-             PreparedStatement stmtSaveNewSource = connection.prepareStatement(strSaveSource, Statement.RETURN_GENERATED_KEYS);
-             PreparedStatement stmtEditSource = connection.prepareStatement(strEditSource, Statement.RETURN_GENERATED_KEYS)) {
+        Connection connection = getDbConnection();
+        try {
+            PreparedStatement stmtSaveNewSource = getCachedPreparedStatement(connection, strSaveSource, true);
+            PreparedStatement stmtEditSource = getCachedPreparedStatement(connection, strEditSource, true);
             if (sourceID == null || sourceID.trim().length() == 0) {
                 String tumourIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(
                         Globals.StandardVariableNames.TumourIDSourceTable.toString()).getDatabaseVariableName();
@@ -1240,6 +1338,10 @@ public class CanRegDAO {
                     id = (int) sourceRecordID;
                 }
             }
+        } catch (SQLException ex) {
+            invalidatePreparedStatement(strSaveSource, true);
+            invalidatePreparedStatement(strEditSource, true);
+            throw ex;
         }
         return id;
     }
@@ -1485,14 +1587,17 @@ public class CanRegDAO {
         if (isRecordLocked(patientRecordID, Globals.PATIENT_TABLE_NAME)) {
             throw new RecordLockedException();
         }
-        try (Connection connection = getDbConnection();
-             PreparedStatement stmtDeletePatientRecord = connection.prepareStatement(STR_DELETE_PATIENT_RECORD)) {
+        try {
+            Connection connection = getDbConnection();
+            PreparedStatement stmtDeletePatientRecord = getCachedPreparedStatement(connection, STR_DELETE_PATIENT_RECORD, false);
             stmtDeletePatientRecord.clearParameters();
             stmtDeletePatientRecord.setInt(1, patientRecordID);
             int rows = stmtDeletePatientRecord.executeUpdate();
             success = (rows > 0);
+            lastAllocatedPatientID = null;
         } catch (SQLException sqle) {
             LOGGER.log(Level.SEVERE, null, sqle);
+            invalidatePreparedStatement(STR_DELETE_PATIENT_RECORD, false);
         }
         return success;
     }
@@ -1502,14 +1607,16 @@ public class CanRegDAO {
         if (isRecordLocked(tumourRecordID, Globals.TUMOUR_TABLE_NAME)) {
             throw new RecordLockedException();
         }
-        try (Connection connection = getDbConnection();
-             PreparedStatement stmtDeleteTumourRecord = connection.prepareStatement(STR_DELETE_TUMOUR_RECORD)) {
+        try {
+            Connection connection = getDbConnection();
+            PreparedStatement stmtDeleteTumourRecord = getCachedPreparedStatement(connection, STR_DELETE_TUMOUR_RECORD, false);
             stmtDeleteTumourRecord.clearParameters();
             stmtDeleteTumourRecord.setInt(1, tumourRecordID);
             int rows = stmtDeleteTumourRecord.executeUpdate();
             success = (rows > 0);
         } catch (SQLException sqle) {
             LOGGER.log(Level.SEVERE, null, sqle);
+            invalidatePreparedStatement(STR_DELETE_TUMOUR_RECORD, false);
         }
         return success;
     }
@@ -1519,14 +1626,16 @@ public class CanRegDAO {
         if (isRecordLocked(sourceRecordID, Globals.SOURCE_TABLE_NAME)) {
             throw new RecordLockedException();
         }
-        try (Connection connection = getDbConnection();
-             PreparedStatement stmtDeleteSourceRecord = connection.prepareStatement(STR_DELETE_SOURCE_RECORD)) {
+        try {
+            Connection connection = getDbConnection();
+            PreparedStatement stmtDeleteSourceRecord = getCachedPreparedStatement(connection, STR_DELETE_SOURCE_RECORD, false);
             stmtDeleteSourceRecord.clearParameters();
             stmtDeleteSourceRecord.setInt(1, sourceRecordID);
             int rows = stmtDeleteSourceRecord.executeUpdate();
             success = (rows > 0);
         } catch (SQLException sqle) {
             LOGGER.log(Level.SEVERE, null, sqle);
+            invalidatePreparedStatement(STR_DELETE_SOURCE_RECORD, false);
         }
         return success;
     }
@@ -1586,15 +1695,18 @@ public class CanRegDAO {
      */
     public synchronized boolean editPatient(Patient patient, boolean fromHoldingToProduction)
             throws RecordLockedException, SQLException {
-        try (Connection connection = getDbConnection();
-             PreparedStatement stmtEditPatient = connection.prepareStatement(strEditPatient,
-                     Statement.RETURN_GENERATED_KEYS)) {
+        Connection connection = getDbConnection();
+        try {
+            PreparedStatement stmtEditPatient = getCachedPreparedStatement(connection, strEditPatient, true);
             if (fromHoldingToProduction)
                 return editRecord(Globals.PATIENT_TABLE_NAME, patient, stmtEditPatient,
                         Globals.StandardVariableNames.PatientRecordID.toString());
             else
                 return editRecord(Globals.PATIENT_TABLE_NAME, patient, stmtEditPatient,
                         Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
+        } catch (SQLException ex) {
+            invalidatePreparedStatement(strEditPatient, true);
+            throw ex;
         }
     }
 
@@ -1607,16 +1719,18 @@ public class CanRegDAO {
      */
     public synchronized boolean editTumour(Tumour tumour, boolean fromHoldingToProduction)
             throws RecordLockedException, SQLException {
-
-        try (Connection connection = getDbConnection();
-             PreparedStatement stmtEditTumour = connection.prepareStatement(strEditTumour,
-                     Statement.RETURN_GENERATED_KEYS)) {
+        Connection connection = getDbConnection();
+        try {
+            PreparedStatement stmtEditTumour = getCachedPreparedStatement(connection, strEditTumour, true);
             if (fromHoldingToProduction)
                 return editRecord(Globals.TUMOUR_TABLE_NAME, tumour, stmtEditTumour,
                         Globals.StandardVariableNames.TumourID.toString());
             else
                 return editRecord(Globals.TUMOUR_TABLE_NAME, tumour, stmtEditTumour,
                         Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME);
+        } catch (SQLException ex) {
+            invalidatePreparedStatement(strEditTumour, true);
+            throw ex;
         }
     }
 
@@ -1628,15 +1742,18 @@ public class CanRegDAO {
      */
     public synchronized boolean editSource(Source source, boolean fromHoldingToProduction)
             throws RecordLockedException, SQLException {
-        try (Connection connection = getDbConnection();
-             PreparedStatement stmtEditSource =
-                     connection.prepareStatement(strEditSource, Statement.RETURN_GENERATED_KEYS)) {
+        Connection connection = getDbConnection();
+        try {
+            PreparedStatement stmtEditSource = getCachedPreparedStatement(connection, strEditSource, true);
             if (fromHoldingToProduction)
                 return editRecord(Globals.SOURCE_TABLE_NAME, source, stmtEditSource,
                         Globals.StandardVariableNames.SourceRecordID.toString());
             else
                 return editRecord(Globals.SOURCE_TABLE_NAME, source, stmtEditSource,
                         Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME);
+        } catch (SQLException ex) {
+            invalidatePreparedStatement(strEditSource, true);
+            throw ex;
         }
     }
 
@@ -1655,54 +1772,59 @@ public class CanRegDAO {
         try {
             stmtEditRecord.clearParameters();
 
+            DatabaseVariablesListElement[] tableVars = tableVariablesMap.get(tableName.toUpperCase());
+            if (tableVars == null) {
+                List<DatabaseVariablesListElement> list = new ArrayList<DatabaseVariablesListElement>();
+                for (DatabaseVariablesListElement v : variables) {
+                    if (v.getDatabaseTableName().equalsIgnoreCase(tableName)) {
+                        list.add(v);
+                    }
+                }
+                tableVars = list.toArray(new DatabaseVariablesListElement[list.size()]);
+            }
+
             int variableNumber = 0;
 
-            for (DatabaseVariablesListElement variable : variables) {
-//                if(variable.getDatabaseVariableName().equalsIgnoreCase(idRecordVariable))
-//                    continue;
-
-                String tableNameDB = variable.getDatabaseTableName();
-                if (tableNameDB.equalsIgnoreCase(tableName)) {
-                    variableNumber++;
-                    String variableType = variable.getVariableType();
-                    int variableLength = variable.getVariableLength();
-                    Object obj = record.getVariable(variable.getDatabaseVariableName());
-                    if (variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_ALPHA_NAME) ||
-                            variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_ASIAN_TEXT_NAME) ||
-                            variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_DICTIONARY_NAME) ||
-                            variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_DATE_NAME) ||
-                            variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_TEXT_AREA_NAME) ||
-                            variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_UUID)) {
-                        if (obj != null) {
-                            try {
-                                String strObj = obj.toString();
-                                if (strObj.length() > 0) {
-                                    if (variableLength > 0 && strObj.length() > variableLength) {
-                                        strObj = strObj.substring(0, variableLength);
-                                    }
-                                    stmtEditRecord.setString(variableNumber, strObj);
-                                } else {
-                                    stmtEditRecord.setString(variableNumber, "");
+            for (DatabaseVariablesListElement variable : tableVars) {
+                variableNumber++;
+                String variableType = variable.getVariableType();
+                int variableLength = variable.getVariableLength();
+                Object obj = record.getVariable(variable.getDatabaseVariableName());
+                if (variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_ALPHA_NAME) ||
+                        variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_ASIAN_TEXT_NAME) ||
+                        variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_DICTIONARY_NAME) ||
+                        variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_DATE_NAME) ||
+                        variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_TEXT_AREA_NAME) ||
+                        variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_UUID)) {
+                    if (obj != null) {
+                        try {
+                            String strObj = obj.toString();
+                            if (strObj.length() > 0) {
+                                if (variableLength > 0 && strObj.length() > variableLength) {
+                                    strObj = strObj.substring(0, variableLength);
                                 }
-                            } catch (java.lang.ClassCastException cce) {
-                                debugOut("Cast to String Error. Type:" + variableType + ", Value: " + obj + ", Variable Number: " + variableNumber);
-                                throw cce;
+                                stmtEditRecord.setString(variableNumber, strObj);
+                            } else {
+                                stmtEditRecord.setString(variableNumber, "");
                             }
-                        } else {
-                            stmtEditRecord.setString(variableNumber, "");
+                        } catch (java.lang.ClassCastException cce) {
+                            debugOut("Cast to String Error. Type:" + variableType + ", Value: " + obj + ", Variable Number: " + variableNumber);
+                            throw cce;
                         }
-                    } else if (variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_NUMBER_NAME)) {
-                        if (obj != null) {
-                            try {
-                                Integer intObj = (Integer) obj;
-                                stmtEditRecord.setInt(variableNumber, intObj);
-                            } catch (java.lang.ClassCastException cce) {
-                                debugOut("Number " + variableType + " " + obj);
-                                throw cce;
-                            }
-                        } else {
-                            stmtEditRecord.setInt(variableNumber, -1);
+                    } else {
+                        stmtEditRecord.setString(variableNumber, "");
+                    }
+                } else if (variableType.equalsIgnoreCase(Globals.VARIABLE_TYPE_NUMBER_NAME)) {
+                    if (obj != null) {
+                        try {
+                            Integer intObj = (Integer) obj;
+                            stmtEditRecord.setInt(variableNumber, intObj);
+                        } catch (java.lang.ClassCastException cce) {
+                            debugOut("Number " + variableType + " " + obj);
+                            throw cce;
                         }
+                    } else {
+                        stmtEditRecord.setInt(variableNumber, -1);
                     }
                 }
             }
@@ -2000,26 +2122,28 @@ public class CanRegDAO {
         if (lock && checkAndLockRecord(recordID, Globals.PATIENT_TABLE_NAME)) {
             throw new RecordLockedException();
         }
-        try (Connection connection = getDbConnection();
-             PreparedStatement stmtGetPatient = connection.prepareStatement(STR_GET_PATIENT)) {
+        try {
+            Connection connection = getDbConnection();
+            PreparedStatement stmtGetPatient = getCachedPreparedStatement(connection, STR_GET_PATIENT, false);
             stmtGetPatient.clearParameters();
             stmtGetPatient.setInt(1, recordID);
-            ResultSet result = stmtGetPatient.executeQuery();
-            metadata = result.getMetaData();
-            int numberOfColumns = metadata.getColumnCount();
-            if (result.next()) {
-                record = new Patient();
-                for (int i = 1; i <= numberOfColumns; i++) {
-                    if (metadata.getColumnType(i) == java.sql.Types.VARCHAR) {
-                        record.setVariable(metadata.getColumnName(i), result.getString(metadata.getColumnName(i)));
-                    } else if (metadata.getColumnType(i) == java.sql.Types.INTEGER) {
-                        record.setVariable(metadata.getColumnName(i), result.getInt(metadata.getColumnName(i)));
+            try (ResultSet result = stmtGetPatient.executeQuery()) {
+                metadata = result.getMetaData();
+                int numberOfColumns = metadata.getColumnCount();
+                if (result.next()) {
+                    record = new Patient();
+                    for (int i = 1; i <= numberOfColumns; i++) {
+                        if (metadata.getColumnType(i) == java.sql.Types.VARCHAR) {
+                            record.setVariable(metadata.getColumnName(i), result.getString(metadata.getColumnName(i)));
+                        } else if (metadata.getColumnType(i) == java.sql.Types.INTEGER) {
+                            record.setVariable(metadata.getColumnName(i), result.getInt(metadata.getColumnName(i)));
+                        }
                     }
                 }
             }
-            result = null;
         } catch (SQLException sqle) {
             LOGGER.log(Level.SEVERE, null, sqle);
+            invalidatePreparedStatement(STR_GET_PATIENT, false);
         }
 
         return record;
@@ -2200,30 +2324,30 @@ public class CanRegDAO {
 
 
     public synchronized Patient getPatientByPatientRecordID(String patientRecordID) {
-
         Patient record = null;
         ResultSetMetaData metadata;
-        try (Connection connection = getDbConnection();
-             PreparedStatement stmtGetPatientByPatientRecordID =
-                     connection.prepareStatement(STR_GET_PATIENT_BY_PATIENT_RECORD_ID)) {
+        try {
+            Connection connection = getDbConnection();
+            PreparedStatement stmtGetPatientByPatientRecordID = getCachedPreparedStatement(connection, STR_GET_PATIENT_BY_PATIENT_RECORD_ID, false);
             stmtGetPatientByPatientRecordID.clearParameters();
             stmtGetPatientByPatientRecordID.setString(1, patientRecordID);
-            ResultSet result = stmtGetPatientByPatientRecordID.executeQuery();
-            metadata = result.getMetaData();
-            int numberOfColumns = metadata.getColumnCount();
-            if (result.next()) {
-                record = new Patient();
-                for (int i = 1; i <= numberOfColumns; i++) {
-                    if (metadata.getColumnType(i) == java.sql.Types.VARCHAR) {
-                        record.setVariable(metadata.getColumnName(i), result.getString(metadata.getColumnName(i)));
-                    } else if (metadata.getColumnType(i) == java.sql.Types.INTEGER) {
-                        record.setVariable(metadata.getColumnName(i), result.getInt(metadata.getColumnName(i)));
+            try (ResultSet result = stmtGetPatientByPatientRecordID.executeQuery()) {
+                metadata = result.getMetaData();
+                int numberOfColumns = metadata.getColumnCount();
+                if (result.next()) {
+                    record = new Patient();
+                    for (int i = 1; i <= numberOfColumns; i++) {
+                        if (metadata.getColumnType(i) == java.sql.Types.VARCHAR) {
+                            record.setVariable(metadata.getColumnName(i), result.getString(metadata.getColumnName(i)));
+                        } else if (metadata.getColumnType(i) == java.sql.Types.INTEGER) {
+                            record.setVariable(metadata.getColumnName(i), result.getInt(metadata.getColumnName(i)));
+                        }
                     }
                 }
             }
-            result = null;
         } catch (SQLException sqle) {
             LOGGER.log(Level.SEVERE, null, sqle);
+            invalidatePreparedStatement(STR_GET_PATIENT_BY_PATIENT_RECORD_ID, false);
         }
 
         return record;
@@ -2235,44 +2359,45 @@ public class CanRegDAO {
         if (lock && checkAndLockRecord(recordID, Globals.TUMOUR_TABLE_NAME)) {
             throw new RecordLockedException();
         }
-        try (Connection connection = getDbConnection();
-             PreparedStatement stmtGetTumour = connection.prepareStatement(STR_GET_TUMOUR)) {
+        try {
+            Connection connection = getDbConnection();
+            PreparedStatement stmtGetTumour = getCachedPreparedStatement(connection, STR_GET_TUMOUR, false);
             stmtGetTumour.clearParameters();
             stmtGetTumour.setInt(1, recordID);
-            ResultSet result = stmtGetTumour.executeQuery();
-            metadata = result.getMetaData();
-            int numberOfColumns = metadata.getColumnCount();
-            if (result.next()) {
-                record = new Tumour();
-                for (int i = 1; i <= numberOfColumns; i++) {
-                    if (metadata.getColumnType(i) == java.sql.Types.VARCHAR) {
-                        record.setVariable(metadata.getColumnName(i), result.getString(metadata.getColumnName(i)));
-                    } else if (metadata.getColumnType(i) == java.sql.Types.INTEGER) {
-                        record.setVariable(metadata.getColumnName(i), result.getInt(metadata.getColumnName(i)));
+            Object tumourID = null;
+            try (ResultSet result = stmtGetTumour.executeQuery()) {
+                metadata = result.getMetaData();
+                int numberOfColumns = metadata.getColumnCount();
+                if (result.next()) {
+                    record = new Tumour();
+                    for (int i = 1; i <= numberOfColumns; i++) {
+                        if (metadata.getColumnType(i) == java.sql.Types.VARCHAR) {
+                            record.setVariable(metadata.getColumnName(i), result.getString(metadata.getColumnName(i)));
+                        } else if (metadata.getColumnType(i) == java.sql.Types.INTEGER) {
+                            record.setVariable(metadata.getColumnName(i), result.getInt(metadata.getColumnName(i)));
+                        }
                     }
                 }
+                if (record != null) {
+                    String recordIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
+                    tumourID = record.getVariable(recordIDVariableName);
+                }
             }
-
-            // get the source information
-            String recordIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
-            Object tumourID;
-            tumourID = record.getVariable(recordIDVariableName);
-
-            Set<Source> sources = null;
-            try {
-                // We don't lock the sources...
-                sources = getSourcesByTumourID(tumourID, false);
-            } catch (DistributedTableDescriptionException ex) {
-                LOGGER.log(Level.SEVERE, null, ex);
-            } catch (UnknownTableException ex) {
-                LOGGER.log(Level.SEVERE, null, ex);
+            if (record != null) {
+                Set<Source> sources = null;
+                try {
+                    // We don't lock the sources...
+                    sources = getSourcesByTumourID(tumourID, false);
+                } catch (DistributedTableDescriptionException ex) {
+                    LOGGER.log(Level.SEVERE, null, ex);
+                } catch (UnknownTableException ex) {
+                    LOGGER.log(Level.SEVERE, null, ex);
+                }
+                record.setSources(sources);
             }
-
-            record.setSources(sources);
-            result = null;
-
         } catch (SQLException sqle) {
             LOGGER.log(Level.SEVERE, null, sqle);
+            invalidatePreparedStatement(STR_GET_TUMOUR, false);
         }
         return record;
     }
@@ -2281,39 +2406,41 @@ public class CanRegDAO {
         Tumour record = null;
         ResultSetMetaData metadata;
 
-        try (Connection connection = getDbConnection();
-             PreparedStatement stmtGetTumourByTumourID = connection.prepareStatement(STR_GET_TUMOUR_BY_TUMOUR_ID)) {
+        try {
+            Connection connection = getDbConnection();
+            PreparedStatement stmtGetTumourByTumourID = getCachedPreparedStatement(connection, STR_GET_TUMOUR_BY_TUMOUR_ID, false);
             stmtGetTumourByTumourID.clearParameters();
             stmtGetTumourByTumourID.setString(1, tumourID);
-            ResultSet result = stmtGetTumourByTumourID.executeQuery();
-            metadata = result.getMetaData();
-            int numberOfColumns = metadata.getColumnCount();
-            if (result.next()) {
-                record = new Tumour();
-                for (int i = 1; i <= numberOfColumns; i++) {
-                    if (metadata.getColumnType(i) == java.sql.Types.VARCHAR) {
-                        record.setVariable(metadata.getColumnName(i), result.getString(metadata.getColumnName(i)));
-                    } else if (metadata.getColumnType(i) == java.sql.Types.INTEGER) {
-                        record.setVariable(metadata.getColumnName(i), result.getInt(metadata.getColumnName(i)));
+            try (ResultSet result = stmtGetTumourByTumourID.executeQuery()) {
+                metadata = result.getMetaData();
+                int numberOfColumns = metadata.getColumnCount();
+                if (result.next()) {
+                    record = new Tumour();
+                    for (int i = 1; i <= numberOfColumns; i++) {
+                        if (metadata.getColumnType(i) == java.sql.Types.VARCHAR) {
+                            record.setVariable(metadata.getColumnName(i), result.getString(metadata.getColumnName(i)));
+                        } else if (metadata.getColumnType(i) == java.sql.Types.INTEGER) {
+                            record.setVariable(metadata.getColumnName(i), result.getInt(metadata.getColumnName(i)));
+                        }
                     }
                 }
             }
 
-            Set<Source> sources = null;
-            try {
-                // We don't lock the sources...
-                sources = getSourcesByTumourID(tumourID, false);
-            } catch (DistributedTableDescriptionException ex) {
-                LOGGER.log(Level.SEVERE, null, ex);
-            } catch (UnknownTableException ex) {
-                LOGGER.log(Level.SEVERE, null, ex);
+            if (record != null) {
+                Set<Source> sources = null;
+                try {
+                    // We don't lock the sources...
+                    sources = getSourcesByTumourID(tumourID, false);
+                } catch (DistributedTableDescriptionException ex) {
+                    LOGGER.log(Level.SEVERE, null, ex);
+                } catch (UnknownTableException ex) {
+                    LOGGER.log(Level.SEVERE, null, ex);
+                }
+                record.setSources(sources);
             }
-
-            record.setSources(sources);
-            result = null;
-
         } catch (SQLException sqle) {
             LOGGER.log(Level.SEVERE, null, sqle);
+            invalidatePreparedStatement(STR_GET_TUMOUR_BY_TUMOUR_ID, false);
         }
         return record;
     }
@@ -2324,26 +2451,28 @@ public class CanRegDAO {
         if (lock && checkAndLockRecord(recordID, Globals.SOURCE_TABLE_NAME)) {
             throw new RecordLockedException();
         }
-        try (Connection connection = getDbConnection();
-             PreparedStatement stmtGetSource = connection.prepareStatement(STR_GET_SOURCE)) {
+        try {
+            Connection connection = getDbConnection();
+            PreparedStatement stmtGetSource = getCachedPreparedStatement(connection, STR_GET_SOURCE, false);
             stmtGetSource.clearParameters();
             stmtGetSource.setInt(1, recordID);
-            ResultSet result = stmtGetSource.executeQuery();
-            metadata = result.getMetaData();
-            int numberOfColumns = metadata.getColumnCount();
-            if (result.next()) {
-                record = new Source();
-                for (int i = 1; i <= numberOfColumns; i++) {
-                    if (metadata.getColumnType(i) == java.sql.Types.VARCHAR) {
-                        record.setVariable(metadata.getColumnName(i), result.getString(metadata.getColumnName(i)));
-                    } else if (metadata.getColumnType(i) == java.sql.Types.INTEGER) {
-                        record.setVariable(metadata.getColumnName(i), result.getInt(metadata.getColumnName(i)));
+            try (ResultSet result = stmtGetSource.executeQuery()) {
+                metadata = result.getMetaData();
+                int numberOfColumns = metadata.getColumnCount();
+                if (result.next()) {
+                    record = new Source();
+                    for (int i = 1; i <= numberOfColumns; i++) {
+                        if (metadata.getColumnType(i) == java.sql.Types.VARCHAR) {
+                            record.setVariable(metadata.getColumnName(i), result.getString(metadata.getColumnName(i)));
+                        } else if (metadata.getColumnType(i) == java.sql.Types.INTEGER) {
+                            record.setVariable(metadata.getColumnName(i), result.getInt(metadata.getColumnName(i)));
+                        }
                     }
                 }
             }
-            result = null;
         } catch (SQLException sqle) {
             LOGGER.log(Level.SEVERE, null, sqle);
+            invalidatePreparedStatement(STR_GET_SOURCE, false);
         }
         return record;
     }
@@ -2352,42 +2481,52 @@ public class CanRegDAO {
         Source record = null;
         ResultSetMetaData metadata;
 
-        try (Connection connection = getDbConnection();
-             PreparedStatement stmtGetSourceBySourceID = connection.prepareStatement(STR_GET_SOURCE_BY_SOURCE_ID)) {
+        try {
+            Connection connection = getDbConnection();
+            PreparedStatement stmtGetSourceBySourceID = getCachedPreparedStatement(connection, STR_GET_SOURCE_BY_SOURCE_ID, false);
             stmtGetSourceBySourceID.clearParameters();
             stmtGetSourceBySourceID.setString(1, sourceID);
-            ResultSet result = stmtGetSourceBySourceID.executeQuery();
-            metadata = result.getMetaData();
-            int numberOfColumns = metadata.getColumnCount();
-            if (result.next()) {
-                record = new Source();
-                for (int i = 1; i <= numberOfColumns; i++) {
-                    if (metadata.getColumnType(i) == java.sql.Types.VARCHAR) {
-                        record.setVariable(metadata.getColumnName(i), result.getString(metadata.getColumnName(i)));
-                    } else if (metadata.getColumnType(i) == java.sql.Types.INTEGER) {
-                        record.setVariable(metadata.getColumnName(i), result.getInt(metadata.getColumnName(i)));
+            try (ResultSet result = stmtGetSourceBySourceID.executeQuery()) {
+                metadata = result.getMetaData();
+                int numberOfColumns = metadata.getColumnCount();
+                if (result.next()) {
+                    record = new Source();
+                    for (int i = 1; i <= numberOfColumns; i++) {
+                        if (metadata.getColumnType(i) == java.sql.Types.VARCHAR) {
+                            record.setVariable(metadata.getColumnName(i), result.getString(metadata.getColumnName(i)));
+                        } else if (metadata.getColumnType(i) == java.sql.Types.INTEGER) {
+                            record.setVariable(metadata.getColumnName(i), result.getInt(metadata.getColumnName(i)));
+                        }
                     }
                 }
             }
-
-            result = null;
         } catch (SQLException sqle) {
             LOGGER.log(Level.SEVERE, null, sqle);
+            invalidatePreparedStatement(STR_GET_SOURCE_BY_SOURCE_ID, false);
         }
         return record;
     }
 
     public synchronized String getNextPatientID() {
+        if (lastAllocatedPatientID != null) {
+            lastAllocatedPatientID = canreg.common.Tools.increment(lastAllocatedPatientID);
+            return lastAllocatedPatientID;
+        }
+
         String patientID = null;
-        try (Connection connection = getDbConnection();
-             PreparedStatement stmtGetHighestPatientID = connection.prepareStatement(strGetHighestPatientID);) {
-            ResultSet result = stmtGetHighestPatientID.executeQuery();
-            result.next();
-            String highestPatientID = result.getString(1);
-            result.close();
-            if (highestPatientID != null) {
-                patientID = canreg.common.Tools.increment(highestPatientID);
-            } else {
+        try {
+            Connection connection = getDbConnection();
+            PreparedStatement stmtGetHighestPatientID = getCachedPreparedStatement(connection, strGetHighestPatientID, false);
+            stmtGetHighestPatientID.clearParameters();
+            try (ResultSet result = stmtGetHighestPatientID.executeQuery()) {
+                if (result.next()) {
+                    String highestPatientID = result.getString(1);
+                    if (highestPatientID != null) {
+                        patientID = canreg.common.Tools.increment(highestPatientID);
+                    }
+                }
+            }
+            if (patientID == null) {
                 int year = Calendar.getInstance().get(Calendar.YEAR);
                 patientID = year + "";
                 int patientIDlength = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString()).getVariableLength();
@@ -2398,24 +2537,30 @@ public class CanRegDAO {
                     patientID += "1";
                 }
             }
+            lastAllocatedPatientID = patientID;
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, null, ex);
+            invalidatePreparedStatement(strGetHighestPatientID, false);
         }
         return patientID;
     }
 
     public synchronized String getNextTumourID(String patientRecordID) {
         String tumourID = null;
-        try (Connection connection = getDbConnection();
-             PreparedStatement stmtGetHighestTumourID = connection.prepareStatement(strGetHighestTumourID)) {
+        try {
+            Connection connection = getDbConnection();
+            PreparedStatement stmtGetHighestTumourID = getCachedPreparedStatement(connection, strGetHighestTumourID, false);
             stmtGetHighestTumourID.clearParameters();
             stmtGetHighestTumourID.setString(1, patientRecordID);
-            ResultSet result = stmtGetHighestTumourID.executeQuery();
-            result.next();
-            String highestTumourID = result.getString(1);
-            if (highestTumourID != null) {
-                tumourID = canreg.common.Tools.increment(highestTumourID);
-            } else {
+            try (ResultSet result = stmtGetHighestTumourID.executeQuery()) {
+                if (result.next()) {
+                    String highestTumourID = result.getString(1);
+                    if (highestTumourID != null) {
+                        tumourID = canreg.common.Tools.increment(highestTumourID);
+                    }
+                }
+            }
+            if (tumourID == null) {
                 tumourID = patientRecordID;
                 int tumourIDlength = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getVariableLength();
                 while (tumourID.length() < tumourIDlength - 1) {
@@ -2427,49 +2572,52 @@ public class CanRegDAO {
             }
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, null, ex);
+            invalidatePreparedStatement(strGetHighestTumourID, false);
         }
         return tumourID;
     }
 
     public synchronized String getNextPatientRecordID(String patientID) {
         String patientRecordID = null;
-        try (Connection connection = getDbConnection();
-             PreparedStatement stmtGetHighestPatientRecordID = connection.prepareStatement(strGetHighestPatientRecordID)) {
+        try {
+            Connection connection = getDbConnection();
+            PreparedStatement stmtGetHighestPatientRecordID = getCachedPreparedStatement(connection, strGetHighestPatientRecordID, false);
             stmtGetHighestPatientRecordID.clearParameters();
             stmtGetHighestPatientRecordID.setString(1, patientID);
-            ResultSet result = stmtGetHighestPatientRecordID.executeQuery();
-            result.next();
-            String highestPatientRecordID = result.getString(1);
-            if (highestPatientRecordID != null) {
-                patientRecordID = canreg.common.Tools.increment(highestPatientRecordID);
-            } else {
-                patientRecordID = patientID;
-                int patientRecordIDlength = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString()).getVariableLength();
-                while (patientRecordID.length() < patientRecordIDlength - 1) {
-                    patientRecordID += "0";
+            try (ResultSet result = stmtGetHighestPatientRecordID.executeQuery()) {
+                if (result.next()) {
+                    String highestPatientRecordID = result.getString(1);
+                    if (highestPatientRecordID != null) {
+                        patientRecordID = canreg.common.Tools.increment(highestPatientRecordID);
+                    }
                 }
-                if (patientRecordID.length() == patientRecordIDlength - 1) {
-                    patientRecordID += "1";
-                }
+            }
+            if (patientRecordID == null) {
+                patientRecordID = formatInitialPatientRecordID(patientID);
             }
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, null, ex);
+            invalidatePreparedStatement(strGetHighestPatientRecordID, false);
         }
         return patientRecordID;
     }
 
     public synchronized String getNextSourceID(String tumourRecordID) {
         String sourceID = null;
-        try (Connection connection = getDbConnection();
-             PreparedStatement stmtGetHighestSourceRecordID = connection.prepareStatement(strGetHighestSourceRecordID)) {
+        try {
+            Connection connection = getDbConnection();
+            PreparedStatement stmtGetHighestSourceRecordID = getCachedPreparedStatement(connection, strGetHighestSourceRecordID, false);
             stmtGetHighestSourceRecordID.clearParameters();
             stmtGetHighestSourceRecordID.setString(1, tumourRecordID);
-            ResultSet result = stmtGetHighestSourceRecordID.executeQuery();
-            result.next();
-            String highestSourceID = result.getString(1);
-            if (highestSourceID != null) {
-                sourceID = canreg.common.Tools.increment(highestSourceID);
-            } else {
+            try (ResultSet result = stmtGetHighestSourceRecordID.executeQuery()) {
+                if (result.next()) {
+                    String highestSourceID = result.getString(1);
+                    if (highestSourceID != null) {
+                        sourceID = canreg.common.Tools.increment(highestSourceID);
+                    }
+                }
+            }
+            if (sourceID == null) {
                 sourceID = tumourRecordID;
                 int sourceIDlength = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.SourceRecordID.toString()).getVariableLength();
                 while (sourceID.length() < sourceIDlength - 1) {
@@ -2481,6 +2629,7 @@ public class CanRegDAO {
             }
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, null, ex);
+            invalidatePreparedStatement(strGetHighestSourceRecordID, false);
         }
         return sourceID;
     }
