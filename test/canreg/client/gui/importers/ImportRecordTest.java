@@ -167,4 +167,62 @@ public class ImportRecordTest {
         Import.importSource(server, ImportOptions.UPDATE, "SRC_NULL", "SRC_VAR",
                 null, "TUM_NULL", reportWriter, false, false, true);
     }
+
+    @Test
+    public void testImportCacheOperations() {
+        Import.ImportCache cache = new Import.ImportCache();
+        Patient patient = new Patient();
+        Tumour tumour = new Tumour();
+
+        assertNull(cache.getPatientByPRID("PRID_1"));
+        assertNull(cache.getPatientByPID("PID_1"));
+        assertNull(cache.getTumourByTID("TID_1"));
+
+        cache.putPatientByPRID("PRID_1", patient);
+        cache.putPatientByPID("PID_1", patient);
+        cache.putTumourByTID("TID_1", tumour);
+
+        assertSame(patient, cache.getPatientByPRID("PRID_1"));
+        assertSame(patient, cache.getPatientByPID("PID_1"));
+        assertSame(tumour, cache.getTumourByTID("TID_1"));
+
+        cache.clear();
+        assertNull(cache.getPatientByPRID("PRID_1"));
+        assertNull(cache.getPatientByPID("PID_1"));
+        assertNull(cache.getTumourByTID("TID_1"));
+    }
+
+    @Test
+    public void testImportPatientPopulatesCache() throws Exception {
+        CanRegServerInterface server = (CanRegServerInterface) Proxy.newProxyInstance(
+                CanRegServerInterface.class.getClassLoader(),
+                new Class<?>[]{CanRegServerInterface.class},
+                new InvocationHandler() {
+                    @Override
+                    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                        if ("savePatient".equals(method.getName())) {
+                            return 303;
+                        }
+                        return null;
+                    }
+                });
+
+        Patient patient = new Patient();
+        String patientIdVar = globalToolBox.translateStandardVariableNameToDatabaseListElement(
+                Globals.StandardVariableNames.PatientID.toString()).getDatabaseVariableName();
+        String patientRecIdVar = globalToolBox.translateStandardVariableNameToDatabaseListElement(
+                Globals.StandardVariableNames.PatientRecordID.toString()).getDatabaseVariableName();
+
+        patient.setVariable(patientIdVar, "PID_TEST_CACHE");
+        patient.setVariable(patientRecIdVar, "PRID_TEST_CACHE");
+
+        Import.ImportCache cache = new Import.ImportCache();
+        StringWriter reportWriter = new StringWriter();
+        int result = Import.importPatient(server, ImportOptions.REJECT, "PRID_TEST_CACHE",
+                patient, reportWriter, false, false, false, globalToolBox, cache);
+
+        assertEquals(303, result);
+        assertSame(patient, cache.getPatientByPRID("PRID_TEST_CACHE"));
+        assertSame(patient, cache.getPatientByPID("PID_TEST_CACHE"));
+    }
 }

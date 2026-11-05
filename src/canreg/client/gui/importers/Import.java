@@ -62,6 +62,7 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -518,6 +519,66 @@ public class Import {
         return newRelations;
     }
 
+    /**
+     * Bounded in-memory LRU cache to avoid repeated roundtrip queries during bulk imports.
+     */
+    public static class ImportCache {
+        private final Map<String, Patient> patientByPRID = new LinkedHashMap<String, Patient>(1024, 0.75f, true) {
+            @Override
+            protected boolean removeEldestEntry(Map.Entry<String, Patient> eldest) {
+                return size() > 5000;
+            }
+        };
+        private final Map<String, Patient> patientByPID = new LinkedHashMap<String, Patient>(1024, 0.75f, true) {
+            @Override
+            protected boolean removeEldestEntry(Map.Entry<String, Patient> eldest) {
+                return size() > 5000;
+            }
+        };
+        private final Map<String, Tumour> tumourByTID = new LinkedHashMap<String, Tumour>(1024, 0.75f, true) {
+            @Override
+            protected boolean removeEldestEntry(Map.Entry<String, Tumour> eldest) {
+                return size() > 5000;
+            }
+        };
+
+        public Patient getPatientByPRID(String prid) {
+            return (prid != null) ? patientByPRID.get(prid) : null;
+        }
+
+        public void putPatientByPRID(String prid, Patient p) {
+            if (prid != null && p != null) {
+                patientByPRID.put(prid, p);
+            }
+        }
+
+        public Patient getPatientByPID(String pid) {
+            return (pid != null) ? patientByPID.get(pid) : null;
+        }
+
+        public void putPatientByPID(String pid, Patient p) {
+            if (pid != null && p != null) {
+                patientByPID.put(pid, p);
+            }
+        }
+
+        public Tumour getTumourByTID(String tid) {
+            return (tid != null) ? tumourByTID.get(tid) : null;
+        }
+
+        public void putTumourByTID(String tid, Tumour t) {
+            if (tid != null && t != null) {
+                tumourByTID.put(tid, t);
+            }
+        }
+
+        public void clear() {
+            patientByPRID.clear();
+            patientByPID.clear();
+            tumourByTID.clear();
+        }
+    }
+
     public static boolean importFiles(Task<Object, Void> task, 
                                       List<canreg.client.dataentry.Relation> map, File[] files, 
                                       CanRegServerInterface server, ImportOptions io, 
@@ -526,6 +587,25 @@ public class Import {
                    UnknownTableException, DistributedTableDescriptionException, Exception {
 
         int numberOfLinesRead = 0;
+        final int BATCH_SIZE = 500;
+        ImportCache cache = new ImportCache();
+
+        // Pre-filter relation mappings by table name to avoid scanning the entire map on every row
+        List<Relation> patientRelations = new ArrayList<>();
+        List<Relation> tumourRelations = new ArrayList<>();
+        List<Relation> sourceRelations = new ArrayList<>();
+        for (Relation rel : map) {
+            if (rel.getDatabaseTableVariableID() >= 0) {
+                if (rel.getDatabaseTableName().equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
+                    patientRelations.add(rel);
+                } else if (rel.getDatabaseTableName().equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
+                    tumourRelations.add(rel);
+                } else if (rel.getDatabaseTableName().equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
+                    sourceRelations.add(rel);
+                }
+            }
+        }
+
         Writer reportWriter = new BufferedWriter(new OutputStreamWriter(System.out));
         if (io.getReportFileName() != null && io.getReportFileName().trim().length() > 0) {
             try {
@@ -566,63 +646,97 @@ public class Import {
                 parser = CSVParser.parse(files[0], io.getFileCharsets()[0], format);
 
                 GlobalToolBox globalToolBox = new GlobalToolBox(server.getDatabseDescription());
-                for (CSVRecord csvRecord : parser) {
-                    // updating progress bar
-                    if (task != null) {
-                        task.firePropertyChange(PROGRESS, ((numberOfLinesRead - 1) * 100 / linesToRead) / 3, ((numberOfLinesRead) * 100 / linesToRead) / 3);
-                        task.firePropertyChange(PATIENTS, ((numberOfLinesRead - 1) * 100 / linesToRead), ((numberOfLinesRead) * 100 / linesToRead));
-                    }
+                int lastPatientProgress = -1;
+                int lastOverallProgress = -1;
+                int linesSinceLastCommit = 0;
 
-                    // Build patient part
-                    Patient patient = new Patient();
-                    for (int i = 0; i < map.size(); i++) {
-                        Relation rel = map.get(i);
-                        if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
+                try {
+                    server.openTransaction();
+                } catch (Exception ex) {
+                    LOGGER.log(Level.WARNING, "Could not open transaction for patients import", ex);
+                }
+
+                try {
+                    for (CSVRecord csvRecord : parser) {
+                        int currentPatientProgress = linesToRead > 0 ? (int) (((long) numberOfLinesRead * 100) / linesToRead) : 0;
+                        int currentOverallProgress = currentPatientProgress / 3;
+                        if (task != null && (currentPatientProgress != lastPatientProgress || numberOfLinesRead % 100 == 0)) {
+                            task.firePropertyChange(PROGRESS, lastOverallProgress, currentOverallProgress);
+                            task.firePropertyChange(PATIENTS, lastPatientProgress, currentPatientProgress);
+                            lastPatientProgress = currentPatientProgress;
+                            lastOverallProgress = currentOverallProgress;
+                        }
+
+                        // Build patient part
+                        Patient patient = new Patient();
+                        for (Relation rel : patientRelations) {
                             if (rel.getVariableType().equalsIgnoreCase(Globals.VARIABLE_TYPE_NUMBER_NAME)) {
-                                if (csvRecord.get(rel.getFileColumnNumber()).length() > 0) {
+                                String cellVal = csvRecord.get(rel.getFileColumnNumber());
+                                if (cellVal.length() > 0) {
                                     try {
-                                        patient.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(csvRecord.get(rel.getFileColumnNumber())));
+                                        patient.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(cellVal));
                                     } catch (NumberFormatException ex) {
-                                        LOGGER.log(Level.SEVERE, String.format("Number format error in line: %d",numberOfLinesRead + 1 + 1), ex);
+                                        LOGGER.log(Level.SEVERE, String.format("Number format error in line: %d", numberOfLinesRead + 1 + 1), ex);
                                         success = false;
                                     }
                                 }
                             } else {
                                 String value = csvRecord.get(rel.getFileColumnNumber());
-                                if(rel.getDatabaseVariableName().equalsIgnoreCase(RAW_DATA_COLUMN))
+                                if (rel.getDatabaseVariableName().equalsIgnoreCase(RAW_DATA_COLUMN)) {
                                     value = value.replace("@#$", " <br>");
+                                }
                                 patient.setVariable(rel.getDatabaseVariableName(), value);
                             }
                         }
-                        if (task != null) {
-                            task.firePropertyChange(RECORD, i - 1 / map.size() * 50, i / map.size() * 50);
+
+                        Object patientRecordID = patient.getVariable(io.getPatientRecordIDVariableName());
+
+                        importPatient(server, io.getDiscrepancies(), (String) patientRecordID,
+                                patient, reportWriter,
+                                intoHoldingDB, io.isTestOnly(), false, globalToolBox, cache);
+
+                        numberOfLinesRead++;
+                        linesSinceLastCommit++;
+
+                        if (linesSinceLastCommit >= BATCH_SIZE) {
+                            try {
+                                server.commitTransaction();
+                                server.openTransaction();
+                                linesSinceLastCommit = 0;
+                            } catch (Exception ex) {
+                                LOGGER.log(Level.WARNING, "Error committing patient batch transaction", ex);
+                            }
+                        }
+
+                        if (Thread.interrupted()) {
+                            reportWriter.flush();
+                            throw new InterruptedException();
                         }
                     }
-                    Object patientRecordID = patient.getVariable(io.getPatientRecordIDVariableName());
 
-                    importPatient(server, io.getDiscrepancies(), (String) patientRecordID,
-                            patient, reportWriter,
-                            intoHoldingDB, io.isTestOnly(), false, globalToolBox);
-
-                    if (task != null) {
-                        task.firePropertyChange(RECORD, 100, 75);
+                    if (linesSinceLastCommit > 0) {
+                        try {
+                            server.commitTransaction();
+                            linesSinceLastCommit = 0;
+                        } catch (Exception ex) {
+                            LOGGER.log(Level.WARNING, "Error committing final patient transaction", ex);
+                        }
                     }
-
-                    numberOfLinesRead++;
-
-                    if (Thread.interrupted()) {
-                        //We've been interrupted: no more importing.
-                        reportWriter.flush();
-                        throw new InterruptedException();
+                } catch (Exception ex) {
+                    try {
+                        server.rollbackTransaction();
+                    } catch (Exception ignore) {
                     }
+                    throw ex;
                 }
+
                 parser.close();
                 reportWriter.write("Finished reading patients." + Globals.newline + Globals.newline);
                 reportWriter.flush();
             }
             if (task != null) {
                 task.firePropertyChange(PATIENTS, 100, 100);
-                task.firePropertyChange("progress", 33, 34);
+                task.firePropertyChange(PROGRESS, 33, 33);
             }
 
             // then we get the tumours            
@@ -653,85 +767,130 @@ public class Import {
                         .withDelimiter(io.getSeparators()[1]);
                 parser = CSVParser.parse(files[1], io.getFileCharsets()[1], format);
 
-                for (CSVRecord csvRecord : parser) {    
-                    if (task != null) {
-                        task.firePropertyChange(PROGRESS, 33 + ((numberOfLinesRead - 1) * 100 / linesToRead) / 3, 33 + ((numberOfLinesRead) * 100 / linesToRead) / 3);
-                        task.firePropertyChange(TUMOURS, ((numberOfLinesRead - 1) * 100 / linesToRead), ((numberOfLinesRead) * 100 / linesToRead));
-                    }
-                    // Build tumour part
-                    Tumour tumour = new Tumour();
-                    for (int i = 0; i < map.size(); i++) {
-                        Relation rel = map.get(i);
-                        if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase("tumour")) {
+                int lastTumourProgress = -1;
+                int lastOverallProgress = -1;
+                int linesSinceLastCommit = 0;
+
+                try {
+                    server.openTransaction();
+                } catch (Exception ex) {
+                    LOGGER.log(Level.WARNING, "Could not open transaction for tumours import", ex);
+                }
+
+                try {
+                    for (CSVRecord csvRecord : parser) {    
+                        int currentTumourProgress = linesToRead > 0 ? (int) (((long) numberOfLinesRead * 100) / linesToRead) : 0;
+                        int currentOverallProgress = 33 + (currentTumourProgress / 3);
+                        if (task != null && (currentTumourProgress != lastTumourProgress || numberOfLinesRead % 100 == 0)) {
+                            task.firePropertyChange(PROGRESS, lastOverallProgress, currentOverallProgress);
+                            task.firePropertyChange(TUMOURS, lastTumourProgress, currentTumourProgress);
+                            lastTumourProgress = currentTumourProgress;
+                            lastOverallProgress = currentOverallProgress;
+                        }
+
+                        // Build tumour part
+                        Tumour tumour = new Tumour();
+                        for (Relation rel : tumourRelations) {
                             if (rel.getVariableType().equalsIgnoreCase("Number")) {
-                                if (csvRecord.get(rel.getFileColumnNumber()).length() > 0) {
+                                String cellVal = csvRecord.get(rel.getFileColumnNumber());
+                                if (cellVal.length() > 0) {
                                     try {
-                                        tumour.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(csvRecord.get(rel.getFileColumnNumber())));
+                                        tumour.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(cellVal));
                                     } catch (NumberFormatException ex) {
-                                        LOGGER.log(Level.SEVERE, String.format("Number format error in line: %d",numberOfLinesRead + 1 + 1), ex);
+                                        LOGGER.log(Level.SEVERE, String.format("Number format error in line: %d", numberOfLinesRead + 1 + 1), ex);
                                         success = false;
                                     }
                                 }
                             } else {
                                 String value = csvRecord.get(rel.getFileColumnNumber());
-                                if(rel.getDatabaseVariableName().equalsIgnoreCase(RAW_DATA_COLUMN))
+                                if (rel.getDatabaseVariableName().equalsIgnoreCase(RAW_DATA_COLUMN)) {
                                     value = value.replace("@#$", " <br>");
+                                }
                                 tumour.setVariable(rel.getDatabaseVariableName(), value);
                             }
-                        }
-                        if (task != null) {
-                            task.firePropertyChange(RECORD, i - 1 / map.size() * 50, i / map.size() * 50);
-                        }
-                    } 
+                        } 
 
-                    String tumourID = (String) tumour.getVariable(io.getTumourIDVariablename());
-                    String patientRecordID = (String) tumour.getVariable(io.getPatientRecordIDTumourTableVariableName());
-                    
-                    //patientRecordID IS A MUST if the tumour is new, because without that
-                    //the new tumourID cannot be calculated!!!
-                    if(patientRecordID == null || patientRecordID.isEmpty()) {
-                        String patientID = tumour.getVariableAsString(io.getPatientIDTumourTableVariableName());
-                        if (patientID != null && !patientID.isEmpty()) {
-                            Patient[] patients = CanRegClientApp.getApplication().getPatientsByPatientID(patientID, false, server);
-                            if (patients != null && patients.length > 0 && patients[0] != null) {
-                                patientRecordID = patients[0].getVariableAsString(io.getPatientRecordIDVariableName());
-                                
-                                //This should not happen, but... this is our last chance to save the procedure.
-                                if(patientRecordID == null || patientRecordID.isEmpty())
-                                    patientRecordID = patients[0].getVariableAsString(io.getTumourIDVariablename());
-                                
-                                tumour.setVariable(io.getPatientRecordIDVariableName(), patientRecordID);
-                                tumour.setVariable(io.getPatientRecordIDTumourTableVariableName(), patientRecordID);
+                        String tumourID = (String) tumour.getVariable(io.getTumourIDVariablename());
+                        String patientRecordID = (String) tumour.getVariable(io.getPatientRecordIDTumourTableVariableName());
+                        
+                        // patientRecordID IS A MUST if the tumour is new, because without that
+                        // the new tumourID cannot be calculated!!!
+                        if (patientRecordID == null || patientRecordID.isEmpty()) {
+                            String patientID = tumour.getVariableAsString(io.getPatientIDTumourTableVariableName());
+                            if (patientID != null && !patientID.isEmpty()) {
+                                Patient[] patients = null;
+                                Patient cached = cache.getPatientByPID(patientID);
+                                if (cached != null) {
+                                    patients = new Patient[]{cached};
+                                } else {
+                                    patients = CanRegClientApp.getApplication().getPatientsByPatientID(patientID, false, server);
+                                    if (patients != null && patients.length > 0 && patients[0] != null) {
+                                        cache.putPatientByPID(patientID, patients[0]);
+                                    }
+                                }
+                                if (patients != null && patients.length > 0 && patients[0] != null) {
+                                    patientRecordID = patients[0].getVariableAsString(io.getPatientRecordIDVariableName());
+                                    
+                                    if (patientRecordID == null || patientRecordID.isEmpty()) {
+                                        patientRecordID = patients[0].getVariableAsString(io.getTumourIDVariablename());
+                                    }
+                                    
+                                    tumour.setVariable(io.getPatientRecordIDVariableName(), patientRecordID);
+                                    tumour.setVariable(io.getPatientRecordIDTumourTableVariableName(), patientRecordID);
+                                    cache.putPatientByPRID(patientRecordID, patients[0]);
+                                }
                             }
                         }
-                    }
-                    
-                    importTumour(server, io.getDiscrepancies(), tumourID, patientRecordID, 
-                                 tumour, io, reportWriter, intoHoldingDB, io.isTestOnly(), false);
-                    
-                    if (task != null) {
-                        task.firePropertyChange(RECORD, 75, 100);
-                    }
-                    //Read next line of data
-                    numberOfLinesRead++;
+                        
+                        importTumour(server, io.getDiscrepancies(), tumourID, patientRecordID, 
+                                     tumour, io, reportWriter, intoHoldingDB, io.isTestOnly(), false, cache);
+                        
+                        numberOfLinesRead++;
+                        linesSinceLastCommit++;
 
-                    if (Thread.interrupted()) {
-                        //We've been interrupted: no more importing.
-                        reportWriter.flush();
-                        throw new InterruptedException();
+                        if (linesSinceLastCommit >= BATCH_SIZE) {
+                            try {
+                                server.commitTransaction();
+                                server.openTransaction();
+                                linesSinceLastCommit = 0;
+                            } catch (Exception ex) {
+                                LOGGER.log(Level.WARNING, "Error committing tumour batch transaction", ex);
+                            }
+                        }
+
+                        if (Thread.interrupted()) {
+                            reportWriter.flush();
+                            throw new InterruptedException();
+                        }
                     }
+
+                    if (linesSinceLastCommit > 0) {
+                        try {
+                            server.commitTransaction();
+                            linesSinceLastCommit = 0;
+                        } catch (Exception ex) {
+                            LOGGER.log(Level.WARNING, "Error committing final tumour transaction", ex);
+                        }
+                    }
+                } catch (Exception ex) {
+                    try {
+                        server.rollbackTransaction();
+                    } catch (Exception ignore) {
+                    }
+                    throw ex;
                 }
+
                 parser.close();
                 reportWriter.write("Finished reading tumours." + Globals.newline + Globals.newline);
                 reportWriter.flush();
             }
             if (task != null) {
                 task.firePropertyChange(TUMOURS, 100, 100);
+                task.firePropertyChange(PROGRESS, 66, 66);
             }
             // then at last we get the sources
             if (task != null) {
                 task.firePropertyChange(SOURCES, 0, 0);
-                task.firePropertyChange(PROGRESS, 66, 66);
             }
             if (files[2] != null) {
                 reportWriter.write("Starting to import sources from " + files[2].getAbsolutePath() + Globals.newline);
@@ -756,57 +915,90 @@ public class Import {
                         .withDelimiter(io.getSeparators()[2]);
                 parser = CSVParser.parse(files[2], io.getFileCharsets()[2], format);
 
-                for (CSVRecord csvRecord : parser) {   
-                    // We allow for null tasks...
-                    if (task != null) {
-                        task.firePropertyChange(PROGRESS, 67 + ((numberOfLinesRead - 1) * 100 / linesToRead) / 3, 67 + ((numberOfLinesRead) * 100 / linesToRead) / 3);
-                        task.firePropertyChange(SOURCES, ((numberOfLinesRead - 1) * 100 / linesToRead), ((numberOfLinesRead) * 100 / linesToRead));
-                    }
+                int lastSourceProgress = -1;
+                int lastOverallProgress = -1;
+                int linesSinceLastCommit = 0;
 
-                    // Build source part
-                    Source source = new Source();
-                    for (int i = 0; i < map.size(); i++) {
-                        Relation rel = map.get(i);
-                        if (rel.getDatabaseTableVariableID() >= 0 && rel.getDatabaseTableName().equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
+                try {
+                    server.openTransaction();
+                } catch (Exception ex) {
+                    LOGGER.log(Level.WARNING, "Could not open transaction for sources import", ex);
+                }
+
+                try {
+                    for (CSVRecord csvRecord : parser) {   
+                        int currentSourceProgress = linesToRead > 0 ? (int) (((long) numberOfLinesRead * 100) / linesToRead) : 0;
+                        int currentOverallProgress = 66 + (currentSourceProgress / 3);
+                        if (task != null && (currentSourceProgress != lastSourceProgress || numberOfLinesRead % 100 == 0)) {
+                            task.firePropertyChange(PROGRESS, lastOverallProgress, currentOverallProgress);
+                            task.firePropertyChange(SOURCES, lastSourceProgress, currentSourceProgress);
+                            lastSourceProgress = currentSourceProgress;
+                            lastOverallProgress = currentOverallProgress;
+                        }
+
+                        // Build source part
+                        Source source = new Source();
+                        for (Relation rel : sourceRelations) {
                             if (rel.getVariableType().equalsIgnoreCase("Number")) {
-                                if (csvRecord.get(rel.getFileColumnNumber()).length() > 0) {
+                                String cellVal = csvRecord.get(rel.getFileColumnNumber());
+                                if (cellVal.length() > 0) {
                                     try {
-                                        source.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(csvRecord.get(rel.getFileColumnNumber())));
+                                        source.setVariable(rel.getDatabaseVariableName(), Integer.parseInt(cellVal));
                                     } catch (NumberFormatException ex) {
-                                        LOGGER.log(Level.SEVERE, String.format("Number format error in line: %d",numberOfLinesRead + 1 + 1), ex);
+                                        LOGGER.log(Level.SEVERE, String.format("Number format error in line: %d", numberOfLinesRead + 1 + 1), ex);
                                         success = false;
                                     }
                                 }
                             } else {
                                 String value = csvRecord.get(rel.getFileColumnNumber());
-                                if(rel.getDatabaseVariableName().equalsIgnoreCase(RAW_DATA_COLUMN))
+                                if (rel.getDatabaseVariableName().equalsIgnoreCase(RAW_DATA_COLUMN)) {
                                     value = value.replace("@#$", " <br>");
+                                }
                                 source.setVariable(rel.getDatabaseVariableName(), value);
                             }
                         }
-                        if (task != null) {
-                            task.firePropertyChange(RECORD, i - 1 / map.size() * 50, i / map.size() * 50);
+
+                        String tumourID = (String) source.getVariable(io.getTumourIDSourceTableVariableName());                    
+                        String sourceID = (String) source.getVariable(io.getSourceIDVariablename());
+                        
+                        importSource(server, io.getDiscrepancies(), sourceID, io.getSourceIDVariablename(), 
+                                     source, tumourID, reportWriter, intoHoldingDB, io.isTestOnly(), false, cache);
+                                            
+                        numberOfLinesRead++;
+                        linesSinceLastCommit++;
+
+                        if (linesSinceLastCommit >= BATCH_SIZE) {
+                            try {
+                                server.commitTransaction();
+                                server.openTransaction();
+                                linesSinceLastCommit = 0;
+                            } catch (Exception ex) {
+                                LOGGER.log(Level.WARNING, "Error committing source batch transaction", ex);
+                            }
+                        }
+
+                        if (Thread.interrupted()) {
+                            reportWriter.flush();
+                            throw new InterruptedException();
                         }
                     }
 
-                    String tumourID = (String) source.getVariable(io.getTumourIDSourceTableVariableName());                    
-                    String sourceID = (String) source.getVariable(io.getSourceIDVariablename());
-                    
-                    importSource(server, io.getDiscrepancies(), sourceID, io.getSourceIDVariablename(), 
-                                 source, tumourID, reportWriter, intoHoldingDB, io.isTestOnly(), false);
-                                        
-                    if (task != null) {
-                        task.firePropertyChange(RECORD, 75, 100);
+                    if (linesSinceLastCommit > 0) {
+                        try {
+                            server.commitTransaction();
+                            linesSinceLastCommit = 0;
+                        } catch (Exception ex) {
+                            LOGGER.log(Level.WARNING, "Error committing final source transaction", ex);
+                        }
                     }
-
-                    numberOfLinesRead++;
-
-                    if (Thread.interrupted()) {
-                        //We've been interrupted: no more importing.
-                        reportWriter.flush();
-                        throw new InterruptedException();
+                } catch (Exception ex) {
+                    try {
+                        server.rollbackTransaction();
+                    } catch (Exception ignore) {
                     }
+                    throw ex;
                 }
+
                 reportWriter.write("Finished reading sources." + Globals.newline + Globals.newline);
                 reportWriter.flush();
                 parser.close();                
@@ -892,19 +1084,39 @@ public class Import {
             throws SQLException, SecurityException, RecordLockedException, 
                    UnknownTableException, DistributedTableDescriptionException, RemoteException,
                    IOException, Exception {
+        return importPatient(server, discrepancyOption, patientRecordID, patientToImport, reportWriter,
+                             intoHoldingDB, isTestOnly, fromHoldingToProduction, globalToolBox, null);
+    }
+
+    public static int importPatient(CanRegServerInterface server, int discrepancyOption,
+                                     String patientRecordID, Patient patientToImport, Writer reportWriter, 
+                                     boolean intoHoldingDB, boolean isTestOnly, 
+                                     boolean fromHoldingToProduction, GlobalToolBox globalToolBox,
+                                     ImportCache cache)
+            throws SQLException, SecurityException, RecordLockedException, 
+                   UnknownTableException, DistributedTableDescriptionException, RemoteException,
+                   IOException, Exception {
         if (patientToImport == null) {
             LOGGER.log(Level.WARNING, "importPatient called with null patientToImport for patientRecordID: {0}", patientRecordID);
             return -1;
         }
 
         Patient oldPatientRecord = null;
-        try {
-            if (CanRegClientApp.getApplication() != null) {
-                oldPatientRecord = CanRegClientApp.getApplication().getPatientRecord(patientRecordID, false, server);
+        if (cache != null && patientRecordID != null) {
+            oldPatientRecord = cache.getPatientByPRID(patientRecordID);
+        }
+        if (oldPatientRecord == null) {
+            try {
+                if (CanRegClientApp.getApplication() != null) {
+                    oldPatientRecord = CanRegClientApp.getApplication().getPatientRecord(patientRecordID, false, server);
+                    if (oldPatientRecord != null && cache != null) {
+                        cache.putPatientByPRID(patientRecordID, oldPatientRecord);
+                    }
+                }
+            } catch (Exception ex1) {
+                // Patient not found in DB or application context unavailable.
+                LOGGER.log(Level.WARNING, "Patient not found in DB", ex1);
             }
-        } catch (Exception ex1) {
-            // Patient not found in DB or application context unavailable.
-            LOGGER.log(Level.WARNING, "Patient not found in DB", ex1);
         }
 
         boolean savePatient = true;
@@ -943,6 +1155,7 @@ public class Import {
 //      }
 
         if ( ! isTestOnly && savePatient) {
+            int resultPRID = -1;
             if (oldPatientRecord != null) { // does the patient record already exist ?
     //              try {
                 if (fromHoldingToProduction) {
@@ -955,9 +1168,9 @@ public class Import {
     //              }
                 Object prid = patientToImport.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
                 if (prid instanceof Integer) {
-                    return (Integer) prid;
+                    resultPRID = (Integer) prid;
                 } else if (oldPatientRecord.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME) instanceof Integer) {
-                    return (Integer) oldPatientRecord.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
+                    resultPRID = (Integer) oldPatientRecord.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
                 }
             } else {
     //              try {
@@ -975,11 +1188,34 @@ public class Import {
                         }
                     }
                 }
-                return server.savePatient(patientToImport);
+                resultPRID = server.savePatient(patientToImport);
     //              } catch(Exception ex) {
     //                  LOGGER.log(Level.SEVERE, "ERROR SAVING PATIENT " + patientID, ex);
     //              }
             }
+
+            if (cache != null && patientToImport != null) {
+                if (patientRecordID != null && !patientRecordID.isEmpty()) {
+                    cache.putPatientByPRID(patientRecordID, patientToImport);
+                }
+                if (globalToolBox != null) {
+                    DatabaseVariablesListElement patientIDVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString());
+                    if (patientIDVariable != null) {
+                        String pid = patientToImport.getVariableAsString(patientIDVariable.getDatabaseVariableName());
+                        if (pid != null && !pid.isEmpty()) {
+                            cache.putPatientByPID(pid, patientToImport);
+                        }
+                    }
+                    DatabaseVariablesListElement patientRecordIDVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString());
+                    if (patientRecordIDVariable != null) {
+                        String pridStr = patientToImport.getVariableAsString(patientRecordIDVariable.getDatabaseVariableName());
+                        if (pridStr != null && !pridStr.isEmpty()) {
+                            cache.putPatientByPRID(pridStr, patientToImport);
+                        }
+                    }
+                }
+            }
+            return resultPRID;
         }
         
         return -1;
@@ -991,6 +1227,19 @@ public class Import {
                                     ImportOptions io, Writer reportWriter, 
                                     boolean intoHoldingDB, boolean isTestOnly,
                                     boolean fromHoldingToProduction)
+            throws SQLException, SecurityException, RecordLockedException, 
+                   UnknownTableException, DistributedTableDescriptionException, RemoteException, 
+                   IOException, Exception {
+        importTumour(server, discrepancyOption, tumourID, patientRecordID, tumourToImport,
+                     io, reportWriter, intoHoldingDB, isTestOnly, fromHoldingToProduction, null);
+    }
+
+    public static void importTumour(CanRegServerInterface server, int discrepancyOption,
+                                    String tumourID, String patientRecordID, Tumour tumourToImport, 
+                                    ImportOptions io, Writer reportWriter, 
+                                    boolean intoHoldingDB, boolean isTestOnly,
+                                    boolean fromHoldingToProduction,
+                                    ImportCache cache)
             throws SQLException, SecurityException, RecordLockedException, 
                    UnknownTableException, DistributedTableDescriptionException, RemoteException, 
                    IOException, Exception {
@@ -1007,11 +1256,21 @@ public class Import {
         ResultCode worstResultCodeFound;
         Tumour oldTumourRecord = null;
         
-        try {
-            oldTumourRecord = CanRegClientApp.getApplication().getTumourRecordBasedOnTumourID(tumourID, false, server);
-        } catch (Exception ex1) {
-            // Tumour not found in DB or application context unavailable.
-            LOGGER.log(Level.WARNING, "Tumour not found in DB", ex1);
+        if (cache != null && tumourID != null && !tumourID.isEmpty()) {
+            oldTumourRecord = cache.getTumourByTID(tumourID);
+        }
+        if (oldTumourRecord == null && tumourID != null && !tumourID.isEmpty()) {
+            try {
+                if (CanRegClientApp.getApplication() != null) {
+                    oldTumourRecord = CanRegClientApp.getApplication().getTumourRecordBasedOnTumourID(tumourID, false, server);
+                    if (oldTumourRecord != null && cache != null) {
+                        cache.putTumourByTID(tumourID, oldTumourRecord);
+                    }
+                }
+            } catch (Exception ex1) {
+                // Tumour not found in DB or application context unavailable.
+                LOGGER.log(Level.WARNING, "Tumour not found in DB", ex1);
+            }
         }
 
         if (oldTumourRecord != null) {
@@ -1044,12 +1303,20 @@ public class Import {
 
         Patient patient = null;
         if (patientRecordID != null && !patientRecordID.isEmpty()) {
-            try {
-                if (CanRegClientApp.getApplication() != null) {
-                    patient = CanRegClientApp.getApplication().getPatientRecord(patientRecordID, false, server);
+            if (cache != null) {
+                patient = cache.getPatientByPRID(patientRecordID);
+            }
+            if (patient == null) {
+                try {
+                    if (CanRegClientApp.getApplication() != null) {
+                        patient = CanRegClientApp.getApplication().getPatientRecord(patientRecordID, false, server);
+                        if (patient != null && cache != null) {
+                            cache.putPatientByPRID(patientRecordID, patient);
+                        }
+                    }
+                } catch (Exception ex) {
+                    LOGGER.log(Level.WARNING, "Error looking up patient for patientRecordID: " + patientRecordID, ex);
                 }
-            } catch (Exception ex) {
-                LOGGER.log(Level.WARNING, "Error looking up patient for patientRecordID: " + patientRecordID, ex);
             }
         }
 
@@ -1058,28 +1325,39 @@ public class Import {
             String patientID = (io != null && io.getPatientIDTumourTableVariableName() != null)
                     ? tumourToImport.getVariableAsString(io.getPatientIDTumourTableVariableName()) : null;
             if (patientID != null && !patientID.isEmpty()) {
-                try {
-                    Patient[] patients = CanRegClientApp.getApplication().getPatientsByPatientID(patientID, false, server);
-                    if (patients != null && patients.length > 0 && patients[0] != null) {
-                        patient = patients[0];
-                        String resolvedPatientRecordID = patient.getVariableAsString(
-                                (io != null && io.getPatientRecordIDVariableName() != null)
-                                        ? io.getPatientRecordIDVariableName()
-                                        : Globals.StandardVariableNames.PatientRecordID.name());
-                        if (resolvedPatientRecordID != null && !resolvedPatientRecordID.isEmpty()) {
-                            patientRecordID = resolvedPatientRecordID;
-                            if (io != null) {
-                                if (io.getPatientRecordIDVariableName() != null) {
-                                    tumourToImport.setVariable(io.getPatientRecordIDVariableName(), patientRecordID);
+                if (cache != null) {
+                    patient = cache.getPatientByPID(patientID);
+                }
+                if (patient == null) {
+                    try {
+                        Patient[] patients = CanRegClientApp.getApplication().getPatientsByPatientID(patientID, false, server);
+                        if (patients != null && patients.length > 0 && patients[0] != null) {
+                            patient = patients[0];
+                            if (cache != null) {
+                                cache.putPatientByPID(patientID, patient);
+                            }
+                            String resolvedPatientRecordID = patient.getVariableAsString(
+                                    (io != null && io.getPatientRecordIDVariableName() != null)
+                                            ? io.getPatientRecordIDVariableName()
+                                            : Globals.StandardVariableNames.PatientRecordID.name());
+                            if (resolvedPatientRecordID != null && !resolvedPatientRecordID.isEmpty()) {
+                                patientRecordID = resolvedPatientRecordID;
+                                if (cache != null) {
+                                    cache.putPatientByPRID(patientRecordID, patient);
                                 }
-                                if (io.getPatientRecordIDTumourTableVariableName() != null) {
-                                    tumourToImport.setVariable(io.getPatientRecordIDTumourTableVariableName(), patientRecordID);
+                                if (io != null) {
+                                    if (io.getPatientRecordIDVariableName() != null) {
+                                        tumourToImport.setVariable(io.getPatientRecordIDVariableName(), patientRecordID);
+                                    }
+                                    if (io.getPatientRecordIDTumourTableVariableName() != null) {
+                                        tumourToImport.setVariable(io.getPatientRecordIDTumourTableVariableName(), patientRecordID);
+                                    }
                                 }
                             }
                         }
+                    } catch (Exception ex) {
+                        LOGGER.log(Level.WARNING, "Fallback patient lookup by PatientID failed: " + patientID, ex);
                     }
-                } catch (Exception ex) {
-                    LOGGER.log(Level.WARNING, "Fallback patient lookup by PatientID failed: " + patientID, ex);
                 }
             }
         }
@@ -1200,6 +1478,9 @@ public class Import {
 //                       LOGGER.log(Level.SEVERE, "ERROR SAVING TUMOUR " + tumourID, ex);
 //                  }
                 }
+                if (cache != null && tumourID != null && !tumourID.isEmpty()) {
+                    cache.putTumourByTID(tumourID, tumourToImport);
+                }
             }
         }
     }
@@ -1214,18 +1495,41 @@ public class Import {
             throws SecurityException, SQLException, RecordLockedException, 
                    DistributedTableDescriptionException, UnknownTableException, RemoteException,
                    IOException, Exception {
+        importSource(server, discrepancyOption, sourceRecordID, sourceIDVariablename,
+                     sourceToImport, tumourID, reportWriter, intoHoldingDB, isTestOnly,
+                     fromHoldingToProduction, null);
+    }
+
+    public static void importSource(CanRegServerInterface server, int discrepancyOption,
+                                    String sourceRecordID, String sourceIDVariablename, 
+                                    Source sourceToImport, String tumourID,  
+                                    Writer reportWriter, 
+                                    boolean intoHoldingDB, boolean isTestOnly, 
+                                    boolean fromHoldingToProduction,
+                                    ImportCache cache) 
+            throws SecurityException, SQLException, RecordLockedException, 
+                   DistributedTableDescriptionException, UnknownTableException, RemoteException,
+                   IOException, Exception {
         if (sourceToImport == null) {
             LOGGER.log(Level.WARNING, "importSource called with null sourceToImport for sourceRecordID: {0}", sourceRecordID);
             return;
         }
 
         Tumour tumour = null;
-        try {
-            if (CanRegClientApp.getApplication() != null) {
-                tumour = CanRegClientApp.getApplication().getTumourRecordBasedOnTumourID(tumourID, false, server);
+        if (cache != null && tumourID != null && !tumourID.isEmpty()) {
+            tumour = cache.getTumourByTID(tumourID);
+        }
+        if (tumour == null && tumourID != null && !tumourID.isEmpty()) {
+            try {
+                if (CanRegClientApp.getApplication() != null) {
+                    tumour = CanRegClientApp.getApplication().getTumourRecordBasedOnTumourID(tumourID, false, server);
+                    if (tumour != null && cache != null) {
+                        cache.putTumourByTID(tumourID, tumour);
+                    }
+                }
+            } catch (Exception ex1) {
+                LOGGER.log(Level.WARNING, "Tumour not found in DB for tumourID: " + tumourID, ex1);
             }
-        } catch (Exception ex1) {
-            LOGGER.log(Level.WARNING, "Tumour not found in DB for tumourID: " + tumourID, ex1);
         }
 
 
@@ -1279,6 +1583,9 @@ public class Import {
 //                                        " ON TUMOUR " + tumour.getVariable(io.getTumourIDVariablename()),
 //                                        ex);
 //              }
+                    if (cache != null && tumourID != null && !tumourID.isEmpty()) {
+                        cache.putTumourByTID(tumourID, tumour);
+                    }
             }
         } else {
             LOGGER.log(Level.SEVERE, "No tumour with ID {0} was found for source ID {1}", new Object[]{tumourID, sourceRecordID});

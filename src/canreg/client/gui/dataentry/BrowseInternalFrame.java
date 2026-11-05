@@ -1064,6 +1064,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
 
             CanRegServerInterface productionServer = CanRegClientApp.getApplication().getServer();
             GlobalToolBox globalToolBox = new GlobalToolBox(productionServer.getDatabseDescription());
+            Import.ImportCache cache = new Import.ImportCache();
             String patientRecordIDVariable = globalToolBox
                     .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString())
                     .getDatabaseVariableName();
@@ -1076,70 +1077,101 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
 
             int totalPatients = patientRecordIDsToProcess.size();
             int currentPatientIndex = 0;
+            int batchCount = 0;
 
-            for (String holdingPatientRecordID : patientRecordIDsToProcess) {
-                currentPatientIndex++;
-                final int progressPercent = totalPatients > 0
-                        ? (int) (((double) (currentPatientIndex - 1) / totalPatients) * 100)
-                        : 0;
-                final String statusMessage = browseResourceMap.getString("IMPORTING RECORDS INTO PRODUCTION ")
-                        + " (" + currentPatientIndex + "/" + totalPatients + ")...";
+            try {
+                productionServer.openTransaction();
+            } catch (Exception ex) {
+                LOGGER.log(Level.WARNING, "Could not open transaction on production server", ex);
+            }
 
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (waitFrame != null) {
-                            waitFrame.setProgress(progressPercent);
-                            waitFrame.setLabel(statusMessage);
-                        }
-                    }
-                });
-                setProgress(progressPercent, 0, 100);
-                setMessage(statusMessage);
+            try {
+                for (String holdingPatientRecordID : patientRecordIDsToProcess) {
+                    currentPatientIndex++;
+                    final int progressPercent = totalPatients > 0
+                            ? (int) (((double) (currentPatientIndex - 1) / totalPatients) * 100)
+                            : 0;
+                    final String statusMessage = browseResourceMap.getString("IMPORTING RECORDS INTO PRODUCTION ")
+                            + " (" + currentPatientIndex + "/" + totalPatients + ")...";
 
-                Patient patientToImport = CanRegClientApp.getApplication().getPatientRecord(holdingPatientRecordID, false, server);
-                if (patientToImport == null) {
-                    LOGGER.log(Level.WARNING, "Patient record not found in holding DB for ID: {0}", holdingPatientRecordID);
-                    continue;
-                }
-                int productionPRID = Import.importPatient(productionServer, discrepancyOption,
-                        holdingPatientRecordID, patientToImport, reportWriter, false, false, true, globalToolBox);
-
-                Tumour[] tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientRecordID(holdingPatientRecordID, false, server);
-                if (tumourRecords != null) {
-                    for (Tumour tumourToImport : tumourRecords) {
-                        if (tumourToImport == null) {
-                            continue;
-                        }
-                        String tumourID = tumourToImport.getVariableAsString(tumourIDlookupVariable);
-                        String targetPatientRecordID = holdingPatientRecordID;
-
-                        if (productionPRID != -1) {
-                            Patient productionPatient = (Patient) productionServer.getRecord(productionPRID, Globals.PATIENT_TABLE_NAME, false, server.hashCode());
-                            if (productionPatient != null) {
-                                targetPatientRecordID = productionPatient.getVariableAsString(patientRecordIDVariable);
-                                tumourToImport.setVariable(tumourIDVariableName, "");
-                                tumourToImport.setVariable(tumourPatientRecordIdVariableName, targetPatientRecordID);
-                                tumourID = "";
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (waitFrame != null) {
+                                waitFrame.setProgress(progressPercent);
+                                waitFrame.setLabel(statusMessage);
                             }
                         }
+                    });
+                    setProgress(progressPercent, 0, 100);
+                    setMessage(statusMessage);
 
-                        Import.importTumour(productionServer, discrepancyOption, tumourID,
-                                targetPatientRecordID, tumourToImport, null, reportWriter, false, false, true);
+                    Patient patientToImport = CanRegClientApp.getApplication().getPatientRecord(holdingPatientRecordID, false, server);
+                    if (patientToImport == null) {
+                        LOGGER.log(Level.WARNING, "Patient record not found in holding DB for ID: {0}", holdingPatientRecordID);
+                        continue;
+                    }
+                    int productionPRID = Import.importPatient(productionServer, discrepancyOption,
+                            holdingPatientRecordID, patientToImport, reportWriter, false, false, true, globalToolBox, cache);
 
-                        if (deleteRecord(tumourToImport)) {
-                            successfullyDeletedRecord++;
-                        } else {
-                            errorDeletedRecord++;
+                    Tumour[] tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientRecordID(holdingPatientRecordID, false, server);
+                    if (tumourRecords != null) {
+                        for (Tumour tumourToImport : tumourRecords) {
+                            if (tumourToImport == null) {
+                                continue;
+                            }
+                            String tumourID = tumourToImport.getVariableAsString(tumourIDlookupVariable);
+                            String targetPatientRecordID = holdingPatientRecordID;
+
+                            if (productionPRID != -1) {
+                                Patient productionPatient = (Patient) productionServer.getRecord(productionPRID, Globals.PATIENT_TABLE_NAME, false, server.hashCode());
+                                if (productionPatient != null) {
+                                    targetPatientRecordID = productionPatient.getVariableAsString(patientRecordIDVariable);
+                                    tumourToImport.setVariable(tumourIDVariableName, "");
+                                    tumourToImport.setVariable(tumourPatientRecordIdVariableName, targetPatientRecordID);
+                                    tumourID = "";
+                                }
+                            }
+
+                            Import.importTumour(productionServer, discrepancyOption, tumourID,
+                                    targetPatientRecordID, tumourToImport, null, reportWriter, false, false, true, cache);
+
+                            if (deleteRecord(tumourToImport)) {
+                                successfullyDeletedRecord++;
+                            } else {
+                                errorDeletedRecord++;
+                            }
+                        }
+                    }
+
+                    if (deleteRecord(patientToImport)) {
+                        successfullyDeletedRecord++;
+                    } else {
+                        errorDeletedRecord++;
+                    }
+
+                    batchCount++;
+                    if (batchCount % 500 == 0) {
+                        try {
+                            productionServer.commitTransaction();
+                            productionServer.openTransaction();
+                        } catch (Exception ex) {
+                            LOGGER.log(Level.WARNING, "Error committing batch transaction on production server", ex);
                         }
                     }
                 }
 
-                if (deleteRecord(patientToImport)) {
-                    successfullyDeletedRecord++;
-                } else {
-                    errorDeletedRecord++;
+                try {
+                    productionServer.commitTransaction();
+                } catch (Exception ex) {
+                    LOGGER.log(Level.WARNING, "Error committing final transaction on production server", ex);
                 }
+            } catch (Exception ex) {
+                try {
+                    productionServer.rollbackTransaction();
+                } catch (Exception ignore) {
+                }
+                throw ex;
             }
 
             SwingUtilities.invokeLater(new Runnable() {

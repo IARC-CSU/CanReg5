@@ -891,11 +891,13 @@ public class CanRegDAO {
      *
      * @throws SQLException SQLException
      */
-    public void openTransaction() throws SQLException {
+    public synchronized void openTransaction() throws SQLException {
         if (dbConnection == null) {
             dbConnection = wrapUniqueConnection(DriverManager.getConnection(getDatabaseUrl(), dbProperties));
         }
-        dbConnection.setAutoCommit(false);
+        if (dbConnection.getAutoCommit()) {
+            dbConnection.setAutoCommit(false);
+        }
     }
 
     /**
@@ -903,8 +905,8 @@ public class CanRegDAO {
      *
      * @throws SQLException SQLException
      */
-    public void rollbackTransaction() throws SQLException {
-        if (dbConnection != null) {
+    public synchronized void rollbackTransaction() throws SQLException {
+        if (dbConnection != null && !dbConnection.getAutoCommit()) {
             dbConnection.rollback();
             dbConnection.setAutoCommit(true);
         }
@@ -915,8 +917,8 @@ public class CanRegDAO {
      *
      * @throws SQLException SQLException
      */
-    public void commitTransaction() throws SQLException {
-        if (dbConnection != null) {
+    public synchronized void commitTransaction() throws SQLException {
+        if (dbConnection != null && !dbConnection.getAutoCommit()) {
             dbConnection.commit();
             dbConnection.setAutoCommit(true);
         }
