@@ -263,4 +263,31 @@ public class ImportRecordTest {
         assertEquals(404, tumour.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME));
         assertSame(tumour, cache.getTumourByTID("TID_TEST_404"));
     }
+
+    @Test
+    public void testImportPatientDoesNotOverwriteHoldingRecordIdWhenFromHoldingToProduction() throws Exception {
+        CanRegServerInterface server = (CanRegServerInterface) Proxy.newProxyInstance(
+                CanRegServerInterface.class.getClassLoader(),
+                new Class<?>[]{CanRegServerInterface.class},
+                new InvocationHandler() {
+                    @Override
+                    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                        if ("savePatient".equals(method.getName())) {
+                            return 9999;
+                        }
+                        return null;
+                    }
+                });
+
+        Patient patient = new Patient();
+        patient.setVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME, 42); // holding DB PRID
+
+        StringWriter reportWriter = new StringWriter();
+        int result = Import.importPatient(server, ImportOptions.REJECT, "REC_42",
+                patient, reportWriter, false, false, true, globalToolBox); // fromHoldingToProduction = true
+
+        assertEquals(9999, result);
+        assertEquals("Holding PRID must not be overwritten when fromHoldingToProduction is true",
+                42, patient.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME));
+    }
 }

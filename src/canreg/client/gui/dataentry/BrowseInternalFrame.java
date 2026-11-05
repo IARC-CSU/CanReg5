@@ -1111,6 +1111,13 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                         LOGGER.log(Level.WARNING, "Patient record not found in holding DB for ID: {0}", holdingPatientRecordID);
                         continue;
                     }
+
+                    int holdingPRID = -1;
+                    Object holdingPRIDObj = patientToImport.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
+                    if (holdingPRIDObj instanceof Integer) {
+                        holdingPRID = (Integer) holdingPRIDObj;
+                    }
+
                     int productionPRID = Import.importPatient(productionServer, discrepancyOption,
                             holdingPatientRecordID, patientToImport, reportWriter, false, false, true, globalToolBox, cache);
 
@@ -1120,6 +1127,26 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                             if (tumourToImport == null) {
                                 continue;
                             }
+
+                            int holdingTRID = -1;
+                            Object holdingTRIDObj = tumourToImport.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME);
+                            if (holdingTRIDObj instanceof Integer) {
+                                holdingTRID = (Integer) holdingTRIDObj;
+                            }
+
+                            Set<Source> sources = tumourToImport.getSources();
+                            List<Integer> holdingSourceIDs = new ArrayList<Integer>();
+                            if (sources != null) {
+                                for (Source source : sources) {
+                                    if (source != null) {
+                                        Object sridObj = source.getVariable(Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME);
+                                        if (sridObj instanceof Integer) {
+                                            holdingSourceIDs.add((Integer) sridObj);
+                                        }
+                                    }
+                                }
+                            }
+
                             String tumourID = tumourToImport.getVariableAsString(tumourIDlookupVariable);
                             String targetPatientRecordID = holdingPatientRecordID;
 
@@ -1136,7 +1163,15 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                             Import.importTumour(productionServer, discrepancyOption, tumourID,
                                     targetPatientRecordID, tumourToImport, null, reportWriter, false, false, true, cache);
 
-                            if (deleteRecord(tumourToImport)) {
+                            // Delete holding sources and tumour records from holding DB
+                            for (Integer srid : holdingSourceIDs) {
+                                deleteRecordByID(srid, Globals.SOURCE_TABLE_NAME);
+                            }
+                            boolean tumourDeleted = false;
+                            if (holdingTRID >= 0) {
+                                tumourDeleted = deleteRecordByID(holdingTRID, Globals.TUMOUR_TABLE_NAME);
+                            }
+                            if (tumourDeleted) {
                                 successfullyDeletedRecord++;
                             } else {
                                 errorDeletedRecord++;
@@ -1144,7 +1179,12 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                         }
                     }
 
-                    if (deleteRecord(patientToImport)) {
+                    // Delete patient from holding DB (tumours deleted first to satisfy FK constraints)
+                    boolean patientDeleted = false;
+                    if (holdingPRID >= 0) {
+                        patientDeleted = deleteRecordByID(holdingPRID, Globals.PATIENT_TABLE_NAME);
+                    }
+                    if (patientDeleted) {
                         successfullyDeletedRecord++;
                     } else {
                         errorDeletedRecord++;
@@ -1240,8 +1280,21 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
         }
     }
     
-    private boolean deleteRecord(DatabaseRecord record) {
+    private boolean deleteRecordByID(int id, String tableName) {
         boolean success = false;
+        if (id >= 0) {
+            try {
+                canreg.client.CanRegClientApp.getApplication().releaseRecord(id, tableName, server);
+                success = canreg.client.CanRegClientApp.getApplication().deleteRecord(id, tableName, server);
+            } catch (Exception ex) {
+               LOGGER.log(Level.SEVERE, null, ex);
+                new TechnicalError().errorDialog();
+            }
+        }
+        return success;
+    }
+
+    private boolean deleteRecord(DatabaseRecord record) {
         int id = -1;
         String tableName = null;
         if (record instanceof Patient) {
@@ -1252,8 +1305,10 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
         } else if (record instanceof Tumour) {
             // delete sources first.
             Tumour tumour = (Tumour) record;
-            for (Source source : tumour.getSources()) 
-                deleteRecord(source);
+            if (tumour.getSources() != null) {
+                for (Source source : tumour.getSources()) 
+                    deleteRecord(source);
+            }
             
             Object idObject = record.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME);
             if (idObject != null) 
@@ -1265,16 +1320,7 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                 id = (Integer) idObject;            
             tableName = Globals.SOURCE_TABLE_NAME;
         }
-        if (id >= 0) {
-            try {
-                canreg.client.CanRegClientApp.getApplication().releaseRecord(id, tableName, server);
-                success = canreg.client.CanRegClientApp.getApplication().deleteRecord(id, tableName, server);
-            } catch (Exception ex) {
-               LOGGER.log(Level.SEVERE, null, ex);
-                new TechnicalError().errorDialog();
-            }
-        }
-        return success;
+        return deleteRecordByID(id, tableName);
     }
 
     @Action

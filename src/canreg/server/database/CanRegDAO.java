@@ -1489,8 +1489,8 @@ public class CanRegDAO {
              PreparedStatement stmtDeletePatientRecord = connection.prepareStatement(STR_DELETE_PATIENT_RECORD)) {
             stmtDeletePatientRecord.clearParameters();
             stmtDeletePatientRecord.setInt(1, patientRecordID);
-            stmtDeletePatientRecord.executeUpdate();
-            success = true;
+            int rows = stmtDeletePatientRecord.executeUpdate();
+            success = (rows > 0);
         } catch (SQLException sqle) {
             LOGGER.log(Level.SEVERE, null, sqle);
         }
@@ -1506,8 +1506,8 @@ public class CanRegDAO {
              PreparedStatement stmtDeleteTumourRecord = connection.prepareStatement(STR_DELETE_TUMOUR_RECORD)) {
             stmtDeleteTumourRecord.clearParameters();
             stmtDeleteTumourRecord.setInt(1, tumourRecordID);
-            stmtDeleteTumourRecord.executeUpdate();
-            success = true;
+            int rows = stmtDeleteTumourRecord.executeUpdate();
+            success = (rows > 0);
         } catch (SQLException sqle) {
             LOGGER.log(Level.SEVERE, null, sqle);
         }
@@ -1523,8 +1523,8 @@ public class CanRegDAO {
              PreparedStatement stmtDeleteSourceRecord = connection.prepareStatement(STR_DELETE_SOURCE_RECORD)) {
             stmtDeleteSourceRecord.clearParameters();
             stmtDeleteSourceRecord.setInt(1, sourceRecordID);
-            stmtDeleteSourceRecord.executeUpdate();
-            success = true;
+            int rows = stmtDeleteSourceRecord.executeUpdate();
+            success = (rows > 0);
         } catch (SQLException sqle) {
             LOGGER.log(Level.SEVERE, null, sqle);
         }

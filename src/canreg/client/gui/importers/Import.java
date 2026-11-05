@@ -1189,7 +1189,7 @@ public class Import {
                     }
                 }
                 resultPRID = server.savePatient(patientToImport);
-                if (resultPRID > 0) {
+                if (!fromHoldingToProduction && resultPRID > 0) {
                     patientToImport.setVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME, resultPRID);
                 }
     //              } catch(Exception ex) {
@@ -1465,9 +1465,6 @@ public class Import {
                         if(fromHoldingToProduction) {
                             if(tumourToImport.getVariableAsString(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME_FOR_HOLDING).isEmpty()) {
                                 int savedId = server.saveTumour(tumourToImport);
-                                if (savedId > 0) {
-                                    tumourToImport.setVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME, savedId);
-                                }
                             } else
                                 server.editTumourFromHoldingToProduction(tumourToImport);
                         }
@@ -1480,7 +1477,7 @@ public class Import {
                 else {
 //                  try {
                         int savedId = server.saveTumour(tumourToImport);
-                        if (savedId > 0) {
+                        if (!fromHoldingToProduction && savedId > 0) {
                             tumourToImport.setVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME, savedId);
                         }
 //                  } catch(Exception ex) {
