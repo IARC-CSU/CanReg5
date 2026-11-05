@@ -892,6 +892,11 @@ public class Import {
             throws SQLException, SecurityException, RecordLockedException, 
                    UnknownTableException, DistributedTableDescriptionException, RemoteException,
                    IOException, Exception {
+        if (patientToImport == null) {
+            LOGGER.log(Level.WARNING, "importPatient called with null patientToImport for patientRecordID: {0}", patientRecordID);
+            return -1;
+        }
+
         Patient oldPatientRecord = null;
         try {
             if (CanRegClientApp.getApplication() != null) {
@@ -948,6 +953,12 @@ public class Import {
     //              } catch(Exception ex) {
     //                  LOGGER.log(Level.SEVERE, "ERROR EDITING PATIENT " + patientID, ex);
     //              }
+                Object prid = patientToImport.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
+                if (prid instanceof Integer) {
+                    return (Integer) prid;
+                } else if (oldPatientRecord.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME) instanceof Integer) {
+                    return (Integer) oldPatientRecord.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
+                }
             } else {
     //              try {
                 if (fromHoldingToProduction) {
@@ -983,6 +994,11 @@ public class Import {
             throws SQLException, SecurityException, RecordLockedException, 
                    UnknownTableException, DistributedTableDescriptionException, RemoteException, 
                    IOException, Exception {
+        if (tumourToImport == null) {
+            LOGGER.log(Level.WARNING, "importTumour called with null tumourToImport for tumourID: {0}", tumourID);
+            return;
+        }
+
         // see if this tumour exists in the database already
         // TODO: Implement this using arrays and getTumourRexords instead
         boolean saveTumour = true;
@@ -1198,6 +1214,11 @@ public class Import {
             throws SecurityException, SQLException, RecordLockedException, 
                    DistributedTableDescriptionException, UnknownTableException, RemoteException,
                    IOException, Exception {
+        if (sourceToImport == null) {
+            LOGGER.log(Level.WARNING, "importSource called with null sourceToImport for sourceRecordID: {0}", sourceRecordID);
+            return;
+        }
+
         Tumour tumour = null;
         try {
             if (CanRegClientApp.getApplication() != null) {
@@ -1330,6 +1351,9 @@ public class Import {
      * @return a report of the differences between oldRecord and newRecord
      */
     private static String updateRecord(DatabaseRecord oldRecord, DatabaseRecord newRecord) {
+        if (oldRecord == null || newRecord == null) {
+            return "";
+        }
         String report = "";
         // get all the elements from the newTumour and put them in the oldTumour
         for (String variableName : newRecord.getVariableNames()) {
@@ -1358,6 +1382,9 @@ public class Import {
      * @return a report of the differences between oldRecord and newRecord
      */
     private static String overwriteRecord(DatabaseRecord oldRecord, DatabaseRecord newRecord) {
+        if (oldRecord == null || newRecord == null) {
+            return "";
+        }
         String report = "";
         // get all the elements from the newTumour and put them in the oldTumour
         for (String variableName : oldRecord.getVariableNames()) {

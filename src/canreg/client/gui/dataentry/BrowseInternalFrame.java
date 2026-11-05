@@ -60,8 +60,10 @@ import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -1010,43 +1012,54 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                             .getDatabaseVariableName();
                     int columnNumber = tableColumnModel.getColumnIndex(canreg.common.Tools.toUpperCaseStandardized(patientRecordIDVariable), false);
 
+                    Set<String> processedPatientRecordIDs = new HashSet<String>();
+
                     for(Integer rowNumber : resultTable.getSelectedRows()) {
                         String holdingPatientRecordID = (String) tableDataModel.getValueAt(rowNumber, columnNumber);
+                        if (holdingPatientRecordID == null || holdingPatientRecordID.trim().isEmpty()
+                                || processedPatientRecordIDs.contains(holdingPatientRecordID)) {
+                            continue;
+                        }
+                        processedPatientRecordIDs.add(holdingPatientRecordID);
+
                         Patient patientToImport = CanRegClientApp.getApplication().getPatientRecord(holdingPatientRecordID, false, server);
+                        if (patientToImport == null) {
+                            LOGGER.log(Level.WARNING, "Patient record not found in holding DB for ID: {0}", holdingPatientRecordID);
+                            continue;
+                        }
                         int productionPRID = Import.importPatient(productionServer, result,
                                 holdingPatientRecordID, patientToImport, reportWriter, false, false, true, globalToolBox);
 
                         Tumour[] tumourRecords = CanRegClientApp.getApplication().getTumourRecordsBasedOnPatientRecordID(holdingPatientRecordID, false, server);
-                        for(Tumour tumourToImport : tumourRecords) {
-                            String tumourID = tumourToImport.getVariableAsString(tumourIDlookupVariable);
+                        if (tumourRecords != null) {
+                            for(Tumour tumourToImport : tumourRecords) {
+                                if (tumourToImport == null) {
+                                    continue;
+                                }
+                                String tumourID = tumourToImport.getVariableAsString(tumourIDlookupVariable);
+                                String targetPatientRecordID = holdingPatientRecordID;
 
-                            if(productionPRID != -1) {
-                                Patient productionPatient = (Patient) productionServer.getRecord(productionPRID, Globals.PATIENT_TABLE_NAME, false, server.hashCode());
-                                holdingPatientRecordID = productionPatient.getVariableAsString(patientRecordIDVariable);
+                                if(productionPRID != -1) {
+                                    Patient productionPatient = (Patient) productionServer.getRecord(productionPRID, Globals.PATIENT_TABLE_NAME, false, server.hashCode());
+                                    if (productionPatient != null) {
+                                        targetPatientRecordID = productionPatient.getVariableAsString(patientRecordIDVariable);
 
-                                String tumourIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
-                                String tumourPatientRecordIdVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName();
-                                tumourToImport.setVariable(tumourIDVariableName, "");
-                                tumourToImport.setVariable(tumourPatientRecordIdVariableName, holdingPatientRecordID);
-                                tumourID = "";
+                                        String tumourIDVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getDatabaseVariableName();
+                                        String tumourPatientRecordIdVariableName = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString()).getDatabaseVariableName();
+                                        tumourToImport.setVariable(tumourIDVariableName, "");
+                                        tumourToImport.setVariable(tumourPatientRecordIdVariableName, targetPatientRecordID);
+                                        tumourID = "";
+                                    }
+                                }
+
+                                Import.importTumour(productionServer, result, tumourID,
+                                        targetPatientRecordID, tumourToImport, null, reportWriter, false, false, true);
+
+                                if(deleteRecord(tumourToImport))
+                                    successfullyDeletedRecord++;
+                                else
+                                    errorDeletedRecord++;
                             }
-
-                            Import.importTumour(productionServer, result, tumourID,
-                                    holdingPatientRecordID, tumourToImport, null, reportWriter, false, false, true);
-
-                            //NOT NECESSARY, sources are already taken care of in CanRegDAO.editRecord() when
-                            //the record being updated is a Tumour (near the end of the method it deletes the sources
-                            //and saves them all from scratch).
-    //                            for(Source sourceToImport : tumourToImport.getSources()) {
-    //                                Import.importSource(CanRegClientApp.getApplication().getServer(), result,
-    //                                        sourceToImport.getVariableAsString(sourceIDlookupVariable),
-    //                                        sourceIDlookupVariable, sourceToImport, tumourID, reportWriter, false, false, true);
-    //                            }
-
-                            if(deleteRecord(tumourToImport))
-                                successfullyDeletedRecord++;
-                            else
-                                errorDeletedRecord++;
                         }
 
                         if(deleteRecord(patientToImport))

@@ -128,4 +128,43 @@ public class ImportRecordTest {
         assertTrue("Report must record that no patient matches this tumour",
                 reportWriter.toString().contains("No patient matches this Tumour"));
     }
+
+    @Test
+    public void testImportPatientHandlesNullPatientGracefully() throws Exception {
+        CanRegServerInterface server = (CanRegServerInterface) Proxy.newProxyInstance(
+                CanRegServerInterface.class.getClassLoader(),
+                new Class<?>[]{CanRegServerInterface.class},
+                new InvocationHandler() {
+                    @Override
+                    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                        return null;
+                    }
+                });
+
+        StringWriter reportWriter = new StringWriter();
+        int result = Import.importPatient(server, ImportOptions.UPDATE, "1999230201",
+                null, reportWriter, false, false, true, globalToolBox);
+
+        assertEquals(-1, result);
+    }
+
+    @Test
+    public void testImportTumourAndSourceHandleNullGracefully() throws Exception {
+        CanRegServerInterface server = (CanRegServerInterface) Proxy.newProxyInstance(
+                CanRegServerInterface.class.getClassLoader(),
+                new Class<?>[]{CanRegServerInterface.class},
+                new InvocationHandler() {
+                    @Override
+                    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                        return null;
+                    }
+                });
+
+        StringWriter reportWriter = new StringWriter();
+        Import.importTumour(server, ImportOptions.UPDATE, "TUM_NULL", "PRID_NULL",
+                null, null, reportWriter, false, false, true);
+
+        Import.importSource(server, ImportOptions.UPDATE, "SRC_NULL", "SRC_VAR",
+                null, "TUM_NULL", reportWriter, false, false, true);
+    }
 }
