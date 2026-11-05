@@ -99,7 +99,11 @@ public class DistributedTableDataSourceResultSetImpl implements DistributedTable
         try {
             // int pos;
             // pos = resultSet.getRow();
-            resultSet.absolute(from);
+            if (from == 0) {
+                resultSet.beforeFirst();
+            } else {
+                resultSet.absolute(from);
+            }
             boolean hasMore = resultSet.next();
 
             while (hasMore && rows.size() < (to - from)) {

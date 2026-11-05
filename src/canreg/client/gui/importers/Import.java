@@ -1189,6 +1189,9 @@ public class Import {
                     }
                 }
                 resultPRID = server.savePatient(patientToImport);
+                if (resultPRID > 0) {
+                    patientToImport.setVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME, resultPRID);
+                }
     //              } catch(Exception ex) {
     //                  LOGGER.log(Level.SEVERE, "ERROR SAVING PATIENT " + patientID, ex);
     //              }
@@ -1461,7 +1464,10 @@ public class Import {
 //                  try {
                         if(fromHoldingToProduction) {
                             if(tumourToImport.getVariableAsString(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME_FOR_HOLDING).isEmpty()) {
-                                server.saveTumour(tumourToImport);
+                                int savedId = server.saveTumour(tumourToImport);
+                                if (savedId > 0) {
+                                    tumourToImport.setVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME, savedId);
+                                }
                             } else
                                 server.editTumourFromHoldingToProduction(tumourToImport);
                         }
@@ -1473,7 +1479,10 @@ public class Import {
                 } // if not we save it
                 else {
 //                  try {
-                        server.saveTumour(tumourToImport);
+                        int savedId = server.saveTumour(tumourToImport);
+                        if (savedId > 0) {
+                            tumourToImport.setVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME, savedId);
+                        }
 //                  } catch(Exception ex) {
 //                       LOGGER.log(Level.SEVERE, "ERROR SAVING TUMOUR " + tumourID, ex);
 //                  }
@@ -1573,6 +1582,17 @@ public class Import {
             tumour.setSources(sources);
             if ( ! isTestOnly) {
 //              try {
+                    if (tumour.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME) == null && CanRegClientApp.getApplication() != null) {
+                        try {
+                            Tumour dbTumour = CanRegClientApp.getApplication().getTumourRecordBasedOnTumourID(tumourID, false, server);
+                            if (dbTumour != null && dbTumour.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME) != null) {
+                                tumour.setVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME,
+                                        dbTumour.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME));
+                            }
+                        } catch (Exception ex) {
+                            LOGGER.log(Level.FINE, "Could not resolve tumour record ID from DB", ex);
+                        }
+                    }
                     if(fromHoldingToProduction)
                         server.editTumourFromHoldingToProduction(tumour);
                     else

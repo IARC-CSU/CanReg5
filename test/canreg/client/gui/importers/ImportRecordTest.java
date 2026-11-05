@@ -222,7 +222,45 @@ public class ImportRecordTest {
                 patient, reportWriter, false, false, false, globalToolBox, cache);
 
         assertEquals(303, result);
+        assertEquals(303, patient.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME));
         assertSame(patient, cache.getPatientByPRID("PRID_TEST_CACHE"));
         assertSame(patient, cache.getPatientByPID("PID_TEST_CACHE"));
+    }
+
+    @Test
+    public void testImportTumourSetsRecordIdAndPopulatesCache() throws Exception {
+        final AtomicBoolean saveCalled = new AtomicBoolean(false);
+        CanRegServerInterface server = (CanRegServerInterface) Proxy.newProxyInstance(
+                CanRegServerInterface.class.getClassLoader(),
+                new Class<?>[]{CanRegServerInterface.class},
+                new InvocationHandler() {
+                    @Override
+                    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                        if ("saveTumour".equals(method.getName())) {
+                            saveCalled.set(true);
+                            return 404;
+                        }
+                        return null;
+                    }
+                });
+
+        Tumour tumour = new Tumour();
+        tumour.setVariable("TumourID", "TID_TEST_404");
+        tumour.setVariable("PatientIDtumourtable", "PID_TEST_404");
+        tumour.setVariable("PatientRecordIDtumourtable", "PRID_TEST_404");
+
+        Patient patient = new Patient();
+        patient.setVariable("PatientRecordID", "PRID_TEST_404");
+
+        Import.ImportCache cache = new Import.ImportCache();
+        cache.putPatientByPRID("PRID_TEST_404", patient);
+
+        StringWriter reportWriter = new StringWriter();
+        Import.importTumour(server, ImportOptions.REJECT, "TID_TEST_404", "PRID_TEST_404",
+                tumour, null, reportWriter, false, false, false, cache);
+
+        assertTrue("saveTumour should have been called", saveCalled.get());
+        assertEquals(404, tumour.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME));
+        assertSame(tumour, cache.getTumourByTID("TID_TEST_404"));
     }
 }

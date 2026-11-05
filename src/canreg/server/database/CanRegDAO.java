@@ -1115,6 +1115,13 @@ public class CanRegDAO {
         ResultSet results = stmtSaveNewRecord.getGeneratedKeys();
         if (results.next()) {
             id = results.getInt(1);
+            if (tableName.equalsIgnoreCase(Globals.PATIENT_TABLE_NAME)) {
+                record.setVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME, id);
+            } else if (tableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_NAME)) {
+                record.setVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME, id);
+            } else if (tableName.equalsIgnoreCase(Globals.SOURCE_TABLE_NAME)) {
+                record.setVariable(Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME, id);
+            }
         }
 
         return id;
@@ -1716,25 +1723,88 @@ public class CanRegDAO {
                             .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString())
                             .getDatabaseVariableName();
                     String patientRecordID = record.getVariableAsString(patientIDVariableName);
-                    Patient patient = getPatientByPatientRecordID(patientRecordID);
-                    idInt = (Integer) patient.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
+                    if (patientRecordID != null && !patientRecordID.isEmpty()) {
+                        Patient patient = getPatientByPatientRecordID(patientRecordID);
+                        if (patient != null) {
+                            idInt = (Integer) patient.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
+                        }
+                    }
                 } else if (record instanceof Tumour) {
                     String tumourIDVariableName = globalToolBox
                             .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString())
                             .getDatabaseVariableName();
                     String tumourID = record.getVariableAsString(tumourIDVariableName);
-                    Tumour tumour = getTumourByTumourID(tumourID);
-                    idInt = (Integer) tumour.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME);
+                    if (tumourID != null && !tumourID.isEmpty()) {
+                        Tumour tumour = getTumourByTumourID(tumourID);
+                        if (tumour != null) {
+                            idInt = (Integer) tumour.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME);
+                        }
+                    }
                 } else if (record instanceof Source) {
                     String sourceIDVariableName = globalToolBox
                             .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.SourceRecordID.toString())
                             .getDatabaseVariableName();
                     String sourceID = record.getVariableAsString(sourceIDVariableName);
-                    Source source = getSourceBySourceID(sourceID);
-                    idInt = (Integer) source.getVariable(Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME);
+                    if (sourceID != null && !sourceID.isEmpty()) {
+                        Source source = getSourceBySourceID(sourceID);
+                        if (source != null) {
+                            idInt = (Integer) source.getVariable(Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME);
+                        }
+                    }
                 }
             } else {
                 idInt = (Integer) record.getVariable(idString);
+            }
+
+            if (idInt == null) {
+                // If internal record ID could not be resolved from record instance, try lookup by business ID
+                if (record instanceof Patient) {
+                    String patientIDVariableName = globalToolBox
+                            .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString())
+                            .getDatabaseVariableName();
+                    String patientRecordID = record.getVariableAsString(patientIDVariableName);
+                    if (patientRecordID != null && !patientRecordID.isEmpty()) {
+                        Patient patient = getPatientByPatientRecordID(patientRecordID);
+                        if (patient != null) {
+                            idInt = (Integer) patient.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
+                            if (idInt != null) {
+                                record.setVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME, idInt);
+                            }
+                        }
+                    }
+                } else if (record instanceof Tumour) {
+                    String tumourIDVariableName = globalToolBox
+                            .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString())
+                            .getDatabaseVariableName();
+                    String tumourID = record.getVariableAsString(tumourIDVariableName);
+                    if (tumourID != null && !tumourID.isEmpty()) {
+                        Tumour tumour = getTumourByTumourID(tumourID);
+                        if (tumour != null) {
+                            idInt = (Integer) tumour.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME);
+                            if (idInt != null) {
+                                record.setVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME, idInt);
+                            }
+                        }
+                    }
+                } else if (record instanceof Source) {
+                    String sourceIDVariableName = globalToolBox
+                            .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.SourceRecordID.toString())
+                            .getDatabaseVariableName();
+                    String sourceID = record.getVariableAsString(sourceIDVariableName);
+                    if (sourceID != null && !sourceID.isEmpty()) {
+                        Source source = getSourceBySourceID(sourceID);
+                        if (source != null) {
+                            idInt = (Integer) source.getVariable(Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME);
+                            if (idInt != null) {
+                                record.setVariable(Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME, idInt);
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (idInt == null) {
+                throw new SQLException("Cannot edit record in table " + tableName + ": record ID could not be determined.");
             }
 
             if (isRecordLocked(idInt, tableName))

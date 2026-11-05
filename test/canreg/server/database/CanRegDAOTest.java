@@ -265,4 +265,77 @@ public class CanRegDAOTest {
         assertTrue(dao.deletePatientRecord(patDbId));
         assertEquals(0, dao.countPatientByPatientID("20200001"));
     }
+
+    @Test
+    public void testEditTumourWhenRecordIdIsNullOnRecordInstance() throws Exception {
+        Patient patient = new Patient();
+        patient.setVariable("RegNo", "20200002");
+        patient.setVariable("PatientRecordID", "2020000201");
+        int patDbId = dao.savePatient(patient);
+        assertTrue(patDbId > 0);
+
+        Tumour tumour = new Tumour();
+        tumour.setVariable("PatientIDtumourtable", "20200002");
+        tumour.setVariable("PatientRecordIDtumourtable", "2020000201");
+        tumour.setVariable("TumourID", "202000020101");
+        tumour.setVariable("Top", "619");
+        tumour.setVariable("Mor", "8140");
+        tumour.setVariable("Beh", "3");
+        int tumDbId = dao.saveTumour(tumour);
+        assertTrue(tumDbId > 0);
+
+        // Simulate a tumour record where TRID is null (e.g. from holding DB or client deserialization)
+        Tumour unkeyedTumour = new Tumour();
+        unkeyedTumour.setVariable("TumourID", "202000020101");
+        unkeyedTumour.setVariable("PatientIDtumourtable", "20200002");
+        unkeyedTumour.setVariable("PatientRecordIDtumourtable", "2020000201");
+        unkeyedTumour.setVariable("Top", "620"); // updated topography
+        unkeyedTumour.setVariable("Mor", "8140");
+        unkeyedTumour.setVariable("Beh", "3");
+        assertNull(unkeyedTumour.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME));
+
+        Source source = new Source();
+        source.setVariable("TumourIDsourcetable", "202000020101");
+        source.setVariable("SourceRecordID", "20200002010101");
+        Set<Source> sources = new LinkedHashSet<Source>();
+        sources.add(source);
+        unkeyedTumour.setSources(sources);
+
+        // Should not throw NullPointerException on idInt unboxing
+        boolean edited = dao.editTumour(unkeyedTumour, false);
+        assertTrue("Editing tumour without internal TRID set should succeed via TumourID fallback", edited);
+
+        Tumour fetched = dao.getTumourByTumourID("202000020101");
+        assertNotNull(fetched);
+        assertEquals("620", fetched.getVariable("TOP"));
+        assertNotNull(fetched.getSources());
+        assertEquals(1, fetched.getSources().size());
+    }
+
+    @Test
+    public void testRetrieveRowsWithZeroFrom() throws Exception {
+        Patient patient = new Patient();
+        patient.setVariable("RegNo", "20200003");
+        patient.setVariable("PatientRecordID", "2020000301");
+        dao.savePatient(patient);
+
+        canreg.common.DatabaseFilter filter = new canreg.common.DatabaseFilter();
+        canreg.common.cachingtableapi.DistributedTableDescription desc = 
+                dao.getDistributedTableDescriptionAndInitiateDatabaseQuery(filter, Globals.PATIENT_TABLE_NAME, dao.generateResultSetID());
+        assertNotNull(desc);
+        int rowCount = desc.getRowCount();
+        assertTrue(rowCount > 0);
+
+        // from == 0 should not throw SQL exception in Derby
+        Object[][] rows = dao.retrieveRows(desc.getResultSetID(), 0, rowCount);
+        assertNotNull(rows);
+        assertEquals(rowCount, rows.length);
+
+        // retrieve 0 rows (0 to 0) should safely return empty array
+        Object[][] emptyRows = dao.retrieveRows(desc.getResultSetID(), 0, 0);
+        assertNotNull(emptyRows);
+        assertEquals(0, emptyRows.length);
+
+        dao.releaseResultSet(desc.getResultSetID());
+    }
 }
