@@ -1102,10 +1102,10 @@ public class Import {
         }
 
         Patient oldPatientRecord = null;
-        if (cache != null && patientRecordID != null) {
+        if (cache != null && patientRecordID != null && !patientRecordID.isEmpty()) {
             oldPatientRecord = cache.getPatientByPRID(patientRecordID);
         }
-        if (oldPatientRecord == null) {
+        if (oldPatientRecord == null && patientRecordID != null && !patientRecordID.isEmpty()) {
             try {
                 if (CanRegClientApp.getApplication() != null) {
                     oldPatientRecord = CanRegClientApp.getApplication().getPatientRecord(patientRecordID, false, server);
@@ -1115,7 +1115,35 @@ public class Import {
                 }
             } catch (Exception ex1) {
                 // Patient not found in DB or application context unavailable.
-                LOGGER.log(Level.WARNING, "Patient not found in DB", ex1);
+                LOGGER.log(Level.WARNING, "Patient not found by PRID in DB", ex1);
+            }
+        }
+
+        // Fallback: if patient not found by patientRecordID, try looking up by PatientID (RegNo)
+        if (oldPatientRecord == null && globalToolBox != null && patientToImport != null) {
+            DatabaseVariablesListElement patientIDVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString());
+            if (patientIDVariable != null) {
+                String patientID = patientToImport.getVariableAsString(patientIDVariable.getDatabaseVariableName());
+                if (patientID != null && !patientID.isEmpty()) {
+                    if (cache != null) {
+                        oldPatientRecord = cache.getPatientByPID(patientID);
+                    }
+                    if (oldPatientRecord == null) {
+                        try {
+                            if (CanRegClientApp.getApplication() != null) {
+                                Patient[] patients = CanRegClientApp.getApplication().getPatientsByPatientID(patientID, false, server);
+                                if (patients != null && patients.length > 0 && patients[0] != null) {
+                                    oldPatientRecord = patients[0];
+                                    if (cache != null) {
+                                        cache.putPatientByPID(patientID, oldPatientRecord);
+                                    }
+                                }
+                            }
+                        } catch (Exception ex) {
+                            LOGGER.log(Level.WARNING, "Fallback patient lookup by PatientID failed: " + patientID, ex);
+                        }
+                    }
+                }
             }
         }
 
@@ -1166,11 +1194,14 @@ public class Import {
     //              } catch(Exception ex) {
     //                  LOGGER.log(Level.SEVERE, "ERROR EDITING PATIENT " + patientID, ex);
     //              }
-                Object prid = patientToImport.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
+                Object prid = oldPatientRecord.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
                 if (prid instanceof Integer) {
                     resultPRID = (Integer) prid;
-                } else if (oldPatientRecord.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME) instanceof Integer) {
-                    resultPRID = (Integer) oldPatientRecord.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
+                } else {
+                    Object pridImport = patientToImport.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
+                    if (pridImport instanceof Integer) {
+                        resultPRID = (Integer) pridImport;
+                    }
                 }
             } else {
     //              try {
@@ -1288,15 +1319,25 @@ public class Import {
                         break;
                     case ImportOptions.UPDATE:
                         String updateReport = updateRecord(oldTumourRecord, tumourToImport);
-                        if (updateReport.length() > 0) {
+                        if (updateReport.length() > 0 && reportWriter != null) {
                             reportWriter.write(tumourID + Globals.newline + updateReport);
+                        }
+                        if (tumourToImport.getSources() != null && !tumourToImport.getSources().isEmpty()) {
+                            oldTumourRecord.setSources(tumourToImport.getSources());
                         }
                         tumourToImport = oldTumourRecord;
                         saveTumour = true;
                         break;
                     case ImportOptions.OVERWRITE:
-                        // deleteTumour;
-                        deleteTumour = true;
+                        String overwriteReport = overwriteRecord(oldTumourRecord, tumourToImport);
+                        if (overwriteReport.length() > 0 && reportWriter != null) {
+                            reportWriter.write(tumourID + Globals.newline + overwriteReport);
+                        }
+                        if (tumourToImport.getSources() != null && !tumourToImport.getSources().isEmpty()) {
+                            oldTumourRecord.setSources(tumourToImport.getSources());
+                        }
+                        tumourToImport = oldTumourRecord;
+                        deleteTumour = false;
                         saveTumour = true;
                         break;
                 }
@@ -1458,31 +1499,26 @@ public class Import {
 //                server.deleteRecord((Integer) oldTumourRecord.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME), Globals.TUMOUR_TABLE_NAME);
             }
             if (saveTumour) {
-                // if tumour has record ID we edit it
-                if (tumourToImport.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME) != null &&
-                    ! tumourToImport.getVariableAsString(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME_FOR_HOLDING).isEmpty()) {
-//                  try {
-                        if(fromHoldingToProduction) {
-                            if(tumourToImport.getVariableAsString(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME_FOR_HOLDING).isEmpty()) {
-                                int savedId = server.saveTumour(tumourToImport);
-                            } else
-                                server.editTumourFromHoldingToProduction(tumourToImport);
+                if (oldTumourRecord != null) {
+                    if (fromHoldingToProduction) {
+                        server.editTumourFromHoldingToProduction(tumourToImport);
+                    } else {
+                        server.editTumour(tumourToImport);
+                    }
+                } else {
+                    if (fromHoldingToProduction) {
+                        // Reset TumourID when promoting a new tumour from holding to production
+                        // so the production database will assign the next valid sequence TumourID.
+                        GlobalToolBox globalToolBox = new GlobalToolBox(server.getDatabseDescription());
+                        DatabaseVariablesListElement tumourIDVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString());
+                        if (tumourIDVariable != null) {
+                            tumourToImport.setVariable(tumourIDVariable.getDatabaseVariableName(), "");
                         }
-                        else
-                            server.editTumour(tumourToImport);
-//                  } catch(Exception ex) {
-//                      LOGGER.log(Level.SEVERE, "ERROR EDITING TUMOUR " + tumourID, ex);
-//                  }
-                } // if not we save it
-                else {
-//                  try {
-                        int savedId = server.saveTumour(tumourToImport);
-                        if (!fromHoldingToProduction && savedId > 0) {
-                            tumourToImport.setVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME, savedId);
-                        }
-//                  } catch(Exception ex) {
-//                       LOGGER.log(Level.SEVERE, "ERROR SAVING TUMOUR " + tumourID, ex);
-//                  }
+                    }
+                    int savedId = server.saveTumour(tumourToImport);
+                    if (!fromHoldingToProduction && savedId > 0) {
+                        tumourToImport.setVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME, savedId);
+                    }
                 }
                 if (cache != null && tumourID != null && !tumourID.isEmpty()) {
                     cache.putTumourByTID(tumourID, tumourToImport);
@@ -1668,6 +1704,14 @@ public class Import {
         return id;
     }
 
+    private static boolean isInternalRecordIdVariable(String variableName) {
+        return variableName != null && (
+                variableName.equalsIgnoreCase(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME) ||
+                variableName.equalsIgnoreCase(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME) ||
+                variableName.equalsIgnoreCase(Globals.SOURCE_TABLE_RECORD_ID_VARIABLE_NAME)
+        );
+    }
+
     /**
      * patches the data from oldRecord using the data from newRecord
      * @param oldRecord
@@ -1679,8 +1723,11 @@ public class Import {
             return "";
         }
         String report = "";
-        // get all the elements from the newTumour and put them in the oldTumour
+        // get all the elements from the newRecord and put them in the oldRecord
         for (String variableName : newRecord.getVariableNames()) {
+            if (isInternalRecordIdVariable(variableName)) {
+                continue;
+            }
             Object newData = newRecord.getVariable(variableName);
             if (newData != null) {
                 Object oldData = oldRecord.getVariable(variableName);
@@ -1710,13 +1757,16 @@ public class Import {
             return "";
         }
         String report = "";
-        // get all the elements from the newTumour and put them in the oldTumour
+        // clear variables from oldRecord (except internal database record IDs)
         for (String variableName : oldRecord.getVariableNames()) {
-            if (!variableName.equalsIgnoreCase(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME)) {
+            if (!isInternalRecordIdVariable(variableName)) {
                 oldRecord.setVariable(variableName, null);
             }
         }
         for (String variableName : newRecord.getVariableNames()) {
+            if (isInternalRecordIdVariable(variableName)) {
+                continue;
+            }
             Object newData = newRecord.getVariable(variableName);
             if (newData != null) {
                 Object oldData = oldRecord.getVariable(variableName);

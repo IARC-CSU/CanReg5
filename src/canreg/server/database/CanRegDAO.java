@@ -1894,6 +1894,21 @@ public class CanRegDAO {
                             }
                         }
                     }
+                    if (idInt == null) {
+                        String patientIDColName = globalToolBox
+                                .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString())
+                                .getDatabaseVariableName();
+                        String patientID = record.getVariableAsString(patientIDColName);
+                        if (patientID != null && !patientID.isEmpty()) {
+                            Patient patient = getPatientByPatientID(patientID);
+                            if (patient != null) {
+                                idInt = (Integer) patient.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
+                                if (idInt != null) {
+                                    record.setVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME, idInt);
+                                }
+                            }
+                        }
+                    }
                 } else if (record instanceof Tumour) {
                     String tumourIDVariableName = globalToolBox
                             .translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString())
@@ -2350,6 +2365,38 @@ public class CanRegDAO {
             invalidatePreparedStatement(STR_GET_PATIENT_BY_PATIENT_RECORD_ID, false);
         }
 
+        return record;
+    }
+
+    public synchronized Patient getPatientByPatientID(String patientID) {
+        if (patientID == null || patientID.isEmpty() || patientIDVariableName == null) {
+            return null;
+        }
+        Patient record = null;
+        String query = "SELECT * FROM APP.PATIENT WHERE " + patientIDVariableName + " = ?";
+        try {
+            Connection connection = getDbConnection();
+            PreparedStatement stmt = getCachedPreparedStatement(connection, query, false);
+            stmt.clearParameters();
+            stmt.setString(1, patientID);
+            try (ResultSet result = stmt.executeQuery()) {
+                ResultSetMetaData metadata = result.getMetaData();
+                int numberOfColumns = metadata.getColumnCount();
+                if (result.next()) {
+                    record = new Patient();
+                    for (int i = 1; i <= numberOfColumns; i++) {
+                        if (metadata.getColumnType(i) == java.sql.Types.VARCHAR) {
+                            record.setVariable(metadata.getColumnName(i), result.getString(metadata.getColumnName(i)));
+                        } else if (metadata.getColumnType(i) == java.sql.Types.INTEGER) {
+                            record.setVariable(metadata.getColumnName(i), result.getInt(metadata.getColumnName(i)));
+                        }
+                    }
+                }
+            }
+        } catch (SQLException sqle) {
+            LOGGER.log(Level.SEVERE, null, sqle);
+            invalidatePreparedStatement(query, false);
+        }
         return record;
     }
 

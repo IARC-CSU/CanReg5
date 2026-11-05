@@ -290,4 +290,201 @@ public class ImportRecordTest {
         assertEquals("Holding PRID must not be overwritten when fromHoldingToProduction is true",
                 42, patient.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME));
     }
+
+    @Test
+    public void testImportPatientUpdatesExistingPatientPreservingProductionPRID() throws Exception {
+        final AtomicBoolean editCalled = new AtomicBoolean(false);
+        final AtomicBoolean saveCalled = new AtomicBoolean(false);
+        CanRegServerInterface server = (CanRegServerInterface) Proxy.newProxyInstance(
+                CanRegServerInterface.class.getClassLoader(),
+                new Class<?>[]{CanRegServerInterface.class},
+                new InvocationHandler() {
+                    @Override
+                    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                        if ("editPatientFromHoldingToProduction".equals(method.getName())) {
+                            editCalled.set(true);
+                            return true;
+                        }
+                        if ("savePatient".equals(method.getName())) {
+                            saveCalled.set(true);
+                            return 9999;
+                        }
+                        return null;
+                    }
+                });
+
+        Patient existingProductionPatient = new Patient();
+        existingProductionPatient.setVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME, 555); // production PRID
+        existingProductionPatient.setVariable("PatientRecordID", "PRID_EXISTING");
+        existingProductionPatient.setVariable("FirstName", "Alice");
+
+        Patient holdingPatient = new Patient();
+        holdingPatient.setVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME, 77); // holding PRID
+        holdingPatient.setVariable("PatientRecordID", "PRID_EXISTING");
+        holdingPatient.setVariable("FirstName", "Alice-Updated");
+
+        Import.ImportCache cache = new Import.ImportCache();
+        cache.putPatientByPRID("PRID_EXISTING", existingProductionPatient);
+
+        StringWriter reportWriter = new StringWriter();
+        int result = Import.importPatient(server, ImportOptions.UPDATE, "PRID_EXISTING",
+                holdingPatient, reportWriter, false, false, true, globalToolBox, cache);
+
+        assertTrue("editPatientFromHoldingToProduction should have been called for existing patient", editCalled.get());
+        assertFalse("savePatient should NOT have been called for existing patient", saveCalled.get());
+        assertEquals("Production PRID must be returned, not holding PRID", 555, result);
+        assertEquals("Production record PRID must remain 555",
+                555, existingProductionPatient.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME));
+        assertEquals("Patient field should be updated", "Alice-Updated", existingProductionPatient.getVariable("FirstName"));
+    }
+
+    @Test
+    public void testImportTumourUpdatesExistingTumourInProduction() throws Exception {
+        final AtomicBoolean editTumourCalled = new AtomicBoolean(false);
+        final AtomicBoolean saveTumourCalled = new AtomicBoolean(false);
+        CanRegServerInterface server = (CanRegServerInterface) Proxy.newProxyInstance(
+                CanRegServerInterface.class.getClassLoader(),
+                new Class<?>[]{CanRegServerInterface.class},
+                new InvocationHandler() {
+                    @Override
+                    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                        if ("editTumourFromHoldingToProduction".equals(method.getName())) {
+                            editTumourCalled.set(true);
+                            return null;
+                        }
+                        if ("saveTumour".equals(method.getName())) {
+                            saveTumourCalled.set(true);
+                            return 9999;
+                        }
+                        return null;
+                    }
+                });
+
+        Tumour existingProductionTumour = new Tumour();
+        existingProductionTumour.setVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME, 888); // production TRID
+        existingProductionTumour.setVariable("TumourID", "TID_EXISTING_01");
+        existingProductionTumour.setVariable("PatientRecordIDtumourtable", "PRID_EXISTING");
+        existingProductionTumour.setVariable("IncidenceDate", "20200101");
+
+        Patient existingProductionPatient = new Patient();
+        existingProductionPatient.setVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME, 555);
+        existingProductionPatient.setVariable("PatientRecordID", "PRID_EXISTING");
+
+        Tumour holdingTumour = new Tumour();
+        holdingTumour.setVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME, 88); // holding TRID
+        holdingTumour.setVariable("TumourID", "TID_EXISTING_01");
+        holdingTumour.setVariable("PatientRecordIDtumourtable", "PRID_EXISTING");
+        holdingTumour.setVariable("IncidenceDate", "20200202");
+
+        Import.ImportCache cache = new Import.ImportCache();
+        cache.putPatientByPRID("PRID_EXISTING", existingProductionPatient);
+        cache.putTumourByTID("TID_EXISTING_01", existingProductionTumour);
+
+        StringWriter reportWriter = new StringWriter();
+        Import.importTumour(server, ImportOptions.UPDATE, "TID_EXISTING_01", "PRID_EXISTING",
+                holdingTumour, null, reportWriter, false, false, true, cache);
+
+        assertTrue("editTumourFromHoldingToProduction should have been called for existing tumour", editTumourCalled.get());
+        assertFalse("saveTumour should NOT have been called for existing tumour", saveTumourCalled.get());
+        assertEquals("Production TRID must remain 888",
+                888, existingProductionTumour.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME));
+        assertEquals("Tumour variable should be updated",
+                "20200202", existingProductionTumour.getVariable("IncidenceDate"));
+    }
+
+    @Test
+    public void testImportTumourOverwritesExistingTumourInProduction() throws Exception {
+        final AtomicBoolean editTumourCalled = new AtomicBoolean(false);
+        final AtomicBoolean saveTumourCalled = new AtomicBoolean(false);
+        CanRegServerInterface server = (CanRegServerInterface) Proxy.newProxyInstance(
+                CanRegServerInterface.class.getClassLoader(),
+                new Class<?>[]{CanRegServerInterface.class},
+                new InvocationHandler() {
+                    @Override
+                    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                        if ("editTumourFromHoldingToProduction".equals(method.getName())) {
+                            editTumourCalled.set(true);
+                            return null;
+                        }
+                        if ("saveTumour".equals(method.getName())) {
+                            saveTumourCalled.set(true);
+                            return 9999;
+                        }
+                        return null;
+                    }
+                });
+
+        Tumour existingProductionTumour = new Tumour();
+        existingProductionTumour.setVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME, 777); // production TRID
+        existingProductionTumour.setVariable("TumourID", "TID_OVERWRITE_01");
+        existingProductionTumour.setVariable("PatientRecordIDtumourtable", "PRID_EXISTING");
+        existingProductionTumour.setVariable("IncidenceDate", "20190101");
+
+        Patient existingProductionPatient = new Patient();
+        existingProductionPatient.setVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME, 555);
+        existingProductionPatient.setVariable("PatientRecordID", "PRID_EXISTING");
+
+        Tumour holdingTumour = new Tumour();
+        holdingTumour.setVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME, 77); // holding TRID
+        holdingTumour.setVariable("TumourID", "TID_OVERWRITE_01");
+        holdingTumour.setVariable("PatientRecordIDtumourtable", "PRID_EXISTING");
+        holdingTumour.setVariable("IncidenceDate", "20210505");
+
+        Import.ImportCache cache = new Import.ImportCache();
+        cache.putPatientByPRID("PRID_EXISTING", existingProductionPatient);
+        cache.putTumourByTID("TID_OVERWRITE_01", existingProductionTumour);
+
+        StringWriter reportWriter = new StringWriter();
+        Import.importTumour(server, ImportOptions.OVERWRITE, "TID_OVERWRITE_01", "PRID_EXISTING",
+                holdingTumour, null, reportWriter, false, false, true, cache);
+
+        assertTrue("editTumourFromHoldingToProduction should have been called for overwritten tumour", editTumourCalled.get());
+        assertFalse("saveTumour should NOT have been called for overwritten tumour", saveTumourCalled.get());
+        assertEquals("Production TRID must remain 777",
+                777, existingProductionTumour.getVariable(Globals.TUMOUR_TABLE_RECORD_ID_VARIABLE_NAME));
+        assertEquals("Tumour variable should be overwritten",
+                "20210505", existingProductionTumour.getVariable("IncidenceDate"));
+    }
+
+    @Test
+    public void testImportTumourSavesNewTumourWhenNotExistingInProduction() throws Exception {
+        final AtomicBoolean saveTumourCalled = new AtomicBoolean(false);
+        final Tumour[] savedTumourHolder = new Tumour[1];
+        CanRegServerInterface server = (CanRegServerInterface) Proxy.newProxyInstance(
+                CanRegServerInterface.class.getClassLoader(),
+                new Class<?>[]{CanRegServerInterface.class},
+                new InvocationHandler() {
+                    @Override
+                    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                        if ("saveTumour".equals(method.getName())) {
+                            saveTumourCalled.set(true);
+                            savedTumourHolder[0] = (Tumour) args[0];
+                            return 909;
+                        }
+                        if ("getDatabseDescription".equals(method.getName())) {
+                            return TestFixtures.loadTestSystemDocument();
+                        }
+                        return null;
+                    }
+                });
+
+        Patient existingProductionPatient = new Patient();
+        existingProductionPatient.setVariable("PatientRecordID", "PRID_EXISTING");
+
+        Tumour newHoldingTumour = new Tumour();
+        newHoldingTumour.setVariable("TumourID", "HOLDING_TEMP_TID");
+        newHoldingTumour.setVariable("PatientRecordIDtumourtable", "PRID_EXISTING");
+
+        Import.ImportCache cache = new Import.ImportCache();
+        cache.putPatientByPRID("PRID_EXISTING", existingProductionPatient);
+
+        StringWriter reportWriter = new StringWriter();
+        Import.importTumour(server, ImportOptions.UPDATE, "", "PRID_EXISTING",
+                newHoldingTumour, null, reportWriter, false, false, true, cache);
+
+        assertTrue("saveTumour should have been called for new tumour", saveTumourCalled.get());
+        assertNotNull(savedTumourHolder[0]);
+        assertEquals("TumourID must be reset before saving so production assigns the new ID",
+                "", savedTumourHolder[0].getVariable("TumourID"));
+    }
 }

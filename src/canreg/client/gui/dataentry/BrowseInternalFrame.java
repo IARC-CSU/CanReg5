@@ -1165,11 +1165,52 @@ private void tumourNumberTextFieldMousePressed(java.awt.event.MouseEvent evt) {/
                             }
 
                             String tumourID = tumourToImport.getVariableAsString(tumourIDlookupVariable);
-                            if (productionPRID != -1) {
+                            // Resolve matching tumour in production if one exists
+                            Tumour prodTumour = null;
+                            if (tumourID != null && !tumourID.isEmpty()) {
+                                if (cache != null) {
+                                    prodTumour = cache.getTumourByTID(tumourID);
+                                }
+                                if (prodTumour == null && CanRegClientApp.getApplication() != null) {
+                                    try {
+                                        prodTumour = CanRegClientApp.getApplication().getTumourRecordBasedOnTumourID(tumourID, false, productionServer);
+                                        if (prodTumour != null && cache != null) {
+                                            cache.putTumourByTID(tumourID, prodTumour);
+                                        }
+                                    } catch (Exception ex) {
+                                        LOGGER.log(Level.FINE, "Tumour not found in production by holding tumourID: " + tumourID, ex);
+                                    }
+                                }
+                            }
+                            if (prodTumour == null && holdingPatientRecordID != null && !holdingPatientRecordID.isEmpty()
+                                    && tumourID != null && tumourID.startsWith(holdingPatientRecordID)) {
+                                String suffix = tumourID.substring(holdingPatientRecordID.length());
+                                String candidateTumourID = targetPatientRecordID + suffix;
+                                if (cache != null) {
+                                    prodTumour = cache.getTumourByTID(candidateTumourID);
+                                }
+                                if (prodTumour == null && CanRegClientApp.getApplication() != null) {
+                                    try {
+                                        prodTumour = CanRegClientApp.getApplication().getTumourRecordBasedOnTumourID(candidateTumourID, false, productionServer);
+                                        if (prodTumour != null) {
+                                            tumourID = candidateTumourID;
+                                            tumourToImport.setVariable(tumourIDVariableName, candidateTumourID);
+                                            if (cache != null) {
+                                                cache.putTumourByTID(candidateTumourID, prodTumour);
+                                            }
+                                        }
+                                    } catch (Exception ex) {
+                                        LOGGER.log(Level.FINE, "Tumour not found in production by candidate tumourID: " + candidateTumourID, ex);
+                                    }
+                                }
+                            }
+
+                            if (prodTumour == null) {
+                                // Tumour does not exist in production: clear tumourID so production allocates a new sequence ID
                                 tumourToImport.setVariable(tumourIDVariableName, "");
-                                tumourToImport.setVariable(tumourPatientRecordIdVariableName, targetPatientRecordID);
                                 tumourID = "";
                             }
+                            tumourToImport.setVariable(tumourPatientRecordIdVariableName, targetPatientRecordID);
 
                             Import.importTumour(productionServer, discrepancyOption, tumourID,
                                     targetPatientRecordID, tumourToImport, null, reportWriter, false, false, true, cache);
