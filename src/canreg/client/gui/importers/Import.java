@@ -691,15 +691,19 @@ public class Import {
                     //the new tumourID cannot be calculated!!!
                     if(patientRecordID == null || patientRecordID.isEmpty()) {
                         String patientID = tumour.getVariableAsString(io.getPatientIDTumourTableVariableName());
-                        Patient[] patients = CanRegClientApp.getApplication().getPatientsByPatientID(patientID, false, server);
-                        patientRecordID = patients[0].getVariableAsString(io.getPatientRecordIDVariableName());
-                        
-                        //This should not happen, but... this is our last chance to save the procedure.
-                        if(patientRecordID == null || patientRecordID.isEmpty())
-                            patientRecordID = patients[0].getVariableAsString(io.getTumourIDVariablename());
-                        
-                        tumour.setVariable(io.getPatientRecordIDVariableName(), patientRecordID);
-                        tumour.setVariable(io.getPatientRecordIDTumourTableVariableName(), patientRecordID);
+                        if (patientID != null && !patientID.isEmpty()) {
+                            Patient[] patients = CanRegClientApp.getApplication().getPatientsByPatientID(patientID, false, server);
+                            if (patients != null && patients.length > 0 && patients[0] != null) {
+                                patientRecordID = patients[0].getVariableAsString(io.getPatientRecordIDVariableName());
+                                
+                                //This should not happen, but... this is our last chance to save the procedure.
+                                if(patientRecordID == null || patientRecordID.isEmpty())
+                                    patientRecordID = patients[0].getVariableAsString(io.getTumourIDVariablename());
+                                
+                                tumour.setVariable(io.getPatientRecordIDVariableName(), patientRecordID);
+                                tumour.setVariable(io.getPatientRecordIDTumourTableVariableName(), patientRecordID);
+                            }
+                        }
                     }
                     
                     importTumour(server, io.getDiscrepancies(), tumourID, patientRecordID, 
@@ -890,14 +894,13 @@ public class Import {
                    IOException, Exception {
         Patient oldPatientRecord = null;
         try {
-            oldPatientRecord = CanRegClientApp.getApplication().getPatientRecord(patientRecordID, false, server);
-        } catch(NullPointerException ex1) {
-            //Patient not found in DB.
-            LOGGER.log(Level.WARNING,"Patient not found in DB" , ex1);
+            if (CanRegClientApp.getApplication() != null) {
+                oldPatientRecord = CanRegClientApp.getApplication().getPatientRecord(patientRecordID, false, server);
+            }
+        } catch (Exception ex1) {
+            // Patient not found in DB or application context unavailable.
+            LOGGER.log(Level.WARNING, "Patient not found in DB", ex1);
         }
-        /*catch (Exception ex) {
-            LOGGER.log(Level.SEVERE, null, ex);
-        } */
 
         boolean savePatient = true;
         // if oldPatientRecord is not null, patch patientToImport with its data
@@ -947,11 +950,20 @@ public class Import {
     //              }
             } else {
     //              try {
-                // Reset RegNo and PatientRecordID. The application will get them new values during the saving process
-                DatabaseVariablesListElement patientIDVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString());
-                DatabaseVariablesListElement patientRecordIDVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString());
-                patientToImport.setVariable(patientIDVariable.getDatabaseVariableName(), "");
-                patientToImport.setVariable(patientRecordIDVariable.getDatabaseVariableName(), "");
+                if (fromHoldingToProduction) {
+                    // Reset RegNo and PatientRecordID when promoting from holding to production.
+                    // The production database will assign fresh values during the saving process.
+                    if (globalToolBox != null) {
+                        DatabaseVariablesListElement patientIDVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString());
+                        DatabaseVariablesListElement patientRecordIDVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString());
+                        if (patientIDVariable != null) {
+                            patientToImport.setVariable(patientIDVariable.getDatabaseVariableName(), "");
+                        }
+                        if (patientRecordIDVariable != null) {
+                            patientToImport.setVariable(patientRecordIDVariable.getDatabaseVariableName(), "");
+                        }
+                    }
+                }
                 return server.savePatient(patientToImport);
     //              } catch(Exception ex) {
     //                  LOGGER.log(Level.SEVERE, "ERROR SAVING PATIENT " + patientID, ex);
@@ -981,13 +993,10 @@ public class Import {
         
         try {
             oldTumourRecord = CanRegClientApp.getApplication().getTumourRecordBasedOnTumourID(tumourID, false, server);
-        } catch(NullPointerException ex1) {
-            //Patient not found in DB.
-            LOGGER.log(Level.SEVERE, "Patient not found in DB", ex1);
+        } catch (Exception ex1) {
+            // Tumour not found in DB or application context unavailable.
+            LOGGER.log(Level.WARNING, "Tumour not found in DB", ex1);
         }
-        /*catch (Exception ex) {
-            LOGGER.log(Level.SEVERE, null, ex);
-        } */
 
         if (oldTumourRecord != null) {
             if(intoHoldingDB) {
@@ -1018,91 +1027,126 @@ public class Import {
         }
 
         Patient patient = null;
-        try {
-            patient = CanRegClientApp.getApplication().getPatientRecord(patientRecordID, false, server);
-        } catch(NullPointerException ex1) {
-            //Patient not found in DB.
-            LOGGER.log(Level.SEVERE, "Patient not found in DB", ex1);
+        if (patientRecordID != null && !patientRecordID.isEmpty()) {
+            try {
+                if (CanRegClientApp.getApplication() != null) {
+                    patient = CanRegClientApp.getApplication().getPatientRecord(patientRecordID, false, server);
+                }
+            } catch (Exception ex) {
+                LOGGER.log(Level.WARNING, "Error looking up patient for patientRecordID: " + patientRecordID, ex);
+            }
         }
-        /*catch (Exception ex) {
-            LOGGER.log(Level.SEVERE, null, ex);
-        } */
 
-                                
-        if (patient != null && io != null) {
-            if (io.isDoChecks() && saveTumour) {
-                // run the edits...
-                String message = "";
-                LinkedList<CheckResult> checkResults = canreg.client.CanRegClientApp.getApplication().performChecks(patient, tumourToImport);
-
-                Map<Globals.StandardVariableNames, CheckResult.ResultCode> mapOfVariablesAndWorstResultCodes 
-                        = new EnumMap<Globals.StandardVariableNames, CheckResult.ResultCode>(Globals.StandardVariableNames.class);
-                worstResultCodeFound = CheckResult.ResultCode.OK;
-                for (CheckResult result : checkResults) {
-                    if (result.getResultCode() != CheckResult.ResultCode.OK && result.getResultCode() != CheckResult.ResultCode.NotDone) {
-                        if (!result.getResultCode().equals(CheckResult.ResultCode.Missing)) {
-                            message += result + "\t";
-                            worstResultCodeFound = CheckResult.decideWorstResultCode(result.getResultCode(), worstResultCodeFound);
-                            for (Globals.StandardVariableNames standardVariableName : result.getVariablesInvolved()) {
-                                CheckResult.ResultCode worstResultCodeFoundForThisVariable = mapOfVariablesAndWorstResultCodes.get(standardVariableName);
-                                if (worstResultCodeFoundForThisVariable == null) {
-                                    mapOfVariablesAndWorstResultCodes.put(standardVariableName, result.getResultCode());
-                                } else if (CheckResult.compareResultSets(result.getResultCode(), worstResultCodeFoundForThisVariable) > 0) {
-                                    mapOfVariablesAndWorstResultCodes.put(standardVariableName, result.getResultCode());
+        // Fallback: if patient was not found by patientRecordID, try looking up by PatientID
+        if (patient == null && tumourToImport != null) {
+            String patientID = (io != null && io.getPatientIDTumourTableVariableName() != null)
+                    ? tumourToImport.getVariableAsString(io.getPatientIDTumourTableVariableName()) : null;
+            if (patientID != null && !patientID.isEmpty()) {
+                try {
+                    Patient[] patients = CanRegClientApp.getApplication().getPatientsByPatientID(patientID, false, server);
+                    if (patients != null && patients.length > 0 && patients[0] != null) {
+                        patient = patients[0];
+                        String resolvedPatientRecordID = patient.getVariableAsString(
+                                (io != null && io.getPatientRecordIDVariableName() != null)
+                                        ? io.getPatientRecordIDVariableName()
+                                        : Globals.StandardVariableNames.PatientRecordID.name());
+                        if (resolvedPatientRecordID != null && !resolvedPatientRecordID.isEmpty()) {
+                            patientRecordID = resolvedPatientRecordID;
+                            if (io != null) {
+                                if (io.getPatientRecordIDVariableName() != null) {
+                                    tumourToImport.setVariable(io.getPatientRecordIDVariableName(), patientRecordID);
+                                }
+                                if (io.getPatientRecordIDTumourTableVariableName() != null) {
+                                    tumourToImport.setVariable(io.getPatientRecordIDTumourTableVariableName(), patientRecordID);
                                 }
                             }
                         }
                     }
-                    // LOGGER.log(Level.INFO, result.toString());
+                } catch (Exception ex) {
+                    LOGGER.log(Level.WARNING, "Fallback patient lookup by PatientID failed: " + patientID, ex);
                 }
-                // always generate ICD10...
-                // ConversionResult[] conversionResult = canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICD10, patient, tumour);
-                // tumour.setVariable(io.getICD10VariableName(), conversionResult[0].getValue());
+            }
+        }
 
-                if (worstResultCodeFound != CheckResult.ResultCode.Invalid && worstResultCodeFound != CheckResult.ResultCode.Missing) {
-                    // generate ICD10 codes
-                    ConversionResult[] conversionResult = 
-                            canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICD10, patient, tumourToImport);
-                    tumourToImport.setVariable(io.getICD10VariableName(), conversionResult[0].getValue());
-                    // generate ICCC codes
-                    if (io.getICCCVariableName() != null) {
-                        String iccc = (String) tumourToImport.getVariable(io.getICCCVariableName());
-                        if (iccc == null || iccc.trim().length() == 0) {
-                            ConversionResult[] conversionResultICCC = 
-                                    canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICCC3, patient, tumourToImport);
-                            tumourToImport.setVariable(io.getICCCVariableName(), conversionResultICCC[0].getValue());
+        if (patient != null) {
+            if (io != null) {
+                if (io.isDoChecks() && saveTumour) {
+                    // run the edits...
+                    String message = "";
+                    LinkedList<CheckResult> checkResults = canreg.client.CanRegClientApp.getApplication().performChecks(patient, tumourToImport);
+
+                    Map<Globals.StandardVariableNames, CheckResult.ResultCode> mapOfVariablesAndWorstResultCodes 
+                            = new EnumMap<Globals.StandardVariableNames, CheckResult.ResultCode>(Globals.StandardVariableNames.class);
+                    worstResultCodeFound = CheckResult.ResultCode.OK;
+                    for (CheckResult result : checkResults) {
+                        if (result.getResultCode() != CheckResult.ResultCode.OK && result.getResultCode() != CheckResult.ResultCode.NotDone) {
+                            if (!result.getResultCode().equals(CheckResult.ResultCode.Missing)) {
+                                message += result + "\t";
+                                worstResultCodeFound = CheckResult.decideWorstResultCode(result.getResultCode(), worstResultCodeFound);
+                                for (Globals.StandardVariableNames standardVariableName : result.getVariablesInvolved()) {
+                                    CheckResult.ResultCode worstResultCodeFoundForThisVariable = mapOfVariablesAndWorstResultCodes.get(standardVariableName);
+                                    if (worstResultCodeFoundForThisVariable == null) {
+                                        mapOfVariablesAndWorstResultCodes.put(standardVariableName, result.getResultCode());
+                                    } else if (CheckResult.compareResultSets(result.getResultCode(), worstResultCodeFoundForThisVariable) > 0) {
+                                        mapOfVariablesAndWorstResultCodes.put(standardVariableName, result.getResultCode());
+                                    }
+                                }
+                            }
                         }
+                        // LOGGER.log(Level.INFO, result.toString());
                     }
-                } else {
-                    tumourToImport.setVariable(io.getTumourRecordStatus(), "0");
-                }
+                    // always generate ICD10...
+                    // ConversionResult[] conversionResult = canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICD10, patient, tumour);
+                    // tumour.setVariable(io.getICD10VariableName(), conversionResult[0].getValue());
 
-                if (worstResultCodeFound == CheckResult.ResultCode.OK) {
-                    // message += "Cross-check conclusion: Valid";
-                } else {
-                    reportWriter.write(tumourID + "\t" + message + Globals.newline);
-                    // System.out.println(tumour.getVariable(io.getTumourIDVariablename()) + " " + message);
-                }
-                tumourToImport.setVariable(io.getTumourCheckStatus(), CheckResult.toDatabaseVariable(worstResultCodeFound));
+                    if (worstResultCodeFound != CheckResult.ResultCode.Invalid && worstResultCodeFound != CheckResult.ResultCode.Missing) {
+                        // generate ICD10 codes
+                        ConversionResult[] conversionResult = 
+                                canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICD10, patient, tumourToImport);
+                        tumourToImport.setVariable(io.getICD10VariableName(), conversionResult[0].getValue());
+                        // generate ICCC codes
+                        if (io.getICCCVariableName() != null) {
+                            String iccc = (String) tumourToImport.getVariable(io.getICCCVariableName());
+                            if (iccc == null || iccc.trim().length() == 0) {
+                                ConversionResult[] conversionResultICCC = 
+                                        canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICCC3, patient, tumourToImport);
+                                tumourToImport.setVariable(io.getICCCVariableName(), conversionResultICCC[0].getValue());
+                            }
+                        }
+                    } else {
+                        tumourToImport.setVariable(io.getTumourRecordStatus(), "0");
+                    }
 
-            } else {
-                // try to generate ICD10, if missing, anyway
-                String icd10 = (String) tumourToImport.getVariable(io.getICD10VariableName());
-                if (icd10 == null || icd10.trim().length() == 0) {
-                    ConversionResult[] conversionResult = 
-                            canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICD10, patient, tumourToImport);
-                    tumourToImport.setVariable(io.getICD10VariableName(), conversionResult[0].getValue());
-                }
-                // try to generate ICCC3, if missing, anyway
-                String iccc = (String) tumourToImport.getVariable(io.getICCCVariableName());
-                if (iccc == null || iccc.trim().length() == 0) {
-                    ConversionResult[] conversionResult = 
-                            canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICCC3, patient, tumourToImport);
-                    tumourToImport.setVariable(io.getICCCVariableName(), conversionResult[0].getValue());
+                    if (worstResultCodeFound == CheckResult.ResultCode.OK) {
+                        // message += "Cross-check conclusion: Valid";
+                    } else {
+                        reportWriter.write(tumourID + "\t" + message + Globals.newline);
+                        // System.out.println(tumour.getVariable(io.getTumourIDVariablename()) + " " + message);
+                    }
+                    tumourToImport.setVariable(io.getTumourCheckStatus(), CheckResult.toDatabaseVariable(worstResultCodeFound));
+
+                } else {
+                    // try to generate ICD10, if missing, anyway
+                    String icd10 = (String) tumourToImport.getVariable(io.getICD10VariableName());
+                    if (icd10 == null || icd10.trim().length() == 0) {
+                        ConversionResult[] conversionResult = 
+                                canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICD10, patient, tumourToImport);
+                        tumourToImport.setVariable(io.getICD10VariableName(), conversionResult[0].getValue());
+                    }
+                    // try to generate ICCC3, if missing, anyway
+                    String iccc = (String) tumourToImport.getVariable(io.getICCCVariableName());
+                    if (iccc == null || iccc.trim().length() == 0) {
+                        ConversionResult[] conversionResult = 
+                                canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICCC3, patient, tumourToImport);
+                        tumourToImport.setVariable(io.getICCCVariableName(), conversionResult[0].getValue());
+                    }
                 }
             }
         } else {
-            reportWriter.write(tumourID + "\t" + "No patient matches this Tumour." + Globals.newline);
+            saveTumour = false;
+            if (reportWriter != null) {
+                reportWriter.write(tumourID + "\t" + "No patient matches this Tumour. Tumour skipped." + Globals.newline);
+            }
             if(io != null) {
                 tumourToImport.setVariable(io.getTumourRecordStatus(), "0");
                 tumourToImport.setVariable(io.getTumourCheckStatus(), CheckResult.toDatabaseVariable(ResultCode.Missing));
@@ -1156,14 +1200,12 @@ public class Import {
                    IOException, Exception {
         Tumour tumour = null;
         try {
-            tumour = CanRegClientApp.getApplication().getTumourRecordBasedOnTumourID(tumourID, false, server);
-        } catch (NullPointerException ex1) {
-            //Patient not found in DB.
-            LOGGER.log(Level.SEVERE,"Patient not found in DB", ex1);
+            if (CanRegClientApp.getApplication() != null) {
+                tumour = CanRegClientApp.getApplication().getTumourRecordBasedOnTumourID(tumourID, false, server);
+            }
+        } catch (Exception ex1) {
+            LOGGER.log(Level.WARNING, "Tumour not found in DB for tumourID: " + tumourID, ex1);
         }
-        /*catch (Exception ex) {
-            LOGGER.log(Level.SEVERE, null, ex);
-        } */
 
 
         boolean addSource = true;
@@ -1218,7 +1260,10 @@ public class Import {
 //              }
             }
         } else {
-            LOGGER.log(Level.SEVERE, "No tumour with ID {0} was found for source ID {1}",new Object[]{tumourID,sourceRecordID});
+            LOGGER.log(Level.SEVERE, "No tumour with ID {0} was found for source ID {1}", new Object[]{tumourID, sourceRecordID});
+            if (reportWriter != null) {
+                reportWriter.write(sourceRecordID + "\t" + "No tumour matches this Source (Tumour ID: " + tumourID + "). Source skipped." + Globals.newline);
+            }
         }
     }
     
