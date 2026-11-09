@@ -133,6 +133,9 @@ fi
 if [ -d "scripts" ]; then
     cp -R "scripts" "${RESOURCES_DIR}/"
 fi
+if [ -d "doc" ]; then
+    cp -R "doc" "${RESOURCES_DIR}/"
+fi
 
 # 5. Make it executable and apply ad-hoc code signature
 chmod +x "${MACOS_DIR}/CanReg5"

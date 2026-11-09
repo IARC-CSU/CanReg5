@@ -242,6 +242,12 @@ hs_err_pid*
 translations/
 CanReg5.zip
 doc/CanReg5-Instructions.pdf
+doc/CanReg5-instructions.pdf
+*.aux
+*.idx
+*.toc
+*.ilg
+*.ind
 CanReg5-R-packages.zip
 CanReg5.app/
 *.orig

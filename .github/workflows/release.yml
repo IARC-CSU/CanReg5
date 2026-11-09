@@ -64,6 +64,19 @@ jobs:
         run: |
           Rscript scripts/download_r_packages.R conf/tables/r/r-packages
 
+      - name: Compile CanReg5 Instructions PDF
+        run: |
+          sudo apt-get update && sudo apt-get install -y texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended
+          cd doc/CanReg5-Instructions
+          pdflatex -interaction=nonstopmode CanReg5-Instructions.tex || true
+          pdflatex -interaction=nonstopmode CanReg5-Instructions.tex || true
+          cd ../..
+          if [ -f "doc/CanReg5-Instructions/CanReg5-Instructions.pdf" ]; then
+            cp doc/CanReg5-Instructions/CanReg5-Instructions.pdf doc/CanReg5-Instructions.pdf
+            cp doc/CanReg5-Instructions/CanReg5-Instructions.pdf doc/CanReg5-instructions.pdf
+            echo "CanReg5 Instructions PDF compiled successfully."
+          fi
+
       - name: Build JAR and Platform Distributions
         run: ant jar
 
@@ -78,6 +91,9 @@ jobs:
           cp dist/web/CanReg5-Linux.zip release-assets/
           cp dist/web/CanReg5-R-packages.zip release-assets/
           cp dist/translations.zip release-assets/
+          if [ -f doc/CanReg5-Instructions/CanReg5-Instructions.pdf ]; then
+            cp doc/CanReg5-Instructions/CanReg5-Instructions.pdf release-assets/
+          fi
           ls -lh release-assets/
 
       - name: Create GitHub Release and Attach Installers
@@ -129,6 +145,18 @@ jobs:
         shell: cmd
         run: |
           ant jar
+
+      - name: Download CanReg5 Instructions PDF
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path doc\CanReg5-Instructions | Out-Null
+          $pdfUrl = "https://github.com/IARC-CSU/CanReg5/releases/download/${{ steps.version.outputs.tag }}/CanReg5-Instructions.pdf"
+          try {
+            Invoke-WebRequest -Uri $pdfUrl -OutFile "doc\CanReg5-Instructions\CanReg5-Instructions.pdf" -UseBasicParsing -TimeoutSec 30
+            Copy-Item "doc\CanReg5-Instructions\CanReg5-Instructions.pdf" "doc\CanReg5-Instructions.pdf" -Force
+          } catch {
+            Write-Host "Instructions PDF not available on release: $($_.Exception.Message)"
+          }
 
       - name: Build Standard Windows Installer (Inno Setup)
         shell: cmd

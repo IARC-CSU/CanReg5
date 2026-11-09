@@ -4,6 +4,7 @@
 - Migrate version check, release download, and instructions PDF links from legacy IACR URLs to GitHub
 - Non-blocking background update checks in Options dialog with semantic version comparison
 - Dynamic changelog viewer migrated to GitHub with automatic local fallback when offline
+- Automated compilation and bundling of CanReg5 Instructions PDF across all release distributions with fallback download support
 - Fix cross-platform template directory resolution in R report generation on macOS and Linux
 - Isolate CanReg5 R user library directories by R major/minor version to prevent pre-R 4.0.0 package collisions
 - Automatically install bundled offline R packages (.zip) into user library when missing
@@ -373,7 +374,7 @@
 - Fixed a potential null-pointer in the table builder if people wanted to use the filter wizard.
 - Added JRuby helper scripts to use the CanReg5 conversions and grouping functionality on data not from CanReg. (See handbook.)
 - Table builder now shows a warning if trying to build a table with no data.
-- Fixed a name error in the changelog. Gon�alo Lacerda translated CanReg5 to Portuguese from Portugal.
+- Fixed a name error in the changelog. Gonçalo Lacerda translated CanReg5 to Portuguese from Portugal.
 - ICD10 codes will be generated even when checks are not performed, potential null pointer error if no name field was defined fixed.
 - Updated the handbook.
 
@@ -398,7 +399,7 @@
 - Various bug fixes
 
 ## 5.00.16
-- Portugese from Portugal added as langauge. (Thanks Gon�alo Lacerda)
+- Portugese from Portugal added as langauge. (Thanks Gonçalo Lacerda)
 - Language chooser in Option Frame now only displays translated languages.
 - Fixed a potential null pointer error in the Population Datasets.
 - DerbyDB engine updated to version 10.8.

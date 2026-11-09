@@ -119,8 +119,25 @@
         <include name="changelog.html"/>
     </patternset>
 
+    <target name="-build-instructions-pdf">
+        <available file="doc/CanReg5-Instructions/CanReg5-Instructions.pdf" property="hasInstructionsPdf"/>
+        <antcall target="-compile-tex-instructions"/>
+        <copy file="doc/CanReg5-Instructions/CanReg5-Instructions.pdf" tofile="doc/CanReg5-Instructions.pdf" failonerror="false"/>
+        <copy file="doc/CanReg5-Instructions/CanReg5-Instructions.pdf" tofile="doc/CanReg5-instructions.pdf" failonerror="false"/>
+    </target>
+
+    <target name="-compile-tex-instructions" unless="hasInstructionsPdf">
+        <echo>Attempting to compile CanReg5-Instructions.pdf from LaTeX...</echo>
+        <exec executable="pdflatex" dir="doc/CanReg5-Instructions" failonerror="false">
+            <env key="TEXMFVAR" value="/tmp/texmf-var"/>
+            <arg value="-interaction=nonstopmode"/>
+            <arg value="CanReg5-Instructions.tex"/>
+        </exec>
+    </target>
+
     <target name="-package-zips">
         <echo>Building platform-specific zip distributions...</echo>
+        <antcall target="-build-instructions-pdf"/>
         
         <!-- 1. Translations zip -->
         <zip destfile="${dist.dir}/translations.zip">
@@ -141,6 +158,7 @@
             </zipfileset>
             <zipfileset dir="." includes="CanReg.exe,CanReg.bat"/>
             <zipfileset dir="conf/tables/r/r-packages" includes="*.tar.gz" prefix="conf/tables/r/r-packages"/>
+            <zipfileset dir="doc" includes="CanReg5-Instructions.pdf,CanReg5-instructions.pdf" prefix="doc" erroronmissingdir="false"/>
             <zipfileset dir="doc/CanReg5-Instructions" includes="CanReg5-Instructions.pdf" prefix="doc" erroronmissingdir="false"/>
             <zipfileset dir="${dist.dir}" includes="CanReg.jar"/>
             <zipfileset dir="${dist.dir}/lib" prefix="lib"/>
@@ -165,6 +183,7 @@
             </zipfileset>
             <zipfileset dir="." includes="CanReg.sh" filemode="755"/>
             <zipfileset dir="conf/tables/r/r-packages" includes="*.tar.gz" prefix="conf/tables/r/r-packages"/>
+            <zipfileset dir="doc" includes="CanReg5-Instructions.pdf,CanReg5-instructions.pdf" prefix="doc" erroronmissingdir="false"/>
             <zipfileset dir="doc/CanReg5-Instructions" includes="CanReg5-Instructions.pdf" prefix="doc" erroronmissingdir="false"/>
             <zipfileset dir="${dist.dir}" includes="CanReg.jar"/>
             <zipfileset dir="${dist.dir}/lib" prefix="lib"/>
@@ -174,6 +193,7 @@
         <copy todir="${dist.dir}/web">
             <fileset dir="." includes="changelog.txt,changelog.html,version.txt"/>
             <fileset file="doc/CanReg5-Instructions/CanReg5-Instructions.pdf" erroronmissingdir="false"/>
+            <fileset file="doc/CanReg5-Instructions.pdf" erroronmissingdir="false"/>
         </copy>
     </target>
 

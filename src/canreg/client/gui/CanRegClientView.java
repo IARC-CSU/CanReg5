@@ -1243,13 +1243,7 @@ public final class CanRegClientView extends FrameView {
 
     @Action
     public void showCanRegHelpFile() {
-        try {
-            File file = new File("doc");
-            canreg.common.Tools.openFile(file.getAbsolutePath() + Globals.FILE_SEPARATOR + Globals.CANREG_INSTRUCTIONS_LOCAL_FILE);
-        } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, null, ex);
-            new TechnicalError().errorDialog();
-        }
+        openCanReg5Instructions();
     }
 
 
@@ -1585,21 +1579,41 @@ public final class CanRegClientView extends FrameView {
 
     @Action
     public void openCanReg5Instructions() {
-        // first try to load the updated instructions
-        File file = new File("doc");
-        String docPath = file.getAbsolutePath();
-        String fileName = docPath + Globals.FILE_SEPARATOR + Globals.CANREG_INSTRUCTIONS_LOCAL_FILE;
-        File instructionsFile = new File(fileName);
-        file = new File(Globals.CANREG_UPDATED_INSTRUCTIONS_LOCAL_FILE);
-        if (file.exists()) {
-            if (file.lastModified() > new File(docPath + Globals.FILE_SEPARATOR + Globals.CANREG_INSTRUCTIONS_LOCAL_FILE).lastModified()) 
-                instructionsFile = file;
+        File[] candidates = new File[] {
+            new File(Globals.CANREG_UPDATED_INSTRUCTIONS_LOCAL_FILE),
+            new File("doc", "CanReg5-Instructions.pdf"),
+            new File("doc", "CanReg5-instructions.pdf"),
+            new File("doc/CanReg5-Instructions", "CanReg5-Instructions.pdf"),
+            new File("doc/CanReg5-Instructions", "CanReg5-instructions.pdf")
+        };
+        File instructionsFile = null;
+        for (File candidate : candidates) {
+            if (candidate.exists() && candidate.isFile()) {
+                if (instructionsFile == null || candidate.lastModified() > instructionsFile.lastModified()) {
+                    instructionsFile = candidate;
+                }
+            }
         }
+
+        if (instructionsFile == null) {
+            int choice = javax.swing.JOptionPane.showConfirmDialog(
+                desktopPane,
+                "The CanReg5 instructions handbook was not found locally.\nWould you like to download it now?",
+                "CanReg5 Handbook",
+                javax.swing.JOptionPane.YES_NO_OPTION,
+                javax.swing.JOptionPane.QUESTION_MESSAGE
+            );
+            if (choice == javax.swing.JOptionPane.YES_OPTION) {
+                downloadLatestInstructions();
+            }
+            return;
+        }
+
         try {
             canreg.common.Tools.openFile(instructionsFile.getAbsolutePath());
         } catch (IllegalArgumentException | IOException ex) {
+            LOGGER.log(Level.WARNING, "Unable to open instructions file: " + instructionsFile, ex);
             new TechnicalError().errorDialog();
-            LOGGER.log(Level.SEVERE, null, ex);
         }
     }
 
@@ -1625,7 +1639,11 @@ public final class CanRegClientView extends FrameView {
         @Override
         protected Object doInBackground() {
             try {
-                canreg.common.Tools.downloadFile(Globals.CANREG_UPDATED_INSTRUCTIONS_URL, Globals.CANREG_INSTRUCTIONS_LOCAL_FILE);
+                File clientFolder = new File(Globals.CANREG_CLIENT_FOLDER);
+                if (!clientFolder.exists()) {
+                    clientFolder.mkdirs();
+                }
+                canreg.common.Tools.downloadFile(Globals.CANREG_UPDATED_INSTRUCTIONS_URL, Globals.CANREG_UPDATED_INSTRUCTIONS_LOCAL_FILE);
             } catch (IOException ex) {
                 LOGGER.log(Level.SEVERE, null, ex);
                 new TechnicalError().errorDialog();
@@ -1637,6 +1655,14 @@ public final class CanRegClientView extends FrameView {
         protected void succeeded(Object result) {
             waitFrame.setVisible(false);
             desktopPane.remove(waitFrame);
+            File downloaded = new File(Globals.CANREG_UPDATED_INSTRUCTIONS_LOCAL_FILE);
+            if (downloaded.exists()) {
+                try {
+                    canreg.common.Tools.openFile(downloaded.getAbsolutePath());
+                } catch (Exception ex) {
+                    LOGGER.log(Level.WARNING, "Unable to open downloaded instructions", ex);
+                }
+            }
         }
     }
 
