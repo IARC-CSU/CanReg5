@@ -611,30 +611,33 @@ public class Tools {
      * @return
      */
     public static String getFileFromURL(URL url) {
+        return getFileFromURL(url, 5000, 10000);
+    }
+
+    public static String getFileFromURL(URL url, int connectTimeoutMs, int readTimeoutMs) {
         StringBuilder contents = new StringBuilder();
 
         try {
+            java.net.URLConnection conn = url.openConnection();
+            conn.setConnectTimeout(connectTimeoutMs);
+            conn.setReadTimeout(readTimeoutMs);
+            conn.setRequestProperty("User-Agent", "CanReg5");
+            conn.setRequestProperty("Accept", "text/plain, text/html, */*");
 
-            // Get an input stream for reading
-            InputStream in = url.openStream();
-
-            // Create a buffered input stream for efficency
-            BufferedInputStream bufIn = new BufferedInputStream(in);
-
-            // Repeat until end of file
-            for (;;) {
-                int data = bufIn.read();
-
-                // Check for EOF
-                if (data == -1) {
-                    break;
-                } else {
-                    contents.append((char) data);
+            try (BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(conn.getInputStream(), java.nio.charset.StandardCharsets.UTF_8))) {
+                String line;
+                boolean first = true;
+                while ((line = reader.readLine()) != null) {
+                    if (!first) {
+                        contents.append("\n");
+                    }
+                    contents.append(line);
+                    first = false;
                 }
             }
-
         } catch (IOException ioe) {
-            LOGGER.log(Level.SEVERE, String.format("I/O Error - %s", ioe), ioe);
+            LOGGER.log(Level.WARNING, "I/O Error fetching URL {0} - {1}", new Object[]{url, ioe.getMessage()});
         }
         return contents.toString();
     }
@@ -645,12 +648,14 @@ public class Tools {
      * @return
      */
     public static String getFileFromURL(String urlString) {
-        String contents = new String();
-        URL url = null;
+        return getFileFromURL(urlString, 5000, 10000);
+    }
+
+    public static String getFileFromURL(String urlString, int connectTimeoutMs, int readTimeoutMs) {
+        String contents = "";
         try {
-            // Create an URL instance
-            url = new URL(urlString);
-            contents = getFileFromURL(url);
+            URL url = new URL(urlString);
+            contents = getFileFromURL(url, connectTimeoutMs, readTimeoutMs);
         } catch (MalformedURLException mue) {
             LOGGER.log(Level.SEVERE, "Invalid URL", mue);
         }
@@ -702,17 +707,17 @@ public class Tools {
     }
 
     public static void downloadFile(String urlString, String localFileName) throws IOException {
-        try (java.io.BufferedInputStream in = new java.io.BufferedInputStream(
-                new java.net.URL(urlString).openStream())) {
+        java.net.URLConnection conn = new java.net.URL(urlString).openConnection();
+        conn.setConnectTimeout(10000);
+        conn.setReadTimeout(30000);
+        conn.setRequestProperty("User-Agent", "CanReg5");
+        try (java.io.BufferedInputStream in = new java.io.BufferedInputStream(conn.getInputStream())) {
             java.io.FileOutputStream fos = new java.io.FileOutputStream(localFileName);
             try (java.io.BufferedOutputStream bout = new BufferedOutputStream(fos, 1024)) {
                 byte[] data = new byte[1024];
                 int x = 0;
                 while ((x = in.read(data, 0, 1024)) >= 0) {
-                    {
-                        bout.write(data, 0, x);
-                    }
-
+                    bout.write(data, 0, x);
                 }
             }
         }

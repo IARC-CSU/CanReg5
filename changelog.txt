@@ -1,6 +1,9 @@
 # CanReg5 Changelog
 
 ## 5.00.46BETA
+- Migrate version check, release download, and instructions PDF links from legacy IACR URLs to GitHub
+- Non-blocking background update checks in Options dialog with semantic version comparison
+- Dynamic changelog viewer migrated to GitHub with automatic local fallback when offline
 - Fix cross-platform template directory resolution in R report generation on macOS and Linux
 - Isolate CanReg5 R user library directories by R major/minor version to prevent pre-R 4.0.0 package collisions
 - Automatically install bundled offline R packages (.zip) into user library when missing

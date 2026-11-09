@@ -38,11 +38,15 @@ public class Globals {
     /**
      *
      */
-    static public String downloadCanRegURL = "http://www.iacr.com.fr/CanReg5/CanReg5.zip";
+    static public String downloadCanRegURL = "https://github.com/IARC-CSU/CanReg5/releases/latest";
     /**
      *
      */
-    static public String newestVersionURLString = "http://www.iacr.com.fr/CanReg5/version.txt";
+    static public String newestVersionURLString = "https://raw.githubusercontent.com/IARC-CSU/CanReg5/master/version.txt";
+    /**
+     *
+     */
+    static public String CANREG_RELEASES_URL = "https://github.com/IARC-CSU/CanReg5/releases";
     /**
      *
      */
@@ -106,11 +110,11 @@ public class Globals {
     static public String CANREG_PASSWORD_FILE_NAME = CANREG_SERVER_FOLDER + FILE_SEPARATOR + "passwords.properties";
     static public String CANREG_LEVELS_FILE_NAME = CANREG_SERVER_FOLDER + FILE_SEPARATOR + "levels.properties";
     static public String CANREG_CONFIG_DATABASE = CANREG_SERVER_FOLDER + FILE_SEPARATOR + "database.properties";
-    static public String CANREG_UPDATED_INSTRUCTIONS_URL = "http://www.iacr.com.fr/CanReg5/CanReg5-instructions.pdf";
+    static public String CANREG_UPDATED_INSTRUCTIONS_URL = "https://raw.githubusercontent.com/IARC-CSU/CanReg5/master/doc/CanReg5-Instructions/CanReg5-Instructions.pdf";
     static public String CANREG_UPDATED_INSTRUCTIONS_LOCAL_FILE = CANREG_CLIENT_FOLDER + Globals.FILE_SEPARATOR + "CanReg5-instructions.pdf";
     static public String CANREG_LOCAL_LOCKED_RECORDS_FILE_NAME_SUFFIX = "-records.locked";
     static public String CANREG_INSTRUCTIONS_LOCAL_FILE = "CanReg5-instructions.pdf";
-    public static String CANREG_CHANGELOG_URL = "http://www.iacr.com.fr/CanReg5/changelog.html";
+    public static String CANREG_CHANGELOG_URL = "https://raw.githubusercontent.com/IARC-CSU/CanReg5/master/changelog.txt";
     /**
      *
      */

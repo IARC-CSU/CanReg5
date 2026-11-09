@@ -1014,17 +1014,70 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
      */
     @Action
     public void checkLatestVersionAction() {
-        String lv = getNewestVersionNumber();
+        checkButton.setEnabled(false);
+        final String origText = checkButton.getText();
+        checkButton.setText("...");
+
+        new javax.swing.SwingWorker<String, Void>() {
+            @Override
+            protected String doInBackground() throws Exception {
+                return getNewestVersionNumber();
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    String lv = get();
+                    checkButton.setText(origText);
+                    checkButton.setEnabled(true);
+                    handleVersionCheckResult(lv);
+                } catch (Exception ex) {
+                    LOGGER.log(Level.WARNING, "Error checking latest version", ex);
+                    checkButton.setText(origText);
+                    checkButton.setEnabled(true);
+                    handleVersionCheckResult(null);
+                }
+            }
+        }.execute();
+    }
+
+    private void handleVersionCheckResult(String lv) {
         if (lv != null && lv.trim().length() > 0) {
+            lv = lv.trim();
             latestVersionTextField.setText(lv);
             latestVersionTextField.setEnabled(true);
-            if (!lv.trim().equalsIgnoreCase(versionInstalledTextField.getText())) {
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/OptionsFrame").getString("NOT_THE_LATEST_VERSION_INSTALLED"), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/OptionsFrame").getString("MESSAGE"), JOptionPane.WARNING_MESSAGE);
+
+            String installed = versionInstalledTextField.getText().trim();
+            canreg.common.Version remoteVer = new canreg.common.Version(lv);
+            canreg.common.Version localVer = new canreg.common.Version(installed);
+
+            if (remoteVer.compareTo(localVer) > 0) {
+                String msg = java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/OptionsFrame").getString("NOT_THE_LATEST_VERSION_INSTALLED");
+                int choice = JOptionPane.showInternalConfirmDialog(
+                    CanRegClientApp.getApplication().getMainFrame().getContentPane(),
+                    msg + "\n" + lv + " (" + installed + ")",
+                    java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/OptionsFrame").getString("MESSAGE"),
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE
+                );
+                if (choice == JOptionPane.YES_OPTION) {
+                    downloadLatestVersionAction();
+                }
             } else {
-                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/OptionsFrame").getString("LATEST_VERSION_INSTALLED."), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/OptionsFrame").getString("MESSAGE"), JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showInternalMessageDialog(
+                    CanRegClientApp.getApplication().getMainFrame().getContentPane(),
+                    java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/OptionsFrame").getString("LATEST_VERSION_INSTALLED."),
+                    java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/OptionsFrame").getString("MESSAGE"),
+                    JOptionPane.INFORMATION_MESSAGE
+                );
             }
         } else {
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/OptionsFrame").getString("NO_INFORMATION"), java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/OptionsFrame").getString("MESSAGE"), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showInternalMessageDialog(
+                CanRegClientApp.getApplication().getMainFrame().getContentPane(),
+                java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/OptionsFrame").getString("NO_INFORMATION"),
+                java.util.ResourceBundle.getBundle("canreg/client/gui/management/resources/OptionsFrame").getString("MESSAGE"),
+                JOptionPane.ERROR_MESSAGE
+            );
         }
     }
 
