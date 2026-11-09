@@ -85,6 +85,18 @@
         <copy todir="dist/lib" failonerror="false">
             <fileset dir="lib" includes="*.jar"/>
         </copy>
+        <pathconvert property="jar.classpath" pathsep=" ">
+            <path path="${javac.classpath}"/>
+            <mapper>
+                <chainedmapper>
+                    <flattenmapper/>
+                    <globmapper from="*" to="lib/*"/>
+                </chainedmapper>
+            </mapper>
+        </pathconvert>
+        <manifest file="${manifest.file}" mode="update">
+            <attribute name="Class-Path" value="${jar.classpath}"/>
+        </manifest>
     </target>
     <target name="-post-compile">
         <copy file="appinfo.properties" todir="${build.classes.dir}" failonerror="false"/>
