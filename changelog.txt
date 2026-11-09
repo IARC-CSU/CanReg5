@@ -1,6 +1,6 @@
 # CanReg5 Changelog
 
-## 5.00.46BETA1
+## 5.00.46BETA
 - Automated installer packaging for Windows, macOS, and Linux
 - GitHub Actions CI/CD release pipeline
 - Headless unit testing suite across core modules
@@ -10,8 +10,8 @@
 - Fix chronological date handling in age calculation
 
 ## 5.00.45
-- Holding database (BETA)
-- Ad-hoc analysis (BETA)
+- Holding database
+- Ad-hoc analysis
 - Improved person search perfomance
 - Memory leak fixes
 
