@@ -126,6 +126,9 @@ if [ -d "dist/lib" ]; then
 fi
 if [ -d "conf" ]; then
     cp -R "conf" "${RESOURCES_DIR}/"
+    # Do not bundle Windows R packages in the macOS app bundle
+    rm -f "${RESOURCES_DIR}/conf/tables/r/r-packages/"*.zip 2>/dev/null || true
+    rm -f "${RESOURCES_DIR}/conf/tables/r/r-packages/"*.tar.gz 2>/dev/null || true
 fi
 if [ -d "demo" ]; then
     cp -R "demo" "${RESOURCES_DIR}/"

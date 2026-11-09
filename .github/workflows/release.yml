@@ -64,6 +64,13 @@ jobs:
         run: |
           Rscript scripts/download_r_packages.R conf/tables/r/r-packages
 
+      - name: Upload R Packages Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: r-packages
+          path: conf/tables/r/r-packages/*.zip
+          if-no-files-found: ignore
+
       - name: Compile CanReg5 Instructions PDF
         run: |
           sudo apt-get update && sudo apt-get install -y texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended
@@ -211,6 +218,33 @@ jobs:
             Write-Host "Building R runtime from scratch via PowerShell..."
             ./scripts/build_r_bundle.ps1 -RVersion "4.6.2" -OutputDir "r-runtime"
           }
+
+      - name: Download R Packages Artifact
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: r-packages
+          path: conf/tables/r/r-packages
+
+      - name: Ensure R packages exist for Windows with R packaging
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path conf\tables\r\r-packages | Out-Null
+          $pkgCount = (Get-ChildItem -Path conf\tables\r\r-packages -Filter "*.zip" | Measure-Object).Count
+          if ($pkgCount -eq 0) {
+            $pkgZipUrl = "https://github.com/IARC-CSU/CanReg5/releases/download/${{ steps.version.outputs.tag }}/CanReg5-R-packages.zip"
+            try {
+              Write-Host "Downloading R packages from $pkgZipUrl..."
+              Invoke-WebRequest -Uri $pkgZipUrl -OutFile "r-pkgs.zip" -UseBasicParsing -TimeoutSec 120
+              Expand-Archive -Path "r-pkgs.zip" -DestinationPath "temp-r-pkgs" -Force
+              Copy-Item -Path "temp-r-pkgs\conf\tables\r\r-packages\*" -Destination "conf\tables\r\r-packages" -Force -Recurse
+              Remove-Item "r-pkgs.zip" -Force
+              Remove-Item "temp-r-pkgs" -Force -Recurse
+            } catch {
+              Write-Host "Unable to download R packages: $($_.Exception.Message)"
+            }
+          }
+          Write-Host "R packages count in conf\tables\r\r-packages: $((Get-ChildItem -Path conf\tables\r\r-packages -Filter '*.zip' | Measure-Object).Count)"
 
       - name: Build Windows with R Installer (Inno Setup)
         shell: cmd

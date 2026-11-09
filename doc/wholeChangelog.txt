@@ -1,5 +1,112 @@
 Changelog
 
+5.00.45
+- Holding database
+- Ad-hoc analysis
+- Improved person search perfomance
+- Memory leak fixes
+
+5.00.44m
+- Updated the CI5 comparison data to the latest volume (XII)
+
+5.00.44k 
+- Updated the Spanish translations of the standard reports.
+- Fixed bug in translated field in report.
+
+5.00.44j
+- Updated the Spanish translations of the standard reports.
+
+5.00.44i
+- Updated texts in standard reports.
+- Updated libraries.
+
+5.00.44h
+- New Features: save list of person search matches as spreadsheet.
+- Fixed link to latest version information.
+- Table builder:
+  - Add version 1.01 to use automatic update.
+  - Fix table age specific rate by site.
+  - Files renamed.
+  - Bundled R updated to 4.0.5.
+  - R packages updated.
+- Other minor fixes.
+
+5.00.44g
+- Table builder:
+  - Better progress bar when installing bundled R packages.
+  - Fixed bug where installing bundled R packages never finished.
+  - Table builder scripts can be updated independently of CanReg.
+  - Updated list of R packages needed.
+
+5.00.44f
+- CanReg can now be bundled with an installation of R and packages that are known to work. (Windows only.)
+
+5.00.44e
+- Table builder is now compatible with latest version of R (4.0.3) libraries. 
+
+5.00.44d
+- Fixed a bug related to answering 'no' to 'really close?' for record with changes.
+
+5.00.44c
+- Fixed a bug in recording of unknown dates.
+
+5.00.44b
+- Table builder is now compatible with latest version of R. (4.0.0)
+- Population data sets with different reference populations are not compatible.
+- Added Ruby script to recode variables in a CSV file.
+- Added help files to scripts.
+
+5.00.44
+- Table Builder:
+  - Data visualizations in R are now translated to Russian, Spanish and Portuguese.
+    - As usual, defaults to English if no language is available.
+  - Web browser based interactive analysis ("Shiny builder") is now out of its BETA phase.
+  - Update to CI5XI for comparison.
+  - Progress bar added for launching R/installing packages on Windows systems.
+  - Fixed a bug with "total population" being unisex.
+  - ICCC table added to report.
+  - Import/export system.
+  - Digit rounding fix.
+  - Harmonization of labels in conf files.
+  - Population datasets are now sorted by name in Table Builder.
+  - Updated list of R packages needed.
+- Memory leaks fixed. (With Betty Carballo and Patricio Carranza.)
+    - Remote sessions are automatically logged out if connection drops.
+- Warning message when trying to add duplicate short names of variables -- also across tables.
+- Fixed a bug where existing source records could disappear during import.
+- Added a very simple ADHOC database XML for data analysis/quality control.
+- Added database variable name in the variables association panel.
+- Fixed a possible user interface freeze if entering incorrect dates.
+- Basic support for non-Gregorian dates added.
+- Rcan updated to 1.3.71
+- Added a jRuby script to generate ICCC and ICD10 based on ICD-O-3 without launching CanReg5.
+- Added a Ruby script to split source records to facilitate migration from flat databases to CanReg5.
+- jcalendar updated
+- Various fixes.
+
+5.00.43b
+- Updated the install_packages script.
+- Language codes sent to R scripts.
+- Various fixes.
+
+5.00.43
+- Analysis features updated in collaboration with Mathieu Laversanne:
+  - Replaced ReportR with Officer for generating docx and pptx documents. (This should take care of troubles related to the different architecture of R/Java.)
+  - Web based data analysis functionality added using the Shiny R library. (This functionality is still at a BETA stage.)
+  - Fixed various data visualizations (pies, ...)
+  - Fixed CI5 and DQ table
+  - Empty values accepted in analytical files.
+  - Male breast cancer into account in rapport generator/other visualizations.
+  - Rcan updated.
+- Fixed bug in file copy during restore from backup for some users with non-Latin character sets.
+- Fixed bug with headless splash screen.
+- Import now works for databases that do not collect ICCC.
+- Simple (one level) dictionaries can now allow varying code lengths.
+- When encrypting your database you can specify the length of the key and algorithm (AES/DES) used for improved security. 
+- Population dataset batch import/export added.
+- RMI now uses a fixed port for communication.
+- Other fixes.
+
 5.00.42
 - Analysis features updated in collaboration with Mathieu Laversanne:
   - Default report for further editing in Word or similar added.
