@@ -71,6 +71,7 @@ Source: "{#CanReg5Dir}\dist\README.TXT"; DestDir: "{app}"; Flags: ignoreversion 
 Source: "{#CanReg5Dir}\changelog.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#CanReg5Dir}\changelog.html"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#CanReg5Dir}\doc\CanReg5-Instructions\CanReg5-Instructions.pdf"; DestDir: "{app}\doc"; Flags: ignoreversion skipifsourcedoesntexist
+Source: "{#CanReg5Dir}\doc\CanReg5-Instructions.pdf"; DestDir: "{app}\doc"; Flags: ignoreversion skipifsourcedoesntexist
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

@@ -222,6 +222,7 @@
             </zipfileset>
             <zipfileset dir="." includes="CanReg.exe,CanReg.bat"/>
             <zipfileset dir="conf/tables/r/r-packages" includes="*.tar.gz" prefix="conf/tables/r/r-packages"/>
+            <zipfileset dir="doc" includes="CanReg5-Instructions.pdf,CanReg5-instructions.pdf" prefix="doc" erroronmissingdir="false"/>
             <zipfileset dir="doc/CanReg5-Instructions" includes="CanReg5-Instructions.pdf" prefix="doc" erroronmissingdir="false"/>
             <zipfileset dir="${dist.dir}" includes="CanReg.jar"/>
             <zipfileset dir="${dist.dir}/lib" prefix="lib"/>
