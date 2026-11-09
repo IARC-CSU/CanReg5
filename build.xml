@@ -117,7 +117,36 @@
         <include name="scripts/**"/>
         <include name="changelog.txt"/>
         <include name="changelog.html"/>
+        <include name="changelog.rtf"/>
     </patternset>
+
+    <target name="-generate-changelog-formats">
+        <echo>Attempting to generate changelog.rtf and changelog.html from changelog.txt...</echo>
+        <exec executable="pandoc" failonerror="false" failifexecutionfails="false">
+            <arg value="changelog.txt"/>
+            <arg value="-f"/>
+            <arg value="markdown"/>
+            <arg value="-t"/>
+            <arg value="rtf"/>
+            <arg value="-s"/>
+            <arg value="-o"/>
+            <arg value="changelog.rtf"/>
+        </exec>
+        <exec executable="pandoc" failonerror="false" failifexecutionfails="false">
+            <arg value="changelog.txt"/>
+            <arg value="-f"/>
+            <arg value="markdown"/>
+            <arg value="-t"/>
+            <arg value="html"/>
+            <arg value="--metadata"/>
+            <arg value="title=CanReg5 Changelog"/>
+            <arg value="-H"/>
+            <arg value="helpers/pandoc/pandoc.html"/>
+            <arg value="-s"/>
+            <arg value="-o"/>
+            <arg value="changelog.html"/>
+        </exec>
+    </target>
 
     <target name="-build-instructions-pdf">
         <available file="doc/CanReg5-Instructions/CanReg5-Instructions.pdf" property="hasInstructionsPdf"/>
@@ -138,6 +167,7 @@
     <target name="-package-zips">
         <echo>Building platform-specific zip distributions...</echo>
         <antcall target="-build-instructions-pdf"/>
+        <antcall target="-generate-changelog-formats"/>
         
         <!-- 1. Translations zip -->
         <zip destfile="${dist.dir}/translations.zip">
@@ -191,7 +221,7 @@
 
         <!-- 5. Copy metadata files to web directory -->
         <copy todir="${dist.dir}/web">
-            <fileset dir="." includes="changelog.txt,changelog.html,version.txt"/>
+            <fileset dir="." includes="changelog.txt,changelog.html,changelog.rtf,version.txt"/>
             <fileset file="doc/CanReg5-Instructions/CanReg5-Instructions.pdf" erroronmissingdir="false"/>
             <fileset file="doc/CanReg5-Instructions.pdf" erroronmissingdir="false"/>
         </copy>

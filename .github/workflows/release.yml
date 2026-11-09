@@ -84,6 +84,23 @@ jobs:
             echo "CanReg5 Instructions PDF compiled successfully."
           fi
 
+      - name: Generate Changelog HTML and RTF
+        run: |
+          if ! command -v pandoc &> /dev/null; then
+            sudo apt-get update && sudo apt-get install -y pandoc
+          fi
+          pandoc changelog.txt -f markdown -t rtf -s -o changelog.rtf
+          pandoc changelog.txt -f markdown -t html --metadata title="CanReg5 Changelog" -H helpers/pandoc/pandoc.html -s -o changelog.html
+
+      - name: Upload Changelog Formats Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: changelog-formats
+          path: |
+            changelog.rtf
+            changelog.html
+          if-no-files-found: ignore
+
       - name: Build JAR and Platform Distributions
         run: ant jar
 
@@ -106,6 +123,8 @@ jobs:
           cp dist/web/CanReg5-Linux.zip release-assets/
           cp dist/web/CanReg5-R-packages.zip release-assets/
           cp dist/translations.zip release-assets/
+          cp changelog.html release-assets/
+          cp changelog.txt release-assets/
           if [ -f doc/CanReg5-Instructions/CanReg5-Instructions.pdf ]; then
             cp doc/CanReg5-Instructions/CanReg5-Instructions.pdf release-assets/
           fi
@@ -180,6 +199,13 @@ jobs:
               Write-Host "Instructions PDF not available on release: $($_.Exception.Message)"
             }
           }
+
+      - name: Download Changelog Formats Artifact
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: changelog-formats
+          path: .
 
       - name: Build CanReg5 JAR and Distribution
         shell: cmd
