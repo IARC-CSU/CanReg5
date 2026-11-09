@@ -1,8 +1,12 @@
 # CanReg5 Changelog
 
 ## 5.00.46BETA
+- Fix cross-platform template directory resolution in R report generation on macOS and Linux
+- Fix runtime library Class-Path in CanReg.jar manifest
+- Fix duplicate record creation and ensure proper deletion of holding records when importing updates to production
+- Improve holding database promotion performance with batch transactions, statement caching, and background progress dialog
 - Automated installer packaging for Windows, macOS, and Linux
-- GitHub Actions CI/CD release pipeline
+- GitHub Actions CI/CD release pipeline with automated R package bundling
 - Headless unit testing suite across core modules
 - Cleaned and consolidated dependency libraries in lib/
 - Cross-platform Table Builder progress reporting for R scripts (macOS, Linux, and Windows)
