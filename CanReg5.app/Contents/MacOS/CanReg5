@@ -1,0 +1,30 @@
+#!/bin/bash
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+# Navigate to the self-contained Resources directory inside the .app bundle
+cd "$DIR/../Resources"
+
+# Add standard macOS Homebrew and JDK binary paths to PATH (GUI launches do not inherit shell profiles)
+export PATH="/opt/homebrew/bin:/opt/homebrew/opt/openjdk/bin:/usr/local/bin:/usr/local/opt/openjdk/bin:$PATH"
+
+JAVA_CMD="java"
+
+# Fallback to search standard macOS JVM paths if not found on updated PATH
+if ! "$JAVA_CMD" -version &>/dev/null; then
+    JVM_JAVA=$(ls -d /Library/Java/JavaVirtualMachines/*/Contents/Home/bin/java 2>/dev/null | tail -n 1)
+    if [ -x "$JVM_JAVA" ]; then
+        JAVA_CMD="$JVM_JAVA"
+    fi
+fi
+
+# Double check if Java is resolved and runnable
+if ! "$JAVA_CMD" -version &>/dev/null; then
+    osascript -e 'display alert "CanReg5 Launcher Error" message "Unable to locate a Java Runtime.\n\nPlease ensure Java is installed on your Mac."' as critical
+    exit 1
+fi
+
+if [ -f "CanReg.jar" ]; then
+    "$JAVA_CMD" -cp "CanReg.jar:lib/*" canreg.client.CanRegClientApp
+else
+    # Show user-friendly macOS native error dialog if JAR is missing
+    osascript -e 'display alert "CanReg5 Launcher Error" message "Could not find CanReg.jar inside the App Bundle.\n\nPlease rebuild the package using '\''ant jar'\''."' as critical
+fi

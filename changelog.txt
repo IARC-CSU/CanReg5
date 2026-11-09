@@ -1,5 +1,8 @@
 # CanReg5 Changelog
 
+## 5.00.44m
+- Updated the CI5 comparison data to the latest volume (XII)
+
 ## 5.00.44k 
 - Updated the Spanish translations of the standard reports.
 - Fixed bug in translated field in report.

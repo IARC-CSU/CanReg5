@@ -1,0 +1,30 @@
+cancer,cancer_lab,cancer_color
+1,"Lip, oral cavity",#AE563E
+3,Other pharynx,#2A4950
+2,Nasopharynx,#FA10DC
+4,Oesophagus,#DC1341
+5,Stomach,#ae56a2
+6,Colorectum,#FFD803
+7,Liver,#F3A654
+8,Gallbladder,#5063A9
+9,Pancreas,#940009
+10,Larynx,#6D8A6D
+11,Lung,#1E90FF
+12,Melanoma of skin,#894919
+13,Mesothelioma,#888888
+14,Kaposi sarcoma,#FFC2CA
+15,Breast,#FF68BC
+16,Cervix uteri,#FF7500
+17,Corpus uteri,#9FE72D
+18,Ovary,#8C07C2
+19,Prostate,#34A76E
+20,Testis,#4682B4
+21,Kidney,#040186
+22,Bladder,#7FF76F
+23,"Brain, nervous system",#D5BED2
+24,Thyroid,#ADD9E4
+25,Hodgkin lymphoma,#9BE73A
+26,Non-Hodgkin lymphoma,#9931D0
+27,Multiple myeloma,#6D8A6D
+28,Leukaemia,#FFFFA6
+29,All sites but skin,

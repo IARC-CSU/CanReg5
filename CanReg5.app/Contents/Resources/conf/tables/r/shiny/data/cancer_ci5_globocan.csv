@@ -1,0 +1,64 @@
+cancer,cancer_lab,globocan_code,globocan_label
+1,Lip,1,"Lip, oral cavity"
+2,Tongue,1,"Lip, oral cavity"
+3,Mouth,1,"Lip, oral cavity"
+4,Salivary glands,1,"Lip, oral cavity"
+5,Tonsil,3,Other pharynx
+6,Other oropharynx,3,Other pharynx
+7,Nasopharynx,2,Nasopharynx
+8,Hypopharynx,3,Other pharynx
+9,Pharynx unspecified,3,Other pharynx
+10,Oesophagus,4,Oesophagus
+11,Stomach,5,Stomach
+12,Small intestine,99,NA
+13,Colon,6,Colorectum
+14,Rectum,6,Colorectum
+15,Anus,6,Colorectum
+16,Liver,7,Liver
+17,Gallbladder etc.,8,Gallbladder
+18,Pancreas,9,Pancreas
+19,"Nose, sinuses etc.",99,NA
+20,Larynx,10,Larynx
+21,Lung (incl. trachea and bronchus),11,Lung
+22,Other thoracic organs,99,NA
+23,Bone,99,NA
+24,Melanoma of skin,12,Melanoma of skin
+25,Other skin,99,NA
+26,Mesothelioma,13,Mesothelioma
+27,Kaposi sarcoma,14,Kaposi sarcoma
+28,Connective and soft tissue,99,NA
+29,Breast,15,Breast
+30,Vulva,99,NA
+31,Vagina,99,NA
+32,Cervix uteri,16,Cervix uteri
+33,Corpus uteri,17,Corpus uteri
+34,Uterus unspecified,99,NA
+35,Ovary,18,Ovary
+36,Other female genital organs,99,NA
+37,Placenta,99,NA
+38,Penis,99,NA
+39,Prostate,19,Prostate
+40,Testis,20,Testis
+41,Other male genital organs,99,NA
+42,Kidney,21,Kidney
+43,Renal pelvis,21,Kidney
+44,Ureter,21,Kidney
+45,Bladder,22,Bladder
+46,Other urinary organs,99,NA
+47,Eye,99,NA
+48,"Brain, nervous system",23,"Brain, nervous system"
+49,Thyroid,24,Thyroid
+50,Adrenal gland,99,NA
+51,Other endocrine,99,NA
+52,Hodgkin disease,25,Hodgkin lymphoma
+53,Non-Hodgkin lymphoma,26,Non-Hodgkin lymphoma
+54,Immunoproliferative diseases,27,Multiple myeloma
+55,Multiple myeloma,27,Multiple myeloma
+56,Lymphoid leukaemia,28,Leukaemia
+57,Myeloid leukaemia,28,Leukaemia
+58,Leukaemia unspecified,28,Leukaemia
+59,Myeloproliferative disorders,99,NA
+60,Myelodysplastic syndromes,99,NA
+61,Other and unspecified,99,NA
+62,All sites,99,NA
+63,All sites but skin,29,All sites but skin

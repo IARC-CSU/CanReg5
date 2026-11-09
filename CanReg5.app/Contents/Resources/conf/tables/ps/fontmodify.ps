@@ -1,0 +1,8 @@
+%% Modify font to show accents etc...
+/Times findfont               % load the font, for instance, Courier
+0 dict copy begin                 % copy it to a new dictionary
+/Encoding ISOLatin1Encoding def   % replace encoding vector
+/MyTimes /FontName def        % replace font name
+currentdict end
+dup /FID undef                    % remove internal data
+/MyTimes exch definefont pop  % define the new font
