@@ -79,6 +79,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 import org.jdesktop.application.Action;
+import org.jdesktop.application.Task;
 import org.w3c.dom.Document;
 
 /**
@@ -1544,11 +1545,15 @@ public class RecordEditor extends javax.swing.JInternalFrame
     }
 
     @Action
-    public void productionButtonAction() {
-        boolean result = this.browser.productionButtonAction();
-        if(result) {
-            dispose();
+    public Task productionButtonAction() {
+        if (this.browser != null) {
+            Task task = this.browser.productionButtonAction();
+            if (task != null) {
+                dispose();
+            }
+            return task;
         }
+        return null;
     }
 
     @Action

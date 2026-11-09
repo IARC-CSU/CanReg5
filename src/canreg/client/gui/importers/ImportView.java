@@ -141,19 +141,67 @@ public class ImportView extends javax.swing.JInternalFrame {
         charsetsComboBox.setModel(new javax.swing.DefaultComboBoxModel(charsets.values().toArray()));
         // set the default mapping
         charsetsComboBox.setSelectedItem(globalToolBox.getStandardCharset());
+        charsetsComboBox.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                if (inFile != null && inFile.exists() && inFile.isFile()) {
+                    updatePreview();
+                }
+            }
+        });
         // initializeVariableMappingTab();
     }
 
+    private String lastAutoDetectedSeparatorFilePath = null;
+
     private void changeFile() {
-        inFile = new File(fileNameTextField.getText().trim());
-        path = inFile.getPath();
-        needToRebuildVariableMap = true;
-        try {
-            numberOfRecordsTextField.setText("" + (canreg.common.Tools.numberOfLinesInFile(inFile.getAbsolutePath()) - 1));
-            // autodetectFileEncodingAction();
-        } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, null, ex);
-            new TechnicalError().errorDialog();
+        String fileName = fileNameTextField.getText().trim();
+        if (fileName.length() > 0) {
+            inFile = new File(fileName);
+            path = inFile.getPath();
+            needToRebuildVariableMap = true;
+            if (inFile.exists() && inFile.isFile()) {
+                try {
+                    numberOfRecordsTextField.setText("" + (canreg.common.Tools.numberOfLinesInFile(inFile.getAbsolutePath()) - 1));
+                } catch (IOException ex) {
+                    LOGGER.log(Level.SEVERE, null, ex);
+                    new TechnicalError().errorDialog();
+                }
+                autoDetectSeparator(false);
+                updatePreview();
+            } else {
+                previewPanel.setVisible(false);
+            }
+        } else {
+            inFile = null;
+            path = null;
+            previewPanel.setVisible(false);
+        }
+    }
+
+    public void autoDetectSeparator(boolean force) {
+        if (inFile != null && inFile.exists() && inFile.isFile()) {
+            String currentPath = inFile.getAbsolutePath();
+            if (force || !currentPath.equals(lastAutoDetectedSeparatorFilePath)) {
+                Charset cs = (Charset) charsetsComboBox.getSelectedItem();
+                char sep = Tools.autoDetectSeparator(inFile, cs);
+                setSeparator(sep);
+                lastAutoDetectedSeparatorFilePath = currentPath;
+            }
+        }
+    }
+
+    public void setSeparator(char sep) {
+        if (sep == '\t') {
+            separatingCharacterComboBox.setSelectedItem("Tab");
+        } else if (sep == ',') {
+            separatingCharacterComboBox.setSelectedItem("Comma");
+        } else if (sep == ';') {
+            separatingCharacterComboBox.setSelectedItem("Semicolon");
+        } else if (sep == '|') {
+            separatingCharacterComboBox.setSelectedItem("Pipe");
+        } else {
+            separatingCharacterComboBox.setSelectedItem(String.valueOf(sep));
         }
     }
 
@@ -325,7 +373,7 @@ public class ImportView extends javax.swing.JInternalFrame {
         fileLabel.setName("fileLabel"); // NOI18N
 
         separatingCharacterComboBox.setEditable(true);
-        separatingCharacterComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tab", "Comma" }));
+        separatingCharacterComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tab", "Comma", "Semicolon", "Pipe" }));
         separatingCharacterComboBox.setAction(actionMap.get("comboBoxChanged")); // NOI18N
         separatingCharacterComboBox.setName("separatingCharacterComboBox"); // NOI18N
 
@@ -956,28 +1004,33 @@ public class ImportView extends javax.swing.JInternalFrame {
     }
 
     private char getSeparator() {
-        String sc = separatingCharacterComboBox.getSelectedItem().toString();
+        Object item = separatingCharacterComboBox.getSelectedItem();
+        if (item == null) {
+            return ',';
+        }
+        String sc = item.toString().trim();
         char schar = ','; // Default
-        if (sc.equalsIgnoreCase("Tab")) {
+        if (sc.equalsIgnoreCase("Tab") || sc.equalsIgnoreCase("\\t") || sc.equals("\t")) {
             schar = '\t';
-        } else if (sc.equalsIgnoreCase("Comma")) {
+        } else if (sc.equalsIgnoreCase("Comma") || sc.equals(",")) {
             schar = ',';
+        } else if (sc.equalsIgnoreCase("Semicolon") || sc.equals(";")) {
+            schar = ';';
+        } else if (sc.equalsIgnoreCase("Pipe") || sc.equals("|")) {
+            schar = '|';
         } else if (sc.length() > 0) {
             schar = sc.charAt(0);
         }
         return schar;
     }
 
-    /**
-     *
-     */
-    @Action
-    public void previewAction() {
-        // show the contents of the file
+    public void updatePreview(boolean showDialogOnError) {
+        if (inFile == null || !inFile.exists() || !inFile.isFile()) {
+            previewPanel.setVisible(false);
+            return;
+        }
         BufferedReader br = null;
         try {
-            changeFile();
-            // numberOfRecordsTextField.setText(""+(canreg.common.Tools.numberOfLinesInFile(inFile.getAbsolutePath())-1));
             FileInputStream fis = new FileInputStream(inFile);
             br = new BufferedReader(new InputStreamReader(fis, (Charset) charsetsComboBox.getSelectedItem()));
             CSVFormat csvFormat = CSVFormat.DEFAULT.
@@ -993,8 +1046,7 @@ public class ImportView extends javax.swing.JInternalFrame {
             String[] headers = csvParser.getHeaderMap().keySet().toArray(new String[0]);
 
             for (CSVRecord csvRecord : csvParser) {
-                csvRecord.toMap();
-                Vector vec = new Vector();
+                Vector<String> vec = new Vector<String>();
                 Iterator<String> iterator = csvRecord.iterator();
                 while (iterator.hasNext()) {
                     vec.add(iterator.next());
@@ -1007,17 +1059,19 @@ public class ImportView extends javax.swing.JInternalFrame {
             }
             numberOfRecordsShownTextField.setText(numberOfLinesRead + "");
 
-            // previewTextArea.setText(headers + "\n" + dataText);
-            // previewTextArea.setCaretPosition(0);
             previewPanel.setVisible(true);
-            Vector columnNames = new Vector(Arrays.asList(headers));
+            Vector<String> columnNames = new Vector<String>(Arrays.asList(headers));
             previewTable.setModel(new DefaultTableModel(data, columnNames));
         } catch (FileNotFoundException fileNotFoundException) {
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportView").getString("COULD_NOT_PREVIEW_FILE:") + " \'" + fileNameTextField.getText().trim() + "\'.", java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportView").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
-            LOGGER.log(Level.SEVERE, null, fileNotFoundException);
-        } catch (IOException ex) {
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportView").getString("COULD_NOT_PREVIEW_FILE:") + " \'" + fileNameTextField.getText().trim() + "\'.", java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportView").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
-            LOGGER.log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.WARNING, "File not found for preview: " + inFile.getPath(), fileNotFoundException);
+            if (showDialogOnError) {
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportView").getString("COULD_NOT_PREVIEW_FILE:") + " \'" + fileNameTextField.getText().trim() + "\'.", java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportView").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception ex) {
+            LOGGER.log(Level.WARNING, "Could not preview file: " + inFile.getPath(), ex);
+            if (showDialogOnError) {
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportView").getString("COULD_NOT_PREVIEW_FILE:") + " \'" + fileNameTextField.getText().trim() + "\'.", java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportView").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
+            }
         } finally {
             try {
                 if (br != null) {
@@ -1030,12 +1084,28 @@ public class ImportView extends javax.swing.JInternalFrame {
         }
     }
 
+    public void updatePreview() {
+        updatePreview(false);
+    }
+
+    /**
+     *
+     */
+    @Action
+    public void previewAction() {
+        changeFile();
+        updatePreview(true);
+    }
+
     /**
      *
      */
     @Action
     public void comboBoxChanged() {
         needToRebuildVariableMap = true;
+        if (inFile != null && inFile.exists() && inFile.isFile()) {
+            updatePreview();
+        }
     }
 
     /**
@@ -1053,6 +1123,8 @@ public class ImportView extends javax.swing.JInternalFrame {
             JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportView").getString("NO_ENCODING_DETECTED."), java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportView").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
             // System.out.println("No encoding detected.");
         }
+        autoDetectSeparator(true);
+        updatePreview();
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel associateVariablesPanel;

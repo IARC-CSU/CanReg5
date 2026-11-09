@@ -81,6 +81,14 @@ public class PreviewFilePanel extends javax.swing.JPanel {
         charsetsComboBox.setModel(new javax.swing.DefaultComboBoxModel(charsets.values().toArray()));
         // set the default mapping
         charsetsComboBox.setSelectedItem(CanRegClientApp.getApplication().getGlobalToolBox().getStandardCharset());
+        charsetsComboBox.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                if (inFile != null && inFile.exists() && inFile.isFile()) {
+                    updatePreview();
+                }
+            }
+        });
         // initializeVariableMappingTab();
     }
 
@@ -219,7 +227,7 @@ public class PreviewFilePanel extends javax.swing.JPanel {
         fileLabel.setName("fileLabel"); // NOI18N
 
         separatingCharacterComboBox.setEditable(true);
-        separatingCharacterComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tab", "Comma" }));
+        separatingCharacterComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tab", "Comma", "Semicolon", "Pipe" }));
         separatingCharacterComboBox.setAction(actionMap.get("comboBoxChanged")); // NOI18N
         separatingCharacterComboBox.setName("separatingCharacterComboBox"); // NOI18N
 
@@ -304,7 +312,9 @@ public class PreviewFilePanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void fileNameTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_fileNameTextFieldFocusLost
-        // TODO add your handling code here:
+        if (fileNameTextField.getText().trim().length() > 0) {
+            changeFile();
+        }
 }//GEN-LAST:event_fileNameTextFieldFocusLost
 
     private void fileNameTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fileNameTextFieldMouseReleased
@@ -335,11 +345,14 @@ public class PreviewFilePanel extends javax.swing.JPanel {
 
 
     @Action
-    public void previewAction() {
+    public void updatePreview(boolean showDialogOnError) {
+        if (inFile == null || !inFile.exists() || !inFile.isFile()) {
+            previewPanel.setVisible(false);
+            return;
+        }
         // show the contents of the file
         BufferedReader br = null;
         try {
-            changeFile();
             // numberOfRecordsTextField.setText(""+(canreg.common.Tools.numberOfLinesInFile(inFile.getAbsolutePath())-1));
             FileInputStream fis = new FileInputStream(inFile);
             br = new BufferedReader(new InputStreamReader(fis, (Charset) charsetsComboBox.getSelectedItem()));
@@ -376,12 +389,16 @@ public class PreviewFilePanel extends javax.swing.JPanel {
             Vector columnNames = new Vector(Arrays.asList(headers));
             previewTable.setModel(new DefaultTableModel(data, columnNames));
         } catch (FileNotFoundException fileNotFoundException) {
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(),
-                java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportView").getString("COULD_NOT_PREVIEW_FILE:") + " \'" + fileNameTextField.getText().trim() + "\'.", java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/resources/ImportView").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
-           LOGGER.log(Level.SEVERE, null, fileNotFoundException);
-        } catch (IOException ex) {
-           LOGGER.log(Level.SEVERE, null, ex);
-            new TechnicalError().errorDialog();
+            LOGGER.log(Level.WARNING, "File not found for preview: " + inFile.getPath(), fileNotFoundException);
+            if (showDialogOnError) {
+                JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(),
+                    java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportView").getString("COULD_NOT_PREVIEW_FILE:") + " '" + fileNameTextField.getText().trim() + "'.", java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportView").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception ex) {
+            LOGGER.log(Level.WARNING, "Could not preview file: " + inFile.getPath(), ex);
+            if (showDialogOnError) {
+                new TechnicalError().errorDialog();
+            }
         } finally {
             try {
                 if (br != null) {
@@ -392,6 +409,16 @@ public class PreviewFilePanel extends javax.swing.JPanel {
                 new TechnicalError().errorDialog();
             }
         }
+    }
+
+    public void updatePreview() {
+        updatePreview(false);
+    }
+
+    @Action
+    public void previewAction() {
+        changeFile();
+        updatePreview(true);
     }
 
     @Action
@@ -412,11 +439,16 @@ public class PreviewFilePanel extends javax.swing.JPanel {
 
             // JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/components/resources/PreviewFilePanel").getString("NO_ENCODING_DETECTED."), java.util.ResourceBundle.getBundle("canreg/client/gui/dataentry/components/PreviewFilePanel").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
         }
+        autoDetectSeparator(true);
+        updatePreview();
     }
     
     @Action
     public void comboBoxChanged() {
         listener.actionPerformed(new ActionEvent(this, 0, SEPARATING_CHARACTER_CHANGED_ACTION));
+        if (inFile != null && inFile.exists() && inFile.isFile()) {
+            updatePreview();
+        }
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -439,28 +471,75 @@ public class PreviewFilePanel extends javax.swing.JPanel {
     private javax.swing.JLabel separatingCharacterLabel;
     // End of variables declaration//GEN-END:variables
 
+    private String lastAutoDetectedSeparatorFilePath = null;
+
     private void changeFile() {
         if (fileNameTextField.getText().trim().length() > 0) {
             try {
                 inFile = new File(fileNameTextField.getText().trim());
                 listener.actionPerformed(new ActionEvent(this, 0, FILE_CHANGED_ACTION));
-                numberOfRecordsTextField.setText("" + (canreg.common.Tools.numberOfLinesInFile(inFile.getCanonicalPath()) - 1));
+                if (inFile.exists() && inFile.isFile()) {
+                    numberOfRecordsTextField.setText("" + (canreg.common.Tools.numberOfLinesInFile(inFile.getCanonicalPath()) - 1));
+                    autoDetectSeparator(false);
+                    updatePreview();
+                } else {
+                    previewPanel.setVisible(false);
+                }
             } catch (IOException ex) {
                LOGGER.log(Level.SEVERE, null, ex);
                 new TechnicalError().errorDialog();
             }
         } else {
             inFile = null;
+            previewPanel.setVisible(false);
+        }
+    }
+
+    public void autoDetectSeparator(boolean force) {
+        if (inFile != null && inFile.exists() && inFile.isFile()) {
+            String currentPath = inFile.getAbsolutePath();
+            if (force || !currentPath.equals(lastAutoDetectedSeparatorFilePath)) {
+                Charset cs = getCharacterSet();
+                char sep = Tools.autoDetectSeparator(inFile, cs);
+                setSeparator(sep);
+                lastAutoDetectedSeparatorFilePath = currentPath;
+            }
+        }
+    }
+
+    public void autoDetectSeparator() {
+        autoDetectSeparator(true);
+    }
+
+    public void setSeparator(char sep) {
+        if (sep == '\t') {
+            separatingCharacterComboBox.setSelectedItem("Tab");
+        } else if (sep == ',') {
+            separatingCharacterComboBox.setSelectedItem("Comma");
+        } else if (sep == ';') {
+            separatingCharacterComboBox.setSelectedItem("Semicolon");
+        } else if (sep == '|') {
+            separatingCharacterComboBox.setSelectedItem("Pipe");
+        } else {
+            separatingCharacterComboBox.setSelectedItem(String.valueOf(sep));
         }
     }
 
     public char getSeparator() {
-        String sc = separatingCharacterComboBox.getSelectedItem().toString();
+        Object item = separatingCharacterComboBox.getSelectedItem();
+        if (item == null) {
+            return ',';
+        }
+        String sc = item.toString().trim();
         char schar = ','; // Default
-        if (sc.equalsIgnoreCase("Tab")) {
+        if (sc.equalsIgnoreCase("Tab") || sc.equalsIgnoreCase("\\t") || sc.equals("\t")) {
             schar = '\t';
-        } else if (sc.equalsIgnoreCase("Comma")) {
+        } else if (sc.equalsIgnoreCase("Comma") || sc.equals(",")) {
             schar = ',';
+        } else if (sc.equalsIgnoreCase("Semicolon") || sc.equals(";")) {
+            schar = ';';
+        } else if (sc.equalsIgnoreCase("Pipe") || sc.equals("|")) {
+            schar = '|';
         } else if (sc.length() > 0) {
             schar = sc.charAt(0);
         }

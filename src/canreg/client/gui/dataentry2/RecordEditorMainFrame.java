@@ -74,6 +74,7 @@ import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 
 import org.jdesktop.application.Action;
+import org.jdesktop.application.Task;
 import org.w3c.dom.Document;
 
 /**
@@ -2234,11 +2235,15 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
     }//GEN-LAST:event_addTumourRecordButtonFocusGained
 
     @Action
-    public void productionButtonAction() {
-        boolean result = this.browser.productionButtonAction();
-        if (result) {
-            close();
+    public Task productionButtonAction() {
+        if (this.browser != null) {
+            Task task = this.browser.productionButtonAction();
+            if (task != null) {
+                close();
+            }
+            return task;
         }
+        return null;
     }
 
     @Action

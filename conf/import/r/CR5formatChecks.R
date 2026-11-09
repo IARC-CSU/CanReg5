@@ -311,14 +311,24 @@ if(.Platform$OS.type != "windows"){
                           "output.raw.data.csv",
                           sep = "//")
       
-      if (paramsJSON$patientFileSeparator == "Comma") {
+      if (paramsJSON$patientFileSeparator == "Comma" || paramsJSON$patientFileSeparator == ",") {
         write.csv(raw.data, file.write,
                   row.names = FALSE,
                   fileEncoding = "UTF-8")
-      }else if (paramsJSON$patientFileSeparator == "Tab") {
+      }else if (paramsJSON$patientFileSeparator == "Tab" || paramsJSON$patientFileSeparator == "\t") {
         write.table(raw.data, file.write,
                     row.names = FALSE,
                     sep = "\t",
+                    fileEncoding = "UTF-8")
+      }else if (paramsJSON$patientFileSeparator == "Semicolon" || paramsJSON$patientFileSeparator == ";") {
+        write.table(raw.data, file.write,
+                    row.names = FALSE,
+                    sep = ";",
+                    fileEncoding = "UTF-8")
+      }else if (paramsJSON$patientFileSeparator == "Pipe" || paramsJSON$patientFileSeparator == "|") {
+        write.table(raw.data, file.write,
+                    row.names = FALSE,
+                    sep = "|",
                     fileEncoding = "UTF-8")
       } else {
         write.table(raw.data, file.write,
@@ -406,14 +416,24 @@ if(.Platform$OS.type != "windows"){
                                   "output.patient.raw.data.csv",
                                   sep = "//")
       
-      if(paramsJSON$patientFileSeparator == "Comma"){
+      if(paramsJSON$patientFileSeparator == "Comma" || paramsJSON$patientFileSeparator == ","){
         write.csv(patient.raw.data, file.patient.write, 
                   row.names = FALSE,
                   fileEncoding = "UTF-8")
-      }else if(paramsJSON$patientFileSeparator == "Tab"){
+      }else if(paramsJSON$patientFileSeparator == "Tab" || paramsJSON$patientFileSeparator == "\t"){
         write.table(patient.raw.data, file.patient.write,  
                     row.names = FALSE,
                     sep = "\t",
+                    fileEncoding = "UTF-8")
+      }else if(paramsJSON$patientFileSeparator == "Semicolon" || paramsJSON$patientFileSeparator == ";"){
+        write.table(patient.raw.data, file.patient.write,  
+                    row.names = FALSE,
+                    sep = ";",
+                    fileEncoding = "UTF-8")
+      }else if(paramsJSON$patientFileSeparator == "Pipe" || paramsJSON$patientFileSeparator == "|"){
+        write.table(patient.raw.data, file.patient.write,  
+                    row.names = FALSE,
+                    sep = "|",
                     fileEncoding = "UTF-8")
       }else{
         write.table(patient.raw.data, file.patient.write,  
@@ -701,14 +721,24 @@ if(.Platform$OS.type != "windows"){
                                   sep = "//")
       
       
-      if(paramsJSON$patientFileSeparator == "Comma"){
+      if(paramsJSON$patientFileSeparator == "Comma" || paramsJSON$patientFileSeparator == ","){
         write.csv(patient.raw.data, file.patient.write, 
                   row.names = FALSE,
                   fileEncoding = "UTF-8")
-      }else if(paramsJSON$patientFileSeparator == "Tab"){
+      }else if(paramsJSON$patientFileSeparator == "Tab" || paramsJSON$patientFileSeparator == "\t"){
         write.table(patient.raw.data, file.patient.write,  
                     row.names = FALSE,
                     sep = "\t",
+                    fileEncoding = "UTF-8")
+      }else if(paramsJSON$patientFileSeparator == "Semicolon" || paramsJSON$patientFileSeparator == ";"){
+        write.table(patient.raw.data, file.patient.write,  
+                    row.names = FALSE,
+                    sep = ";",
+                    fileEncoding = "UTF-8")
+      }else if(paramsJSON$patientFileSeparator == "Pipe" || paramsJSON$patientFileSeparator == "|"){
+        write.table(patient.raw.data, file.patient.write,  
+                    row.names = FALSE,
+                    sep = "|",
                     fileEncoding = "UTF-8")
       }else{
         write.table(patient.raw.data, file.patient.write,  
