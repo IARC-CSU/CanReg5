@@ -101,7 +101,7 @@
     <target name="-post-compile">
         <copy file="appinfo.properties" todir="${build.classes.dir}" failonerror="false"/>
     </target>
-    <target name="-build-jdeploy">
+    <target name="jdeploy" description="Generate native distributions using jDeploy">
         <echo>Generating native distributions using jDeploy...</echo>
         <exec executable="npx" failonerror="false" failifexecutionfails="false">
             <arg value="jdeploy"/>
@@ -119,7 +119,7 @@
         <include name="changelog.html"/>
     </patternset>
 
-    <target name="-package-zips" depends="-build-jdeploy">
+    <target name="-package-zips">
         <echo>Building platform-specific zip distributions...</echo>
         
         <!-- 1. Translations zip -->

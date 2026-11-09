@@ -23,11 +23,6 @@ jobs:
           distribution: 'zulu'
           java-version: '8'
 
-      - name: Set up Node.js (for jDeploy)
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-
       - name: Extract version from Git tag
         id: version
         run: |
@@ -83,11 +78,6 @@ jobs:
           cp dist/web/CanReg5-Linux.zip release-assets/
           cp dist/web/CanReg5-R-packages.zip release-assets/
           cp dist/translations.zip release-assets/
-          for f in jdeploy/installers/*; do
-            if [ -f "$f" ] && [[ "$f" != *win* ]]; then
-              cp "$f" release-assets/
-            fi
-          done
           ls -lh release-assets/
 
       - name: Create GitHub Release and Attach Installers
@@ -189,8 +179,6 @@ jobs:
           New-Item -ItemType Directory -Force -Path windows-assets
           Compress-Archive -Path dist\CanReg5-Setup.exe -DestinationPath windows-assets\CanReg5-Setup.zip -Force
           Compress-Archive -Path dist\CanReg5-with-R-Setup.exe -DestinationPath windows-assets\CanReg5-with-R-Setup.zip -Force
-          Copy-Item dist\CanReg5-Setup.exe windows-assets\
-          Copy-Item dist\CanReg5-with-R-Setup.exe windows-assets\
           if (Test-Path dist\web\CanReg5-Windows-with-R.zip) {
             Copy-Item dist\web\CanReg5-Windows-with-R.zip windows-assets\
           }
