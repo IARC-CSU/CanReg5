@@ -850,9 +850,10 @@ canreg_clean_install <- function(args)
   if (sysName == "Windows") {
     setWinProgressBar(pb, 0,label = "Cleaning CanReg R folder")
   }
-  unlink(file.path(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5")),recursive = TRUE)
-  dir.create(file.path(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5")),recursive = TRUE)
-  .libPaths(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5"))
+  user_lib <- canreg_get_user_lib()
+  unlink(user_lib, recursive = TRUE)
+  dir.create(user_lib, recursive = TRUE)
+  .libPaths(unique(c(user_lib, .libPaths())))
 
 
   cat("This is the actual repository\n")

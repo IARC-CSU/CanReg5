@@ -2,6 +2,9 @@
 
 ## 5.00.46BETA
 - Fix cross-platform template directory resolution in R report generation on macOS and Linux
+- Isolate CanReg5 R user library directories by R major/minor version to prevent pre-R 4.0.0 package collisions
+- Automatically install bundled offline R packages (.zip) into user library when missing
+- Automatically detect and purge stale pre-R 4.0.0 packages from user library and exclude incompatible libraries from .libPaths()
 - Fix runtime library Class-Path in CanReg.jar manifest
 - Fix duplicate record creation and ensure proper deletion of holding records when importing updates to production
 - Improve holding database promotion performance with batch transactions, statement caching, and background progress dialog

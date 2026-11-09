@@ -1,3 +1,21 @@
+canreg_get_user_lib <- function() {
+  r_maj_min <- paste0(getRversion()$major, ".", getRversion()$minor)
+  r_user_env <- Sys.getenv("R_LIBS_USER")
+  if (nzchar(r_user_env)) {
+    expanded <- gsub("%v", r_maj_min, r_user_env, fixed = TRUE)
+    if (!grepl(paste0("R-?", getRversion()$major), expanded, ignore.case = TRUE) &&
+        !grepl(r_maj_min, expanded, fixed = TRUE)) {
+      user_lib <- paste0(expanded, "-R", r_maj_min, "-CanReg5")
+    } else {
+      user_lib <- paste0(expanded, "-CanReg5")
+    }
+  } else {
+    user_lib <- file.path(path.expand("~"), paste0(".R-", r_maj_min, "-CanReg5-library"))
+  }
+  user_lib <- normalizePath(user_lib, winslash = "/", mustWork = FALSE)
+  return(user_lib)
+}
+
 load.fun <- function(x) { 
   old.repos <- getOption("repos") 
   on.exit(options(repos = old.repos))
@@ -5,7 +23,7 @@ load.fun <- function(x) {
   new.repos["CRAN"] <- "https://cran.r-project.org"
   options(repos = new.repos)
   x <- as.character(substitute(x))
-  rlibs <- gsub("\\", "/", file.path(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5")), fixed = TRUE)
+  rlibs <- gsub("\\", "/", canreg_get_user_lib(), fixed = TRUE)
   dir.create(rlibs, recursive = TRUE, showWarnings = FALSE)
   eval(parse(text = paste("install.packages('", x, "', lib='", rlibs, "', quiet = TRUE)", sep = ""))) 
   eval(parse(text = paste("require(", x, ", lib.loc = '", rlibs, "')", sep = "")))
@@ -17,12 +35,7 @@ canreg_load_packages <- function(packages_list) {
 
   sysName <- Sys.info()[['sysname']]
 
-  r_user_env <- Sys.getenv("R_LIBS_USER")
-  if (nzchar(r_user_env)) {
-    user_lib <- paste0(r_user_env, "-CanReg5")
-  } else {
-    user_lib <- file.path(path.expand("~"), ".R-CanReg5-library")
-  }
+  user_lib <- canreg_get_user_lib()
   if (!dir.exists(user_lib)) {
     try(dir.create(user_lib, recursive = TRUE, showWarnings = FALSE), silent = TRUE)
   }
