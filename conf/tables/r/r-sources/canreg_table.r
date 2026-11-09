@@ -53,15 +53,24 @@ canreg_table_report <- function(ls_args)
   graph_width <<- 6
 
   #check if report path exist (if not create report path)
-  pos <- regexpr("\\\\[^\\\\]*$", ls_args$out)[[1]]
-  path <- substr(ls_args$out,start=1, stop=pos)
+  pos <- max(gregexpr("[/\\\\]", ls_args$out)[[1]])
+  if (pos > 0) {
+    path <- substr(ls_args$out, start=1, stop=pos)
+  } else {
+    path <- dirname(ls_args$out)
+    if (path == "." && !grepl("[/\\\\]", ls_args$out)) {
+      path <- paste0(getwd(), "/")
+    } else {
+      path <- paste0(path, "/")
+    }
+  }
   if (ls_args$sc=="null") {
     report_path <- paste0(path, "report-template")
   } else {
     report_path <- paste0(path, "report-template-", ls_args$sc)
   }
   if(!file_test("-d",report_path)) {
-    dir.create(report_path)
+    dir.create(report_path, recursive=TRUE, showWarnings=FALSE)
   }
 
   sysName <<- Sys.info()[['sysname']]

@@ -1469,9 +1469,9 @@ canreg_shiny_list_folder_content <- function(output) {
 	else {
 		
 		if (ls_args$sc=="null") {
-			report_source <- paste0(path, "\\report-template")
+			report_source <- file.path(path, "report-template")
 		} else {
-			report_source <- paste0(path, "\\report-template-", ls_args$sc)
+			report_source <- file.path(path, paste0("report-template-", ls_args$sc))
 		}
 
 		if(!file_test("-d",report_source)) {

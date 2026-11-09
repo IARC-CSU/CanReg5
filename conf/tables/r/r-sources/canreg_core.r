@@ -212,6 +212,13 @@ canreg_merge_CI5_registry <- function(dt, dt_CI5, registry_region, registry_labe
 
 canreg_report_template_extract <- function(report_path,script.basename, appendix=FALSE) {
   
+  if (!dir.exists(report_path)) {
+    dir.create(report_path, recursive = TRUE, showWarnings = FALSE)
+  }
+  if (!dir.exists(report_path)) {
+    stop(paste("Template folder could not be created or accessed:", report_path))
+  }
+
   # Copy template base if no file in the report_template folder
   
   # detect txt file beginning with 1_, 12_, 2_ etc.. 
@@ -221,7 +228,9 @@ canreg_report_template_extract <- function(report_path,script.basename, appendix
   if (length(file_template) == 0) {
     
     file_template <- list.files(path=paste(sep="/", script.basename, "report_text"), full.names = TRUE)
-    file.copy(file_template,report_path)
+    if (length(file_template) > 0 && dir.exists(report_path)) {
+      file.copy(file_template,report_path)
+    }
     
   }
   
@@ -229,7 +238,9 @@ canreg_report_template_extract <- function(report_path,script.basename, appendix
   if (!any(grepl("^1_1_",file_template ))) {
     
     file_1_1 <- list.files(path=paste(sep="/", script.basename, "report_text"),pattern= "^1_1_[^_]*\\.txt$", full.names = TRUE)
-    file.copy(file_1_1,report_path)
+    if (length(file_1_1) > 0 && dir.exists(report_path)) {
+      file.copy(file_1_1,report_path)
+    }
     
   }
   
@@ -237,17 +248,23 @@ canreg_report_template_extract <- function(report_path,script.basename, appendix
   if (!any(grepl("^1_2_",file_template ))) {
     
     file_1_2 <- list.files(path=paste(sep="/", script.basename, "report_text"),pattern= "^1_2_[^_]*\\.txt$", full.names = TRUE)
-    file.copy(file_1_2,report_path)
+    if (length(file_1_2) > 0 && dir.exists(report_path)) {
+      file.copy(file_1_2,report_path)
+    }
     
   }
   
   # Force Appendix first chapter
   
-  file_APP_1 <- list.files(path=paste(sep="/", script.basename, "report_text"),pattern= "^APP_1_Graph*\\.txt$", full.names = TRUE)
-  file.copy(file_APP_1,report_path)
+  file_APP_1 <- list.files(path=paste(sep="/", script.basename, "report_text"),pattern= "^APP_1_Graph.*\\.txt$", full.names = TRUE)
+  if (length(file_APP_1) > 0 && dir.exists(report_path)) {
+    file.copy(file_APP_1,report_path)
+  }
     
-  file_APP_1_1 <- list.files(path=paste(sep="/", script.basename, "report_text"),pattern= "^APP_1_1_Age-specific incidence rate*\\.txt$", full.names = TRUE)
-  file.copy(file_APP_1_1,report_path)
+  file_APP_1_1 <- list.files(path=paste(sep="/", script.basename, "report_text"),pattern= "^APP_1_1_Age-specific incidence rate.*\\.txt$", full.names = TRUE)
+  if (length(file_APP_1_1) > 0 && dir.exists(report_path)) {
+    file.copy(file_APP_1_1,report_path)
+  }
     
   
   if (appendix) {
