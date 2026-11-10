@@ -215,7 +215,6 @@ pip-log.txt
 #Mr Developer
 .mr.developer.cfg
 vqyl2sk0.zpf.txt
-doc/CanReg5-Instructions/CanReg5-Instructions.pdf
 
 *.class
 
@@ -241,7 +240,11 @@ hs_err_pid*
 *.tmp7
 translations/
 CanReg5.zip
-doc/CanReg5-Instructions.pdf
+*.aux
+*.idx
+*.toc
+*.ilg
+*.ind
 CanReg5-R-packages.zip
 CanReg5.app/
 *.orig

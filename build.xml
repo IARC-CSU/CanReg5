@@ -85,11 +85,23 @@
         <copy todir="dist/lib" failonerror="false">
             <fileset dir="lib" includes="*.jar"/>
         </copy>
+        <pathconvert property="jar.classpath" pathsep=" ">
+            <path path="${javac.classpath}"/>
+            <mapper>
+                <chainedmapper>
+                    <flattenmapper/>
+                    <globmapper from="*" to="lib/*"/>
+                </chainedmapper>
+            </mapper>
+        </pathconvert>
+        <manifest file="${manifest.file}" mode="update">
+            <attribute name="Class-Path" value="${jar.classpath}"/>
+        </manifest>
     </target>
     <target name="-post-compile">
         <copy file="appinfo.properties" todir="${build.classes.dir}" failonerror="false"/>
     </target>
-    <target name="-build-jdeploy">
+    <target name="jdeploy" description="Generate native distributions using jDeploy">
         <echo>Generating native distributions using jDeploy...</echo>
         <exec executable="npx" failonerror="false" failifexecutionfails="false">
             <arg value="jdeploy"/>
@@ -103,12 +115,62 @@
         <exclude name="conf/tables/r/r-packages/*"/>
         <include name="demo/**"/>
         <include name="scripts/**"/>
+        <include name="helpers/completeness_analyzer/**"/>
         <include name="changelog.txt"/>
         <include name="changelog.html"/>
+        <include name="changelog.rtf"/>
     </patternset>
 
-    <target name="-package-zips" depends="-build-jdeploy">
+    <target name="generate-changelog-formats" depends="-generate-changelog-formats" description="Generate changelog.rtf and changelog.html from changelog.txt"/>
+
+    <target name="convert-docs-to-md" description="Convert LyX/LaTeX instructions into doc/instructions/ markdown">
+        <exec executable="python3" failonerror="false">
+            <arg value="helpers/convert_docs_to_md.py"/>
+        </exec>
+    </target>
+
+    <target name="-generate-changelog-formats">
+        <echo>Attempting to generate changelog.rtf and changelog.html from changelog.txt...</echo>
+        <exec executable="pandoc" failonerror="false" failifexecutionfails="false">
+            <arg value="changelog.txt"/>
+            <arg value="-f"/>
+            <arg value="markdown"/>
+            <arg value="-t"/>
+            <arg value="rtf"/>
+            <arg value="-s"/>
+            <arg value="-o"/>
+            <arg value="changelog.rtf"/>
+        </exec>
+        <exec executable="pandoc" failonerror="false" failifexecutionfails="false">
+            <arg value="changelog.txt"/>
+            <arg value="-f"/>
+            <arg value="markdown"/>
+            <arg value="-t"/>
+            <arg value="html"/>
+            <arg value="--metadata"/>
+            <arg value="title=CanReg5 Changelog"/>
+            <arg value="-H"/>
+            <arg value="helpers/pandoc/pandoc.html"/>
+            <arg value="-s"/>
+            <arg value="-o"/>
+            <arg value="changelog.html"/>
+        </exec>
+    </target>
+
+    <target name="build-instructions-pdf" description="Compile Markdown instructions into doc/CanReg5-Instructions.pdf and HTML">
+        <exec executable="python3" failonerror="false">
+            <arg value="helpers/build_instructions_pdf.py"/>
+        </exec>
+    </target>
+
+    <target name="-build-instructions-pdf">
+        <antcall target="build-instructions-pdf"/>
+    </target>
+
+    <target name="-package-zips">
         <echo>Building platform-specific zip distributions...</echo>
+        <antcall target="-build-instructions-pdf"/>
+        <antcall target="-generate-changelog-formats"/>
         
         <!-- 1. Translations zip -->
         <zip destfile="${dist.dir}/translations.zip">
@@ -128,7 +190,8 @@
                 <patternset refid="base.files"/>
             </zipfileset>
             <zipfileset dir="." includes="CanReg.exe,CanReg.bat"/>
-            <zipfileset dir="conf/tables/r/r-packages" includes="*.tar.gz" prefix="conf/tables/r/r-packages"/>
+            <zipfileset dir="conf/tables/r/r-packages" includes="install_packages.r" prefix="conf/tables/r/r-packages"/>
+            <zipfileset dir="doc" includes="CanReg5-Instructions.pdf,CanReg5-instructions.pdf" prefix="doc" erroronmissingdir="false"/>
             <zipfileset dir="doc/CanReg5-Instructions" includes="CanReg5-Instructions.pdf" prefix="doc" erroronmissingdir="false"/>
             <zipfileset dir="${dist.dir}" includes="CanReg.jar"/>
             <zipfileset dir="${dist.dir}/lib" prefix="lib"/>
@@ -152,7 +215,8 @@
                 <patternset refid="base.files"/>
             </zipfileset>
             <zipfileset dir="." includes="CanReg.sh" filemode="755"/>
-            <zipfileset dir="conf/tables/r/r-packages" includes="*.tar.gz" prefix="conf/tables/r/r-packages"/>
+            <zipfileset dir="conf/tables/r/r-packages" includes="install_packages.r" prefix="conf/tables/r/r-packages"/>
+            <zipfileset dir="doc" includes="CanReg5-Instructions.pdf,CanReg5-instructions.pdf" prefix="doc" erroronmissingdir="false"/>
             <zipfileset dir="doc/CanReg5-Instructions" includes="CanReg5-Instructions.pdf" prefix="doc" erroronmissingdir="false"/>
             <zipfileset dir="${dist.dir}" includes="CanReg.jar"/>
             <zipfileset dir="${dist.dir}/lib" prefix="lib"/>
@@ -160,8 +224,9 @@
 
         <!-- 5. Copy metadata files to web directory -->
         <copy todir="${dist.dir}/web">
-            <fileset dir="." includes="changelog.txt,changelog.html,version.txt"/>
-            <fileset file="doc/CanReg5-Instructions/CanReg5-Instructions.pdf" erroronmissingdir="false"/>
+            <fileset dir="." includes="changelog.txt,changelog.html,changelog.rtf,version.txt"/>
+            <fileset file="doc/CanReg5-Instructions.pdf" erroronmissingdir="false"/>
+            <fileset file="doc/CanReg5-Instructions.html" erroronmissingdir="false"/>
         </copy>
     </target>
 
@@ -189,7 +254,8 @@
                 <patternset refid="base.files"/>
             </zipfileset>
             <zipfileset dir="." includes="CanReg.exe,CanReg.bat"/>
-            <zipfileset dir="conf/tables/r/r-packages" includes="*.tar.gz" prefix="conf/tables/r/r-packages"/>
+            <zipfileset dir="conf/tables/r/r-packages" includes="install_packages.r,*.zip,*.tar.gz" prefix="conf/tables/r/r-packages"/>
+            <zipfileset dir="doc" includes="CanReg5-Instructions.pdf,CanReg5-instructions.pdf" prefix="doc" erroronmissingdir="false"/>
             <zipfileset dir="doc/CanReg5-Instructions" includes="CanReg5-Instructions.pdf" prefix="doc" erroronmissingdir="false"/>
             <zipfileset dir="${dist.dir}" includes="CanReg.jar"/>
             <zipfileset dir="${dist.dir}/lib" prefix="lib"/>

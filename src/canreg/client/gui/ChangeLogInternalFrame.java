@@ -136,12 +136,49 @@ public class ChangeLogInternalFrame extends javax.swing.JInternalFrame implement
     }//GEN-LAST:event_editorPaneMouseReleased
 
     private void readChangelog() {
-        String changelog = canreg.common.Tools.getFileFromURL(Globals.CANREG_CHANGELOG_URL);
-        if(Globals.CANREG_CHANGELOG_URL.endsWith("html")){
-            editorPane.setContentType("text/html");
-        }
-        editorPane.setText(changelog);
-        editorPane.setCaretPosition(0);
+        editorPane.setContentType("text/plain");
+        editorPane.setFont(new java.awt.Font(java.awt.Font.MONOSPACED, java.awt.Font.PLAIN, 12));
+        editorPane.setText("Loading changelog from GitHub...");
+
+        new javax.swing.SwingWorker<String, Void>() {
+            @Override
+            protected String doInBackground() throws Exception {
+                String changelog = canreg.common.Tools.getFileFromURL(Globals.CANREG_CHANGELOG_URL, 5000, 10000);
+                if (changelog != null && changelog.trim().length() > 0) {
+                    return changelog;
+                }
+                // Offline fallback: load local changelog file
+                java.io.File localChangelog = new java.io.File("changelog.txt");
+                if (!localChangelog.exists()) {
+                    localChangelog = new java.io.File("changelog.html");
+                }
+                if (localChangelog.exists()) {
+                    byte[] bytes = java.nio.file.Files.readAllBytes(localChangelog.toPath());
+                    return new String(bytes, java.nio.charset.StandardCharsets.UTF_8);
+                }
+                return "Unable to load changelog (offline and local changelog file not found).\n"
+                        + "Please visit: " + Globals.CANREG_RELEASES_URL;
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    String content = get();
+                    if (content != null && (content.trim().startsWith("<!DOCTYPE") || content.trim().startsWith("<html"))) {
+                        editorPane.setContentType("text/html");
+                    } else {
+                        editorPane.setContentType("text/plain");
+                        editorPane.setFont(new java.awt.Font(java.awt.Font.MONOSPACED, java.awt.Font.PLAIN, 12));
+                    }
+                    editorPane.setText(content);
+                    editorPane.setCaretPosition(0);
+                } catch (Exception ex) {
+                    LOGGER.log(Level.WARNING, "Error loading changelog", ex);
+                    editorPane.setText("Unable to load changelog: " + ex.getMessage()
+                            + "\nPlease visit: " + Globals.CANREG_RELEASES_URL);
+                }
+            }
+        }.execute();
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JEditorPane editorPane;

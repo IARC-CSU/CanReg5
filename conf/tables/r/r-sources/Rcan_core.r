@@ -186,6 +186,59 @@ canreg_args <- function(Args) {
 
 
 
+canreg_get_user_lib <- function() {
+  r_maj_min <- paste0(getRversion()$major, ".", getRversion()$minor)
+  r_user_env <- Sys.getenv("R_LIBS_USER")
+  if (nzchar(r_user_env)) {
+    expanded <- gsub("%v", r_maj_min, r_user_env, fixed = TRUE)
+    if (!grepl(paste0("R-?", getRversion()$major), expanded, ignore.case = TRUE) &&
+        !grepl(r_maj_min, expanded, fixed = TRUE)) {
+      user_lib <- paste0(expanded, "-R", r_maj_min, "-CanReg5")
+    } else {
+      user_lib <- paste0(expanded, "-CanReg5")
+    }
+  } else {
+    user_lib <- file.path(path.expand("~"), paste0(".R-", r_maj_min, "-CanReg5-library"))
+  }
+  user_lib <- normalizePath(user_lib, winslash = "/", mustWork = FALSE)
+  return(user_lib)
+}
+
+canreg_is_lib_compatible <- function(lib_path) {
+  if (!dir.exists(lib_path)) return(FALSE)
+  if (getRversion() < "4.0.0") return(TRUE)
+  pkg_dirs <- list.dirs(lib_path, recursive = FALSE, full.names = TRUE)
+  if (length(pkg_dirs) == 0) return(TRUE)
+  for (pd in head(pkg_dirs, 15)) {
+    desc_file <- file.path(pd, "DESCRIPTION")
+    if (file.exists(desc_file)) {
+      dcf <- tryCatch(read.dcf(desc_file, fields = "Built"), error = function(e) NULL)
+      if (!is.null(dcf) && length(dcf) > 0 && !is.na(dcf[1, 1])) {
+        if (grepl("^[R ]*[123][.]", dcf[1, 1])) {
+          return(FALSE)
+        }
+      }
+    }
+  }
+  return(TRUE)
+}
+
+canreg_clean_incompatible_packages <- function(lib_path) {
+  if (!dir.exists(lib_path) || getRversion() < "4.0.0") return(invisible(NULL))
+  pkg_dirs <- list.dirs(lib_path, recursive = FALSE, full.names = TRUE)
+  for (pd in pkg_dirs) {
+    desc_file <- file.path(pd, "DESCRIPTION")
+    if (file.exists(desc_file)) {
+      dcf <- tryCatch(read.dcf(desc_file, fields = "Built"), error = function(e) NULL)
+      if (!is.null(dcf) && length(dcf) > 0 && !is.na(dcf[1, 1])) {
+        if (grepl("^[R ]*[123][.]", dcf[1, 1])) {
+          try(unlink(pd, recursive = TRUE, force = TRUE), silent = TRUE)
+        }
+      }
+    }
+  }
+}
+
 canreg_load_packages <- function(packages_list) { 
 
   sysName <- Sys.info()[['sysname']]
@@ -203,14 +256,11 @@ canreg_load_packages <- function(packages_list) {
     stop("The table builder does not work with R '3.2.0', please install any version after '3.2.1'.\n '3.2.1' or later is recommended.\n You can edit the Path in the 'Options' in CanReg.") 
   }
 
-  r_user_env <- Sys.getenv("R_LIBS_USER")
-  if (nzchar(r_user_env)) {
-    user_lib <- paste0(r_user_env, "-CanReg5")
-  } else {
-    user_lib <- file.path(path.expand("~"), ".R-CanReg5-library")
-  }
+  user_lib <- canreg_get_user_lib()
   if (!dir.exists(user_lib)) {
     try(dir.create(user_lib, recursive = TRUE, showWarnings = FALSE), silent = TRUE)
+  } else {
+    canreg_clean_incompatible_packages(user_lib)
   }
 
   active_libs <- c()
@@ -218,7 +268,7 @@ canreg_load_packages <- function(packages_list) {
     active_libs <- c(active_libs, user_lib)
   }
 
-  # Add bundled library locations if present
+  # Add bundled library locations if present and version-compatible
   sb <- NULL
   if (exists("script.basename", envir = .GlobalEnv)) {
     sb <- get("script.basename", envir = .GlobalEnv)
@@ -233,24 +283,86 @@ canreg_load_packages <- function(packages_list) {
       file.path(dirname(dirname(sb)), "r-runtime", "library")
     )
     for (bl in bundled_libs) {
-      if (dir.exists(bl)) {
+      if (dir.exists(bl) && canreg_is_lib_compatible(bl)) {
         active_libs <- c(active_libs, bl)
       }
     }
   }
-  if (dir.exists("r-runtime/library")) {
+  if (dir.exists("r-runtime/library") && canreg_is_lib_compatible(file.path(getwd(), "r-runtime", "library"))) {
     active_libs <- c(active_libs, file.path(getwd(), "r-runtime", "library"))
   }
 
-  if (length(active_libs) > 0) {
-    .libPaths(unique(c(active_libs, .libPaths())))
+  # Filter existing .libPaths() so incompatible pre-R 4.0.0 libraries don't poison R 4.x
+  existing_paths <- .libPaths()
+  compatible_paths <- existing_paths[sapply(existing_paths, canreg_is_lib_compatible)]
+  if (length(compatible_paths) == 0) {
+    compatible_paths <- existing_paths
   }
+  .libPaths(unique(c(active_libs, compatible_paths)))
 
   # Fast check: are all required packages already available?
   missing_packages <- c()
   for (pkg in packages_list) {
-    if (!requireNamespace(pkg, quietly = TRUE)) {
+    ok <- tryCatch(requireNamespace(pkg, quietly = TRUE), error = function(e) FALSE)
+    if (!ok) {
       missing_packages <- c(missing_packages, pkg)
+    }
+  }
+
+  # If any package is missing, check for local bundled package archives first (offline mode)
+  if (length(missing_packages) > 0) {
+    candidate_dirs <- c()
+    if (!is.null(sb) && nzchar(sb)) {
+      candidate_dirs <- c(candidate_dirs, file.path(sb, "r-packages"), sb, file.path(dirname(sb), "r-packages"))
+    }
+    candidate_dirs <- c(
+      candidate_dirs,
+      file.path(getwd(), "conf", "tables", "r", "r-packages"),
+      file.path(getwd(), "r-packages"),
+      "conf/tables/r/r-packages",
+      "r-packages"
+    )
+    candidate_dirs <- unique(candidate_dirs[dir.exists(candidate_dirs)])
+
+    archive_ext <- if (sysName == "Windows") ".*\\.zip$" else ".*\\.(tar\\.gz|tgz)$"
+    local_archives <- c()
+    for (cd in candidate_dirs) {
+      found <- list.files(cd, pattern = archive_ext, full.names = TRUE)
+      if (length(found) > 0) {
+        local_archives <- c(local_archives, found)
+      }
+    }
+    local_archives <- unique(local_archives)
+
+    if (length(local_archives) > 0) {
+      for (pkg in missing_packages) {
+        pkg_pat <- paste0("^", pkg, "_")
+        matches <- local_archives[grepl(pkg_pat, basename(local_archives))]
+        if (length(matches) > 0) {
+          if (exists("canreg_progress", mode = "function")) {
+            canreg_progress(pb, 0.5, "Installing R packages", sprintf("Installing offline package - %s", pkg))
+          } else if (sysName == "Windows" && exists("setWinProgressBar", mode = "function")) {
+            setWinProgressBar(pb, value = 0.5, label = sprintf("Installing %s (offline)...", pkg))
+          }
+          try(install.packages(matches[1], lib = user_lib, repos = NULL, quiet = TRUE), silent = TRUE)
+        }
+      }
+      for (arc in local_archives) {
+        arc_pkg <- sub("_.*$", "", basename(arc))
+        ok <- tryCatch(requireNamespace(arc_pkg, quietly = TRUE), error = function(e) FALSE)
+        if (!ok) {
+          try(install.packages(arc, lib = user_lib, repos = NULL, quiet = TRUE), silent = TRUE)
+        }
+      }
+
+      # Re-evaluate missing packages
+      missing_packages <- c()
+      for (pkg in packages_list) {
+        ok <- tryCatch(requireNamespace(pkg, quietly = TRUE), error = function(e) FALSE)
+        if (!ok) {
+          missing_packages <- c(missing_packages, pkg)
+        }
+      }
     }
   }
 
@@ -291,8 +403,9 @@ canreg_load_packages <- function(packages_list) {
     }
     stop(paste0(
       "Missing required R package(s): ", paste(missing_packages, collapse = ", "), ".\n",
-      "No internet connection to CRAN is available to download them automatically.\n",
-      "Please connect to the internet, install the packages, or use the CanReg5 bundle with R included."
+      "No internet connection to CRAN is available to download them automatically,\n",
+      "and matching offline package archives were not found in conf/tables/r/r-packages/.\n",
+      "Please connect to the internet, install the packages, or extract the CanReg5-R-packages.zip bundle into conf/tables/r/r-packages/."
     ))
   }
 

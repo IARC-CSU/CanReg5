@@ -23,11 +23,6 @@ jobs:
           distribution: 'zulu'
           java-version: '8'
 
-      - name: Set up Node.js (for jDeploy)
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-
       - name: Extract version from Git tag
         id: version
         run: |
@@ -60,8 +55,65 @@ jobs:
             fi
           done
 
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: 'release'
+
+      - name: Download Windows R packages for offline bundle
+        run: |
+          Rscript scripts/download_r_packages.R conf/tables/r/r-packages
+
+      - name: Upload R Packages Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: r-packages
+          path: conf/tables/r/r-packages/*.zip
+          if-no-files-found: ignore
+
+      - name: Verify Instructions PDF
+        run: |
+          if [ -f "doc/CanReg5-Instructions.pdf" ]; then
+            echo "CanReg5 Instructions PDF ready."
+          elif [ -f "doc/CanReg5-Instructions/CanReg5-Instructions.pdf" ]; then
+            cp doc/CanReg5-Instructions/CanReg5-Instructions.pdf doc/CanReg5-Instructions.pdf
+            echo "CanReg5 Instructions PDF ready from legacy path."
+          else
+            echo "Warning: CanReg5-Instructions.pdf not found."
+          fi
+
+      - name: Set up Pandoc
+        uses: pandoc/actions/setup@v1
+        continue-on-error: true
+
+      - name: Generate Changelog HTML and RTF
+        run: |
+          if command -v pandoc &> /dev/null; then
+            pandoc changelog.txt -f markdown -t rtf -s -o changelog.rtf
+            pandoc changelog.txt -f markdown -t html --metadata title="CanReg5 Changelog" -H helpers/pandoc/pandoc.html -s -o changelog.html
+          else
+            echo "Pandoc not available; using repository versions of changelog.html and changelog.rtf"
+          fi
+
+      - name: Upload Changelog Formats Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: changelog-formats
+          path: |
+            changelog.rtf
+            changelog.html
+          if-no-files-found: ignore
+
       - name: Build JAR and Platform Distributions
         run: ant jar
+
+      - name: Upload Instructions PDF Artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: instructions-pdf
+          path: doc/CanReg5-Instructions.pdf
+          if-no-files-found: ignore
 
       - name: Collect Release Assets
         run: |
@@ -74,11 +126,11 @@ jobs:
           cp dist/web/CanReg5-Linux.zip release-assets/
           cp dist/web/CanReg5-R-packages.zip release-assets/
           cp dist/translations.zip release-assets/
-          for f in jdeploy/installers/*; do
-            if [ -f "$f" ] && [[ "$f" != *win* ]]; then
-              cp "$f" release-assets/
-            fi
-          done
+          cp changelog.html release-assets/
+          cp changelog.txt release-assets/
+          if [ -f doc/CanReg5-Instructions.pdf ]; then
+            cp doc/CanReg5-Instructions.pdf release-assets/
+          fi
           ls -lh release-assets/
 
       - name: Create GitHub Release and Attach Installers
@@ -126,6 +178,38 @@ jobs:
           sed -i "s/^program\.VERSION=.*/program.VERSION=${{ steps.version.outputs.version }}/" appinfo.properties
           echo "#define MyAppVersion \"${{ steps.version.outputs.version }}\"" > inno-settings.txt
 
+      - name: Download Instructions PDF Artifact
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: instructions-pdf
+          path: doc/CanReg5-Instructions
+
+      - name: Ensure PDF paths exist for Windows packaging
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path doc\CanReg5-Instructions | Out-Null
+          if (Test-Path "doc\CanReg5-Instructions\CanReg5-Instructions.pdf") {
+            Copy-Item "doc\CanReg5-Instructions\CanReg5-Instructions.pdf" "doc\CanReg5-Instructions.pdf" -Force
+            Copy-Item "doc\CanReg5-Instructions\CanReg5-Instructions.pdf" "doc\CanReg5-instructions.pdf" -Force
+          } else {
+            $pdfUrl = "https://github.com/IARC-CSU/CanReg5/releases/download/${{ steps.version.outputs.tag }}/CanReg5-Instructions.pdf"
+            try {
+              Invoke-WebRequest -Uri $pdfUrl -OutFile "doc\CanReg5-Instructions\CanReg5-Instructions.pdf" -UseBasicParsing -TimeoutSec 30
+              Copy-Item "doc\CanReg5-Instructions\CanReg5-Instructions.pdf" "doc\CanReg5-Instructions.pdf" -Force
+              Copy-Item "doc\CanReg5-Instructions\CanReg5-Instructions.pdf" "doc\CanReg5-instructions.pdf" -Force
+            } catch {
+              Write-Host "Instructions PDF not available on release: $($_.Exception.Message)"
+            }
+          }
+
+      - name: Download Changelog Formats Artifact
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: changelog-formats
+          path: .
+
       - name: Build CanReg5 JAR and Distribution
         shell: cmd
         run: |
@@ -164,6 +248,33 @@ jobs:
             ./scripts/build_r_bundle.ps1 -RVersion "4.6.2" -OutputDir "r-runtime"
           }
 
+      - name: Download R Packages Artifact
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: r-packages
+          path: conf/tables/r/r-packages
+
+      - name: Ensure R packages exist for Windows with R packaging
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path conf\tables\r\r-packages | Out-Null
+          $pkgCount = (Get-ChildItem -Path conf\tables\r\r-packages -Filter "*.zip" | Measure-Object).Count
+          if ($pkgCount -eq 0) {
+            $pkgZipUrl = "https://github.com/IARC-CSU/CanReg5/releases/download/${{ steps.version.outputs.tag }}/CanReg5-R-packages.zip"
+            try {
+              Write-Host "Downloading R packages from $pkgZipUrl..."
+              Invoke-WebRequest -Uri $pkgZipUrl -OutFile "r-pkgs.zip" -UseBasicParsing -TimeoutSec 120
+              Expand-Archive -Path "r-pkgs.zip" -DestinationPath "temp-r-pkgs" -Force
+              Copy-Item -Path "temp-r-pkgs\conf\tables\r\r-packages\*" -Destination "conf\tables\r\r-packages" -Force -Recurse
+              Remove-Item "r-pkgs.zip" -Force
+              Remove-Item "temp-r-pkgs" -Force -Recurse
+            } catch {
+              Write-Host "Unable to download R packages: $($_.Exception.Message)"
+            }
+          }
+          Write-Host "R packages count in conf\tables\r\r-packages: $((Get-ChildItem -Path conf\tables\r\r-packages -Filter '*.zip' | Measure-Object).Count)"
+
       - name: Build Windows with R Installer (Inno Setup)
         shell: cmd
         run: |
@@ -180,8 +291,6 @@ jobs:
           New-Item -ItemType Directory -Force -Path windows-assets
           Compress-Archive -Path dist\CanReg5-Setup.exe -DestinationPath windows-assets\CanReg5-Setup.zip -Force
           Compress-Archive -Path dist\CanReg5-with-R-Setup.exe -DestinationPath windows-assets\CanReg5-with-R-Setup.zip -Force
-          Copy-Item dist\CanReg5-Setup.exe windows-assets\
-          Copy-Item dist\CanReg5-with-R-Setup.exe windows-assets\
           if (Test-Path dist\web\CanReg5-Windows-with-R.zip) {
             Copy-Item dist\web\CanReg5-Windows-with-R.zip windows-assets\
           }

@@ -1,8 +1,21 @@
 # CanReg5 Changelog
 
-## 5.00.46BETA1
+## 5.00.46BETA
+- Converted user instructions and handbook into GitHub-Flavored Markdown in doc/instructions/ with offline image bundling and chapter navigation
+- Added Cancer Registry Completeness Analyzer tool to Tools menu with full offline D3/Tailwind bundling and step-by-step export guidance
+- Migrate version check, release download, and instructions PDF links from legacy IACR URLs to GitHub
+- Non-blocking background update checks in Options dialog with semantic version comparison
+- Dynamic changelog viewer migrated to GitHub with automatic local fallback when offline
+- Automated compilation and bundling of CanReg5 Instructions PDF across all release distributions with fallback download support
+- Fix cross-platform template directory resolution in R report generation on macOS and Linux
+- Isolate CanReg5 R user library directories by R major/minor version to prevent pre-R 4.0.0 package collisions
+- Automatically install bundled offline R packages (.zip) into user library when missing
+- Automatically detect and purge stale pre-R 4.0.0 packages from user library and exclude incompatible libraries from .libPaths()
+- Fix runtime library Class-Path in CanReg.jar manifest
+- Fix duplicate record creation and ensure proper deletion of holding records when importing updates to production
+- Improve holding database promotion performance with batch transactions, statement caching, and background progress dialog
 - Automated installer packaging for Windows, macOS, and Linux
-- GitHub Actions CI/CD release pipeline
+- GitHub Actions CI/CD release pipeline with automated R package bundling
 - Headless unit testing suite across core modules
 - Cleaned and consolidated dependency libraries in lib/
 - Cross-platform Table Builder progress reporting for R scripts (macOS, Linux, and Windows)
@@ -10,10 +23,13 @@
 - Fix chronological date handling in age calculation
 
 ## 5.00.45
-- Holding database (BETA)
-- Ad-hoc analysis (BETA)
+- Holding database
+- Ad-hoc analysis
 - Improved person search perfomance
 - Memory leak fixes
+
+## 5.00.44m
+- Updated the CI5 comparison data to the latest volume (XII)
 
 ## 5.00.44k 
 - Updated the Spanish translations of the standard reports.
@@ -360,7 +376,7 @@
 - Fixed a potential null-pointer in the table builder if people wanted to use the filter wizard.
 - Added JRuby helper scripts to use the CanReg5 conversions and grouping functionality on data not from CanReg. (See handbook.)
 - Table builder now shows a warning if trying to build a table with no data.
-- Fixed a name error in the changelog. Gon�alo Lacerda translated CanReg5 to Portuguese from Portugal.
+- Fixed a name error in the changelog. Gonçalo Lacerda translated CanReg5 to Portuguese from Portugal.
 - ICD10 codes will be generated even when checks are not performed, potential null pointer error if no name field was defined fixed.
 - Updated the handbook.
 
@@ -385,7 +401,7 @@
 - Various bug fixes
 
 ## 5.00.16
-- Portugese from Portugal added as langauge. (Thanks Gon�alo Lacerda)
+- Portugese from Portugal added as langauge. (Thanks Gonçalo Lacerda)
 - Language chooser in Option Frame now only displays translated languages.
 - Fixed a potential null pointer error in the Population Datasets.
 - DerbyDB engine updated to version 10.8.

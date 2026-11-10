@@ -126,12 +126,22 @@ if [ -d "dist/lib" ]; then
 fi
 if [ -d "conf" ]; then
     cp -R "conf" "${RESOURCES_DIR}/"
+    # Do not bundle Windows R packages in the macOS app bundle
+    rm -f "${RESOURCES_DIR}/conf/tables/r/r-packages/"*.zip 2>/dev/null || true
+    rm -f "${RESOURCES_DIR}/conf/tables/r/r-packages/"*.tar.gz 2>/dev/null || true
 fi
 if [ -d "demo" ]; then
     cp -R "demo" "${RESOURCES_DIR}/"
 fi
 if [ -d "scripts" ]; then
     cp -R "scripts" "${RESOURCES_DIR}/"
+fi
+if [ -d "helpers/completeness_analyzer" ]; then
+    mkdir -p "${RESOURCES_DIR}/helpers"
+    cp -R "helpers/completeness_analyzer" "${RESOURCES_DIR}/helpers/"
+fi
+if [ -d "doc" ]; then
+    cp -R "doc" "${RESOURCES_DIR}/"
 fi
 
 # 5. Make it executable and apply ad-hoc code signature

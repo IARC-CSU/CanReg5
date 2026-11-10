@@ -14,7 +14,20 @@
 
 #Libraries
 #======================================================
-.libPaths(paste0(Sys.getenv("R_LIBS_USER"), "-CanReg5"))
+r_maj_min <- paste0(getRversion()$major, ".", getRversion()$minor)
+r_user_env <- Sys.getenv("R_LIBS_USER")
+if (nzchar(r_user_env)) {
+  expanded <- gsub("%v", r_maj_min, r_user_env, fixed = TRUE)
+  if (!grepl(paste0("R-?", getRversion()$major), expanded, ignore.case = TRUE) &&
+      !grepl(r_maj_min, expanded, fixed = TRUE)) {
+    user_lib <- paste0(expanded, "-R", r_maj_min, "-CanReg5")
+  } else {
+    user_lib <- paste0(expanded, "-CanReg5")
+  }
+} else {
+  user_lib <- file.path(path.expand("~"), paste0(".R-", r_maj_min, "-CanReg5-library"))
+}
+.libPaths(unique(c(user_lib, .libPaths())))
 #======================================================
 
 #Libraries nedeed
