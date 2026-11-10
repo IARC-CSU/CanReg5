@@ -82,6 +82,53 @@
 
         <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-200">
             
+            <!-- CanReg5 Export Instructions Banner -->
+            <div class="mb-6 p-5 bg-blue-50 border border-blue-200 rounded-xl">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                        <svg class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <div class="ml-3 flex-1">
+                        <h3 class="text-base font-semibold text-blue-950">How to get your data from CanReg5</h3>
+                        <p class="text-sm text-blue-800 mt-1">
+                            This tool evaluates cancer registry completeness over time by plotting notifications per month across reporting sources. To export your data from CanReg5:
+                        </p>
+                        <ol class="mt-2 text-sm text-blue-800 list-decimal list-inside space-y-1.5">
+                            <li>In CanReg5, open <strong>Analysis &rarr; Export Data &amp; Reports...</strong> (or click the <strong>Export</strong> button on the toolbar).</li>
+                            <li>Under <strong>Table Selection</strong>, select <strong>Source + Tumour</strong> (or <em>Patient + Tumour + Source</em>).</li>
+                            <li>Include the following required columns in your export list:
+                                <div class="mt-2 grid sm:grid-cols-3 gap-3">
+                                    <div class="bg-white p-3 rounded-lg border border-blue-200 shadow-sm">
+                                        <div class="font-semibold text-blue-950 text-xs uppercase tracking-wide">1. Source Column</div>
+                                        <div class="text-xs text-gray-500 mt-0.5">From the <strong>Source</strong> table</div>
+                                        <div class="text-xs text-blue-700 font-mono mt-1 bg-blue-50 px-1.5 py-0.5 rounded inline-block font-semibold">Source</div>
+                                        <div class="text-xs text-gray-600 mt-1">Reporting facility, hospital, or clinic code/name</div>
+                                    </div>
+                                    <div class="bg-white p-3 rounded-lg border border-blue-200 shadow-sm">
+                                        <div class="font-semibold text-blue-950 text-xs uppercase tracking-wide">2. Source Date Column</div>
+                                        <div class="text-xs text-gray-500 mt-0.5">From the <strong>Source</strong> table</div>
+                                        <div class="text-xs text-blue-700 font-mono mt-1 bg-blue-50 px-1.5 py-0.5 rounded inline-block font-semibold">Date</div>
+                                        <div class="text-xs text-gray-600 mt-1">Date of notification, report, admission, or lab result</div>
+                                    </div>
+                                    <div class="bg-white p-3 rounded-lg border border-blue-200 shadow-sm">
+                                        <div class="font-semibold text-blue-950 text-xs uppercase tracking-wide">3. Incidence Date Column</div>
+                                        <div class="text-xs text-gray-500 mt-0.5">From the <strong>Tumour</strong> table</div>
+                                        <div class="text-xs text-blue-700 font-mono mt-1 bg-blue-50 px-1.5 py-0.5 rounded inline-block font-semibold">IncidenceDate</div>
+                                        <div class="text-xs text-gray-600 mt-1">Date of cancer diagnosis (used as fallback if Source Date is empty)</div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="mt-2">Choose <strong>Character Separated (CSV / TSV)</strong> format, ensure <strong>Include Header</strong> is checked, and export the file.</li>
+                        </ol>
+                        <p class="text-xs text-blue-700 mt-2.5 italic">
+                            Tip: Once exported, select your file in Step 1 below. Delimiter, header row, and date format will be detected automatically.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
             <!-- Step 1: File Upload -->
             <div class="mb-6">
                 <h2 class="text-xl font-semibold text-gray-800 border-b pb-2 mb-4">Step 1: Upload Your Data File</h2>
@@ -560,9 +607,9 @@
                     if(opt) { select.value = opt.value; break; }
                 }
             };
-            selectIfPresent(sourceColumnSelect, ['source', 'src']);
-            selectIfPresent(sourceDateColumnSelect, ['date', 'source date']);
-            selectIfPresent(incidenceDateColumnSelect, ['incid', 'incidence']);
+            selectIfPresent(sourceColumnSelect, ['source', 'src', 'hosp', 'hospital', 'reporting source', 'unit']);
+            selectIfPresent(sourceDateColumnSelect, ['source date', 'sourcedate', 'date', 'notif']);
+            selectIfPresent(incidenceDateColumnSelect, ['incid', 'incidence', 'diag', 'diagnosis']);
         }
 
         function displayMessage(text, type) {
