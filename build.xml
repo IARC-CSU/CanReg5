@@ -165,7 +165,6 @@
 
     <target name="-build-instructions-pdf">
         <antcall target="build-instructions-pdf"/>
-        <copy file="doc/CanReg5-Instructions.pdf" tofile="doc/CanReg5-instructions.pdf" failonerror="false"/>
     </target>
 
     <target name="-package-zips">

@@ -74,12 +74,12 @@ jobs:
       - name: Verify Instructions PDF
         run: |
           if [ -f "doc/CanReg5-Instructions.pdf" ]; then
-            cp doc/CanReg5-Instructions.pdf doc/CanReg5-instructions.pdf
             echo "CanReg5 Instructions PDF ready."
           elif [ -f "doc/CanReg5-Instructions/CanReg5-Instructions.pdf" ]; then
             cp doc/CanReg5-Instructions/CanReg5-Instructions.pdf doc/CanReg5-Instructions.pdf
-            cp doc/CanReg5-Instructions/CanReg5-Instructions.pdf doc/CanReg5-instructions.pdf
             echo "CanReg5 Instructions PDF ready from legacy path."
+          else
+            echo "Warning: CanReg5-Instructions.pdf not found."
           fi
 
       - name: Set up Pandoc
