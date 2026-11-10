@@ -80,8 +80,7 @@ CanReg5 was developed with NetBeans IDE with an additional Swing application fra
 Before building the project, copy `appinfo.properties` from `/src/canreg/client` into `/src`.
 
 Build and run the project. Then the CanReg5 window should appear.
-On the first run, click "Add a new system" and import a system (.xml file). Then you'll be invited to log into the database. The default password is "123456789".
-Next, select the correct system and log in to the application using your credentials.
+On the first run, click "Add a new system" and import a system (.xml file). Next, select the system and log in using the default supervisor credentials: username `morten` and password `ervik`.
 
 ### Installation troubleshooting
 - In the `pom.xml`, the Derby dependency might have its scope set to test, which causes the build to fail since the database dependency will be missing. Try to remove its `<scope>` tag.
