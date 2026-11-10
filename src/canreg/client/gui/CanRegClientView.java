@@ -281,6 +281,7 @@ public final class CanRegClientView extends FrameView {
         loadPopulationsMenuItem = new javax.swing.JMenuItem();
         installRPackagesMenuItem = new javax.swing.JMenuItem();
         garbleDatabaseMenuItem = new javax.swing.JMenuItem();
+        completenessAnalyzerMenuItem = new javax.swing.JMenuItem();
         javax.swing.JMenu helpMenu = new javax.swing.JMenu();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
@@ -639,6 +640,11 @@ public final class CanRegClientView extends FrameView {
         garbleDatabaseMenuItem.setAction(actionMap.get("garbleDatabaseAction")); // NOI18N
         garbleDatabaseMenuItem.setName("garbleDatabaseMenuItem"); // NOI18N
         toolsMenu.add(garbleDatabaseMenuItem);
+
+        completenessAnalyzerMenuItem.setAction(actionMap.get("openCompletenessAnalyzer")); // NOI18N
+        completenessAnalyzerMenuItem.setText(resourceMap.getString("completenessAnalyzerMenuItem.text")); // NOI18N
+        completenessAnalyzerMenuItem.setName("completenessAnalyzerMenuItem"); // NOI18N
+        toolsMenu.add(completenessAnalyzerMenuItem);
 
         menuBar.add(toolsMenu);
 
@@ -1237,6 +1243,42 @@ public final class CanRegClientView extends FrameView {
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, null, ex);
             new TechnicalError().errorDialog();
+        }
+    }
+
+    @Action
+    public void openCompletenessAnalyzer() {
+        File[] candidates = new File[] {
+            new File("helpers", "completeness_analyzer" + Globals.FILE_SEPARATOR + "registrations_by_source_by_month.html"),
+            new File("scripts", "completeness_analyzer" + Globals.FILE_SEPARATOR + "registrations_by_source_by_month.html"),
+            new File("completeness_analyzer", "registrations_by_source_by_month.html")
+        };
+        File targetFile = null;
+        for (File candidate : candidates) {
+            if (candidate.exists()) {
+                targetFile = candidate;
+                break;
+            }
+        }
+        if (targetFile != null) {
+            try {
+                canreg.common.Tools.browse(targetFile.toURI().toString());
+            } catch (IOException ex) {
+                LOGGER.log(Level.WARNING, "Error opening Completeness Analyzer with browse(): " + targetFile, ex);
+                try {
+                    canreg.common.Tools.openFile(targetFile.getAbsolutePath());
+                } catch (IOException ex2) {
+                    LOGGER.log(Level.SEVERE, "Failed to open Completeness Analyzer file: " + targetFile, ex2);
+                    new TechnicalError().errorDialog();
+                }
+            }
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(
+                desktopPane,
+                "Could not find the Completeness Analyzer file:\nhelpers/completeness_analyzer/registrations_by_source_by_month.html",
+                "File Not Found",
+                javax.swing.JOptionPane.ERROR_MESSAGE
+            );
         }
     }
 
@@ -1958,6 +2000,7 @@ public final class CanRegClientView extends FrameView {
     private javax.swing.JMenuItem encrWebsiteMenuItem;
     private javax.swing.JMenuItem exportDataReportsMenuItem;
     private javax.swing.JMenuItem frequenciesMenuItem;
+    private javax.swing.JMenuItem completenessAnalyzerMenuItem;
     private javax.swing.JMenuItem garbleDatabaseMenuItem;
     private javax.swing.JButton handbookButton;
     private javax.swing.JButton holdingDBsButton;

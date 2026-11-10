@@ -76,6 +76,7 @@ Source: "{#CanReg5Dir}\changelog.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#CanReg5Dir}\changelog.html"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#CanReg5Dir}\doc\CanReg5-Instructions\CanReg5-Instructions.pdf"; DestDir: "{app}\doc"; Flags: ignoreversion skipifsourcedoesntexist
 Source: "{#CanReg5Dir}\doc\CanReg5-Instructions.pdf"; DestDir: "{app}\doc"; Flags: ignoreversion skipifsourcedoesntexist
+Source: "{#CanReg5Dir}\helpers\completeness_analyzer\*"; DestDir: "{app}\helpers\completeness_analyzer"; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
 Source: "{#RSourceDir}\*"; DestDir: "{app}\r-runtime"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#CanReg5Dir}\conf\tables\r\r-packages\*"; DestDir: "{app}\conf\tables\r\r-packages"; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files

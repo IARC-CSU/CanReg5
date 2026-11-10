@@ -115,6 +115,7 @@
         <exclude name="conf/tables/r/r-packages/*"/>
         <include name="demo/**"/>
         <include name="scripts/**"/>
+        <include name="helpers/completeness_analyzer/**"/>
         <include name="changelog.txt"/>
         <include name="changelog.html"/>
         <include name="changelog.rtf"/>

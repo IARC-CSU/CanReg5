@@ -136,6 +136,10 @@ fi
 if [ -d "scripts" ]; then
     cp -R "scripts" "${RESOURCES_DIR}/"
 fi
+if [ -d "helpers/completeness_analyzer" ]; then
+    mkdir -p "${RESOURCES_DIR}/helpers"
+    cp -R "helpers/completeness_analyzer" "${RESOURCES_DIR}/helpers/"
+fi
 if [ -d "doc" ]; then
     cp -R "doc" "${RESOURCES_DIR}/"
 fi
