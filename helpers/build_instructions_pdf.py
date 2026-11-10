@@ -78,19 +78,20 @@ def build_pdf(combined_md_path, version):
     titlepage_tex = f"""
 \\begin{{titlepage}}
 \\centering
-\\vspace*{{1.5cm}}
-\\includegraphics[width=0.7\\textwidth]{{{LOGO_FILE}}}\\par
-\\vspace{{1.8cm}}
+\\vspace*{{0.5cm}}
+\\includegraphics[width=0.48\\textwidth]{{{LOGO_FILE}}}\\par
+\\vspace{{1.0cm}}
 {{\\Huge\\bfseries CanReg5 Instructions \\& Handbook\\par}}
-\\vspace{{0.6cm}}
+\\vspace{{0.4cm}}
 {{\\Large\\bfseries Open Source Cancer Registry Software\\par}}
-\\vspace{{1.5cm}}
+\\vspace{{1.0cm}}
 {{\\Large\\textbf{{Version:}} {version}\\par}}
-\\vspace{{0.6cm}}
+\\vspace{{0.5cm}}
 {{\\large Morten Johannes Ervik\\par}}
 {{\\large International Agency for Research on Cancer (IARC / WHO)\\par}}
 \\vfill
 {{\\large \\today\\par}}
+\\vspace*{{0.5cm}}
 \\end{{titlepage}}
 """
     tmp_title_tex = "/tmp/canreg_titlepage.tex"
@@ -130,11 +131,11 @@ def build_html(combined_md_path, version):
 
     # Generate custom HTML header with logo and injected version
     titlepage_html = f"""
-<header id="title-block-header" style="text-align: center; margin-top: 2.5em; margin-bottom: 3.5em; padding-bottom: 2em; border-bottom: 1px solid #eaecef;">
-  <img src="images/LogoBetaNewer.png" alt="CanReg5 Logo" style="max-width: 480px; width: 80%; height: auto; margin-bottom: 1.5em;" />
-  <h1 style="margin: 0.3em 0; font-size: 2.4em;">CanReg5 Instructions &amp; Handbook</h1>
-  <p style="font-size: 1.25em; color: #555; margin: 0.2em 0 1.5em 0;">Open Source Cancer Registry Software</p>
-  <div style="font-size: 1.1em; line-height: 1.7; color: #333;">
+<header id="title-block-header" style="text-align: center; margin-top: 2em; margin-bottom: 3em; padding-bottom: 2em; border-bottom: 1px solid #eaecef;">
+  <img src="images/LogoBetaNewer.png" alt="CanReg5 Logo" style="max-width: 360px; width: 60%; height: auto; margin-bottom: 1.2em;" />
+  <h1 style="margin: 0.3em 0; font-size: 2.2em;">CanReg5 Instructions &amp; Handbook</h1>
+  <p style="font-size: 1.2em; color: #555; margin: 0.2em 0 1.2em 0;">Open Source Cancer Registry Software</p>
+  <div style="font-size: 1.05em; line-height: 1.6; color: #333;">
     <p><strong>Version:</strong> {version}</p>
     <p><strong>Author:</strong> Morten Johannes Ervik</p>
     <p><strong>Publisher:</strong> International Agency for Research on Cancer (IARC / WHO)</p>
