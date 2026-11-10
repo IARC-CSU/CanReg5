@@ -1,7 +1,7 @@
 # CanReg5 Changelog
 
 ## 5.00.46BETA
-- Added Cancer Registry Completeness Analyzer tool to Tools menu with full offline D3/Tailwind bundling
+- Added Cancer Registry Completeness Analyzer tool to Tools menu with full offline D3/Tailwind bundling and step-by-step export guidance
 - Migrate version check, release download, and instructions PDF links from legacy IACR URLs to GitHub
 - Non-blocking background update checks in Options dialog with semantic version comparison
 - Dynamic changelog viewer migrated to GitHub with automatic local fallback when offline
