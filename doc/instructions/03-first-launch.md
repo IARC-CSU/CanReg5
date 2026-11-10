@@ -127,7 +127,7 @@ definition converter menu</figcaption>
 <div class="flushleft">
 
 Do “Browse” to find your CanReg4 system definition file. (This is a file
-located in the folder \\\CR4SHARE\CANREG4\CR4-SYST\\ followed by your 3
+located in the folder `\\CR4SHARE\CANREG4\CR4-SYST\` followed by your 3
 letter registry code i.e. TRN whose name is ending in .DEF (i.e.
 CR4-TRN.DEF).)
 
@@ -198,8 +198,7 @@ Optional: Before you proceed to the next step and launch the server you
 can, if you want(!), manually edit this XML file you have created by
 opening it in a text editor or a dedicated XML editor. The file is
 located in your user folder under .CanRegServer. (On my machine, for
-example, running Windows XP it is under: C:\Documents and
-Settings\morten\\.CanRegServer\System.)
+example, running Windows XP it is under: `C:\Documents and Settings\morten\.CanRegServer\System`.)
 
 </div>
 
@@ -569,13 +568,12 @@ icon in your notification area.
 #### Launching server from command line
 
 To launch CanReg5 from command line, you’ll have to open command line on
-your computer (Windows: Win+R, “cmd”) change into the folder you have
-*installed* CanReg5 (Windows: “cd %programfiles(x86)%\CanReg5”) and type
+your computer (Windows: Win+R, `cmd`), change into the folder you have
+*installed* CanReg5 (Windows: `cd "%programfiles(x86)%\CanReg5"`) and type
 the following to launch the server:
 
-“java -jar CanReg5.jar \<registry-code\>” (where \<registry-code\>
-should be replace by the code of your registry, ie “java -jar
-CanReg5.jar TRN-E”)
+`java -jar CanReg5.jar <registry-code>` (where `<registry-code>`
+should be replaced by the code of your registry, i.e. `java -jar CanReg5.jar TRN-E`)
 
 ### Login
 

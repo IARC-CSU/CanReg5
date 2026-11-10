@@ -240,8 +240,6 @@ hs_err_pid*
 *.tmp7
 translations/
 CanReg5.zip
-doc/CanReg5-Instructions.pdf
-doc/CanReg5-instructions.pdf
 *.aux
 *.idx
 *.toc

@@ -359,23 +359,14 @@ Some scripts can also take additional arguments like:
 
 Example call:
 
-<div class="lyxcode">
-
-"C:\Program Files\R\R-2.12.2\bin\R.exe" 
-
---slave --file=
-
-"C:\Users\ervikm\Desktop\CanReg\\.\conf\tables\r\test.r"
-
---args -ft=svg -out="C:\Documents and Settings\ervikm\Desktop\test"
-
--pop="C:\Users\ervikm\Temp\pop4834689295162083243.tsv"
-
--inc="C:\Users\ervikm\Temp\inc4297000362541616146.tsv"
-
--onePage=3x4 
-
-</div>
+```bash
+"C:\Program Files\R\R-2.12.2\bin\R.exe" \
+  --slave --file="C:\Users\ervikm\Desktop\CanReg\conf\tables\r\test.r" \
+  --args -ft=svg -out="C:\Documents and Settings\ervikm\Desktop\test" \
+  -pop="C:\Users\ervikm\Temp\pop4834689295162083243.tsv" \
+  -inc="C:\Users\ervikm\Temp\inc4297000362541616146.tsv" \
+  -onePage=3x4
+```
 
 (The user never sees this, but it can be useful to keep this in mind
 when writing your own R scripts.)

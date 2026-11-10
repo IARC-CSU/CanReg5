@@ -33,8 +33,7 @@ database on the server machine. If you are on the server machine, you
 can see the files you created by clicking “Open folder containing
 Backup”. It is stored in the **CanReg server** folder under Backup and 3
 digit code of the registry and then the date of the backup. On my
-machine, for example, it is “C:\Documents and
-Settings\morten\\.CanRegServer\Backup\TRN\2009-01-14”.
+machine, for example, it is `C:\Documents and Settings\morten\.CanRegServer\Backup\TRN\2009-01-14`.
 
 </div>
 

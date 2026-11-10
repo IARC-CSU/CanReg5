@@ -156,67 +156,37 @@ newest version from here: <http://www.iacr.com.fr/CanReg5/CanReg5.zip>)
 <div class="flushleft">
 
 CanReg generates a logfile when you run it. This file is called
-canreg5client.log and is located in your home folder. (On windows it is
-most probably under C:\Documents and Settings\\ - you can access this by
-browsing to %HOMEPATH% Depending on how you have configured your
+canreg5client.log and is located in your home folder. (On Windows it is
+most probably under `C:\Documents and Settings\` - you can access this by
+browsing to `%HOMEPATH%`. Depending on how you have configured your
 computer it might show up as canreg5client.) If you can attach this to
 emails with feedback/queries it would be very useful. Please note that
 this file is overwritten each time CanReg is started, so you need to
 “take it” just after, for example, your error occurs.
 
-</div>
-
-<div class="flushleft">
-
-<div class="minipage">
-
 Example content of a log-file:
 
-<div class="lyxcode">
-
-\<?xml version="1.0" encoding="windows-1252" standalone="no"?\>
-
-\<!DOCTYPE log SYSTEM "logger.dtd"\>
-
-\<log\>
-
-\<record\> 
-
-<div class="lyxcode">
-
-\<date\>2009-06-25T16:09:27\</date\>
-
-\<millis\>1245938967921\</millis\>
-
-\<sequence\>0\</sequence\>
-
-\<logger\>canreg.client.CanRegClientApp\</logger\>
-
-\<level\>INFO\</level\>
-
-\<class\>canreg.client.CanRegClientApp\</class\>
-
-\<method\>startup\</method\>
-
-\<thread\>10\</thread\>
-
-\<message\>CanReg version: 4.99.9b668 (20090625160546)\</message\>
+```xml
+<?xml version="1.0" encoding="windows-1252" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+  <record>
+    <date>2009-06-25T16:09:27</date>
+    <millis>1245938967921</millis>
+    <sequence>0</sequence>
+    <logger>canreg.client.CanRegClientApp</logger>
+    <level>INFO</level>
+    <class>canreg.client.CanRegClientApp</class>
+    <method>startup</method>
+    <thread>10</thread>
+    <message>CanReg version: 4.99.9b668 (20090625160546)</message>
+  </record>
+  ...
+</log>
+```
 
 </div>
 
-\</record\>
-
-...
-
-\</log\>
-
-</div>
-
-</div>
-
-</div>
-
-# Installing and running CanReg5
 
 ---
 

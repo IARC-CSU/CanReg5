@@ -157,20 +157,15 @@
         </exec>
     </target>
 
-    <target name="-build-instructions-pdf">
-        <available file="doc/CanReg5-Instructions/CanReg5-Instructions.pdf" property="hasInstructionsPdf"/>
-        <antcall target="-compile-tex-instructions"/>
-        <copy file="doc/CanReg5-Instructions/CanReg5-Instructions.pdf" tofile="doc/CanReg5-Instructions.pdf" failonerror="false"/>
-        <copy file="doc/CanReg5-Instructions/CanReg5-Instructions.pdf" tofile="doc/CanReg5-instructions.pdf" failonerror="false"/>
+    <target name="build-instructions-pdf" description="Compile Markdown instructions into doc/CanReg5-Instructions.pdf and HTML">
+        <exec executable="python3" failonerror="false">
+            <arg value="helpers/build_instructions_pdf.py"/>
+        </exec>
     </target>
 
-    <target name="-compile-tex-instructions" unless="hasInstructionsPdf">
-        <echo>Attempting to compile CanReg5-Instructions.pdf from LaTeX...</echo>
-        <exec executable="pdflatex" dir="doc/CanReg5-Instructions" failonerror="false">
-            <env key="TEXMFVAR" value="/tmp/texmf-var"/>
-            <arg value="-interaction=nonstopmode"/>
-            <arg value="CanReg5-Instructions.tex"/>
-        </exec>
+    <target name="-build-instructions-pdf">
+        <antcall target="build-instructions-pdf"/>
+        <copy file="doc/CanReg5-Instructions.pdf" tofile="doc/CanReg5-instructions.pdf" failonerror="false"/>
     </target>
 
     <target name="-package-zips">
@@ -231,8 +226,8 @@
         <!-- 5. Copy metadata files to web directory -->
         <copy todir="${dist.dir}/web">
             <fileset dir="." includes="changelog.txt,changelog.html,changelog.rtf,version.txt"/>
-            <fileset file="doc/CanReg5-Instructions/CanReg5-Instructions.pdf" erroronmissingdir="false"/>
             <fileset file="doc/CanReg5-Instructions.pdf" erroronmissingdir="false"/>
+            <fileset file="doc/CanReg5-Instructions.html" erroronmissingdir="false"/>
         </copy>
     </target>
 

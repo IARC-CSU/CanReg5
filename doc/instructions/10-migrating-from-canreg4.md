@@ -24,7 +24,7 @@ system definition of CanReg4.)
     1.  <img src="images/ToolsConvertCR4Menu.png" style="width:90.0%" alt="image" />
 
 2.  Do “Browse” to find your CanReg4 system definition file. (This is a
-    file located in the folder \CR4SHARE\CANREG4\CR4-SYST\\ followed by
+    file located in the folder `\\CR4SHARE\CANREG4\CR4-SYST\` followed by
     your 3 letter registry code i.e. TRN whose name is ending in .DEF
     (i.e. CR4-TRN.DEF).)
 
@@ -66,7 +66,7 @@ system definition of CanReg4.)
     or manually by opening it in a text editor or a dedicated XML
     editor. The file is located in your user folder under .CanRegServer.
     (On my machine, for example, running Windows XP it is under:
-    C:\Documents and Settings\morten\\.CanRegServer\System.)
+    `C:\Documents and Settings\morten\.CanRegServer\System`.)
 
 10. Click “Login”.
 

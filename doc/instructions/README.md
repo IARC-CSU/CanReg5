@@ -2,10 +2,10 @@
 
 Welcome to the official documentation and user handbook for **CanReg5** — the open-source tool for cancer registries to input, store, check, and analyze cancer data.
 
-> **Note:** This documentation is available in multiple formats:
+> **Note:** This Markdown documentation is the authoritative source of truth for the CanReg5 Handbook:
 > - **Online Markdown:** Browse chapters directly below on GitHub.
-> - **Offline PDF:** A complete compiled PDF version with figures and index is available at [`doc/CanReg5-Instructions.pdf`](../CanReg5-Instructions.pdf) and bundled in the release zip files.
-> - **Source LyX/LaTeX:** Available in [`doc/CanReg5-Instructions/`](../CanReg5-Instructions/).
+> - **Offline PDF:** A complete compiled PDF version with figures and table of contents is available at [`doc/CanReg5-Instructions.pdf`](../CanReg5-Instructions.pdf) (bundled in release distributions). Can be regenerated anytime with `ant build-instructions-pdf`.
+> - **Offline Single-Page HTML:** Available at [`doc/CanReg5-Instructions.html`](../CanReg5-Instructions.html).
 
 ## Table of Contents
 

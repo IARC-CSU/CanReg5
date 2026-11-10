@@ -128,8 +128,7 @@ A:
 
 To clear the previous data from CanReg5 you need to delete the database
 files. These can be found in your user folder under
-.CanRegServer\Database (On my machine it is under C:\Documents and
-Settings\ervikm\\.CanRegServer\Database ). Please note that this deletes
+`.CanRegServer\Database` (On my machine it is under `C:\Documents and Settings\ervikm\.CanRegServer\Database`). Please note that this deletes
 the dictionaries and population data as well, so you might want to
 export those prior to deleting this. Then you can relaunch CanReg and
 the server and the empty database will be rebuilt. It is a good idea to
