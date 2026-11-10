@@ -73,24 +73,30 @@ jobs:
 
       - name: Compile CanReg5 Instructions PDF
         run: |
-          sudo apt-get update && sudo apt-get install -y texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended
-          cd doc/CanReg5-Instructions
-          pdflatex -interaction=nonstopmode CanReg5-Instructions.tex || true
-          pdflatex -interaction=nonstopmode CanReg5-Instructions.tex || true
-          cd ../..
+          if command -v pdflatex &> /dev/null; then
+            cd doc/CanReg5-Instructions
+            pdflatex -interaction=nonstopmode CanReg5-Instructions.tex || true
+            pdflatex -interaction=nonstopmode CanReg5-Instructions.tex || true
+            cd ../..
+          fi
           if [ -f "doc/CanReg5-Instructions/CanReg5-Instructions.pdf" ]; then
             cp doc/CanReg5-Instructions/CanReg5-Instructions.pdf doc/CanReg5-Instructions.pdf
             cp doc/CanReg5-Instructions/CanReg5-Instructions.pdf doc/CanReg5-instructions.pdf
-            echo "CanReg5 Instructions PDF compiled successfully."
+            echo "CanReg5 Instructions PDF ready."
           fi
+
+      - name: Set up Pandoc
+        uses: pandoc/actions/setup@v1
+        continue-on-error: true
 
       - name: Generate Changelog HTML and RTF
         run: |
-          if ! command -v pandoc &> /dev/null; then
-            sudo apt-get update && sudo apt-get install -y pandoc
+          if command -v pandoc &> /dev/null; then
+            pandoc changelog.txt -f markdown -t rtf -s -o changelog.rtf
+            pandoc changelog.txt -f markdown -t html --metadata title="CanReg5 Changelog" -H helpers/pandoc/pandoc.html -s -o changelog.html
+          else
+            echo "Pandoc not available; using repository versions of changelog.html and changelog.rtf"
           fi
-          pandoc changelog.txt -f markdown -t rtf -s -o changelog.rtf
-          pandoc changelog.txt -f markdown -t html --metadata title="CanReg5 Changelog" -H helpers/pandoc/pandoc.html -s -o changelog.html
 
       - name: Upload Changelog Formats Artifact
         uses: actions/upload-artifact@v4
