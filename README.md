@@ -16,8 +16,9 @@ Is available in several languages. (English, French, Spanish, Portuguese, Russia
 
 ## Documentation
 
-- **Online User Instructions & Handbook:** Browse the [CanReg5 User Instructions](doc/instructions/README.md) directly on GitHub.
-- **Offline PDF Handbook:** Download or view [`doc/CanReg5-Instructions.pdf`](doc/CanReg5-Instructions.pdf) (bundled in all release packages).
+- **User Instructions & Handbook:** Browse the [CanReg5 User Instructions](doc/instructions/README.md) directly on GitHub (or download [`doc/CanReg5-Instructions.pdf`](doc/CanReg5-Instructions.pdf)).
+- **Analysis & R Specification:** Read the [CanReg Analysis & R Whitepaper](doc/CanReg5-Analysis/README.md).
+- **Future Improvements Roadmap:** Explore the [CanReg5 Future Roadmap](doc/CanReg5-Future/README.md).
 - **Changelog:** View the complete version history in [`changelog.txt`](changelog.txt) or formatted [HTML](changelog.html).
 
 

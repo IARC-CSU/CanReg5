@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """
 build_instructions_pdf.py
-Compiles the Markdown instructions in doc/instructions/ into doc/CanReg5-Instructions.pdf and doc/CanReg5-Instructions.html.
-Injects CanReg version and Logo on the first page of both HTML and PDF.
+Compiles CanReg5 Markdown documentation into PDF and HTML:
+1. doc/instructions/*.md -> doc/CanReg5-Instructions.pdf & doc/CanReg5-Instructions.html
+2. doc/CanReg5-Analysis/README.md -> doc/CanReg5-Analysis/CanReg5-Analysis.pdf & HTML
+3. doc/CanReg5-Future/README.md -> doc/CanReg5-Future/CanReg5-Future.pdf & HTML
 """
 
 import os
