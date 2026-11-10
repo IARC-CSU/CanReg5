@@ -47,7 +47,6 @@ Remaining ideas and fixes for CanReg 5.1.
   - Others:
     - Table of rates by year with the same groups as the current incidence table? (DF)
 - Group by other meta variables for frequencies by year (age group, 2 digit ICD-10 etc.)
-- Export report automatically opened in the System? [DONE]
 - An intermediate question asking for sub-population when automatically picking population data sets?
 
 ## Quality control
@@ -78,18 +77,6 @@ Remaining ideas and fixes for CanReg 5.1.
   - Detect duplicate variable names.
 - Possibility to change the path of the database / other system variables.
 
-## Pending bugs
-
-- Merge issues.
-
-## (Computer) Code related improvements
-
-- More unit tests.
-
-## Coding related improvements
-
-- Inconsistencies IARCcrgTools vs CanReg in ICD-O-3 to 10 conversions. (Korea)
-
 ---
 
 # Proposals for CanReg 5.2
@@ -112,7 +99,6 @@ Ideas and fixes for CanReg 5.2.
 
 ## Data Entry related
 
-- Let user enter dates in the format they wish? [DONE]
 - Support for some other date formats?
   - Buddhist
   - Other? Chinese?
