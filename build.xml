@@ -121,6 +121,14 @@
         <include name="changelog.rtf"/>
     </patternset>
 
+    <target name="generate-changelog-formats" depends="-generate-changelog-formats" description="Generate changelog.rtf and changelog.html from changelog.txt"/>
+
+    <target name="convert-docs-to-md" description="Convert LyX/LaTeX instructions into doc/instructions/ markdown">
+        <exec executable="python3" failonerror="false">
+            <arg value="helpers/convert_docs_to_md.py"/>
+        </exec>
+    </target>
+
     <target name="-generate-changelog-formats">
         <echo>Attempting to generate changelog.rtf and changelog.html from changelog.txt...</echo>
         <exec executable="pandoc" failonerror="false" failifexecutionfails="false">

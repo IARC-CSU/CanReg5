@@ -14,6 +14,12 @@ It was designed with an emphasis on user friendliness, it has a modern user inte
 
 Is available in several languages. (English, French, Spanish, Portuguese, Russian, Turkish, Georgian, and Chinese.)
 
+## Documentation
+
+- **Online User Instructions & Handbook:** Browse the [CanReg5 User Instructions](doc/instructions/README.md) directly on GitHub.
+- **Offline PDF Handbook:** Download or view [`doc/CanReg5-Instructions.pdf`](doc/CanReg5-Instructions.pdf) (bundled in all release packages).
+- **Changelog:** View the complete version history in [`changelog.txt`](changelog.txt) or formatted [HTML](changelog.html).
+
 
 ## Development and Build Instructions
 
