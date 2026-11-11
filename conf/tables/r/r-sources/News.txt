@@ -1,3 +1,8 @@
+## Version 1.15
+
+11/11/2026
+Fix crash in Childhood Cancer (ICCC) table generation when data contains only a single sex or missing childhood age groups
+
 ## Version 1.14
 
 12/06/2024
