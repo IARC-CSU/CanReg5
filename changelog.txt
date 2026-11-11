@@ -23,6 +23,7 @@
 - Fix crash in Childhood Cancer (ICCC) table generation when data contains only a single sex or missing childhood age groups
 - Fix syntax parse error in PowerPoint slide deck generator and R table builder scripts
 - Update Table Builder to version 1.15
+- Fix patient deduplication blocking, date/number similarity scoring, and duplicate symmetric result pairs
 - Fix chronological date handling in age calculation
 
 ## 5.00.45
