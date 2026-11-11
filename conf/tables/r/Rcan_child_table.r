@@ -7,7 +7,7 @@
     ## to get canreg argument list
   Args <- commandArgs(TRUE)
   
-  ls_args <- list(filename = NULL, out = NULL, inc = NULL, pop = NULL, ft = \"\")
+  ls_args <- list(filename = NULL, out = NULL, inc = NULL, pop = NULL, ft = "")
   tryCatch({
     
     ## source function to check if update needed
