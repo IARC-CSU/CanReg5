@@ -20,6 +20,7 @@
 - Cleaned and consolidated dependency libraries in lib/
 - Cross-platform Table Builder progress reporting for R scripts (macOS, Linux, and Windows)
 - Non-blocking background task execution for Table Builder to prevent GUI freezing
+- Fix crash in Childhood Cancer (ICCC) table generation when data contains only a single sex or missing childhood age groups
 - Fix chronological date handling in age calculation
 
 ## 5.00.45
