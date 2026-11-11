@@ -1,4 +1,4 @@
-## version : 1.13
+## version : 1.15
 
 canreg_progress <- function(pb, value, title = NULL, label = NULL, detail = NULL) {
   pct <- as.integer(round(value * (if (value <= 1) 100 else 1)))
