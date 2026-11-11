@@ -2,6 +2,7 @@
 
 ## 5.00.44m
 - Updated the CI5 comparison data to the latest volume (XII)
+- Fix crash in Childhood Cancer (ICCC) table generation when data contains only a single sex or missing childhood age groups
 
 ## 5.00.44k 
 - Updated the Spanish translations of the standard reports.
