@@ -21,6 +21,8 @@
 - Cross-platform Table Builder progress reporting for R scripts (macOS, Linux, and Windows)
 - Non-blocking background task execution for Table Builder to prevent GUI freezing
 - Fix crash in Childhood Cancer (ICCC) table generation when data contains only a single sex or missing childhood age groups
+- Fix syntax parse error in PowerPoint slide deck generator and R table builder scripts
+- Update Table Builder to version 1.15
 - Fix chronological date handling in age calculation
 
 ## 5.00.45
