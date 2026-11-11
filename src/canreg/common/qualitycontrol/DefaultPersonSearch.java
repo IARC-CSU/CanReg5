@@ -156,84 +156,13 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
     }
 
     private float comparePatients(Patient patient1, Patient patient2) {
-        int similarity = 0;
-        float TotalScore = 0;
-        String patient1data;
-        String patient2data;
-        DatabaseVariablesListElement dbvle;
-        CompareAlgorithms compareAlgorithm;
-        boolean locked;
-        int range;
-
+        Object[] p1Data = new Object[variableNames.length];
+        Object[] p2Data = new Object[variableNames.length];
         for (int link = 0; link < variableNames.length; ++link) {
-            dbvle = variablesInDBMap.get(variableNames[link]);
-            String unknownCode = null;
-            if (dbvle.getUnknownCode() != null) {
-                unknownCode = dbvle.getUnknownCode().toString();
-            }
-
-            Object patient1dataObject = patient1.getVariable(variableNames[link]);
-            Object patient2dataObject = patient2.getVariable(variableNames[link]);
-
-            if (patient1dataObject != null && patient2dataObject != null) {
-
-                patient1data = patient1dataObject.toString();
-                patient2data = patient2dataObject.toString();
-
-                compareAlgorithm = searchVariables[link].getCompareAlgorithm();
-                locked = lockeds[link];
-                range = searchVariables[link].getYearRange();
-
-                if (patient1data.trim().length() == 0 || patient2data.trim().length() == 0) {
-                    similarity = missing;
-                } else if (patient1data.equals(unknownCode)) {
-                    similarity = missing;
-                } else if (patient2data.equals(unknownCode)) {
-                    similarity = missing;
-                } else if (locked) {
-                    if (compareAlgorithm.equals(CompareAlgorithms.date)){
-                        similarity = compareDateBlocked(patient1data.substring(0, 4), patient2data.substring(0, 4), range);
-                    }else if (compareAlgorithm.equals(CompareAlgorithms.soundex)){
-                        similarity = compareSoundex(patient1data, patient2data);
-                    }else {
-                        similarity = compareExact(patient1data, patient2data);
-                    }
-                    if (similarity <= 0){
-                        return 0;
-                    }
-                } else if (compareAlgorithm.equals(CompareAlgorithms.code)) {
-                    similarity = compareCodes(patient1data, patient2data);
-                } else if (compareAlgorithm.equals(CompareAlgorithms.alpha)) {
-                    similarity = compareText(patient1data, patient2data);
-                } else if (compareAlgorithm.equals(CompareAlgorithms.date)) {
-                    similarity = compareDate(patient1data, patient2data, searchVariables[link].getYearRange());
-                } else if (compareAlgorithm.equals(CompareAlgorithms.number)) {
-                    similarity = compareNumber(patient1data, patient2data);
-                } else if (compareAlgorithm.equals(CompareAlgorithms.soundex)) {
-                    similarity = compareSoundex(patient1data, patient2data);
-                } else {
-                    similarity = compareText(patient1data, patient2data);
-                }
-
-                float score;
-                if (similarity == missing) {
-                    score = 0;
-                } else {
-                    float dis = discPower[link];
-                    float rel = reliability[link];
-                    float pres = presence[link];
-                    float weigth = variableWeights[link];
-                    score = scoreFunction(dis, rel, pres, similarity, weigth);
-                }
-                // String s = LinkField1[link]+", "+LinkField2[link]+"  Sim:"+Integer.toString(Similarity)+"  Score:"+undup.FloatToStr(Score, 1);
-                // DEPeditsInst.Warning (s);
-                // similDisp[link] = Similarity;
-                // scoreDisp[link] = score;
-                TotalScore += score;
-            }
+            p1Data[link] = patient1.getVariable(variableNames[link]);
+            p2Data[link] = patient2.getVariable(variableNames[link]);
         }
-
-        return TotalScore;
+        return comparePatientsDataOnly(p1Data, p2Data);
     }
 
     /**
@@ -272,45 +201,49 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
         for (int link = 0; link < variableNames.length; ++link) {
             dbvle = variablesInDBMap.get(variableNames[link]);
             String unknownCode = null;
-            if (dbvle.getUnknownCode() != null) {
+            if (dbvle != null && dbvle.getUnknownCode() != null) {
                 unknownCode = dbvle.getUnknownCode().toString();
             }
 
             Object patient1dataObject = patient1[link];
             Object patient2dataObject = patient2[link];
 
-            if (patient1dataObject != null && patient2dataObject != null) {
+            compareAlgorithm = searchVariables[link].getCompareAlgorithm();
+            locked = lockeds[link];
+            range = searchVariables[link].getYearRange();
 
-                patient1data = patient1dataObject.toString();
-                patient2data = patient2dataObject.toString();
+            patient1data = (patient1dataObject != null) ? patient1dataObject.toString().trim() : "";
+            patient2data = (patient2dataObject != null) ? patient2dataObject.toString().trim() : "";
 
-                compareAlgorithm = searchVariables[link].getCompareAlgorithm();
-                locked = lockeds[link];
-                range = searchVariables[link].getYearRange();
+            boolean isMissing = (patient1data.length() == 0 || patient2data.length() == 0
+                    || (unknownCode != null && (patient1data.equals(unknownCode) || patient2data.equals(unknownCode))));
 
-                if (patient1data.trim().length() == 0 || patient2data.trim().length() == 0) {
-                    similarity = missing;
-                } else if (patient1data.equals(unknownCode)) {
-                    similarity = missing;
-                } else if (patient2data.equals(unknownCode)) {
-                    similarity = missing;
-                } else if (locked) {
-                    if (compareAlgorithm.equals(CompareAlgorithms.date)){
-                        similarity = compareDateBlocked(patient1data.substring(0, 4), patient2data.substring(0, 4), range);
-                    }else if (compareAlgorithm.equals(CompareAlgorithms.soundex)){
-                        similarity = compareSoundex(patient1data, patient2data);
-                    }else {
-                        similarity = compareExact(patient1data, patient2data);
+            if (isMissing) {
+                if (locked) {
+                    return 0;
+                }
+                similarity = missing;
+            } else {
+                if (locked) {
+                    int blockSimilarity;
+                    if (compareAlgorithm.equals(CompareAlgorithms.date)) {
+                        blockSimilarity = compareDateBlocked(patient1data, patient2data, range);
+                    } else if (compareAlgorithm.equals(CompareAlgorithms.soundex)) {
+                        blockSimilarity = compareSoundex(patient1data, patient2data);
+                    } else {
+                        blockSimilarity = compareExact(patient1data, patient2data);
                     }
-                    if (similarity <= 0){
+                    if (blockSimilarity <= 0) {
                         return 0;
                     }
-                } else if (compareAlgorithm.equals(CompareAlgorithms.code)) {
+                }
+
+                if (compareAlgorithm.equals(CompareAlgorithms.code)) {
                     similarity = compareCodes(patient1data, patient2data);
                 } else if (compareAlgorithm.equals(CompareAlgorithms.alpha)) {
                     similarity = compareText(patient1data, patient2data);
                 } else if (compareAlgorithm.equals(CompareAlgorithms.date)) {
-                    similarity = compareDate(patient1data, patient2data, searchVariables[link].getYearRange());
+                    similarity = compareDate(patient1data, patient2data, range);
                 } else if (compareAlgorithm.equals(CompareAlgorithms.number)) {
                     similarity = compareNumber(patient1data, patient2data);
                 } else if (compareAlgorithm.equals(CompareAlgorithms.soundex)) {
@@ -320,19 +253,19 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
                 } else {
                     similarity = compareText(patient1data, patient2data);
                 }
-
-                float score;
-                if (similarity == missing) {
-                    score = 0;
-                } else {
-                    float dis = discPower[link];
-                    float rel = reliability[link];
-                    float pres = presence[link];
-                    float weigth = variableWeights[link];
-                    score = scoreFunction(dis, rel, pres, similarity, weigth);
-                }
-                totalScore += score;
             }
+
+            float score;
+            if (similarity == missing) {
+                score = 0;
+            } else {
+                float dis = discPower[link];
+                float rel = reliability[link];
+                float pres = presence[link];
+                float weigth = variableWeights[link];
+                score = scoreFunction(dis, rel, pres, similarity, weigth);
+            }
+            totalScore += score;
         }
         return totalScore;
     }
@@ -483,7 +416,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
                 LOGGER.log(Level.SEVERE, null, e);
                 return 0;
             }
-            if (YrInt1 <= YrInt2 + yearRange || YrInt1 >= YrInt2 - yearRange) {
+            if (yearRange > 0 && YrInt1 <= YrInt2 + yearRange && YrInt1 >= YrInt2 - yearRange) {
                 Score += 25;  // Years difference inside the year range
             } else // years not in years range allowed difference
             {
@@ -570,7 +503,7 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
         int N2;
         try {
             N1 = Integer.parseInt(s1);
-            N2 = Integer.parseInt(s1);
+            N2 = Integer.parseInt(s2);
         } catch (NumberFormatException nfe) {
             return 0;
         }
@@ -626,10 +559,17 @@ public class DefaultPersonSearch implements PersonSearcher, Serializable {
         return (patient1data.equals(patient2data)) ? 100 : 0;
     }
 
-    private int compareDateBlocked(String patient1Data, String patient2Data, int range){
-        int year1 = Integer.parseInt(patient1Data);
-        int year2 = Integer.parseInt(patient2Data);
-        return (year1 - range <= year2 && year2 <= year1 + range) ? 100: 0;
+    private int compareDateBlocked(String patient1Data, String patient2Data, int range) {
+        if (patient1Data == null || patient2Data == null || patient1Data.length() < 4 || patient2Data.length() < 4) {
+            return 0;
+        }
+        try {
+            int year1 = Integer.parseInt(patient1Data.substring(0, 4));
+            int year2 = Integer.parseInt(patient2Data.substring(0, 4));
+            return (year1 - range <= year2 && year2 <= year1 + range) ? 100 : 0;
+        } catch (NumberFormatException ex) {
+            return 0;
+        }
     }
 
     @Override
