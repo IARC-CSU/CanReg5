@@ -895,6 +895,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             gpsh.setPatientRecordIDsWithinRange(retrieveRows(resultSetID, 0, dataDescription.getRowCount()));
             releaseResultSet(resultSetID);
 
+            patientsData = null;
             activePersonSearchers.put(resultSetID, gpsh);
             // releaseResultSet(resultSetID);
             isOK = true;
@@ -938,12 +939,13 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             } else {
                 // Object[][] rowData = retrieveRows(idString, startRow, endRow);
                 Object[][] rowData = globalPersonSearchHandler.getPatientRecordIDsWithinRange();
+                Object[][] allPatientIDs = globalPersonSearchHandler.getAllPatientRecordIDs();
                 if (patientsData == null) {
                     //read all users one time in database and keep only the data corresponding to the variables selected
                     // on the duplicate Person Search Panel
-                    patientsData = new HashMap<>(rowData.length);
+                    patientsData = new HashMap<>(allPatientIDs.length);
                     try {
-                        for (Object[] r : rowData) {
+                        for (Object[] r : allPatientIDs) {
                             int patientID = (Integer) r[0];
                             // all selected data from the database are on the variable patientsData
                             try {
@@ -959,14 +961,18 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
                         LOGGER.log(Level.SEVERE,null,ex);
                     }
                 }
+                Set<Integer> rangeIDs = new HashSet<>(rowData.length);
+                for (Object[] r : rowData) {
+                    rangeIDs.add((Integer) r[0]);
+                }
                 //  read all the stored data in memory to compute the patientIDScorePatientIDMap
                 for (int row = startRow; row < endRow && row < rowData.length; row++) {
                     int patientIDA = (Integer) rowData[row][0];
                     Object[] patientAData = patientsData.get(patientIDA);
-                    if (patientAData != null) {
-                        Map<String, Float> patientIDScoreMap = performPersonSearchDataOnly(patientIDA, patientAData, searcher, patientsData, globalPersonSearchHandler.getAllPatientRecordIDs());
+                    if (patientAData != null && patientAData.length > 0) {
+                        Map<String, Float> patientIDScoreMap = performPersonSearchDataOnly(patientIDA, patientAData, searcher, patientsData, allPatientIDs, rangeIDs);
                         if (patientIDScoreMap.size() > 0) {
-                            patientIDScorePatientIDMap.put(patientAData[5].toString(), patientIDScoreMap);
+                            patientIDScorePatientIDMap.put(patientAData[patientAData.length - 1].toString(), patientIDScoreMap);
                         }
                     }
                 }
@@ -979,6 +985,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
 
     private synchronized void releasePersonSearcher(String idString) {
         try {
+            patientsData = null;
             releaseResultSet(idString);
             activePersonSearchers.remove(idString);
         } catch (SQLException | RemoteException | SecurityException ex) {
@@ -1029,19 +1036,34 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             // value needs to be "blocked" and the compare algorithm mustn't be soundex
             if (psv[i].isBlock() && !psv[i].getCompareAlgorithm().equals(PersonSearcher.CompareAlgorithms.soundex)) {
                 attributeName = psv[i].getName();
-                String variableValue = patient.getVariable(attributeName).toString();
+                Object varObj = patient.getVariable(attributeName);
+                String variableValue = (varObj != null) ? varObj.toString().trim() : "";
                 // if selected algorithm is date, comparison is done on the year
                 if (psv[i].getCompareAlgorithm().equals(PersonSearcher.CompareAlgorithms.date)) {
-                    variableValue = variableValue.substring(0, 4);
-                    int yearRange = psv[i].getYearRange() + 1;
-                    int startRange = Integer.parseInt(variableValue) - yearRange;
-                    int endRange = Integer.parseInt(variableValue) + yearRange;
-                    filterToApply.append(" AND ").append(attributeName).append(" > '").append(startRange).append("1231' AND ").append(attributeName).append(" < '").append(endRange).append("0101'");
+                    if (variableValue.length() >= 4) {
+                        try {
+                            variableValue = variableValue.substring(0, 4);
+                            int yearRange = psv[i].getYearRange() + 1;
+                            int startRange = Integer.parseInt(variableValue) - yearRange;
+                            int endRange = Integer.parseInt(variableValue) + yearRange;
+                            filterToApply.append(" AND ").append(attributeName).append(" > '").append(startRange).append("1231' AND ").append(attributeName).append(" < '").append(endRange).append("0101'");
+                        } catch (NumberFormatException ex) {
+                            return new TreeMap<>();
+                        }
+                    } else {
+                        return new TreeMap<>();
+                    }
                 // if selected algorithm is number, remove the quotes on the value
                 } else if (psv[i].getCompareAlgorithm().equals(PersonSearcher.CompareAlgorithms.number)) {
+                    if (variableValue.length() == 0) {
+                        return new TreeMap<>();
+                    }
                     filterToApply.append(" AND ").append(attributeName).append("=").append(variableValue);
                 } else {
-                    filterToApply.append(" AND ").append(attributeName).append("='").append(variableValue).append("'");
+                    if (variableValue.length() == 0) {
+                        return new TreeMap<>();
+                    }
+                    filterToApply.append(" AND ").append(attributeName).append("='").append(variableValue.replace("'", "''")).append("'");
                 }
             }
         }
@@ -1050,7 +1072,9 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         try {
             dataDescription = currentDAO.getDistributedTableDescriptionAndInitiateDatabaseQuery(filter, Globals.PATIENT_TABLE_NAME, currentDAO.generateResultSetID());
             resultSetID = dataDescription.getResultSetID();
-            Object[][] rowData = retrieveRows(resultSetID, 0, dataDescription.getRowCount() - 1);
+            Object[][] rowData = (dataDescription.getRowCount() > 0)
+                    ? retrieveRows(resultSetID, 0, dataDescription.getRowCount())
+                    : new Object[0][0];
             patientIDScoreMap = performPersonSearch(patient, searcher, rowData);
             releaseResultSet(resultSetID);
             // Set the resultSetID to null after release of the resultSet to avoid another release in the finally
@@ -1071,22 +1095,23 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
      * @param searcher all the information about the duplicate search parameters
      * @param patientsData selected variables of each patient of the database
      * @param rowData map that contains all the temporary patient'Ids
+     * @param rangeIDs set of patient IDs within the active search range
      */
     private Map<String, Float> performPersonSearchDataOnly(int patientIDA, Object[] patient, PersonSearcher searcher,
-        Map<Integer, Object[]> patientsData, Object[][] rowData) {
+        Map<Integer, Object[]> patientsData, Object[][] rowData, Set<Integer> rangeIDs) {
         Map<String, Float> patientIDScoreMap = new TreeMap<>();
         Object[] patientB;
         float threshold = searcher.getThreshold();
         for (Object[] r : rowData) {
             int patientIDB = (Integer) r[0];
-            if (patientIDB != patientIDA) {
+            if (patientIDB > patientIDA || (rangeIDs != null && !rangeIDs.contains(patientIDB))) {
                 patientB = patientsData.get(patientIDB);
 
-                if (patientB != null) {
+                if (patientB != null && patientB.length > 0) {
                     //compute the score between the two patients
                     float score = ((DefaultPersonSearch) searcher).compareDataOnly(patient, patientB);
                     if (score > threshold) {
-                        patientIDScoreMap.put(patientB[5].toString(), score);
+                        patientIDScoreMap.put(patientB[patientB.length - 1].toString(), score);
                     }
                 }
             }

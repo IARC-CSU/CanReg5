@@ -633,15 +633,19 @@ public class PersonSearchFrame extends javax.swing.JInternalFrame implements Act
                 ComparePatientsInternalFrame cpif = new ComparePatientsInternalFrame(desktopPane);
                 try {
 //                  patient = CanRegClientApp.getApplication().getPatientRecord("" + model.getValueAt(rowNumber, columnNumber), false);
-                    String patient1ID = (String) target.getValueAt(rowNumber, 0);
+                    String patient1ID = (String) target.getValueAt(rowNumber, columnNumber);
                     Patient patient1 = CanRegClientApp.getApplication().getPatientsByPatientID(patient1ID, false, null)[0];
                     cpif.addMainRecordSet(patient1, null);
-                    // find all results with same as ID1
+                    // find all results matching patient1ID in either column
                     for (int row = 0; row < resultTableModel.getRowCount(); row++) {
-                        if (patient1ID.equals(target.getValueAt(row, 0))) {
-                            String patient2ID = (String) target.getValueAt(row, 1);
+                        if (patient1ID.equals(resultTableModel.getValueAt(row, 0))) {
+                            String patient2ID = (String) resultTableModel.getValueAt(row, 1);
                             Patient patient2 = CanRegClientApp.getApplication().getPatientsByPatientID(patient2ID, false, null)[0];
-                            cpif.addRecordSet(patient2, null, (Float) target.getValueAt(row, 2));
+                            cpif.addRecordSet(patient2, null, (Float) resultTableModel.getValueAt(row, 2));
+                        } else if (patient1ID.equals(resultTableModel.getValueAt(row, 1))) {
+                            String patient2ID = (String) resultTableModel.getValueAt(row, 0);
+                            Patient patient2 = CanRegClientApp.getApplication().getPatientsByPatientID(patient2ID, false, null)[0];
+                            cpif.addRecordSet(patient2, null, (Float) resultTableModel.getValueAt(row, 2));
                         }
                     }
                     CanRegClientView.showAndPositionInternalFrame(desktopPane, cpif);
