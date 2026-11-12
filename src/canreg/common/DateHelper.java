@@ -73,27 +73,44 @@ public class DateHelper {
 
         GregorianCalendarCanReg calendar = new GregorianCalendarCanReg();
 
-        calendar.clear();
-        calendar.setLenient(false);
-        calendar.set(year, month - 1, day);
-
-        boolean dateReadProperly = false;
-
-        if (year == 9999) {
-            calendar.clear(Calendar.YEAR);
-            calendar.setUnknownYearValue(yearString);
+        if (year == 9999 || year == 0) {
             unknownYear = true;
-        } 
+        }
         if (month == 99 || month == 0) {
-            calendar.clear(Calendar.MONTH);
-            calendar.setUnknownMonthValue(monthString);
             unknownMonth = true;
         }
-        if (day == 99 || day == 00 ) {
+        if (day == 99 || day == 0) {
+            unknownDay = true;
+        }
+
+        if (!unknownMonth && (month < 1 || month > 12)) {
+            throw new IllegalArgumentException("Invalid month: " + monthString);
+        }
+        if (!unknownDay && (day < 1 || day > 31)) {
+            throw new IllegalArgumentException("Invalid day: " + dayString);
+        }
+
+        int safeYear = unknownYear ? 2000 : year;
+        int safeMonth = unknownMonth ? Calendar.JULY : (month - 1);
+        int safeDay = unknownDay ? 15 : day;
+
+        calendar.clear();
+        calendar.setLenient(false);
+        calendar.set(safeYear, safeMonth, safeDay);
+        // Force GregorianCalendar to validate the known year/month/day combination immediately
+        calendar.getTimeInMillis();
+
+        if (unknownYear) {
+            calendar.clear(Calendar.YEAR);
+            calendar.setUnknownYearValue(yearString);
+        }
+        if (unknownMonth) {
+            calendar.clear(Calendar.MONTH);
+            calendar.setUnknownMonthValue(monthString);
+        }
+        if (unknownDay) {
             calendar.clear(Calendar.DAY_OF_MONTH);
             calendar.setUnknownDayValue(dayString);
-            // if this is what triggers the error set it to unknown
-            unknownDay = true;
         }
         
 //        This approach only detects the first unknown, so not enough...        
@@ -213,6 +230,8 @@ public class DateHelper {
     }
 
     public static long daysBetween(GregorianCalendarCanReg startDate, GregorianCalendarCanReg endDate) {
+        startDate = correctUnknown(startDate);
+        endDate = correctUnknown(endDate);
         int sign = 1;
         if (startDate.after(endDate)){
             GregorianCalendarCanReg tempDate = startDate;
@@ -253,19 +272,19 @@ public class DateHelper {
     public static GregorianCalendarCanReg correctUnknown(GregorianCalendarCanReg date) {
         GregorianCalendarCanReg newDate = date.clone();
         // for calculations "correct unknown"
-        if (date.isUnknownMonth()) {
+        if (newDate.isUnknownMonth() || !newDate.isSet(Calendar.MONTH)) {
             // Set month to July
-            date.set(Calendar.MONTH, 7 - 1);
-            date.setUnkownMonth(false);
+            newDate.set(Calendar.MONTH, 7 - 1);
+            newDate.setUnkownMonth(false);
             // And day to first
-            date.set(Calendar.DAY_OF_MONTH, 1);
-            date.setUnknownDay(false);
-        } else if (date.isUnknownDay()) {
+            newDate.set(Calendar.DAY_OF_MONTH, 1);
+            newDate.setUnknownDay(false);
+        } else if (newDate.isUnknownDay() || !newDate.isSet(Calendar.DAY_OF_MONTH)) {
             // Set day to mid-month
-            date.set(Calendar.DAY_OF_MONTH, 15);
-            date.setUnknownDay(false);
+            newDate.set(Calendar.DAY_OF_MONTH, 15);
+            newDate.setUnknownDay(false);
         }
-        return date;
+        return newDate;
     }
 
     public static Calendar parseTimestamp(String timestamp, String dateFormat, Locale locale) throws ParseException {
