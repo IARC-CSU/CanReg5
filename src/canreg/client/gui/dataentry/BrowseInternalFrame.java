@@ -149,12 +149,32 @@ public class BrowseInternalFrame extends javax.swing.JInternalFrame implements A
         initOtherComponents();
         initValues();
         
-        if(this.server == null) {
-            this.holdingOptions.setVisible(false);
+        if (this.server == null || (CanRegClientApp.getApplication() != null && CanRegClientApp.getApplication().isAdHocDB())) {
+            configureForAdHoc();
         }
         
         setPreferredSize(new java.awt.Dimension(950, 600));
         pack();
+    }
+
+    public void configureForAdHoc() {
+        if (this.holdingOptions != null) {
+            this.holdingOptions.setVisible(false);
+            if (this.selectAllChkBox != null) {
+                this.selectAllChkBox.setVisible(false);
+            }
+            if (this.productionBtn != null) {
+                this.productionBtn.setVisible(false);
+            }
+            if (this.deleteHoldingBtn != null) {
+                this.deleteHoldingBtn.setVisible(false);
+            }
+            if (this.mainPanel != null) {
+                this.mainPanel.remove(this.holdingOptions);
+                this.mainPanel.revalidate();
+                this.mainPanel.repaint();
+            }
+        }
     }
     ///
     // org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, new java.util.List(), jTable1);

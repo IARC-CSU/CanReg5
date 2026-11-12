@@ -59,12 +59,29 @@ public class AdhocWizardInternalFrame extends javax.swing.JInternalFrame
         this.dtp = dtp;
         this.server = server;
         initComponents();
-        setTitle(resourceMap.getString("Form.title"));
+        String title = resourceMap.getString("Form.title");
+        try {
+            if (this.server != null) {
+                title += " - " + this.server.getCanRegRegistryName() + " (" + this.server.getCanRegRegistryCode() + ")";
+            }
+        } catch (RemoteException ex) {
+            LOGGER.log(Level.WARNING, null, ex);
+        }
+        setTitle(title);
         
         importFilesFrame = new ImportFilesView();
         importFilesFrame.configureForAdHoc();
+        if (importFilesFrame.getMainPanel() instanceof javax.swing.JTabbedPane) {
+            ((javax.swing.JTabbedPane) importFilesFrame.getMainPanel()).addChangeListener(new javax.swing.event.ChangeListener() {
+                @Override
+                public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                    updateNavigationButtons();
+                }
+            });
+        }
         
         browseFrame = new BrowseInternalFrame(dtp, this.server);
+        browseFrame.configureForAdHoc();
         
         initPopulationTab();
         
@@ -202,16 +219,28 @@ public class AdhocWizardInternalFrame extends javax.swing.JInternalFrame
         if( ! changeTabFlag) 
             return;
         
-        if(this.tabbedPane.getSelectedIndex() != 0)
-            this.backBtn.setEnabled(true);
-        else
-            this.backBtn.setEnabled(false);
-        
-        if(this.tabbedPane.getSelectedIndex() == (this.tabbedPane.getTabCount() - 1))
-            this.nextBtn.setEnabled(false);
-        else
-            this.nextBtn.setEnabled(true);
+        updateNavigationButtons();
+        if (this.tabbedPane.getSelectedIndex() > 0
+                && importFilesFrame != null
+                && importFilesFrame.hasSelectedFiles()
+                && !importFilesFrame.isFilesImported()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    resourceMap.getString("FILES_NOT_IMPORTED_NOTICE"),
+                    resourceMap.getString("FILES_NOT_IMPORTED_TITLE"),
+                    JOptionPane.INFORMATION_MESSAGE);
+        }
     }//GEN-LAST:event_tabbedPaneStateChanged
+
+    private void updateNavigationButtons() {
+        if (!changeTabFlag || importFilesFrame == null) {
+            return;
+        }
+        int outerIndex = this.tabbedPane.getSelectedIndex();
+        int innerIndex = importFilesFrame.getSelectedTabIndex();
+        this.backBtn.setEnabled(outerIndex > 0 || innerIndex > 0);
+        this.nextBtn.setEnabled(outerIndex < (this.tabbedPane.getTabCount() - 1));
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -226,15 +255,41 @@ public class AdhocWizardInternalFrame extends javax.swing.JInternalFrame
 
     @Action
     public void backButtonAction() {
-        this.tabbedPane.setSelectedIndex(this.tabbedPane.getSelectedIndex() - 1);
-        if(this.tabbedPane.getSelectedIndex() == 0)
-            this.backBtn.setEnabled(false);
+        if (this.tabbedPane.getSelectedIndex() == 0 && importFilesFrame.getSelectedTabIndex() > 0) {
+            importFilesFrame.jumpToPreviousTabAction();
+        } else if (this.tabbedPane.getSelectedIndex() > 0) {
+            this.tabbedPane.setSelectedIndex(this.tabbedPane.getSelectedIndex() - 1);
+        }
+        updateNavigationButtons();
     }
 
     @Action
     public void nextButtonAction() {
-        this.tabbedPane.setSelectedIndex(this.tabbedPane.getSelectedIndex() + 1);
-        this.backBtn.setEnabled(true);
+        if (this.tabbedPane.getSelectedIndex() == 0) {
+            if (importFilesFrame.getSelectedTabIndex() < importFilesFrame.getTabCount() - 1) {
+                importFilesFrame.jumpToNextTabAction();
+                updateNavigationButtons();
+                return;
+            }
+            if (importFilesFrame.hasSelectedFiles() && !importFilesFrame.isFilesImported()) {
+                int option = JOptionPane.showConfirmDialog(
+                        this,
+                        resourceMap.getString("FILES_NOT_IMPORTED_PROMPT"),
+                        resourceMap.getString("FILES_NOT_IMPORTED_TITLE"),
+                        JOptionPane.YES_NO_CANCEL_OPTION,
+                        JOptionPane.QUESTION_MESSAGE);
+                if (option == JOptionPane.YES_OPTION) {
+                    importFilesFrame.triggerImportButton();
+                    return;
+                } else if (option != JOptionPane.NO_OPTION) {
+                    return;
+                }
+            }
+        }
+        if (this.tabbedPane.getSelectedIndex() < this.tabbedPane.getTabCount() - 1) {
+            this.tabbedPane.setSelectedIndex(this.tabbedPane.getSelectedIndex() + 1);
+        }
+        updateNavigationButtons();
     }
 
     @Action

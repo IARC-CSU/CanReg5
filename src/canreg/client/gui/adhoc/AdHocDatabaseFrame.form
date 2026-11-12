@@ -66,6 +66,8 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="32767" attributes="0"/>
                   <Component id="newDBbutton" min="-2" pref="240" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="deleteDBbutton" min="-2" pref="240" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
@@ -79,7 +81,10 @@
                       <Component id="dbsCombo" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="newDBbutton" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="newDBbutton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="deleteDBbutton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
                   <EmptySpace pref="9" max="32767" attributes="0"/>
               </Group>
           </Group>
@@ -109,6 +114,15 @@
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="newDBbutton.text"/>
             <Property name="name" type="java.lang.String" value="newDBbutton" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="deleteDBbutton">
+          <Properties>
+            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+              <action class="canreg.client.gui.adhoc.AdHocDatabaseFrame" id="deleteDatabaseAction" methodName="deleteDatabaseAction"/>
+            </Property>
+            <Property name="text" type="java.lang.String" resourceKey="deleteDBbutton.text"/>
+            <Property name="name" type="java.lang.String" value="deleteDBbutton" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>

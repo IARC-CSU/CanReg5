@@ -69,6 +69,7 @@ public class CanRegDAO {
     private final DatabaseVariablesListElement[] variables;
     private final Map<String, DatabaseVariablesListElement[]> tableVariablesMap;
     private final Map<String, PreparedStatement> statementCache = new HashMap<String, PreparedStatement>();
+    private final boolean isAdHocDB;
     private String lastAllocatedPatientID = null;
     StringBuilder counterStringBuilder = new StringBuilder();
     StringBuilder getterStringBuilder = new StringBuilder();
@@ -94,7 +95,19 @@ public class CanRegDAO {
      * @param holding      true if holding db
      */
     public CanRegDAO(String registryCode, Document doc, boolean holding) {
-        this(doc, registryCode, holding);
+        this(registryCode, doc, holding, false);
+    }
+
+    /**
+     * Constructor for local dao on Canreg server.
+     *
+     * @param registryCode registry code
+     * @param doc          doc
+     * @param holding      true if holding db
+     * @param isAdHocDB    true if ad-hoc db
+     */
+    public CanRegDAO(String registryCode, Document doc, boolean holding, boolean isAdHocDB) {
+        this(doc, registryCode, holding, isAdHocDB);
         setDBSystemDir();
         dbProperties = loadDBProperties();
         if (!dbExists()) {
@@ -114,7 +127,7 @@ public class CanRegDAO {
      * @param databaseProperties database properties with user, password, bootPassword if required, pool properties...
      */
     public CanRegDAO(String registryCode, Document doc, Properties databaseProperties) {
-        this(doc, registryCode, false);
+        this(doc, registryCode, false, false);
         dbProperties = databaseProperties;
         this.bootPassword = databaseProperties.getProperty(BOOT_PASSWORD);
         // Initialize the datasource
@@ -127,9 +140,11 @@ public class CanRegDAO {
      * @param doc          doc
      * @param registryCode registry code
      * @param holding      true if holding db
+     * @param isAdHocDB    true if ad-hoc db
      */
-    private CanRegDAO(Document doc, String registryCode, boolean holding) {
+    private CanRegDAO(Document doc, String registryCode, boolean holding, boolean isAdHocDB) {
         this.doc = doc;
+        this.isAdHocDB = isAdHocDB;
 
         this.registryCode = registryCode;
 
@@ -778,7 +793,11 @@ public class CanRegDAO {
 
         // create the db system directory
         File fileSystemDir = new File(systemDir);
-        fileSystemDir.mkdir();
+        fileSystemDir.mkdirs();
+        if (isAdHocDB) {
+            File adHocDir = new File(Globals.CANREG_SERVER_ADHOC_DATABASE_FOLDER);
+            adHocDir.mkdirs();
+        }
     }
 
     private Properties loadDBProperties() {
@@ -859,6 +878,15 @@ public class CanRegDAO {
         // We do it without the territory set so that the default JVM one is taken
         // Should this be moved to an option? I guess not...
         dbProperties.put("collation", "TERRITORY_BASED:PRIMARY");
+        Locale defaultLocale = Locale.getDefault();
+        if (!Arrays.asList(java.text.Collator.getAvailableLocales()).contains(defaultLocale)) {
+            Locale langLocale = new Locale(defaultLocale.getLanguage());
+            if (Arrays.asList(java.text.Collator.getAvailableLocales()).contains(langLocale)) {
+                dbProperties.put("territory", defaultLocale.getLanguage());
+            } else {
+                dbProperties.put("territory", "en_US");
+            }
+        }
 
         try {
             openUniqueConnection(dbUrl);
@@ -867,6 +895,8 @@ public class CanRegDAO {
             LOGGER.log(Level.SEVERE, null, ex);
         }
         dbProperties.remove("create");
+        dbProperties.remove("collation");
+        dbProperties.remove("territory");
         return bCreated;
     }
 
@@ -1129,6 +1159,9 @@ public class CanRegDAO {
      * @return String location of the database
      */
     public String getDatabaseLocation() {
+        if (isAdHocDB) {
+            return Globals.CANREG_SERVER_ADHOC_DATABASE_FOLDER + "/" + getRegistryCode();
+        }
         return System.getProperty("derby.system.home") + "/" + getRegistryCode();
     }
 
@@ -1142,7 +1175,10 @@ public class CanRegDAO {
     }
 
     public String getDatabaseUrl(String bootPassword) {
-        String dbUrl = dbProperties.getProperty("derby.url") + getRegistryCode();
+        String dbName = isAdHocDB
+                ? (Globals.CANREG_SERVER_ADHOC_DATABASE_FOLDER + "/" + getRegistryCode()).replace('\\', '/')
+                : getRegistryCode();
+        String dbUrl = dbProperties.getProperty("derby.url") + dbName;
         if (bootPassword != null) {
             dbUrl = dbUrl + ";bootPassword=" + bootPassword;
         }
@@ -1238,8 +1274,10 @@ public class CanRegDAO {
         if (patientID == null || patientID.trim().length() == 0) {
             patientID = getNextPatientID();
             patient.setVariable(patientIDVariable.getDatabaseVariableName(), patientID);
-            patientRecordID = formatInitialPatientRecordID(patientID);
-            patient.setVariable(patientRecordIDVariable.getDatabaseVariableName(), patientRecordID);
+            if (patientRecordID == null || patientRecordID.trim().length() == 0) {
+                patientRecordID = formatInitialPatientRecordID(patientID);
+                patient.setVariable(patientRecordIDVariable.getDatabaseVariableName(), patientRecordID);
+            }
         } else {
             lastAllocatedPatientID = null;
             if (patientRecordID == null || patientRecordID.trim().length() == 0) {
@@ -1280,8 +1318,9 @@ public class CanRegDAO {
             tumour.setVariable(tumourIDVariableName, tumourID);
         }
         DatabaseVariablesListElement tumourRecordStatusVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourRecordStatus.toString());
-        if (tumour.getVariable(tumourRecordStatusVariable.getDatabaseVariableName()) == null) {
-            tumour.setVariable(tumourRecordStatusVariable.getDatabaseVariableName(), "0");
+        if (tumour.getVariable(tumourRecordStatusVariable.getDatabaseVariableName()) == null
+                || tumour.getVariable(tumourRecordStatusVariable.getDatabaseVariableName()).toString().trim().isEmpty()) {
+            tumour.setVariable(tumourRecordStatusVariable.getDatabaseVariableName(), "1");
         }
         DatabaseVariablesListElement tumourUnduplicationStatusVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourUnduplicationStatus.toString());
         if (tumour.getVariable(tumourUnduplicationStatusVariable.getDatabaseVariableName()) == null) {
@@ -2598,23 +2637,40 @@ public class CanRegDAO {
             Connection connection = getDbConnection();
             PreparedStatement stmtGetHighestTumourID = getCachedPreparedStatement(connection, strGetHighestTumourID, false);
             stmtGetHighestTumourID.clearParameters();
-            stmtGetHighestTumourID.setString(1, patientRecordID);
+            String safePatientRecordID = patientRecordID != null ? patientRecordID.trim() : "";
+            DatabaseVariablesListElement pridTumourVar = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordIDTumourTable.toString());
+            int maxPridLength = pridTumourVar != null ? pridTumourVar.getVariableLength() : 0;
+            if (maxPridLength > 0 && safePatientRecordID.length() > maxPridLength) {
+                safePatientRecordID = safePatientRecordID.substring(0, maxPridLength);
+            }
+            stmtGetHighestTumourID.setString(1, safePatientRecordID);
             try (ResultSet result = stmtGetHighestTumourID.executeQuery()) {
                 if (result.next()) {
                     String highestTumourID = result.getString(1);
-                    if (highestTumourID != null) {
+                    if (highestTumourID != null && highestTumourID.trim().length() > 0) {
                         tumourID = canreg.common.Tools.increment(highestTumourID);
                     }
                 }
             }
+            int tumourIDlength = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getVariableLength();
             if (tumourID == null) {
-                tumourID = patientRecordID;
-                int tumourIDlength = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourID.toString()).getVariableLength();
+                tumourID = safePatientRecordID;
                 while (tumourID.length() < tumourIDlength - 1) {
                     tumourID += "0";
                 }
                 if (tumourID.length() == tumourIDlength - 1) {
                     tumourID += "1";
+                }
+            }
+            if (tumourIDlength > 0 && tumourID.length() > tumourIDlength) {
+                tumourID = tumourID.substring(0, tumourIDlength);
+            }
+            if (tumourID != null) {
+                while (countTumourByTumourID(tumourID) > 0) {
+                    tumourID = canreg.common.Tools.increment(tumourID);
+                    if (tumourIDlength > 0 && tumourID.length() > tumourIDlength) {
+                        tumourID = tumourID.substring(tumourID.length() - tumourIDlength);
+                    }
                 }
             }
         } catch (SQLException ex) {

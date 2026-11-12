@@ -23,9 +23,14 @@ import canreg.client.CanRegClientApp;
 import canreg.client.gui.management.systemeditor.ModifyDatabaseStructureInternalFrame;
 import canreg.client.gui.tools.WaitFrame;
 import canreg.common.Globals;
+import canreg.common.Tools;
 import java.awt.Cursor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.nio.file.Files;
+import java.text.MessageFormat;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -58,6 +63,13 @@ public class AdHocDatabaseFrame extends javax.swing.JInternalFrame {
         this.pack();
         
         dbsCombo.setModel(new javax.swing.DefaultComboBoxModel<>(getAdHocDBsList()));
+        dbsCombo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loadSelectedAdHocXML();
+            }
+        });
+        loadSelectedAdHocXML();
     }
 
 
@@ -68,6 +80,7 @@ public class AdHocDatabaseFrame extends javax.swing.JInternalFrame {
         chooseDbLabel = new javax.swing.JLabel();
         dbsCombo = new javax.swing.JComboBox<>();
         newDBbutton = new javax.swing.JButton();
+        deleteDBbutton = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         cancelBtn = new javax.swing.JButton();
@@ -92,6 +105,10 @@ public class AdHocDatabaseFrame extends javax.swing.JInternalFrame {
         newDBbutton.setText(resourceMap.getString("newDBbutton.text")); // NOI18N
         newDBbutton.setName("newDBbutton"); // NOI18N
 
+        deleteDBbutton.setAction(actionMap.get("deleteDatabaseAction")); // NOI18N
+        deleteDBbutton.setText(resourceMap.getString("deleteDBbutton.text")); // NOI18N
+        deleteDBbutton.setName("deleteDBbutton"); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -105,6 +122,8 @@ public class AdHocDatabaseFrame extends javax.swing.JInternalFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(newDBbutton, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(deleteDBbutton, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -115,7 +134,9 @@ public class AdHocDatabaseFrame extends javax.swing.JInternalFrame {
                     .addComponent(chooseDbLabel)
                     .addComponent(dbsCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(newDBbutton)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(newDBbutton)
+                    .addComponent(deleteDBbutton))
                 .addContainerGap(9, Short.MAX_VALUE))
         );
 
@@ -179,22 +200,63 @@ public class AdHocDatabaseFrame extends javax.swing.JInternalFrame {
 
     private String[] getAdHocDBsList() {
         File adHocSysDescFolder = new File(Globals.CANREG_SERVER_ADHOC_DB_SYSTEM_DESCRIPTION_FOLDER);
-        if( ! adHocSysDescFolder.exists() || adHocSysDescFolder.listFiles().length == 0) {
+        File[] xmlFiles = adHocSysDescFolder.exists() ? adHocSysDescFolder.listFiles(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.toLowerCase().endsWith(".xml");
+            }
+        }) : null;
+        if (xmlFiles == null || xmlFiles.length == 0) {
             this.createNewDatabaseAction();
             return new String[]{resourceMap.getString("NO ADHOC DATABASE FOUND")};
         }
         
-        String[] adhocFiles = new String[adHocSysDescFolder.listFiles().length];
-        int i = 0;
-        for(File file : adHocSysDescFolder.listFiles()) {
-            adhocFiles[i] = file.getName();
-            i++;
+        String[] adhocFiles = new String[xmlFiles.length];
+        for (int i = 0; i < xmlFiles.length; i++) {
+            adhocFiles[i] = xmlFiles[i].getName();
         }
         return adhocFiles;
     }
 
+    private boolean isExistingAdHocSelected() {
+        return dbsCombo.isEnabled()
+                && dbsCombo.getSelectedIndex() != -1
+                && !dbsCombo.getSelectedItem().equals(resourceMap.getString("NO ADHOC DATABASE FOUND"));
+    }
+
+    private void loadSelectedAdHocXML() {
+        if (isExistingAdHocSelected()) {
+            String selectedItem = (String) dbsCombo.getSelectedItem();
+            File xmlFile = new File(Globals.CANREG_SERVER_ADHOC_DB_SYSTEM_DESCRIPTION_FOLDER, selectedItem);
+            if (xmlFile.exists()) {
+                databaseStructureFrame.pickXML(xmlFile.getAbsolutePath());
+                databaseStructureFrame.setEnabled(false);
+            }
+            this.deleteDBbutton.setEnabled(true);
+        } else {
+            this.deleteDBbutton.setEnabled(false);
+        }
+    }
+
     @Action
     public Task nextButtonAction() {
+        if (isExistingAdHocSelected()) {
+            String selectedItem = (String) dbsCombo.getSelectedItem();
+            String adhocRegCode = selectedItem.substring(0, selectedItem.indexOf(".xml"));
+            String regName = databaseStructureFrame.getRegistryName();
+            String message = MessageFormat.format(
+                    resourceMap.getString("CONFIRM_OPEN_EXISTING_ADHOC_DB"),
+                    regName, adhocRegCode);
+            int option = JOptionPane.showConfirmDialog(
+                    this,
+                    message,
+                    resourceMap.getString("OPEN_EXISTING_ADHOC_TITLE"),
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE);
+            if (option != JOptionPane.YES_OPTION) {
+                return null;
+            }
+        }
         return new NextButtonActionTask(org.jdesktop.application.Application.getInstance(canreg.client.CanRegClientApp.class));
     }
 
@@ -223,7 +285,7 @@ public class AdHocDatabaseFrame extends javax.swing.JInternalFrame {
                 adHocSysDescFolder.mkdirs();
             
             String adhocRegCode = null;
-            if(dbsCombo.getSelectedIndex() != -1 && ! dbsCombo.getSelectedItem().equals(resourceMap.getString("NO ADHOC DATABASE FOUND"))) { 
+            if(isExistingAdHocSelected()) { 
                 adhocRegCode = (String) dbsCombo.getSelectedItem();
                 adhocRegCode = adhocRegCode.substring(0, adhocRegCode.indexOf(".xml"));
             }
@@ -287,18 +349,58 @@ public class AdHocDatabaseFrame extends javax.swing.JInternalFrame {
 
     @Action
     public void createNewDatabaseAction() {
+        databaseStructureFrame.configureForAdHoc();
         databaseStructureFrame.setEnabled(true);
         this.newDBbutton.setEnabled(false);
+        this.deleteDBbutton.setEnabled(false);
         this.dbsCombo.setEnabled(false);
         this.dbsCombo.setSelectedIndex(-1);
     }
 
+    @Action
+    public void deleteDatabaseAction() {
+        if (!isExistingAdHocSelected()) {
+            return;
+        }
+        String selectedItem = (String) dbsCombo.getSelectedItem();
+        String adhocRegCode = selectedItem.substring(0, selectedItem.indexOf(".xml"));
+        String message = MessageFormat.format(resourceMap.getString("CONFIRM_DELETE_ADHOC_DB"), adhocRegCode);
+        int option = JOptionPane.showConfirmDialog(
+                this,
+                message,
+                resourceMap.getString("DELETE_ADHOC_TITLE"),
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE);
+        if (option == JOptionPane.YES_OPTION) {
+            File xmlFile = new File(Globals.CANREG_SERVER_ADHOC_DB_SYSTEM_DESCRIPTION_FOLDER, selectedItem);
+            if (xmlFile.exists()) {
+                xmlFile.delete();
+            }
+            try {
+                File adhocDbFolder = new File(Globals.CANREG_SERVER_ADHOC_DATABASE_FOLDER, adhocRegCode);
+                if (adhocDbFolder.exists()) {
+                    Tools.deleteFolderRecursively(adhocDbFolder);
+                }
+                // Also clean up any legacy Ad-Hoc DB created in the main Database folder if no production system XML exists for it
+                File systemXml = new File(Globals.CANREG_SERVER_SYSTEM_CONFIG_FOLDER, selectedItem);
+                File legacyDbFolder = new File(Globals.CANREG_SERVER_DATABASE_FOLDER, adhocRegCode);
+                if (!systemXml.exists() && legacyDbFolder.exists()) {
+                    Tools.deleteFolderRecursively(legacyDbFolder);
+                }
+            } catch (java.io.IOException ex) {
+                LOGGER.log(Level.SEVERE, null, ex);
+            }
+            dbsCombo.setModel(new javax.swing.DefaultComboBoxModel<>(getAdHocDBsList()));
+            loadSelectedAdHocXML();
+        }
+    }
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelBtn;
     private javax.swing.JLabel chooseDbLabel;
     private javax.swing.JComboBox<String> dbsCombo;
+    private javax.swing.JButton deleteDBbutton;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
