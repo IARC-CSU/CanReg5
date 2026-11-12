@@ -183,7 +183,7 @@ public class RecordEditorMainFrame extends javax.swing.JInternalFrame
         patientTabbedPane.addChangeListener(tabbedPaneChangeListener);
         tumourTabbedPane.addChangeListener(tabbedPaneChangeListener);
 
-        if (this.server == null) {
+        if (this.server == null || (CanRegClientApp.getApplication() != null && CanRegClientApp.getApplication().isAdHocDB())) {
             this.productionBtn.setVisible(false);
             this.viewFullDataBtn.setVisible(false);
             this.viewProductionRecordBtn.setVisible(false);

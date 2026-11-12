@@ -417,4 +417,41 @@ public class CanRegDAOTest {
         }
         dao.commitTransaction();
     }
+
+    @Test
+    public void testAdHocDatabaseIsolationFromMainDatabaseFolder() throws Exception {
+        String originalMainFolder = Globals.CANREG_SERVER_DATABASE_FOLDER;
+        String originalAdHocFolder = Globals.CANREG_SERVER_ADHOC_DATABASE_FOLDER;
+        java.io.File tempRoot = java.nio.file.Files.createTempDirectory("canreg_adhoc_test").toFile();
+        java.io.File mainDbDir = new java.io.File(tempRoot, "Database");
+        java.io.File adHocDbDir = new java.io.File(tempRoot, "AdHocDatabase");
+        CanRegDAO adHocDao = null;
+        try {
+            Globals.CANREG_SERVER_DATABASE_FOLDER = mainDbDir.getAbsolutePath();
+            Globals.CANREG_SERVER_ADHOC_DATABASE_FOLDER = adHocDbDir.getAbsolutePath();
+
+            String code = "TEST_ADHOC_ISO";
+            adHocDao = new CanRegDAO(code, doc, false, true);
+            assertTrue("Ad-Hoc DAO should connect", adHocDao.connect());
+
+            java.io.File expectedAdHocLocation = new java.io.File(adHocDbDir, code);
+            java.io.File unexpectedMainLocation = new java.io.File(mainDbDir, code);
+
+            assertEquals(expectedAdHocLocation.getAbsolutePath(), new java.io.File(adHocDao.getDatabaseLocation()).getAbsolutePath());
+            assertTrue("Ad-Hoc database must be created inside AdHocDatabase folder", expectedAdHocLocation.exists());
+            assertFalse("Ad-Hoc database must not be created inside main Database folder", unexpectedMainLocation.exists());
+            assertTrue("Ad-Hoc JDBC URL should reference AdHocDatabase folder",
+                    adHocDao.getDatabaseUrl().contains("AdHocDatabase/" + code));
+        } finally {
+            if (adHocDao != null) {
+                try {
+                    adHocDao.disconnect();
+                } catch (SQLException ignored) {
+                }
+            }
+            Globals.CANREG_SERVER_DATABASE_FOLDER = originalMainFolder;
+            Globals.CANREG_SERVER_ADHOC_DATABASE_FOLDER = originalAdHocFolder;
+            canreg.common.Tools.deleteFolderRecursively(tempRoot);
+        }
+    }
 }

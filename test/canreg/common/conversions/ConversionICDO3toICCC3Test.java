@@ -86,5 +86,16 @@ public class ConversionICDO3toICCC3Test {
         vars.put(StandardVariableNames.Behaviour, "3");
         assertEquals(ConversionResult.ResultCode.Invalid, conv.performConversion(vars)[0].getResultCode());
     }
+
+    @Test
+    public void testNormalizedTopographyAndMorphologySlashAndMissingSex() {
+        Map<StandardVariableNames, Object> vars = new LinkedHashMap<StandardVariableNames, Object>();
+        vars.put(StandardVariableNames.Topography, "C64.9");
+        vars.put(StandardVariableNames.Morphology, "8960/3");
+
+        ConversionResult[] res = conv.performConversion(vars);
+        assertEquals(ConversionResult.ResultCode.OK, res[0].getResultCode());
+        assertEquals("6a", res[0].getValue());
+    }
 }
 

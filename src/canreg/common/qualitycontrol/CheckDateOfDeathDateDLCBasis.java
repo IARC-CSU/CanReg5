@@ -100,12 +100,18 @@ public class CheckDateOfDeathDateDLCBasis extends CheckInterface {
             incidenceDate = DateHelper.parseDateStringToGregorianCalendarCanReg(incidenceDateCode, Globals.DATE_FORMAT_STRING);
         } catch (ParseException ex) {
             Logger.getLogger(CheckDateOfDeathDateDLCBasis.class.getName()).log(Level.SEVERE, null, ex);
+            result.setResultCode(CheckResult.ResultCode.Invalid);
+            result.setMessage("Not a valid date");
+            return result;
         } catch (NumberFormatException numberFormatException) {
             result.setResultCode(CheckResult.ResultCode.Invalid);
             result.setMessage("Not a number");
             return result;
         } catch (IllegalArgumentException ex) {
-            Logger.getLogger(CheckDateOfDeathDateDLCBasis.class.getName()).log(Level.WARNING, "Dates: " + birthDateCode + ", " + incidenceDate, ex);
+            Logger.getLogger(CheckDateOfDeathDateDLCBasis.class.getName()).log(Level.WARNING, "Dates: " + dlcCode + ", " + incidenceDateCode, ex);
+            result.setResultCode(CheckResult.ResultCode.Invalid);
+            result.setMessage("Not a valid date");
+            return result;
         } catch (NullPointerException nullPointerException) {
             result.setResultCode(CheckResult.ResultCode.Missing);
             result.setMessage("Missing variable(s) needed.");

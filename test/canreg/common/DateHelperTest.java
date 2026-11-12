@@ -151,4 +151,26 @@ public class DateHelperTest {
         assertEquals(14, cal.get(Calendar.HOUR_OF_DAY));
         assertEquals(30, cal.get(Calendar.MINUTE));
     }
+
+    @Test
+    public void testParseUnknownDayInFebruaryAndYearsBetween() throws Exception {
+        GregorianCalendarCanReg febUnknownDay = DateHelper.parseDateStringToGregorianCalendarCanReg("19500299", "yyyyMMdd");
+        GregorianCalendarCanReg incDate = DateHelper.parseDateStringToGregorianCalendarCanReg("20100299", "yyyyMMdd");
+        assertTrue(febUnknownDay.isUnknownDay());
+        assertEquals(60, DateHelper.yearsBetween(febUnknownDay, incDate));
+        assertTrue(DateHelper.daysBetween(febUnknownDay, incDate) > 0);
+        // Original calendar must still retain its unknown day flag after yearsBetween/daysBetween
+        assertTrue(febUnknownDay.isUnknownDay());
+        assertEquals("19500299", DateHelper.parseGregorianCalendarCanRegToDateString(febUnknownDay, "yyyyMMdd"));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testParseInvalidNonLeapFebruary29ThrowsIllegalArgumentException() throws Exception {
+        DateHelper.parseDateStringToGregorianCalendarCanReg("19500229", "yyyyMMdd");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testParseInvalidFebruary30ThrowsIllegalArgumentException() throws Exception {
+        DateHelper.parseDateStringToGregorianCalendarCanReg("20200230", "yyyyMMdd");
+    }
 }

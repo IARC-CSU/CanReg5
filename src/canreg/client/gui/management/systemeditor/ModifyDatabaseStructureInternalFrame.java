@@ -527,7 +527,8 @@ public class ModifyDatabaseStructureInternalFrame extends javax.swing.JInternalF
 
     private boolean checkCode(String code) {
         // does the database folder exist?
-        File file = new File(Globals.CANREG_SERVER_DATABASE_FOLDER + Globals.FILE_SEPARATOR + code);
+        String dbFolder = adHoc ? Globals.CANREG_SERVER_ADHOC_DATABASE_FOLDER : Globals.CANREG_SERVER_DATABASE_FOLDER;
+        File file = new File(dbFolder + Globals.FILE_SEPARATOR + code);
         return file.exists();
     }
 

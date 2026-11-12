@@ -112,7 +112,7 @@ public class CheckAgeIncidenceDateBirthDate extends CheckInterface {
             result.setMessage("Not a number");
             return result;
         } catch (IllegalArgumentException ex) {
-            LOGGER.log(Level.WARNING, String.format("Dates : %s , %s",birthDate,incidenceDate), ex);
+            LOGGER.log(Level.WARNING, String.format("Dates : %s , %s", birthDateCode, incidenceDateCode), ex);
             result.setResultCode(CheckResult.ResultCode.Invalid);
             result.setMessage("Not a number");
             return result;
@@ -129,10 +129,20 @@ public class CheckAgeIncidenceDateBirthDate extends CheckInterface {
                 allowedDifference = 1;
             }
 
-            long calculatedAge = DateHelper.yearsBetween(birthDate, incidenceDate);
+            long calculatedAge;
+            long daysDiff;
+            try {
+                calculatedAge = DateHelper.yearsBetween(birthDate, incidenceDate);
+                daysDiff = DateHelper.daysBetween(birthDate, incidenceDate);
+            } catch (IllegalArgumentException ex) {
+                LOGGER.log(Level.WARNING, String.format("Dates : %s , %s", birthDateCode, incidenceDateCode), ex);
+                result.setResultCode(CheckResult.ResultCode.Invalid);
+                result.setMessage("Not a valid date");
+                return result;
+            }
 
             // System.out.println("Calculated age:"+ calculatedAge);
-            if (DateHelper.daysBetween(birthDate, incidenceDate) + allowedDifference*365 < 0) {
+            if (daysDiff + allowedDifference*365 < 0) {
                 result.setMessage("Incidence date before birth date.");
                 result.setResultCode(CheckResult.ResultCode.Invalid);
                 return result;
@@ -141,9 +151,16 @@ public class CheckAgeIncidenceDateBirthDate extends CheckInterface {
                 result.setResultCode(CheckResult.ResultCode.Query);
                 return result;
             } else if (Math.abs((calculatedAge - ageNumber)) > allowedDifference) {
-                result.setMessage("Age error. Stated: " + ageNumber + ", Calculated: " + calculatedAge);
-                result.setResultCode(CheckResult.ResultCode.Invalid);
-                return result;
+                long ageDiff = Math.abs(calculatedAge - ageNumber);
+                if (ageDiff - allowedDifference == 1) {
+                    result.setMessage("Age query. Stated: " + ageNumber + ", Calculated: " + calculatedAge);
+                    result.setResultCode(CheckResult.ResultCode.Query);
+                    return result;
+                } else {
+                    result.setMessage("Age error. Stated: " + ageNumber + ", Calculated: " + calculatedAge);
+                    result.setResultCode(CheckResult.ResultCode.Invalid);
+                    return result;
+                }
             }
         }
 

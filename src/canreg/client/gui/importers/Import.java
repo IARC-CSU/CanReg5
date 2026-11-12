@@ -33,10 +33,12 @@ import canreg.client.dataentry.Relation;
 import canreg.common.DatabaseVariablesListElement;
 import canreg.common.GlobalToolBox;
 import canreg.common.Globals;
+import canreg.common.conversions.ConversionICDO3toICD10;
 import canreg.common.conversions.ConversionResult;
 import canreg.common.conversions.Converter;
 import canreg.common.qualitycontrol.CheckResult;
 import canreg.common.qualitycontrol.CheckResult.ResultCode;
+import canreg.common.qualitycontrol.Checker;
 import canreg.server.CanRegRegistryProxy;
 import canreg.server.CanRegServerInterface;
 import canreg.server.database.*;
@@ -365,19 +367,7 @@ public class Import {
                     }
                 }
                 if (patient != null && tumour != null) {
-                    String icd10 = (String) tumour.getVariable(io.getICD10VariableName());
-                    if (icd10 == null || icd10.trim().length() == 0) {
-                        ConversionResult[] conversionResult = canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICD10, patient, tumour);
-                        tumour.setVariable(io.getICD10VariableName(), conversionResult[0].getValue());
-                    }
-                    // check if iccc variable is defined
-                    if (io.getICCCVariableName() != null) {
-                        String iccc = (String) tumour.getVariable(io.getICCCVariableName());
-                        if (iccc == null || iccc.trim().length() == 0) {
-                            ConversionResult[] conversionResult = canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICCC3, patient, tumour);
-                            tumour.setVariable(io.getICCCVariableName(), conversionResult[0].getValue());
-                        }
-                    }
+                    generateMissingCodes(server, patient, tumour, io);
                 }
                 if (tumour.getVariable(io.getPatientIDTumourTableVariableName()) == null) {
                     tumour.setVariable(io.getPatientIDTumourTableVariableName(), patientID);
@@ -385,6 +375,13 @@ public class Import {
 
                 if (tumour.getVariable(io.getPatientRecordIDTumourTableVariableName()) == null) {
                     tumour.setVariable(io.getPatientRecordIDTumourTableVariableName(), patientRecordID);
+                }
+
+                if (io.getTumourRecordStatus() != null) {
+                    Object currentRecStatus = tumour.getVariable(io.getTumourRecordStatus());
+                    if (currentRecStatus == null || currentRecStatus.toString().trim().isEmpty()) {
+                        tumour.setVariable(io.getTumourRecordStatus(), "1");
+                    }
                 }
 
                 int tumourDatabaseIDNumber = server.saveTumour(tumour);
@@ -526,19 +523,31 @@ public class Import {
         private final Map<String, Patient> patientByPRID = new LinkedHashMap<String, Patient>(1024, 0.75f, true) {
             @Override
             protected boolean removeEldestEntry(Map.Entry<String, Patient> eldest) {
-                return size() > 5000;
+                return size() > 500000;
             }
         };
         private final Map<String, Patient> patientByPID = new LinkedHashMap<String, Patient>(1024, 0.75f, true) {
             @Override
             protected boolean removeEldestEntry(Map.Entry<String, Patient> eldest) {
-                return size() > 5000;
+                return size() > 500000;
             }
         };
         private final Map<String, Tumour> tumourByTID = new LinkedHashMap<String, Tumour>(1024, 0.75f, true) {
             @Override
             protected boolean removeEldestEntry(Map.Entry<String, Tumour> eldest) {
-                return size() > 5000;
+                return size() > 500000;
+            }
+        };
+        private final Map<Integer, Patient> patientByLineNumber = new LinkedHashMap<Integer, Patient>(1024, 0.75f, true) {
+            @Override
+            protected boolean removeEldestEntry(Map.Entry<Integer, Patient> eldest) {
+                return size() > 500000;
+            }
+        };
+        private final Map<String, Patient> patientByTID = new LinkedHashMap<String, Patient>(1024, 0.75f, true) {
+            @Override
+            protected boolean removeEldestEntry(Map.Entry<String, Patient> eldest) {
+                return size() > 500000;
             }
         };
 
@@ -572,10 +581,32 @@ public class Import {
             }
         }
 
+        public Patient getPatientByLineNumber(int lineNumber) {
+            return patientByLineNumber.get(lineNumber);
+        }
+
+        public void putPatientByLineNumber(int lineNumber, Patient p) {
+            if (p != null) {
+                patientByLineNumber.put(lineNumber, p);
+            }
+        }
+
+        public Patient getPatientByTID(String tid) {
+            return (tid != null) ? patientByTID.get(tid) : null;
+        }
+
+        public void putPatientByTID(String tid, Patient p) {
+            if (tid != null && p != null) {
+                patientByTID.put(tid, p);
+            }
+        }
+
         public void clear() {
             patientByPRID.clear();
             patientByPID.clear();
             tumourByTID.clear();
+            patientByLineNumber.clear();
+            patientByTID.clear();
         }
     }
 
@@ -616,6 +647,29 @@ public class Import {
         }
         boolean success;
         CSVParser parser = null;
+
+        if (files[0] == null && files[1] != null) {
+            files[0] = files[1];
+            if (io.getSeparators() != null && io.getSeparators().length > 1) {
+                io.getSeparators()[0] = io.getSeparators()[1];
+            }
+            if (io.getFileCharsets() != null && io.getFileCharsets().length > 1) {
+                io.getFileCharsets()[0] = io.getFileCharsets()[1];
+            }
+        }
+        boolean isSingleFile = false;
+        try {
+            if (files[0] != null && files[1] != null &&
+                    files[0].getCanonicalPath().equals(files[1].getCanonicalPath())) {
+                isSingleFile = true;
+            }
+        } catch (IOException ex) {
+            if (files[0] != null && files[1] != null &&
+                    files[0].getAbsolutePath().equals(files[1].getAbsolutePath())) {
+                isSingleFile = true;
+            }
+        }
+
         CSVFormat format = CSVFormat.DEFAULT
                 .withFirstRecordAsHeader()
                 .withDelimiter(io.getSeparators()[0]);
@@ -626,8 +680,8 @@ public class Import {
         try {
             // first we get the patients
             if (task != null) {
-                task.firePropertyChange(PROGRESS, 0, 0);
-                task.firePropertyChange(PATIENTS, 0, 0);
+                task.firePropertyChange(PROGRESS, null, 0);
+                task.firePropertyChange(PATIENTS, null, 0);
             }
             if (files[0] != null) {
                 reportWriter.write("Starting to import patients from " + files[0].getAbsolutePath() + Globals.newline);
@@ -695,6 +749,19 @@ public class Import {
                                 patient, reportWriter,
                                 intoHoldingDB, io.isTestOnly(), false, globalToolBox, cache);
 
+                        cache.putPatientByLineNumber(numberOfLinesRead + 1, patient);
+                        if (isSingleFile) {
+                            for (Relation rel : tumourRelations) {
+                                if (rel.getDatabaseVariableName().equalsIgnoreCase(io.getTumourIDVariablename())) {
+                                    String tid = csvRecord.get(rel.getFileColumnNumber());
+                                    if (tid != null && !tid.trim().isEmpty()) {
+                                        cache.putPatientByTID(tid.trim(), patient);
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+
                         numberOfLinesRead++;
                         linesSinceLastCommit++;
 
@@ -735,13 +802,13 @@ public class Import {
                 reportWriter.flush();
             }
             if (task != null) {
-                task.firePropertyChange(PATIENTS, 100, 100);
-                task.firePropertyChange(PROGRESS, 33, 33);
+                task.firePropertyChange(PATIENTS, null, 100);
+                task.firePropertyChange(PROGRESS, null, 33);
             }
 
             // then we get the tumours            
             if (task != null) {
-                task.firePropertyChange(TUMOURS, 0, 0);
+                task.firePropertyChange(TUMOURS, null, 0);
             }
 
             if (files[1] != null) {
@@ -817,15 +884,60 @@ public class Import {
                         // the new tumourID cannot be calculated!!!
                         if (patientRecordID == null || patientRecordID.isEmpty()) {
                             String patientID = tumour.getVariableAsString(io.getPatientIDTumourTableVariableName());
+                            Patient matchedPatient = null;
                             if (patientID != null && !patientID.isEmpty()) {
+                                matchedPatient = cache.getPatientByPID(patientID);
+                            }
+                            if (matchedPatient == null && tumourID != null && !tumourID.isEmpty()) {
+                                matchedPatient = cache.getPatientByTID(tumourID);
+                            }
+                            if (matchedPatient == null && isSingleFile) {
+                                matchedPatient = cache.getPatientByLineNumber(numberOfLinesRead + 1);
+                            }
+
+                            if (matchedPatient != null) {
+                                patientRecordID = matchedPatient.getVariableAsString(io.getPatientRecordIDVariableName());
+                                if (patientRecordID == null || patientRecordID.isEmpty()) {
+                                    patientRecordID = matchedPatient.getVariableAsString(io.getTumourIDVariablename());
+                                }
+                                tumour.setVariable(io.getPatientRecordIDVariableName(), patientRecordID);
+                                tumour.setVariable(io.getPatientRecordIDTumourTableVariableName(), patientRecordID);
+                                if (tumour.getVariable(io.getPatientIDTumourTableVariableName()) == null) {
+                                    tumour.setVariable(io.getPatientIDTumourTableVariableName(), matchedPatient.getVariableAsString(io.getPatientIDVariableName()));
+                                }
+                                if (patientRecordID != null && !patientRecordID.isEmpty()) {
+                                    cache.putPatientByPRID(patientRecordID, matchedPatient);
+                                }
+                            } else if (patientID != null && !patientID.isEmpty()) {
                                 Patient[] patients = null;
                                 Patient cached = cache.getPatientByPID(patientID);
                                 if (cached != null) {
-                                    patients = new Patient[]{cached};
-                                } else {
-                                    patients = CanRegClientApp.getApplication().getPatientsByPatientID(patientID, false, server);
-                                    if (patients != null && patients.length > 0 && patients[0] != null) {
-                                        cache.putPatientByPID(patientID, patients[0]);
+                                    String cachedPrid = cached.getVariableAsString(io.getPatientRecordIDVariableName());
+                                    if (cachedPrid != null && !cachedPrid.isEmpty()) {
+                                        patients = new Patient[]{cached};
+                                    } else {
+                                        Object recIdObj = cached.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
+                                        if (recIdObj instanceof Integer && (Integer) recIdObj > 0) {
+                                            try {
+                                                DatabaseRecord dbRec = server.getRecord((Integer) recIdObj, Globals.PATIENT_TABLE_NAME, false, null);
+                                                if (dbRec instanceof Patient) {
+                                                    patients = new Patient[]{(Patient) dbRec};
+                                                    cache.putPatientByPID(patientID, (Patient) dbRec);
+                                                }
+                                            } catch (Exception ignore) {
+                                            }
+                                        }
+                                    }
+                                }
+                                if (patients == null) {
+                                    try {
+                                        if (CanRegClientApp.getApplication() != null) {
+                                            patients = CanRegClientApp.getApplication().getPatientsByPatientID(patientID, false, server);
+                                            if (patients != null && patients.length > 0 && patients[0] != null) {
+                                                cache.putPatientByPID(patientID, patients[0]);
+                                            }
+                                        }
+                                    } catch (IllegalStateException ignore) {
                                     }
                                 }
                                 if (patients != null && patients.length > 0 && patients[0] != null) {
@@ -885,14 +997,14 @@ public class Import {
                 reportWriter.flush();
             }
             if (task != null) {
-                task.firePropertyChange(TUMOURS, 100, 100);
-                task.firePropertyChange(PROGRESS, 66, 66);
+                task.firePropertyChange(TUMOURS, null, 100);
+                task.firePropertyChange(PROGRESS, null, 66);
             }
             // then at last we get the sources
             if (task != null) {
-                task.firePropertyChange(SOURCES, 0, 0);
+                task.firePropertyChange(SOURCES, null, 0);
             }
-            if (files[2] != null) {
+            if (files[2] != null && !sourceRelations.isEmpty()) {
                 reportWriter.write("Starting to import sources from " + files[2].getAbsolutePath() + Globals.newline);
 
                 sourceFIS = new FileInputStream(files[2]);
@@ -1004,8 +1116,8 @@ public class Import {
                 parser.close();                
             }
             if (task != null) {
-                task.firePropertyChange(SOURCES, 100, 100);
-                task.firePropertyChange(PROGRESS, 100, 100);
+                task.firePropertyChange(SOURCES, null, 100);
+                task.firePropertyChange(PROGRESS, null, 100);
                 while (!task.isProgressPropertyValid()) {
                     // wait untill progress has been updated...
                 }
@@ -1048,7 +1160,10 @@ public class Import {
                 sourceFIS.close();
         }
         if (task != null) {
-            task.firePropertyChange(PROGRESS, 100, 100);
+            task.firePropertyChange(PATIENTS, null, 100);
+            task.firePropertyChange(TUMOURS, null, 100);
+            task.firePropertyChange(SOURCES, null, 100);
+            task.firePropertyChange(PROGRESS, null, 100);
             task.firePropertyChange("finished", null, null);
         }
                 
@@ -1184,6 +1299,16 @@ public class Import {
 
         if ( ! isTestOnly && savePatient) {
             int resultPRID = -1;
+            DatabaseVariablesListElement patientIDVariable = globalToolBox != null
+                    ? globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString())
+                    : null;
+            DatabaseVariablesListElement patientRecordIDVariable = globalToolBox != null
+                    ? globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString())
+                    : null;
+            String originalPid = (patientIDVariable != null && patientToImport != null)
+                    ? patientToImport.getVariableAsString(patientIDVariable.getDatabaseVariableName())
+                    : null;
+
             if (oldPatientRecord != null) { // does the patient record already exist ?
     //              try {
                 if (fromHoldingToProduction) {
@@ -1208,20 +1333,44 @@ public class Import {
                 if (fromHoldingToProduction) {
                     // Reset RegNo and PatientRecordID when promoting from holding to production.
                     // The production database will assign fresh values during the saving process.
-                    if (globalToolBox != null) {
-                        DatabaseVariablesListElement patientIDVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString());
-                        DatabaseVariablesListElement patientRecordIDVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString());
-                        if (patientIDVariable != null) {
-                            patientToImport.setVariable(patientIDVariable.getDatabaseVariableName(), "");
-                        }
-                        if (patientRecordIDVariable != null) {
-                            patientToImport.setVariable(patientRecordIDVariable.getDatabaseVariableName(), "");
-                        }
+                    if (patientIDVariable != null) {
+                        patientToImport.setVariable(patientIDVariable.getDatabaseVariableName(), "");
+                    }
+                    if (patientRecordIDVariable != null) {
+                        patientToImport.setVariable(patientRecordIDVariable.getDatabaseVariableName(), "");
                     }
                 }
                 resultPRID = server.savePatient(patientToImport);
                 if (!fromHoldingToProduction && resultPRID > 0) {
                     patientToImport.setVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME, resultPRID);
+                    String currentPrid = patientRecordIDVariable != null
+                            ? patientToImport.getVariableAsString(patientRecordIDVariable.getDatabaseVariableName())
+                            : null;
+                    String currentPid = patientIDVariable != null
+                            ? patientToImport.getVariableAsString(patientIDVariable.getDatabaseVariableName())
+                            : null;
+                    if (currentPrid == null || currentPrid.trim().isEmpty()
+                            || currentPid == null || currentPid.trim().isEmpty()) {
+                        try {
+                            DatabaseRecord savedRec = server.getRecord(resultPRID, Globals.PATIENT_TABLE_NAME, false, null);
+                            if (savedRec instanceof Patient) {
+                                if (patientIDVariable != null) {
+                                    String savedPid = savedRec.getVariableAsString(patientIDVariable.getDatabaseVariableName());
+                                    if (savedPid != null && !savedPid.isEmpty()) {
+                                        patientToImport.setVariable(patientIDVariable.getDatabaseVariableName(), savedPid);
+                                    }
+                                }
+                                if (patientRecordIDVariable != null) {
+                                    String savedPrid = savedRec.getVariableAsString(patientRecordIDVariable.getDatabaseVariableName());
+                                    if (savedPrid != null && !savedPrid.isEmpty()) {
+                                        patientToImport.setVariable(patientRecordIDVariable.getDatabaseVariableName(), savedPrid);
+                                    }
+                                }
+                            }
+                        } catch (Exception ex) {
+                            LOGGER.log(Level.FINE, "Could not fetch saved patient record after savePatient", ex);
+                        }
+                    }
                 }
     //              } catch(Exception ex) {
     //                  LOGGER.log(Level.SEVERE, "ERROR SAVING PATIENT " + patientID, ex);
@@ -1232,20 +1381,19 @@ public class Import {
                 if (patientRecordID != null && !patientRecordID.isEmpty()) {
                     cache.putPatientByPRID(patientRecordID, patientToImport);
                 }
-                if (globalToolBox != null) {
-                    DatabaseVariablesListElement patientIDVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientID.toString());
-                    if (patientIDVariable != null) {
-                        String pid = patientToImport.getVariableAsString(patientIDVariable.getDatabaseVariableName());
-                        if (pid != null && !pid.isEmpty()) {
-                            cache.putPatientByPID(pid, patientToImport);
-                        }
+                if (originalPid != null && !originalPid.isEmpty()) {
+                    cache.putPatientByPID(originalPid, patientToImport);
+                }
+                if (patientIDVariable != null) {
+                    String pid = patientToImport.getVariableAsString(patientIDVariable.getDatabaseVariableName());
+                    if (pid != null && !pid.isEmpty()) {
+                        cache.putPatientByPID(pid, patientToImport);
                     }
-                    DatabaseVariablesListElement patientRecordIDVariable = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.PatientRecordID.toString());
-                    if (patientRecordIDVariable != null) {
-                        String pridStr = patientToImport.getVariableAsString(patientRecordIDVariable.getDatabaseVariableName());
-                        if (pridStr != null && !pridStr.isEmpty()) {
-                            cache.putPatientByPRID(pridStr, patientToImport);
-                        }
+                }
+                if (patientRecordIDVariable != null) {
+                    String pridStr = patientToImport.getVariableAsString(patientRecordIDVariable.getDatabaseVariableName());
+                    if (pridStr != null && !pridStr.isEmpty()) {
+                        cache.putPatientByPRID(pridStr, patientToImport);
                     }
                 }
             }
@@ -1369,33 +1517,38 @@ public class Import {
             String patientID = (io != null && io.getPatientIDTumourTableVariableName() != null)
                     ? tumourToImport.getVariableAsString(io.getPatientIDTumourTableVariableName()) : null;
             if (patientID != null && !patientID.isEmpty()) {
+                String pridVarName = (io != null && io.getPatientRecordIDVariableName() != null)
+                        ? io.getPatientRecordIDVariableName()
+                        : Globals.StandardVariableNames.PatientRecordID.name();
                 if (cache != null) {
-                    patient = cache.getPatientByPID(patientID);
+                    Patient cachedPatient = cache.getPatientByPID(patientID);
+                    if (cachedPatient != null) {
+                        String cachedPrid = cachedPatient.getVariableAsString(pridVarName);
+                        if (cachedPrid != null && !cachedPrid.isEmpty()) {
+                            patient = cachedPatient;
+                        } else {
+                            Object recIdObj = cachedPatient.getVariable(Globals.PATIENT_TABLE_RECORD_ID_VARIABLE_NAME);
+                            if (recIdObj instanceof Integer && (Integer) recIdObj > 0) {
+                                try {
+                                    DatabaseRecord dbRec = server.getRecord((Integer) recIdObj, Globals.PATIENT_TABLE_NAME, false, null);
+                                    if (dbRec instanceof Patient) {
+                                        patient = (Patient) dbRec;
+                                        cache.putPatientByPID(patientID, patient);
+                                    }
+                                } catch (Exception ignore) {
+                                }
+                            }
+                        }
+                    }
                 }
                 if (patient == null) {
                     try {
-                        Patient[] patients = CanRegClientApp.getApplication().getPatientsByPatientID(patientID, false, server);
-                        if (patients != null && patients.length > 0 && patients[0] != null) {
-                            patient = patients[0];
-                            if (cache != null) {
-                                cache.putPatientByPID(patientID, patient);
-                            }
-                            String resolvedPatientRecordID = patient.getVariableAsString(
-                                    (io != null && io.getPatientRecordIDVariableName() != null)
-                                            ? io.getPatientRecordIDVariableName()
-                                            : Globals.StandardVariableNames.PatientRecordID.name());
-                            if (resolvedPatientRecordID != null && !resolvedPatientRecordID.isEmpty()) {
-                                patientRecordID = resolvedPatientRecordID;
+                        if (CanRegClientApp.getApplication() != null) {
+                            Patient[] patients = CanRegClientApp.getApplication().getPatientsByPatientID(patientID, false, server);
+                            if (patients != null && patients.length > 0 && patients[0] != null) {
+                                patient = patients[0];
                                 if (cache != null) {
-                                    cache.putPatientByPRID(patientRecordID, patient);
-                                }
-                                if (io != null) {
-                                    if (io.getPatientRecordIDVariableName() != null) {
-                                        tumourToImport.setVariable(io.getPatientRecordIDVariableName(), patientRecordID);
-                                    }
-                                    if (io.getPatientRecordIDTumourTableVariableName() != null) {
-                                        tumourToImport.setVariable(io.getPatientRecordIDTumourTableVariableName(), patientRecordID);
-                                    }
+                                    cache.putPatientByPID(patientID, patient);
                                 }
                             }
                         }
@@ -1403,15 +1556,97 @@ public class Import {
                         LOGGER.log(Level.WARNING, "Fallback patient lookup by PatientID failed: " + patientID, ex);
                     }
                 }
+                if (patient != null) {
+                    String resolvedPatientRecordID = patient.getVariableAsString(pridVarName);
+                    if (resolvedPatientRecordID != null && !resolvedPatientRecordID.isEmpty()) {
+                        patientRecordID = resolvedPatientRecordID;
+                        if (cache != null) {
+                            cache.putPatientByPRID(patientRecordID, patient);
+                        }
+                        if (io != null) {
+                            if (io.getPatientRecordIDVariableName() != null) {
+                                tumourToImport.setVariable(io.getPatientRecordIDVariableName(), patientRecordID);
+                            }
+                            if (io.getPatientRecordIDTumourTableVariableName() != null) {
+                                tumourToImport.setVariable(io.getPatientRecordIDTumourTableVariableName(), patientRecordID);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Fallback 2: if patient was still not found, try looking up by TumourID in cache
+        if (patient == null && tumourID != null && !tumourID.isEmpty() && cache != null) {
+            patient = cache.getPatientByTID(tumourID);
+            if (patient != null) {
+                String pridVarName = (io != null && io.getPatientRecordIDVariableName() != null)
+                        ? io.getPatientRecordIDVariableName()
+                        : Globals.StandardVariableNames.PatientRecordID.name();
+                String pidVarName = (io != null && io.getPatientIDVariableName() != null)
+                        ? io.getPatientIDVariableName()
+                        : Globals.StandardVariableNames.PatientID.name();
+                String resolvedPatientRecordID = patient.getVariableAsString(pridVarName);
+                if (resolvedPatientRecordID != null && !resolvedPatientRecordID.isEmpty()) {
+                    patientRecordID = resolvedPatientRecordID;
+                    cache.putPatientByPRID(patientRecordID, patient);
+                    if (io != null) {
+                        if (io.getPatientRecordIDVariableName() != null) {
+                            tumourToImport.setVariable(io.getPatientRecordIDVariableName(), patientRecordID);
+                        }
+                        if (io.getPatientRecordIDTumourTableVariableName() != null) {
+                            tumourToImport.setVariable(io.getPatientRecordIDTumourTableVariableName(), patientRecordID);
+                        }
+                    }
+                }
+                String pid = patient.getVariableAsString(pidVarName);
+                if (pid != null && !pid.isEmpty() && io != null && io.getPatientIDTumourTableVariableName() != null) {
+                    tumourToImport.setVariable(io.getPatientIDTumourTableVariableName(), pid);
+                }
             }
         }
 
         if (patient != null) {
             if (io != null) {
+                String pridVar = io.getPatientRecordIDVariableName();
+                String resolvedPrid = (pridVar != null) ? patient.getVariableAsString(pridVar) : null;
+                if (resolvedPrid != null && !resolvedPrid.isEmpty()) {
+                    patientRecordID = resolvedPrid;
+                    if (io.getPatientRecordIDTumourTableVariableName() != null) {
+                        tumourToImport.setVariable(io.getPatientRecordIDTumourTableVariableName(), resolvedPrid);
+                    }
+                }
+                String pidVar = io.getPatientIDVariableName();
+                String resolvedPid = (pidVar != null) ? patient.getVariableAsString(pidVar) : null;
+                if (resolvedPid != null && !resolvedPid.isEmpty() && io.getPatientIDTumourTableVariableName() != null) {
+                    tumourToImport.setVariable(io.getPatientIDTumourTableVariableName(), resolvedPid);
+                }
+            }
+            generateMissingCodes(server, patient, tumourToImport, io);
+            if (io != null) {
+                String recStatusVarName = io.getTumourRecordStatus();
+                if (recStatusVarName == null || recStatusVarName.isEmpty()) {
+                    try {
+                        GlobalToolBox globalToolBox = new GlobalToolBox(server.getDatabseDescription());
+                        DatabaseVariablesListElement recStatusElem = globalToolBox.translateStandardVariableNameToDatabaseListElement(Globals.StandardVariableNames.TumourRecordStatus.toString());
+                        if (recStatusElem != null) {
+                            recStatusVarName = recStatusElem.getDatabaseVariableName();
+                        }
+                    } catch (Exception ignore) {
+                    }
+                }
+                // Add record status as 1 by default if this column is missing
+                if (recStatusVarName != null) {
+                    Object currentRecStatus = tumourToImport.getVariable(recStatusVarName);
+                    if (currentRecStatus == null || currentRecStatus.toString().trim().isEmpty()) {
+                        tumourToImport.setVariable(recStatusVarName, "1");
+                    }
+                }
+
                 if (io.isDoChecks() && saveTumour) {
                     // run the edits...
                     String message = "";
-                    LinkedList<CheckResult> checkResults = canreg.client.CanRegClientApp.getApplication().performChecks(patient, tumourToImport);
+                    LinkedList<CheckResult> checkResults = runChecks(server, patient, tumourToImport);
 
                     Map<Globals.StandardVariableNames, CheckResult.ResultCode> mapOfVariablesAndWorstResultCodes 
                             = new EnumMap<Globals.StandardVariableNames, CheckResult.ResultCode>(Globals.StandardVariableNames.class);
@@ -1433,51 +1668,26 @@ public class Import {
                         }
                         // LOGGER.log(Level.INFO, result.toString());
                     }
-                    // always generate ICD10...
-                    // ConversionResult[] conversionResult = canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICD10, patient, tumour);
-                    // tumour.setVariable(io.getICD10VariableName(), conversionResult[0].getValue());
 
-                    if (worstResultCodeFound != CheckResult.ResultCode.Invalid && worstResultCodeFound != CheckResult.ResultCode.Missing) {
-                        // generate ICD10 codes
-                        ConversionResult[] conversionResult = 
-                                canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICD10, patient, tumourToImport);
-                        tumourToImport.setVariable(io.getICD10VariableName(), conversionResult[0].getValue());
-                        // generate ICCC codes
-                        if (io.getICCCVariableName() != null) {
-                            String iccc = (String) tumourToImport.getVariable(io.getICCCVariableName());
-                            if (iccc == null || iccc.trim().length() == 0) {
-                                ConversionResult[] conversionResultICCC = 
-                                        canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICCC3, patient, tumourToImport);
-                                tumourToImport.setVariable(io.getICCCVariableName(), conversionResultICCC[0].getValue());
-                            }
+                    // Update record status (recs) based on outcome of check:
+                    // Errors change record status to 0, warnings keep 1.
+                    if (worstResultCodeFound == CheckResult.ResultCode.Invalid || worstResultCodeFound == CheckResult.ResultCode.Missing) {
+                        if (recStatusVarName != null) {
+                            tumourToImport.setVariable(recStatusVarName, "0");
                         }
                     } else {
-                        tumourToImport.setVariable(io.getTumourRecordStatus(), "0");
+                        if (recStatusVarName != null) {
+                            Object currentRecStatus = tumourToImport.getVariable(recStatusVarName);
+                            if (currentRecStatus == null || currentRecStatus.toString().trim().isEmpty() || "1".equals(currentRecStatus.toString().trim())) {
+                                tumourToImport.setVariable(recStatusVarName, "1");
+                            }
+                        }
                     }
 
-                    if (worstResultCodeFound == CheckResult.ResultCode.OK) {
-                        // message += "Cross-check conclusion: Valid";
-                    } else {
+                    if (worstResultCodeFound != CheckResult.ResultCode.OK && reportWriter != null) {
                         reportWriter.write(tumourID + "\t" + message + Globals.newline);
-                        // System.out.println(tumour.getVariable(io.getTumourIDVariablename()) + " " + message);
                     }
                     tumourToImport.setVariable(io.getTumourCheckStatus(), CheckResult.toDatabaseVariable(worstResultCodeFound));
-
-                } else {
-                    // try to generate ICD10, if missing, anyway
-                    String icd10 = (String) tumourToImport.getVariable(io.getICD10VariableName());
-                    if (icd10 == null || icd10.trim().length() == 0) {
-                        ConversionResult[] conversionResult = 
-                                canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICD10, patient, tumourToImport);
-                        tumourToImport.setVariable(io.getICD10VariableName(), conversionResult[0].getValue());
-                    }
-                    // try to generate ICCC3, if missing, anyway
-                    String iccc = (String) tumourToImport.getVariable(io.getICCCVariableName());
-                    if (iccc == null || iccc.trim().length() == 0) {
-                        ConversionResult[] conversionResult = 
-                                canreg.client.CanRegClientApp.getApplication().performConversions(Converter.ConversionName.ICDO3toICCC3, patient, tumourToImport);
-                        tumourToImport.setVariable(io.getICCCVariableName(), conversionResult[0].getValue());
-                    }
                 }
             }
         } else {
@@ -1655,27 +1865,100 @@ public class Import {
      * @return
      */
     public static List<Relation> constructRelations(Document doc, String[] lineElements) {
-        LinkedList<Relation> list = new LinkedList();
-        NodeList nl = doc.getElementsByTagName(namespace + "variable");
-        String[] variableNames = canreg.common.Tools.getVariableNames(doc, namespace);
-        for (int i = 0; i < lineElements.length; i++) {
-            boolean found = false;
-            int j = 0;
-            while (!found && j < variableNames.length) {
-                found = lineElements[i].equalsIgnoreCase(variableNames[j++]);
+        return constructRelations(doc, lineElements, null, LearnedVariableMappings.getInstance());
+    }
+
+    public static List<Relation> constructRelations(Document doc, String[] lineElements, String targetTableName) {
+        return constructRelations(doc, lineElements, targetTableName, LearnedVariableMappings.getInstance());
+    }
+
+    public static List<Relation> constructRelations(
+            Document doc,
+            String[] lineElements,
+            String targetTableName,
+            LearnedVariableMappings learnedMappings) {
+        LinkedList<Relation> list = new LinkedList<Relation>();
+        if (lineElements == null) {
+            return list;
+        }
+        DatabaseVariablesListElement[] allVariables = canreg.common.Tools.getVariableListElements(doc, namespace);
+        List<DatabaseVariablesListElement> candidateList = new ArrayList<DatabaseVariablesListElement>();
+        for (DatabaseVariablesListElement v : allVariables) {
+            if (targetTableName == null || targetTableName.trim().isEmpty()
+                    || v.getDatabaseTableName().equalsIgnoreCase(targetTableName)) {
+                candidateList.add(v);
             }
-            //build relation
+        }
+        DatabaseVariablesListElement[] candidateVariables = candidateList.toArray(new DatabaseVariablesListElement[candidateList.size()]);
+
+        DatabaseVariablesListElement[] matchedByCol = new DatabaseVariablesListElement[lineElements.length];
+        boolean[] learnedByCol = new boolean[lineElements.length];
+        Set<Integer> claimedVarIds = new LinkedHashSet<Integer>();
+
+        // Pass 1a: Exact match on shortName, standardVariableName, fullName, or englishName within candidateVariables
+        for (int i = 0; i < lineElements.length; i++) {
+            String colName = lineElements[i] != null ? lineElements[i].trim() : "";
+            if (colName.isEmpty()) {
+                continue;
+            }
+            DatabaseVariablesListElement exact = findExactVariableMatch(colName, candidateVariables, claimedVarIds);
+            if (exact != null) {
+                matchedByCol[i] = exact;
+                claimedVarIds.add(exact.getDatabaseTableVariableID());
+            }
+        }
+
+        // Pass 1b: Exact foreign-key match when targetTableName is Tumour or Source
+        // (e.g., column "RegNo" or "PatientID" in Tumour file -> PatientIDTumourTable)
+        if (targetTableName != null && !targetTableName.trim().isEmpty()) {
+            for (int i = 0; i < lineElements.length; i++) {
+                if (matchedByCol[i] != null) {
+                    continue;
+                }
+                String colName = lineElements[i] != null ? lineElements[i].trim() : "";
+                if (colName.isEmpty()) {
+                    continue;
+                }
+                DatabaseVariablesListElement fkMatch = findForeignKeyVariableMatch(
+                        colName, targetTableName, allVariables, candidateVariables, claimedVarIds);
+                if (fkMatch != null) {
+                    matchedByCol[i] = fkMatch;
+                    claimedVarIds.add(fkMatch.getDatabaseTableVariableID());
+                }
+            }
+        }
+
+        // Pass 2: Learned manual mappings from previous imports on this installation
+        if (learnedMappings != null) {
+            for (int i = 0; i < lineElements.length; i++) {
+                if (matchedByCol[i] != null) {
+                    continue;
+                }
+                String colName = lineElements[i] != null ? lineElements[i].trim() : "";
+                if (colName.isEmpty()) {
+                    continue;
+                }
+                DatabaseVariablesListElement learned = learnedMappings.findLearnedVariable(
+                        targetTableName, colName, candidateVariables);
+                if (learned != null && !claimedVarIds.contains(learned.getDatabaseTableVariableID())) {
+                    matchedByCol[i] = learned;
+                    learnedByCol[i] = true;
+                    claimedVarIds.add(learned.getDatabaseTableVariableID());
+                }
+            }
+        }
+
+        for (int i = 0; i < lineElements.length; i++) {
             Relation rel = new Relation();
             rel.setFileVariableName(lineElements[i]);
             rel.setFileColumnNumber(i);
-            if (found) {
-                //backtrack
-                j--;
-                Element e = (Element) nl.item(j);
-                rel.setDatabaseTableName(e.getElementsByTagName(namespace + "table").item(0).getTextContent());
-                rel.setDatabaseTableVariableID(Integer.parseInt(e.getElementsByTagName(namespace + "variable_id").item(0).getTextContent()));
-                rel.setVariableType(e.getElementsByTagName(namespace + "variable_type").item(0).getTextContent());
-                rel.setDatabaseVariableName(variableNames[j]);
+            DatabaseVariablesListElement matched = matchedByCol[i];
+            if (matched != null) {
+                rel.setDatabaseTableName(matched.getDatabaseTableName());
+                rel.setDatabaseTableVariableID(matched.getDatabaseTableVariableID());
+                rel.setVariableType(matched.getVariableType());
+                rel.setDatabaseVariableName(matched.getDatabaseVariableName());
+                rel.setLearnedMapping(learnedByCol[i]);
             } else {
                 rel.setDatabaseTableName("");
                 rel.setDatabaseTableVariableID(-1);
@@ -1685,6 +1968,96 @@ public class Import {
             list.add(rel);
         }
         return list;
+    }
+
+    private static DatabaseVariablesListElement findExactVariableMatch(
+            String colName,
+            DatabaseVariablesListElement[] candidateVariables,
+            Set<Integer> claimedVarIds) {
+        // 1. Short name (databaseVariableName)
+        for (DatabaseVariablesListElement v : candidateVariables) {
+            if (!claimedVarIds.contains(v.getDatabaseTableVariableID())
+                    && v.getDatabaseVariableName() != null
+                    && colName.equalsIgnoreCase(v.getDatabaseVariableName().trim())) {
+                return v;
+            }
+        }
+        // 2. Standard variable name
+        for (DatabaseVariablesListElement v : candidateVariables) {
+            if (!claimedVarIds.contains(v.getDatabaseTableVariableID())
+                    && v.getStandardVariableName() != null
+                    && colName.equalsIgnoreCase(v.getStandardVariableName().trim())) {
+                return v;
+            }
+        }
+        // 3. Full name or English name
+        for (DatabaseVariablesListElement v : candidateVariables) {
+            if (!claimedVarIds.contains(v.getDatabaseTableVariableID())) {
+                if (v.getFullName() != null && colName.equalsIgnoreCase(v.getFullName().trim())) {
+                    return v;
+                }
+                if (v.getEnglishName() != null && colName.equalsIgnoreCase(v.getEnglishName().trim())) {
+                    return v;
+                }
+            }
+        }
+        return null;
+    }
+
+    private static DatabaseVariablesListElement findForeignKeyVariableMatch(
+            String colName,
+            String targetTableName,
+            DatabaseVariablesListElement[] allVariables,
+            DatabaseVariablesListElement[] candidateVariables,
+            Set<Integer> claimedVarIds) {
+        String targetStandardName = null;
+        if (Globals.TUMOUR_TABLE_NAME.equalsIgnoreCase(targetTableName)) {
+            if (matchesParentVariable(colName, Globals.PATIENT_TABLE_NAME,
+                    Globals.StandardVariableNames.PatientID.toString(), allVariables)) {
+                targetStandardName = Globals.StandardVariableNames.PatientIDTumourTable.toString();
+            } else if (matchesParentVariable(colName, Globals.PATIENT_TABLE_NAME,
+                    Globals.StandardVariableNames.PatientRecordID.toString(), allVariables)) {
+                targetStandardName = Globals.StandardVariableNames.PatientRecordIDTumourTable.toString();
+            }
+        } else if (Globals.SOURCE_TABLE_NAME.equalsIgnoreCase(targetTableName)) {
+            if (matchesParentVariable(colName, Globals.TUMOUR_TABLE_NAME,
+                    Globals.StandardVariableNames.TumourID.toString(), allVariables)) {
+                targetStandardName = Globals.StandardVariableNames.TumourIDSourceTable.toString();
+            }
+        }
+        if (targetStandardName != null) {
+            for (DatabaseVariablesListElement v : candidateVariables) {
+                if (!claimedVarIds.contains(v.getDatabaseTableVariableID())
+                        && v.getStandardVariableName() != null
+                        && v.getStandardVariableName().equalsIgnoreCase(targetStandardName)) {
+                    return v;
+                }
+            }
+        }
+        return null;
+    }
+
+    private static boolean matchesParentVariable(
+            String colName,
+            String parentTableName,
+            String parentStandardName,
+            DatabaseVariablesListElement[] allVariables) {
+        if (colName.equalsIgnoreCase(parentStandardName)) {
+            return true;
+        }
+        for (DatabaseVariablesListElement v : allVariables) {
+            if (v.getDatabaseTableName().equalsIgnoreCase(parentTableName)
+                    && v.getStandardVariableName() != null
+                    && v.getStandardVariableName().equalsIgnoreCase(parentStandardName)) {
+                if (v.getDatabaseVariableName() != null && colName.equalsIgnoreCase(v.getDatabaseVariableName().trim())) {
+                    return true;
+                }
+                if (v.getFullName() != null && colName.equalsIgnoreCase(v.getFullName().trim())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private static void debugOut(String msg) {
@@ -1783,5 +2156,162 @@ public class Import {
             }
         }
         return report;
+    }
+
+    private static GlobalToolBox resolveGlobalToolBox(CanRegServerInterface server) {
+        try {
+            if (CanRegClientApp.getApplication() != null) {
+                GlobalToolBox gtb = CanRegClientApp.getApplication().getGlobalToolBox();
+                if (gtb != null) {
+                    return gtb;
+                }
+            }
+        } catch (Exception ignore) {
+        }
+        try {
+            if (server != null && server.getDatabseDescription() != null) {
+                return new GlobalToolBox(server.getDatabseDescription());
+            }
+        } catch (Exception ignore) {
+        }
+        return null;
+    }
+
+    private static LinkedList<CheckResult> runChecks(CanRegServerInterface server, Patient patient, Tumour tumour) {
+        try {
+            if (CanRegClientApp.getApplication() != null) {
+                LinkedList<CheckResult> res = CanRegClientApp.getApplication().performChecks(patient, tumour);
+                if (res != null) {
+                    return res;
+                }
+            }
+        } catch (Exception ignore) {
+        }
+        GlobalToolBox gtb = resolveGlobalToolBox(server);
+        if (gtb != null) {
+            Checker fallbackChecker = new Checker(gtb.getStandardVariables());
+            return fallbackChecker.performChecks(patient, tumour);
+        }
+        return new LinkedList<CheckResult>();
+    }
+
+    private static ConversionResult[] runConversion(
+            CanRegServerInterface server, GlobalToolBox gtb,
+            Converter.ConversionName conversionName, Patient patient, Tumour tumour) {
+        try {
+            if (CanRegClientApp.getApplication() != null) {
+                ConversionResult[] res = CanRegClientApp.getApplication().performConversions(conversionName, patient, tumour);
+                if (res != null) {
+                    return res;
+                }
+            }
+        } catch (Exception ignore) {
+        }
+        if (gtb == null) {
+            gtb = resolveGlobalToolBox(server);
+        }
+        if (gtb != null) {
+            Converter fallbackConverter = new Converter(gtb.getStandardVariables());
+            return fallbackConverter.performConversion(conversionName, patient, tumour);
+        }
+        return null;
+    }
+
+    private static final ConversionICDO3toICD10 ICDO3_TO_ICD10_HELPER = new ConversionICDO3toICD10();
+
+    private static void generateMissingCodes(CanRegServerInterface server, Patient patient, Tumour tumour, ImportOptions io) {
+        if (patient == null || tumour == null) {
+            return;
+        }
+        GlobalToolBox gtb = resolveGlobalToolBox(server);
+
+        if (gtb != null) {
+            String topVarName = gtb.translateStandardVariableNameToDatabaseVariableName(
+                    Globals.StandardVariableNames.Topography.toString());
+            if (topVarName != null) {
+                String topVal = tumour.getVariableAsString(topVarName);
+                if (topVal != null && !topVal.trim().isEmpty()) {
+                    String normalizedTop = topVal.trim();
+                    if (normalizedTop.startsWith("C") || normalizedTop.startsWith("c")) {
+                        normalizedTop = normalizedTop.substring(1);
+                    }
+                    normalizedTop = normalizedTop.replace(".", "").trim();
+                    while (!normalizedTop.isEmpty() && normalizedTop.length() < 3) {
+                        normalizedTop = "0" + normalizedTop;
+                    }
+                    if (!normalizedTop.equals(topVal)) {
+                        tumour.setVariable(topVarName, normalizedTop);
+                    }
+                }
+            }
+
+            String morVarName = gtb.translateStandardVariableNameToDatabaseVariableName(
+                    Globals.StandardVariableNames.Morphology.toString());
+            String behVarName = gtb.translateStandardVariableNameToDatabaseVariableName(
+                    Globals.StandardVariableNames.Behaviour.toString());
+            if (morVarName != null) {
+                String morVal = tumour.getVariableAsString(morVarName);
+                if (morVal != null && !morVal.trim().isEmpty()) {
+                    String cleanedMor = morVal.trim().replace("/", "");
+                    if (cleanedMor.length() == 5) {
+                        if (behVarName != null) {
+                            String behVal = tumour.getVariableAsString(behVarName);
+                            if (behVal == null || behVal.trim().isEmpty()) {
+                                tumour.setVariable(behVarName, cleanedMor.substring(4, 5));
+                            }
+                        }
+                        cleanedMor = cleanedMor.substring(0, 4);
+                        tumour.setVariable(morVarName, cleanedMor);
+                    } else if (cleanedMor.length() > 4) {
+                        cleanedMor = cleanedMor.substring(0, 4);
+                        tumour.setVariable(morVarName, cleanedMor);
+                    } else if (!cleanedMor.equals(morVal)) {
+                        tumour.setVariable(morVarName, cleanedMor);
+                    }
+
+                    if (behVarName != null) {
+                        String behVal = tumour.getVariableAsString(behVarName);
+                        if (behVal == null || behVal.trim().isEmpty()) {
+                            String inferredBeh = ICDO3_TO_ICD10_HELPER.inferBehaviourFromMorphology(cleanedMor);
+                            if (inferredBeh != null && !inferredBeh.isEmpty()) {
+                                tumour.setVariable(behVarName, inferredBeh);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        String icd10VarName = (io != null && io.getICD10VariableName() != null)
+                ? io.getICD10VariableName()
+                : (gtb != null ? gtb.translateStandardVariableNameToDatabaseVariableName(Globals.StandardVariableNames.ICD10.toString()) : null);
+        if (icd10VarName != null) {
+            String icd10 = tumour.getVariableAsString(icd10VarName);
+            if (icd10 == null || icd10.trim().isEmpty()) {
+                ConversionResult[] conversionResult = runConversion(server, gtb, Converter.ConversionName.ICDO3toICD10, patient, tumour);
+                if (conversionResult != null && conversionResult.length > 0 && conversionResult[0].getValue() != null) {
+                    String val = conversionResult[0].getValue().toString().trim();
+                    if (!val.isEmpty() && !val.startsWith("?")) {
+                        tumour.setVariable(icd10VarName, val);
+                    }
+                }
+            }
+        }
+
+        String icccVarName = (io != null && io.getICCCVariableName() != null)
+                ? io.getICCCVariableName()
+                : (gtb != null ? gtb.translateStandardVariableNameToDatabaseVariableName(Globals.StandardVariableNames.ICCC.toString()) : null);
+        if (icccVarName != null) {
+            String iccc = tumour.getVariableAsString(icccVarName);
+            if (iccc == null || iccc.trim().isEmpty()) {
+                ConversionResult[] conversionResult = runConversion(server, gtb, Converter.ConversionName.ICDO3toICCC3, patient, tumour);
+                if (conversionResult != null && conversionResult.length > 0 && conversionResult[0].getValue() != null) {
+                    String val = conversionResult[0].getValue().toString().trim();
+                    if (!val.isEmpty() && !val.startsWith("?")) {
+                        tumour.setVariable(icccVarName, val);
+                    }
+                }
+            }
+        }
     }
 }

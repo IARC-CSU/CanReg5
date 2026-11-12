@@ -121,6 +121,7 @@ public class CanRegClientApp extends SingleFrameApplication {
     private Document doc;
     private Map<Integer, Dictionary> dictionary;
     private boolean canregServerRunningOnThisMachine = false;
+    private boolean isAdHocDB = false;
     private GlobalToolBox globalToolBox;
     private Checker checker;
     private Converter converter;
@@ -506,6 +507,7 @@ public class CanRegClientApp extends SingleFrameApplication {
 
         mainServer = loginServer.login(username, password);
         if (mainServer != null) {
+            this.isAdHocDB = isAdHocDB;
             this.pingExecutor = Executors.newSingleThreadScheduledExecutor();
             Integer seconds = Integer.parseInt(localSettings.getProperty(LocalSettings.CLIENT_TO_SERVER_PING_KEY));
             this.pingExecutor.scheduleAtFixedRate(new PingToServer(), 0, seconds, TimeUnit.SECONDS);
@@ -558,6 +560,14 @@ public class CanRegClientApp extends SingleFrameApplication {
 
     public String getSystemName() {
         return systemName;
+    }
+
+    public boolean isAdHocDB() {
+        return isAdHocDB;
+    }
+
+    public void setAdHocDB(boolean isAdHocDB) {
+        this.isAdHocDB = isAdHocDB;
     }
     
     public CanRegServerInterface getServer() {

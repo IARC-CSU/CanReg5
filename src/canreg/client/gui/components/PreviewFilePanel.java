@@ -66,6 +66,7 @@ public class PreviewFilePanel extends javax.swing.JPanel {
     private ActionListener listener;
     public static final String FILE_CHANGED_ACTION = "file_changed";
     public static final String SEPARATING_CHARACTER_CHANGED_ACTION = "separating_character_changed";
+    public static final String USE_FILE_FOR_ALL_TABLES_ACTION = "use_file_for_all_tables";
     private static final Logger LOGGER = Logger.getLogger(PreviewFilePanel.class.getName());
 
 
@@ -80,7 +81,8 @@ public class PreviewFilePanel extends javax.swing.JPanel {
         SortedMap<String, Charset> charsets = Charset.availableCharsets();
         charsetsComboBox.setModel(new javax.swing.DefaultComboBoxModel(charsets.values().toArray()));
         // set the default mapping
-        charsetsComboBox.setSelectedItem(CanRegClientApp.getApplication().getGlobalToolBox().getStandardCharset());
+        canreg.common.GlobalToolBox gtb = CanRegClientApp.getApplication().getGlobalToolBox();
+        charsetsComboBox.setSelectedItem(gtb != null ? gtb.getStandardCharset() : Charset.defaultCharset());
         charsetsComboBox.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -118,6 +120,7 @@ public class PreviewFilePanel extends javax.swing.JPanel {
         autodetectButton = new javax.swing.JButton();
         fileEncodingLabel = new javax.swing.JLabel();
         charsetsComboBox = new javax.swing.JComboBox();
+        useForAllTablesButton = new javax.swing.JButton();
 
         setName("Form"); // NOI18N
 
@@ -244,6 +247,9 @@ public class PreviewFilePanel extends javax.swing.JPanel {
         charsetsComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         charsetsComboBox.setName("charsetsComboBox"); // NOI18N
 
+        useForAllTablesButton.setAction(actionMap.get("useFileForAllTablesAction")); // NOI18N
+        useForAllTablesButton.setName("useForAllTablesButton"); // NOI18N
+
         javax.swing.GroupLayout chooseFilePanelLayout = new javax.swing.GroupLayout(chooseFilePanel);
         chooseFilePanel.setLayout(chooseFilePanelLayout);
         chooseFilePanelLayout.setHorizontalGroup(
@@ -271,7 +277,9 @@ public class PreviewFilePanel extends javax.swing.JPanel {
                             .addGroup(chooseFilePanelLayout.createSequentialGroup()
                                 .addComponent(browseButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(previewButton))
+                                .addComponent(previewButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(useForAllTablesButton))
                             .addComponent(separatingCharacterComboBox, 0, 1, Short.MAX_VALUE))))
                 .addContainerGap())
         );
@@ -280,6 +288,7 @@ public class PreviewFilePanel extends javax.swing.JPanel {
             .addGroup(chooseFilePanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(chooseFilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(useForAllTablesButton)
                     .addComponent(previewButton)
                     .addComponent(browseButton)
                     .addComponent(fileLabel)
@@ -417,7 +426,10 @@ public class PreviewFilePanel extends javax.swing.JPanel {
 
     @Action
     public void previewAction() {
-        changeFile();
+        String currentText = fileNameTextField.getText().trim();
+        if (!currentText.equals(lastNotifiedFilePath)) {
+            changeFile();
+        }
         updatePreview(true);
     }
 
@@ -445,9 +457,22 @@ public class PreviewFilePanel extends javax.swing.JPanel {
     
     @Action
     public void comboBoxChanged() {
-        listener.actionPerformed(new ActionEvent(this, 0, SEPARATING_CHARACTER_CHANGED_ACTION));
+        char currentSep = getSeparator();
+        if (currentSep != lastNotifiedSeparator) {
+            lastNotifiedSeparator = currentSep;
+            if (listener != null) {
+                listener.actionPerformed(new ActionEvent(this, 0, SEPARATING_CHARACTER_CHANGED_ACTION));
+            }
+        }
         if (inFile != null && inFile.exists() && inFile.isFile()) {
             updatePreview();
+        }
+    }
+    
+    @Action
+    public void useFileForAllTablesAction() {
+        if (listener != null) {
+            listener.actionPerformed(new ActionEvent(this, 0, USE_FILE_FOR_ALL_TABLES_ACTION));
         }
     }
     
@@ -469,18 +494,29 @@ public class PreviewFilePanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane previewTableScrollPane;
     private javax.swing.JComboBox separatingCharacterComboBox;
     private javax.swing.JLabel separatingCharacterLabel;
+    private javax.swing.JButton useForAllTablesButton;
     // End of variables declaration//GEN-END:variables
 
     private String lastAutoDetectedSeparatorFilePath = null;
+    private String lastNotifiedFilePath = "";
+    private char lastNotifiedSeparator = '\0';
 
     private void changeFile() {
-        if (fileNameTextField.getText().trim().length() > 0) {
+        String currentText = fileNameTextField.getText().trim();
+        if (currentText.equals(lastNotifiedFilePath)) {
+            return;
+        }
+        lastNotifiedFilePath = currentText;
+        if (currentText.length() > 0) {
             try {
-                inFile = new File(fileNameTextField.getText().trim());
-                listener.actionPerformed(new ActionEvent(this, 0, FILE_CHANGED_ACTION));
+                inFile = new File(currentText);
+                if (listener != null) {
+                    listener.actionPerformed(new ActionEvent(this, 0, FILE_CHANGED_ACTION));
+                }
                 if (inFile.exists() && inFile.isFile()) {
                     numberOfRecordsTextField.setText("" + (canreg.common.Tools.numberOfLinesInFile(inFile.getCanonicalPath()) - 1));
                     autoDetectSeparator(false);
+                    lastNotifiedSeparator = getSeparator();
                     updatePreview();
                 } else {
                     previewPanel.setVisible(false);
@@ -491,6 +527,9 @@ public class PreviewFilePanel extends javax.swing.JPanel {
             }
         } else {
             inFile = null;
+            if (listener != null) {
+                listener.actionPerformed(new ActionEvent(this, 0, FILE_CHANGED_ACTION));
+            }
             previewPanel.setVisible(false);
         }
     }
@@ -561,5 +600,19 @@ public class PreviewFilePanel extends javax.swing.JPanel {
 
     public void setChooser(JFileChooser chooser) {
         this.chooser = chooser;
+    }
+
+    public void setFile(File file) {
+        fileNameTextField.setText(file != null ? file.getAbsolutePath() : "");
+        changeFile();
+    }
+
+    public void setFile(File file, char separator, Charset charset) {
+        if (charset != null) {
+            charsetsComboBox.setSelectedItem(charset);
+        }
+        setSeparator(separator);
+        fileNameTextField.setText(file != null ? file.getAbsolutePath() : "");
+        changeFile();
     }
 }

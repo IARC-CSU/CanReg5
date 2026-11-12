@@ -37,6 +37,16 @@ public class Relation {
     private String databaseVariableName;    
     // 
     private String fileVariableName;
+    // Whether this relation was populated from learned user mapping history
+    private boolean learnedMapping;
+
+    public boolean isLearnedMapping() {
+        return learnedMapping;
+    }
+
+    public void setLearnedMapping(boolean learnedMapping) {
+        this.learnedMapping = learnedMapping;
+    }
 
     /**
      * 

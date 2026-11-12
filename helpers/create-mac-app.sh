@@ -41,9 +41,11 @@ if [ -f "$ICON_SOURCE" ]; then
     sips -z 512 512   "$ICON_SOURCE" --out "$ICONSET/icon_512x512.png" >/dev/null 2>&1
     sips -z 1024 1024 "$ICON_SOURCE" --out "$ICONSET/icon_512x512@2x.png" >/dev/null 2>&1
     
-    iconutil -c icns "$ICONSET" -o "${RESOURCES_DIR}/CanReg5.icns"
+    iconutil -c icns "$ICONSET" -o "${RESOURCES_DIR}/CanReg5.icns" 2>/dev/null || echo "Warning: iconutil could not generate icns; app bundle will use default system icon."
     rm -rf "$ICONSET"
-    echo "App icon generated successfully."
+    if [ -f "${RESOURCES_DIR}/CanReg5.icns" ]; then
+        echo "App icon generated successfully."
+    fi
 else
     echo "Warning: LogoBetaNewer.png not found. App bundle will use default system icon."
 fi

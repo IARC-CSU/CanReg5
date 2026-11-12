@@ -213,6 +213,9 @@ public class Checker {
             } else {
                 data = tumour.getVariable(dbvle.getShortName());
             }
+            if (data instanceof String && ((String) data).trim().isEmpty()) {
+                data = null;
+            }
             variables.put(standardVariable, data);
         }
         for (CheckInterface check : checks) {

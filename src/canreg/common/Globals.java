@@ -107,6 +107,7 @@ public class Globals {
     static final private String CANREG_BACKUP_FOLDER_NAME = "Backup";
     static final private String CANREG_HOLDING_DB_SYSTEM_DESCRIPTION_FOLDER_NAME = "Holding";
     static final private String CANREG_ADHOC_DB_SYSTEM_DESCRIPTION_FOLDER_NAME = "AdHoc";
+    static final private String CANREG_ADHOC_DATABASE_FOLDER_NAME = "AdHocDatabase";
     static public String CANREG_PASSWORD_FILE_NAME = CANREG_SERVER_FOLDER + FILE_SEPARATOR + "passwords.properties";
     static public String CANREG_LEVELS_FILE_NAME = CANREG_SERVER_FOLDER + FILE_SEPARATOR + "levels.properties";
     static public String CANREG_CONFIG_DATABASE = CANREG_SERVER_FOLDER + FILE_SEPARATOR + "database.properties";
@@ -151,6 +152,10 @@ public class Globals {
      * 
      */
     static public String CANREG_SERVER_ADHOC_DB_SYSTEM_DESCRIPTION_FOLDER = CANREG_SERVER_FOLDER + Globals.FILE_SEPARATOR + CANREG_ADHOC_DB_SYSTEM_DESCRIPTION_FOLDER_NAME;
+    /**
+     *
+     */
+    static public String CANREG_SERVER_ADHOC_DATABASE_FOLDER = CANREG_SERVER_FOLDER + Globals.FILE_SEPARATOR + CANREG_ADHOC_DATABASE_FOLDER_NAME;
     /**
      *
      */

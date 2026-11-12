@@ -198,7 +198,7 @@ public class RecordEditor extends javax.swing.JInternalFrame
         //remove the add patient record button for now
         addpatientRecordButton.setVisible(false);
         
-        if(this.server == null) {
+        if (this.server == null || (CanRegClientApp.getApplication() != null && CanRegClientApp.getApplication().isAdHocDB())) {
             this.productionBtn.setVisible(false);
             this.viewFullDataBtn.setVisible(false);
             this.viewProductionRecordBtn.setVisible(false);

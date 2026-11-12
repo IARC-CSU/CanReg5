@@ -95,6 +95,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     private CanRegDAO currentDAO;
     private HashMap<String, CanRegDAO> registriesDAOs;
     private Map<Integer, Object[]> patientsData;
+    private boolean isAdHocDB;
 
     /**
      *
@@ -117,6 +118,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
     private void initialize(String registryCode, boolean isAdHocDB) throws RemoteException {
         registriesDAOs = new HashMap<>();
         defaultRegistryCode = registryCode;
+        this.isAdHocDB = isAdHocDB;
         defaultConfigFileUtils = new DefaultConfigFileUtils();
         LOGGER.log(Level.INFO, "Java version: {0}", System.getProperty("java.version"));
 
@@ -293,7 +295,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
         // Connect to the database
         CanRegDAO dao = null;
         try {
-            dao = new CanRegDAO(sysDesc.getRegistryCode(), sysDesc.getSystemDescriptionDocument(), holding);
+            dao = new CanRegDAO(sysDesc.getRegistryCode(), sysDesc.getSystemDescriptionDocument(), holding, this.isAdHocDB);
             connected = dao.connect();
         } catch (SQLException ex) {
             System.out.println("ERROR ***");
@@ -308,7 +310,7 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
                 String password = new String(pf.getPassword());
                 if (password.length() > 0) {
                     try {
-                        dao = new CanRegDAO(sysDesc.getRegistryCode(), sysDesc.getSystemDescriptionDocument(), holding);
+                        dao = new CanRegDAO(sysDesc.getRegistryCode(), sysDesc.getSystemDescriptionDocument(), holding, this.isAdHocDB);
                         connected = dao.connectWithBootPassword(password.toCharArray());
                     } catch (RemoteException | SQLException ex1) {
                         LOGGER.log(Level.SEVERE, null, ex1);
@@ -1351,7 +1353,8 @@ public class CanRegServerImpl extends UnicastRemoteObject implements CanRegServe
             holdingDBSystemDescriptionFolder.deleteOnExit();
         }
 
-        File holdingDBFolder = new File(Globals.CANREG_SERVER_DATABASE_FOLDER + Globals.FILE_SEPARATOR + holdingRegistryCode);
+        String dbRootFolder = isAdHocDB ? Globals.CANREG_SERVER_ADHOC_DATABASE_FOLDER : Globals.CANREG_SERVER_DATABASE_FOLDER;
+        File holdingDBFolder = new File(dbRootFolder + Globals.FILE_SEPARATOR + holdingRegistryCode);
         if (!Tools.deleteFolderRecursively(holdingDBFolder)) {
             holdingDBFolder.deleteOnExit();
         }

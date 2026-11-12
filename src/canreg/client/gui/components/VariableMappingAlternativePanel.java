@@ -31,6 +31,7 @@ public class VariableMappingAlternativePanel extends javax.swing.JPanel {
 
     private DatabaseVariablesListElement databaseVariableListElement;
     private int fileColumnNumber;
+    private boolean learnedMapping = false;
     // private String fileVariable;
     // private String[] fileElements;
 
@@ -47,15 +48,48 @@ public class VariableMappingAlternativePanel extends javax.swing.JPanel {
         fileElementsComboBox.setModel(new javax.swing.DefaultComboBoxModel(entriesInComboBox));
     }
 
-        private void updateWarning(String fileElementSelected) {
+    public String findMatchingFileElement(String candidate) {
+        if (candidate == null || candidate.trim().isEmpty()) {
+            return null;
+        }
+        javax.swing.ComboBoxModel model = fileElementsComboBox.getModel();
+        for (int i = 1; i < model.getSize(); i++) {
+            Object elem = model.getElementAt(i);
+            if (elem != null && elem.toString().equals(candidate)) {
+                return elem.toString();
+            }
+        }
+        for (int i = 1; i < model.getSize(); i++) {
+            Object elem = model.getElementAt(i);
+            if (elem != null && elem.toString().trim().equalsIgnoreCase(candidate.trim())) {
+                return elem.toString();
+            }
+        }
+        return null;
+    }
+
+    public void setLearnedMapping(boolean learnedMapping) {
+        this.learnedMapping = learnedMapping;
+        updateWarning(getSelectedFileElement());
+    }
+
+    public boolean isLearnedMapping() {
+        return learnedMapping;
+    }
+
+    private void updateWarning(String fileElementSelected) {
         if (fileElementSelected != null && fileElementSelected.trim().length() > 0) {
             if (databaseVariableListElement != null) {
-                dbVariableLabel.setText("<html>" + dbVariableLabel(databaseVariableListElement) + "<html>");
+                if (learnedMapping) {
+                    dbVariableLabel.setText("<html><i>" + dbVariableLabel(databaseVariableListElement) + " [Learned]</i></html>");
+                } else {
+                    dbVariableLabel.setText("<html>" + dbVariableLabel(databaseVariableListElement) + "</html>");
+                }
                 dbVariableLabel.repaint();
             }
         } else {
             if (databaseVariableListElement != null) {
-                dbVariableLabel.setText("<html><b>" + dbVariableLabel(databaseVariableListElement) + "</b><html>");
+                dbVariableLabel.setText("<html><b>" + dbVariableLabel(databaseVariableListElement) + "</b></html>");
                 dbVariableLabel.repaint();
             }
         }
@@ -156,6 +190,7 @@ public class VariableMappingAlternativePanel extends javax.swing.JPanel {
      */
     @Action
     public void changeComboBoxAction() {
+        learnedMapping = false;
         updateWarning(getSelectedFileElement());
     }
 

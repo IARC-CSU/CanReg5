@@ -103,12 +103,18 @@ public class CheckDateOfLastContact extends CheckInterface {
             incidenceDate = DateHelper.parseDateStringToGregorianCalendarCanReg(incidenceDateCode, Globals.DATE_FORMAT_STRING);
         } catch (ParseException ex) {
             LOGGER.log(Level.SEVERE, null, ex);
+            result.setResultCode(CheckResult.ResultCode.Invalid);
+            result.setMessage("Not a valid date");
+            return result;
         } catch (NumberFormatException numberFormatException) {
             result.setResultCode(CheckResult.ResultCode.Invalid);
             result.setMessage("Not a number");
             return result;
         } catch (IllegalArgumentException ex) {
-            LOGGER.log(Level.WARNING, String.format("Dates : %s , %s",birthDateCode,incidenceDate), ex);
+            LOGGER.log(Level.WARNING, String.format("Dates : %s , %s", dlcCode, incidenceDateCode), ex);
+            result.setResultCode(CheckResult.ResultCode.Invalid);
+            result.setMessage("Not a valid date");
+            return result;
         } catch (NullPointerException nullPointerException) {
             result.setResultCode(CheckResult.ResultCode.Missing);
             result.setMessage("Missing variable(s) needed.");
