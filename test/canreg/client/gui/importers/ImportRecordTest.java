@@ -487,4 +487,287 @@ public class ImportRecordTest {
         assertEquals("TumourID must be reset before saving so production assigns the new ID",
                 "", savedTumourHolder[0].getVariable("TumourID"));
     }
+
+    @Test
+    public void testImportTumourGeneratesMissingICD10AndICCCWhenChecksFailOrDisabled() throws Exception {
+        final Tumour[] savedTumourHolder = new Tumour[1];
+        CanRegServerInterface server = (CanRegServerInterface) Proxy.newProxyInstance(
+                CanRegServerInterface.class.getClassLoader(),
+                new Class<?>[]{CanRegServerInterface.class},
+                new InvocationHandler() {
+                    @Override
+                    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                        if ("saveTumour".equals(method.getName())) {
+                            savedTumourHolder[0] = (Tumour) args[0];
+                            return 910;
+                        }
+                        if ("getDatabseDescription".equals(method.getName())) {
+                            return TestFixtures.loadTestSystemDocument();
+                        }
+                        return null;
+                    }
+                });
+
+        String sexVar = globalToolBox.translateStandardVariableNameToDatabaseVariableName(
+                Globals.StandardVariableNames.Sex.toString());
+        String topVar = globalToolBox.translateStandardVariableNameToDatabaseVariableName(
+                Globals.StandardVariableNames.Topography.toString());
+        String morVar = globalToolBox.translateStandardVariableNameToDatabaseVariableName(
+                Globals.StandardVariableNames.Morphology.toString());
+        String behVar = globalToolBox.translateStandardVariableNameToDatabaseVariableName(
+                Globals.StandardVariableNames.Behaviour.toString());
+        String icd10Var = globalToolBox.translateStandardVariableNameToDatabaseVariableName(
+                Globals.StandardVariableNames.ICD10.toString());
+        String icccVar = globalToolBox.translateStandardVariableNameToDatabaseVariableName(
+                Globals.StandardVariableNames.ICCC.toString());
+        String recStatusVar = globalToolBox.translateStandardVariableNameToDatabaseVariableName(
+                Globals.StandardVariableNames.TumourRecordStatus.toString());
+        String checkStatusVar = globalToolBox.translateStandardVariableNameToDatabaseVariableName(
+                Globals.StandardVariableNames.CheckStatus.toString());
+
+        Patient patient = new Patient();
+        patient.setVariable("PatientRecordID", "PRID_GEN_CODES");
+        patient.setVariable(sexVar, "2");
+
+        Tumour tumour = new Tumour();
+        tumour.setVariable("TumourID", "TID_GEN_01");
+        tumour.setVariable("PatientRecordIDtumourtable", "PRID_GEN_CODES");
+        tumour.setVariable(topVar, "C50.9");
+        tumour.setVariable(morVar, "8500");
+        tumour.setVariable(behVar, "3");
+
+        ImportOptions io = new ImportOptions();
+        io.setDoChecks(true);
+        io.setICD10VariableName(icd10Var);
+        io.setICCCVariableName(icccVar);
+        io.setTumourRecordStatus(recStatusVar);
+        io.setTumourCheckStatus(checkStatusVar);
+
+        Import.ImportCache cache = new Import.ImportCache();
+        cache.putPatientByPRID("PRID_GEN_CODES", patient);
+
+        StringWriter reportWriter = new StringWriter();
+        Import.importTumour(server, ImportOptions.REJECT, "TID_GEN_01", "PRID_GEN_CODES",
+                tumour, io, reportWriter, false, false, false, cache);
+
+        assertNotNull("saveTumour should have been called", savedTumourHolder[0]);
+        assertEquals("Topography should be normalized to 3 digits", "509", savedTumourHolder[0].getVariable(topVar));
+        assertEquals("Missing ICD10 should be generated", "C509", savedTumourHolder[0].getVariable(icd10Var));
+        assertEquals("Missing ICCC should be generated", "11f", savedTumourHolder[0].getVariable(icccVar));
+    }
+
+    @Test
+    public void testImportTumourGeneratesMissingBehaviourICD10AndICCCFromTopographyAndMorphologyOnly() throws Exception {
+        final Tumour[] savedTumourHolder = new Tumour[1];
+        CanRegServerInterface server = (CanRegServerInterface) Proxy.newProxyInstance(
+                CanRegServerInterface.class.getClassLoader(),
+                new Class<?>[]{CanRegServerInterface.class},
+                new InvocationHandler() {
+                    @Override
+                    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                        if ("saveTumour".equals(method.getName())) {
+                            savedTumourHolder[0] = (Tumour) args[0];
+                            return 911;
+                        }
+                        if ("getDatabseDescription".equals(method.getName())) {
+                            return TestFixtures.loadTestSystemDocument();
+                        }
+                        return null;
+                    }
+                });
+
+        String topVar = globalToolBox.translateStandardVariableNameToDatabaseVariableName(
+                Globals.StandardVariableNames.Topography.toString());
+        String morVar = globalToolBox.translateStandardVariableNameToDatabaseVariableName(
+                Globals.StandardVariableNames.Morphology.toString());
+        String behVar = globalToolBox.translateStandardVariableNameToDatabaseVariableName(
+                Globals.StandardVariableNames.Behaviour.toString());
+        String icd10Var = globalToolBox.translateStandardVariableNameToDatabaseVariableName(
+                Globals.StandardVariableNames.ICD10.toString());
+        String icccVar = globalToolBox.translateStandardVariableNameToDatabaseVariableName(
+                Globals.StandardVariableNames.ICCC.toString());
+        String recStatusVar = globalToolBox.translateStandardVariableNameToDatabaseVariableName(
+                Globals.StandardVariableNames.TumourRecordStatus.toString());
+        String checkStatusVar = globalToolBox.translateStandardVariableNameToDatabaseVariableName(
+                Globals.StandardVariableNames.CheckStatus.toString());
+
+        Patient patient = new Patient();
+        patient.setVariable("PatientRecordID", "PRID_TOP_MOR_ONLY");
+
+        Tumour tumour = new Tumour();
+        tumour.setVariable("TumourID", "TID_TOP_MOR_01");
+        tumour.setVariable("PatientRecordIDtumourtable", "PRID_TOP_MOR_ONLY");
+        tumour.setVariable(topVar, "C50.9");
+        tumour.setVariable(morVar, "8500");
+        // Behaviour is intentionally left unmapped / null
+
+        ImportOptions io = new ImportOptions();
+        io.setDoChecks(true);
+        io.setICD10VariableName(icd10Var);
+        io.setICCCVariableName(icccVar);
+        io.setTumourRecordStatus(recStatusVar);
+        io.setTumourCheckStatus(checkStatusVar);
+
+        Import.ImportCache cache = new Import.ImportCache();
+        cache.putPatientByPRID("PRID_TOP_MOR_ONLY", patient);
+
+        StringWriter reportWriter = new StringWriter();
+        Import.importTumour(server, ImportOptions.REJECT, "TID_TOP_MOR_01", "PRID_TOP_MOR_ONLY",
+                tumour, io, reportWriter, false, false, false, cache);
+
+        assertNotNull("saveTumour should have been called", savedTumourHolder[0]);
+        assertEquals("Topography should be normalized to 3 digits", "509", savedTumourHolder[0].getVariable(topVar));
+        assertEquals("Missing Behaviour should be inferred from Morphology", "3", savedTumourHolder[0].getVariable(behVar));
+        assertEquals("Missing ICD10 should be generated", "C509", savedTumourHolder[0].getVariable(icd10Var));
+        assertEquals("Missing ICCC should be generated", "11f", savedTumourHolder[0].getVariable(icccVar));
+    }
+
+    @Test
+    public void testImportTumourDefaultsRecordStatusTo1WhenMissingAndDoChecksFalse() throws Exception {
+        final Tumour[] savedTumourHolder = new Tumour[1];
+        CanRegServerInterface server = (CanRegServerInterface) Proxy.newProxyInstance(
+                CanRegServerInterface.class.getClassLoader(),
+                new Class<?>[]{CanRegServerInterface.class},
+                new InvocationHandler() {
+                    @Override
+                    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                        if ("saveTumour".equals(method.getName())) {
+                            savedTumourHolder[0] = (Tumour) args[0];
+                            return 301;
+                        }
+                        if ("getDatabseDescription".equals(method.getName())) {
+                            return TestFixtures.loadTestSystemDocument();
+                        }
+                        return null;
+                    }
+                });
+
+        String recStatusVar = globalToolBox.translateStandardVariableNameToDatabaseVariableName(
+                Globals.StandardVariableNames.TumourRecordStatus.toString());
+
+        Patient patient = new Patient();
+        patient.setVariable("PatientRecordID", "PRID_DEF_RECS_01");
+
+        Tumour tumour = new Tumour();
+        tumour.setVariable("TumourID", "TID_DEF_RECS_01");
+        tumour.setVariable("PatientRecordIDtumourtable", "PRID_DEF_RECS_01");
+        // TumourRecordStatus is intentionally omitted / null
+
+        ImportOptions io = new ImportOptions();
+        io.setDoChecks(false);
+        io.setTumourRecordStatus(recStatusVar);
+
+        Import.ImportCache cache = new Import.ImportCache();
+        cache.putPatientByPRID("PRID_DEF_RECS_01", patient);
+
+        StringWriter reportWriter = new StringWriter();
+        Import.importTumour(server, ImportOptions.REJECT, "TID_DEF_RECS_01", "PRID_DEF_RECS_01",
+                tumour, io, reportWriter, false, false, false, cache);
+
+        assertNotNull("saveTumour should have been called", savedTumourHolder[0]);
+        assertEquals("Record status must default to 1 when missing", "1", savedTumourHolder[0].getVariable(recStatusVar));
+    }
+
+    @Test
+    public void testImportTumourUpdatesRecordStatusBasedOnCheckOutcome() throws Exception {
+        final Tumour[] savedTumourHolder = new Tumour[1];
+        CanRegServerInterface server = (CanRegServerInterface) Proxy.newProxyInstance(
+                CanRegServerInterface.class.getClassLoader(),
+                new Class<?>[]{CanRegServerInterface.class},
+                new InvocationHandler() {
+                    @Override
+                    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                        if ("saveTumour".equals(method.getName())) {
+                            savedTumourHolder[0] = (Tumour) args[0];
+                            return 302;
+                        }
+                        if ("getDatabseDescription".equals(method.getName())) {
+                            return TestFixtures.loadTestSystemDocument();
+                        }
+                        return null;
+                    }
+                });
+
+        String recStatusVar = globalToolBox.translateStandardVariableNameToDatabaseVariableName(
+                Globals.StandardVariableNames.TumourRecordStatus.toString());
+        String checkStatusVar = globalToolBox.translateStandardVariableNameToDatabaseVariableName(
+                Globals.StandardVariableNames.CheckStatus.toString());
+        String inciDateVar = globalToolBox.translateStandardVariableNameToDatabaseVariableName(
+                Globals.StandardVariableNames.IncidenceDate.toString());
+        String birthDateVar = globalToolBox.translateStandardVariableNameToDatabaseVariableName(
+                Globals.StandardVariableNames.BirthDate.toString());
+        String ageVar = globalToolBox.translateStandardVariableNameToDatabaseVariableName(
+                Globals.StandardVariableNames.Age.toString());
+
+        Patient patient = new Patient();
+        patient.setVariable("PatientRecordID", "PRID_CHECK_ERR");
+        patient.setVariable(birthDateVar, "19800101");
+
+        // Tumour with conflicting / impossible age and incidence date (age 100 with birth date 1980 and incidence 1985 -> Invalid)
+        Tumour tumour = new Tumour();
+        tumour.setVariable("TumourID", "TID_CHECK_ERR");
+        tumour.setVariable("PatientRecordIDtumourtable", "PRID_CHECK_ERR");
+        tumour.setVariable(inciDateVar, "19850101");
+        tumour.setVariable(ageVar, 100);
+
+        ImportOptions io = new ImportOptions();
+        io.setDoChecks(true);
+        io.setTumourRecordStatus(recStatusVar);
+        io.setTumourCheckStatus(checkStatusVar);
+
+        Import.ImportCache cache = new Import.ImportCache();
+        cache.putPatientByPRID("PRID_CHECK_ERR", patient);
+
+        StringWriter reportWriter = new StringWriter();
+        Import.importTumour(server, ImportOptions.REJECT, "TID_CHECK_ERR", "PRID_CHECK_ERR",
+                tumour, io, reportWriter, false, false, false, cache);
+
+        assertNotNull("saveTumour should have been called", savedTumourHolder[0]);
+        assertEquals("Record status must be 0 when checks detect errors", "0", savedTumourHolder[0].getVariable(recStatusVar));
+    }
+
+    @Test
+    public void testImportTumourFallbackToPatientByTID() throws Exception {
+        final Tumour[] savedTumourHolder = new Tumour[1];
+        CanRegServerInterface server = (CanRegServerInterface) Proxy.newProxyInstance(
+                CanRegServerInterface.class.getClassLoader(),
+                new Class<?>[]{CanRegServerInterface.class},
+                new InvocationHandler() {
+                    @Override
+                    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                        if ("saveTumour".equals(method.getName())) {
+                            savedTumourHolder[0] = (Tumour) args[0];
+                            return 303;
+                        }
+                        return null;
+                    }
+                });
+
+        Patient patient = new Patient();
+        patient.setVariable("PatientID", "PID_FALLBACK");
+        patient.setVariable("PatientRecordID", "PRID_FALLBACK");
+
+        Tumour tumour = new Tumour();
+        tumour.setVariable("TumourID", "TID_SINGLE_FILE");
+
+        ImportOptions io = new ImportOptions();
+        io.setTumourIDVariablename("TumourID");
+        io.setPatientIDVariableName("PatientID");
+        io.setPatientRecordIDVariableName("PatientRecordID");
+        io.setPatientIDTumourTableVariableName("PatientIDtumourtable");
+        io.setPatientRecordIDTumourTableVariableName("PatientRecordIDtumourtable");
+
+        Import.ImportCache cache = new Import.ImportCache();
+        cache.putPatientByTID("TID_SINGLE_FILE", patient);
+
+        StringWriter reportWriter = new StringWriter();
+        Import.importTumour(server, ImportOptions.REJECT, "TID_SINGLE_FILE", null,
+                tumour, io, reportWriter, false, false, false, cache);
+
+        assertNotNull("saveTumour should have been called", savedTumourHolder[0]);
+        assertEquals("PatientRecordIDtumourtable should be linked via TID cache fallback",
+                "PRID_FALLBACK", savedTumourHolder[0].getVariable("PatientRecordIDtumourtable"));
+        assertEquals("PatientIDtumourtable should be set from patient via TID cache fallback",
+                "PID_FALLBACK", savedTumourHolder[0].getVariable("PatientIDtumourtable"));
+    }
 }

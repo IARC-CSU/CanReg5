@@ -70,6 +70,8 @@
                                   <Component id="browseButton" min="-2" max="-2" attributes="1"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="previewButton" min="-2" max="-2" attributes="1"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="useForAllTablesButton" min="-2" max="-2" attributes="1"/>
                               </Group>
                               <Component id="separatingCharacterComboBox" alignment="1" min="0" pref="0" max="32767" attributes="1"/>
                           </Group>
@@ -84,6 +86,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="useForAllTablesButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="previewButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="browseButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="fileLabel" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -231,6 +234,14 @@
               <action class="canreg.client.gui.components.PreviewFilePanel" id="previewAction" methodName="previewAction"/>
             </Property>
             <Property name="name" type="java.lang.String" value="previewButton" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="useForAllTablesButton">
+          <Properties>
+            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+              <action class="canreg.client.gui.components.PreviewFilePanel" id="useFileForAllTablesAction" methodName="useFileForAllTablesAction"/>
+            </Property>
+            <Property name="name" type="java.lang.String" value="useForAllTablesButton" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="fileLabel">

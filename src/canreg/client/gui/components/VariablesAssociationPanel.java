@@ -27,8 +27,10 @@ package canreg.client.gui.components;
 
 import canreg.client.dataentry.Relation;
 import canreg.common.DatabaseVariablesListElement;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -44,6 +46,16 @@ public class VariablesAssociationPanel extends javax.swing.JPanel {
     }
 
     public void initializeVariableMappingPanel(List<Relation> map, DatabaseVariablesListElement[] databaseVariablesListElements, String[] fileElements) {
+        Map<Integer, String> previousSelections = new HashMap<Integer, String>();
+        if (panelList != null) {
+            for (VariableMappingAlternativePanel oldPanel : panelList) {
+                String selected = oldPanel.getSelectedFileElement();
+                if (selected != null && !selected.trim().isEmpty()) {
+                    previousSelections.put(oldPanel.getDBVariableIndex(), selected);
+                }
+            }
+        }
+
         // Remove all variable mappings
         variablesPanel.removeAll();
         panelList = new LinkedList<VariableMappingAlternativePanel>();
@@ -53,19 +65,27 @@ public class VariablesAssociationPanel extends javax.swing.JPanel {
             VariableMappingAlternativePanel vmp = new VariableMappingAlternativePanel();
             panelList.add(vmp);
             vmp.setFileElements(fileElements);
-            boolean found = false;
-            int i = 0;
-            Relation rel = null;
-            while (!found && i < map.size()) {
-                rel = map.get(i++);
-                if (rel != null) {
-                    found = rel.getDatabaseTableVariableID() == dbvle.getDatabaseTableVariableID();
+            Relation matchedRel = null;
+            if (map != null) {
+                for (Relation candidate : map) {
+                    if (candidate != null && candidate.getDatabaseTableVariableID() == dbvle.getDatabaseTableVariableID()) {
+                        if (matchedRel == null || (matchedRel.isLearnedMapping() && !candidate.isLearnedMapping())) {
+                            matchedRel = candidate;
+                        }
+                    }
                 }
             }
-            if (found) {
-                vmp.setSelectedFileElement(rel.getFileVariableName());
+            if (matchedRel != null) {
+                vmp.setSelectedFileElement(matchedRel.getFileVariableName());
+                vmp.setLearnedMapping(matchedRel.isLearnedMapping());
             } else {
-                vmp.setSelectedFileElement(null);
+                String prevSelected = previousSelections.get(dbvle.getDatabaseTableVariableID());
+                String matchingPrev = prevSelected != null ? vmp.findMatchingFileElement(prevSelected) : null;
+                if (matchingPrev != null) {
+                    vmp.setSelectedFileElement(matchingPrev);
+                } else {
+                    vmp.setSelectedFileElement(null);
+                }
             }
             vmp.setDBVariable(dbvle);
             variablesPanel.add(vmp);

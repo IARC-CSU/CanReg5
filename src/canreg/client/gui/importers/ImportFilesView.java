@@ -44,9 +44,11 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
@@ -82,7 +84,9 @@ import org.w3c.dom.Document;
 public class ImportFilesView extends javax.swing.JInternalFrame implements ActionListener {
 
     private static final Logger LOGGER = Logger.getLogger(ImportFilesView.class.getName());
-    private boolean needToRebuildVariableMap = true;
+    private boolean needToRebuildPatientVariableMap = true;
+    private boolean needToRebuildTumourVariableMap = true;
+    private boolean needToRebuildSourceVariableMap = true;
     private File patientInFile;
     private File tumourInFile;
     private File sourceInFile;
@@ -96,6 +100,7 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
     private Task importTask;
     private final JFileChooser chooser;
     private boolean reportFileNameSet = false;
+    private boolean filesImported = false;
 
 
     public ImportFilesView() {
@@ -121,6 +126,13 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
 
         // And add the listener to the tabbedPane
         tabbedPane.addChangeListener(tabbedPaneChangeListener);
+
+        associateVariavlesTabbedPane.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                syncForeignKeyMappings();
+            }
+        });
 
         localSettings = CanRegClientApp.getApplication().getLocalSettings();
         path = localSettings.getProperty("import_path");
@@ -148,6 +160,10 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
         patientVariablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, Globals.PATIENT_TABLE_NAME);
         tumourVariablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, Globals.TUMOUR_TABLE_NAME);
         sourceVariablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, Globals.SOURCE_TABLE_NAME);
+
+        if (CanRegClientApp.getApplication() != null && CanRegClientApp.getApplication().isAdHocDB()) {
+            configureForAdHoc();
+        }
     }
     
     public void refreshServerDependentVars() {
@@ -156,10 +172,35 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
         tumourVariablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, Globals.TUMOUR_TABLE_NAME);
         sourceVariablesInDB = canreg.common.Tools.getVariableListElements(doc, Globals.NAMESPACE, Globals.SOURCE_TABLE_NAME);
         globalToolBox = CanRegClientApp.getApplication().getGlobalToolBox();
+        needToRebuildPatientVariableMap = true;
+        needToRebuildTumourVariableMap = true;
+        needToRebuildSourceVariableMap = true;
     }
     
     public JComponent getMainPanel() {
         return this.tabbedPane;
+    }
+
+    public int getSelectedTabIndex() {
+        return this.tabbedPane.getSelectedIndex();
+    }
+
+    public int getTabCount() {
+        return this.tabbedPane.getTabCount();
+    }
+
+    public boolean hasSelectedFiles() {
+        return patientPreviewFilePanel.getInFile() != null
+                || tumourPreviewFilePanel.getInFile() != null
+                || sourcePreviewFilePanel.getInFile() != null;
+    }
+
+    public boolean isFilesImported() {
+        return filesImported;
+    }
+
+    public void triggerImportButton() {
+        importButton.doClick();
     }
 
     private void changeTab(int tabNumber) {
@@ -678,17 +719,49 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
     
     @Action
     public void jumpToNextTabAction() {
-        initializeVariableMappingTab();
         int tabNumber = tabbedPane.getSelectedIndex();
-        if (tabNumber < tabbedPane.getTabCount()) {
+        if (tabNumber == 0) {
+            checkSingleFilePrompt();
+        }
+        if (tabNumber < tabbedPane.getTabCount() - 1) {
             tabbedPane.setSelectedIndex(++tabNumber);
             changeTab(tabNumber);
         }
     }
 
+    public void checkSingleFilePrompt() {
+        File patientFile = patientPreviewFilePanel.getInFile();
+        File tumourFile = tumourPreviewFilePanel.getInFile();
+
+        if (tumourFile != null && tumourFile.exists() && (patientFile == null || !patientFile.exists())) {
+            int res = JOptionPane.showInternalConfirmDialog(
+                    this,
+                    java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportFilesView").getString("USE_TUMOUR_FILE_FOR_PATIENTS_PROMPT"),
+                    java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportFilesView").getString("SINGLE_FILE_DETECTED"),
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE);
+            if (res == JOptionPane.YES_OPTION) {
+                patientPreviewFilePanel.setFile(tumourFile, tumourPreviewFilePanel.getSeparator(), tumourPreviewFilePanel.getCharacterSet());
+                needToRebuildPatientVariableMap = true;
+                needToRebuildTumourVariableMap = true;
+            }
+        } else if (patientFile != null && patientFile.exists() && (tumourFile == null || !tumourFile.exists())) {
+            int res = JOptionPane.showInternalConfirmDialog(
+                    this,
+                    java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportFilesView").getString("USE_PATIENT_FILE_FOR_TUMOURS_PROMPT"),
+                    java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportFilesView").getString("SINGLE_FILE_DETECTED"),
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE);
+            if (res == JOptionPane.YES_OPTION) {
+                tumourPreviewFilePanel.setFile(patientFile, patientPreviewFilePanel.getSeparator(), patientPreviewFilePanel.getCharacterSet());
+                needToRebuildPatientVariableMap = true;
+                needToRebuildTumourVariableMap = true;
+            }
+        }
+    }
+
     @Action
     public void jumpToPreviousTabAction() {
-        initializeVariableMappingTab();
         int tabNumber = tabbedPane.getSelectedIndex();
         if (tabNumber >= 1) {
             tabbedPane.setSelectedIndex(--tabNumber);
@@ -793,15 +866,59 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        Object source = e.getSource();
         if (e.getActionCommand().equals(PreviewFilePanel.FILE_CHANGED_ACTION)) {
-            needToRebuildVariableMap = true;
+            if (source == patientPreviewFilePanel) {
+                needToRebuildPatientVariableMap = true;
+            } else if (source == tumourPreviewFilePanel) {
+                needToRebuildTumourVariableMap = true;
+            } else if (source == sourcePreviewFilePanel) {
+                needToRebuildSourceVariableMap = true;
+            } else {
+                needToRebuildPatientVariableMap = true;
+                needToRebuildTumourVariableMap = true;
+                needToRebuildSourceVariableMap = true;
+            }
+            filesImported = false;
             if (!reportFileNameSet) {
                 File file = new File(chooser.getCurrentDirectory().getAbsolutePath() + File.separatorChar + "import_report.txt");
                 // chooser.setSelectedFile(file);
                 reportFileNameTextField.setText(file.getAbsolutePath());
             }
-        } else if(e.getActionCommand().equals(PreviewFilePanel.SEPARATING_CHARACTER_CHANGED_ACTION)) {
-            this.comboBoxChanged();
+        } else if (e.getActionCommand().equals(PreviewFilePanel.SEPARATING_CHARACTER_CHANGED_ACTION)) {
+            if (source == patientPreviewFilePanel) {
+                needToRebuildPatientVariableMap = true;
+            } else if (source == tumourPreviewFilePanel) {
+                needToRebuildTumourVariableMap = true;
+            } else if (source == sourcePreviewFilePanel) {
+                needToRebuildSourceVariableMap = true;
+            } else {
+                this.comboBoxChanged();
+            }
+        } else if (e.getActionCommand().equals(PreviewFilePanel.USE_FILE_FOR_ALL_TABLES_ACTION)) {
+            if (source instanceof PreviewFilePanel) {
+                PreviewFilePanel sourcePanel = (PreviewFilePanel) source;
+                File file = sourcePanel.getInFile();
+                if (file != null && file.exists() && file.isFile()) {
+                    char sep = sourcePanel.getSeparator();
+                    Charset cs = sourcePanel.getCharacterSet();
+                    patientPreviewFilePanel.setFile(file, sep, cs);
+                    tumourPreviewFilePanel.setFile(file, sep, cs);
+                    sourcePreviewFilePanel.setFile(file, sep, cs);
+                    needToRebuildPatientVariableMap = true;
+                    needToRebuildTumourVariableMap = true;
+                    needToRebuildSourceVariableMap = true;
+                    filesImported = false;
+                    if (!reportFileNameSet) {
+                        File repFile = new File(file.getParentFile().getAbsolutePath() + File.separatorChar + "import_report.txt");
+                        reportFileNameTextField.setText(repFile.getAbsolutePath());
+                    }
+                    JOptionPane.showInternalMessageDialog(this,
+                            java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportFilesView").getString("FILE_APPLIED_TO_ALL_TABLES"),
+                            java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportFilesView").getString("INFORMATION"),
+                            JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
         }
     }
 
@@ -812,6 +929,17 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
         this.overwriteRadioButton.setEnabled(true);
         this.updateRadioButton.setEnabled(true);
         this.testOnlyCheckBox.setEnabled(false);
+        if (this.maxLinesPanel != null) {
+            this.maxLinesPanel.setVisible(false);
+            if (this.maxLinesTextField != null) {
+                this.maxLinesTextField.setText("");
+            }
+            if (this.importFilePanel != null) {
+                this.importFilePanel.remove(this.maxLinesPanel);
+                this.importFilePanel.revalidate();
+                this.importFilePanel.repaint();
+            }
+        }
     }
 
     private class ImportActionTask extends org.jdesktop.application.Task<Object, Void> {
@@ -827,12 +955,22 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
             super(app);
             Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
             setCursor(hourglassCursor);
+            syncForeignKeyMappings();
             variablesMap = buildMap();
+            LearnedVariableMappings.getInstance().saveMappings(doc, variablesMap);
                        
+            File patFile = patientPreviewFilePanel.getInFile();
+            File tumFile = tumourPreviewFilePanel.getInFile();
+            File srcFile = sourcePreviewFilePanel.getInFile();
+            if (patFile == null && tumFile != null) {
+                patFile = tumFile;
+            } else if (tumFile == null && patFile != null) {
+                tumFile = patFile;
+            }
             files = new File[]{
-                patientPreviewFilePanel.getInFile(),
-                tumourPreviewFilePanel.getInFile(),
-                sourcePreviewFilePanel.getInFile()
+                patFile,
+                tumFile,
+                srcFile
             };
 
             io = buildImportOptions();
@@ -902,10 +1040,18 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
             String fileListString = "";
             
             //In case they were replaced by the R scripts 
+            File patFile = patientPreviewFilePanel.getInFile();
+            File tumFile = tumourPreviewFilePanel.getInFile();
+            File srcFile = sourcePreviewFilePanel.getInFile();
+            if (patFile == null && tumFile != null) {
+                patFile = tumFile;
+            } else if (tumFile == null && patFile != null) {
+                tumFile = patFile;
+            }
             files = new File[]{
-                patientPreviewFilePanel.getInFile(),
-                tumourPreviewFilePanel.getInFile(),
-                sourcePreviewFilePanel.getInFile()
+                patFile,
+                tumFile,
+                srcFile
             };
             
             for (File file : files) {
@@ -918,6 +1064,15 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
             if (!(Boolean) result) {
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportFilesView").getString("SOMETHING_WRONG_WITH_THE_FILE(S)_") + fileListString + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportFilesView").getString("FILE(S)_NOT_SUCCESSFULLY_IMPORTED"), JOptionPane.WARNING_MESSAGE);
             } else {
+                filesImported = true;
+                progressBar.setValue(100);
+                progressBar.setString("100%");
+                patientsProgressBar.setValue(100);
+                patientsProgressBar.setString("100%");
+                tumoursProgressBar.setValue(100);
+                tumoursProgressBar.setString("100%");
+                sourcesProgressBar.setValue(100);
+                sourcesProgressBar.setString("100%");
                 JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportFilesView").getString("SUCCESSFULLY_IMPORTED_FILE(S)_") + fileListString + ".", java.util.ResourceBundle.getBundle("canreg/client/gui/importers/resources/ImportFilesView").getString("FILE(S)_SUCCESSFULLY_IMPORTED"), JOptionPane.INFORMATION_MESSAGE);
             }
             importTask = null;
@@ -1023,42 +1178,51 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
         try {
             // patient mapping
             patientInFile = patientPreviewFilePanel.getInFile();
-            if (needToRebuildVariableMap && patientInFile != null) {
-                br = new BufferedReader(new FileReader(patientInFile));
+            if (needToRebuildPatientVariableMap && patientInFile != null) {
+                br = new BufferedReader(new InputStreamReader(new FileInputStream(patientInFile), patientPreviewFilePanel.getCharacterSet()));
                 String line = br.readLine();
+                br.close();
+                br = null;
                 String[] lineElements = canreg.common.Tools.breakDownLine(patientPreviewFilePanel.getSeparator(), line);
-                List<Relation> map = Import.constructRelations(doc, lineElements);
+                List<Relation> map = Import.constructRelations(doc, lineElements, Globals.PATIENT_TABLE_NAME);
                 patientVariablesAssociationPanel.initializeVariableMappingPanel(map, patientVariablesInDB, lineElements);
+                needToRebuildPatientVariableMap = false;
             }
             // tumour mapping
             tumourInFile = tumourPreviewFilePanel.getInFile();
-            if (needToRebuildVariableMap && tumourInFile != null) {
-                br = new BufferedReader(new FileReader(tumourInFile));
+            if (needToRebuildTumourVariableMap && tumourInFile != null) {
+                br = new BufferedReader(new InputStreamReader(new FileInputStream(tumourInFile), tumourPreviewFilePanel.getCharacterSet()));
                 String line = br.readLine();
+                br.close();
+                br = null;
                 String[] lineElements = canreg.common.Tools.breakDownLine(tumourPreviewFilePanel.getSeparator(), line);
-                List<Relation> map = Import.constructRelations(doc, lineElements);
+                List<Relation> map = Import.constructRelations(doc, lineElements, Globals.TUMOUR_TABLE_NAME);
                 tumourVariablesAssociationPanel.initializeVariableMappingPanel(map, tumourVariablesInDB, lineElements);
+                needToRebuildTumourVariableMap = false;
             }
             // source mapping
             sourceInFile = sourcePreviewFilePanel.getInFile();
-            if (needToRebuildVariableMap && sourceInFile != null) {
-                br = new BufferedReader(new FileReader(sourceInFile));
+            if (needToRebuildSourceVariableMap && sourceInFile != null) {
+                br = new BufferedReader(new InputStreamReader(new FileInputStream(sourceInFile), sourcePreviewFilePanel.getCharacterSet()));
                 String line = br.readLine();
+                br.close();
+                br = null;
                 String[] lineElements = canreg.common.Tools.breakDownLine(sourcePreviewFilePanel.getSeparator(), line);
-                List<Relation> map = Import.constructRelations(doc, lineElements);
+                List<Relation> map = Import.constructRelations(doc, lineElements, Globals.SOURCE_TABLE_NAME);
                 sourceVariablesAssociationPanel.initializeVariableMappingPanel(map, sourceVariablesInDB, lineElements);
+                needToRebuildSourceVariableMap = false;
             }
+            syncForeignKeyMappings();
         } catch (RemoteException ex) {
             LOGGER.log(Level.SEVERE, null, ex);
             new TechnicalError().errorDialog();
         } catch (FileNotFoundException ex) {
             LOGGER.log(Level.SEVERE, null, ex);
-            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not open file: \'" + patientInFile.getPath() + "\'.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showInternalMessageDialog(CanRegClientApp.getApplication().getMainFrame().getContentPane(), "Could not open file: \'" + (patientInFile != null ? patientInFile.getPath() : "") + "\'.", "Error", JOptionPane.ERROR_MESSAGE);
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, null, ex);
             new TechnicalError().errorDialog();
         } finally {
-            needToRebuildVariableMap = false;
             try {
                 if (br != null) {
                     br.close();
@@ -1068,6 +1232,61 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
                 new TechnicalError().errorDialog();
             }
         }
+    }
+
+    private void syncForeignKeyMappings() {
+        syncLinkedStandardVariables(
+                patientVariablesAssociationPanel, Globals.StandardVariableNames.PatientID.toString(),
+                tumourVariablesAssociationPanel, Globals.StandardVariableNames.PatientIDTumourTable.toString());
+        syncLinkedStandardVariables(
+                patientVariablesAssociationPanel, Globals.StandardVariableNames.PatientRecordID.toString(),
+                tumourVariablesAssociationPanel, Globals.StandardVariableNames.PatientRecordIDTumourTable.toString());
+        syncLinkedStandardVariables(
+                tumourVariablesAssociationPanel, Globals.StandardVariableNames.TumourID.toString(),
+                sourceVariablesAssociationPanel, Globals.StandardVariableNames.TumourIDSourceTable.toString());
+    }
+
+    private void syncLinkedStandardVariables(
+            canreg.client.gui.components.VariablesAssociationPanel panelA, String stdVarA,
+            canreg.client.gui.components.VariablesAssociationPanel panelB, String stdVarB) {
+        if (panelA == null || panelB == null
+                || panelA.getPanelList() == null || panelB.getPanelList() == null) {
+            return;
+        }
+        VariableMappingAlternativePanel vmpA = findPanelByStandardVariableName(panelA.getPanelList(), stdVarA);
+        VariableMappingAlternativePanel vmpB = findPanelByStandardVariableName(panelB.getPanelList(), stdVarB);
+        if (vmpA == null || vmpB == null) {
+            return;
+        }
+        String selectedA = vmpA.getSelectedFileElement();
+        String selectedB = vmpB.getSelectedFileElement();
+        if (selectedA != null && selectedB == null) {
+            String matchInB = vmpB.findMatchingFileElement(selectedA);
+            if (matchInB != null) {
+                vmpB.setSelectedFileElement(matchInB);
+                vmpB.setLearnedMapping(true);
+            }
+        } else if (selectedB != null && selectedA == null) {
+            String matchInA = vmpA.findMatchingFileElement(selectedB);
+            if (matchInA != null) {
+                vmpA.setSelectedFileElement(matchInA);
+                vmpA.setLearnedMapping(true);
+            }
+        }
+    }
+
+    private VariableMappingAlternativePanel findPanelByStandardVariableName(
+            List<VariableMappingAlternativePanel> panelList, String standardVariableName) {
+        if (panelList == null || standardVariableName == null) {
+            return null;
+        }
+        for (VariableMappingAlternativePanel vmp : panelList) {
+            DatabaseVariablesListElement dbVLE = vmp.getDatabaseVariablesListElement();
+            if (dbVLE != null && standardVariableName.equalsIgnoreCase(dbVLE.getStandardVariableName())) {
+                return vmp;
+            }
+        }
+        return null;
     }
 
     private List<Relation> buildMap() {
@@ -1145,11 +1364,20 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
         io.setTestOnly(testOnlyCheckBox.isSelected());
 
         // separators
-        io.setSeparators(new char[]{
-            patientPreviewFilePanel.getSeparator(),
-            tumourPreviewFilePanel.getSeparator(),
-            sourcePreviewFilePanel.getSeparator()
-        });
+        char patSep = patientPreviewFilePanel.getSeparator();
+        char tumSep = tumourPreviewFilePanel.getSeparator();
+        char srcSep = sourcePreviewFilePanel.getSeparator();
+        Charset patCs = patientPreviewFilePanel.getCharacterSet();
+        Charset tumCs = tumourPreviewFilePanel.getCharacterSet();
+        Charset srcCs = sourcePreviewFilePanel.getCharacterSet();
+        if (patientPreviewFilePanel.getInFile() == null && tumourPreviewFilePanel.getInFile() != null) {
+            patSep = tumSep;
+            patCs = tumCs;
+        } else if (tumourPreviewFilePanel.getInFile() == null && patientPreviewFilePanel.getInFile() != null) {
+            tumSep = patSep;
+            tumCs = patCs;
+        }
+        io.setSeparators(new char[]{patSep, tumSep, srcSep});
 
         // CanReg data
         io.setDoChecks(doChecksCheckBox.isSelected());
@@ -1189,10 +1417,18 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
 
     private Charset[] getCharsets() {
         // get one from each table
+        Charset patCs = patientPreviewFilePanel.getCharacterSet();
+        Charset tumCs = tumourPreviewFilePanel.getCharacterSet();
+        Charset srcCs = sourcePreviewFilePanel.getCharacterSet();
+        if (patientPreviewFilePanel.getInFile() == null && tumourPreviewFilePanel.getInFile() != null) {
+            patCs = tumCs;
+        } else if (tumourPreviewFilePanel.getInFile() == null && patientPreviewFilePanel.getInFile() != null) {
+            tumCs = patCs;
+        }
         return new Charset[]{
-            patientPreviewFilePanel.getCharacterSet(),
-            tumourPreviewFilePanel.getCharacterSet(),
-            sourcePreviewFilePanel.getCharacterSet()
+            patCs,
+            tumCs,
+            srcCs
         };
     }
 
@@ -1201,7 +1437,9 @@ public class ImportFilesView extends javax.swing.JInternalFrame implements Actio
      */
     @Action
     public void comboBoxChanged() {
-        needToRebuildVariableMap = true;
+        needToRebuildPatientVariableMap = true;
+        needToRebuildTumourVariableMap = true;
+        needToRebuildSourceVariableMap = true;
     }
 
     /**
