@@ -85,5 +85,32 @@ public class ConversionICDO3toICD10Test {
         vars.put(StandardVariableNames.Behaviour, "3");
         assertEquals(ConversionResult.ResultCode.Invalid, conv.performConversion(vars)[0].getResultCode());
     }
+
+    @Test
+    public void testNormalizedTopographyAndMorphologySlashAndMissingSex() {
+        Map<StandardVariableNames, Object> vars = new LinkedHashMap<StandardVariableNames, Object>();
+        vars.put(StandardVariableNames.Topography, "C50.9");
+        vars.put(StandardVariableNames.Morphology, "8500/3");
+
+        ConversionResult[] res = conv.performConversion(vars);
+        assertEquals(ConversionResult.ResultCode.OK, res[0].getResultCode());
+        assertEquals("C509", res[0].getValue());
+    }
+
+    @Test
+    public void testInferBehaviourWhenMissing() {
+        assertEquals("3", conv.inferBehaviourFromMorphology("8500"));
+        assertEquals("2", conv.inferBehaviourFromMorphology("8077"));
+        assertEquals("1", conv.inferBehaviourFromMorphology("8442"));
+        assertEquals("0", conv.inferBehaviourFromMorphology("8146"));
+
+        Map<StandardVariableNames, Object> vars = new LinkedHashMap<StandardVariableNames, Object>();
+        vars.put(StandardVariableNames.Topography, "C53.9");
+        vars.put(StandardVariableNames.Morphology, "8077");
+
+        ConversionResult[] res = conv.performConversion(vars);
+        assertEquals(ConversionResult.ResultCode.OK, res[0].getResultCode());
+        assertEquals("D069", res[0].getValue());
+    }
 }
 

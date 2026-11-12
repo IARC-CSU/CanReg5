@@ -141,13 +141,50 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
         int topographyNumber = 0;
 
         try {
-            sexCode = variables.get(StandardVariableNames.Sex).toString();
-            sexNumber = Integer.parseInt(sexCode);
-            morphologyCode = variables.get(StandardVariableNames.Morphology).toString();
+            Object topObj = variables.get(StandardVariableNames.Topography);
+            Object morObj = variables.get(StandardVariableNames.Morphology);
+            if (topObj == null || morObj == null) {
+                throw new NullPointerException();
+            }
+            topographyCode = topObj.toString().trim();
+            if (topographyCode.startsWith("C") || topographyCode.startsWith("c")) {
+                topographyCode = topographyCode.substring(1);
+            }
+            topographyCode = topographyCode.replace(".", "").trim();
+            if (topographyCode.isEmpty()) {
+                throw new NullPointerException();
+            }
+            while (topographyCode.length() < 3) {
+                topographyCode = "0" + topographyCode;
+            }
+
+            morphologyCode = morObj.toString().trim().replace("/", "");
+            if (morphologyCode.isEmpty()) {
+                throw new NullPointerException();
+            }
+
+            Object behObj = variables.get(StandardVariableNames.Behaviour);
+            behaviourCode = (behObj != null) ? behObj.toString().trim() : "";
+            if (morphologyCode.length() == 5 && behaviourCode.isEmpty()) {
+                behaviourCode = morphologyCode.substring(4, 5);
+                morphologyCode = morphologyCode.substring(0, 4);
+            } else if (morphologyCode.length() > 4) {
+                morphologyCode = morphologyCode.substring(0, 4);
+            }
+            if (behaviourCode.isEmpty()) {
+                behaviourCode = inferBehaviourFromMorphology(morphologyCode);
+            }
+            if (behaviourCode == null || behaviourCode.isEmpty()) {
+                throw new NullPointerException();
+            }
+
+            Object sexObj = variables.get(StandardVariableNames.Sex);
+            sexCode = (sexObj != null) ? sexObj.toString().trim() : "";
+            sexNumber = sexCode.isEmpty() ? 9 : Integer.parseInt(sexCode);
+
             morphologyNumber = Integer.parseInt(morphologyCode);
-            topographyCode = variables.get(StandardVariableNames.Topography).toString();
-            topographyNumber = Integer.parseInt(morphologyCode);
-            behaviourCode = variables.get(StandardVariableNames.Behaviour).toString();
+            topographyNumber = Integer.parseInt(topographyCode);
+            behaviourNumber = Integer.parseInt(behaviourCode);
         } catch (NumberFormatException numberFormatException) {
             result[0].setResultCode(ConversionResult.ResultCode.Invalid);
             result[0].setMessage("Not a number");
@@ -453,5 +490,40 @@ public class ConversionICDO3toICD10 implements ConversionInterface {
     @Override
     public ConversionName getConversionName() {
         return conversionName;
+    }
+
+    /**
+     * Infers the default ICD-O-3 behaviour code ("3", "2", "1", or "0") for a 4-digit
+     * morphology code using the O3_10M lookup table when Behaviour is not provided.
+     * Prefers non-rare behaviour combinations in order: 3 (malignant), 2 (in situ),
+     * 1 (uncertain), 0 (benign).
+     */
+    public String inferBehaviourFromMorphology(String morphology4Code) {
+        if (morphology4Code == null) {
+            return null;
+        }
+        String cleaned = morphology4Code.trim().replace("/", "");
+        if (cleaned.length() == 5) {
+            return cleaned.substring(4, 5);
+        }
+        if (cleaned.length() != 4 || morphologyICD10Map == null) {
+            return null;
+        }
+        String[] candidates = new String[]{"3", "2", "1", "0"};
+        // First pass: look for non-rare behaviour rules (rule character <= ':')
+        for (String beh : candidates) {
+            String line = morphologyICD10Map.get(cleaned + beh);
+            if (line != null && !line.isEmpty() && line.charAt(0) <= 58) {
+                return beh;
+            }
+        }
+        // Second pass: fall back to any defined behaviour entry in O3_10M
+        for (String beh : candidates) {
+            String line = morphologyICD10Map.get(cleaned + beh);
+            if (line != null && !line.isEmpty()) {
+                return beh;
+            }
+        }
+        return "3";
     }
 }

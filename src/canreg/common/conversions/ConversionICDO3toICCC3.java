@@ -163,13 +163,47 @@ public class ConversionICDO3toICCC3 implements ConversionInterface {
         int topographyNumber = 0;
 
         try {
-            sexCode = variables.get(StandardVariableNames.Sex).toString();
-            sexNumber = Integer.parseInt(sexCode);
-            morphologyCode = variables.get(StandardVariableNames.Morphology).toString();
+            Object topObj = variables.get(StandardVariableNames.Topography);
+            Object morObj = variables.get(StandardVariableNames.Morphology);
+            if (topObj == null || morObj == null) {
+                throw new NullPointerException();
+            }
+            topographyCode = topObj.toString().trim();
+            if (topographyCode.startsWith("C") || topographyCode.startsWith("c")) {
+                topographyCode = topographyCode.substring(1);
+            }
+            topographyCode = topographyCode.replace(".", "").trim();
+            if (topographyCode.isEmpty()) {
+                throw new NullPointerException();
+            }
+            while (topographyCode.length() < 3) {
+                topographyCode = "0" + topographyCode;
+            }
+
+            morphologyCode = morObj.toString().trim().replace("/", "");
+            if (morphologyCode.isEmpty()) {
+                throw new NullPointerException();
+            }
+
+            Object behObj = variables.get(StandardVariableNames.Behaviour);
+            behaviourCode = (behObj != null) ? behObj.toString().trim() : "";
+            if (morphologyCode.length() == 5 && behaviourCode.isEmpty()) {
+                behaviourCode = morphologyCode.substring(4, 5);
+                morphologyCode = morphologyCode.substring(0, 4);
+            } else if (morphologyCode.length() > 4) {
+                morphologyCode = morphologyCode.substring(0, 4);
+            }
+            if (behaviourCode.isEmpty()) {
+                behaviourCode = "3";
+            }
+
+            Object sexObj = variables.get(StandardVariableNames.Sex);
+            sexCode = (sexObj != null) ? sexObj.toString().trim() : "";
+            sexNumber = sexCode.isEmpty() ? 9 : Integer.parseInt(sexCode);
+
             morphologyNumber = Integer.parseInt(morphologyCode);
-            topographyCode = variables.get(StandardVariableNames.Topography).toString();
-            topographyNumber = Integer.parseInt(morphologyCode);
-            behaviourCode = variables.get(StandardVariableNames.Behaviour).toString();
+            topographyNumber = Integer.parseInt(topographyCode);
+            behaviourNumber = Integer.parseInt(behaviourCode);
         } catch (NumberFormatException numberFormatException) {
             result[0].setResultCode(ConversionResult.ResultCode.Invalid);
             result[0].setMessage("Not a number");
