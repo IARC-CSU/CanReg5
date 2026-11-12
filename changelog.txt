@@ -1,6 +1,13 @@
 # CanReg5 Changelog
 
 ## 5.00.46BETA
+- Adjust Age vs Birth Date vs Incidence Date quality check so that a 1-year difference produces a Query (warning) rather than an Invalid (error) status across all registry modules and ad-hoc analysis
+- Suppress holding database controls ("Move Into Main DB", "Delete Holding DB", "Select All Records") and Max Lines box in Ad-hoc mode
+- Ensure all table progress bars (Patients, Tumours, Sources) and Overall progress end at 100% upon import completion even if table(s) are skipped
+- Support single-file flat tumour imports in ad-hoc analysis and file importer: add "Use file for all tables" button, automatic single-file detection, prompt when only one file is selected, and link tumours to patients via line number and TumourID when PatientRecordID is unmapped
+- Persist learned manual variable mappings across import sessions with table-aware foreign-key mapping
+- Set Record Status (RecS) to 1 by default on import when missing, and update based on check outcome when Do Checks is selected (errors change to 0, warnings keep 1)
+- Fix duplicate key collisions in TUMOUR table during ad-hoc import by ensuring uniqueness of generated TumourID, preserving mapped PatientRecordID, syncing tumour foreign keys, and expanding import cache capacity
 - Converted user instructions and handbook into GitHub-Flavored Markdown in doc/instructions/ with offline image bundling and chapter navigation
 - Added Cancer Registry Completeness Analyzer tool to Tools menu with full offline D3/Tailwind bundling and step-by-step export guidance
 - Migrate version check, release download, and instructions PDF links from legacy IACR URLs to GitHub
