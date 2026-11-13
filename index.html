@@ -1,54 +1,75 @@
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>CanReg5 by IARC-CSU</title>
-
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/github-light.css">
-    <meta name="viewport" content="width=device-width">
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-  </head>
-  <body>
-    <div class="wrapper">
-      <header>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CanReg5 – Open source cancer registry software</title>
+  <meta name="description" content="CanReg5 is a multi-user, multi-platform, open-source tool to input, store, check and analyse cancer registry data.">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <header class="hero">
+    <div class="container hero-inner">
+      <img src="assets/logo.png" alt="CanReg5 logo" class="logo" width="128" height="128">
+      <div>
         <h1>CanReg5</h1>
-        <p>a multi user, multi platform, open source tool to input, store, check and analyse cancer registry data.</p>
-
-        <p class="view"><a href="https://github.com/IARC-CSU/CanReg5">View the Project on GitHub <small>IARC-CSU/CanReg5</small></a></p>
-
-
-        <ul>
-          <li><a href="https://github.com/IARC-CSU/CanReg5/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/IARC-CSU/CanReg5/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/IARC-CSU/CanReg5">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
-      <section>
-        <h3>
-<a id="description" class="anchor" href="#description" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Description</h3>
-
-<p>Cancer registries need a tool to input, store, check and analyse their data. If these data are also coded and verified in a standard way, it facilitates the production of comparable analyses across registry populations. The main goal of the CanReg5 project is to provide a flexible and easy to use tool to accomplish these objectives. CanReg5 is a multi user, multi platform, open source tool to input, store, check and analyse cancer registry data. It has modules to do: data entry, quality control, consistency checks and basic analysis of the data  It was designed with an emphasis on user friendliness, it has a modern user interface and is easy to navigate.  Is available in several languages. (English, French, Spanish, Portuguese, Russian, Turkish, Georgian, and Chinese.)</p>
-
-<h3>
-<a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Authors and Contributors</h3>
-
-<p>Morten Johannes Ervik (<a href="https://github.com/IARC-CSU" class="user-mention">@IARC-CSU</a> / <a href="https://github.com/mortenjohs" class="user-mention">@mortenjohs</a>)</p>
-
-<h3>
-<a id="support-or-contact" class="anchor" href="#support-or-contact" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Support or Contact</h3>
-
-<p>Having trouble with CanReg? Check out our <a href="http://www.iacr.com.fr/CanReg5/CanReg5-instructions.pdf">hand book</a> or <a href="http://www.iacr.com.fr/CanReg5">contact support</a> and we’ll help you sort it out.</p>
-      </section>
-      <footer>
-        <p>This project is maintained by <a href="https://github.com/IARC-CSU">IARC-CSU</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
-      </footer>
+        <p class="tagline">A multi-user, multi-platform, open-source tool to input, store, check and analyse cancer registry data.</p>
+        <p class="byline">Developed by the International Agency for Research on Cancer (IARC/WHO).</p>
+      </div>
     </div>
-    <script src="javascripts/scale.fix.js"></script>
-    
-  </body>
+  </header>
+
+  <main class="container">
+    <section class="releases" aria-label="Downloads">
+      <article class="card stable" id="stable">
+        <div class="card-head">
+          <span class="badge badge-stable">Stable</span>
+          <h2>Latest release</h2>
+        </div>
+        <p class="version" data-field="version">Loading…</p>
+        <p class="date" data-field="date"></p>
+        <p class="note">Recommended for production use in cancer registries.</p>
+        <div class="downloads" data-field="downloads"></div>
+        <a class="button primary" data-field="page"
+           href="https://github.com/IARC-CSU/CanReg5/releases/latest">View release on GitHub</a>
+      </article>
+
+      <article class="card beta" id="beta">
+        <div class="card-head">
+          <span class="badge badge-beta">Beta</span>
+          <h2>Latest pre-release</h2>
+        </div>
+        <p class="version" data-field="version">Loading…</p>
+        <p class="date" data-field="date"></p>
+        <p class="note">Preview of upcoming features. Test on a copy of your data – not for production.</p>
+        <div class="downloads" data-field="downloads"></div>
+        <a class="button" data-field="page"
+           href="https://github.com/IARC-CSU/CanReg5/releases">View release on GitHub</a>
+      </article>
+    </section>
+
+    <section class="links">
+      <h2>Resources</h2>
+      <ul>
+        <li><a href="https://github.com/IARC-CSU/CanReg5/releases">All releases</a></li>
+        <li><a href="https://github.com/IARC-CSU/CanReg5/blob/develop/changelog.txt">Changelog</a></li>
+        <li><a href="https://github.com/IARC-CSU/CanReg5/tree/develop/doc/instructions">Instructions &amp; handbook</a></li>
+        <li><a href="tools/completeness_analyzer.html">Cancer registry completeness analyzer</a></li>
+        <li><a href="https://github.com/IARC-CSU/CanReg5">Source code</a></li>
+        <li><a href="https://github.com/IARC-CSU/CanReg5/issues">Report an issue</a></li>
+        <li><a href="https://gicr.iarc.fr/">Global Initiative for Cancer Registry Development (GICR)</a></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      &copy; 2008–<span id="year">2026</span> International Agency for Research on Cancer. CanReg5 is released under the
+      <a href="https://github.com/IARC-CSU/CanReg5/blob/develop/LICENSE">GNU GPL v3</a>.
+    </div>
+  </footer>
+
+  <script src="assets/releases.js"></script>
+</body>
 </html>
