@@ -96,10 +96,13 @@ public final class CanRegClientView extends FrameView {
         ResourceMap resourceMap = getResourceMap();
 
         // Set the main programs icon
+        java.awt.Image frameIcon = null;
         java.net.URL imageURL = CanRegClientView.class.getResource(resourceMap.getString("icon", String.class));
         if (imageURL != null) {
-            java.awt.Window.getWindows()[0].setIconImage(new ImageIcon(imageURL).getImage());
+            frameIcon = new ImageIcon(imageURL).getImage();
+            java.awt.Window.getWindows()[0].setIconImage(frameIcon);
         }
+        configurePlatformDesktopIntegration(frameIcon);
 
         setUserRightsLevel(userRightsLevel);
 
@@ -183,6 +186,50 @@ public final class CanRegClientView extends FrameView {
 
     }
 
+
+    private void configurePlatformDesktopIntegration(java.awt.Image fallbackIcon) {
+        if (java.awt.GraphicsEnvironment.isHeadless()) {
+            return;
+        }
+        try {
+            if (java.awt.Taskbar.isTaskbarSupported()) {
+                java.awt.Taskbar taskbar = java.awt.Taskbar.getTaskbar();
+                if (taskbar.isSupported(java.awt.Taskbar.Feature.ICON_IMAGE)) {
+                    java.net.URL hiResUrl = CanRegClientView.class.getResource("/canreg/client/gui/resources/LogoBetaNewer.png");
+                    java.awt.Image dockIcon = hiResUrl != null ? new ImageIcon(hiResUrl).getImage() : fallbackIcon;
+                    if (dockIcon != null) {
+                        taskbar.setIconImage(dockIcon);
+                    }
+                }
+            }
+        } catch (UnsupportedOperationException | SecurityException ex) {
+            LOGGER.log(Level.FINE, "Taskbar icon not supported on this platform", ex);
+        }
+
+        boolean isMac = System.getProperty("os.name", "").toLowerCase(java.util.Locale.ENGLISH).contains("mac");
+        if (!isMac) {
+            return;
+        }
+        try {
+            if (java.awt.Desktop.isDesktopSupported()) {
+                java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
+                if (desktop.isSupported(java.awt.Desktop.Action.APP_ABOUT)) {
+                    desktop.setAboutHandler(e -> javax.swing.SwingUtilities.invokeLater(this::showAboutBox));
+                }
+                if (desktop.isSupported(java.awt.Desktop.Action.APP_PREFERENCES)) {
+                    desktop.setPreferencesHandler(e -> javax.swing.SwingUtilities.invokeLater(this::showOptionFrame));
+                }
+                if (desktop.isSupported(java.awt.Desktop.Action.APP_QUIT_HANDLER)) {
+                    desktop.setQuitHandler((e, response) -> {
+                        response.cancelQuit();
+                        javax.swing.SwingUtilities.invokeLater(() -> CanRegClientApp.getApplication().exit(null));
+                    });
+                }
+            }
+        } catch (UnsupportedOperationException | SecurityException ex) {
+            LOGGER.log(Level.FINE, "macOS Desktop handlers could not be registered", ex);
+        }
+    }
 
     @Action
     public void showAboutBox() {

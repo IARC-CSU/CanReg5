@@ -421,10 +421,15 @@ public class VariableEditorPanel extends javax.swing.JPanel
         undoManager = new UndoManager();
         this.codeTextField.getDocument().removeUndoableEditListener(undoHandler);
         this.codeTextField.getDocument().addUndoableEditListener(undoHandler);
-        // ctrl + Z
-        KeyStroke undoKeystroke = KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.CTRL_DOWN_MASK);
-        // ctrl + Y
-        KeyStroke redoKeystroke = KeyStroke.getKeyStroke(KeyEvent.VK_Y, KeyEvent.CTRL_DOWN_MASK);
+        int menuMask = KeyEvent.CTRL_DOWN_MASK;
+        try {
+            menuMask = java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
+        } catch (java.awt.HeadlessException ignored) {
+        }
+        // ctrl/cmd + Z
+        KeyStroke undoKeystroke = KeyStroke.getKeyStroke(KeyEvent.VK_Z, menuMask);
+        // ctrl/cmd + Y
+        KeyStroke redoKeystroke = KeyStroke.getKeyStroke(KeyEvent.VK_Y, menuMask);
 
         undoAction = new UndoAction();
         // associate "ctrl + z" to the action "undoKeystroke"

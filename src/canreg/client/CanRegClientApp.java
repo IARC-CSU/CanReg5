@@ -704,69 +704,113 @@ public class CanRegClientApp extends SingleFrameApplication {
         }
     }
 
+    public static String resolveLookAndFeelClassName(String lafKey) {
+        boolean isMac = System.getProperty("os.name", "").toLowerCase(Locale.ENGLISH).contains("mac");
+        if (lafKey == null || lafKey.trim().isEmpty()) {
+            return isMac
+                    ? "com.formdev.flatlaf.themes.FlatMacLightLaf"
+                    : "com.formdev.flatlaf.FlatLightLaf";
+        }
+        String key = lafKey.trim();
+        if (key.equalsIgnoreCase("Flat Light") || key.equalsIgnoreCase("Light")) {
+            return "com.formdev.flatlaf.FlatLightLaf";
+        } else if (key.equalsIgnoreCase("Flat Dark")) {
+            return "com.formdev.flatlaf.FlatDarkLaf";
+        } else if (key.equalsIgnoreCase("IntelliJ Light")) {
+            return "com.formdev.flatlaf.FlatIntelliJLaf";
+        } else if (key.equalsIgnoreCase("Flat Darcula") || key.equalsIgnoreCase("Dark")) {
+            return "com.formdev.flatlaf.FlatDarculaLaf";
+        } else if (key.equalsIgnoreCase("macOS Light")) {
+            return "com.formdev.flatlaf.themes.FlatMacLightLaf";
+        } else if (key.equalsIgnoreCase("macOS Dark")) {
+            return "com.formdev.flatlaf.themes.FlatMacDarkLaf";
+        } else if (key.equalsIgnoreCase("One Dark")) {
+            return "com.formdev.flatlaf.intellijthemes.FlatOneDarkIJTheme";
+        } else if (key.equalsIgnoreCase("Nord")) {
+            return "com.formdev.flatlaf.intellijthemes.FlatNordIJTheme";
+        } else if (key.equalsIgnoreCase("Arc Light")) {
+            return "com.formdev.flatlaf.intellijthemes.FlatArcIJTheme";
+        } else if (key.equalsIgnoreCase("Arc Dark")) {
+            return "com.formdev.flatlaf.intellijthemes.FlatArcDarkIJTheme";
+        } else if (key.equalsIgnoreCase("GitHub Light")) {
+            return "com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatGitHubIJTheme";
+        } else if (key.equalsIgnoreCase("GitHub Dark")) {
+            return "com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatGitHubDarkIJTheme";
+        } else if (key.equalsIgnoreCase("Solarized Light")) {
+            return "com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatSolarizedLightIJTheme";
+        } else if (key.equalsIgnoreCase("Solarized Dark")) {
+            return "com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatSolarizedDarkIJTheme";
+        } else if (key.equalsIgnoreCase("High Contrast")) {
+            return "com.formdev.flatlaf.intellijthemes.FlatHighContrastIJTheme";
+        } else if (key.equalsIgnoreCase("System")) {
+            return UIManager.getSystemLookAndFeelClassName();
+        } else {
+            return "com.formdev.flatlaf.FlatLightLaf";
+        }
+    }
+
     /**
      *
      */
     public void applyPreferences() {
         Locale.setDefault(localSettings.getLocale());
+
+        // 1. Apply Look & Feel first so font overrides are not discarded by setLookAndFeel
+        String lafKey = localSettings.getProperty(LocalSettings.LOOK_AND_FEEL_KEY);
+        String lafClassName = resolveLookAndFeelClassName(lafKey);
+        try {
+            if (UIManager.getLookAndFeel() == null
+                    || !UIManager.getLookAndFeel().getClass().getName().equals(lafClassName)) {
+                UIManager.setLookAndFeel(lafClassName);
+            }
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+            LOGGER.log(Level.WARNING, "Failed to set look and feel: " + lafKey, ex);
+            try {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } catch (Exception e) {
+                LOGGER.log(Level.SEVERE, null, e);
+            }
+        }
+
+        // 2. Apply font family and size preferences (or reset to Look & Feel defaults)
         String fontNameCode = localSettings.getProperty(LocalSettings.FONT_NAME_KEY);
         String fontSize = localSettings.getProperty(LocalSettings.FONT_SIZE_KEY);
 
-        String fontName = "Tahoma";
-        int fontSizeInt = 11;
+        Font baseFont = UIManager.getLookAndFeelDefaults().getFont("defaultFont");
+        if (baseFont == null) {
+            baseFont = UIManager.getLookAndFeelDefaults().getFont("Label.font");
+        }
+        String fontName = baseFont != null ? baseFont.getFamily() : "SansSerif";
+        int fontSizeInt = baseFont != null ? baseFont.getSize() : 12;
 
-        boolean setFont = false;
-        if (fontNameCode != null && fontNameCode.length() > 0 && !fontNameCode.equalsIgnoreCase(LocalSettings.FONT_NAME_DEFAULT)) {
-            setFont = true;
+        boolean customFont = false;
+        if (fontNameCode != null && fontNameCode.trim().length() > 0
+                && !fontNameCode.trim().equalsIgnoreCase(LocalSettings.FONT_NAME_DEFAULT)) {
+            customFont = true;
             fontName = fontNameCode.trim();
         }
-        if (fontSize != null && fontSize.length() > 0 && !fontSize.equalsIgnoreCase(LocalSettings.FONT_SIZE_MEDIUM)) {
-            setFont = true;
-            if (fontSize.equalsIgnoreCase(LocalSettings.FONT_SIZE_BIG)) {
+        if (fontSize != null && fontSize.trim().length() > 0
+                && !fontSize.trim().equalsIgnoreCase(LocalSettings.FONT_SIZE_MEDIUM)) {
+            customFont = true;
+            if (fontSize.trim().equalsIgnoreCase(LocalSettings.FONT_SIZE_BIG)) {
                 fontSizeInt = 14;
-            } else if (fontSize.equalsIgnoreCase(LocalSettings.FONT_SIZE_SMALL)) {
+            } else if (fontSize.trim().equalsIgnoreCase(LocalSettings.FONT_SIZE_SMALL)) {
                 fontSizeInt = 10;
             }
         }
-        if (setFont) {
+
+        UITools.resetUIFont();
+        if (customFont) {
             setUIFont(fontName, fontSizeInt);
         }
-        String lafKey = localSettings.getProperty(LocalSettings.LOOK_AND_FEEL_KEY);
-        if (lafKey != null && lafKey.trim().length() > 0) {
-            try {
-                String lafClassName;
-                if (lafKey.equalsIgnoreCase("Flat Light")) {
-                    lafClassName = "com.formdev.flatlaf.FlatLightLaf";
-                } else if (lafKey.equalsIgnoreCase("Flat Dark")) {
-                    lafClassName = "com.formdev.flatlaf.FlatDarkLaf";
-                } else if (lafKey.equalsIgnoreCase("Flat Darcula") || lafKey.equalsIgnoreCase("Dark")) {
-                    lafClassName = "com.formdev.flatlaf.FlatDarculaLaf";
-                } else if (lafKey.equalsIgnoreCase("IntelliJ Light") || lafKey.equalsIgnoreCase("Light") || lafKey.equalsIgnoreCase("macOS Light")) {
-                    lafClassName = "com.formdev.flatlaf.FlatIntelliJLaf";
-                } else if (lafKey.equalsIgnoreCase("One Dark")) {
-                    lafClassName = "com.formdev.flatlaf.intellijthemes.FlatOneDarkIJTheme";
-                } else if (lafKey.equalsIgnoreCase("Nord")) {
-                    lafClassName = "com.formdev.flatlaf.intellijthemes.FlatNordIJTheme";
-                } else if (lafKey.equalsIgnoreCase("Arc Light")) {
-                    lafClassName = "com.formdev.flatlaf.intellijthemes.FlatArcIJTheme";
-                } else if (lafKey.equalsIgnoreCase("Arc Dark")) {
-                    lafClassName = "com.formdev.flatlaf.intellijthemes.FlatArcDarkIJTheme";
-                } else if (lafKey.equalsIgnoreCase("GitHub Light")) {
-                    lafClassName = "com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatGitHubIJTheme";
-                } else if (lafKey.equalsIgnoreCase("GitHub Dark") || lafKey.equalsIgnoreCase("macOS Dark")) {
-                    lafClassName = "com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatGitHubDarkIJTheme";
-                } else if (lafKey.equalsIgnoreCase("System")) {
-                    lafClassName = UIManager.getSystemLookAndFeelClassName();
-                } else {
-                    lafClassName = "com.formdev.flatlaf.FlatLightLaf";
-                }
-                UIManager.setLookAndFeel(lafClassName);
-            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-                LOGGER.log(Level.WARNING, "Failed to set look and feel: " + lafKey, ex);
-                try {
-                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                } catch (Exception e) {
-                    LOGGER.log(Level.SEVERE, null, e);
+
+        // 3. Refresh all open windows immediately so changes apply without restart
+        if (java.awt.Window.getWindows().length > 0) {
+            if (UIManager.getLookAndFeel() instanceof com.formdev.flatlaf.FlatLaf) {
+                com.formdev.flatlaf.FlatLaf.updateUI();
+            } else {
+                for (java.awt.Window window : java.awt.Window.getWindows()) {
+                    javax.swing.SwingUtilities.updateComponentTreeUI(window);
                 }
             }
         }
@@ -1450,10 +1494,10 @@ public class CanRegClientApp extends SingleFrameApplication {
     }
 
     /**
-     * Installs the JGoodies Look & Feels, if available, in classpath.
+     * Installs optional Look & Feels and initializes the default Look & Feel
+     * from saved settings or platform default.
      */
     public static void initializeLookAndFeels() {
-        // if in classpath try to load JGoodies Plastic Look & Feel
         try {
             LookAndFeelInfo[] lnfs = UIManager.getInstalledLookAndFeels();
             boolean found = false;
@@ -1466,7 +1510,8 @@ public class CanRegClientApp extends SingleFrameApplication {
                 UIManager.installLookAndFeel("JGoodies Plastic 3D",
                         "com.jgoodies.looks.plastic.Plastic3DLookAndFeel");
             }
-            UIManager.setLookAndFeel("com.jgoodies.looks.plastic.Plastic3DLookAndFeel");
+            String lafKey = localSettings != null ? localSettings.getProperty(LocalSettings.LOOK_AND_FEEL_KEY) : null;
+            UIManager.setLookAndFeel(resolveLookAndFeelClassName(lafKey));
         } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException t) {
             try {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -1704,7 +1749,11 @@ public class CanRegClientApp extends SingleFrameApplication {
      * @param args
      */
     public static void main(String[] args) {
-        System.setProperty("apple.awt.application.name", "CanReg5");
+        if (System.getProperty("os.name", "").toLowerCase(Locale.ENGLISH).contains("mac")) {
+            System.setProperty("apple.laf.useScreenMenuBar", "true");
+            System.setProperty("apple.awt.application.name", "CanReg5");
+            System.setProperty("apple.awt.application.appearance", "system");
+        }
         System.setProperty("flatlaf.useWindowDecorations", "true");
         // first see if we are dealing with something that doesn't use the GUI
         if (args.length > 0 && args[0].equalsIgnoreCase("--convert")) {

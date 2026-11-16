@@ -408,7 +408,7 @@ public final class LocalSettings {
             if (System.getProperty("os.name").toLowerCase().contains("mac")) {
                 property = "macOS Light";
             } else {
-                property = "Light";
+                property = "Flat Light";
             }
         } else if (key.equalsIgnoreCase(AUTO_BACKUP_KEY)) {
             property = TRUE_PROPERTY;

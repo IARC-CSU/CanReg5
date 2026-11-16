@@ -19,18 +19,37 @@
  */
 package canreg.client.gui.tools;
 
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Set;
 import javax.swing.UIManager;
 
 public class UITools {
 
+    private static final Set<Object> OVERRIDDEN_FONT_KEYS = new HashSet<Object>();
+
     public static void setUIFont(javax.swing.plaf.FontUIResource f) {
-        java.util.Enumeration keys = UIManager.getDefaults().keys();
+        Enumeration<Object> keys = UIManager.getDefaults().keys();
         while (keys.hasMoreElements()) {
             Object key = keys.nextElement();
             Object value = UIManager.get(key);
             if (value instanceof javax.swing.plaf.FontUIResource) {
                 UIManager.put(key, f);
+                OVERRIDDEN_FONT_KEYS.add(key);
             }
         }
+        UIManager.put("defaultFont", f);
+        OVERRIDDEN_FONT_KEYS.add("defaultFont");
+    }
+
+    /**
+     * Removes any font overrides previously applied via {@link #setUIFont} so
+     * the active Look & Feel's default fonts take effect again.
+     */
+    public static void resetUIFont() {
+        for (Object key : OVERRIDDEN_FONT_KEYS) {
+            UIManager.put(key, null);
+        }
+        OVERRIDDEN_FONT_KEYS.clear();
     }
 }

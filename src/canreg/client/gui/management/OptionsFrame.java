@@ -103,7 +103,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         lookAndFeelPanel = new javax.swing.JPanel();
         showOutlineCheckBox = new javax.swing.JCheckBox();
         fontNameLabel = new javax.swing.JLabel();
-        fontNameTextField = new javax.swing.JTextField();
+        fontNameComboBox = new javax.swing.JComboBox();
         fontSizeComboBox = new javax.swing.JComboBox();
         fontSizeLabel = new javax.swing.JLabel();
         themeLabel = new javax.swing.JLabel();
@@ -235,9 +235,10 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         fontNameLabel.setToolTipText(resourceMap.getString("fontNameLabel.toolTipText")); // NOI18N
         fontNameLabel.setName("fontNameLabel"); // NOI18N
 
-        fontNameTextField.setText(resourceMap.getString("fontNameTextField.text")); // NOI18N
-        fontNameTextField.setToolTipText(resourceMap.getString("fontNameTextField.toolTipText")); // NOI18N
-        fontNameTextField.setName("fontNameTextField"); // NOI18N
+        fontNameComboBox.setEditable(true);
+        fontNameComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "default" }));
+        fontNameComboBox.setToolTipText(resourceMap.getString("fontNameComboBox.toolTipText")); // NOI18N
+        fontNameComboBox.setName("fontNameComboBox"); // NOI18N
 
         fontSizeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Small", "Medium", "Big" }));
         fontSizeComboBox.setSelectedIndex(1);
@@ -252,7 +253,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         themeLabel.setToolTipText(resourceMap.getString("themeLabel.toolTipText")); // NOI18N
         themeLabel.setName("themeLabel"); // NOI18N
 
-        themeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "macOS Light", "macOS Dark", "Flat Light", "Flat Dark", "Flat Darcula", "One Dark", "Nord", "Arc Light", "Arc Dark", "GitHub Light", "GitHub Dark", "System" }));
+        themeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Flat Light", "Flat Dark", "IntelliJ Light", "Flat Darcula", "macOS Light", "macOS Dark", "One Dark", "Nord", "Arc Light", "Arc Dark", "GitHub Light", "GitHub Dark", "Solarized Light", "Solarized Dark", "High Contrast", "System" }));
         themeComboBox.setToolTipText(resourceMap.getString("themeComboBox.toolTipText")); // NOI18N
         themeComboBox.setName("themeComboBox"); // NOI18N
 
@@ -275,7 +276,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
                         .addGroup(lookAndFeelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(themeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(fontSizeComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(fontNameTextField))
+                            .addComponent(fontNameComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addContainerGap())))
         );
         lookAndFeelPanelLayout.setVerticalGroup(
@@ -288,7 +289,7 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(lookAndFeelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(fontNameLabel)
-                    .addComponent(fontNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(fontNameComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(lookAndFeelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(fontSizeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -796,8 +797,8 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
     private javax.swing.JButton downloadLatestButton;
     private javax.swing.JButton downloadLatestButton1;
     private javax.swing.JLabel everyLabel;
+    private javax.swing.JComboBox fontNameComboBox;
     private javax.swing.JLabel fontNameLabel;
-    private javax.swing.JTextField fontNameTextField;
     private javax.swing.JComboBox fontSizeComboBox;
     private javax.swing.JLabel fontSizeLabel;
     private javax.swing.JPanel generalPanel;
@@ -900,10 +901,16 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         gsInstallationTextField.setText(gsPath);
 
         String fontName = localSettings.getProperty(LocalSettings.FONT_NAME_KEY);
-        if (fontName == null || fontName.length() == 0) {
+        if (fontName == null || fontName.trim().length() == 0) {
             fontName = LocalSettings.FONT_NAME_DEFAULT;
         }
-        fontNameTextField.setText(fontName);
+        List<String> fontOptions = new java.util.ArrayList<String>();
+        fontOptions.add(LocalSettings.FONT_NAME_DEFAULT);
+        for (String family : java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()) {
+            fontOptions.add(family);
+        }
+        fontNameComboBox.setModel(new javax.swing.DefaultComboBoxModel(fontOptions.toArray()));
+        fontNameComboBox.setSelectedItem(fontName);
 
         String fontSize = localSettings.getProperty(LocalSettings.FONT_SIZE_KEY);
         fontSizeComboBox.setSelectedItem(fontSize);
@@ -923,6 +930,14 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         clientSessionsCheckTextField.setText(localSettings.getProperty(LocalSettings.CLIENT_SESSIONS_CHECK_KEY));
         
         String theme = localSettings.getProperty(LocalSettings.LOOK_AND_FEEL_KEY);
+        if (theme == null || theme.trim().isEmpty()) {
+            theme = System.getProperty("os.name", "").toLowerCase(Locale.ENGLISH).contains("mac")
+                    ? "macOS Light" : "Flat Light";
+        } else if (theme.equalsIgnoreCase("Light")) {
+            theme = "Flat Light";
+        } else if (theme.equalsIgnoreCase("Dark")) {
+            theme = "Flat Darcula";
+        }
         themeComboBox.setSelectedItem(theme);
     }
 
@@ -974,7 +989,11 @@ public class OptionsFrame extends javax.swing.JInternalFrame {
         localSettings.setProperty(LocalSettings.R_PATH, rInstallationTextField.getText());
         localSettings.setProperty(LocalSettings.GS_PATH, gsInstallationTextField.getText());
 
-        localSettings.setProperty(LocalSettings.FONT_NAME_KEY, fontNameTextField.getText());
+        Object selectedFont = fontNameComboBox.getSelectedItem();
+        String fontToSave = (selectedFont != null && selectedFont.toString().trim().length() > 0)
+                ? selectedFont.toString().trim()
+                : LocalSettings.FONT_NAME_DEFAULT;
+        localSettings.setProperty(LocalSettings.FONT_NAME_KEY, fontToSave);
         localSettings.setProperty(LocalSettings.FONT_SIZE_KEY, fontSizeComboBox.getSelectedItem().toString());
 
         localSettings.setProperty(LocalSettings.DATE_FORMAT_KEY, dateFormatComboBox.getSelectedItem().toString());

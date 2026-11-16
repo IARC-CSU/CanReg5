@@ -247,7 +247,7 @@
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="themeComboBox" alignment="0" max="32767" attributes="0"/>
                                       <Component id="fontSizeComboBox" alignment="1" max="32767" attributes="0"/>
-                                      <Component id="fontNameTextField" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="fontNameComboBox" alignment="0" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                               </Group>
@@ -266,7 +266,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="fontNameLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="fontNameTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="fontNameComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -295,11 +295,16 @@
                     <Property name="name" type="java.lang.String" value="fontNameLabel" noResource="true"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="fontNameTextField">
+                <Component class="javax.swing.JComboBox" name="fontNameComboBox">
                   <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="fontNameTextField.text"/>
-                    <Property name="toolTipText" type="java.lang.String" resourceKey="fontNameTextField.toolTipText"/>
-                    <Property name="name" type="java.lang.String" value="fontNameTextField" noResource="true"/>
+                    <Property name="editable" type="boolean" value="true"/>
+                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                      <StringArray count="1">
+                        <StringItem index="0" value="default"/>
+                      </StringArray>
+                    </Property>
+                    <Property name="toolTipText" type="java.lang.String" resourceKey="fontNameComboBox.toolTipText"/>
+                    <Property name="name" type="java.lang.String" value="fontNameComboBox" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JComboBox" name="fontSizeComboBox">
@@ -333,10 +338,23 @@
                 <Component class="javax.swing.JComboBox" name="themeComboBox">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="3">
-                        <StringItem index="0" value="System"/>
-                        <StringItem index="1" value="Light"/>
-                        <StringItem index="2" value="Dark"/>
+                      <StringArray count="16">
+                        <StringItem index="0" value="Flat Light"/>
+                        <StringItem index="1" value="Flat Dark"/>
+                        <StringItem index="2" value="IntelliJ Light"/>
+                        <StringItem index="3" value="Flat Darcula"/>
+                        <StringItem index="4" value="macOS Light"/>
+                        <StringItem index="5" value="macOS Dark"/>
+                        <StringItem index="6" value="One Dark"/>
+                        <StringItem index="7" value="Nord"/>
+                        <StringItem index="8" value="Arc Light"/>
+                        <StringItem index="9" value="Arc Dark"/>
+                        <StringItem index="10" value="GitHub Light"/>
+                        <StringItem index="11" value="GitHub Dark"/>
+                        <StringItem index="12" value="Solarized Light"/>
+                        <StringItem index="13" value="Solarized Dark"/>
+                        <StringItem index="14" value="High Contrast"/>
+                        <StringItem index="15" value="System"/>
                       </StringArray>
                     </Property>
                     <Property name="toolTipText" type="java.lang.String" resourceKey="themeComboBox.toolTipText"/>

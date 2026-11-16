@@ -41,7 +41,38 @@ if [ -f "$ICON_SOURCE" ]; then
     sips -z 512 512   "$ICON_SOURCE" --out "$ICONSET/icon_512x512.png" >/dev/null 2>&1
     sips -z 1024 1024 "$ICON_SOURCE" --out "$ICONSET/icon_512x512@2x.png" >/dev/null 2>&1
     
-    iconutil -c icns "$ICONSET" -o "${RESOURCES_DIR}/CanReg5.icns" 2>/dev/null || echo "Warning: iconutil could not generate icns; app bundle will use default system icon."
+    if ! iconutil -c icns "$ICONSET" -o "${RESOURCES_DIR}/CanReg5.icns" 2>/dev/null; then
+        if command -v python3 &>/dev/null; then
+            python3 - "$ICONSET" "${RESOURCES_DIR}/CanReg5.icns" << 'PYEOF'
+import os, struct, sys
+iconset_dir, out_path = sys.argv[1], sys.argv[2]
+mapping = [
+    (b"icp4", "icon_16x16.png"),
+    (b"ic11", "icon_16x16@2x.png"),
+    (b"icp5", "icon_32x32.png"),
+    (b"ic12", "icon_32x32@2x.png"),
+    (b"ic07", "icon_128x128.png"),
+    (b"ic13", "icon_128x128@2x.png"),
+    (b"ic08", "icon_256x256.png"),
+    (b"ic14", "icon_256x256@2x.png"),
+    (b"ic09", "icon_512x512.png"),
+    (b"ic10", "icon_512x512@2x.png"),
+]
+chunks = []
+for ostype, fname in mapping:
+    fpath = os.path.join(iconset_dir, fname)
+    if os.path.isfile(fpath):
+        data = open(fpath, "rb").read()
+        chunks.append(ostype + struct.pack(">I", 8 + len(data)) + data)
+if chunks:
+    body = b"".join(chunks)
+    with open(out_path, "wb") as f:
+        f.write(b"icns" + struct.pack(">I", 8 + len(body)) + body)
+PYEOF
+        else
+            echo "Warning: iconutil failed and python3 not found; app bundle will use default system icon."
+        fi
+    fi
     rm -rf "$ICONSET"
     if [ -f "${RESOURCES_DIR}/CanReg5.icns" ]; then
         echo "App icon generated successfully."
