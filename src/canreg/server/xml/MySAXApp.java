@@ -25,7 +25,6 @@ import java.io.FileReader;
 import org.xml.sax.XMLReader;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
-import org.xml.sax.helpers.XMLReaderFactory;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class MySAXApp extends DefaultHandler
@@ -39,7 +38,9 @@ public class MySAXApp extends DefaultHandler
     public static void main(String args[])
 	throws Exception
     {
-	XMLReader xr = XMLReaderFactory.createXMLReader();
+	javax.xml.parsers.SAXParserFactory factory = javax.xml.parsers.SAXParserFactory.newInstance();
+	factory.setNamespaceAware(true);
+	XMLReader xr = factory.newSAXParser().getXMLReader();
 	MySAXApp handler = new MySAXApp();
 	xr.setContentHandler(handler);
 	xr.setErrorHandler(handler);

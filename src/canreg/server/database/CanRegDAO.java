@@ -880,7 +880,7 @@ public class CanRegDAO {
         dbProperties.put("collation", "TERRITORY_BASED:PRIMARY");
         Locale defaultLocale = Locale.getDefault();
         if (!Arrays.asList(java.text.Collator.getAvailableLocales()).contains(defaultLocale)) {
-            Locale langLocale = new Locale(defaultLocale.getLanguage());
+            Locale langLocale = Locale.of(defaultLocale.getLanguage());
             if (Arrays.asList(java.text.Collator.getAvailableLocales()).contains(langLocale)) {
                 dbProperties.put("territory", defaultLocale.getLanguage());
             } else {

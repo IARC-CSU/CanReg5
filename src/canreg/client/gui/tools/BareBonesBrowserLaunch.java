@@ -43,8 +43,8 @@ public class BareBonesBrowserLaunch {
                   new Object[] {url});
                }
             else if (osName.startsWith("Windows"))
-               Runtime.getRuntime().exec(
-                  "rundll32 url.dll,FileProtocolHandler " + url);
+               Runtime.getRuntime().exec(new String[]
+                  {"rundll32", "url.dll,FileProtocolHandler", url});
             else { //assume Unix or Linux
                String browser = null;
                for (String b : browsers)

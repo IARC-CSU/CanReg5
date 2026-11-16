@@ -76,9 +76,13 @@ class CanRegServerProxy extends UnicastRemoteObject implements CanRegServerInter
         // call this method
 
         try {
-            Subject.doAs(theUser, new ValidateMethodCall(methodName));
-        } catch (java.security.PrivilegedActionException e) {
-            throw (SecurityException) e.getException();
+            Subject.callAs(theUser, new ValidateMethodCall(methodName));
+        } catch (java.util.concurrent.CompletionException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof SecurityException securityException) {
+                throw securityException;
+            }
+            throw new SecurityException(cause);
         }
 
     }

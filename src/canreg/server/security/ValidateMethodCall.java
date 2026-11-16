@@ -19,13 +19,13 @@
  */
 package canreg.server.security;
 
-import java.security.PrivilegedExceptionAction;
+import java.util.concurrent.Callable;
 
 /**
  *
  * @author ervikm
  */
-public class ValidateMethodCall implements PrivilegedExceptionAction {
+public class ValidateMethodCall implements Callable<Object> {
 
     private final String priveledgedMethodName;
 
@@ -45,7 +45,7 @@ public class ValidateMethodCall implements PrivilegedExceptionAction {
     }
 
     @Override
-    public Object run() throws Exception {
+    public Object call() throws Exception {
         // Only has to check if the appropriate ServerPermission is owned by
         // the user. If not an exception is thrown.
 
@@ -54,5 +54,12 @@ public class ValidateMethodCall implements PrivilegedExceptionAction {
         // AccessController.checkPermission(new ServerPermission(priveledgedMethodName));
 
         return null;
+    }
+
+    /**
+     * Backwards-compatible delegate for legacy callers.
+     */
+    public Object run() throws Exception {
+        return call();
     }
 }

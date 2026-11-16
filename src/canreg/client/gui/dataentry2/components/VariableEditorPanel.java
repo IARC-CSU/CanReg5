@@ -422,9 +422,9 @@ public class VariableEditorPanel extends javax.swing.JPanel
         this.codeTextField.getDocument().removeUndoableEditListener(undoHandler);
         this.codeTextField.getDocument().addUndoableEditListener(undoHandler);
         // ctrl + Z
-        KeyStroke undoKeystroke = KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.CTRL_MASK);
+        KeyStroke undoKeystroke = KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.CTRL_DOWN_MASK);
         // ctrl + Y
-        KeyStroke redoKeystroke = KeyStroke.getKeyStroke(KeyEvent.VK_Y, KeyEvent.CTRL_MASK);
+        KeyStroke redoKeystroke = KeyStroke.getKeyStroke(KeyEvent.VK_Y, KeyEvent.CTRL_DOWN_MASK);
 
         undoAction = new UndoAction();
         // associate "ctrl + z" to the action "undoKeystroke"

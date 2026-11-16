@@ -5,7 +5,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * Unit tests for {@link GregorianCalendarCanReg} and {@link BuddhistCalendarCanReg}.
+ * Unit tests for {@link GregorianCalendarCanReg}.
  */
 public class CalendarCanRegTest {
 

@@ -263,9 +263,9 @@ public final class LocalSettings {
         if (localeString != null && localeString.length() > 0) {
             String[] parts = localeString.split("_");
             if (parts.length > 1) {
-                locale = new Locale(parts[0], parts[1]);
+                locale = Locale.of(parts[0], parts[1]);
             } else {
-                locale = new Locale(localeString);
+                locale = Locale.of(localeString);
             }
         }
         return locale;
@@ -598,8 +598,8 @@ public final class LocalSettings {
      */
     public String getLanguage() {
         String localeString = properties.getProperty(LOCALE_KEY);
-        Locale loc = new Locale(localeString);
-        return loc.getDisplayLanguage(new Locale("en"));
+        Locale loc = Locale.of(localeString);
+        return loc.getDisplayLanguage(Locale.ENGLISH);
     }
 
     /**

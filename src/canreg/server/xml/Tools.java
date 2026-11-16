@@ -152,37 +152,17 @@ public class Tools {
         }
     }
 
-    // Helper method to create a URL from a file name
+    // Helper method to create a URL from a file name (or an existing URL string)
     private static URL createURL(String fileName) {
         URL url = null;
 
         try {
-            url = new URL(fileName);
-        } catch (MalformedURLException ex) {
-            File f = new File(fileName);
-
+            url = java.net.URI.create(fileName).toURL();
+        } catch (MalformedURLException | IllegalArgumentException ex) {
+            // Not an absolute URL - treat it as a local file path.
+            // File.toURI() produces a valid, properly escaped file: URL on all platforms.
             try {
-                String path = f.getAbsolutePath();
-
-                // This code that is required to make a valid URL
-                // on the Windows platform, due to inconsistencies
-                // in what getAbsolutePath returns.
-                String fs = System.getProperty("file.separator");
-
-                if (fs.length() == 1) {
-                    char sep = fs.charAt(0);
-
-                    if (sep != '/') {
-                        path = path.replace(sep, '/');
-                    }
-
-                    if (path.charAt(0) != '/') {
-                        path = '/' + path;
-                    }
-                }
-
-                path = "file://" + path;
-                url = new URL(path);
+                url = new File(fileName).getAbsoluteFile().toURI().toURL();
             } catch (MalformedURLException e) {
                 LOGGER.log(Level.INFO, String.format("Cannot create url for: %s",fileName), e);
                 System.exit(0);

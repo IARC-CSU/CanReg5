@@ -654,9 +654,9 @@ public class Tools {
     public static String getFileFromURL(String urlString, int connectTimeoutMs, int readTimeoutMs) {
         String contents = "";
         try {
-            URL url = new URL(urlString);
+            URL url = java.net.URI.create(urlString).toURL();
             contents = getFileFromURL(url, connectTimeoutMs, readTimeoutMs);
-        } catch (MalformedURLException mue) {
+        } catch (MalformedURLException | IllegalArgumentException mue) {
             LOGGER.log(Level.SEVERE, "Invalid URL", mue);
         }
         return contents;
@@ -707,7 +707,7 @@ public class Tools {
     }
 
     public static void downloadFile(String urlString, String localFileName) throws IOException {
-        java.net.URLConnection conn = new java.net.URL(urlString).openConnection();
+        java.net.URLConnection conn = java.net.URI.create(urlString).toURL().openConnection();
         conn.setConnectTimeout(10000);
         conn.setReadTimeout(30000);
         conn.setRequestProperty("User-Agent", "CanReg5");
@@ -804,11 +804,11 @@ public class Tools {
             String osName = System.getProperty("os.name");
             File file = new File(fileName);
             if (osName.startsWith("Windows")) {
-                Runtime.getRuntime().exec("rundll32 SHELL32.DLL,ShellExec_RunDLL " + file.getAbsolutePath());
+                Runtime.getRuntime().exec(new String[]{"rundll32", "SHELL32.DLL,ShellExec_RunDLL", file.getAbsolutePath()});
             } else if (osName.startsWith("Mac OS")) {
-                Runtime.getRuntime().exec("open " + file.getAbsolutePath());
+                Runtime.getRuntime().exec(new String[]{"open", file.getAbsolutePath()});
             } else if (osName.startsWith("Lin")) {
-                Runtime.getRuntime().exec("open " + file.getAbsolutePath());
+                Runtime.getRuntime().exec(new String[]{"xdg-open", file.getAbsolutePath()});
             } else {
                 BareBonesBrowserLaunch.openURL(fileName);
             }
