@@ -6,7 +6,7 @@ This document serves as the foundational guide for Gemini CLI when working on th
 CanReg5 is a multi-user, multi-platform, open-source tool for cancer registries to input, store, check, and analyze data. It is a Java-based desktop application with a focus on user-friendliness and internationalization.
 
 ## Tech Stack
-- **Language:** Java 8 (1.8)
+- **Language:** Java 25 (LTS)
 - **Build System:** Apache Ant (NetBeans project structure)
 - **Frameworks/Libraries:** 
   - Swing (GUI)
@@ -19,7 +19,7 @@ CanReg5 is a multi-user, multi-platform, open-source tool for cancer registries 
 - **Testing:** JUnit 4
 
 ## Coding Standards
-- **Java 8 Compatibility:** Ensure all code changes are compatible with Java 8. Do not use features from later Java versions.
+- **Java 25 Compatibility:** Target Java 25 (LTS). Modern Java language features and standard library APIs up to Java 25 may be used while maintaining consistency with the existing codebase.
 - **Naming Conventions:** Follow standard Java naming conventions (PascalCase for classes, camelCase for methods/variables).
 - **Style:** Maintain consistency with the existing codebase (refer to `src/canreg`).
 - **Internationalization:** Be mindful of multi-language support. String literals for UI should ideally be externalized (check `appinfo.properties` and other resource bundles).
@@ -56,7 +56,7 @@ CanReg5 is a multi-user, multi-platform, open-source tool for cancer registries 
 
 ## Feasibility of New Features
 - **High Feasibility:** Core features within the existing Swing/Derby/JFreeChart paradigm are straightforward to implement by following established patterns.
-- **Java 8 Constraint:** All new features MUST strictly adhere to Java 8 (1.8) syntax and libraries.
+- **Java 25 Target:** All new features target Java 25 (LTS) syntax and standard libraries.
 - **Verification:** Feasibility is supported by an existing JUnit 4 suite, which should be extended for all new functionality.
 - **UI Consistency:** New UI elements should use existing Swing components or custom wrappers to maintain the application's look and feel.
 
