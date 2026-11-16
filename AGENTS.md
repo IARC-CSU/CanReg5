@@ -51,7 +51,7 @@ CanReg5 is a multi-user, multi-platform, open-source tool for cancer registries 
 ## Maintainability & Technical Debt
 - **Architecture:** Clear client-server-common separation (`src/canreg/client`, `server`, `common`) facilitates navigation and modularity.
 - **Build System:** Uses Apache Ant with a NetBeans structure. While functional, it lacks the dependency management and lifecycle features of modern systems like Maven or Gradle.
-- **Dependencies:** Significant technical debt exists due to outdated and mixed library versions (e.g., Apache Batik 1.6/1.14 mix, older Apache Commons versions).
+- **Dependencies:** Core libraries upgraded for Java 25 (Apache Derby `10.17.1.0`, unified Apache Batik `1.18` + XMLGraphics Commons `2.10`, FlatLaf `3.5.4`, Jackson `2.18.3`, Apache Commons `csv`/`dbcp2`/`pool2`/`io`/`logging`, JFreeChart `1.5.5`, JUniversalChardet `2.5.0`); a few legacy UI/utility libraries (`commons-lang 2.6`, `bsaf`, `beansbinding`) remain pinned for Swing/API compatibility.
 - **Coupling:** High degree of coupling within the Swing GUI components and server-side logic, which may complicate isolation for testing.
 
 ## Feasibility of New Features

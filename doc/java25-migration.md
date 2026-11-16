@@ -73,6 +73,15 @@ Because CanReg5 uses standard Swing, JDBC, and RMI APIs, compiling cleanly on Ja
 - **Cross-Platform Launcher Support:** Updated `CanReg.bat`, `CanReg.sh`, and `helpers/create-mac-app.sh` to prefer a bundled `./jre` runtime when present and fall back to a system Java 25+ installation.
 - **Inno Setup & Portable Distributions:** Kept Inno Setup (`helpers/InnoSetup/CanReg5-InnoSetup.iss` and `CanReg5-with-R-InnoSetup.iss`) to preserve non-admin per-user install fallback, 7-language setup prompts, LZMA compression, and in-place upgrades over existing CanReg5 installations. Both `CanReg5-Setup.exe` and `CanReg5-with-R-Setup.exe` bundle `dist/jre` inside `{app}\jre`, while portable `.zip` distributions (`CanReg5-Windows.zip`, `CanReg5-Linux.zip`, `CanReg5-macOS.zip`) remain lightweight when built without a pre-generated `dist/jre`.
 
+### Third-Party Library Upgrades
+Moving to Java 25 unblocked upgrading the core third-party libraries in `lib/`, `pom.xml`, `nbproject/project.properties`, `CanReg5.iml`, and `manifest.mf`:
+- **Apache Derby (`10.14.2.0` -> `10.17.1.0`):** Upgraded `derby`, `derbynet`, `derbytools`, and added the required `derbyshared` and `derbyclient` modules introduced in Derby 10.15+.
+- **Apache Batik & XMLGraphics Commons (`1.6-1` / `1.14` mix -> unified `1.18` / `2.10`):** Eliminated the legacy mixed 1.6/1.14 Batik JARs in favor of unified `1.18` modules (`batik-svggen`, `batik-dom`, `batik-awt-util`, `batik-util`, `batik-constants`, `batik-css`, `batik-ext`, `batik-i18n`, `batik-shared-resources`, `batik-xml`, plus transitive `xml-apis-ext-1.3.04`) and `xmlgraphics-commons-2.10`.
+- **FlatLaf (`1.3` -> `3.5.4`):** Upgraded `flatlaf` and `flatlaf-intellij-themes` for improved modern HiDPI Swing rendering.
+- **Jackson (`2.12.3` -> `2.18.3`):** Upgraded `jackson-annotations`, `jackson-core`, and `jackson-databind`.
+- **Apache Commons:** Upgraded `commons-csv` (`1.4` -> `1.12.0`), `commons-dbcp2` (`2.5.0` -> `2.13.0`), `commons-pool2` (`2.6.0` -> `2.12.1`), `commons-io` (`2.4` -> `2.18.0`), `commons-logging` (`1.2` -> `1.3.4`), plus transitive `commons-codec-1.17.1` and `jakarta.transaction-api-1.3.3` (`commons-lang 2.6` remains pinned to preserve `org.apache.commons.lang` APIs).
+- **JFreeChart & JUniversalChardet:** Upgraded `jfreechart` (`1.5.3` -> `1.5.5`) and `juniversalchardet` (`1.0.3` -> `2.5.0`).
+
 ---
 
 ## Deployment & Rollout Considerations
