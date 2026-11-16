@@ -107,6 +107,9 @@ jobs:
       - name: Build JAR and Platform Distributions
         run: ant jar
 
+      - name: Build macOS DMG with Bundled Java 25 Runtime
+        run: ant build-mac-dmg
+
       - name: Upload Instructions PDF Artifact
         if: always()
         uses: actions/upload-artifact@v4
@@ -123,6 +126,7 @@ jobs:
             cp dist/web/CanReg5-Windows-with-R.zip release-assets/
           fi
           cp dist/web/CanReg5-macOS.zip release-assets/
+          cp dist/web/CanReg5-macOS.dmg release-assets/
           cp dist/web/CanReg5-Linux.zip release-assets/
           cp dist/web/CanReg5-R-packages.zip release-assets/
           cp dist/translations.zip release-assets/

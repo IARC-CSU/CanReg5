@@ -233,12 +233,20 @@
     <target name="-build-mac-app" if="isMac">
         <echo>Creating macOS App Bundle...</echo>
         <exec executable="/bin/bash" failonerror="true">
+            <env key="BUNDLE_JRE" value="false"/>
             <arg value="helpers/create-mac-app.sh"/>
         </exec>
         <zip destfile="${dist.dir}/web/CanReg5-macOS.zip">
             <zipfileset dir="." includes="CanReg5.app/**" excludes="CanReg5.app/Contents/MacOS/CanReg5"/>
             <zipfileset dir="." includes="CanReg5.app/Contents/MacOS/CanReg5" filemode="755"/>
         </zip>
+    </target>
+
+    <target name="build-mac-dmg" depends="init" description="Build self-contained macOS DMG with bundled custom jlink Java 25 runtime">
+        <antcall target="-build-jlink-jre"/>
+        <exec executable="/bin/bash" failonerror="true">
+            <arg value="helpers/create-mac-dmg.sh"/>
+        </exec>
     </target>
 
     <target name="package-windows-with-r" depends="init" description="Package CanReg5-Windows-with-R.zip">

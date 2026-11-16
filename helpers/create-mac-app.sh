@@ -162,9 +162,13 @@ fi
 if [ -d "dist/lib" ]; then
     cp -R "dist/lib" "${RESOURCES_DIR}/"
 fi
-if [ -d "dist/jre" ] && [ "${BUNDLE_JRE:-true}" != "false" ]; then
+if [ -d "dist/jre" ] && [ "${BUNDLE_JRE:-false}" = "true" ]; then
     echo "Bundling custom jlink Java runtime..."
     cp -R "dist/jre" "${RESOURCES_DIR}/"
+    chmod +x "${RESOURCES_DIR}/jre/bin/"* 2>/dev/null || true
+    if [ -f "${RESOURCES_DIR}/jre/lib/jspawnhelper" ]; then
+        chmod +x "${RESOURCES_DIR}/jre/lib/jspawnhelper"
+    fi
 fi
 if [ -d "conf" ]; then
     cp -R "conf" "${RESOURCES_DIR}/"
