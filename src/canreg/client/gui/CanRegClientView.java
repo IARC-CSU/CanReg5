@@ -1150,86 +1150,177 @@ public final class CanRegClientView extends FrameView {
     }
 
 
+    /**
+     * Resolved permission flags for toolbar and menu controls for a given user rights level.
+     */
+    public record UserRightsMenuState(
+            boolean analysis,
+            boolean management,
+            boolean dataEntry,
+            boolean loggedIn,
+            boolean adhoc,
+            boolean toolsEnabled,
+            boolean restoreEnabled,
+            boolean topLevelAlwaysEnabled) {
+
+        public static UserRightsMenuState forLevel(
+                Globals.UserRightLevels userRightsLevel,
+                boolean canRegServerRunningOnThisMachine,
+                boolean isMacOS) {
+            boolean analysis = false;
+            boolean management = false;
+            boolean dataEntry = false;
+            boolean loggedIn = false;
+            boolean adhoc = false;
+
+            if (userRightsLevel == Globals.UserRightLevels.NOT_LOGGED_IN
+                    || userRightsLevel == Globals.UserRightLevels.API
+                    || userRightsLevel == null) {
+                adhoc = true;
+            } else {
+                loggedIn = true;
+                if (userRightsLevel == Globals.UserRightLevels.SUPERVISOR) {
+                    management = true;
+                    dataEntry = true;
+                    analysis = true;
+                } else if (userRightsLevel == Globals.UserRightLevels.REGISTRAR) {
+                    dataEntry = true;
+                    analysis = true;
+                } else if (userRightsLevel == Globals.UserRightLevels.ANALYST) {
+                    analysis = true;
+                }
+            }
+
+            boolean toolsEnabled = canRegServerRunningOnThisMachine || !loggedIn;
+            boolean restoreEnabled = canRegServerRunningOnThisMachine;
+            return new UserRightsMenuState(
+                    analysis, management, dataEntry, loggedIn, adhoc,
+                    toolsEnabled, restoreEnabled, isMacOS);
+        }
+    }
+
+    /**
+     * Menu and toolbar controls updated when user rights change.
+     */
+    public record MenuBarControls(
+            JButton browseEditButton,
+            JButton createNewRecordButton,
+            JButton tableBuilderButton,
+            JButton holdingDBsButton,
+            JButton adhocButton,
+            JMenuItem logOutMenuItem,
+            JMenu dataEntryMenu,
+            JMenuItem browseEditMenuItem,
+            JMenuItem createNewRecordMenuItem,
+            JMenuItem editDictionaryMenuItem,
+            JMenuItem editPDSMenuItem,
+            JMenuItem importDataMenuItem,
+            JMenu analysisMenu,
+            JMenuItem frequenciesMenuItem,
+            JMenuItem incidenceTablesMenuItem,
+            JMenuItem exportDataReportsMenuItem,
+            JMenu managementMenu,
+            JMenuItem backupMenuItem,
+            JMenuItem restoreMenuItem,
+            JMenu qualityControlMenu,
+            JMenuItem usersMenuItem,
+            JMenu advancedMenu,
+            JMenu toolsMenu,
+            JMenu migrateMenu,
+            JMenuItem importFromCR4MenuItem,
+            JMenuItem migratePopulationSetMenuItem,
+            JMenu databaseStructureMenu,
+            JMenu populationsMenu,
+            JMenuItem installRPackagesMenuItem,
+            JMenuItem completenessAnalyzerMenuItem) {
+    }
+
+    public static void applyUserRightsToControls(UserRightsMenuState state, MenuBarControls controls) {
+        controls.browseEditButton().setEnabled(state.dataEntry());
+        controls.createNewRecordButton().setEnabled(state.dataEntry());
+        controls.tableBuilderButton().setEnabled(state.analysis());
+        controls.holdingDBsButton().setEnabled(state.dataEntry());
+        controls.adhocButton().setEnabled(state.adhoc());
+
+        controls.logOutMenuItem().setEnabled(state.loggedIn());
+
+        // On macOS with screen menu bar enabled, keep top-level JMenu headers enabled per Apple HIG
+        // and to avoid the JDK CMenuBar issue where re-enabling a disabled top-level menu leaves children greyed out.
+        controls.dataEntryMenu().setEnabled(state.topLevelAlwaysEnabled() || state.dataEntry());
+        controls.browseEditMenuItem().setEnabled(state.dataEntry());
+        controls.createNewRecordMenuItem().setEnabled(state.dataEntry());
+        controls.editDictionaryMenuItem().setEnabled(state.management());
+        controls.editPDSMenuItem().setEnabled(state.dataEntry());
+        controls.importDataMenuItem().setEnabled(state.management());
+
+        controls.analysisMenu().setEnabled(state.topLevelAlwaysEnabled() || state.analysis());
+        controls.frequenciesMenuItem().setEnabled(state.analysis());
+        controls.incidenceTablesMenuItem().setEnabled(state.analysis());
+        controls.exportDataReportsMenuItem().setEnabled(state.analysis());
+
+        controls.managementMenu().setEnabled(true);
+        controls.backupMenuItem().setEnabled(state.loggedIn());
+        controls.restoreMenuItem().setEnabled(state.restoreEnabled());
+        controls.qualityControlMenu().setEnabled(state.management());
+        controls.usersMenuItem().setEnabled(state.loggedIn());
+        controls.advancedMenu().setEnabled(state.management());
+
+        controls.toolsMenu().setEnabled(state.topLevelAlwaysEnabled() || state.toolsEnabled());
+        controls.migrateMenu().setEnabled(state.toolsEnabled());
+        controls.importFromCR4MenuItem().setEnabled(state.management());
+        controls.migratePopulationSetMenuItem().setEnabled(state.analysis());
+        controls.databaseStructureMenu().setEnabled(state.toolsEnabled());
+        controls.populationsMenu().setEnabled(state.toolsEnabled() && state.management());
+        controls.installRPackagesMenuItem().setEnabled(state.toolsEnabled());
+        controls.completenessAnalyzerMenuItem().setEnabled(state.toolsEnabled());
+    }
+
     public void setUserRightsLevel(Globals.UserRightLevels userRightsLevel) {
         this.userRightsLevel = userRightsLevel;
+        if (!javax.swing.SwingUtilities.isEventDispatchThread()) {
+            javax.swing.SwingUtilities.invokeLater(() -> setUserRightsLevel(userRightsLevel));
+            return;
+        }
         userLevelLabel.setText(userRightsLevel.toString());
 
-        boolean analysis = false;
-        boolean management = false;
-        boolean dataEntry = false;
-        boolean loggedIn = false;
-        boolean adhoc = false;
+        boolean isMacOS = System.getProperty("os.name", "").toLowerCase(Locale.ENGLISH).contains("mac");
+        boolean serverRunningOnThisMachine = CanRegClientApp.getApplication().isCanRegServerRunningOnThisMachine();
+        UserRightsMenuState state = UserRightsMenuState.forLevel(
+                userRightsLevel, serverRunningOnThisMachine, isMacOS);
 
-        // Hide/reveal menus
-        if (userRightsLevel == Globals.UserRightLevels.NOT_LOGGED_IN || userRightsLevel == Globals.UserRightLevels.API) {
-            analysis = false;
-            management = false;
-            dataEntry = false;
-            loggedIn = false;
-            adhoc = true;
-        } else {
-            loggedIn = true;
-            adhoc = false;
-            if (userRightsLevel == Globals.UserRightLevels.SUPERVISOR) {
-                management = true;
-                dataEntry = true;
-                analysis = true;
-            }
-            if (userRightsLevel == Globals.UserRightLevels.REGISTRAR) {
-                dataEntry = true;
-                analysis = true;
-            }
-            if (userRightsLevel == Globals.UserRightLevels.ANALYST) {
-                analysis = true;
-            }
-        }
+        applyUserRightsToControls(state, new MenuBarControls(
+                browseEditButton,
+                createNewRecordButton,
+                tableBuilderButton,
+                holdingDBsButton,
+                adhocButton,
+                logOutMenuItem,
+                dataEntryMenu,
+                browseEditMenuItem,
+                createNewRecordMenuItem,
+                editDictionaryMenuItem,
+                editPDSMenuItem,
+                importDataMenuItem,
+                analysisMenu,
+                frequenciesMenuItem,
+                incidenceTablesMenuItem,
+                exportDataReportsMenuItem,
+                managementMenu,
+                backupMenuItem,
+                restoreMenuItem,
+                qualityControlMenu,
+                usersMenuItem,
+                advancedMenu,
+                toolsMenu,
+                migrateMenu,
+                importFromCR4MenuItem,
+                migratePopulationSetMenuItem,
+                databaseStructureMenu,
+                populationsMenu,
+                installRPackagesMenuItem,
+                completenessAnalyzerMenuItem));
 
-        // setUpDatabaseMenuItem.setVisible(false);
-        //toolbar buttons        
-        // a bit too drastic : toolBar.setVisible(loggedIn);
-        browseEditButton.setEnabled(dataEntry);
-        createNewRecordButton.setEnabled(dataEntry);
-        tableBuilderButton.setEnabled(analysis);
-        holdingDBsButton.setEnabled(dataEntry);
-        adhocButton.setEnabled(adhoc);
-
-        // startDatabaseServerButton.setEnabled(management);
-        //Menus
-        editDictionaryMenuItem.setEnabled(management);
-
-        analysisMenu.setEnabled(analysis);
-        managementMenu.setEnabled(true);
-
-        backupMenuItem.setEnabled(loggedIn);
-        restoreMenuItem.setEnabled(management);
-
-        usersMenuItem.setEnabled(loggedIn);
-
-        advancedMenu.setEnabled(management);
-        qualityControlMenu.setEnabled(management);
-
-        dataEntryMenu.setEnabled(dataEntry);
-        logOutMenuItem.setEnabled(loggedIn);
-
-        importDataMenuItem.setEnabled(management);
-        importFromCR4MenuItem.setEnabled(management);
-
-        populationsMenu.setEnabled(management);
-
-        migratePopulationSetMenuItem.setEnabled(analysis);
-        
-        // If we are accessing a remote CanReg system not all things are available to us...
-        if (!CanRegClientApp.getApplication().isCanRegServerRunningOnThisMachine()) {
-            toolsMenu.setEnabled(!loggedIn);
-            restoreMenuItem.setEnabled(false);
-            // We show the install system button if we are not logged in to a remote server...
-            // installSystemButton.setEnabled((userRightsLevel == Globals.UserRightLevels.NOT_LOGGED_IN));
-        } else {
-            toolsMenu.setEnabled(true);
-            restoreMenuItem.setEnabled(true);
-        }
-
-        garbleDatabaseMenuItem.setVisible(management && Globals.SHOW_GARBLER);
+        garbleDatabaseMenuItem.setVisible(state.management() && Globals.SHOW_GARBLER);
         canreg4migrationMenuItem.setVisible(Globals.DEBUG);
 
         latestNewsMenuItem.setVisible(false);
