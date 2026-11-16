@@ -263,6 +263,34 @@
         </zip>
     </target>
 
+    <property name="jlink.modules" value="java.base,java.desktop,java.logging,java.management,java.naming,java.prefs,java.rmi,java.security.jgss,java.sql,java.sql.rowset,java.xml,java.xml.crypto,jdk.crypto.ec,jdk.localedata,jdk.unsupported,jdk.xml.dom"/>
+
+    <target name="build-jlink-jre" depends="init" description="Build custom slim Java 25 runtime using jlink">
+        <antcall target="-build-jlink-jre"/>
+    </target>
+
+    <target name="-build-jlink-jre">
+        <delete dir="${dist.dir}/jre" failonerror="false"/>
+        <condition property="jlink.exec.name" value="jlink.exe" else="jlink">
+            <os family="windows"/>
+        </condition>
+        <condition property="jlink.bin" value="${java.home}/bin/${jlink.exec.name}" else="${jlink.exec.name}">
+            <available file="${java.home}/bin/${jlink.exec.name}"/>
+        </condition>
+        <echo>Building custom Java runtime at ${dist.dir}/jre using ${jlink.bin}...</echo>
+        <mkdir dir="${dist.dir}"/>
+        <exec executable="${jlink.bin}" failonerror="true">
+            <arg value="--add-modules"/>
+            <arg value="${jlink.modules}"/>
+            <arg value="--strip-debug"/>
+            <arg value="--no-man-pages"/>
+            <arg value="--no-header-files"/>
+            <arg value="--compress=zip-6"/>
+            <arg value="--output"/>
+            <arg value="${dist.dir}/jre"/>
+        </exec>
+    </target>
+
     <target name="-post-jar">
         <exec executable="ruby" osfamily="unix" failonerror="false" failifexecutionfails="false">
             <arg value="update_version_number.rb"/>

@@ -10,6 +10,10 @@
   #define CanReg5Dir "..\.."
 #endif
 
+#ifndef JreSourceDir
+  #define JreSourceDir CanReg5Dir + "\dist\jre"
+#endif
+
 #ifndef MyAppVersion
   #if FileExists(CanReg5Dir + "\inno-settings.txt")
     #include CanReg5Dir + "\inno-settings.txt"
@@ -73,6 +77,7 @@ Source: "{#CanReg5Dir}\changelog.html"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#CanReg5Dir}\doc\CanReg5-Instructions\CanReg5-Instructions.pdf"; DestDir: "{app}\doc"; Flags: ignoreversion skipifsourcedoesntexist
 Source: "{#CanReg5Dir}\doc\CanReg5-Instructions.pdf"; DestDir: "{app}\doc"; Flags: ignoreversion skipifsourcedoesntexist
 Source: "{#CanReg5Dir}\helpers\completeness_analyzer\*"; DestDir: "{app}\helpers\completeness_analyzer"; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
+Source: "{#JreSourceDir}\*"; DestDir: "{app}\jre"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

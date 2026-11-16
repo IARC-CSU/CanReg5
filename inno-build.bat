@@ -8,6 +8,8 @@ set zippath="C:\Program Files\7-Zip"
 set zx=%zippath%\7z.exe
 pandoc changelog.txt -f markdown -t rtf -s -o changelog.rtf
 pandoc changelog.txt -f markdown -t html --metadata title="CanReg5 Changelog" -H helpers\pandoc\pandoc.html -s -o changelog.html
+powershell -NoProfile -ExecutionPolicy Bypass -File helpers\windows-launcher\build-launcher.ps1
+if not exist dist\jre\bin\javaw.exe call ant build-jlink-jre
 REM if not exist %isx% set errormsg=%isx% not found && goto errorhandler
 cp changelog.html dist\web
 %isx% "%iwz%"

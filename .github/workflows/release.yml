@@ -17,11 +17,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up JDK 8
+      - name: Set up JDK 25
         uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
-          java-version: '8'
+          java-version: '25'
 
       - name: Extract version from Git tag
         id: version
@@ -151,11 +151,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up JDK 8
+      - name: Set up JDK 25
         uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
-          java-version: '8'
+          java-version: '25'
 
       - name: Install Inno Setup
         shell: pwsh
@@ -215,10 +215,20 @@ jobs:
         run: |
           ant jar
 
+      - name: Build 64-bit Windows Launcher (CanReg.exe)
+        shell: pwsh
+        run: |
+          ./helpers/windows-launcher/build-launcher.ps1
+
+      - name: Build Custom Java 25 Runtime (jlink)
+        shell: cmd
+        run: |
+          ant build-jlink-jre
+
       - name: Build Standard Windows Installer (Inno Setup)
         shell: cmd
         run: |
-          ISCC.exe /DCanReg5Dir="%GITHUB_WORKSPACE%" helpers\InnoSetup\CanReg5-InnoSetup.iss
+          ISCC.exe /DCanReg5Dir="%GITHUB_WORKSPACE%" /DJreSourceDir="%GITHUB_WORKSPACE%\dist\jre" helpers\InnoSetup\CanReg5-InnoSetup.iss
 
       - name: Acquire Standalone R Runtime
         shell: pwsh
@@ -278,7 +288,7 @@ jobs:
       - name: Build Windows with R Installer (Inno Setup)
         shell: cmd
         run: |
-          ISCC.exe /DCanReg5Dir="%GITHUB_WORKSPACE%" /DRSourceDir="%GITHUB_WORKSPACE%\r-runtime" helpers\InnoSetup\CanReg5-with-R-InnoSetup.iss
+          ISCC.exe /DCanReg5Dir="%GITHUB_WORKSPACE%" /DJreSourceDir="%GITHUB_WORKSPACE%\dist\jre" /DRSourceDir="%GITHUB_WORKSPACE%\r-runtime" helpers\InnoSetup\CanReg5-with-R-InnoSetup.iss
 
       - name: Package Windows with R Zip Distribution
         shell: cmd

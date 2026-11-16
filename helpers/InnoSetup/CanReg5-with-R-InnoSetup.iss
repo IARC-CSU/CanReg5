@@ -22,6 +22,10 @@
   #define RSourceDir CanReg5Dir + "\r-runtime"
 #endif
 
+#ifndef JreSourceDir
+  #define JreSourceDir CanReg5Dir + "\dist\jre"
+#endif
+
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
@@ -79,6 +83,7 @@ Source: "{#CanReg5Dir}\doc\CanReg5-Instructions.pdf"; DestDir: "{app}\doc"; Flag
 Source: "{#CanReg5Dir}\helpers\completeness_analyzer\*"; DestDir: "{app}\helpers\completeness_analyzer"; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
 Source: "{#RSourceDir}\*"; DestDir: "{app}\r-runtime"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#CanReg5Dir}\conf\tables\r\r-packages\*"; DestDir: "{app}\conf\tables\r\r-packages"; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
+Source: "{#JreSourceDir}\*"; DestDir: "{app}\jre"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
